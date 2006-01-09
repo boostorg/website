@@ -8,7 +8,7 @@ else if ($_SERVER['HTTP_HOST'] === 'boost.borg.redshift-software.com:8080') {
 }
 else if ($_SERVER['HTTP_HOST'] === 'boost.redshift-software.com') {
 	@define('ARCHIVE_PREFIX', '/export/website/boost/archives/boost_');
-	@define('UNZIP', 'unzip');
+	@define('UNZIP', '/usr/local/bin/unzip');
 }
 @define('ARCHIVE_FILE_PREFIX', 'boost_');
 
