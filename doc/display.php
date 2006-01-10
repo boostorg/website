@@ -1,11 +1,15 @@
 <?php
 require dirname(__FILE__) . '/../common/code/extract.php';
-if (preg_match('/^.*png$/',$_SERVER["PATH_INFO"])) {
+
+$path_info = archive_file_path('/^[\/]([^\.\/]+)[\/](.*)$/',$_SERVER["PATH_INFO"]);
+
+if (preg_match('/^.*png$/',$path_info[0])) {
   header('Content-type: image/png');
   #header('Content-Disposition: attachment; filename="downloaded.pdf"');
-  print_archive_file('/^[\/]([^\.\/]+)[\/](.*)$/',$_SERVER["PATH_INFO"]);
+  archive_file_extract($path_info);
 }
 else {
+require dirname(__FILE__) . '/../common/code/webnotes.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -17,6 +21,7 @@ else {
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-doc.css" />
   <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
+  <?php pwn_head(); ?>
 </head>
 
 <body>
@@ -27,10 +32,17 @@ else {
   <div id="body">
     <div id="body-inner">
       <div id="content">
-        <div class="section" id="intro">
+        <div class="section" id="docs">
           <div class="section-0">
             <div class="section-body">
-              <?php print_archive_file('/^[\/]([^\.\/]+)[\/](.*)$/',$_SERVER["PATH_INFO"]); ?>
+              <?php archive_file_extract($path_info); ?>
+            </div>
+          </div>
+        </div>
+        <div class="section" id="notes">
+          <div class="section-0">
+            <div class="section-body">
+              <?php pwn_body($path_info[1],$_SERVER['PHP_SELF']); ?>
             </div>
           </div>
         </div>

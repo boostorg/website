@@ -1,0 +1,139 @@
+# phpWebNotes - a php based note addition system
+# Copyright (C) 2000-2002 Webnotes Team - webnotes-devel@sourceforge.net
+# This program is distributed under the terms and conditions of the GPL
+# See the files README and LICENSE for details
+
+-------------------------------------------------------------------------------
+### Installation steps ###
+-------------------------------------------------------------------------------
+
+*** REQUIREMENTS: MySql database, php 4.0.6 and higer (4.1.2+ recommended), a webserver (tested on Apache and IIS,should work anything else PHP will run with).
+
+1. First, transfer the file to your webserver.  You will need to telnet/ssh into
+the server for the next steps.
+
+2. Next, untar/gunzip it to the directory that you want. (On Linux type tar zxf filename.tar.gz to decompress)
+
+3. After that you will need to cd into the sql/ folder under the webnotes
+directory and locate the db_generate.sql file.  Run the following command:
+
+mysql -u<username> -p<password> <databasename> < db_generate.sql
+
+Then you will need to upgrade the db to the latest (that's only needed if you have
+downloaded a CVS version).
+
+mysql -u<username> -p<password> <databasename> < db_upgrade.sql
+
+If you installed MySQL from source code you may have to add /usr/local/mysql/bin/ infront of those commands
+
+You could also cut and paste the sql statements from db_generate.sql into a
+package like phpMyAdmin.  You will need to have created the database ahead of
+time.
+
+4. Create core/custom_config_inc.php which overrides the default values in
+config_defaults_inc.php.  You can edit directly the config_defaults_inc.php but 
+this will make it harder to upgrade to future releases of phpWebNotes.  In particular you
+will want to set the database variables:  hostname, username, password, and
+database name.  These must be set to match the configuration of your webserver and mysql
+database.  Also, don't forget to input the correct directory paths.
+
+5.  For every page that you want notes to be available you will need to convert
+their extension to one that is interpreted by PHP (Such as .php).  Then:
+
+Insert the following inside the &lt;head&gt; &lt;/head&gt; tag):
+
+&lt;?
+	require_once('/mypath/core/api.php'); # replace with actual path
+	pwn_head();
+?&gt;
+
+Insert the following into the bottom of the document (before the &lt;/body&gt; tag):
+
+&lt;?
+	pwn_body( 'my-page-logical-name', $PHP_SELF, $page_prev, $page_next, $page_parent );
+?&gt;
+
+You can replace the 'my-page-logical-name' with __FILE__ or basename( __FILE__ ) 
+if you don't want to assign ids to the pages.
+
+The require_once argument should be the absolute path to your installation of
+phpWebNotes.  It should not be relative to what your browser would see.
+This way if you have lots of files in different directories you will always
+be able to add the web note functionality to each page.
+
+6. If you want the pages to auto-index (register themselves) in the database
+(default) then skip the next step.
+
+7.  You will need to index the files in your website.  Open up the phpWebNotes
+directory in your web browser and login.  The default username and password is
+administrator / root.  You should change this later on!  Open up the "File
+Index" page.  Select the root directory and then choose the Index button.  It
+indexes all files in the directory it is located in and all subdirectories.
+
+8. If you need the notes to be moderated before they appear on the webpage then
+leave $g_auto_accept_notes = OFF, otherwise set it to ON and go to step 11.
+
+9.  Notes will be added as pending.  They need to be approved by the moderator/
+administrator before they will become visible.  This can be done by loggin in and
+then visiting the page.  All notes will have the actions next to them, to approve
+a note, the [ Accept ] action should be clicked.
+
+10.  You can edit or delete notes later on by going to the page.  This option will 
+only be available if you have logged in as a moderator/administrator.
+
+11. The next step is to get the sample working.  This depends on the auto-index feature.
+For each page we need to index it, and add links to parent, previous, and next. All
+these links can only be established if the page we are linking to is already linked.
+Hence, we need to visit each page to index it, and we also need to visit it again when
+all its neighbours are indexed and already visited (i.e. they know they own urls).
+
+Webopedia
+ |_ Markup
+ |  |_ xml
+ |  |_ xhtml
+ |
+ |_ Web Services
+
+a. Visit http://.../webnotes/sample/webopedia.php		[ this will index webopedia page ]
+b. Visit http://.../webnotes/sample/markup.php			[ this will index markup, and add Webopedia as parent / prev ]
+c. Visit http://.../webnotes/sample/xml.php				[ this will index xml, add markup as parent, prev ]
+d. Visit http://.../webnotes/sample/xhtml.php			[ this will index xhtml, add markup as parent, xml as prev ]
+e. Visit http://.../webnotes/sample/webservices.php		[ this will index web services, add webopedia as parent, xhtml as prev ]
+f. Visit http://.../webnotes/sample/xhtml.php			[ this will add web services as next ]
+g. Visit http://.../webnotes/sample/xml.php				[ this will add xhtml as next ]
+h. Visit http://.../webnotes/sample/markup.php			[ this will add xml as next ]
+i. Visit http://.../webnotes/sample/webopedia.php		[ this will add markup as next ]
+
+-------------------------------------------------------------------------------
+### Troubleshooting ###
+-------------------------------------------------------------------------------
+
+* PROBLEM:  Warning messages prevent you from viewing or adding notes.
+
+SOLUTION: Your error_level is too high.  Open up your php.ini (or php3.ini)
+and lower it.  There should be enough comments around the variable to help you
+out.
+
+* PROBLEM:  After upgrading from phpWebNotes 1.0.0, I can not login.
+
+SOLUTION: Users were created in version 1.0.0 with enabled equal to 0.  This was not
+a problem in v1.0.0 because the enabled field was ignored.  However, in v2.0.0 enabled
+is checked.  In order to solve this problem, login to the database and set the enabled
+flag to 1 for the accounts that you need enabled.
+
+* PROBLEM: Adding notes does nothing
+
+SOLUTION: You may have track_vars set to Off (or 0).  Set this to On in your
+php.ini file.  As of version 4.0.3 and newer it is set to On by default.
+
+* PROBLEM: phpWebNotes does not work under PHP 4.2 and 4.3
+
+SOLUTION: phpWebNotes requires register_globals to be on which used to be enabled
+by default in 4.1.2 and older. 4.2.0 and newer have it set to Off as default so
+you will have to set register_globals to On in php.ini
+
+-------------------------------------------------------------------------------
+### Useful links ###
+-------------------------------------------------------------------------------
+
+See http://webnotes.sf.net/links.php for useful links.
