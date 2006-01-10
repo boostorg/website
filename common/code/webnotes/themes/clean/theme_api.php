@@ -129,6 +129,10 @@ HTML;
                 {
                     $t_id_view = "<span class=\"webnotes-edit\"><span class=\"webnotes-dash\">&mdash;</span> $t_visibility $t_moderation</span>";
                 }
+                else
+                {
+                    $t_id_view = '&nbsp;';
+                }
                 $t_id_bookmark = "<a name=\"$t_id\">$t_id</a>";
             }
             else
