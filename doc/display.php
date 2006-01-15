@@ -1,15 +1,10 @@
 <?php
-require dirname(__FILE__) . '/../common/code/extract.php';
+require dirname(__FILE__) . '/../common/code/archive_file.php';
 
-$path_info = archive_file_path('/^[\/]([^\.\/]+)[\/](.*)$/',$_SERVER["PATH_INFO"]);
+$_file = new archive_file('/^[\/]([^\.\/]+)[\/](.*)$/',$_SERVER["PATH_INFO"]);
 
-if (preg_match('/^.*png$/',$path_info[0])) {
-  header('Content-type: image/png');
-  #header('Content-Disposition: attachment; filename="downloaded.pdf"');
-  archive_file_extract($path_info);
-}
-else {
-require dirname(__FILE__) . '/../common/code/webnotes.php';
+if ($_file->is_raw()) { $_file->extract(); }
+else { require dirname(__FILE__) . '/../common/code/webnotes.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -35,14 +30,14 @@ require dirname(__FILE__) . '/../common/code/webnotes.php';
         <div class="section" id="docs">
           <div class="section-0">
             <div class="section-body">
-              <?php archive_file_extract($path_info); ?>
+              <?php $_file->extract(); ?>
             </div>
           </div>
         </div>
         <div class="section" id="notes">
           <div class="section-0">
             <div class="section-body">
-              <?php pwn_body($path_info[1],$_SERVER['PHP_SELF']); ?>
+              <?php pwn_body($_file->file_,$_SERVER['PHP_SELF']); ?>
             </div>
           </div>
         </div>
