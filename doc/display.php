@@ -27,10 +27,6 @@ else { require dirname(__FILE__) . '/../common/code/webnotes.php';
   <div id="body">
     <div id="body-inner">
       <div id="content">
-        <div id="sidebar">
-          <?php virtual("/common/sidebar-common.html");?><?php virtual("/common/sidebar-doc.html");?>
-        </div>
-
         <div class="section" id="docs">
           <div class="section-0">
             <div class="section-body">
@@ -42,7 +38,7 @@ else { require dirname(__FILE__) . '/../common/code/webnotes.php';
         <div class="section" id="notes">
           <div class="section-0">
             <div class="section-body">
-              <?php pwn_body($_file->file_,$_SERVER['PHP_SELF']); ?>
+              <?php pwn_body($_file->key_,$_SERVER['PHP_SELF']); ?>
             </div>
           </div>
         </div>

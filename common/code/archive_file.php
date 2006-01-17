@@ -169,6 +169,10 @@ class archive_file
         }
         $text = str_replace('<hr>','',$text);
         $text = str_replace('<table width="100%">','<table class="footer-table">',$text);
+        $text = preg_replace(
+            '@[\s]+(border|cellpadding|cellspacing|width|height|valign|frame|rules|naturalsizeflag|background)=[^\s>]+@i',
+            '',
+            $text );
         
         print $text;
     }
