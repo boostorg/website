@@ -12,7 +12,7 @@ else { require dirname(__FILE__) . '/../common/code/webnotes.php';
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <title>Boost C++ Libraries</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-doc.css" />
   <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
@@ -27,6 +27,10 @@ else { require dirname(__FILE__) . '/../common/code/webnotes.php';
   <div id="body">
     <div id="body-inner">
       <div id="content">
+        <div id="sidebar">
+          <?php virtual("/common/sidebar-common.html");?><?php virtual("/common/sidebar-doc.html");?>
+        </div>
+
         <div class="section" id="docs">
           <div class="section-0">
             <div class="section-body">
@@ -34,6 +38,7 @@ else { require dirname(__FILE__) . '/../common/code/webnotes.php';
             </div>
           </div>
         </div>
+
         <div class="section" id="notes">
           <div class="section-0">
             <div class="section-body">
@@ -41,10 +46,6 @@ else { require dirname(__FILE__) . '/../common/code/webnotes.php';
             </div>
           </div>
         </div>
-      </div>
-
-      <div id="sidebar">
-        <?php virtual("/common/sidebar-common.html");?><?php virtual("/common/sidebar-doc.html");?>
       </div>
 
       <div class="clear"></div>
@@ -69,7 +70,6 @@ else { require dirname(__FILE__) . '/../common/code/webnotes.php';
     </div>
 
     <div class="clear"></div>
-  </div>
+  </div><?php } ?>
 </body>
 </html>
-<?php } ?>
