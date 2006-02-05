@@ -7,7 +7,7 @@
 
 if ($_SERVER['HTTP_HOST'] === 'boost.sourceforge.net') {
 }
-else if ($_SERVER['HTTP_HOST'] === 'boost.borg.redshift-software.com:8080') {
+else if ($_SERVER['HTTP_HOST'] === 'boost.borg.redshift-software.com') {
     @define('ARCHIVE_PREFIX', 'C:/DevRoots/Boost/boost_');
     @define('UNZIP', 'unzip');
 }
@@ -52,6 +52,8 @@ class archive_file
     var $archive_ = NULL;
     var $extractor_ = NULL;
     var $type_ = NULL;
+    var $head_content_ = NULL;
+    var $content_ = NULL;
     
     function archive_file($pattern, $vpath)
     {
@@ -92,26 +94,43 @@ class archive_file
                 break;
             }
         }
+        
+        $unzip = UNZIP . ' -p "' . $this->archive_ . '" "' . $this->file_ . '"';
+        if (! $this->extractor_)
+        {
+            # File doesn't exist, or we don't know how to handle it.
+            header("HTTP/1.0 404 Not Found");
+            $this->extractor_ = 'raw';
+        }
+        else if ($this->extractor_ == 'raw')
+        {
+            $this->_extract_raw($unzip);
+        }
+        else
+        {
+            /* We pre-extract so we can get this like meta tag information
+               before we have to print it out. */
+            $this->content_ = $this->_extract_string($unzip);
+            $f = '_init_'.$this->extractor_;
+            $this->$f();
+        }
+    }
+    
+    function content_head()
+    {
+        if ($this->head_content_)
+        {
+            print $this->head_content_;
+        }
+        else
+        {
+            print '<meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />';
+        }
     }
     
     function is_raw()
     {
         return $this->extractor_ == 'raw';
-    }
-
-    function extract()
-    {
-        if ($this->extractor_)
-        {
-            $f = '_extract_' . $this->extractor_;
-            $unzip = UNZIP . ' -p "' . $this->archive_ . '" "' . $this->file_ . '"';
-            $this->$f($unzip);
-        }
-        else
-        {
-            # File doesn't exist, or we don't know how to handle it.
-            header("HTTP/1.0 404 Not Found");
-        }
     }
 
     function _extract_string($unzip)
@@ -133,21 +152,39 @@ class archive_file
         fpassthru($file_handle);
         pclose($file_handle);
     }
+    
+    function content()
+    {
+        if ($this->extractor_)
+        {
+            $f = '_content_'.$this->extractor_;
+            $this->$f();
+        }
+    }
 
-    function _extract_text($unzip)
+    function _init_text()
+    {
+    }
+    
+    function _content_text()
     {
         print "<h3>".$this->key_."</h3>\n";
         print "<pre>\n";
-        print htmlentities($this->_extract_string($unzip));
+        print htmlentities($this->content_);
         print "</pre>\n";
     }
 
-    function _extract_cpp($unzip)
+    function _init_cpp()
     {
+    }
+
+    function _content_cpp()
+    {
+        $text = htmlentities($this->content_);
+        
         print "<h3>".$this->key_."</h3>\n";
         print "<pre>\n";
         $root = dirname(preg_replace('@([^/]+/)@','../',$this->key_));
-        $text = htmlentities($this->_extract_string($unzip));
         $text = preg_replace(
             '@(#[ ]*include[ ]*&lt;)(boost[^&]+)@Ssm',
             '${1}<a href="'.$root.'/${2}">${2}</a>',
@@ -156,9 +193,19 @@ class archive_file
         print "</pre>\n";
     }
 
-    function _extract_boost_book_html($unzip)
+    function _init_boost_book_html()
     {
-        $text = $this->_extract_string($unzip);
+        preg_match('@text/html; charset=([^\s"]+)@i',$this->content_,$charset);
+        if (isset($charset[1]))
+        {
+            $this->head_content_ = '<meta http-equiv="Content-Type" content="text/html; charset='.$charset[1].'" />';
+        }
+    }
+
+    function _content_boost_book_html()
+    {
+        $text = $this->content_;
+        
         $text = substr($text,strpos($text,'<div class="spirit-nav">'));
         $text = substr($text,0,strpos($text,'</body>'));
         for ($i = 0; $i < 8; $i++) {
@@ -177,9 +224,18 @@ class archive_file
         print $text;
     }
 
-    function _extract_boost_libs_html($unzip)
+    function _init_boost_libs_html()
     {
-        $text = $this->_extract_string($unzip);
+        preg_match('@text/html; charset=([^\s"]+)@i',$this->content_,$charset);
+        if (isset($charset[1]))
+        {
+            $this->head_content_ = '<meta http-equiv="Content-Type" content="text/html; charset='.$charset[1].'" />';
+        }
+    }
+
+    function _content_boost_libs_html()
+    {
+        $text = $this->content_;
         
         preg_match('@<title>([^<]+)</title>@i',$text,$title);
         

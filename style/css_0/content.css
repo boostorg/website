@@ -70,11 +70,20 @@
 #content .section a.external:visited {
   border-bottom: 1px dashed #902020;
 }
+#content .section a[name] {
+  border: none;
+}
+#content .section a[name]:hover {
+  color: #000000;
+}
+#content .section a[name]:visited {
+  border: none;
+}
 /* Standard text markups. Mostly defaults. */
 /* #content .section em { } */
-#content .section strong { font-weight: bold; }
+#content .section strong { font-weight: 900; }
 /* #content .section cite { } */
-/* #content .section dfn { } */
+#content .section dfn { font-weight: 700; font-style: normal; }
 /* #content .section code { } */
 /* #content .section samp { } */
 /* #content .section kbd { } */
@@ -207,28 +216,16 @@
 }
 #content .section .note .note-body {
 }
-/* Lists use a minimal decoration of a '+' bullet but only for subitems.
-   This styling provides a consistent look on all browsers. */
 /* Default style, as in straight in content, lists... */
 #content .section ul {
-  margin: 0.75em 0em 0em 0em;
+  margin: 0.25em 0em 0.25em 0em;
   padding: 0em;
 }
 #content .section ul li {
-  display: block;
-  margin: 0em;
-  padding: 0em 0em 0em 1em;
-  list-style-type: none;
-  background: url(boost_bullet.gif) no-repeat 0em 0.5em;
+  margin: 0em 0em 0em 1em;
+  padding: 0em 0em 0em 0em;
+  list-style: square;
   text-indent: 0em;
-}
-#content .section ul ul {
-  margin: 0em;
-  padding: 0em 0em 0em 1em;
-}
-#content .section ul li ul {
-  margin: 0em;
-  padding: 0em;
 }
 /* Table of contents lists... */
 #content .section ul.toc {
@@ -239,12 +236,25 @@
 }
 #content .section ul.toc li
 {
-  display: block;
   margin: 0em;
-  padding: 0em 0em 0em 1em;
+  padding: 0em;
   list-style-type: none;
-  background: url(boost_bullet.gif) no-repeat 0em 0.5em;
   text-indent: 0em;
+}
+#content .section ul.toc li ul li
+{
+  margin: 0em 0em 0em 1em;
+}
+#content .section ul.toc a {
+  display: block;
+  width: 100%;
+  border: none;
+}
+#content .section ul.toc a:hover {
+  background: #DDDDDD;
+}
+#content .section ul.toc a:visited {
+  border: none;
 }
 /* History style lists, the first level doesn't get bullets... */
 #content .section ul.history {
@@ -263,11 +273,9 @@
   padding: 0em;
 }
 #content .section ul.history li ul li {
-  display: block;
-  margin: 0em;
-  padding: 0em 0em 0em 1em;
-  list-style-type: none;
-  background: url(boost_bullet.gif) no-repeat 0em 0.5em;
+  margin: 0em 0em 0em 1em;
+  padding: 0em;
+  list-style-type: square;
   text-indent: 0em;
 }
 /* Catalog style lists, the first level doesn't get bullets... */
@@ -288,41 +296,45 @@
   padding: 0em 0em 0em 1em;
 }
 /* A directory, as in the index for the people. */
-#content .section ul.directory {
+#content .section ul.directory,
+#content .section .directory
+{
   padding: 0em;
-  list-style-type: none;
+  margin: 0em;
 }
-#content .section ul.directory li {
+#content .section ul.directory li,
+#content .section .directory .directory-item
+{
+  display: block;
   float: left;
   width: 45%;
   margin: 0em;
   padding: 0em 1em 1em 0em;
   text-indent: 0em;
-  background: none;
+  list-style-type: none;
+}
+#content .section ul.directory li * {
+  float: none !important;
 }
 #content .section ul.directory li ul {
-  margin: 0.75em 1em 0em 0em;
+  margin: 0.25em 0em 0.25em 0em;
   padding: 0em;
 }
 #content .section ul.directory li ul li {
-  display: block;
-  float: none;
-  width: 100%;
-  margin: 0em;
-  padding: 0em 0em 0em 1em;
-  list-style-type: none;
-  background: url(boost_bullet.gif) no-repeat 0em 0.5em;
+  display: list-item;
+  padding: 0em 0em 0em 0em;
   text-indent: 0em;
+  list-style-type: square;
 }
-#content .section .directory {
-  padding: 0em;
+#content .section ul.directory li ul li {
+  /* For IE. */
+  width: 95%;
+  margin: 0em 0em 0em 1.25em;
 }
-#content .section .directory .directory-item {
-  float: left;
-  width: 45%;
-  margin: 0em;
-  padding: 0em 1em 1em 0em;
-  text-indent: 0em;
+#content .section ul.directory > li ul li {
+  /* For non-broken browsers. */
+  width: inherit !important;
+  margin: 0em 0em 0em 1em;
 }
 /* Default style, as in straight in content, ordered lists... */
 #content .section ol {

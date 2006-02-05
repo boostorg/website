@@ -3,8 +3,7 @@ require dirname(__FILE__) . '/../common/code/archive_file.php';
 
 $_file = new archive_file('/^[\/]([^\.\/]+)[\/](.*)$/',$_SERVER["PATH_INFO"]);
 
-if ($_file->is_raw()) { $_file->extract(); }
-else { require dirname(__FILE__) . '/../common/code/webnotes.php';
+if (!$_file->is_raw()) { require dirname(__FILE__) . '/../common/code/webnotes.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -12,7 +11,7 @@ else { require dirname(__FILE__) . '/../common/code/webnotes.php';
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <title>Boost C++ Libraries</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+  <?php $_file->content_head(); ?>
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-doc.css" />
   <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
@@ -30,7 +29,7 @@ else { require dirname(__FILE__) . '/../common/code/webnotes.php';
         <div class="section" id="docs">
           <div class="section-0">
             <div class="section-body">
-              <?php $_file->extract(); ?>
+              <?php $_file->content(); ?>
             </div>
           </div>
         </div>

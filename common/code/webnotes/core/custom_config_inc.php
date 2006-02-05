@@ -8,7 +8,7 @@
 if ($_SERVER['HTTP_HOST'] === 'boost.sourceforge.net') {
     require '';
 }
-else if ($_SERVER['HTTP_HOST'] === 'boost.borg.redshift-software.com:8080') {
+else if ($_SERVER['HTTP_HOST'] === 'boost.borg.redshift-software.com') {
     require 'C:/DevRoots/Boost/Boost_webnotes_inc.php';
 }
 else if ($_SERVER['HTTP_HOST'] === 'boost.redshift-software.com') {
