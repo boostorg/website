@@ -272,7 +272,10 @@ class archive_file
         #{
         #    $text = substr($text,$h1_begin[0][1]);
         #}
-        $text = "<h1>${title[1]}</h1>\n" . $text;
+        if (isset($title[1]))
+        {
+            $text = "<h1>${title[1]}</h1>\n" . $text;
+        }
         $text = preg_replace(
             '@(<a[^>]+>[\s]*)?<img.*boost\.png[^>]*>([\s]*</a>)?@i',
             '',
