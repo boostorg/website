@@ -241,6 +241,10 @@ class archive_file
         
         preg_match('@<body[^>]*>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
         preg_match('@</body>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
+        if (!isset($body_begin[0]))
+        {
+            return;
+        }
         $text = substr($text,
             $body_begin[0][1]+strlen($body_begin[0][0]),
             $body_end[0][1]-($body_begin[0][1]+strlen($body_begin[0][0])) );
