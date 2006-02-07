@@ -10,7 +10,6 @@ if (!$_file->is_raw()) { require dirname(__FILE__) . '/../common/code/webnotes.p
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Boost C++ Libraries</title>
   <?php $_file->content_head(); ?>
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-doc.css" />

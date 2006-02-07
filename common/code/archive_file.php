@@ -64,20 +64,21 @@ class archive_file
         if ($info_map == NULL)
         {
             $info_map = array(
-                array('/^libs\/iostreams\/doc\/.*(html|htm)$/i','raw','text/html'),
-                array('/^libs\/preprocessor\/doc\/.*(html|htm)$/i','raw','text/html'),
-                array('/^libs\/serialization\/doc\/.*(html|htm)$/i','raw','text/html'),
-                array('/^libs\/.*(html|htm)$/i','boost_libs_html','text/html'),
-                array('/^doc\/html\/.*html$/i','boost_book_html','text/html'),
-                array('/[.](txt|py|rst)$/i','text','text/plain'),
-                array('/[.](cpp|hpp)$/i','cpp','text/plain'),
-                array('/[.]png$/i','raw','image/png'),
-                array('/[.]gif$/i','raw','image/gif'),
-                array('/[.](jpg|jpeg|jpe)$/i','raw','image/jpeg'),
-                array('/[.]css$/i','raw','text/css'),
-                array('/[.]js$/i','raw','application/x-javascript'),
-                array('/[.]pdf$/i','raw','application/pdf'),
-                array('/^boost\/.*$/i','text','text/plain'),
+                array('@^libs/iostreams/doc/.*(html|htm)$@i','raw','text/html'),
+                array('@^libs/preprocessor/doc\.*(html|htm)$@i','raw','text/html'),
+                array('@^libs/serialization/doc/.*(html|htm)$@i','raw','text/html'),
+                array('@^libs/preprocessor/doc/.*(html|htm)$@i','raw','text/html'),
+                array('@^libs.*(html|htm)$@i','boost_libs_html','text/html'),
+                array('@^doc/html/.*html$@i','boost_book_html','text/html'),
+                array('@[.](txt|py|rst)$@i','text','text/plain'),
+                array('@[.](cpp|hpp)$@i','cpp','text/plain'),
+                array('@[.]png$@i','raw','image/png'),
+                array('@[.]gif$@i','raw','image/gif'),
+                array('@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
+                array('@[.]css$@i','raw','text/css'),
+                array('@[.]js$@i','raw','application/x-javascript'),
+                array('@[.]pdf$@i','raw','application/pdf'),
+                array('@^boost/.*$@i','text','text/plain'),
                 );
         }
         
@@ -124,7 +125,11 @@ class archive_file
         }
         else
         {
-            print '<meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />';
+            print <<<HTML
+  <title>Boost C++ Libraries</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+HTML
+                ;
         }
     }
     
@@ -193,18 +198,73 @@ class archive_file
         print "</pre>\n";
     }
 
-    function _init_boost_book_html()
+    function _init_html_pre()
     {
+        $h = '';
+        
         preg_match('@text/html; charset=([^\s"]+)@i',$this->content_,$charset);
         if (isset($charset[1]))
         {
-            $this->head_content_ = '<meta http-equiv="Content-Type" content="text/html; charset='.$charset[1].'" />';
+            $h .= <<<HTML
+  <meta http-equiv="Content-Type" content="text/html; charset=${charset[1]}" />
+HTML
+                ;
         }
+        
+        preg_match('@<title>([^<]+)</title>@i',$this->content_,$title);
+        if (isset($title[1]))
+        {
+            $h .= <<<HTML
+  <title>Boost C++ Libraries - ${title[1]}</title>
+HTML
+                ;
+        }
+        else if ($h !== '')
+        {
+            $h .= <<<HTML
+  <title>Boost C++ Libraries</title>
+HTML
+                ;
+        }
+        
+        if ($h !== '')
+        {
+            $this->head_content_ = $h;
+        }
+    }
+    
+    function _content_html_pre()
+    {
+        $text = $this->content_;
+        
+        $text = preg_replace(
+            '@href="?http://www.boost.org/?([^"\s]*)"?@i',
+            'href="/${1}"',
+            $text );
+        $text = preg_replace(
+            '@href="?(?:\.\./)+people/(.*\.htm)"?@i',
+            'href="/users/people/${1}l"',
+            $text );
+        $text = preg_replace(
+            '@href="?(?:\.\./)+(LICENSE_.*\.txt)"?@i',
+            'href="/${1}"',
+            $text );
+        $text = preg_replace(
+            '@<a\s+(class="[^"]+")?\s*href="?(http|mailto)(:[^"\s]*)"?@i',
+            '<a class="external" href="${2}${3}"',
+            $text );
+        
+        return $text;
+    }
+
+    function _init_boost_book_html()
+    {
+        $this->_init_html_pre();
     }
 
     function _content_boost_book_html()
     {
-        $text = $this->content_;
+        $text = $this->_content_html_pre();
         
         $text = substr($text,strpos($text,'<div class="spirit-nav">'));
         $text = substr($text,0,strpos($text,'</body>'));
@@ -226,18 +286,12 @@ class archive_file
 
     function _init_boost_libs_html()
     {
-        preg_match('@text/html; charset=([^\s"]+)@i',$this->content_,$charset);
-        if (isset($charset[1]))
-        {
-            $this->head_content_ = '<meta http-equiv="Content-Type" content="text/html; charset='.$charset[1].'" />';
-        }
+        $this->_init_html_pre();
     }
 
     function _content_boost_libs_html()
     {
-        $text = $this->content_;
-        
-        preg_match('@<title>([^<]+)</title>@i',$text,$title);
+        $text = $this->_content_html_pre();
         
         preg_match('@<body[^>]*>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
         preg_match('@</body>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
@@ -245,15 +299,23 @@ class archive_file
         {
             return;
         }
-        $text = substr($text,
-            $body_begin[0][1]+strlen($body_begin[0][0]),
-            $body_end[0][1]-($body_begin[0][1]+strlen($body_begin[0][0])) );
+        else if (!isset($body_end[0]))
+        {
+            $text = substr($text,
+                $body_begin[0][1]+strlen($body_begin[0][0]));
+        }
+        else
+        {
+            $text = substr($text,
+                $body_begin[0][1]+strlen($body_begin[0][0]),
+                $body_end[0][1]-($body_begin[0][1]+strlen($body_begin[0][0])) );
+        }
         
         # nasty code, because (?!fubar) causes an ICE...
         preg_match('@<table@i',$text,$table_begin,PREG_OFFSET_CAPTURE);
         preg_match('@</table>@i',$text,$table_end,PREG_OFFSET_CAPTURE);
-        if (isset($table_end[0]) && strpos(substr($text,0,$table_end[0][1]),
-            'boost.png',$table_begin[0][1]) !== FALSE)
+        if (isset($table_begin[0]) && isset($table_end[0]) &&
+            strpos(substr($text,0,$table_end[0][1]),'boost.png',$table_begin[0][1]) !== FALSE)
         {
             $text = substr($text,$table_end[0][1]+strlen($table_end[0][0]));
         }
@@ -272,10 +334,10 @@ class archive_file
         #{
         #    $text = substr($text,$h1_begin[0][1]);
         #}
-        if (isset($title[1]))
-        {
-            $text = "<h1>${title[1]}</h1>\n" . $text;
-        }
+        #if (isset($title[1]))
+        #{
+        #    $text = "<h1>${title[1]}</h1>\n" . $text;
+        #}
         $text = preg_replace(
             '@(<a[^>]+>[\s]*)?<img.*boost\.png[^>]*>([\s]*</a>)?@i',
             '',
@@ -335,6 +397,10 @@ class archive_file
         $text = preg_replace(
             '@<table>([\s]+<tr>[\s]+<td)[\s]+class="note_box">@i',
             '<table class="note_box">${1}>',
+            $text );
+        $text = preg_replace(
+            '@<table>([\s]+<tr>[\s]+<td[\s]+class="table_title">)@i',
+            '<table class="toc">${1}',
             $text );
         $text = preg_replace(
             '@src=".*theme/u_arr\.gif"@i',
