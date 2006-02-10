@@ -1,6 +1,9 @@
 RewriteEngine On
 RewriteBase /doc
 
+RewriteRule ^wiki$ wiki/ [R]
+RewriteRule ^wiki/(.*)$ wiki.php/$1 [L]
+
 # The libs that are *not* documented with BoostBook:
 RewriteRule ^assign(/)?(index.html)?(.*)$ release/libs/assign/doc$1$2$3 [R]
 RewriteRule ^bind/(.*)$ release/libs/bind/$1 [R]
@@ -61,7 +64,7 @@ RewriteRule ^value_initialized$ release/libs/utility/value_init.htm [R]
 RewriteRule ^wave$ release/libs/wave/index.html [R]
 
 # Everything else is in the BoostBook doc/* subdir of the archives:
-RewriteRule ^([^/]+)[/]?$ release/doc/html/$1.html [R]
+RewriteRule ^html([^/]+)[/]?$ release/doc/html/$1.html [R]
 
 # In case we don't get a file looking URI we send it to the index.html file.
 #~ RewriteRule ^(release|development)/(boost/[^.]+\.[a-z]+)$ $1/$2 [R,L]
