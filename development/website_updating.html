@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>Boost C++ Libraries - Updating Website</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+  <link rel="icon" href="/favicon.ico" type="image/ico" />
+  <link rel="stylesheet" type="text/css" href=
+  "/style/section-development.css" />
+  <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
+</head>
+
+<body>
+  <div id="heading">
+    <!--#include virtual="/common/heading.html" -->
+  </div>
+
+  <div id="body">
+    <div id="body-inner">
+      <div id="content">
+        <div class="section" id="intro">
+          <div class="section-0">
+            <div class="section-title">
+              <h1>Updating and Editing Website Content</h1>
+            </div>
+
+            <div class="section-body">
+              <h2>Getting Content</h2>
+
+              <p>The website content lives as a sibling project of the Boost
+              sources. This makes it easy to keep the website content up to
+              date without interfeering with the development and release of
+              the Boost Libraries. To get the content follow the regular
+              <a href="http://sourceforge.net/cvs/?group_id=7586" class=
+              "external">Sourceforge CVS instructions</a> but using
+              <strong><tt>website</tt></strong> as the module to obtain. For
+              example:</p>
+              <pre>
+cvs -z3 -d:ext:<i>developername</i>@cvs.sourceforge.net:/cvsroot/boost co -P website
+</pre>
+
+              <h2>Existing Page</h2>
+
+              <p>The web content is structured to be as simple as possible to
+              make generic editing possible. At minimum only a text editor
+              and <a href="http://tidy.sourceforge.com/" class=
+              "external">HTML Tidy</a> are needed to edit content. The
+              content uses <a href="http://www.w3.org/TR/xhtml1/" class=
+              "external">XHTML 1.0 Strict</a> for various reasons, the most
+              important being to increase accessibility and to enforce the
+              separation of style from content. After getting the content you
+              want to edit as above, make the changes you want and run the
+              result through HTML Tidy with these options:</p>
+              <pre>
+tidy --tidy-mark no -i -wrap 78 -m -asxhtml --doctype strict <i>fname</i>
+</pre>
+
+              <p>Running HTML Tidy with a consistent set of options also
+              helps in keeping an accurate change history in CVS. There are
+              <a href="/development/exemplar.html">examples</a> of the kinds
+              of styles supported either directly or through the use of
+              [<tt>class="<i>value</i>"</tt>] attributes for the various
+              XHTML tags. Please pay attention to any errors and warning that
+              HTML Tidy mentions and strive to remove all of them.</p>
+
+              <p>The pages should be viewable in most browsers. If possible
+              test you changes in as many as possible. Preferably at least
+              with IE and one other modern browser if you are on Windows. But
+              if you are on another platform testing with the "default"
+              browser is best. Normally viewing the page in outside of the a
+              web server context will only show you the content and part of
+              the footer. This is because the site uses Server Side Includes
+              (SSI) which most browsers will not process. To look at the
+              complete content you will need to either run your own Apache
+              server, or wait for the <a href=
+              "http://boost.redshift-software.com/" class="external">test
+              site</a> to update with the new content.</p>
+
+              <h2>New Page</h2>
+
+              <p>To make adding new pages easier there is a <a href=
+              "/workplace/template.html">template</a> to get one started. To
+              start copy the template to the section of the website you want
+              to add to and name the new file with a reasonably clear name.
+              The section is up to you but the inteded type of content for
+              each is:</p>
+
+              <dl>
+                <dt><dfn>Introduction</dfn></dt>
+
+                <dd>Content to help new users in uderstanding what Boost is
+                for and what it is about. This is the one place where new
+                visitors are going to visit. Directory:
+                <tt>website/users</tt></dd>
+
+                <dt><dfn>Community</dfn></dt>
+
+                <dd>For users who are interested in participating, or are
+                already participitating, this section describes how the Boost
+                community of users and developers functions. Directory:
+                <tt>website/community</tt></dd>
+
+                <dt><dfn>Development</dfn></dt>
+
+                <dd>Prospective or existing Boost developers make use of this
+                section to quickly get to the most frequetly used content.
+                This section is intended to hold the references to resources
+                or directly include content that changes frequently. Or
+                content that only pertains to library developers, although it
+                may be of more widespread interest as users become more
+                involved in the Boost community. Directory:
+                <tt>website/development</tt></dd>
+
+                <dt><dfn>Support</dfn></dt>
+
+                <dd>Content to help users in getting problems resolved can go
+                here. This would include both public support as informally
+                provided by the Boost developers and the over all Boost
+                community and commercial support when available. Directory:
+                <tt>website/support</tt></dd>
+
+                <dt><dfn>Documentation</dfn></dt>
+
+                <dd>This section organizes documents specific to the Boost
+                libraries. This includes at minimum the library documentation
+                published with each of the Boost releases. Also included is
+                access to the community maintained Wiki. Directory:
+                <tt>website/support</tt></dd>
+              </dl>
+
+              <p>To provide the section user interface look and feel there
+              are some changes that need to be done to the template:</p>
+
+              <ul>
+                <li>
+                  <p>Each section has a different CSS style reference
+                  included in the <tt>head</tt> section. This reference needs
+                  to change to one of:</p>
+
+                  <ul>
+                    <li>Introduction: <tt>/style/section-boost.css</tt></li>
+
+                    <li>Community: <tt>/style/section-community.css</tt></li>
+
+                    <li>Development:
+                    <tt>/style/section-development.css</tt></li>
+
+                    <li>Support: <tt>/style/section-support.css</tt></li>
+
+                    <li>Documentation: <tt>/style/section-doc.css</tt></li>
+                  </ul>
+                </li>
+
+                <li>
+                  <p>Each section displays a different context sensitive
+                  sidebar menu through the use of SSI. The reference to the
+                  sidebar to display needs to change in the <tt>sidebar</tt>
+                  section to one of:</p>
+
+                  <ul>
+                    <li>Introduction:
+                    <tt>/common/sidebar-boost.html</tt></li>
+
+                    <li>Community:
+                    <tt>/common/sidebar-community.html</tt></li>
+
+                    <li>Development:
+                    <tt>/common/sidebar-development.html</tt></li>
+
+                    <li>Support: <tt>/common/sidebar-support.html</tt></li>
+
+                    <li>Documentation: <tt>/common/sidebar-doc.html</tt></li>
+                  </ul>
+
+                  <p>In the <tt>sidebar</tt> section there are two menus
+                  included the first is common to all the pages and contains
+                  the download link and search box. Do not replace that
+                  sidebar (<tt>/common/sidebar-common.html</tt>). It's the
+                  second <tt>#include</tt> that should be changed to reflect
+                  the current section.</p>
+                </li>
+
+                <li>
+                  <p>Since this is a new page, you will also need to insert
+                  your own corresponding copyright in the footer.</p>
+                </li>
+
+                <li>
+                  <p>To insert the new content you need to insert it into the
+                  <tt>section-body</tt> section. Replace the <tt>{stuff}</tt>
+                  placeholder with the content you want. In addition you
+                  might also want to change the title, in the <tt>head</tt>,
+                  and in the <tt>section-title</tt> section.</p>
+                </li>
+              </ul>
+
+              <p>In addition to the immediate content for the new page one
+              needs to add an entry to the page so it can be accessed from
+              the sidebar and index. See below...</p>
+
+              <h2>Menus, Sidebars, and Index</h2>
+
+              <p>The various navigation elements are structured to make
+              adding new entries easy and to keep all places where wuch
+              entries show consistent. To do this the site makes use of SSI
+              to reduce the locations that have those entries to
+              <em>one</em>. This means that changing it at the single common
+              place one doesn't have to worry about changing all the pages,
+              they all reflect the new content immediately. To add items to
+              the various section menus edit the corresponding menu file in
+              the <tt>website/common</tt> directory:</p>
+
+              <ul>
+                <li>Introduction: <tt>/common/menu-boost.html</tt></li>
+
+                <li>Community: <tt>/common/menu-community.html</tt></li>
+
+                <li>Development: <tt>/common/menu-development.html</tt></li>
+
+                <li>Support: <tt>/common/menu-support.html</tt></li>
+
+                <li>Documentation: <tt>/common/menu-doc.html</tt></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sidebar">
+        <!--#include virtual="/common/sidebar-common.html" -->
+        <!--#include virtual="/common/sidebar-development.html" -->
+      </div>
+
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <div id="footer-left">
+      <div id="revised">
+        <p>Revised $Date$</p>
+      </div>
+
+      <div id="copyright">
+        <p>Copyright Rene Rivera 2006.</p>
+      </div><!--#include virtual="/common/footer-license.html" -->
+    </div>
+
+    <div id="footer-right">
+      <!--#include virtual="/common/footer-banners.html" -->
+    </div>
+
+    <div class="clear"></div>
+  </div>
+</body>
+</html>
