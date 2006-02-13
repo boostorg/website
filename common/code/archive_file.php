@@ -67,6 +67,7 @@ class archive_file
                 array('@^libs/iostreams/doc/.*(html|htm)$@i','raw','text/html'),
                 array('@^libs/preprocessor/doc\.*(html|htm)$@i','raw','text/html'),
                 array('@^libs/serialization/doc/.*(html|htm)$@i','raw','text/html'),
+                ##array('@^libs/serialization/doc/index.html$@i','boost_frame1_html','text/html'),
                 array('@^libs/preprocessor/doc/.*(html|htm)$@i','raw','text/html'),
                 array('@^libs.*(html|htm)$@i','boost_libs_html','text/html'),
                 array('@^doc/html/.*html$@i','boost_book_html','text/html'),
@@ -445,6 +446,33 @@ HTML
         $text = preg_replace(
             '@(<img src=".*theme/(?:arrow)\.gif")>@i',
             '${1} class="inline">',
+            $text );
+        
+        print $text;
+    }
+
+    function _init_boost_frame1_html()
+    {
+        $this->_init_html_pre();
+    }
+
+    function _content_boost_frame1_html()
+    {
+        $text = $this->_content_html_pre();
+        
+        $text = substr($text,strpos($text,'<div class="spirit-nav">'));
+        $text = substr($text,0,strpos($text,'</body>'));
+        for ($i = 0; $i < 8; $i++) {
+            $text = preg_replace(
+                '@<img src="[\./]*images/(.*\.png)" alt="(.*)"([ ][/])?>@Ssm',
+                '<img src="/style/css_0/${1}" alt="${2}" />',
+                $text );
+        }
+        $text = str_replace('<hr>','',$text);
+        $text = str_replace('<table width="100%">','<table class="footer-table">',$text);
+        $text = preg_replace(
+            '@[\s]+(border|cellpadding|cellspacing|width|height|valign|frame|rules|naturalsizeflag|background)=[^\s>]+@i',
+            '',
             $text );
         
         print $text;
