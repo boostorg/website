@@ -12,7 +12,7 @@ class boost_wiki
     
     function boost_wiki($uri)
     {
-        if ($_SERVER["PATH_INFO"] && $_SERVER["PATH_INFO"] != '/')
+        if (isset($_SERVER["PATH_INFO"]) && $_SERVER["PATH_INFO"] != '/')
         {
             $uri .= '?'.substr($_SERVER["PATH_INFO"],1);
         }
