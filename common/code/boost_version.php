@@ -7,18 +7,25 @@
 
 function boost_version($v,$r,$p)
 {
-    $vinfo = array();
-    preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$_SERVER["PATH_INFO"],$vinfo);
-    if (isset($vinfo[0]))
+    if (isset($_SERVER["PATH_INFO"]))
     {
-        return
-          ($v < $vinfo[1]) ||
-          ($v == $vinfo[1] && $r < $vinfo[2]) ||
-          ($v == $vinfo[1] && $r == $vinfo[2] && $p <= $vinfo[3]);
+        $vinfo = array();
+        preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$_SERVER["PATH_INFO"],$vinfo);
+        if (isset($vinfo[0]))
+        {
+            return
+              ($v < $vinfo[1]) ||
+              ($v == $vinfo[1] && $r < $vinfo[2]) ||
+              ($v == $vinfo[1] && $r == $vinfo[2] && $p <= $vinfo[3]);
+        }
+        else
+        {
+            return FALSE;
+        }
     }
     else
     {
-        return FALSE;
+        return TRUE;
     }
 }
 ?>
