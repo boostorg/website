@@ -3,7 +3,14 @@ require dirname(__FILE__) . '/../common/code/boost_version.php';
 require dirname(__FILE__) . '/../common/code/libraries.php';
 
 $libs = new boost_libraries(dirname(__FILE__) . '/../libraries.xml');
-$libs->sort_by('name');
+if (isset($_REQUEST['sort']))
+{
+  $libs->sort_by($_REQUEST['sort']);
+}
+else
+{
+  $libs->sort_by('name');
+}
 
 function libref($lib)
 {
@@ -57,9 +64,7 @@ function libbuildlink($lib)
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-doc.css" />
   <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
-</head><!--
-<?php print_r($libs->db); ?>
--->
+</head>
 
 <body>
   <div id="heading">
@@ -76,6 +81,24 @@ function libbuildlink($lib)
             </div>
 
             <div class="section-body">
+              <ul class="menu">
+                <li>Sort By</li>
+
+                <li><a href="?sort=name">Name</a></li>
+
+                <li><a href="?sort=boost-version">Available</a></li>
+
+                <li><a href="?sort=std-proposal">STD Proposal</a></li>
+
+                <li><a href="?sort=std-tr1">STD::TR1</a></li>
+
+                <li><a href="?sort=header-only">Header Only Use</a></li>
+
+                <li><a href="?sort=autolink">Automatic Linking</a></li>
+
+                <li><a href="?sort=key">Key</a></li>
+              </ul>
+
               <dl class="">
                 <?php
                 foreach ($libs->db as $key => $lib) {
@@ -86,7 +109,7 @@ function libbuildlink($lib)
 
                 <dd>
                   <p>
-                  <?php echo ($lib['description'] ? $lib['description'] : '&nbsp;'); ?></p>
+                  <?php echo ($lib['description'] ? htmlentities($lib['description'],ENT_NOQUOTES,'UTF-8') : '&nbsp;'); ?></p>
 
                   <dl class="fields">
                     <dt>Author(s)</dt>
