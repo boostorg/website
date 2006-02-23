@@ -86,7 +86,7 @@ function libbuildlink($lib)
 
                 <li><a href="?sort=name">Name</a></li>
 
-                <li><a href="?sort=boost-version">Available</a></li>
+                <li><a href="?sort=boost-version">First Release</a></li>
 
                 <li><a href="?sort=std-proposal">STD Proposal</a></li>
 
@@ -116,7 +116,7 @@ function libbuildlink($lib)
 
                     <dd><?php libauthors($lib); ?></dd>
 
-                    <dt>Available</dt>
+                    <dt>First&nbsp;Release</dt>
 
                     <dd><?php libavailable($lib); ?></dd>
 
