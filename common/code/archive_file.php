@@ -5,7 +5,10 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-if ($_SERVER['HTTP_HOST'] === 'boost.sourceforge.net') {
+if ($_SERVER['HTTP_HOST'] === 'boost.org' ||
+  $_SERVER['HTTP_HOST'] === 'beta.boost.org') {
+    @define('ARCHIVE_PREFIX', '/home/grafik/www.boost.org/boost_');
+    @define('UNZIP', '/usr/bin/unzip');
 }
 else if ($_SERVER['HTTP_HOST'] === 'boost.borg.redshift-software.com') {
     @define('ARCHIVE_PREFIX', 'C:/DevRoots/Boost/boost_');
