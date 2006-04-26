@@ -5,8 +5,9 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-if ($_SERVER['HTTP_HOST'] === 'boost.sourceforge.net') {
-    require '';
+if ($_SERVER['HTTP_HOST'] === 'boost.org' ||
+  $_SERVER['HTTP_HOST'] === 'beta.boost.org') {
+    require '/home/grafik/www.boost.org/Boost_webnotes_inc.php';
 }
 else if ($_SERVER['HTTP_HOST'] === 'boost.borg.redshift-software.com') {
     require 'C:/DevRoots/Boost/Boost_webnotes_inc.php';
