@@ -2,6 +2,7 @@
 require dirname(__FILE__) . '/common/code/feed.php';
 $_news = new boost_feed(dirname(__FILE__) . '/news.rss', '/users/news');
 $_news->sort_by('pubdate');
+$_downloads = new boost_feed(dirname(__FILE__) . '/downloads.rss', '/users/download');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -92,9 +93,9 @@ $_news->sort_by('pubdate');
                       <li><span class=
                       "news-title"><?php print '<a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
                       <span class=
-                      "news-description"><?php print $_item['description']; ?></span>
+                      "news-description"><?php print $_item['brief']; ?></span>
                       <span class=
-                      "news-date"><?php print gmdate('F jS, Y H:i e',$_item['pubdate']); ?></span></li><?php } ?>
+                      "news-date"><?php print $_item['date']; ?></span></li><?php } ?>
                     </ul>
 
                     <p><a href="/users/news">More News...</a> (<a href=
@@ -107,25 +108,18 @@ $_news->sort_by('pubdate');
                     <h2>Downloads</h2>
 
                     <ul>
-                      <li><a href=
-                      "http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=376197"
-                         class="external">Boost 1.33.1</a></li>
+                      <?php $_count = 0; foreach ( $_downloads->db as $_guid => $_item ) { $_count += 1; if ($_count > 5) { break; } ?>
 
-                      <li><a href=
-                      "http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=159715&amp;release_id=376194"
-                         class="external">Boost 1.33.1 Documentation</a></li>
-
-                      <li><a href=
-                      "http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=72941&amp;release_id=344791"
-                         class="external">Boost.Jam 3.1.11</a></li>
-
-                      <li><a href=
-                      "http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=80982&amp;release_id=278763"
-                         class="external">Boost.Build 2.0-m10</a></li>
+                      <li><span class=
+                      "news-title"><?php print '<a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
+                      <span class=
+                      "news-description"><?php print $_item['brief']; ?></span>
+                      <span class=
+                      "news-date"><?php print $_item['date']; ?></span></li><?php } ?>
                     </ul>
 
-                    <p><a href="/users/download.html">More
-                    Downloads...</a></p>
+                    <p><a href="/users/download">More Downloads...</a>
+                    (<a href="downloads.rss">RSS</a>)</p>
                   </div>
                 </div>
 

@@ -69,14 +69,7 @@ class boost_feed
                             {
                                 case 'pubdate':
                                 $item['pubdate'] = strtotime($item['pubdate']);
-                                break;
-                                
-                                case 'guid':
-                                if (preg_match("@[{]([^}]+)[}]@",$item['guid'],$guid))
-                                {
-                                    $item['guid'] = $guid[1];
-                                }
-                                $item['link'] = $item_base_uri.'/'.$item['guid'];
+                                $item['date'] = gmdate('F jS, Y H:i ',$item['pubdate']).'GMT';
                                 break;
                             }
                         }
@@ -87,6 +80,20 @@ class boost_feed
             }
             else if ($val['tag'] == 'item' && $val['type'] == 'close' && $item)
             {
+                $item['guid'] = md5('['.$item['pubdate'].'] '.$item['title']);
+                if (!isset($item['link']) || ! $item['link'])
+                {
+                    $item['link'] = $item_base_uri.'/'.$item['guid'];
+                }
+                if (isset($item['description']))
+                {
+                    $desc = preg_split('@<hr( /)?>@i',$item['description']);
+                    $item['brief'] = $desc[0];
+                    if (isset($desc[1]))
+                    {
+                        $item['description'] = $desc[1];
+                    }
+                }
                 $this->db[$item['guid']] = $item;
                 $item = NULL;
             }
