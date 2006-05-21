@@ -1,3 +1,8 @@
+<?php
+require dirname(__FILE__) . '/common/code/feed.php';
+$_news = new boost_feed(dirname(__FILE__) . '/news.rss', '/users/news');
+$_news->sort_by('pubdate');
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -15,7 +20,7 @@
 
 <body>
   <div id="heading">
-    <!--#include virtual="/common/heading.html" -->
+    <?php virtual("/common/heading.html"); ?>
   </div>
 
   <div id="body">
@@ -82,23 +87,18 @@
                     <h2>News</h2>
 
                     <ul>
-                      <li><em><a href=".">December 10, 2005 - asio Formal
-                      Review Begins</a></em><br />
-                      The review will run until Friday December 23rd. The
-                      <a href="http://asio.sourceforge.net/">Boost.Asio</a>
-                      library is intended for programmers using C++ for
-                      systems programming, where access to operating system
-                      functionality such as networking is often
-                      required.</li>
+                      <?php $_count = 0; foreach ( $_news->db as $_guid => $_item ) { $_count += 1; if ($_count > 3) { break; } ?>
 
-                      <li><em><a href=".">December 5, 2005 - Version
-                      1.33.1</a></em><br />
-                      Updated Libraries: Any, Config, Python, Smart Pointer,
-                      Regex, Iostreams, Functional/Hash, Multi-index
-                      Containers, Graph, Signals, Thread, and Wave.</li>
+                      <li><span class=
+                      "news-title"><?php print '<a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
+                      <span class=
+                      "news-description"><?php print $_item['description']; ?></span>
+                      <span class=
+                      "news-date"><?php print gmdate('F jS, Y H:i e',$_item['pubdate']); ?></span></li><?php } ?>
                     </ul>
 
-                    <p><a href="/users/news.html">More News...</a></p>
+                    <p><a href="/users/news">More News...</a> (<a href=
+                    "news.rss">RSS</a>)</p>
                   </div>
                 </div>
 
@@ -137,8 +137,7 @@
       </div>
 
       <div id="sidebar">
-        <!--#include virtual="/common/sidebar-common.html" -->
-        <!--#include virtual="/common/sidebar-welcome.html" -->
+        <?php virtual("/common/sidebar-common.html"); ?><?php virtual("/common/sidebar-welcome.html"); ?>
       </div>
 
       <div class="clear"></div>
@@ -155,11 +154,11 @@
         <p>Copyright Beman Dawes, David Abrahams, 1998-2005.</p>
 
         <p>Copyright Rene Rivera 2004-2005.</p>
-      </div><!--#include virtual="/common/footer-license.html" -->
+      </div><?php virtual("/common/footer-license.html"); ?>
     </div>
 
     <div id="footer-right">
-      <!--#include virtual="/common/footer-banners.html" -->
+      <?php virtual("/common/footer-banners.html"); ?>
     </div>
 
     <div class="clear"></div>
