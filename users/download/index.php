@@ -43,7 +43,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../../downloads.rss', '/users
               "news-date"><?php print $_item['date']; ?></span></h2>
 
               <div class="news-description">
-                <?php print $_item['description']; ?>
+                <?php print $_item['brief']; ?>
               </div><?php } ?>
             </div>
           </div>

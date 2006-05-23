@@ -1,7 +1,7 @@
 <?php
 require dirname(__FILE__) . '/../../common/code/feed.php';
 $_news = new boost_feed(dirname(__FILE__) . '/../../news.rss', '/users/news');
-$_news->sort_by('pubdate');
+$_guid = basename($_SERVER["PATH_INFO"]);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -30,22 +30,14 @@ $_news->sort_by('pubdate');
             </div>
 
             <div class="section-body">
-              <ul class="toc">
-                <?php foreach ( $_news->db as $_guid => $_item ) { ?>
-
-                <li><span class=
-                "news-title"><?php print '<a href="#'.$_item['guid'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span></li><?php } ?>
-              </ul><?php foreach ( $_news->db as $_guid => $_item ) { ?>
-
               <h2><span class=
-              "news-title"><?php print '<a name="'.$_item['guid'].'" id=
-"'.$_item['guid'].'"></a><a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
+              "news-title"><?php print $_news->db[$_guid]['title']; ?></span>
               <span class=
-              "news-date"><?php print $_item['date']; ?></span></h2>
+              "news-date"><?php print $_news->db[$_guid]['date']; ?></span></h2>
 
               <div class="news-description">
-                <?php print $_item['brief']; ?>
-              </div><?php } ?>
+                <?php print $_news->db[$_guid]['description']; ?>
+              </div>
             </div>
           </div>
         </div>

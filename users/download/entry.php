@@ -1,14 +1,14 @@
 <?php
 require dirname(__FILE__) . '/../../common/code/feed.php';
-$_news = new boost_feed(dirname(__FILE__) . '/../../news.rss', '/users/news');
-$_news->sort_by('pubdate');
+$_downloads = new boost_feed(dirname(__FILE__) . '/../../downloads.rss', '/users/download');
+$_guid = basename($_SERVER["PATH_INFO"]);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Boost News</title>
+  <title>Boost Downloads</title>
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-boost.css" />
@@ -26,26 +26,18 @@ $_news->sort_by('pubdate');
         <div class="section" id="intro">
           <div class="section-0">
             <div class="section-title">
-              <h1>Boost News</h1>
+              <h1>Boost Downloads</h1>
             </div>
 
             <div class="section-body">
-              <ul class="toc">
-                <?php foreach ( $_news->db as $_guid => $_item ) { ?>
-
-                <li><span class=
-                "news-title"><?php print '<a href="#'.$_item['guid'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span></li><?php } ?>
-              </ul><?php foreach ( $_news->db as $_guid => $_item ) { ?>
-
               <h2><span class=
-              "news-title"><?php print '<a name="'.$_item['guid'].'" id=
-"'.$_item['guid'].'"></a><a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
+              "news-title"><?php print $_downloads->db[$_guid]['title']; ?></span>
               <span class=
-              "news-date"><?php print $_item['date']; ?></span></h2>
+              "news-date"><?php print $_downloads->db[$_guid]['date']; ?></span></h2>
 
               <div class="news-description">
-                <?php print $_item['brief']; ?>
-              </div><?php } ?>
+                <?php print $_downloads->db[$_guid]['description']; ?>
+              </div>
             </div>
           </div>
         </div>
