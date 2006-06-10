@@ -5,6 +5,35 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
+
+function _preg_replace_bounds($front_regex,$back_regex,$front_replace,$back_replace,$text)
+{
+    $offset = 0;
+    $result = '';
+    while (TRUE)
+    {
+        $subject = substr($text,$offset);
+        if (preg_match($front_regex,$subject,$begin,PREG_OFFSET_CAPTURE) == 0 ||
+            preg_match($back_regex,$subject,$end,PREG_OFFSET_CAPTURE,
+                $begin[0][1]+strlen($begin[0][0])) == 0
+            )
+        { break; }
+        else
+        {
+            $result .= substr($subject,0,$begin[0][1]);
+            $result .= preg_replace($front_regex,$front_replace,$begin[0][0]);
+            $result .= substr(
+                $subject,
+                $begin[0][1]+strlen($begin[0][0]),
+                $end[0][1]-($begin[0][1]+strlen($begin[0][0])) );
+            $result .= preg_replace($back_regex,$back_replace,$end[0][0]);
+            $offset += $end[0][1]+strlen($end[0][0]);
+        }
+    }
+    if ($result === '') { return $text; }
+    else { return $result . substr($text,$offset); }
+}
+
 class boost_wiki
 {
     var $head_content_ = NULL;
@@ -12,7 +41,16 @@ class boost_wiki
     
     function boost_wiki($uri)
     {
-        if (isset($_SERVER["PATH_INFO"]) && $_SERVER["PATH_INFO"] != '/')
+        if (isset($_SERVER["QUERY_STRING"]) && $_SERVER["QUERY_STRING"])
+        {
+            $uri .= '?';
+            if (isset($_SERVER["PATH_INFO"]) && $_SERVER["PATH_INFO"] != '/')
+            {
+                $uri .= 'id='.substr($_SERVER["PATH_INFO"],1).'&';
+            }
+            $uri .= $_SERVER["QUERY_STRING"];
+        }
+        else if (isset($_SERVER["PATH_INFO"]) && $_SERVER["PATH_INFO"] != '/')
         {
             $uri .= '?'.substr($_SERVER["PATH_INFO"],1);
         }
@@ -23,8 +61,10 @@ class boost_wiki
             $this->_init_html();
         }
         
-        $this->head_content_ = <<<HTML
+        $this->head_content_ .= <<<HTML
+  
   <!-- WIKI URI == '${uri}' -->
+  
 HTML
             ;
     }
@@ -106,8 +146,18 @@ HTML
             'href="/doc/wiki/${1}"',
             $text );
         
-        preg_match('@<body[^>]*>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
-        preg_match('@</body>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
+        switch (isset($_REQUEST["action"]) ? $_REQUEST["action"] : '')
+        {
+            case 'edit':
+            preg_match('@<hr>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
+            preg_match('@</body>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
+            break;
+            
+            default:
+            preg_match('@<hr>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
+            preg_match('@<form method="post" action="wiki.pl" [^>]*>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
+            break;
+        }
         if (!isset($body_begin[0]))
         {
             return;
@@ -122,6 +172,26 @@ HTML
             $text = substr($text,
                 $body_begin[0][1]+strlen($body_begin[0][0]),
                 $body_end[0][1]-($body_begin[0][1]+strlen($body_begin[0][0])) );
+        }
+        
+        $text = preg_replace(
+            '@<[/]?(font|hr)[^>]*>@i',
+            '',
+            $text );
+        
+        switch (isset($_REQUEST["action"]) ? $_REQUEST["action"] : '')
+        {
+            case 'edit':
+            $text = _preg_replace_bounds(
+                '@<form method="post" action="wiki.pl" enctype="application/x-www-form-urlencoded">@i',
+                '@</form>@i',
+                '<form id="wiki-edit-form" method="post" enctype="application/x-www-form-urlencoded">',
+                '</form>',
+                $text );
+            break;
+            
+            default:
+            break;
         }
         
         print $text;
