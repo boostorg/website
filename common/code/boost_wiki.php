@@ -41,7 +41,18 @@ class boost_wiki
     
     function boost_wiki($uri)
     {
-        if (isset($_SERVER["QUERY_STRING"]) && $_SERVER["QUERY_STRING"])
+        $context = NULL;
+        if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == "POST")
+        {
+            $context = stream_context_create(array(
+                'http' => array(
+                    'method' => 'POST',
+                    'content' => file_get_contents("php://input"),
+                    'header' => "Content-type: application/x-www-form-urlencoded\r\n"
+                    )
+                ));
+        }
+        else if (isset($_SERVER["QUERY_STRING"]) && $_SERVER["QUERY_STRING"])
         {
             $uri .= '?';
             if (isset($_SERVER["PATH_INFO"]) && $_SERVER["PATH_INFO"] != '/')
@@ -54,7 +65,7 @@ class boost_wiki
         {
             $uri .= '?'.substr($_SERVER["PATH_INFO"],1);
         }
-        $this->content_ = file_get_contents($uri);
+        $this->content_ = file_get_contents($uri,false,$context);
         
         if ($this->content_ && $this->content_ != '')
         {
@@ -146,9 +157,14 @@ HTML
             'href="/doc/wiki/${1}"',
             $text );
         
-        switch (isset($_REQUEST["action"]) ? $_REQUEST["action"] : '')
+        switch (isset($_REQUEST["action"]) ? $_REQUEST["action"] : 'display')
         {
             case 'edit':
+            preg_match('@<hr>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
+            preg_match('@</textarea>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
+            break;
+            
+            case 'post':
             preg_match('@<hr>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
             preg_match('@</body>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
             break;
@@ -178,16 +194,46 @@ HTML
             '@<[/]?(font|hr)[^>]*>@i',
             '',
             $text );
+        $text = preg_replace(
+            '@[\s]+(border|cellpadding|cellspacing|width|height|valign|align|frame|rules|naturalsizeflag|background|wrap)=[^\s>]+@i',
+            '',
+            $text );
         
-        switch (isset($_REQUEST["action"]) ? $_REQUEST["action"] : '')
+        $edit_html = <<<HTML
+</textarea>
+<label><span class="wiki-label">Summary</span> <input type="text" name="summary" value="*" size="60" maxlength="200" id="summary" /></label>
+<label><span class="wiki-label">Minor Edit</span> <input type="checkbox" name="recent_edit" value="on" id="recent_edit" /></label>
+<input type="submit" name="Save" value="Save" id="Save" />
+<input type="submit" name="Preview" value="Preview" id="Preview" />
+</form>
+HTML;
+        switch (isset($_REQUEST["action"]) ? $_REQUEST["action"] : 'display')
         {
             case 'edit':
-            $text = _preg_replace_bounds(
+            $text = preg_replace(
                 '@<form method="post" action="wiki.pl" enctype="application/x-www-form-urlencoded">@i',
-                '@</form>@i',
-                '<form id="wiki-edit-form" method="post" enctype="application/x-www-form-urlencoded">',
-                '</form>',
+                '<form method="post" action="./?action=post" enctype="application/x-www-form-urlencoded" id="wiki-edit-form">',
                 $text );
+            $text .= $edit_html;
+            break;
+            
+            case 'post':
+            $text = preg_replace(
+                '@<form method="post" action="wiki.pl" enctype="application/x-www-form-urlencoded">@i',
+                '<form method="post" action="./?action=post" enctype="application/x-www-form-urlencoded" id="wiki-edit-form">',
+                $text );
+            $text = preg_replace(
+                '@<h2>Preview only, not yet saved</h2>([^\r\n]*[\r\n]*)*@i',
+                '</div>',
+                $text );
+            $text = preg_replace(
+                '@</textarea>([^\r\n]*[\r\n]*){3}@i',
+                $edit_html . <<<HTML
+<div class="clear"></div>
+<h2 class="content-header">Preview only, not yet saved</h2>
+<div id="wiki-preview">
+HTML
+                ,$text );
             break;
             
             default:
