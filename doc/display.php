@@ -3,7 +3,7 @@ require dirname(__FILE__) . '/../common/code/archive_file.php';
 
 $_file = new archive_file('/^[\/]([^\.\/]+)[\/](.*)$/',$_SERVER["PATH_INFO"]);
 
-if (!$_file->is_raw()) { require dirname(__FILE__) . '/../common/code/webnotes.php';
+if (!$_file->is_raw()) { #~ require dirname(__FILE__) . '/../common/code/webnotes.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -14,7 +14,7 @@ if (!$_file->is_raw()) { require dirname(__FILE__) . '/../common/code/webnotes.p
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-doc.css" />
   <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
-  <?php pwn_head(); ?>
+  <?php #~ pwn_head(); ?>
 </head>
 
 <body>
@@ -36,7 +36,7 @@ if (!$_file->is_raw()) { require dirname(__FILE__) . '/../common/code/webnotes.p
         <div class="section" id="notes">
           <div class="section-0">
             <div class="section-body">
-              <?php pwn_body($_file->key_,$_SERVER['PHP_SELF']); ?>
+              <?php #~ pwn_body($_file->key_,$_SERVER['PHP_SELF']); ?>
             </div>
           </div>
         </div>
