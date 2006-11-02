@@ -144,7 +144,7 @@ HTML
 
     function _extract_string($unzip)
     {
-        $file_handle = popen($unzip,'rb');
+        $file_handle = popen($unzip,'r');
         $text = '';
         while ($file_handle && !feof($file_handle)) {
             $text .= fread($file_handle,8*1024);
@@ -157,7 +157,7 @@ HTML
     {
         header('Content-type: '.$this->type_);
         ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
-        $file_handle = popen($unzip,'rb');
+        $file_handle = popen($unzip,'r');
         fpassthru($file_handle);
         pclose($file_handle);
     }
