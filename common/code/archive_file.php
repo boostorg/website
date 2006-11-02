@@ -100,7 +100,7 @@ class archive_file
             }
         }
         
-        $unzip = UNZIP . ' -p "' . $this->archive_ . '" "' . $this->file_ . '"';
+        $unzip = UNZIP . ' -p ' . escapeshellarg($this->archive_) . ' ' . escapeshellarg($this->file_);
         if (! $this->extractor_)
         {
             # File doesn't exist, or we don't know how to handle it.
