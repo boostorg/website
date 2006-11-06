@@ -1,6 +1,6 @@
 <?php
 require dirname(__FILE__) . '/../../common/code/feed.php';
-$_downloads = new boost_feed(dirname(__FILE__) . '/../../downloads.rss', '/users/download');
+$_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/users/download');
 $_guid = basename($_SERVER["PATH_INFO"]);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"

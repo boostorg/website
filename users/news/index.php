@@ -1,6 +1,6 @@
 <?php
 require dirname(__FILE__) . '/../../common/code/feed.php';
-$_news = new boost_feed(dirname(__FILE__) . '/../../news.rss', '/users/news');
+$_news = new boost_feed(dirname(__FILE__) . '/../../feed/news.rss', '/users/news');
 $_news->sort_by('pubdate');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"

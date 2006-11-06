@@ -1,6 +1,6 @@
 <?php
 require dirname(__FILE__) . '/../../common/code/feed.php';
-$_downloads = new boost_feed(dirname(__FILE__) . '/../../downloads.rss', '/users/download');
+$_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/users/download');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -37,8 +37,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../../downloads.rss', '/users
               </ul><?php foreach ( $_downloads->db as $_guid => $_item ) { ?>
 
               <h2><span class=
-              "news-title"><?php print '<a name="'.$_item['guid'].'" id=
-              "'.$_item['guid'].'"></a><a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
+              "news-title"><?php print '<a name="'.$_item['guid'].'" id="'.$_item['guid'].'"></a><a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
               <span class=
               "news-date"><?php print $_item['date']; ?></span></h2>
 

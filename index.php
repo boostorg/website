@@ -1,8 +1,8 @@
 <?php
 require dirname(__FILE__) . '/common/code/feed.php';
-$_news = new boost_feed(dirname(__FILE__) . '/news.rss', '/users/news');
+$_news = new boost_feed(dirname(__FILE__) . '/feed/news.rss', '/users/news');
 $_news->sort_by('pubdate');
-$_downloads = new boost_feed(dirname(__FILE__) . '/downloads.rss', '/users/download');
+$_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/download');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -103,7 +103,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/downloads.rss', '/users/downl
                   </ul>
 
                   <p><a href="/users/news">More News...</a> (<a href=
-                  "news.rss">RSS</a>)</p>
+                  "feed/news.rss">RSS</a>)</p>
 
                   <h2>Downloads</h2>
 
@@ -117,7 +117,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/downloads.rss', '/users/downl
                   </ul>
 
                   <p><a href="/users/download">More Downloads...</a>
-                  (<a href="downloads.rss">RSS</a>)</p>
+                  (<a href="feed/downloads.rss">RSS</a>)</p>
                 </div>
 
                 <div class="clear"></div>
