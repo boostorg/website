@@ -1,9 +1,9 @@
 <?php
-require dirname(__FILE__) . '/../common/code/archive_file.php';
+require_once(dirname(__FILE__) . '/../common/code/archive_file.php');
 
 $_file = new archive_file('/^[\/]([^\.\/]+)[\/](.*)$/',$_SERVER["PATH_INFO"]);
 
-if (!$_file->is_raw()) { #~ require dirname(__FILE__) . '/../common/code/webnotes.php';
+if (!$_file->is_raw()) { #~ require_once(dirname(__FILE__) . '/../common/code/webnotes.php');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

@@ -1,6 +1,6 @@
 <?php
-require dirname(__FILE__) . '/../common/code/boost_version.php';
-require dirname(__FILE__) . '/../common/code/libraries.php';
+require_once(dirname(__FILE__) . '/../common/code/boost_version.php');
+require_once(dirname(__FILE__) . '/../common/code/libraries.php');
 
 $libs = new boost_libraries(dirname(__FILE__) . '/../libraries.xml');
 if (isset($_REQUEST['sort']))

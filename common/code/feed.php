@@ -61,6 +61,8 @@ class boost_feed
                     case 'description':
                     case 'guid':
                     case 'pubdate':
+                    case 'link':
+                    case 'dc:date':
                     {
                         if (isset($val['value']))
                         {
@@ -69,6 +71,11 @@ class boost_feed
                             {
                                 case 'pubdate':
                                 $item['pubdate'] = strtotime($item['pubdate']);
+                                $item['date'] = gmdate('F jS, Y H:i ',$item['pubdate']).'GMT';
+                                break;
+                                
+                                case 'dc:date':
+                                $item['pubdate'] = strtotime($item['dc:date']);
                                 $item['date'] = gmdate('F jS, Y H:i ',$item['pubdate']).'GMT';
                                 break;
                             }

@@ -1,5 +1,5 @@
 <?php
-require dirname(__FILE__) . '/common/code/feed.php';
+require_once(dirname(__FILE__) . '/common/code/feed.php');
 $_news = new boost_feed(dirname(__FILE__) . '/feed/news.rss', '/users/news');
 $_news->sort_by('pubdate');
 $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/download');

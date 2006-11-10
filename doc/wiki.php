@@ -1,5 +1,5 @@
 <?php
-require dirname(__FILE__) . '/../common/code/boost_wiki.php';
+require_once(dirname(__FILE__) . '/../common/code/boost_wiki.php');
 
 $_wiki = new boost_wiki('http://www.crystalclearsoftware.com/cgi-bin/boost_wiki/wiki.pl');
 
