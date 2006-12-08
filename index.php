@@ -56,9 +56,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/
                      proposed for the upcoming <a href=
                      "http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1810.html"
                      class="external">TR2</a>.</p>
-                </div>
 
-                <div class="directory-item" id="welcome-getting-started">
                   <h3 class="note">Getting Started</h3>
 
                   <p class="note"><span class="note-body">Boost works on
@@ -73,18 +71,14 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/
                   class="external">NetBSD</a> include pre-built Boost
                   packages. Boost may also already be available on your
                   organization's internal web server.</span></p>
-                </div>
 
-                <div class="directory-item" id="welcome-background">
                   <h3 class="note">Background</h3>
 
                   <p class="note"><span class="note-body">Read on with the
                   <a href="/users/">introductory material</a> to help you
                   understand what Boost is about and to help in educating
                   your organization about Boost.</span></p>
-                </div>
 
-                <div class="directory-item" id="welcome-community">
                   <h3 class="note">Community</h3>
 
                   <p class="note"><span class="note-body">Boost welcomes and
