@@ -44,7 +44,7 @@ class boost_feed
         xml_parse_into_struct($parser, $xml, $values);
         xml_parser_free($parser);
         
-        ##print '<!-- '; print_r($values); print ' -->';
+        print '<!-- '; print_r($values); print ' -->';
         
         $item = NULL;
         foreach ( $values as $key => $val )
