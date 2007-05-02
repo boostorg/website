@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . '/../common/code/feed.php');
 $_news = new boost_feed(
-  dirname(__FILE__) . '/../feed/gmane.comp.lib.boost.interest.rss',
+  '/home/grafik/www.boost.org/gmane.comp.lib.boost.interest.rss',
   '/feed/gmane.comp.lib.boost.interest.rss');
 $_news->sort_by('pubdate');
 ?>
