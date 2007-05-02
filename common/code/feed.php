@@ -37,8 +37,9 @@ class boost_feed
     
     function boost_feed($xml_file,$item_base_uri)
     {
+        print '<!-- boost_fead (0) -->';
         $xml = implode("",file($xml_file));
-        print '<!-- boost_fead... -->';
+        print '<!-- boost_fead (1) -->';
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
