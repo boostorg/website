@@ -39,13 +39,14 @@ class boost_feed
     
     function boost_feed($xml_file,$item_base_uri)
     {
-        ##print "<!-- boost_fead (0) ".dirname($xml_file)." -->";
+        print "<!-- boost_fead (0) ".$xml_file." -->\n";
         if (dirname($xml_file) == ".")
         {
             $xml_file = BOOST_RSS_DIR.'/'.$xml_file;
         }
+        print "<!-- boost_fead (1) ".$xml_file." -->\n";
         $xml = implode("",file($xml_file));
-        ##print '<!-- boost_fead (1) -->';
+        print "<!-- boost_fead (2) ".$xml_file." -->\n";
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
