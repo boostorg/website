@@ -4,6 +4,8 @@
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
+require_once(dirname(__FILE__) . '/boost_config.php');
+
 
 function _field_cmp_key_($a,$b)
 { return strcmp($a['key'],$b['key']); }
@@ -37,16 +39,20 @@ class boost_feed
     
     function boost_feed($xml_file,$item_base_uri)
     {
-        print '<!-- boost_fead (0) -->';
+        ##print "<!-- boost_fead (0) ".dirname($xml_file)." -->";
+        if (dirname($xml_file) == ".")
+        {
+            $xml_file = BOOST_RSS_DIR.'/'.$xml_file;
+        }
         $xml = implode("",file($xml_file));
-        print '<!-- boost_fead (1) -->';
+        ##print '<!-- boost_fead (1) -->';
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
         xml_parse_into_struct($parser, $xml, $values);
         xml_parser_free($parser);
         
-        print '<!-- '; print_r($values); print ' -->';
+        ##print '<!-- '; print_r($values); print ' -->';
         
         $item = NULL;
         foreach ( $values as $key => $val )
