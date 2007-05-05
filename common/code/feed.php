@@ -110,6 +110,11 @@ class boost_feed
                         $item['description'] = $desc[1];
                     }
                 }
+                if (isset($item['title']))
+                {
+                    preg_match('@^(?:[\[][^\]]+[\]]\s*)*(.*)@i',$item['title'],$title);
+                    $item['title'] = $title[1];
+                }
                 $this->db[$item['guid']] = $item;
                 $item = NULL;
             }
