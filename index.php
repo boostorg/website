@@ -146,7 +146,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/
       <div id="copyright">
         <p>Copyright Beman Dawes, David Abrahams, 1998-2005.</p>
 
-        <p>Copyright Rene Rivera 2004-2005.</p>
+        <p>Copyright Rene Rivera 2004-2007.</p>
       </div><?php virtual("/common/footer-license.html"); ?>
     </div>
 
