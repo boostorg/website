@@ -33,5 +33,6 @@ cat - >>config.inc.php <<PHP
 \$cfg['Servers'][\$i]['auth_type'] = 'http';
 ?>
 PHP
+cd ..
 rm -f "phpMyAdmin"
 ln -s "${phpmyadmin}" "phpMyAdmin"
