@@ -1,0 +1,229 @@
+[library Boost.GroupedLinks
+    [quickbook 1.4]
+    [authors [Capeletto, Matias]]
+    [copyright 2007 Matias Capeletto]
+    [category javascript]
+    [id grouped_links]
+    [dirname grouped_links]
+    [purpose
+        Construct a grouped links select box from a XML definition file
+    ]
+    [source-mode c++]
+    [license
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+[@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[/ QuickBook Document version 1.4 ]
+
+[def __GROUPED_LINKS_IMAGE__ [$images/grouped_links.png]]
+
+[section Introduction]
+
+GroupedLinks is a simple javascript API for building links select boxes.
+
+Features
+
+* Released under Boost Software License.
+* Cross-browser.
+* Items are populated from a simple XML definition file.
+* css based look & feel.
+* Support for relative URLs.
+* Integration with Boostbook.
+* Only standard javascript used.
+
+__GROUPED_LINKS_IMAGE__
+
+[endsect]
+
+[section Tutorial]
+
+
+[section GroupedLinks XML definition]
+
+A GroupedLinks select box is populated from a ['GroupedLinks XML definition]
+file. This is an important feature, because it means that the items are not
+harcoded in the HTML saving us space using global definitions and allowing
+us to change the definition with out touching the HTML files.
+
+['GroupedLinks XML definition] start with a tag named `groupedLinks`.
+There are only three elements:
+
+[table Elements
+[[Name][Purpose]]
+[[`title`][
+Add a title to the GroupedLinks select box. This is useful when
+you do not want to select any of the internals items. The select
+box will show the title instead.
+]]
+[[`group`][
+Starts a group list.
+]]
+[[`item`][
+Links items. They must reside inside a group list.
+]]
+]
+
+All the elements have two attributes:
+
+* [*tag: ] Name of the element, it will be showed in the HTML.
+* [*url: ] URL of the link. It can be relative or absolute. (It is optional)
+
+A ['GroupedLinks XML definition] will look like:
+
+``
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<groupedLinks version="1.0">
+
+<title tag="Title"      url="group_1.html"/>
+
+<group tag="Group 1"    url="group_1.html">
+
+    <item tag="Item A"  url="group_1/item_A.html"/>
+    <item tag="Item B"  url="group_1/item_A.html"/>
+    <item tag="Item C"  url="http://www.item_C.com"/>
+
+</group>
+
+<group tag="Group 2"    url="group_2.html">
+
+    <item tag="Item A"  url="group_2/item_A.html"/>
+    <item tag="Item B"  url="group_2/item_A.html"/>
+
+</group>
+
+<group tag="Group 3"    url="group_3.html"/>
+
+</groupedLinks>
+``
+
+
+[endsect]
+
+[section Including a GroupedLinks select box in your HTML]
+
+To include a ['GroupedLinks select box] in the body of your HTML you have
+to create a form with an unique id and call the javascript function
+`grouped_links_select_box` inside of it.
+
+[table grouped_links_select_box function
+[[][Parameter Name][Purpose]]
+[[1][GroupedLinks XML URL][
+['GroupedLinks XML definition] URL.
+]]
+[[2][Form id][
+id of the form where you want to place the ['GroupedLinks select box].
+]]
+[[3][Base URL][
+A base URL that will be concatenated to all the relatives URLs.
+]]
+[[5][Selected item][
+The item that is selected by default. This parameter is optional, if
+you call the function with only three parameters the tag of the title
+element is used if there is one in the ['GroupedLinks XML definition].
+]]
+]
+
+It is simple enough to be understood from an example:
+
+``
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Boost.GroupedLinks Example</title>
+<link rel="stylesheet" href="../../css/grouped_links.css" type="text/css">
+</head>
+
+<body>
+
+<!-- /* Include the grouped links java script api */ -->
+
+<script type="text/javascript" src="../../js/grouped_links.js"></script>
+
+<!-- /* Add a form with an "id" attribute */ -->
+
+<form id="boost_libs_list">
+
+    <!--/*  Call the GroupedLinks "select box" */-->
+
+    <script type="text/javascript">
+
+        grouped_links_select_box('boost_libs.xml',
+                                 'boost_libs_list',
+                                 '../../',
+                                 'Boost Libraries');
+
+    </script>
+
+</form>
+``
+
+[note
+Remember to change the `src` of the javascript include line to point
+to the URL of `grouped_links.js` in your system. Try to work with
+relatives paths so the HTML can be easily moved.
+]
+
+[endsect]
+
+[section Boostbook integration]
+
+Add the following lines to your jamfile.v2
+
+    <xsl:param>grouped.links.chapters.show="'true'"
+    <xsl:param>grouped.links.sections.show="'true'"
+    <xsl:param>grouped.links.sections.xml="'sections.XML'" # your XML sections
+
+GroupedLinks select boxes for boost libraries and internal sections can be
+requested to boostbook using the following options:
+
+[table Boostbook GroupedLinks Parameters
+[[Name][Purpose]]
+[[`show`][Include select box]]
+[[`xml`][Path to the XML definition]]
+[[`url`][Base URL to use with relative paths]]
+]
+
+You can configure all the parameters used by boostbook:
+
+    <xsl:param>grouped.links.js="'grouped_links.js'"
+
+    <xsl:param>grouped.links.chapters.show="'true'"
+    <xsl:param>grouped.links.chapters.xml="'boost_libs_grouped_links.XML'"
+    <xsl:param>grouped.links.chapters.url="''"
+
+    <xsl:param>grouped.links.sections.show="'true'"
+    <xsl:param>grouped.links.sections.xml="'sections_grouped_links.XML'"
+    <xsl:param>grouped.links.sections.url="''"
+
+[endsect]
+
+[endsect]
+
+[section Examples]
+
+In the folder `example` you can find two examples using GropedLinks API.
+
+[variablelist
+[[simple][
+How to put a GropedLinks select box in your HTML body.
+]]
+[[boostbook][
+How to integrate GroupedLinks with boostbook and quickbook docs.
+]]
+]
+
+[endsect]
+
+[section Acknowledgments]
+
+Thanks Martin Capeletto (my brother) for teaching me the basics of javascript.
+
+Thanks to the ones that participates in constructing the new boost docs
+look & feel. Special thanks to John Maddock for his support during this period.
+
+[endsect]
+
+
