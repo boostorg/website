@@ -66,6 +66,11 @@ function boostscript_library()
 
 }
 
+function safari_browser()
+{
+    return ( navigator.vendor.indexOf('Apple') != -1 );
+}
+
 function include_components( aUsedComponents, sUserBaseUrl )
 {
     insert_needed_includes( boostscript.namespace, aUsedComponents,
@@ -78,7 +83,15 @@ function insert_needed_includes( aComponents, aUsedComponents, sBaseUrl )
     {
         find_needed_includes( aUsedComponents[i] );
     }
-    dom_insertion_included_scripts( sBaseUrl );
+
+    if( safari_browser() )
+    {
+        write_insertion_included_scripts( sBaseUrl );
+    }
+    else
+    {
+        dom_insertion_included_scripts( sBaseUrl );
+    }
 }
 
 function find_needed_includes( oComp )
@@ -106,6 +119,22 @@ function dom_insertion_included_scripts( sBaseUrl )
             oHead.appendChild( newScript );
         }
     }
+}
+
+function write_insertion_included_scripts( sBaseUrl )
+{
+    var namespace = boostscript.namespace;
+    var sScriptsHtml = '';
+    for(var i = 0, len = namespace.length; i < len ; i++ )
+    {
+        if( namespace[i].used )
+        {
+            sScriptsHtml += '<script type="text/javascript" scr="'      +
+                            format_url( namespace[i].path, sBaseUrl ) +
+                            '"></script>\n';
+        }
+    }
+    document.write( sScriptsHtml );
 }
 
 function format_base_url(sBaseUrl)
