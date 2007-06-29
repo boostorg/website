@@ -1,0 +1,185 @@
+/*=============================================================================
+
+    Html To Quickbook stylesheets
+
+    Copyright (c) 2006 Rene Rivera
+    Copyright (c) 2007 Matias Capeletto
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+
+=============================================================================*/
+
+@import url(html_to_quickbook_general.css);
+@import url(quickbook_common.css);
+
+/* General
+-----------------------------------------------------------------------------*/
+
+body, body *
+{
+    border: none;
+    margin: 0em;
+    padding: 0em;
+    text-indent: 0em;
+    color: black;
+    font-size: 10pt;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    font-family: monospace;
+    background: white;
+    background-color: white;
+}
+
+body::before
+{
+    content: "[section Top]";
+    color: #5555FF;
+}
+
+body::after
+{
+    content: "[endsect]";
+    color: #5555FF;
+}
+
+h1 img, h2 img, h3 img, h4 img, h5 img, h6 img
+{
+    display: none;
+}
+
+/* Variable List
+-----------------------------------------------------------------------------*/
+
+dl::before { content: "[variablelist "; color: #5555FF; }
+dl::after  { content: "]";              color: #5555FF; }
+dt::before { content: "  [[";           color: #5555FF; }
+dt::after  { content: "]]";             color: #5555FF; }
+dd::before { content: "[";              color: #5555FF; }
+dd::after  { content: "]";              color: #5555FF; }
+
+/* Preformatted output and code
+-----------------------------------------------------------------------------*/
+
+pre::before  { content: "[pre \A";      color: #5555FF; }
+pre::after   { content: "\A]";          color: #5555FF; }
+code::before { content: "[^";           color: #5555FF; }
+code::after  { content: "]";            color: #5555FF; }
+
+/* Text style
+-----------------------------------------------------------------------------*/
+
+i::before   { content: "['";          color: #5555FF;  font-style:  normal;  }
+i           { font-style: italic;                                            }
+i::after    { content: "]";           color: #5555FF;  font-style:  normal;  }
+
+b::before   { content: "[*";          color: #5555FF;  font-weight: normal;  }
+b           { font-weight: bold;                                             }
+b::after    { content: "]";           color: #5555FF;  font-weight: normal;  }
+
+u::before   { content: "[_";          color: #5555FF; text-decoration: none; }
+u           { text-decoration: underline;                                    }
+u::after    { content: "]";           color: #5555FF; text-decoration: none; }
+
+tt::before  { content: "[^";          color: #5555FF;                        }
+tt::after   { content: "]";           color: #5555FF;                        }
+
+q::before   { content: "[\"";         color: #5555FF;  font-style:  normal;  }
+q           { font-style: italic;                                            }
+q::after    { content: "\"]";         color: #5555FF;  font-style:  normal;  }
+
+/* Lists
+-----------------------------------------------------------------------------*/
+
+blockquote > li::before { content: "* "; color: #5555FF; }
+ol > li::before         { content: "# "; color: #5555FF; }
+ul > li::before         { content: "* "; color: #5555FF; }
+ul > li                 { list-style: none; }
+
+/* Blockquote
+-----------------------------------------------------------------------------*/
+
+blockquote::before { content: "[:";           color: #5555FF; }
+blockquote::after  { content: "]";            color: #5555FF; }
+
+/* Tables
+-----------------------------------------------------------------------------*/
+
+table { display: block;  }
+tr    { display: block;  }
+td    { display: inline; }
+th    { display: inline; }
+
+table::before { content: "[table";   color: #5555FF; }
+table::after  { content: "]";        color: #5555FF; }
+
+tr::before { content: "[";          color: #5555FF; }
+tr::after  { content: "]";          color: #5555FF; }
+td::before { content: "[";          color: #5555FF; }
+td::after  { content: "]";          color: #5555FF; }
+th::before { content: "[";          color: #5555FF; }
+th::after  { content: "]";          color: #5555FF; }
+
+/* Forms
+-----------------------------------------------------------------------------*/
+
+form { display: none; }
+
+/* Links
+-----------------------------------------------------------------------------*/
+
+a::before { content: "[@" attr(href) " ";           color: #5555FF; }
+a::after  { content: "]";                           color: #5555FF; }
+
+/* Sections and Headings
+-----------------------------------------------------------------------------*/
+
+h1, h2, h3, h4, h5, h6, p, pre, dl, ul, blockquote {
+    margin-top: 1em;
+}
+
+h1::before, h2::before, h3::before, h4::before, h5::before, h6::before
+{
+    content: "[endsect] [/br][/br] [section ";
+    color: #5555FF;
+}
+
+h1::after, h2::after, h3::after, h4::after, h5::after, h6::after
+{
+    content: "]";
+    color: #5555FF;
+}
+
+h1 a::before, h2 a::before, h3 a::before, h4 a::before, h5 a::before, h6 a::before,
+h1 a::after, h2 a::after, h3 a::after, h4 a::after, h5 a::after, h6 a::after
+{
+    content: "";
+}
+
+/* Images
+-----------------------------------------------------------------------------*/
+
+/* TODO
+img::before
+{
+    content: "[$" attr(src);
+    color: #5555FF;
+}
+
+img::after
+{
+    content: "]";
+    color: #5555FF;
+}
+
+
+*/
+
+img
+{
+    max-height: 100px;
+    max-width: 100px;
+    overflow: hidden;
+}
