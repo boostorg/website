@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head xmlns="http://www.w3.org/1999/xhtml">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Chapter 1. Boost.GroupedLinks</title>
+    <link xmlns="" rel="stylesheet" href="boostbook.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.70.1" />
+    <link rel="start" href="index.html" title="Chapter 1. Boost.GroupedLinks" />
+  </head>
+  <body>
+    <div id="heading">
+      <div id="heading-placard"></div>
+      <div class="heading_navigation_box"></div>
+      <div class="heading_search_box"></div>
+    </div>
+    <div class="spirit-nav"></div>
+    <div id="body">
+      <div id="body-inner">
+        <div id="content">
+          <div xmlns="http://www.w3.org/1999/xhtml" class="chapter" lang="en" xml:lang="en">
+            <div class="titlepage">
+              <div>
+                <div>
+                  <h2 class="title"><a id="grouped_links"></a>Chapter 1. Boost.GroupedLinks</h2>
+                </div>
+                <div>
+                  <div class="author">
+                    <h3 class="author"><span class="firstname">Matias</span> <span class="surname">Capeletto</span></h3>
+                  </div>
+                </div>
+                <div>
+                  <p class="copyright">Copyright © 2007 Matias Capeletto</p>
+                </div>
+                <div>
+                  <div class="legalnotice">
+                    <a id="id2601623"></a>
+                    <p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a xmlns="" href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="toc">
+              <p>
+                <b>Table of Contents</b>
+              </p>
+              <dl>
+                <dt>
+                  <span class="section">
+                    <a href="index.html#grouped_links.introduction">Introduction</a>
+                  </span>
+                </dt>
+                <dt>
+                  <span class="section">
+                    <a href="index.html#grouped_links.tutorial">Tutorial</a>
+                  </span>
+                </dt>
+                <dt>
+                  <span class="section">
+                    <a href="index.html#grouped_links.examples">Examples</a>
+                  </span>
+                </dt>
+                <dt>
+                  <span class="section">
+                    <a href="index.html#grouped_links.acknowledgments">Acknowledgments</a>
+                  </span>
+                </dt>
+              </dl>
+            </div>
+            <div class="section" lang="en" xml:lang="en">
+              <div class="titlepage">
+                <div>
+                  <div>
+                    <h2 class="title" style="clear: both">
+                      <a id="grouped_links.introduction"></a>
+                      <a href="index.html#grouped_links.introduction" title="Introduction">Introduction</a>
+                    </h2>
+                  </div>
+                </div>
+              </div>
+              <p>
+      GroupedLinks is a simple javascript API for building links select boxes.
+    </p>
+              <p>
+      Features
+    </p>
+              <div class="itemizedlist">
+                <ul type="disc">
+                  <li>
+        Released under Boost Software License.
+      </li>
+                  <li>
+        Cross-browser.
+      </li>
+                  <li>
+        Items are populated from a simple XML definition file.
+      </li>
+                  <li>
+        css based look &amp; feel.
+      </li>
+                  <li>
+        Support for relative URLs.
+      </li>
+                  <li>
+        Integration with Boostbook.
+      </li>
+                  <li>
+        Only standard javascript used.
+      </li>
+                </ul>
+              </div>
+              <p>
+      <span class="inlinemediaobject"><img src="images/grouped_links.png" alt="grouped_links" /></span>
+    </p>
+            </div>
+            <div class="section" lang="en" xml:lang="en">
+              <div class="titlepage">
+                <div>
+                  <div>
+                    <h2 class="title" style="clear: both">
+                      <a id="grouped_links.tutorial"></a>
+                      <a href="index.html#grouped_links.tutorial" title="Tutorial">Tutorial</a>
+                    </h2>
+                  </div>
+                </div>
+              </div>
+              <div class="toc">
+                <dl>
+                  <dt>
+                    <span class="section">
+                      <a href="index.html#grouped_links.tutorial.groupedlinks_xml_definition">GroupedLinks
+      XML definition</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="section">
+                      <a href="index.html#grouped_links.tutorial.including_a_groupedlinks_select_box_in_your_html">Including
+      a GroupedLinks select box in your HTML</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="section">
+                      <a href="index.html#grouped_links.tutorial.boostbook_integration">Boostbook
+      integration</a>
+                    </span>
+                  </dt>
+                </dl>
+              </div>
+              <div class="section" lang="en" xml:lang="en">
+                <div class="titlepage">
+                  <div>
+                    <div>
+                      <h3 class="title">
+                        <a id="grouped_links.tutorial.groupedlinks_xml_definition"></a>
+                        <a href="index.html#grouped_links.tutorial.groupedlinks_xml_definition" title="GroupedLinks&#10;      XML definition">GroupedLinks
+      XML definition</a>
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+                <p>
+        A GroupedLinks select box is populated from a <span class="emphasis"><em>GroupedLinks XML
+        definition</em></span> file. This is an important feature, because it means
+        that the items are not harcoded in the HTML saving us space using global
+        definitions and allowing us to change the definition with out touching the
+        HTML files.
+      </p>
+                <p>
+        <span class="emphasis"><em>GroupedLinks XML definition</em></span> start with a tag named
+        <code class="computeroutput"><span class="identifier">groupedLinks</span></code>. There are only
+        three elements:
+      </p>
+                <div class="table">
+                  <a id="id2565416"></a>
+                  <p class="title">
+                    <b>Table 1.1. Elements</b>
+                  </p>
+                  <div class="table-contents">
+                    <table xmlns="" class="table" summary="Elements">
+                      <colgroup>
+                        <col xmlns="http://www.w3.org/1999/xhtml" />
+                        <col xmlns="http://www.w3.org/1999/xhtml" />
+                      </colgroup>
+                      <thead xmlns="http://www.w3.org/1999/xhtml">
+                        <tr>
+                          <th>
+            <p>
+              Name
+            </p>
+            </th>
+                          <th>
+            <p>
+              Purpose
+            </p>
+            </th>
+                        </tr>
+                      </thead>
+                      <tbody xmlns="http://www.w3.org/1999/xhtml">
+                        <tr>
+                          <td>
+            <p>
+              <code class="computeroutput"><span class="identifier">title</span></code>
+            </p>
+            </td>
+                          <td>
+            <p>
+              Add a title to the GroupedLinks select box. This is useful when you
+              do not want to select any of the internals items. The select box will
+              show the title instead.
+            </p>
+            </td>
+                        </tr>
+                        <tr>
+                          <td>
+            <p>
+              <code class="computeroutput"><span class="identifier">group</span></code>
+            </p>
+            </td>
+                          <td>
+            <p>
+              Starts a group list.
+            </p>
+            </td>
+                        </tr>
+                        <tr>
+                          <td>
+            <p>
+              <code class="computeroutput"><span class="identifier">item</span></code>
+            </p>
+            </td>
+                          <td>
+            <p>
+              Links items. They must reside inside a group list.
+            </p>
+            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <br class="table-break" />
+                <p>
+        All the elements have two attributes:
+      </p>
+                <div class="itemizedlist">
+                  <ul type="disc">
+                    <li><span class="bold"><strong>tag: </strong></span> Name of the element, it will be
+          showed in the HTML.
+        </li>
+                    <li><span class="bold"><strong>url: </strong></span> URL of the link. It can be relative
+          or absolute. (It is optional)
+        </li>
+                  </ul>
+                </div>
+                <p>
+        A <span class="emphasis"><em>GroupedLinks XML definition</em></span> will look like:
+      </p>
+                <p>
+        
+</p>
+                <pre class="programlisting">
+<span class="special">&lt;?</span><span class="identifier">xml</span> <span class="identifier">version</span><span class="special">=</span><span class="string">"1.0"</span> <span class="identifier">encoding</span><span class="special">=</span><span class="string">"UTF-8"</span> <span class="special">?&gt;</span>
+
+<span class="special">&lt;</span><span class="identifier">groupedLinks</span> <span class="identifier">version</span><span class="special">=</span><span class="string">"1.0"</span><span class="special">&gt;</span>
+
+<span class="special">&lt;</span><span class="identifier">title</span> <span class="identifier">tag</span><span class="special">=</span><span class="string">"Title"</span>      <span class="identifier">url</span><span class="special">=</span><span class="string">"group_1.html"</span><span class="special">/&gt;</span>
+
+<span class="special">&lt;</span><span class="identifier">group</span> <span class="identifier">tag</span><span class="special">=</span><span class="string">"Group 1"</span>    <span class="identifier">url</span><span class="special">=</span><span class="string">"group_1.html"</span><span class="special">&gt;</span>
+
+    <span class="special">&lt;</span><span class="identifier">item</span> <span class="identifier">tag</span><span class="special">=</span><span class="string">"Item A"</span>  <span class="identifier">url</span><span class="special">=</span><span class="string">"group_1/item_A.html"</span><span class="special">/&gt;</span>
+    <span class="special">&lt;</span><span class="identifier">item</span> <span class="identifier">tag</span><span class="special">=</span><span class="string">"Item B"</span>  <span class="identifier">url</span><span class="special">=</span><span class="string">"group_1/item_A.html"</span><span class="special">/&gt;</span>
+    <span class="special">&lt;</span><span class="identifier">item</span> <span class="identifier">tag</span><span class="special">=</span><span class="string">"Item C"</span>  <span class="identifier">url</span><span class="special">=</span><span class="string">"http://www.item_C.com"</span><span class="special">/&gt;</span>
+
+<span class="special">&lt;/</span><span class="identifier">group</span><span class="special">&gt;</span>
+
+<span class="special">&lt;</span><span class="identifier">group</span> <span class="identifier">tag</span><span class="special">=</span><span class="string">"Group 2"</span>    <span class="identifier">url</span><span class="special">=</span><span class="string">"group_2.html"</span><span class="special">&gt;</span>
+
+    <span class="special">&lt;</span><span class="identifier">item</span> <span class="identifier">tag</span><span class="special">=</span><span class="string">"Item A"</span>  <span class="identifier">url</span><span class="special">=</span><span class="string">"group_2/item_A.html"</span><span class="special">/&gt;</span>
+    <span class="special">&lt;</span><span class="identifier">item</span> <span class="identifier">tag</span><span class="special">=</span><span class="string">"Item B"</span>  <span class="identifier">url</span><span class="special">=</span><span class="string">"group_2/item_A.html"</span><span class="special">/&gt;</span>
+
+<span class="special">&lt;/</span><span class="identifier">group</span><span class="special">&gt;</span>
+
+<span class="special">&lt;</span><span class="identifier">group</span> <span class="identifier">tag</span><span class="special">=</span><span class="string">"Group 3"</span>    <span class="identifier">url</span><span class="special">=</span><span class="string">"group_3.html"</span><span class="special">/&gt;</span>
+
+<span class="special">&lt;/</span><span class="identifier">groupedLinks</span><span class="special">&gt;</span>
+</pre>
+                <p>
+      </p>
+              </div>
+              <div class="section" lang="en" xml:lang="en">
+                <div class="titlepage">
+                  <div>
+                    <div>
+                      <h3 class="title">
+                        <a id="grouped_links.tutorial.including_a_groupedlinks_select_box_in_your_html"></a>
+                        <a href="index.html#grouped_links.tutorial.including_a_groupedlinks_select_box_in_your_html" title="Including&#10;      a GroupedLinks select box in your HTML">Including
+      a GroupedLinks select box in your HTML</a>
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+                <p>
+        To include a <span class="emphasis"><em>GroupedLinks select box</em></span> in the body of
+        your HTML you have to create a form with an unique id and call the javascript
+        function <code class="computeroutput"><span class="identifier">grouped_links_select_box</span></code>
+        inside of it.
+      </p>
+                <div class="table">
+                  <a id="id2611051"></a>
+                  <p class="title">
+                    <b>Table 1.2. grouped_links_select_box function</b>
+                  </p>
+                  <div class="table-contents">
+                    <table xmlns="" class="table" summary="grouped_links_select_box function">
+                      <colgroup>
+                        <col xmlns="http://www.w3.org/1999/xhtml" />
+                        <col xmlns="http://www.w3.org/1999/xhtml" />
+                        <col xmlns="http://www.w3.org/1999/xhtml" />
+                      </colgroup>
+                      <thead xmlns="http://www.w3.org/1999/xhtml">
+                        <tr>
+                          <th>
+            <p>
+            </p>
+            </th>
+                          <th>
+            <p>
+              Parameter Name
+            </p>
+            </th>
+                          <th>
+            <p>
+              Purpose
+            </p>
+            </th>
+                        </tr>
+                      </thead>
+                      <tbody xmlns="http://www.w3.org/1999/xhtml">
+                        <tr>
+                          <td>
+            <p>
+              1
+            </p>
+            </td>
+                          <td>
+            <p>
+              GroupedLinks XML URL
+            </p>
+            </td>
+                          <td>
+            <p>
+              <span class="emphasis"><em>GroupedLinks XML definition</em></span> URL.
+            </p>
+            </td>
+                        </tr>
+                        <tr>
+                          <td>
+            <p>
+              2
+            </p>
+            </td>
+                          <td>
+            <p>
+              Form id
+            </p>
+            </td>
+                          <td>
+            <p>
+              id of the form where you want to place the <span class="emphasis"><em>GroupedLinks select
+              box</em></span>.
+            </p>
+            </td>
+                        </tr>
+                        <tr>
+                          <td>
+            <p>
+              3
+            </p>
+            </td>
+                          <td>
+            <p>
+              Base URL
+            </p>
+            </td>
+                          <td>
+            <p>
+              A base URL that will be concatenated to all the relatives URLs.
+            </p>
+            </td>
+                        </tr>
+                        <tr>
+                          <td>
+            <p>
+              5
+            </p>
+            </td>
+                          <td>
+            <p>
+              Selected item
+            </p>
+            </td>
+                          <td>
+            <p>
+              The item that is selected by default. This parameter is optional, if
+              you call the function with only three parameters the tag of the title
+              element is used if there is one in the <span class="emphasis"><em>GroupedLinks XML definition</em></span>.
+            </p>
+            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <br class="table-break" />
+                <p>
+        It is simple enough to be understood from an example:
+      </p>
+                <p>
+        
+</p>
+                <pre class="programlisting">
+<span class="special">&lt;</span><span class="identifier">head</span><span class="special">&gt;</span>
+<span class="special">&lt;</span><span class="identifier">meta</span> <span class="identifier">http</span><span class="special">-</span><span class="identifier">equiv</span><span class="special">=</span><span class="string">"Content-Type"</span> <span class="identifier">content</span><span class="special">=</span><span class="string">"text/html; charset=ISO-8859-1"</span><span class="special">&gt;</span>
+<span class="special">&lt;</span><span class="identifier">title</span><span class="special">&gt;</span><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">GroupedLinks</span> <span class="identifier">Example</span><span class="special">&lt;/</span><span class="identifier">title</span><span class="special">&gt;</span>
+<span class="special">&lt;</span><span class="identifier">link</span> <span class="identifier">rel</span><span class="special">=</span><span class="string">"stylesheet"</span> <span class="identifier">href</span><span class="special">=</span><span class="string">"../../css/grouped_links.css"</span> <span class="identifier">type</span><span class="special">=</span><span class="string">"text/css"</span><span class="special">&gt;</span>
+<span class="special">&lt;/</span><span class="identifier">head</span><span class="special">&gt;</span>
+
+<span class="special">&lt;</span><span class="identifier">body</span><span class="special">&gt;</span>
+
+<span class="special">&lt;!--</span> <span class="comment">/* Include the grouped links java script api */</span> <span class="special">--&gt;</span>
+
+<span class="special">&lt;</span><span class="identifier">script</span> <span class="identifier">type</span><span class="special">=</span><span class="string">"text/javascript"</span> <span class="identifier">src</span><span class="special">=</span><span class="string">"../../js/grouped_links.js"</span><span class="special">&gt;&lt;/</span><span class="identifier">script</span><span class="special">&gt;</span>
+
+<span class="special">&lt;!--</span> <span class="comment">/* Add a form with an "id" attribute */</span> <span class="special">--&gt;</span>
+
+<span class="special">&lt;</span><span class="identifier">form</span> <span class="identifier">id</span><span class="special">=</span><span class="string">"boost_libs_list"</span><span class="special">&gt;</span>
+
+    <span class="special">&lt;!--/*</span>  <span class="identifier">Call</span> <span class="identifier">the</span> <span class="identifier">GroupedLinks</span> <span class="string">"select box"</span> <span class="special">*/--&gt;</span>
+
+    <span class="special">&lt;</span><span class="identifier">script</span> <span class="identifier">type</span><span class="special">=</span><span class="string">"text/javascript"</span><span class="special">&gt;</span>
+
+        <span class="identifier">grouped_links_select_box</span><span class="special">(</span><span class="char">'boost_libs.xml'</span><span class="special">,</span>
+                                 <span class="char">'boost_libs_list'</span><span class="special">,</span>
+                                 <span class="char">'../../'</span><span class="special">,</span>
+                                 <span class="char">'Boost Libraries'</span><span class="special">);</span>
+
+    <span class="special">&lt;/</span><span class="identifier">script</span><span class="special">&gt;</span>
+
+<span class="special">&lt;/</span><span class="identifier">form</span><span class="special">&gt;</span>
+</pre>
+                <p>
+      </p>
+                <div xmlns="" class="note">
+                  <div class="admonition-graphic">
+                    <img alt="[Note]" src="../../doc/html/images/note.png" />
+                  </div>
+                  <div class="admonition-body">
+                    <div class="admonition-title">Note</div>
+                    <div class="admonition-content">
+                      <p xmlns="http://www.w3.org/1999/xhtml">
+          </p>
+                      <p xmlns="http://www.w3.org/1999/xhtml">
+            Remember to change the <code class="computeroutput"><span class="identifier">src</span></code>
+            of the javascript include line to point to the URL of <code class="computeroutput"><span class="identifier">grouped_links</span><span class="special">.</span><span class="identifier">js</span></code>
+            in your system. Try to work with relatives paths so the HTML can be easily
+            moved.
+          </p>
+                      <p xmlns="http://www.w3.org/1999/xhtml">
+        </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="section" lang="en" xml:lang="en">
+                <div class="titlepage">
+                  <div>
+                    <div>
+                      <h3 class="title">
+                        <a id="grouped_links.tutorial.boostbook_integration"></a>
+                        <a href="index.html#grouped_links.tutorial.boostbook_integration" title="Boostbook&#10;      integration">Boostbook
+      integration</a>
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+                <p>
+        Add the following lines to your jamfile.v2
+      </p>
+                <pre class="programlisting">
+<span class="special">&lt;</span><span class="identifier">xsl</span><span class="special">:</span><span class="identifier">param</span><span class="special">&gt;</span><span class="identifier">grouped</span><span class="special">.</span><span class="identifier">links</span><span class="special">.</span><span class="identifier">chapters</span><span class="special">.</span><span class="identifier">show</span><span class="special">=</span><span class="string">"'true'"</span>
+<span class="special">&lt;</span><span class="identifier">xsl</span><span class="special">:</span><span class="identifier">param</span><span class="special">&gt;</span><span class="identifier">grouped</span><span class="special">.</span><span class="identifier">links</span><span class="special">.</span><span class="identifier">sections</span><span class="special">.</span><span class="identifier">show</span><span class="special">=</span><span class="string">"'true'"</span>
+<span class="special">&lt;</span><span class="identifier">xsl</span><span class="special">:</span><span class="identifier">param</span><span class="special">&gt;</span><span class="identifier">grouped</span><span class="special">.</span><span class="identifier">links</span><span class="special">.</span><span class="identifier">sections</span><span class="special">.</span><span class="identifier">xml</span><span class="special">=</span><span class="string">"'sections.XML'"</span> <span class="preprocessor"># your</span> <span class="identifier">XML</span> <span class="identifier">sections</span>
+</pre>
+                <p>
+        GroupedLinks select boxes for boost libraries and internal sections can be
+        requested to boostbook using the following options:
+      </p>
+                <div class="table">
+                  <a id="id2611978"></a>
+                  <p class="title">
+                    <b>Table 1.3. Boostbook GroupedLinks Parameters</b>
+                  </p>
+                  <div class="table-contents">
+                    <table xmlns="" class="table" summary="Boostbook GroupedLinks Parameters">
+                      <colgroup>
+                        <col xmlns="http://www.w3.org/1999/xhtml" />
+                        <col xmlns="http://www.w3.org/1999/xhtml" />
+                      </colgroup>
+                      <thead xmlns="http://www.w3.org/1999/xhtml">
+                        <tr>
+                          <th>
+            <p>
+              Name
+            </p>
+            </th>
+                          <th>
+            <p>
+              Purpose
+            </p>
+            </th>
+                        </tr>
+                      </thead>
+                      <tbody xmlns="http://www.w3.org/1999/xhtml">
+                        <tr>
+                          <td>
+            <p>
+              <code class="computeroutput"><span class="identifier">show</span></code>
+            </p>
+            </td>
+                          <td>
+            <p>
+              Include select box
+            </p>
+            </td>
+                        </tr>
+                        <tr>
+                          <td>
+            <p>
+              <code class="computeroutput"><span class="identifier">xml</span></code>
+            </p>
+            </td>
+                          <td>
+            <p>
+              Path to the XML definition
+            </p>
+            </td>
+                        </tr>
+                        <tr>
+                          <td>
+            <p>
+              <code class="computeroutput"><span class="identifier">url</span></code>
+            </p>
+            </td>
+                          <td>
+            <p>
+              Base URL to use with relative paths
+            </p>
+            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <br class="table-break" />
+                <p>
+        You can configure all the parameters used by boostbook:
+      </p>
+                <pre class="programlisting">
+<span class="special">&lt;</span><span class="identifier">xsl</span><span class="special">:</span><span class="identifier">param</span><span class="special">&gt;</span><span class="identifier">grouped</span><span class="special">.</span><span class="identifier">links</span><span class="special">.</span><span class="identifier">js</span><span class="special">=</span><span class="string">"'grouped_links.js'"</span>
+
+<span class="special">&lt;</span><span class="identifier">xsl</span><span class="special">:</span><span class="identifier">param</span><span class="special">&gt;</span><span class="identifier">grouped</span><span class="special">.</span><span class="identifier">links</span><span class="special">.</span><span class="identifier">chapters</span><span class="special">.</span><span class="identifier">show</span><span class="special">=</span><span class="string">"'true'"</span>
+<span class="special">&lt;</span><span class="identifier">xsl</span><span class="special">:</span><span class="identifier">param</span><span class="special">&gt;</span><span class="identifier">grouped</span><span class="special">.</span><span class="identifier">links</span><span class="special">.</span><span class="identifier">chapters</span><span class="special">.</span><span class="identifier">xml</span><span class="special">=</span><span class="string">"'boost_libs_grouped_links.XML'"</span>
+<span class="special">&lt;</span><span class="identifier">xsl</span><span class="special">:</span><span class="identifier">param</span><span class="special">&gt;</span><span class="identifier">grouped</span><span class="special">.</span><span class="identifier">links</span><span class="special">.</span><span class="identifier">chapters</span><span class="special">.</span><span class="identifier">url</span><span class="special">=</span><span class="string">"''"</span>
+
+<span class="special">&lt;</span><span class="identifier">xsl</span><span class="special">:</span><span class="identifier">param</span><span class="special">&gt;</span><span class="identifier">grouped</span><span class="special">.</span><span class="identifier">links</span><span class="special">.</span><span class="identifier">sections</span><span class="special">.</span><span class="identifier">show</span><span class="special">=</span><span class="string">"'true'"</span>
+<span class="special">&lt;</span><span class="identifier">xsl</span><span class="special">:</span><span class="identifier">param</span><span class="special">&gt;</span><span class="identifier">grouped</span><span class="special">.</span><span class="identifier">links</span><span class="special">.</span><span class="identifier">sections</span><span class="special">.</span><span class="identifier">xml</span><span class="special">=</span><span class="string">"'sections_grouped_links.XML'"</span>
+<span class="special">&lt;</span><span class="identifier">xsl</span><span class="special">:</span><span class="identifier">param</span><span class="special">&gt;</span><span class="identifier">grouped</span><span class="special">.</span><span class="identifier">links</span><span class="special">.</span><span class="identifier">sections</span><span class="special">.</span><span class="identifier">url</span><span class="special">=</span><span class="string">"''"</span>
+</pre>
+              </div>
+            </div>
+            <div class="section" lang="en" xml:lang="en">
+              <div class="titlepage">
+                <div>
+                  <div>
+                    <h2 class="title" style="clear: both">
+                      <a id="grouped_links.examples"></a>
+                      <a href="index.html#grouped_links.examples" title="Examples">Examples</a>
+                    </h2>
+                  </div>
+                </div>
+              </div>
+              <p>
+      In the folder <code class="computeroutput"><span class="identifier">example</span></code> you can
+      find two examples using GropedLinks API.
+    </p>
+              <div class="variablelist">
+                <p class="title">
+                  <b></b>
+                </p>
+                <dl>
+                  <dt>
+                    <span class="term">simple</span>
+                  </dt>
+                  <dd>
+        How to put a GropedLinks select box in your HTML body.
+      </dd>
+                  <dt>
+                    <span class="term">boostbook</span>
+                  </dt>
+                  <dd>
+        How to integrate GroupedLinks with boostbook and quickbook docs.
+      </dd>
+                </dl>
+              </div>
+            </div>
+            <div class="section" lang="en" xml:lang="en">
+              <div class="titlepage">
+                <div>
+                  <div>
+                    <h2 class="title" style="clear: both">
+                      <a id="grouped_links.acknowledgments"></a>
+                      <a href="index.html#grouped_links.acknowledgments" title="Acknowledgments">Acknowledgments</a>
+                    </h2>
+                  </div>
+                </div>
+              </div>
+              <p>
+      Thanks Martin Capeletto (my brother) for teaching me the basics of javascript.
+    </p>
+              <p>
+      Thanks to the ones that participates in constructing the new boost docs look
+      &amp; feel. Special thanks to John Maddock for his support during this period.
+    </p>
+            </div>
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div class="spirit-nav"></div>
+    <div id="footer">
+      <div id="footer-left">
+        <div id="revised">Revised: June 13, 2007 at 00:31:24 GMT</div>
+        <div id="copyright"></div>
+        <div id="license">
+          <p>Distributed under the
+                  <a href="/LICENSE_1_0.txt" class="internal">Boost Software License, Version 1.0</a>.
+               </p>
+        </div>
+      </div>
+      <div id="footer-right">
+        <div id="banners">
+          <p id="banner-xhtml">
+            <a href="http://validator.w3.org/check?uri=referer" class="external">XHTML 1.0</a>
+          </p>
+          <p id="banner-css">
+            <a href="http://jigsaw.w3.org/css-validator/check/referer" class="external">CSS</a>
+          </p>
+          <p id="banner-sourceforge">
+            <a href="http://sourceforge.net" class="external">SourceForge</a>
+          </p>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </body>
+</html>
