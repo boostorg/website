@@ -11,7 +11,7 @@ $_irc = new boost_irc_stats('http://www.acc.umu.se/~zao/stats/ibd.html');
 <head>
   <?php $_irc->content_head(); ?>
   <link rel="icon" href="/favicon.ico" type="image/ico" />
-  <link rel="stylesheet" type="text/css" href="/style/section-doc.css" />
+  <link rel="stylesheet" type="text/css" href="/style/section-community.css" />
   <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
 </head>
 
@@ -21,13 +21,19 @@ $_irc = new boost_irc_stats('http://www.acc.umu.se/~zao/stats/ibd.html');
   </div>
 
   <div id="body">
-    <div class="section section-0" id="content">
-      <div class="section-title">
-        <h1>Boost C++ Libraries - IRC Stats (#ibd)</h1>
-      </div>
+    <div id="body-inner">
+      <div id="content">
+        <div class="section" id="intro">
+          <div class="section-0">
+            <div class="section-title">
+              <h1>Boost C++ Libraries - IRC Stats (#ibd)</h1>
+            </div>
 
-      <div class="section-body">
-        <?php $_irc->content(); ?>
+            <div class="section-body" id="irc-stats">
+              <?php $_irc->content(); ?>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

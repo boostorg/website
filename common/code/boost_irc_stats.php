@@ -129,6 +129,8 @@ HTML
         
         preg_match('@<body>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
         preg_match('@</body>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
+        //~ preg_match('@<div align="center">@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
+        //~ preg_match('@</div>\s+</body>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
         if (!isset($body_begin[0]))
         {
             return;
@@ -146,11 +148,27 @@ HTML
         }
         
         $text = preg_replace(
+            '@src="[^/]+/([^"\s]*)\.png"@i',
+            'class="irc-stats-${1}" src="/gfx/space.png"',
+            $text );
+        $text = preg_replace(
+            '@>([0-9]+)(\.[0-9]+)?%(<br />)?<@i',
+            '><span class="irc-stats-percent">${1}<span class="irc-stats-decimal">${2}%</span></span><',
+            $text );
+        $text = preg_replace(
             '@<[/]?(font|hr)[^>]*>@i',
             '',
             $text );
         $text = preg_replace(
-            '@[\s]+(border|cellpadding|cellspacing|width|height|valign|align|frame|rules|naturalsizeflag|background|wrap)=[^\s>]+@i',
+            '@<td>&nbsp;</td>@i',
+            '<td class="empty">&nbsp;</td>',
+            $text );
+        $text = preg_replace(
+            '@[\s]+(border|cellpadding|cellspacing|valign|align|frame|rules|naturalsizeflag|background|wrap)=[^\s>]+@i',
+            '',
+            $text );
+        $text = preg_replace(
+            '@[\s]+width="?(100%|710|520|714)"?@i',
             '',
             $text );
         
