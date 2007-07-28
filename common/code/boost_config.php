@@ -20,7 +20,7 @@ switch ($_SERVER['HTTP_HOST'])
   case 'localhost':
   case 'boost.borg.redshift-software.com':
   {
-    define('BOOST_CONFIG_FILE','/DevRoots/Boost-SVN/website/workplace/config.php');
+    define('BOOST_CONFIG_FILE','/DevRoots/Boost/website/workplace/config.php');
     define('ARCHIVE_PREFIX', '/DevRoots/Boost/boost_');
     define('UNZIP', 'unzip');
   }
