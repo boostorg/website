@@ -5,6 +5,23 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
+/*
+BOOST_CONFIG_FILE
+  Path to local configuration, as a PHP source file.
+
+BOOST_RSS_DIR
+  Path to directory with RSS feeds from Gmane.
+
+ARCHIVE_PREFIX
+  Partial path for Boost release archives, the ZIP versions.
+
+UNZIP
+  Unzip program to use to extract files from ZIPs.
+
+ARCHIVE_FILE_PREFIX
+  Prefix for the root directory in the Boost ZIP archives.
+*/
+
 switch ($_SERVER['HTTP_HOST'])
 {
   case 'boost.org':
@@ -12,8 +29,6 @@ switch ($_SERVER['HTTP_HOST'])
   case 'beta.boost.org':
   {
     define('BOOST_CONFIG_FILE','/home/grafik/www.boost.org/config.php');
-    define('ARCHIVE_PREFIX', '/home/grafik/www.boost.org/boost_');
-    define('UNZIP', '/usr/bin/unzip');
   }
   break;
   
@@ -21,8 +36,6 @@ switch ($_SERVER['HTTP_HOST'])
   case 'boost.borg.redshift-software.com':
   {
     define('BOOST_CONFIG_FILE','/DevRoots/Boost/website/workplace/config.php');
-    define('ARCHIVE_PREFIX', '/DevRoots/Boost/boost_');
-    define('UNZIP', 'unzip');
   }
   break;
 }

@@ -1,52 +1,10 @@
 <?php
 /*
-  Copyright 2005 Redshift Software, Inc.
+  Copyright 2005-2007 Redshift Software, Inc.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
-
-if ($_SERVER['HTTP_HOST'] === 'boost.org' ||
-  $_SERVER['HTTP_HOST'] === 'beta.boost.org') {
-    @define('ARCHIVE_PREFIX', '/home/grafik/www.boost.org/boost_');
-    @define('UNZIP', '/usr/bin/unzip');
-}
-else if ($_SERVER['HTTP_HOST'] === 'boost.borg.redshift-software.com') {
-    @define('ARCHIVE_PREFIX', 'C:/DevRoots/Boost/boost_');
-    @define('UNZIP', 'unzip');
-}
-else if ($_SERVER['HTTP_HOST'] === 'boost.redshift-software.com') {
-    @define('ARCHIVE_PREFIX', '/export/website/boost/archives/boost_');
-    @define('UNZIP', '/usr/local/bin/unzip');
-}
-@define('ARCHIVE_FILE_PREFIX', 'boost_');
-
-function _preg_replace_bounds($front_regex,$back_regex,$front_replace,$back_replace,$text)
-{
-    $offset = 0;
-    $result = '';
-    while (TRUE)
-    {
-        $subject = substr($text,$offset);
-        if (preg_match($front_regex,$subject,$begin,PREG_OFFSET_CAPTURE) == 0 ||
-            preg_match($back_regex,$subject,$end,PREG_OFFSET_CAPTURE,
-                $begin[0][1]+strlen($begin[0][0])) == 0
-            )
-        { break; }
-        else
-        {
-            $result .= substr($subject,0,$begin[0][1]);
-            $result .= preg_replace($front_regex,$front_replace,$begin[0][0]);
-            $result .= substr(
-                $subject,
-                $begin[0][1]+strlen($begin[0][0]),
-                $end[0][1]-($begin[0][1]+strlen($begin[0][0])) );
-            $result .= preg_replace($back_regex,$back_replace,$end[0][0]);
-            $offset += $end[0][1]+strlen($end[0][0]);
-        }
-    }
-    if ($result === '') { return $text; }
-    else { return $result . substr($text,$offset); }
-}
+require_once(dirname(__FILE__) . '/boost.php');
 
 class archive_file
 {
