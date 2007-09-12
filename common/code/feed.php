@@ -6,33 +6,6 @@
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
-
-function _field_cmp_key_($a,$b)
-{ return strcmp($a['key'],$b['key']); }
-
-function _field_cmp_title_($a,$b)
-{ return strcmp($a['title'],$b['title']); }
-
-function _field_cmp_description_($a,$b)
-{ return strcmp($a['description'],$b['description']); }
-
-function _field_cmp_guid_($a,$b)
-{ return strcmp($a['guid'],$b['guid']); }
-
-function _field_cmp_pubdate_($a,$b)
-{ return _field_cmp_less_($b['pubdate'],$a['pubdate']); }
-
-function _field_cmp_less_($i,$j)
-{
-    return ($i == $j) ? 0 : (($i < $j) ? -1 : 1);
-}
-
-function _field_cmp_($r,$a,$b)
-{
-    if ($r == 0) { return _field_cmp_pubDate_($a,$b); }
-    else { return $r; }
-}
-
 class boost_feed
 {
     var $db = array();

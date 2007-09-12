@@ -16,7 +16,12 @@ class archive_file
     var $head_content_ = NULL;
     var $content_ = NULL;
     
-    function archive_file($pattern, $vpath)
+    function archive_file(
+        $pattern,
+        $vpath,
+        $archive_subdir = true,
+        $archive_prefix = ARCHIVE_PREFIX,
+        $archive_file_prefix = ARCHIVE_FILE_PREFIX)
     {
         $path_parts = array();
         preg_match($pattern, $vpath, $path_parts);
@@ -32,6 +37,7 @@ class archive_file
                 array('@^libs/preprocessor/doc/.*(html|htm)$@i','raw','text/html'),
                 array('@^libs.*(html|htm)$@i','boost_libs_html','text/html'),
                 array('@^doc/html/.*html$@i','boost_book_html','text/html'),
+                array('@^boost/.*$@i','text','text/plain'),
                 array('@[.](txt|py|rst)$@i','text','text/plain'),
                 array('@[.](cpp|hpp)$@i','cpp','text/plain'),
                 array('@[.]png$@i','raw','image/png'),
@@ -40,13 +46,20 @@ class archive_file
                 array('@[.]css$@i','raw','text/css'),
                 array('@[.]js$@i','raw','application/x-javascript'),
                 array('@[.]pdf$@i','raw','application/pdf'),
-                array('@^boost/.*$@i','text','text/plain'),
+                array('@[.](html|htm)$@i','raw','text/html'),
                 );
         }
         
         $this->key_ = $path_parts[2];
-        $this->file_ = ARCHIVE_FILE_PREFIX . $path_parts[1] . '/' . $path_parts[2];
-        $this->archive_ = str_replace('\\','/', ARCHIVE_PREFIX . $path_parts[1] . '.zip');
+        if ($archive_subdir)
+        {
+            $this->file_ = $archive_file_prefix . $path_parts[1] . '/' . $path_parts[2];
+        }
+        else
+        {
+            $this->file_ = $archive_file_prefix . $path_parts[2];
+        }
+        $this->archive_ = str_replace('\\','/', $archive_prefix . $path_parts[1] . '.zip');
         
         foreach ($info_map as $i)
         {
@@ -68,6 +81,7 @@ class archive_file
         else if ($this->extractor_ == 'raw')
         {
             $this->_extract_raw($unzip);
+            //~ print "--- $unzip";
         }
         else
         {
