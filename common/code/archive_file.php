@@ -19,6 +19,7 @@ class archive_file
     function archive_file(
         $pattern,
         $vpath,
+        $get_as_raw = false,
         $archive_subdir = true,
         $archive_prefix = ARCHIVE_PREFIX,
         $archive_file_prefix = ARCHIVE_FILE_PREFIX)
@@ -78,7 +79,7 @@ class archive_file
             header("HTTP/1.0 404 Not Found");
             $this->extractor_ = 'raw';
         }
-        else if ($this->extractor_ == 'raw')
+        else if ($get_as_raw || $this->extractor_ == 'raw')
         {
             $this->_extract_raw($unzip);
             //~ print "--- $unzip";
