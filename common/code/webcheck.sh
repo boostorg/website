@@ -5,4 +5,5 @@
  "--base-only" \
  "--quiet" \
  "--output=/home/grafik/www.boost.org/testing/webcheck" \
- "--force"
+ "--force" \
+ "http://beta.boost.org/"
