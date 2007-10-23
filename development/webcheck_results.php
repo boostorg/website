@@ -10,7 +10,6 @@ if ($p)
   if (preg_match('@[.](html|htm)$@i')) { header('Content-type: text/html'); }
   else if (preg_match('@[.](css)$@i')) { header('Content-type: text/css'); }
   else if (preg_match('@[.](js)$@i')) { header('Content-type: application/x-javascript'); }
-  readfile("/home/grafik/www.boost.org/webcheck/".basename($p));
-  echo "<!-- ",$p," -->";
+  readfile("/home/grafik/www.boost.org/testing/webcheck/".basename($p));
 }
 ?>
