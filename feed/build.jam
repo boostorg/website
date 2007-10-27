@@ -4,3 +4,53 @@
 
 build-project news ;
 build-project downloads ;
+
+import feature ;
+import property ;
+import path ;
+
+feature.feature title : : free ;
+feature.feature uri : : free ;
+feature.feature count : : free ;
+feature.feature cwd : : free ;
+
+rule get ( property : properties * )
+{
+    local r = [ property.select $(property) : $(properties) ] ;
+    return $(r:G=) ;
+}
+
+rule rss ( targets * : sources * : properties * )
+{
+    on $(targets) TITLE
+        = [ get <title> : $(properties) ] ;
+    on $(targets) LINK
+        = [ get <uri> : $(properties) ] ;
+    on $(targets) COUNT
+        = [ get <count> : $(properties) ] ;
+    on $(targets) BBOOK2RSS
+        = [ path.native [ path.join [ get <cwd> : $(properties) ] bbook2rss.py ] ] ;
+}
+
+actions rss
+{
+    python "$(BBOOK2RSS)" "--channel-title=$(TITLE)" "--channel-link=$(LINK)" "--count=$(COUNT)" "--output=$(<)" "$(>)"
+}
+
+path-constant CWD : . ;
+
+make news.rss : [ glob news/*.xml ] : @rss :
+    <title>"Boost News"
+    <uri>"http://beta.boost.org/feed/news.rss"
+    <count>5
+    <location>$(CWD)
+    <cwd>$(CWD)
+    ;
+
+make downloads.rss : [ glob downloads/*.xml ] : @rss :
+    <title>"Boost Downloads"
+    <uri>"http://www.boost.org/feed/download.rss"
+    <count>5
+    <location>$(CWD)
+    <cwd>$(CWD)
+    ;
