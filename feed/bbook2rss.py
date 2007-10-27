@@ -118,7 +118,7 @@ class BoostBook2RSS:
     
     def x_article(self,node):
         description_xhtml = self.new_node('div',klass='description')
-        brief_xhtml = self.new_node('div',
+        brief_xhtml = self.new_node('span',
             self.x(self.get_child(self.get_child(node,tag='articleinfo'),
                 tag='articlepurpose'
                 )),
