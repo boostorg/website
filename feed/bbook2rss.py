@@ -117,14 +117,13 @@ class BoostBook2RSS:
         return result
     
     def x_article(self,node):
-        description_xhtml = self.new_node('description')
-        description_xhtml.appendChild(self.x(
-            self.get_child(
-                self.get_child(node,tag='articleinfo'),
+        description_xhtml = self.new_node('div',klass='description')
+        brief_xhtml = self.new_node('div',
+            self.x(self.get_child(self.get_child(node,tag='articleinfo'),
                 tag='articlepurpose'
-                )
-            ))
-        description_xhtml.appendChild(self.new_node('hr'))
+                )),
+            klass='brief'
+            )
         body_item = self.get_child(node,tag='title').nextSibling
         while body_item:
             item = self.x(body_item)
@@ -135,7 +134,11 @@ class BoostBook2RSS:
             'item',
             self.new_text('title',node.getAttribute('name')),
             self.new_text('pubDate',node.getAttribute('last-revision')),
-            description_xhtml
+            self.new_text('description',
+                description_xhtml.toxml('utf-8')+\
+                '&lt;hr/&gr;'+\
+                brief_xhtml.toxml('utf-8')
+                )
             )
     
     def x__text(self,node):
