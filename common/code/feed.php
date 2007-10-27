@@ -76,7 +76,7 @@ class boost_feed
                 }
                 if (isset($item['description']))
                 {
-                    $desc = preg_split('@<hr[ ]?[/]?>@i',$item['description']);
+                    $desc = preg_split('@<hr[^/]*[/]>@i',$item['description']);
                     $item['brief'] = $desc[0];
                     if (isset($desc[1]))
                     {
