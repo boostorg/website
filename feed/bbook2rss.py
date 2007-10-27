@@ -136,7 +136,7 @@ class BoostBook2RSS:
             self.new_text('pubDate',node.getAttribute('last-revision')),
             self.new_text('description',
                 brief_xhtml.toxml('utf-8')+\
-                '&lt;hr/&gr;'+\
+                '<hr/>'+\
                 description_xhtml.toxml('utf-8')
                 )
             )
