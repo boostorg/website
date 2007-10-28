@@ -26,7 +26,20 @@
             </div>
 
             <div class="section-body">
-              <h2>Getting Content</h2>
+              <ul class="toc">
+                <li><a href="#GettingContent">Getting Content</a></li>
+
+                <li><a href="#ExistingPage">Existing Page</a></li>
+
+                <li><a href="#NewPage">New Page</a></li>
+
+                <li><a href="#Menus">Menus, Sidebars, and Index</a></li>
+
+                <li><a href="#Feeds">Feeds</a></li>
+              </ul>
+
+              <h2><a name="GettingContent" id="GettingContent"></a>Getting
+              Content</h2>
 
               <p>The website content lives in the <a href=
               "http://svn.boost.org">Boost Subversion repository</a>. To get
@@ -41,7 +54,8 @@ svn co https://svn.boost.org/svn/boost/website/public_html/beta
 svn co https://svn.boost.org/svn/boost/website/public_html/live
 </pre>
 
-              <h2>Existing Page</h2>
+              <h2><a name="ExistingPage" id="ExistingPage"></a>Existing
+              Page</h2>
 
               <p>The web content is structured to be as simple as possible to
               make generic editing possible. At minimum only a text editor
@@ -121,7 +135,7 @@ tidy --tidy-mark no -i -wrap 78 -m -asxhtml --merge-divs no --merge-spans no --d
                 </tr>
               </table>
 
-              <h2>New Page</h2>
+              <h2><a name="NewPage" id="NewPage"></a>New Page</h2>
 
               <p>To make adding new pages easier there is a <a href=
               "http://svn.boost.org/svn/boost/website/workplace/template.html">
@@ -244,7 +258,8 @@ tidy --tidy-mark no -i -wrap 78 -m -asxhtml --merge-divs no --merge-spans no --d
               needs to add an entry to the page so it can be accessed from
               the sidebar and index. See below...</p>
 
-              <h2>Menus, Sidebars, and Index</h2>
+              <h2><a name="Menus" id="Menus"></a>Menus, Sidebars, and
+              Index</h2>
 
               <p>The various navigation elements are structured to make
               adding new entries easy and to keep all places where wuch
@@ -267,6 +282,36 @@ tidy --tidy-mark no -i -wrap 78 -m -asxhtml --merge-divs no --merge-spans no --d
 
                 <li>Documentation: <tt>/common/menu-doc.html</tt></li>
               </ul>
+
+              <h2><a name="Feeds" id="Feeds"></a>Feeds</h2>
+
+              <p>There are various section of the web site that correspond to
+              RSS feeds: news, downloads, and the version history. Even
+              though they are displayed in various locations on the site the
+              source feed documents are in the <tt>/feed</tt> directory. The
+              content is not directly editable, but instead is generated from
+              source Quickbook documents. For example to add a news item one
+              would:</p>
+
+              <ol>
+                <li>Create a new file in the <tt>/feed/news</tt> directory,
+                say <tt>/feed/news/gui_review_ends.qbk</tt>.</li>
+
+                <li>In a shell, go to the <tt>/feed</tt> directory, and run
+                <tt>bjam --boost-build=/path/to/tools/build/v2</tt>, or
+                <tt>bjam --boost=/path/to/boost-root</tt>. This will generate
+                the BoostBook XML for the new news item and regenerate the
+                <tt>/feed/news.rss</tt> file.</li>
+
+                <li>Add the new files to the SVN repository, and commit.</li>
+              </ol>
+
+              <p>The same procedure applies to the other feeds, but keep in
+              mind that some feeds may combine entries from more than one
+              feed subdirectory. Currently this requires Quickbook be
+              precompiled and preconfigured in your <tt>user-config.jam</tt>.
+              And also requires Python, in the path, to do the BoostBook to
+              RSS translation.</p>
             </div>
           </div>
         </div>
@@ -288,7 +333,7 @@ tidy --tidy-mark no -i -wrap 78 -m -asxhtml --merge-divs no --merge-spans no --d
       </div>
 
       <div id="copyright">
-        <p>Copyright Rene Rivera 2006.</p>
+        <p>Copyright Rene Rivera 2006-2007.</p>
       </div><!--#include virtual="/common/footer-license.html" -->
     </div>
 
