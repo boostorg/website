@@ -2,8 +2,9 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-build-project news ;
 build-project downloads ;
+build-project history ;
+build-project news ;
 
 import feature ;
 import property ;
@@ -22,34 +23,44 @@ rule get ( property : properties * )
 
 rule rss ( targets * : sources * : properties * )
 {
-    on $(targets) TITLE
+    TITLE on $(targets)
         = [ get <title> : $(properties) ] ;
-    on $(targets) LINK
+    LINK on $(targets)
         = [ get <uri> : $(properties) ] ;
-    on $(targets) COUNT
+    COUNT on $(targets)
         = [ get <count> : $(properties) ] ;
-    on $(targets) BBOOK2RSS
+    BB2RSS on $(targets)
         = [ path.native [ path.join [ get <cwd> : $(properties) ] bbook2rss.py ] ] ;
 }
 
 actions rss
 {
-    python "$(BBOOK2RSS)" "--channel-title=$(TITLE)" "--channel-link=$(LINK)" "--count=$(COUNT)" "--output=$(<)" "$(>)"
+    python "$(BB2RSS)" "--channel-title=$(TITLE)" "--channel-link=$(LINK)" "--count=$(COUNT)" "--output=$(<)" "$(>)"
 }
 
 path-constant CWD : . ;
 
-make news.rss : [ glob news/*.xml ] : @rss :
-    <title>"Boost News"
-    <uri>"http://beta.boost.org/feed/news.rss"
+make downloads.rss : [ glob downloads/*.xml ]
+    : @rss :
+    <title>"Boost Downloads"
+    <uri>"http://www.boost.org/feed/download.rss"
     <count>5
     <location>$(CWD)
     <cwd>$(CWD)
     ;
 
-make downloads.rss : [ glob downloads/*.xml ] : @rss :
-    <title>"Boost Downloads"
-    <uri>"http://www.boost.org/feed/download.rss"
+make history.rss : [ glob history/*.xml ]
+    : @rss :
+    <title>"Boost History"
+    <uri>"http://beta.boost.org/feed/history.rss"
+    <location>$(CWD)
+    <cwd>$(CWD)
+    ;
+
+make news.rss : [ glob news/*.xml ] [ glob history/*.xml ]
+    : @rss :
+    <title>"Boost News"
+    <uri>"http://beta.boost.org/feed/news.rss"
     <count>5
     <location>$(CWD)
     <cwd>$(CWD)
