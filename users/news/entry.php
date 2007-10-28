@@ -8,7 +8,7 @@ $_guid = basename($_SERVER["PATH_INFO"]);
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Boost News</title>
+  <title><?php print $_news->db[$_guid]['title']; ?></title>
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-boost.css" />
@@ -26,7 +26,7 @@ $_guid = basename($_SERVER["PATH_INFO"]);
         <div class="section" id="intro">
           <div class="section-0">
             <div class="section-title">
-              <h1>Boost News</h1>
+              <h1><?php print $_news->db[$_guid]['title']; ?></h1>
             </div>
 
             <div class="section-body">
@@ -58,7 +58,7 @@ $_guid = basename($_SERVER["PATH_INFO"]);
       </div>
 
       <div id="copyright">
-        <p>Copyright Rene Rivera 2006.</p>
+        <p>Copyright Rene Rivera 2006-2007.</p>
       </div><?php virtual("/common/footer-license.html"); ?>
     </div>
 

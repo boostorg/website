@@ -1,6 +1,6 @@
 <?php
 require_once(dirname(__FILE__) . '/../../common/code/feed.php');
-$_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/users/download');
+$_history = new boost_feed(dirname(__FILE__) . '/../../feed/history.rss', '/users/history');
 $_guid = basename($_SERVER["PATH_INFO"]);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -8,7 +8,7 @@ $_guid = basename($_SERVER["PATH_INFO"]);
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title><?php print $_downloads->db[$_guid]['title']; ?></title>
+  <title><?php print $_history->db[$_guid]['title']; ?></title>
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-boost.css" />
@@ -26,17 +26,17 @@ $_guid = basename($_SERVER["PATH_INFO"]);
         <div class="section" id="intro">
           <div class="section-0">
             <div class="section-title">
-              <h1><?php print $_downloads->db[$_guid]['title']; ?></h1>
+              <h1><?php print $_history->db[$_guid]['title']; ?></h1>
             </div>
 
             <div class="section-body">
               <h2><span class=
-              "news-title"><?php print $_downloads->db[$_guid]['title']; ?></span>
+              "news-title"><?php print $_history->db[$_guid]['title']; ?></span>
               <span class=
-              "news-date"><?php print $_downloads->db[$_guid]['date']; ?></span></h2>
+              "news-date"><?php print $_history->db[$_guid]['date']; ?></span></h2>
 
               <div class="news-description">
-                <?php print $_downloads->db[$_guid]['description']; ?>
+                <?php print $_history->db[$_guid]['description']; ?>
               </div>
             </div>
           </div>
