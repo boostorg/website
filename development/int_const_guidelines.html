@@ -114,8 +114,8 @@ op INTEGRAL_CONSTANT1
               also be incomplete, more guidelines may be added as compilers
               change and/or more problems are encountered.</p>
 
-              <p><b><i>When declaring constants that are class members always
-              use the macro <code>BOOST_STATIC_CONSTANT.</code></i></b></p>
+              <h3>When declaring constants that are class members always use
+              the macro <code>BOOST_STATIC_CONSTANT.</code></h3>
               <pre>
 template &lt;class T&gt;
 struct myclass
@@ -130,27 +130,28 @@ struct myclass
               expressions). The BOOST_STATIC_CONSTANT macro uses the most
               appropriate method for the compiler in question.</p>
 
-              <p><b><i>Don't declare integral constant expressions whose type
-              is wider than int.</i></b></p>
+              <h3>Don't declare integral constant expressions whose type is
+              wider than int.</h3>
 
               <p>Rationale: while in theory all integral types are usable in
               integral constant expressions, in practice many compilers limit
               integral constant expressions to types no wider than
-              <b>int</b>.</p>
+              <code>int</code>.</p>
 
-              <p><b><i>Don't use logical operators in integral constant
-              expressions; use template meta-programming instead.</i></b></p>
+              <h3>Don't use logical operators in integral constant
+              expressions; use template meta-programming instead.</h3>
 
-              <p>The header &lt;boost/type_traits/ice.hpp&gt; contains a
-              number of workaround templates, that fulfil the role of logical
-              operators, for example instead of:</p>
-
-              <p><code>INTEGRAL_CONSTANT1 || INTEGRAL_CONSTANT2</code></p>
+              <p>The header <code>&lt;boost/type_traits/ice.hpp&gt;</code>
+              contains a number of workaround templates, that fulfil the role
+              of logical operators, for example instead of:</p>
+              <pre>
+INTEGRAL_CONSTANT1 || INTEGRAL_CONSTANT2
+</pre>
 
               <p>Use:</p>
-
-              <p>
-              <code>::boost::type_traits::ice_or&lt;INTEGRAL_CONSTANT1,INTEGRAL_CONSTANT2&gt;::value</code></p>
+              <pre>
+::boost::type_traits::ice_or&lt;INTEGRAL_CONSTANT1,INTEGRAL_CONSTANT2&gt;::value
+</pre>
 
               <p>Rationale: A number of compilers (particularly the Borland
               and Microsoft compilers), tend to not to recognise integral
@@ -159,18 +160,20 @@ struct myclass
               up when the integral constant expression is nested deep inside
               template code, and is hard to reproduce and diagnose.</p>
 
-              <p><b><i>Don't use any operators in an integral constant
-              expression used as a non-type template parameter</i></b></p>
+              <h3>Don't use any operators in an integral constant expression
+              used as a non-type template parameter</h3>
 
               <p>Rather than:</p>
-
-              <p><code>typedef myclass&lt;INTEGRAL_CONSTANT1 ==
-              INTEGRAL_CONSTANT2&gt; mytypedef;</code></p>
+              <pre>
+typedef myclass&lt;INTEGRAL_CONSTANT1 ==
+              INTEGRAL_CONSTANT2&gt; mytypedef;
+</pre>
 
               <p>Use:</p>
-
-              <p><code>typedef myclass&lt; some_symbol&gt;
-              mytypedef;</code></p>
+              <pre>
+typedef myclass&lt; some_symbol&gt;
+              mytypedef;
+</pre>
 
               <p>Where <code>some_symbol</code> is the symbolic name of a an
               integral constant expression whose value is
@@ -182,8 +185,8 @@ struct myclass
               template parameters, even though such expressions can be used
               as integral constant expressions elsewhere.</p>
 
-              <p><b><i>Always use a fully qualified name to refer to an
-              integral constant expression.</i></b></p>
+              <h3>Always use a fully qualified name to refer to an integral
+              constant expression.</h3>
 
               <p>For example:</p>
               <pre>
@@ -195,12 +198,12 @@ struct myclass
               expression unless the name is fully qualified (which is to say
               it starts with <code>::</code>).</p>
 
-              <p><b><i>Always leave a space after a '<code>&lt;</code>' and
-              before '<code>::</code>'</i></b></p>
+              <h3>Always leave a space after a '<code>&lt;</code>' and before
+              '<code>::</code>'</h3>
 
               <p>For example:</p>
               <pre>
-<code>typedef</code> myclass&lt; ::boost::is_integral&lt;some_type&gt;::value&gt; mytypedef;
+typedef myclass&lt; ::boost::is_integral&lt;some_type&gt;::value&gt; mytypedef;
                 ^
                 ensure there is space here!
 </pre>
@@ -209,8 +212,7 @@ struct myclass
               right, so <code>&lt;::</code> is interpreted as the same as
               <code>[:</code>.</p>
 
-              <p><b><i>Don't use local names as integral constant
-              expressions</i></b></p>
+              <h3>Don't use local names as integral constant expressions</h3>
 
               <p>Example:</p>
               <pre>
@@ -253,8 +255,8 @@ struct foobar
 };
 </pre>
 
-              <p><b><i>Don't use dependent default parameters for non-type
-              template parameters.</i></b></p>
+              <h3>Don't use dependent default parameters for non-type
+              template parameters.</h3>
 
               <p>For example:</p>
               <pre>
@@ -277,7 +279,7 @@ struct foobar;
               that are compiler specific, and/or break one or more of the
               coding guidelines.</p>
 
-              <p><b><i>Be careful of numeric_limits</i></b></p>
+              <h3>Be careful of numeric_limits</h3>
 
               <p>There are three issues here:</p>
 
@@ -343,7 +345,7 @@ struct limits_test
 };
 </pre>
 
-              <p><b><i>Be careful how you use the sizeof operator</i></b></p>
+              <h3>Be careful how you use the sizeof operator</h3>
 
               <p>As far as I can tell, all compilers treat sizeof expressions
               correctly when the argument is the name of a type (or a
@@ -361,8 +363,7 @@ struct limits_test
                 value with Metroworks C++).</li>
               </ol>
 
-              <p><b><i>Don't use boost::is_convertible unless you have
-              to</i></b></p>
+              <h3>Don't use boost::is_convertible unless you have to</h3>
 
               <p>Since is_convertible is implemented in terms of the sizeof
               operator, it consistently gives the wrong value when used with
