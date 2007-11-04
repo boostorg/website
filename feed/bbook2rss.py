@@ -187,7 +187,11 @@ class BoostBook2RSS:
     def x_literal(self,node):
         return self.new_node('tt',
             *self.x_children(node))
-    
+
+    def x_emphasis(self,node):
+        return self.new_node('em',
+            *self.x_children(node))
+
     def x_inlinemediaobject(self,node):
         image = self.get_child(node,'imageobject')
         if image:
