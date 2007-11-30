@@ -125,16 +125,22 @@ class BoostBook2RSS:
             klass='brief'
             )
         body_item = self.get_child(node,tag='title').nextSibling
+        download_item = None
         while body_item:
             item = self.x(body_item)
             if item:
-                description_xhtml.appendChild(item)
+                download_i = self.get_child(item,tag='boostbook:download')
+                if download_i:
+                    download_item = download_i
+                else:
+                    description_xhtml.appendChild(item)
             body_item = body_item.nextSibling
         return self.new_node(
             'item',
             self.new_text('title',node.getAttribute('name')),
             self.new_text('pubDate',node.getAttribute('last-revision')),
             self.new_text('boostbook:purpose',brief_xhtml.toxml('utf-8')),
+            download_item,
             self.new_text('description',description_xhtml.toxml('utf-8'))
             )
     
@@ -216,6 +222,10 @@ class BoostBook2RSS:
             klass='purpose',
             *self.x_children(node))
     
+    def x_download(self,node):
+        return self.new_text('boostbook:download',
+            self.get_child(node).data)
+    
     def get_child( self, root, tag = None, id = None, name = None):
         for n in root.childNodes:
             found = True
@@ -243,7 +253,8 @@ class BoostBook2RSS:
                 else:
                     result.setAttribute(k,kwargs[k])
         for c in child:
-            result.appendChild(c)
+            if c:
+                result.appendChild(c)
         return result
     
     def new_text( self, tag, data, **kwargs ):

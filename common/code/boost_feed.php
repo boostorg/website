@@ -46,6 +46,7 @@ class boost_feed
                     case 'link':
                     case 'dc:date':
                     case 'boostbook:purpose':
+                    case 'boostbook:download':
                     {
                         if (isset($val['value']))
                         {

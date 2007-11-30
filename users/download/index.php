@@ -39,12 +39,20 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/
               Releases</h2><?php foreach ( $_downloads->db as $_guid => $_item ) { ?>
 
               <h3><span class=
-              "news-title"><?php print '<a name="'.$_item['guid'].'" id="'.$_item['guid'].'"></a><a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span></h3>
+              "news-title"><?php print $_item['title']; ?></span></h3>
 
               <p class="news-date"><?php print $_item['date']; ?></p>
 
               <p class="news-description">
-              <?php print $_item['boostbook:purpose']; ?></p><?php } ?>
+              <?php print $_item['boostbook:purpose']; ?></p>
+
+              <ul class="menu">
+                <li>
+                <?php print '<a href="'.$_item['link'].'">Details</a>'; ?></li>
+
+                <li>
+                <?php print '<a href="'.$_item['boostbook:download'].'">Download</a>'; ?></li>
+              </ul><?php } ?>
 
               <h2><a name="repository" id="repository"></a>Subversion
               Repository</h2>
