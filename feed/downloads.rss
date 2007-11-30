@@ -6,7 +6,114 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.34.1</title><pubDate>Tue, 24 Jul 2007 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+  <item><title>Boost Jam 3.1.15</title><pubDate>Sun, 30 Sep 2007 16:27:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+      This release sees a variety of fixes for long standing Perforce/Jam problems.
+      Most of them relating to running actions in parallel with the -jN option. The
+      end result of the changes is that running parallel actions is now reliably
+      possible in Unix and Windows environments. Many thanks to Noel for joining
+      the effort, to implement and fix the Unix side of stuff.
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=72941&amp;release_id=543223</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+  
+  &lt;p&gt;
+    This release sees a variety of fixes for long standing Perforce/Jam problems.
+    Most of them relating to running actions in parallel with the -jN option. The
+    end result of the changes is that running parallel actions is now reliably possible
+    in Unix and Windows environments. Many thanks to Noel for joining the effort,
+    to implement and fix the Unix side of stuff.
+  &lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;
+      Add support for building bjam with pgi and pathscale toolsets. -- Noel B.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Implement running action commands through pipes (-p option) to fix jumbled
+      output when using parallel execution with -j option. This is implemented for
+      Unix variants, and Windows (Win32/NT). -- Rene R., Noel B.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Add &amp;quot;sun&amp;quot; as alias to Sun Workshop compiler tools. -- Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Set MAXLINE in jam.h to 23k bytes for AIX. The piecemeal archive action was
+      broken with the default MAXLINE of 102400. Because the AIX shell uses some
+      of the 24k default buffer size for its own use, I reduced it to 23k. -- Noel
+      B.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Make use of output dir options of msvc to not polute src dir with compiled
+      files. -- Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      A small fix, so -d+2 will always show the &amp;quot;real&amp;quot; commands being executed
+      instead of casually the name of a temporary batch file. -- Roland S.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Add test to check 'bjam -n'. -- Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Add test to check 'bjam -d2'. -- Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Bring back missing output of -n option. The -o option continues to be broken
+      as it has been for a long time now because of the @ file feature. -- Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Update GC support to work with Boehm GC 7.0. -- Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Revert the BOOST_BUILD_PATH change, since the directory passed to boost-build
+      should be first in searched paths, else project local build system will not
+      be picked correctly. The order had been changed to allow searching of alternate
+      user-config.jam files from boost build. This better should be done with --user-config=
+      switch or similar. -- Roland S.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Initial support for defining action body from Python. -- Vladimir P.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Implement @() expansion during parse phase. -- Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Define OSPLAT var unconditionally, and more generically, when possible. --
+      Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Fix undeclared INT_MAX on some platforms, i.e. Linux. -- Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Modified execunix.c to add support for terminating processes that consume too
+      much cpu or that hang and fail to consume cpu at all. This in support of the
+      bjam -lx option. -- Noel B.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Add internal dependencies for multi-file generating actions to indicate that
+      the targets all only appear when the first target appears. This fixes the long
+      standing problem Perforce/Jam has with multi-file actions and parallel execution
+      (-jN). -- Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Add test of -l limit option now that it's implemented on windows and unix.
+      -- Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Add test for no-op @() expansion. -- Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Handle invalid formats of @() as doing a straight substitution instead of erroring
+      out. -- Rene R.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Various fixes to compile on SGI/Irix. -- Noel B.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Add output for when actions timeout with -lN option. -- Rene R., Noel B.
+    &lt;/li&gt;
+    &lt;li&gt;
+      Add needed include (according to XOPEN) for definition of WIFEXITED and WEXITSTATUS.
+      -- Markus S.
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</description></item><item><title>Version 1.34.1</title><pubDate>Tue, 24 Jul 2007 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       Bugfix Release.
     &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=527428</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
