@@ -30,20 +30,88 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/
 
             <div class="section-body">
               <ul class="toc">
-                <?php foreach ( $_downloads->db as $_guid => $_item ) { ?>
+                <li><a href="#releases">Packaged Releases</a></li>
 
-                <li><span class=
-                "news-title"><?php print '<a href="#'.$_item['guid'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span></li><?php } ?>
-              </ul><?php foreach ( $_downloads->db as $_guid => $_item ) { ?>
+                <li><a href="#repository">Subversion Repository</a></li>
+              </ul>
 
-              <h2><span class=
-              "news-title"><?php print '<a name="'.$_item['guid'].'" id="'.$_item['guid'].'"></a><a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span></h2>
+              <h2><a name="releases" id="releases"></a>Packaged
+              Releases</h2><?php foreach ( $_downloads->db as $_guid => $_item ) { ?>
+
+              <h3><span class=
+              "news-title"><?php print '<a name="'.$_item['guid'].'" id="'.$_item['guid'].'"></a><a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span></h3>
 
               <p class="news-date"><?php print $_item['date']; ?></p>
 
-              <div class="news-description">
-                <?php print $_item['boostbook:purpose']; ?>
-              </div><?php } ?>
+              <p class="news-description">
+              <?php print $_item['boostbook:purpose']; ?></p><?php } ?>
+
+              <h2><a name="repository" id="repository"></a>Subversion
+              Repository</h2>
+
+              <p>Boost uses <a class="external" href=
+              "http://subversion.tigris.org/">Subversion</a> to manage all of
+              the data associated with Boost's development, including the
+              source code to Boost, documentation for Boost libraries, and
+              the Boost web site.</p>
+
+              <h3>Accessing the Boost Subversion Repository</h3>
+
+              <p>The Subversion repository can be accessed in several
+              ways:</p>
+
+              <ul>
+                <li>Anonymous, read-only access to the Boost Subversion
+                repository is available at <a href=
+                "http://svn.boost.org/svn/boost">http://svn.boost.org/svn/boost</a>.
+                To access the current Boost development code, for instance,
+                one would check out from <a href=
+                "http://svn.boost.org/svn/boost/trunk">http://svn.boost.org/svn/boost/trunk</a>.
+                For example, using the command-line <tt>svn</tt>, one might
+                use:
+                  <pre>
+svn co <a href=
+"http://svn.boost.org/svn/boost/trunk">http://svn.boost.org/svn/boost/trunk</a> boost-trunk
+</pre>
+                </li>
+
+                <li>The Subversion repository can be browsed online at
+                <a href=
+                "http://svn.boost.org/trac/boost/browser">http://svn.boost.org/trac/boost/browser</a>.</li>
+
+                <li>On Windows, <a href=
+                "http://tortoisesvn.tigris.org/">TortoiseSVN</a> provides an
+                easy-to-use, graphical interface to Subversion.</li>
+              </ul>
+
+              <h3>Organization of the Boost Subversion Repository</h3>
+
+              <p>The Boost Subversion repository is organized into several
+              top-level directories, reflecting various stages of Boost
+              library development and subtasks within the Boost community. We
+              have the following top-level directories:</p>
+
+              <ul>
+                <li><tt>trunk</tt>: Contains the latest "development" version
+                of Boost.</li>
+
+                <li><tt>sandbox</tt>: Contains libraries and tools that are
+                under active development and have not yet been reviewed or
+                accepted into Boost. See <a href=
+                "http://svn.boost.org/trac/boost/wiki/BoostSandbox">BoostSandbox</a>
+                for information about organization of the sandbox.</li>
+
+                <li><tt>website</tt>: Contains the upcoming Boost web site,
+                which is not yet live.</li>
+
+                <li><tt>branches</tt>: Contains various branches of Boost
+                libraries, typically for release branches and for non-trivial
+                changes to Boost libraries that need to be made separately
+                from the trunk.</li>
+
+                <li><tt>tags</tt>: Contains "tags" that mark certain points
+                in the source tree, such as particular Boost releases.</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -64,7 +132,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/
       </div>
 
       <div id="copyright">
-        <p>Copyright Rene Rivera 2006.</p>
+        <p>Copyright Rene Rivera 2006-2007.</p>
       </div><?php virtual("/common/footer-license.html"); ?>
     </div>
 
