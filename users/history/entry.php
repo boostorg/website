@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__) . '/../../common/code/feed.php');
+require_once(dirname(__FILE__) . '/../../common/code/boost_feed.php');
 $_history = new boost_feed(dirname(__FILE__) . '/../../feed/history.rss', '/users/history');
 $_guid = basename($_SERVER["PATH_INFO"]);
 ?>

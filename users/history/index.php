@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__) . '/../../common/code/feed.php');
+require_once(dirname(__FILE__) . '/../../common/code/boost_feed.php');
 $_history = new boost_feed(dirname(__FILE__) . '/../../feed/history.rss', '/users/history');
 $_history->sort_by('pubdate');
 ?>
@@ -43,7 +43,7 @@ $_history->sort_by('pubdate');
               <p class="news-date"><?php print $_item['date']; ?></p>
 
               <div class="news-description">
-                <?php print $_item['brief']; ?>
+                <?php print $_item['boostbook:purpose']; ?>
               </div><?php } ?>
             </div>
           </div>

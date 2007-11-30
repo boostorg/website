@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__) . '/common/code/feed.php');
+require_once(dirname(__FILE__) . '/common/code/boost_feed.php');
 $_news = new boost_feed(dirname(__FILE__) . '/feed/news.rss', '/users/news');
 $_news->sort_by('pubdate');
 $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/download');
@@ -51,11 +51,11 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/
                   "external">C++ Standards Committee's</a> Library Technical
                   Report (<a href=
                   "http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1745.pdf"
-                     class="external">TR1</a>) as a step toward becoming part
-                     of a future C++ Standard. More Boost libraries are
-                     proposed for the upcoming <a href=
-                     "http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1810.html"
-                     class="external">TR2</a>.</p>
+                  class="external">TR1</a>) as a step toward becoming part of
+                  a future C++ Standard. More Boost libraries are proposed
+                  for the upcoming <a href=
+                  "http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1810.html"
+                  class="external">TR2</a>.</p>
 
                   <h3 class="note">Getting Started</h3>
 
@@ -97,7 +97,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/
                     <li><span class=
                     "news-title"><?php print '<a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
                     <span class=
-                    "news-description"><?php print $_item['brief']; ?></span>
+                    "news-description"><?php print $_item['boostbook:purpose']; ?></span>
                     <span class=
                     "news-date"><?php print $_item['date']; ?></span></li><?php } ?>
                   </ul>

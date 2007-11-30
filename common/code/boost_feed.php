@@ -45,6 +45,7 @@ class boost_feed
                     case 'pubdate':
                     case 'link':
                     case 'dc:date':
+                    case 'boostbook:purpose':
                     {
                         if (isset($val['value']))
                         {
@@ -73,15 +74,6 @@ class boost_feed
                 if (!isset($item['link']) || ! $item['link'])
                 {
                     $item['link'] = $item_base_uri.'/'.$item['guid'];
-                }
-                if (isset($item['description']))
-                {
-                    $desc = preg_split('@<hr[^/]*[/]>@i',$item['description']);
-                    $item['brief'] = $desc[0];
-                    if (isset($desc[1]))
-                    {
-                        $item['description'] = $desc[1];
-                    }
                 }
                 if (isset($item['title']))
                 {
