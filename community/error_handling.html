@@ -118,8 +118,7 @@ catch clause.
                   program, you may report a different exception than intended
                   from a <i>throw-expression</i> that includes construction
                   such as:
-
-                    <pre>
+                  <pre>
 throw some_exception();    
 </pre>
 
@@ -148,7 +147,7 @@ throw some_exception();
                 <i>user</i>-comprehensible error message at the point an
                 exception is thrown. Certainly, internationalization is
                 beyond the scope of the exception class author. <a href=
-                "/users/people/.html">Peter Dimov</a> makes an
+                "/users/people/peter_dimov.html">Peter Dimov</a> makes an
                 excellent argument that the proper use of a
                 <code>what()</code> string is to serve as a key into a table
                 of error message formatters. Now if only we could get
@@ -209,8 +208,7 @@ throw some_exception();
               <code>catch(...)</code> will catch these not-really-C++
               exceptions. Fortunately, there is a simple but little-known
               workaround, which is to use the following incantation:</p>
-
-                <pre>
+              <pre>
 extern "C" void straight_to_debugger(unsigned int, EXCEPTION_POINTERS*)
 {
     throw;
@@ -218,10 +216,11 @@ extern "C" void straight_to_debugger(unsigned int, EXCEPTION_POINTERS*)
 extern "C" void (*old_translator)(unsigned, EXCEPTION_POINTERS*)
          = _set_se_translator(straight_to_debugger);
 </pre>
-              <p>This technique doesn't work if the SEH is raised
-              from within a catch block (or a function called from within a
-              catch block), but it still eliminates the vast majority of
-              JIT-masking problems.</p>
+
+              <p>This technique doesn't work if the SEH is raised from within
+              a catch block (or a function called from within a catch block),
+              but it still eliminates the vast majority of JIT-masking
+              problems.</p>
 
               <h3>How should I handle exceptions?</h3>
 

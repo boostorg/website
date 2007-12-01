@@ -47,7 +47,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/
                   reference implementations so that Boost libraries are
                   suitable for eventual standardization. Ten Boost libraries
                   are already included in the <a href=
-                  "http://www.open-std.org/jtc1/sc22/wg21" class=
+                  "http://www.open-std.org/jtc1/sc22/wg21/" class=
                   "external">C++ Standards Committee's</a> Library Technical
                   Report (<a href=
                   "http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1745.pdf"
