@@ -62,15 +62,16 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/
                   <p class="note"><span class="note-body">Boost works on
                   almost any modern operating system, including UNIX and
                   Windows variants. Follow the <a href=
-                  "/users/getting_started.html">Getting Started Guide</a> to
-                  download and install Boost. Popular Linux and Unix
-                  distributions such as <a href="http://fedora.redhat.com/"
-                  class="external"><span class="link">Fedora</span></a>,
-                  <a href="http://www.debian.org/" class=
-                  "external">Debian</a>, and <a href="http://www.netbsd.org/"
-                  class="external">NetBSD</a> include pre-built Boost
-                  packages. Boost may also already be available on your
-                  organization's internal web server.</span></p>
+                  "/doc/libs/release/more/getting_started/index.html">Getting
+                  Started Guide</a> to download and install Boost. Popular
+                  Linux and Unix distributions such as <a href=
+                  "http://fedora.redhat.com/" class="external"><span class=
+                  "link">Fedora</span></a>, <a href="http://www.debian.org/"
+                  class="external">Debian</a>, and <a href=
+                  "http://www.netbsd.org/" class="external">NetBSD</a>
+                  include pre-built Boost packages. Boost may also already be
+                  available on your organization's internal web
+                  server.</span></p>
 
                   <h3 class="note">Background</h3>
 
