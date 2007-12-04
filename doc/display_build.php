@@ -20,16 +20,12 @@ if (!$_file->is_raw()) {
   <?php #~ pwn_head(); ?>
   <style type="text/css">
 /*<![CDATA[*/
-  div.sidebar {
-  margin-left: 1em ;
-  border: medium outset ;
-  padding: 0em 1em ;
-  background-color: #adbed2;
-  border-color: #000000;
-  border-width: 1;
-  width: 40% ;
-  float: right ;
-  clear: right }
+div.sidebar {
+  margin: 0em 0em 1em 1em !important;
+  width: 40%;
+  float: right;
+  clear: right;
+}
   /*]]>*/
   </style>
 
