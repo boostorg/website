@@ -19,37 +19,26 @@ class archive_file
     function archive_file(
         $pattern,
         $vpath,
+        $content_map = array(),
         $get_as_raw = false,
         $archive_subdir = true,
-        $archive_prefix = ARCHIVE_PREFIX,
+        $archive_dir = ARCHIVE_DIR,
         $archive_file_prefix = ARCHIVE_FILE_PREFIX)
     {
         $path_parts = array();
         preg_match($pattern, $vpath, $path_parts);
         
-        /*static*/ $info_map = NULL;
-        if ($info_map == NULL)
-        {
-            $info_map = array(
-                array('@^libs/iostreams/doc/.*(html|htm)$@i','raw','text/html'),
-                array('@^libs/preprocessor/doc\.*(html|htm)$@i','raw','text/html'),
-                array('@^libs/serialization/doc/.*(html|htm)$@i','raw','text/html'),
-                ##array('@^libs/serialization/doc/index.html$@i','boost_frame1_html','text/html'),
-                array('@^libs/preprocessor/doc/.*(html|htm)$@i','raw','text/html'),
-                array('@^libs.*(html|htm)$@i','boost_libs_html','text/html'),
-                array('@^doc/html/.*html$@i','boost_book_html','text/html'),
-                array('@^boost/.*$@i','text','text/plain'),
-                array('@[.](txt|py|rst)$@i','text','text/plain'),
-                array('@[.](cpp|hpp)$@i','cpp','text/plain'),
-                array('@[.]png$@i','raw','image/png'),
-                array('@[.]gif$@i','raw','image/gif'),
-                array('@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
-                array('@[.]css$@i','raw','text/css'),
-                array('@[.]js$@i','raw','application/x-javascript'),
-                array('@[.]pdf$@i','raw','application/pdf'),
-                array('@[.](html|htm)$@i','raw','text/html'),
-                );
-        }
+        $info_map = array_merge($content_map, array(
+            array('@[.](txt|py|rst)$@i','text','text/plain'),
+            array('@[.](cpp|hpp)$@i','cpp','text/plain'),
+            array('@[.]png$@i','raw','image/png'),
+            array('@[.]gif$@i','raw','image/gif'),
+            array('@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
+            array('@[.]css$@i','raw','text/css'),
+            array('@[.]js$@i','raw','application/x-javascript'),
+            array('@[.]pdf$@i','raw','application/pdf'),
+            array('@[.](html|htm)$@i','raw','text/html'),
+            ));
         
         $this->key_ = $path_parts[2];
         if ($archive_subdir)
@@ -60,7 +49,7 @@ class archive_file
         {
             $this->file_ = $archive_file_prefix . $path_parts[2];
         }
-        $this->archive_ = str_replace('\\','/', $archive_prefix . $path_parts[1] . '.zip');
+        $this->archive_ = str_replace('\\','/', $archive_dir . '/' . $path_parts[1] . '.zip');
         
         foreach ($info_map as $i)
         {
@@ -130,7 +119,7 @@ HTML
     {
         header('Content-type: '.$this->type_);
         ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
-        $file_handle = popen($unzip,'r');
+        $file_handle = popen($unzip,'rb');
         fpassthru($file_handle);
         pclose($file_handle);
     }

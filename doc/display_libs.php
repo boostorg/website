@@ -1,7 +1,16 @@
 <?php
 require_once(dirname(__FILE__) . '/../common/code/archive_file.php');
 
-$_file = new archive_file('/^[\/]([^\.\/]+)[\/](.*)$/',$_SERVER["PATH_INFO"]);
+$_file = new archive_file('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
+  array('@^libs/iostreams/doc/.*(html|htm)$@i','raw','text/html'),
+  array('@^libs/preprocessor/doc\.*(html|htm)$@i','raw','text/html'),
+  array('@^libs/serialization/doc/.*(html|htm)$@i','raw','text/html'),
+  //~ array('@^libs/serialization/doc/index.html$@i','boost_frame1_html','text/html'),
+  //~ array('@^libs/preprocessor/doc/.*(html|htm)$@i','boost_frame1_html','text/html'),
+  array('@^libs.*(html|htm)$@i','boost_libs_html','text/html'),
+  array('@^doc/html/.*html$@i','boost_book_html','text/html'),
+  array('@^boost/.*$@i','text','text/plain')
+  ));
 
 if (!$_file->is_raw()) { #~ require_once(dirname(__FILE__) . '/../common/code/webnotes.php');
 ?>
@@ -15,7 +24,8 @@ if (!$_file->is_raw()) { #~ require_once(dirname(__FILE__) . '/../common/code/we
   <link rel="stylesheet" type="text/css" href="/style/section-doc.css" />
   <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
   <?php #~ pwn_head(); ?>
-</head>
+
+</head><!-- <?php print $_file->file_; ?> -->
 
 <body>
   <div id="heading">
@@ -55,7 +65,7 @@ if (!$_file->is_raw()) { #~ require_once(dirname(__FILE__) . '/../common/code/we
       <div id="copyright">
         <p>Copyright Beman Dawes, David Abrahams, 1998-2005.</p>
 
-        <p>Copyright Rene Rivera 2004-2005.</p>
+        <p>Copyright Rene Rivera 2004-2007.</p>
       </div><?php virtual("/common/footer-license.html");?>
     </div>
 
@@ -64,6 +74,6 @@ if (!$_file->is_raw()) { #~ require_once(dirname(__FILE__) . '/../common/code/we
     </div>
 
     <div class="clear"></div>
-  </div><?php } ?>
+  </div>
 </body>
-</html>
+</html><?php } ?>

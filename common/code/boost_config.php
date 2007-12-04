@@ -46,7 +46,7 @@ switch ($_SERVER['HTTP_HOST'])
   break;
 }
 
-define('ARCHIVE_FILE_PREFIX', 'boost_');
+define('ARCHIVE_FILE_PREFIX', '');
 
 require_once(BOOST_CONFIG_FILE);
 
