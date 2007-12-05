@@ -7,13 +7,13 @@ wget -q -O boost-build.tar.bz2 http://zigzag.cs.msu.su/~ghost/boost_build_nightl
 
 cd ${HOME}/www.boost.org/archives
 
-for result in `find incoming '*.zip'` ; do
+for result in `find incoming -name '*.zip'` ; do
     f=`basename ${result}`
     mv -f live/${f} old
     mv -f ${result} live
     rm -f old/${f}
 done
-for result in `find incoming '*.tar.bz2'` ; do
+for result in `find incoming -name '*.tar.bz2'` ; do
     f=`basename ${result}`
     mv -f live/${f} old
     mv -f ${result} live
