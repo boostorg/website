@@ -1,11 +1,11 @@
 #!/bin/sh
 
-cd ${HOME}/www.boost.org/archive/incoming
+cd ${HOME}/www.boost.org/archives/incoming
 
 wget -q -O boost-build.zip http://zigzag.cs.msu.su/~ghost/boost_build_nightly/boost-build.zip
 wget -q -O boost-build.tar.bz2 http://zigzag.cs.msu.su/~ghost/boost_build_nightly/boost-build.tar.bz2
 
-cd ${HOME}/www.boost.org/archive
+cd ${HOME}/www.boost.org/archives
 
 for result in `find incoming '*.zip'` ; do
     f=`basename ${result}`
