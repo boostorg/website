@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__) . '/../common/code/archive_file.php');
 
 $_file = new archive_file('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
-  array('@^boost-build/index[.]html$@i','boost_libs_html','text/html'),
+  array('@^boost-build/index[.]html$@i','raw','text/html'),
   array('@[.](html|htm)$@i','boost_book_html','text/html')
   ),false,false);
 
