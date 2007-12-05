@@ -1,0 +1,21 @@
+#!/bin/sh
+
+cd ${HOME}/www.boost.org/archive/incoming
+
+wget -q -O boost-build.zip http://zigzag.cs.msu.su/~ghost/boost_build_nightly/boost-build.zip
+wget -q -O boost-build.tar.bz2 http://zigzag.cs.msu.su/~ghost/boost_build_nightly/boost-build.tar.bz2
+
+cd ${HOME}/www.boost.org/archive
+
+for result in `find incoming '*.zip'` ; do
+    f=`basename ${result}`
+    mv -f live/${f} old
+    mv -f ${result} live
+    rm -f old/${f}
+done
+for result in `find incoming '*.tar.bz2'` ; do
+    f=`basename ${result}`
+    mv -f live/${f} old
+    mv -f ${result} live
+    rm -f old/${f}
+done
