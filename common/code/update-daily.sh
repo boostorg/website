@@ -24,6 +24,9 @@ done
  "--yank=http://beta.boost.org/doc/libs" \
  "--yank=http://beta.boost.org/development/tests" \
  "--yank=http://beta.boost.org/development/webcheck" \
+ "--yank=http://validator.w3.org/check?uri=referer" \
+ "--yank=http://jigsaw.w3.org/css-validator/check/referer" \
+ "--yank=http://tinyurl.com/" \
  "--base-only" \
  "--quiet" \
  "--output=/home/grafik/www.boost.org/testing/webcheck" \
