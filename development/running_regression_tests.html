@@ -47,9 +47,34 @@
                 "http://svn.boost.org/svn/boost/trunk/tools/regression/src/run.py">
                 run.py</a> script into that directory.</li>
 
-                <li>Run "<code>python run.py [options]
-                [commands]</code>".</li>
+                <li>
+                  <p>Run "<code>python run.py [options] [commands]</code>"
+                  with at minimum the two options:</p>
+
+                  <ul>
+                    <li><tt>--runner</tt> - Your choice of name that
+                    identifies your results in the reports <sup><a href=
+                    "#runnerid1">1</a>, <a href=
+                    "#runnerid2">2</a></sup>.</li>
+
+                    <li><tt>--toolsets</tt> - The toolset(s) you want to test
+                    with <sup><a href="#toolsets">3</a></sup>.</li>
+                  </ul>
+
+                  <p>For example:</p><tt>python run.py --runner=Metacomm
+                  --toolsets=gcc-4.2.1,msvc-8.0</tt>
+                </li>
               </ol>
+
+              <p><strong>Note</strong>: If you are behind a firewall/proxy
+              server, everything should still "just work". In the rare cases
+              when it doesn't, you can explicitly specify the proxy server
+              parameters through the <tt>--proxy</tt> option, e.g.:</p>
+              <pre>
+python run.py ... <strong>--proxy=http://www.someproxy.com:3128</strong>
+</pre>
+
+              <h2>Options</h2>
               <pre>
 commands: cleanup, collect-logs, get-source, get-tools, patch, regression,
 setup, show-revision, test, test-clean, test-process, test-run, update-source,
@@ -98,6 +123,151 @@ options:
               and to test the release use
               "<code>--tag=branches/release</code>". Or substitute any Boost
               tree of your choice.</p>
+
+              <h2>Details</h2>
+
+              <p>The regression run procedure will:</p>
+
+              <ul>
+                <li>Download the most recent regression scripts.</li>
+
+                <li>Download the desingated testing tool sources including
+                Boost.Jam, Boost.Build, and the various regression
+                programs.</li>
+
+                <li>Download the most recent from the <a href=
+                "/users/download/#repository">Boost Subversion Repository</a>
+                into the subdirectory <tt>boost</tt>.</li>
+
+                <li>Build <tt>bjam</tt> and <tt>process_jam_log</tt> if
+                needed. (<tt>process_jam_log</tt> is a utility, which
+                extracts the test results from the log file produced by
+                Boost.Build).</li>
+
+                <li>Run regression tests, process and collect the
+                results.</li>
+
+                <li>Upload the results to a common FTP server.</li>
+              </ul>
+
+              <p>The report merger process running continuously will merge
+              all submitted test runs and publish them at <a href=
+              "testing.html#RegressionTesting">various locations</a>.</p>
+
+              <h2>Advanced use</h2>
+
+              <h3>Providing detailed information about your environment</h3>
+
+              <p>Once you have your regression results displayed in the
+              Boost-wide reports, you may consider providing a bit more
+              information about yourself and your test environment. This
+              additional information will be presented in the reports on a
+              page associated with your runner ID.</p>
+
+              <p>By default, the page's content is just a single line coming
+              from the <tt>comment.html</tt> file in your <tt>run.py</tt>
+              directory, specifying the tested platform. You can put online a
+              more detailed description of your environment, such as your
+              hardware configuration, compiler builds, and test schedule, by
+              simply altering the file's content. Also, please consider
+              providing your name and email address for cases where Boost
+              developers have questions specific to your particular set of
+              results.</p>
+
+              <h3>Incremental runs</h3>
+
+              <p>You can run <tt>run.py</tt> in <a href=
+              "#incremental">incremental mode</a> by simply passing it an
+              identically named command-line flag:</p>
+              <pre>
+python run.py ... <strong>--incremental</strong>
+</pre>
+
+              <h3>Getting sources from Tarball</h3>
+
+              <p>By default the sources are obtained from the <a href=
+              "/users/download/#repository">Boost Subversion Repository</a>
+              and we prefer testers use SVN. But if you can't have an SVN
+              client installed you can obtain the sources as tarballs
+              (<tt>*.tar.gz</tt>). To indicate this pass an empty user to
+              <tt>run.py</tt>:</p>
+              <pre>
+python run.py ... <strong>--user=</strong>
+</pre>
+
+              <p><strong>Note</strong>: Both methods to obtain the sources
+              will get the latest code. This is accomplished by building the
+              tarball on-demand from the SVN sources.</p>
+
+              <h3>Patching Boost sources</h3>
+
+              <p>You might encounter an occasional need to make local
+              modifications to the Boost codebase before running the tests,
+              without disturbing the automatic nature of the regression
+              process. To implement this under <tt>regression.py</tt>:</p>
+
+              <ol>
+                <li>Codify applying the desired modifications to the sources
+                located in the <tt>./boost</tt> subdirectory in a single
+                executable script named <tt>patch_boost</tt>
+                (<tt>patch_boost.bat</tt> on Windows).</li>
+
+                <li>Place the script in the <tt>run.py</tt> directory.</li>
+              </ol>
+
+              <p>The driver will check for the existence of the
+              <tt>patch_boost</tt> script, and, if found, execute it after
+              obtaining the Boost sources.</p>
+
+              <h2>Feedback</h2>
+
+              <p>Please send all comments/suggestions regarding this document
+              and the testing procedure itself to the <a href=
+              "/community/groups.html#testing">Boost Testing list</a>.</p>
+
+              <h2>Notes</h2>
+
+              <p><a id="runnerid1" name="runnerid1">[1]</a> If you are
+              running regressions interlacingly with a different set of
+              compilers (e.g. for Intel in the morning and GCC at the end of
+              the day), you need to provide a <em>different</em> runner id
+              for each of these runs, e.g. <tt>your_name-intel</tt>, and
+              <tt>your_name-gcc</tt>.</p>
+
+              <p><a id="runnerid2" name="runnerid2">[2]</a> The limitations
+              of the reports' format/medium impose a direct dependency
+              between the number of compilers you are testing with and the
+              amount of space available for your runner id. If you are
+              running regressions for a single compiler, please make sure to
+              choose a short enough id that does not significantly disturb
+              the reports' layout. You can also use spaces in the runner ID
+              to allow the reports to wrap the name to fit.</p>
+
+              <p><a id="toolsets" name="toolsets">[3]</a> If
+              <tt>--toolsets</tt> option is not provided, the script will try
+              to use the platform's default toolset (<tt>gcc</tt> for most
+              Unix-based systems).</p>
+
+              <p><a id="incremental" name="incremental">[4]</a> By default,
+              the script runs in what is known as <em>full mode</em>: on each
+              <tt>run.py</tt> invocation all the files that were left in
+              place by the previous run &mdash; including the binaries for
+              the successfully built tests and libraries &mdash; are deleted,
+              and everything is rebuilt once again from scratch. By contrast,
+              in <em>incremental mode</em> the already existing binaries are
+              left intact, and only the tests and libraries which source
+              files has changed since the previous run are re-built and
+              re-tested.</p>
+
+              <p>The main advantage of incremental runs is a significantly
+              shorter turnaround time, but unfortunately they don't always
+              produce reliable results. Some type of changes to the codebase
+              (changes to the bjam testing subsystem in particular) often
+              require switching to a full mode for one cycle in order to
+              produce trustworthy reports.</p>
+
+              <p>As a general guideline, if you can afford it, testing in
+              full mode is preferable.</p>
             </div>
           </div>
         </div>
@@ -120,6 +290,8 @@ options:
 
       <div id="copyright">
         <p>Copyright Rene Rivera 2007.</p>
+
+        <p>Copyright MetaCommunications, Inc. 2004-2007.</p>
       </div><!--#include virtual="/common/footer-license.html" -->
     </div>
 
