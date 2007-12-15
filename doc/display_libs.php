@@ -8,6 +8,7 @@ $_file = new archive_file('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   //~ array('@^libs/serialization/doc/index.html$@i','boost_frame1_html','text/html'),
   //~ array('@^libs/preprocessor/doc/.*(html|htm)$@i','boost_frame1_html','text/html'),
   array('@^libs.*(html|htm)$@i','boost_libs_html','text/html'),
+  array('@^tools.*(html|htm)$@i','boost_libs_html','text/html'),
   array('@^doc/html/.*html$@i','boost_book_html','text/html'),
   array('@^boost/.*$@i','text','text/plain')
   ));

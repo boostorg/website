@@ -29,7 +29,7 @@ class archive_file
         preg_match($pattern, $vpath, $path_parts);
         
         $info_map = array_merge($content_map, array(
-            array('@[.](txt|py|rst)$@i','text','text/plain'),
+            array('@[.](txt|py|rst|jam|v2|bat|sh)$@i','text','text/plain'),
             array('@[.](cpp|hpp)$@i','cpp','text/plain'),
             array('@[.]png$@i','raw','image/png'),
             array('@[.]gif$@i','raw','image/gif'),
@@ -157,7 +157,11 @@ HTML
         print "<pre>\n";
         $root = dirname(preg_replace('@([^/]+/)@','../',$this->key_));
         $text = preg_replace(
-            '@(#[ ]*include[ ]*&lt;)(boost[^&]+)@Ssm',
+            '@(#[ ]*include[ ]+&lt;)(boost[^&]+)@Ssm',
+            '${1}<a href="'.$root.'/${2}">${2}</a>',
+            $text );
+        $text = preg_replace(
+            '@(#[ ]*include[ ]+&quot;)(boost[^&]+)@Ssm',
             '${1}<a href="'.$root.'/${2}">${2}</a>',
             $text );
         print $text;
