@@ -6,7 +6,7 @@
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
-class archive_file
+class boost_archive
 {
     var $key_ = NULL;
     var $file_ = NULL;
@@ -16,7 +16,7 @@ class archive_file
     var $head_content_ = NULL;
     var $content_ = NULL;
     
-    function archive_file(
+    function boost_archive(
         $pattern,
         $vpath,
         $content_map = array(),
@@ -80,6 +80,11 @@ class archive_file
             $this->content_ = $this->_extract_string($unzip);
             $f = '_init_'.$this->extractor_;
             $this->$f();
+            if ($this->extractor_ == 'simple')
+            {
+                $f = '_content_'.$this->extractor_;
+                $this->$f();
+            }
         }
     }
     
@@ -101,7 +106,7 @@ HTML
     
     function is_raw()
     {
-        return $this->extractor_ == 'raw';
+        return $this->extractor_ == 'raw' || $this->extractor_ == 'simple';
     }
 
     function _extract_string($unzip)
@@ -209,6 +214,10 @@ HTML
         
         $text = preg_replace(
             '@href="?http://www.boost.org/?([^"\s]*)"?@i',
+            'href="/${1}"',
+            $text );
+        $text = preg_replace(
+            '@href="?http://boost.org/?([^"\s]*)"?@i',
             'href="/${1}"',
             $text );
         $text = preg_replace(
@@ -445,6 +454,15 @@ HTML
             $text );
         
         print $text;
+    }
+    
+    function _init_simple()
+    {
+    }
+
+    function _content_simple()
+    {
+        print $this->_content_html_pre();
     }
 }
 ?>

@@ -1,10 +1,10 @@
 <?php
-require_once(dirname(__FILE__) . '/../common/code/archive_file.php');
+require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
-$_file = new archive_file('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
-  array('@^libs/iostreams/doc/.*(html|htm)$@i','raw','text/html'),
-  array('@^libs/preprocessor/doc\.*(html|htm)$@i','raw','text/html'),
-  array('@^libs/serialization/doc/.*(html|htm)$@i','raw','text/html'),
+$_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
+  array('@^libs/iostreams/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/preprocessor/doc\.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/serialization/doc/.*(html|htm)$@i','simple','text/html'),
   //~ array('@^libs/serialization/doc/index.html$@i','boost_frame1_html','text/html'),
   //~ array('@^libs/preprocessor/doc/.*(html|htm)$@i','boost_frame1_html','text/html'),
   array('@^libs.*(html|htm)$@i','boost_libs_html','text/html'),
