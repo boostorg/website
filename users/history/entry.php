@@ -12,6 +12,16 @@ $_guid = basename($_SERVER["PATH_INFO"]);
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-boost.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  #content .news-description ul {
+    list-style: none;
+  }
+  #content .news-description ul ul {
+    list-style: circle;
+  }
+  /*]]>*/
+  </style>
   <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
 </head>
 

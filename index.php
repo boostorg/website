@@ -102,7 +102,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/
                     "news-date"><?php print $_item['date']; ?></span></li><?php } ?>
                   </ul>
 
-                  <p><a href="/users/news">More News...</a> (<a href=
+                  <p><a href="/users/news/">More News...</a> (<a href=
                   "feed/news.rss">RSS</a>)</p>
                 </div>
 
@@ -118,7 +118,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/
                     "news-date"><?php print $_item['date']; ?></span></li><?php } ?>
                   </ul>
 
-                  <p><a href="/users/download">More Downloads...</a>
+                  <p><a href="/users/download/">More Downloads...</a>
                   (<a href="feed/downloads.rss">RSS</a>)</p>
                 </div>
 

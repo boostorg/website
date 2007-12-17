@@ -40,11 +40,22 @@ actions rss
     python "$(BB2RSS)" "--channel-title=$(TITLE)" "--channel-link=$(LINK)" "--count=$(COUNT)" "--output=$(<)" "$(>)"
 }
 
+rule glob-rss ( p + )
+{
+    local files = [ glob $(p:S=.qbk) ] ;
+    files = $(files:S=.xml) ;
+    local result ;
+    for local f in $(files)
+    {
+        local d = $(f:D) ;
+        result += $(d:B)//$(f:D=) ;
+    }
+    return $(result) ;
+}
+
 path-constant CWD : . ;
 
-make downloads.rss :
-    history/boost_1_34_1.xml
-    [ glob downloads/*.xml ]
+make downloads.rss : [ glob-rss history/boost_1_34_1 downloads/* ]
     : @rss :
     <title>"Boost Downloads"
     <uri>"http://www.boost.org/feed/download.rss"
@@ -53,7 +64,7 @@ make downloads.rss :
     <cwd>$(CWD)
     ;
 
-make history.rss : [ glob history/*.xml ]
+make history.rss : [ glob-rss history/* ]
     : @rss :
     <title>"Boost History"
     <uri>"http://beta.boost.org/feed/history.rss"
@@ -61,7 +72,7 @@ make history.rss : [ glob history/*.xml ]
     <cwd>$(CWD)
     ;
 
-make news.rss : [ glob news/*.xml ] [ glob history/*.xml ]
+make news.rss : [ glob-rss news/* history/* ]
     : @rss :
     <title>"Boost News"
     <uri>"http://beta.boost.org/feed/news.rss"
