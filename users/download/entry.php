@@ -31,9 +31,10 @@ $_guid = basename($_SERVER["PATH_INFO"]);
 
             <div class="section-body">
               <h2><span class=
-              "news-title"><?php print $_downloads->db[$_guid]['title']; ?></span>
-              <span class=
-              "news-date"><?php print $_downloads->db[$_guid]['date']; ?></span></h2>
+              "news-title"><?php print $_downloads->db[$_guid]['title']; ?></span></h2>
+
+              <p><span class=
+              "news-date"><?php print $_downloads->db[$_guid]['date']; ?></span></p>
 
               <div class="news-description">
                 <?php print $_downloads->db[$_guid]['description']; ?>

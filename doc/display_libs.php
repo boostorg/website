@@ -3,10 +3,13 @@ require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
 $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   array('@^libs/iostreams/doc/.*(html|htm)$@i','simple','text/html'),
-  array('@^libs/preprocessor/doc\.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/preprocessor/doc/\.*(html|htm)$@i','simple','text/html'),
   array('@^libs/serialization/doc/.*(html|htm)$@i','simple','text/html'),
   //~ array('@^libs/serialization/doc/index.html$@i','boost_frame1_html','text/html'),
   //~ array('@^libs/preprocessor/doc/.*(html|htm)$@i','boost_frame1_html','text/html'),
+  array('@^libs/filesystem/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/numeric/conversion/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/optional/doc/.*(html|htm)$@i','simple','text/html'),
   array('@^libs.*(html|htm)$@i','boost_libs_html','text/html'),
   array('@^tools.*(html|htm)$@i','boost_libs_html','text/html'),
   array('@^doc/html/.*html$@i','boost_book_html','text/html'),
