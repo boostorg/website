@@ -38,12 +38,6 @@ switch ($_SERVER['HTTP_HOST'])
     define('BOOST_CONFIG_FILE','/DevRoots/Boost/website/workplace/config.php');
   }
   break;
-
-  case 'boost-beta':
-  {
-    define('BOOST_CONFIG_FILE','/home/daniel/cpp/config.php');
-  }
-  break;
 }
 
 define('ARCHIVE_FILE_PREFIX', '');
