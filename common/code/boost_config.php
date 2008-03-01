@@ -26,22 +26,21 @@ switch ($_SERVER['HTTP_HOST'])
 {
   case 'boost.org':
   case 'www.boost.org':
+  case 'live.boost.org':
   case 'beta.boost.org':
   {
     define('BOOST_CONFIG_FILE','/home/grafik/www.boost.org/config.php');
-  }
-  break;
-  
-  case 'localhost':
-  case 'boost.borg.redshift-software.com':
-  {
-    define('BOOST_CONFIG_FILE','/DevRoots/Boost/website/workplace/config.php');
   }
   break;
 
   case 'beta.boost.local':
   {
     define('BOOST_CONFIG_FILE','/home/daniel/config.php');
+  }
+  
+  default:
+  {
+    define('BOOST_CONFIG_FILE',dirname(__FILE__) . '/boost_config_local.php');
   }
 }
 
