@@ -36,6 +36,8 @@
                 <li><a href="#Menus">Menus, Sidebars, and Index</a></li>
 
                 <li><a href="#Feeds">Feeds</a></li>
+
+                <li><a href="#Local_Server">Local Server</a></li>
               </ul>
 
               <h2><a name="GettingContent" id="GettingContent"></a>Getting
@@ -312,6 +314,64 @@ tidy --tidy-mark no -i -wrap 78 -m -asxhtml --merge-divs no --merge-spans no --d
               precompiled and preconfigured in your <tt>user-config.jam</tt>.
               And also requires Python, in the path, to do the BoostBook to
               RSS translation.</p>
+
+              <h2><a name="Local_Server" id="Local_Server"></a>Local
+              Server</h2>
+
+              <p>Even though the web site is designed so that one only needs
+              some basic tools and a web browser to make changes there are
+              some aspects that are dynamic and hence will not work without
+              an accompanying web server. To set up local web server for
+              doing changes to the dynamic content one needs to:</p>
+
+              <ol>
+                <li>
+                  <p>Install and get working <a href=
+                  "http://httpd.apache.org/">Apache 2.x.</a> and <a href=
+                  "http://php.net/">PHP 4.x or 5.x</a> (install PHP as an
+                  Apache module, not as CGI).</p>
+                </li>
+
+                <li>
+                  <p>Set up a symbolic host lookup in your <tt>hosts</tt>
+                  file by adding "<tt>127.0.0.1 boost.localhost</tt>".</p>
+                </li>
+
+                <li>
+                  <p>Add a virtual host in Apache to match the new local
+                  host. A likely configuration to work is:</p>
+                  <pre>
+&lt;VirtualHost 127.0.0.1:80&gt;
+  ServerName boost.localhost
+  DocumentRoot "/path/to/boost/website/public_html/beta"
+  &lt;Directory "/path/to/boost/website/public_html/beta"&gt;
+    Options MultiViews Includes ExecCGI FollowSymLinks +Includes
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+  &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</pre>
+                </li>
+
+                <li>
+                  <p>Create a local PHP configuration file for Boost specific
+                  settings as
+                  "<tt>/path/to/boost/website/public_html/beta/common/code/boost_config_local.php</tt>"
+                  that contains something like:</p>
+                  <pre>
+&lt;?php
+define('BOOST_RSS_DIR', '/path/to/boost/website/workplace/rss');
+define('ARCHIVE_DIR', '/path/to/boost/website/workplace/archives');
+define('RESULTS_DIR', '/path/to/boost/website/workplace/testing');
+define('UNZIP', 'unzip');
+?&gt;
+</pre>
+
+                  <p>For a brief explanation of the settings see the
+                  <tt>common/code/boost_config.php</tt> file.</p>
+                </li>
+              </ol>
             </div>
           </div>
         </div>
