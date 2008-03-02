@@ -34,11 +34,11 @@ $_news->sort_by('pubdate');
                 <?php foreach ( $_news->db as $_guid => $_item ) { ?>
 
                 <li><span class=
-                "news-title"><?php print '<a href="#'.$_item['guid'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span></li><?php } ?>
+                "news-title"><?php print '<a href="#i'.$_item['guid'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span></li><?php } ?>
               </ul><?php foreach ( $_news->db as $_guid => $_item ) { ?>
 
               <h2 class="news-title">
-              <?php print '<a name="'.$_item['guid'].'" id="'.$_item['guid'].'"></a><a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></h2>
+              <?php print '<a name="i'.$_item['guid'].'" id="i'.$_item['guid'].'"></a><a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></h2>
 
               <p class="news-date"><?php print $_item['date']; ?></p>
 

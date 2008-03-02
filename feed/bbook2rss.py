@@ -7,6 +7,7 @@ import re
 import optparse
 import time
 import xml.dom.minidom
+from xml.sax.saxutils import unescape, escape
 
 class BoostBook2RSS:
 
@@ -139,9 +140,9 @@ class BoostBook2RSS:
             'item',
             self.new_text('title',node.getAttribute('name')),
             self.new_text('pubDate',node.getAttribute('last-revision')),
-            self.new_text('boostbook:purpose',brief_xhtml.toxml('utf-8')),
+            self.new_text('boostbook:purpose',escape(brief_xhtml.toxml('utf-8'))),
             download_item,
-            self.new_text('description',description_xhtml.toxml('utf-8'))
+            self.new_text('description',escape(description_xhtml.toxml('utf-8')))
             )
     
     def x__text(self,node):
