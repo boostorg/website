@@ -31,7 +31,7 @@ class BoostBook2RSS:
         self.input = []
         ( _opt_, self.input ) = opt.parse_args(None,self)
         self.rss = xml.dom.minidom.parseString('''<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
   <channel>
     <generator>BoostBook2RSS</generator>
     <title>%(title)s</title>

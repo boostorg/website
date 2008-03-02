@@ -33,11 +33,13 @@ rule rss ( targets * : sources * : properties * )
         = [ path.native [ path.join [ get <cwd> : $(properties) ] bbook2rss.py ] ] ;
     JAMSHELL on $(targets)
         = % ;
+    PYTHON on $(targets)
+        = [ property.select <python.interpreter> : $(properties) ] ;
 }
 
 actions rss
 {
-    python "$(BB2RSS)" "--channel-title=$(TITLE)" "--channel-link=$(LINK)" "--count=$(COUNT)" "--output=$(<)" "$(>)"
+    "$(PYTHON:G=:E=python)" "$(BB2RSS)" "--channel-title=$(TITLE)" "--channel-link=$(LINK)" "--count=$(COUNT)" "--output=$(<)" "$(>)"
 }
 
 rule glob-rss ( p + )
