@@ -71,7 +71,9 @@ class boost_feed
             }
             else if ($val['tag'] == 'item' && $val['type'] == 'close' && $item)
             {
-                $item['guid'] = md5('['.$item['pubdate'].'] '.$item['title']);
+                //~ $item['guid'] = md5('['.$item['pubdate'].'] '.$item['title']);
+                $item['guid'] = gmdate('Y-m-d-',$item['pubdate'])
+                  . preg_replace('@[\W]@i',"_",strtolower($item['title']));
                 if (!isset($item['link']) || ! $item['link'])
                 {
                     $item['link'] = $item_base_uri.'/'.$item['guid'];
