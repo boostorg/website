@@ -2,8 +2,9 @@
 require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
 $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
-  array('@^boost-build/index[.]html$@i','simple','text/html'),
-  array('@[.](html|htm)$@i','boost_book_html','text/html')
+  //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type),
+  array('@.*@','@^boost-build/index[.]html$@i','simple','text/html'),
+  array('@.*@','@[.](html|htm)$@i','boost_book_html','text/html')
   ),false,false);
 
 if (!$_file->is_raw()) {
