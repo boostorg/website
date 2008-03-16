@@ -76,7 +76,7 @@ class BoostBook2RSS:
         else:
             out = sys.stdout
         if out:
-            out.write(self.tostring())
+            self.rss.writexml(out,encoding='utf-8')
     
     #~ Turns the internal XML tree into an output UTF-8 string.
     def tostring(self):
@@ -140,9 +140,9 @@ class BoostBook2RSS:
             'item',
             self.new_text('title',node.getAttribute('name')),
             self.new_text('pubDate',node.getAttribute('last-revision')),
-            self.new_text('boostbook:purpose',escape(brief_xhtml.toxml('utf-8'))),
+            self.new_text('boostbook:purpose',brief_xhtml.toxml('utf-8')),
             download_item,
-            self.new_text('description',escape(description_xhtml.toxml('utf-8')))
+            self.new_text('description',description_xhtml.toxml('utf-8'))
             )
     
     def x__text(self,node):
