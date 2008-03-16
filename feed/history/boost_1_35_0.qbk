@@ -12,7 +12,7 @@
 
 [section New Libraries]
 
-* [phrase library..[@/libs/asio/index.html ASIO]:] Portable networking, 
+* [phrase library..[@/libs/asio/index.html Asio]:] Portable networking, 
   including sockets, timers, hostname resolution and socket iostreams, 
   from Chris Kohlhoff.
 * [phrase library..[@/libs/bimap/index.html Bimap]:] Boost.Bimap is a 
@@ -59,6 +59,46 @@
     some existing code. See [@/libs/iostreams/doc/index.html?path=12 Release Notes] 
     for details.
   * Numerous other bug fixes and optimizations.
+* [phrase library..[@/libs/thread/index.html Thread]:] 
+    * Instances of boost::thread and of the various lock types are now movable.
+    * Threads can be interrupted at interruption points.
+    * Condition variables can now be used with any type that implements the
+   Lockable concept, through the use of `boost::condition_variable_any`
+   (`boost::condition` is a typedef to `boost::condition_variable_any`, provided for
+   backwards compatibility). `boost::condition_variable` is provided as an
+   optimization, and will only work with `boost::unique_lock<boost::mutex>`
+   (`boost::mutex::scoped_lock`).
+    * Thread IDs are separated from boost::thread, so a thread can obtain it's
+   own ID (using `boost::this_thread::get_id()`), and IDs can be used as keys in
+   associative containers, as they have the full set of comparison operators.
+    * Timeouts are now implemented using the Boost DateTime library, through a
+   typedef `boost::system_time` for absolute timeouts, and with support for relative
+   timeouts in many cases. `boost::xtime` is supported for backwards compatibility
+   only.
+    * Locks are implemented as publicly accessible templates `boost::lock_guard`,
+   `boost::unique_lock`, `boost::shared_lock`, and `boost::upgrade_lock`, which are
+   templated on the type of the mutex. The Lockable concept has been extended to
+   include publicly available `lock()` and `unlock()` member functions, which are used
+   by the lock types.
+    * `boost::try_mutex` has been removed, and the functionality subsumed into
+   `boost::mutex`. `boost::try_mutex` is left as a typedef, but is no longer a separate
+   class.
+    * `boost::recursive_try_mutex` has been removed, and the functionality
+   subsumed into `boost::recursive_mutex`. `boost::recursive_try_mutex` is left as a
+   typedef, but is no longer a separate class.
+    * `boost::detail::thread::lock_ops` has been removed. Code that relies on the
+   `lock_ops` implementation detail will no longer work, as this has been removed, as
+   it is no longer necessary now that mutex types now have public `lock()` and
+   `unlock()` member functions.
+    * `scoped_lock` constructors with a second parameter of type bool are no
+   longer provided. With previous boost releases,
+      `boost::mutex::scoped_lock some_lock(some_mutex,false);`
+      could be used to create a lock object that was associated with a mutex,
+   but did not lock it on construction. This facility has now been replaced with
+   the constructor that takes a `boost::defer_lock_type` as the second parameter:
+      `boost::mutex::scoped_lock some_lock(some_mutex,boost::defer_lock);`
+    * The broken `boost::read_write_mutex` has been replaced with
+   `boost::shared_mutex`.
 * [phrase library..[@/libs/wave/index.html Wave]:] Standards conformant implementation of the 
   mandated C99/C++ preprocessor functionality packed behind an easy to use 
   iterator interface, from Hartmut Kaiser. Highlights:
