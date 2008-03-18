@@ -252,18 +252,20 @@ HTML
         
         $text = substr($text,strpos($text,'<div class="spirit-nav">'));
         $text = substr($text,0,strpos($text,'</body>'));
-        for ($i = 0; $i < 8; $i++) {
-            $text = preg_replace(
-                '@<img src="[\./]*images/(.*\.png)" alt="(.*)"([ ][/])?>@Ssm',
-                '<img src="/style/css_0/${1}" alt="${2}" />',
-                $text );
-        }
         $text = str_replace('<hr>','',$text);
         $text = str_replace('<table width="100%">','<table class="footer-table">',$text);
         $text = preg_replace(
             '@[\s]+(border|cellpadding|cellspacing|width|height|valign|frame|rules|naturalsizeflag|background)=[^\s>]+@i',
             '',
             $text );
+        /* */
+        for ($i = 0; $i < 8; $i++) {
+            $text = preg_replace(
+                '@<img src="[\./]*images/([^.]+)\.png" alt="([^"]+)"([ /]*)>@Ssm',
+                '<img src="/gfx/space.png" alt="${2}" class="${1}_image" />',
+                $text );
+        }
+        /* */
         
         print $text;
     }
@@ -388,39 +390,39 @@ HTML
             $text );
         $text = preg_replace(
             '@src=".*theme/u_arr\.gif"@i',
-            'src="/style/css_0/up.png"',
+            'src="/gfx/space.png" class="up_image"',
             $text );
         $text = preg_replace(
             '@src=".*theme/l_arr\.gif"@i',
-            'src="/style/css_0/prev.png"',
+            'src="/gfx/space.png" class="prev_image"',
             $text );
         $text = preg_replace(
             '@src=".*theme/r_arr\.gif"@i',
-            'src="/style/css_0/next.png"',
+            'src="/gfx/space.png" class="next_image"',
             $text );
         $text = preg_replace(
             '@src=".*theme/u_arr_disabled\.gif"@i',
-            'src="/style/css_0/up_disabled.png"',
+            'src="/gfx/space.png" class="up_image_disabled"',
             $text );
         $text = preg_replace(
             '@src=".*theme/l_arr_disabled\.gif"@i',
-            'src="/style/css_0/prev_disabled.png"',
+            'src="/gfx/space.png" class="prev_image_disabled"',
             $text );
         $text = preg_replace(
             '@src=".*theme/r_arr_disabled\.gif"@i',
-            'src="/style/css_0/next_disabled.png"',
+            'src="/gfx/space.png" class="next_image_disabled"',
             $text );
         $text = preg_replace(
             '@src=".*theme/note\.gif"@i',
-            'src="/style/css_0/note.png"',
+            'src="/gfx/space.png" class="note_image"',
             $text );
         $text = preg_replace(
             '@src=".*theme/alert\.gif"@i',
-            'src="/style/css_0/caution.png"',
+            'src="/gfx/space.png" class="caution_image"',
             $text );
         $text = preg_replace(
             '@src=".*theme/bulb\.gif"@i',
-            'src="/style/css_0/tip.png"',
+            'src="/gfx/space.png" class="tip_image"',
             $text );
         $text = preg_replace(
             '@<img src=".*theme/(?:bullet|lens)\.gif">@i',
