@@ -9,6 +9,7 @@ build-project news ;
 import feature ;
 import property ;
 import path ;
+import set ;
 
 feature.feature title : : free ;
 feature.feature uri : : free ;
@@ -74,7 +75,12 @@ make history.rss : [ glob-rss history/* ]
     <cwd>$(CWD)
     ;
 
-make news.rss : [ glob-rss news/* history/* ]
+make news.rss
+    : [ set.difference
+        [ glob-rss news/* history/* ] :
+            ## Uncomment the following line out to hide the item from the result.
+            [ glob-rss history/boost_1_35_0 ]
+        ]
     : @rss :
     <title>"Boost News"
     <uri>"http://beta.boost.org/feed/news.rss"

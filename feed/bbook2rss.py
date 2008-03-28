@@ -60,12 +60,15 @@ class BoostBook2RSS:
             article = xml.dom.minidom.parse(bb)
             item = self.x(article.documentElement)
             if item:
-                items.append([
-                    time.mktime(time.strptime(
-                        article.documentElement.getAttribute('last-revision'),
-                        '%a, %d %b %Y %H:%M:%S %Z')),
-                    item
-                    ])
+                try:
+                    items.append([
+                        time.mktime(time.strptime(
+                            article.documentElement.getAttribute('last-revision'),
+                            '%a, %d %b %Y %H:%M:%S %Z')),
+                        item
+                        ])
+                except:
+                    items.append([time.time(),item])
         items.sort(lambda x,y: -cmp(x[0],y[0]))
         for item in items[0:self.count]:
             channel.appendChild(item[1])

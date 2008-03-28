@@ -55,12 +55,28 @@ class boost_feed
                             {
                                 case 'pubdate':
                                 $item['pubdate'] = strtotime($item['pubdate']);
-                                $item['date'] = gmdate('F jS, Y H:i ',$item['pubdate']).'GMT';
+                                if ($item['pubdate'] != 0)
+                                {
+                                    $item['date'] = gmdate('F jS, Y H:i ',$item['pubdate']).'GMT';
+                                }
+                                else
+                                {
+                                    $item['pubdate'] = time();
+                                    $item['date'] = "In Progress";
+                                }
                                 break;
                                 
                                 case 'dc:date':
                                 $item['pubdate'] = strtotime($item['dc:date']);
-                                $item['date'] = gmdate('F jS, Y H:i ',$item['pubdate']).'GMT';
+                                if ($item['pubdate'] != 0)
+                                {
+                                    $item['date'] = gmdate('F jS, Y H:i ',$item['pubdate']).'GMT';
+                                }
+                                else
+                                {
+                                    $item['pubdate'] = time();
+                                    $item['date'] = "In Progress";
+                                }
                                 break;
                             }
                         }
