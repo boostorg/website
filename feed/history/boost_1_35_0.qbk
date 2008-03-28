@@ -1,0 +1,191 @@
+[article Version 1.35.0
+    [quickbook 1.4]
+    [source-mode c++]
+    [purpose Release.]
+    [authors [Dawes, Beman]]
+    [/Uncomment the and set the last-revision date at release time.]
+    [/last-revision Wed, 23 Jan 2008 12:00:00 GMT]
+]
+
+[include ext.qbk]
+
+[download http://sourceforge.net/project/showfiles.php?group_id=7586&package_id=8041]
+
+[section New Libraries]
+
+* [phrase library..[@/libs/asio/index.html Asio]:] Portable networking, 
+  including sockets, timers, hostname resolution and socket iostreams, 
+  from Chris Kohlhoff.
+* [phrase library..[@/libs/bimap/index.html Bimap]:] Boost.Bimap is a 
+  bidirectional maps library for C++. With Boost.Bimap you can create 
+  associative containers in which both types can be used as key, from
+  Matias Capeletto.
+* [phrase library..[@/libs/circular_buffer/index.html Circular Buffer]:] STL compliant container 
+  also known as ring or cyclic buffer, from Jan Gaspar.
+* [phrase library..[@/libs/function_types/index.html Function Types]:] 
+  Boost.FunctionTypes provides functionality to classify, decompose 
+  and synthesize function, function pointer, function reference and 
+  pointer to member types.  From Tobias Schwinger.
+* [phrase library..[@/libs/fusion/index.html Fusion]:] 
+  Library for working with tuples, including various containers, 
+  algorithms, etc. From Joel de Guzman, Dan Marsden and Tobias Schwinger.
+* [phrase library..[@/libs/gil/doc/index.html GIL]:] 
+  Generic Image Library, from Lubomir Bourdev and Hailin Jin.
+* [phrase library..[@/libs/interprocess/index.html Interprocess]:] 
+  Shared memory, memory mapped files, process-shared mutexes, 
+  condition variables, containers and allocators, from Ion Gazta'''&#241;'''aga.
+* [phrase library..[@/libs/intrusive/index.html Intrusive]:] 
+  Intrusive containers and algorithms, from Ion Gazta'''&#241;'''aga.
+* [phrase library..[@/libs/math/doc/sf_and_dist/html/index.html Math/Special Functions]:] 
+  A wide selection of mathematical special functions from 
+  John Maddock, Paul Bristow, Hubert Holin and Xiaogang Zhang.
+* [phrase library..[@/libs/math/doc/sf_and_dist/html/index.html Math/Statistical Distributions]:] 
+  A wide selection of univariate statistical distributions and functions that 
+  operate on them from John Maddock and Paul Bristow
+* [phrase library..[@/doc/html/mpi.html MPI]:] 
+  Message Passing Interface library, for use in distributed-memory 
+  parallel application programming, from Douglas Gregor and Matthias Troyer.
+* [phrase library..[@/libs/system/index.html System]:] 
+  Operating system support, including the diagnostics support that will be 
+  part of the C++0x standard library, from Beman Dawes.
+
+
+[endsect]
+
+[section Updated Libraries]
+
+* [phrase library..[@/libs/graph/doc/index.html Graph]:]
+  Generic graph components and algorithms. Highlights:
+  * `kolmogorov_max_flow`, from Stephan Diederich as part of the 2006 Google Summer of Code.
+  * `read_dimacs_max_flow` and `write_dimacs_max_flow` for max-flow problems, from Stephan Diederich.
+  * `read_graphml` and `write_graphml` for GraphML input/output, from Tiago de Paula Peixoto.
+  * `minimum_cycle_ratio` and `maximum_cycle_ratio`, from Dmitry Bufistov and Andrey Parfenov.
+  * `boyer_myrvold_planarity_test`, along with a suite of algorithms for planar graphs, from Aaron Windsor.
+  * LEDA Adaptor improvements, from Jens M'''&#252;'''ller.
+* [phrase library..[@/libs/functional/hash/index.html Hash]:]
+  A TR1 hash function object, from Daniel James. Highlights:
+  * Support for `long long`, `std::complex`.
+  * Improved the algorithm for hashing floating point numbers.
+  * A few bug and warning fixes.
+* [phrase library..[@/libs/iostreams/index.html Iostreams]:] Framework for defining streams, stream 
+  buffers and i/o filters, from Jonathan Turkanis. Highlights:
+  * Clarified the semantics of close(). This fixes several bugs but will break
+    some existing code. See [@/libs/iostreams/doc/index.html?path=12 Release Notes] 
+    for details.
+  * Numerous other bug fixes and optimizations.
+* [phrase library..[@/libs/multi_array/index.html Multi Array]:] 
+   * Added "dimensionality" compile-time constante to the MultiArray concept.
+   * For greater control over error situations, uses of C++ assert have  
+      been replaced with BOOST_ASSERT.
+   * Fixed a bug with simultaneous resizing and reindexing.
+* [phrase library..[@/libs/multi_index/doc/index.html Multi-index Containers]:]
+  * New [@/libs/multi_index/doc/tutorial/key_extraction.html#global_fun `global_fun`]
+    predefined key extractor.
+  * Added [@/libs/multi_index/doc/tutorial/indices.html#iterator_to `iterator_to`]
+    facility.
+  * Included [@/libs/multi_index/doc/tutorial/creation.html#special_allocator support for
+    non-standard allocators] such as those of
+    [@/libs/interprocess/index.html Boost.Interprocess], which makes
+    `multi_index_container`s placeable in shared memory.
+  * New versions of `modify` and `modify_key` with rollback, as described in the
+    [@/libs/multi_index/doc/tutorial/basics.html#ord_updating tutorial].
+  * A number of optimizations and minor improvements have also been included.
+    For a complete list of changes, see the library
+    [@/libs/multi_index/doc/release_notes.html#boost_1_35 release notes].
+* [phrase library..[@/libs/serialization/index.html Serialization]:] 
+   Boost.Serialization has been updated with optimizations for dense arrays.
+* [phrase library..[@/libs/thread/index.html Thread]:] 
+    * The Thread library has been updated to be more in line with the C++0x working draft.
+    * Instances of boost::thread and of the various lock types are now movable.
+    * Threads can be interrupted at interruption points.
+    * Condition variables can now be used with any type that implements the
+   Lockable concept, through the use of `boost::condition_variable_any`
+   (`boost::condition` is a typedef to `boost::condition_variable_any`, provided for
+   backwards compatibility). `boost::condition_variable` is provided as an
+   optimization, and will only work with `boost::unique_lock<boost::mutex>`
+   (`boost::mutex::scoped_lock`).
+    * Thread IDs are separated from boost::thread, so a thread can obtain it's
+   own ID (using `boost::this_thread::get_id()`), and IDs can be used as keys in
+   associative containers, as they have the full set of comparison operators.
+    * Timeouts are now implemented using the Boost DateTime library, through a
+   typedef `boost::system_time` for absolute timeouts, and with support for relative
+   timeouts in many cases. `boost::xtime` is supported for backwards compatibility
+   only.
+    * Locks are implemented as publicly accessible templates `boost::lock_guard`,
+   `boost::unique_lock`, `boost::shared_lock`, and `boost::upgrade_lock`, which are
+   templated on the type of the mutex. The Lockable concept has been extended to
+   include publicly available `lock()` and `unlock()` member functions, which are used
+   by the lock types.
+    * `boost::try_mutex` has been removed, and the functionality subsumed into
+   `boost::mutex`. `boost::try_mutex` is left as a typedef, but is no longer a separate
+   class.
+    * `boost::recursive_try_mutex` has been removed, and the functionality
+   subsumed into `boost::recursive_mutex`. `boost::recursive_try_mutex` is left as a
+   typedef, but is no longer a separate class.
+    * `boost::detail::thread::lock_ops` has been removed. Code that relies on the
+   `lock_ops` implementation detail will no longer work, as this has been removed, as
+   it is no longer necessary now that mutex types now have public `lock()` and
+   `unlock()` member functions.
+    * `scoped_lock` constructors with a second parameter of type bool are no
+   longer provided. With previous boost releases,
+      `boost::mutex::scoped_lock some_lock(some_mutex,false);`
+      could be used to create a lock object that was associated with a mutex,
+   but did not lock it on construction. This facility has now been replaced with
+   the constructor that takes a `boost::defer_lock_type` as the second parameter:
+      `boost::mutex::scoped_lock some_lock(some_mutex,boost::defer_lock);`
+    * The broken `boost::read_write_mutex` has been replaced with
+   `boost::shared_mutex`.
+* [phrase library..[@/libs/wave/index.html Wave]:] Standards conformant implementation of the 
+  mandated C99/C++ preprocessor functionality packed behind an easy to use 
+  iterator interface, from Hartmut Kaiser. Highlights:
+  * Added the possibility to continue the preprocessing after an error occured.
+  * Added the macro introspection API to the wave::context object.
+  * Added threading support to the library.
+  * Improved the overall performance by upto 30%.
+  * Changed and unified preprocessor hook interface (this is an interface 
+    breaking change!), added several new preprocessor hook functions.
+  * Added serialization support.
+  * Added new examples (for instance: Hannibal - a partial C++ parser, by Danny 
+    Havenith).
+  * Added a new lexical analyzer based on Ben Hansons Lexertl library.
+  * Fixed a large number of other bugs and problems.
+* [phrase library..[@/libs/xpressive/index.html Xpressive]:] Regular expressions that can be
+  written as strings or as expression templates, and that can refer to each
+  other and themselves recursively with the power of context-free grammars,
+  from Eric Niebler. Highlights:
+  * Added /semantic actions/ to static regexes. A semantic action is code that
+    executes when part of a regular expression matches.
+  * Added /custom assertions/ to static regexes. A custom assertion is a Boolean
+    predicate that can participate in the regex match.
+  * Added /named regexes/ for embedding a static or dynamic regex into a dynamic
+    regex. This can be used to create dynamic regex grammars.
+  * Added /named captures/ to dynamic regexes, like Perl.
+
+[endsect]
+
+[section Supported Compilers]
+
+The following compilers are officially supported in this release:
+
+* HP aCC version 61400 on HP-UX.
+* Darwin GCC 4.01.
+* GNU GCC up to version 4.2.1, on Linux and Solaris.
+* Intel C++ 9.1 on Linux.
+* Intel C++ 10.1 on Windows.
+* Microsoft Visual C++ 7.1 and 8 on Windows (Visual Sudio .NET 2003 and 2005).
+
+In addition the following compilers should be well supported, but weren't part of
+out release criteria for 1.35:
+
+* IBM Visual Age 9.0 on AIX.
+* Intel C++ 10 and later on Linux.
+* GNU GCC 4.3 and later on Linux and Solaris.
+* Microsoft Visual C++ 9 (Visual Studio .NET 2008).
+
+[endsect]
+
+[section Acknowledgements]
+
+[@/users/people/beman_dawes.html Beman Dawes] managed this release.
+
+[endsect]

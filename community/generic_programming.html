@@ -1,0 +1,509 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>Generic Programming Techniques</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+  <link rel="icon" href="/favicon.ico" type="image/ico" />
+  <link rel="stylesheet" type="text/css" href=
+  "/style/section-community.css" />
+  <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
+
+  <style type="text/css">
+/*<![CDATA[*/
+  a.c2 {font-style: italic}
+  strong.c1 {font-style: italic}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="heading">
+    <!--#include virtual="/common/heading.html" -->
+  </div>
+
+  <div id="body">
+    <div id="body-inner">
+      <div id="content">
+        <div class="section" id="intro">
+          <div class="section-0">
+            <div class="section-title">
+              <h1>Generic Programming Techniques</h1>
+            </div>
+
+            <div class="section-body">
+              <p>This is an incomplete survey of some of the generic
+              programming techniques used in the <a href="/">boost</a>
+              libraries.</p>
+
+              <h2>Table of Contents</h2>
+
+              <ul>
+                <li><a href="#introduction">Introduction</a></li>
+
+                <li><a href="#concept">The Anatomy of a Concept</a></li>
+
+                <li><a href="#traits">Traits</a></li>
+
+                <li><a href="#tag_dispatching">Tag Dispatching</a></li>
+
+                <li><a href="#adaptors">Adaptors</a></li>
+
+                <li><a href="#type_generator">Type Generators</a></li>
+
+                <li><a href="#object_generator">Object Generators</a></li>
+
+                <li><a href="#policy">Policy Classes</a></li>
+              </ul>
+
+              <h2><a name="introduction" id=
+              "introduction">Introduction</a></h2>
+
+              <p>Generic programming is about generalizing software
+              components so that they can be easily reused in a wide variety
+              of situations. In C++, class and function templates are
+              particularly effective mechanisms for generic programming
+              because they make the generalization possible without
+              sacrificing efficiency.</p>
+
+              <p>As a simple example of generic programming, we will look at
+              how one might generalize the <code>memcpy()</code> function of
+              the C standard library. An implementation of
+              <code>memcpy()</code> might look like the following:</p>
+              <pre>
+void* memcpy(void* region1, const void* region2, size_t n)
+{
+  const char* first = (const char*)region2;
+  const char* last = ((const char*)region2) + n;
+  char* result = (char*)region1;
+  while (first != last)
+    *result++ = *first++;
+  return result;
+}
+</pre>
+
+              <p>The <code>memcpy()</code> function is already generalized to
+              some extent by the use of <code>void*</code> so that the
+              function can be used to copy arrays of different kinds of data.
+              But what if the data we would like to copy is not in an array?
+              Perhaps it is in a linked list. Can we generalize the notion of
+              copy to any sequence of elements? Looking at the body of
+              <code>memcpy()</code>, the function's <strong class=
+              "c1">minimal requirements</strong> are that it needs to
+              <i>traverse</i> through the sequence using some sort of
+              pointer, <i>access</i> elements pointed to, <i>write</i> the
+              elements to the destination, and <i>compare</i> pointers to
+              know when to stop. The C++ standard library groups requirements
+              such as these into <strong class="c1">concepts</strong>, in
+              this case the <a href=
+              "http://www.sgi.com/tech/stl/InputIterator.html">Input
+              Iterator</a> concept (for <code>region2</code>) and the
+              <a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output
+              Iterator</a> concept (for <code>region1</code>).</p>
+
+              <p>If we rewrite the <code>memcpy()</code> as a function
+              template, and use the <a href=
+              "http://www.sgi.com/tech/stl/InputIterator.html">Input
+              Iterator</a> and <a href=
+              "http://www.sgi.com/tech/stl/OutputIterator.html">Output
+              Iterator</a> concepts to describe the requirements on the
+              template parameters, we can implement a highly reusable
+              <code>copy()</code> function in the following way:</p>
+              <pre>
+template &lt;typename InputIterator, typename OutputIterator&gt;
+OutputIterator
+copy(InputIterator first, InputIterator last, OutputIterator result)
+{
+  while (first != last)
+    *result++ = *first++;
+  return result;
+}
+</pre>
+
+              <p>Using the generic <code>copy()</code> function, we can now
+              copy elements from any kind of sequence, including a linked
+              list that exports iterators such as <code>std::<a href=
+              "http://www.sgi.com/tech/stl/List.html">list</a></code>.</p>
+              <pre>
+#include &lt;list&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+int main()
+{
+  const int N = 3;
+  std::vector&lt;int&gt; region1(N);
+  std::list&lt;int&gt; region2;
+
+  region2.push_back(1);
+  region2.push_back(0);
+  region2.push_back(3);
+  
+  std::copy(region2.begin(), region2.end(), region1.begin());
+
+  for (int i = 0; i &lt; N; ++i)
+    std::cout &lt;&lt; region1[i] &lt;&lt; " ";
+  std::cout &lt;&lt; std::endl;
+}
+</pre>
+
+              <h2><a name="concept" id="concept">Anatomy of a
+              Concept</a></h2>
+
+              <p>A <strong class="c1">concept</strong> is a set of
+              requirements consisting of valid expressions, associated types,
+              invariants, and complexity guarantees. A type that satisfies
+              the requirements is said to <strong class="c1">model</strong>
+              the concept. A concept can extend the requirements of another
+              concept, which is called <strong class=
+              "c1">refinement</strong>.</p>
+
+              <ul>
+                <li><a name="valid_expression" id=
+                "valid_expression"><strong>Valid Expressions</strong></a> are
+                C++ expressions which must compile successfully for the
+                objects involved in the expression to be considered
+                <i>models</i> of the concept.</li>
+
+                <li><a name="associated_type" id=
+                "associated_type"><strong>Associated Types</strong></a> are
+                types that are related to the modeling type in that they
+                participate in one or more of the valid expressions.
+                Typically associated types can be accessed either through
+                typedefs nested within a class definition for the modeling
+                type, or they are accessed through a <a href="#traits">traits
+                class</a>.</li>
+
+                <li><strong>Invariants</strong> are run-time characteristics
+                of the objects that must always be true, that is, the
+                functions involving the objects must preserve these
+                characteristics. The invariants often take the form of
+                pre-conditions and post-conditions.</li>
+
+                <li><strong>Complexity Guarantees</strong> are maximum limits
+                on how long the execution of one of the valid expressions
+                will take, or how much of various resources its computation
+                will use.</li>
+              </ul>
+
+              <p>The concepts used in the C++ Standard Library are documented
+              at the <a href=
+              "http://www.sgi.com/tech/stl/table_of_contents.html">SGI STL
+              site</a>.</p>
+
+              <h2><a name="traits" id="traits">Traits</a></h2>
+
+              <p>A traits class provides a way of associating information
+              with a compile-time entity (a type, integral constant, or
+              address). For example, the class template <a href=
+              "http://www.sgi.com/tech/stl/iterator_traits.html"><code>std::iterator_traits&lt;T&gt;</code></a>
+              looks something like this:</p>
+              <pre>
+template &lt;class Iterator&gt;
+struct iterator_traits {
+  typedef ... iterator_category;
+  typedef ... value_type;
+  typedef ... difference_type;
+  typedef ... pointer;
+  typedef ... reference;
+};
+</pre>
+
+              <p>The traits' <code>value_type</code> gives generic code the
+              type which the iterator is "pointing at", while the
+              <code>iterator_category</code> can be used to select more
+              efficient algorithms depending on the iterator's
+              capabilities.</p>
+
+              <p>A key feature of traits templates is that they're
+              <i>non-intrusive</i>: they allow us to associate information
+              with arbitrary types, including built-in types and types
+              defined in third-party libraries, Normally, traits are
+              specified for a particular type by (partially) specializing the
+              traits template.</p>
+
+              <p>For an in-depth description of
+              <code>std::iterator_traits</code>, see <a href=
+              "http://www.sgi.com/tech/stl/iterator_traits.html">this
+              page</a> provided by SGI. Another very different expression of
+              the traits idiom in the standard is
+              <code>std::numeric_limits&lt;T&gt;</code> which provides
+              constants describing the range and capabilities of numeric
+              types.</p>
+
+              <h2><a name="tag_dispatching" id="tag_dispatching">Tag
+              Dispatching</a></h2>
+
+              <p>Tag dispatching is a way of using function overloading to
+              dispatch based on properties of a type, and is often used hand
+              in hand with traits classes. A good example of this synergy is
+              the implementation of the <a href=
+              "http://www.sgi.com/tech/stl/advance.html"><code>std::advance()</code></a>
+              function in the C++ Standard Library, which increments an
+              iterator <code>n</code> times. Depending on the kind of
+              iterator, there are different optimizations that can be applied
+              in the implementation. If the iterator is <a href=
+              "http://www.sgi.com/tech/stl/RandomAccessIterator.html">random
+              access</a> (can jump forward and backward arbitrary distances),
+              then the <code>advance()</code> function can simply be
+              implemented with <code>i += n</code>, and is very efficient:
+              constant time. Other iterators must be <code>advance</code>d in
+              steps, making the operation linear in n. If the iterator is
+              <a href=
+              "http://www.sgi.com/tech/stl/BidirectionalIterator.html">bidirectional</a>,
+              then it makes sense for <code>n</code> to be negative, so we
+              must decide whether to increment or decrement the iterator.</p>
+
+              <p>The relation between tag dispatching and traits classes is
+              that the property used for dispatching (in this case the
+              <code>iterator_category</code>) is often accessed through a
+              traits class. The main <code>advance()</code> function uses the
+              <a href=
+              "http://www.sgi.com/tech/stl/iterator_traits.html"><code>iterator_traits</code></a>
+              class to get the <code>iterator_category</code>. It then makes
+              a call the the overloaded <code>advance_dispatch()</code>
+              function. The appropriate <code>advance_dispatch()</code> is
+              selected by the compiler based on whatever type the
+              <code>iterator_category</code> resolves to, either <a href=
+              "http://www.sgi.com/tech/stl/input_iterator_tag.html"><code>input_iterator_tag</code></a>,
+              <a href=
+              "http://www.sgi.com/tech/stl/bidirectional_iterator_tag.html"><code>
+              bidirectional_iterator_tag</code></a>, or <a href=
+              "http://www.sgi.com/tech/stl/random_access_iterator_tag.html"><code>
+              random_access_iterator_tag</code></a>. A <strong class=
+              "c1">tag</strong> is simply a class whose only purpose is to
+              convey some property for use in tag dispatching and similar
+              techniques. Refer to <a href=
+              "http://www.sgi.com/tech/stl/iterator_tags.html">this page</a>
+              for a more detailed description of iterator tags.</p>
+              <pre>
+namespace std {
+  struct input_iterator_tag { };
+  struct bidirectional_iterator_tag { };
+  struct random_access_iterator_tag { };
+
+  namespace detail {
+    template &lt;class InputIterator, class Distance&gt;
+    void advance_dispatch(InputIterator&amp; i, Distance n, <strong>input_iterator_tag</strong>) {
+      while (n--) ++i;
+    }
+
+    template &lt;class BidirectionalIterator, class Distance&gt;
+    void advance_dispatch(BidirectionalIterator&amp; i, Distance n, 
+       <strong>bidirectional_iterator_tag</strong>) {
+      if (n &gt;= 0)
+        while (n--) ++i;
+      else
+        while (n++) --i;
+    }
+
+    template &lt;class RandomAccessIterator, class Distance&gt;
+    void advance_dispatch(RandomAccessIterator&amp; i, Distance n, 
+       <strong>random_access_iterator_tag</strong>) {
+      i += n;
+    }
+  }
+
+  template &lt;class InputIterator, class Distance&gt;
+  void advance(InputIterator&amp; i, Distance n) {
+    typename <strong>iterator_traits&lt;InputIterator&gt;::iterator_category</strong> category;
+    detail::advance_dispatch(i, n, <strong>category</strong>);
+  }
+}
+</pre>
+
+              <h2><a name="adaptors" id="adaptors">Adaptors</a></h2>
+
+              <p>An <i>adaptor</i> is a class template which builds on
+              another type or types to provide a new interface or behavioral
+              variant. Examples of standard adaptors are <a href=
+              "http://www.sgi.com/tech/stl/ReverseIterator.html">std::reverse_iterator</a>,
+              which adapts an iterator type by reversing its motion upon
+              increment/decrement, and <a href=
+              "http://www.sgi.com/tech/stl/stack.html">std::stack</a>, which
+              adapts a container to provide a simple stack interface.</p>
+
+              <p>A more comprehensive review of the adaptors in the standard
+              can be found <a href=
+              "http://portal.acm.org/citation.cfm?id=249118.249120">here</a>.</p>
+
+              <h2><a name="type_generator" id="type_generator">Type
+              Generators</a></h2>
+
+              <p><strong>Note:</strong> The <i>type generator</i> concept has
+              largely been superseded by the more refined notion of a
+              <a class="c2" href=
+              "/doc/libs/release/libs/mpl/doc/refmanual/metafunction.html">metafunction</a>.
+              See <i><a href="http://www.boost-consulting.com/mplbook/">C++
+              Template Metaprogramming</a></i> for an in-depth discussion of
+              metafunctions.</p>
+
+              <p>A <i>type generator</i> is a template whose only purpose is
+              to synthesize a new type or types based on its template
+              argument(s)<a href="#footnote1">[1]</a>. The generated type is
+              usually expressed as a nested typedef named, appropriately
+              <code>type</code>. A type generator is usually used to
+              consolidate a complicated type expression into a simple one.
+              This example uses an old version of <a href=
+              "/doc/libs/release/libs/iterator/doc/iterator_adaptor.html"><code>
+              iterator_adaptor</code></a> whose design didn't allow derived
+              iterator types. As a result, every adapted iterator had to be a
+              specialization of <code>iterator_adaptor</code> itself and
+              generators were a convenient way to produce those types.</p>
+              <pre>
+template &lt;class Predicate, class Iterator, 
+    class Value = <i>complicated default</i>,
+    class Reference = <i>complicated default</i>,
+    class Pointer = <i>complicated default</i>,
+    class Category = <i>complicated default</i>,
+    class Distance = <i>complicated default</i>
+         &gt;
+struct filter_iterator_generator {
+    typedef iterator_adaptor&lt;
+        
+        Iterator,filter_iterator_policies&lt;Predicate,Iterator&gt;,
+        Value,Reference,Pointer,Category,Distance&gt; <strong>type</strong>;
+};
+</pre>
+
+              <p>Now, that's complicated, but producing an adapted filter
+              iterator using the generator is much easier. You can usually
+              just write:</p>
+              <pre>
+boost::filter_iterator_generator&lt;my_predicate,my_base_iterator&gt;::type
+</pre>
+
+              <h2><a name="object_generator" id="object_generator">Object
+              Generators</a></h2>
+
+              <p>An <i>object generator</i> is a function template whose only
+              purpose is to construct a new object out of its arguments.
+              Think of it as a kind of generic constructor. An object
+              generator may be more useful than a plain constructor when the
+              exact type to be generated is difficult or impossible to
+              express and the result of the generator can be passed directly
+              to a function rather than stored in a variable. Most Boost
+              object generators are named with the prefix
+              "<code>make_</code>", after <code>std::<a href=
+              "http://www.sgi.com/tech/stl/pair.html">make_pair</a>(const&nbsp;T&amp;,&nbsp;const&nbsp;U&amp;)</code>.</p>
+
+              <p>For example, given:</p>
+              <pre>
+struct widget {
+  void tweak(int);
+};
+std::vector&lt;widget *&gt; widget_ptrs;
+</pre>
+
+              <p>By chaining two standard object generators,
+              <code>std::<a href=
+              "http://www.dinkumware.com/manuals/default.aspx?manual=compleat&amp;page=functio2.html#bind2nd">bind2nd</a>()</code>
+              and <code>std::<a href=
+              "http://www.dinkumware.com/manuals/default.aspx?manual=compleat&amp;page=functio2.html#mem_fun">mem_fun</a>()</code>,
+              we can easily tweak all widgets:</p>
+              <pre>
+void tweak_all_widgets1(int arg)
+{
+   for_each(widget_ptrs.begin(), widget_ptrs.end(),
+      <strong>bind2nd</strong>(std::<strong>mem_fun</strong>(&amp;widget::tweak), arg));
+}
+</pre>
+
+              <p>Without using object generators the example above would look
+              like this:</p>
+              <pre>
+void tweak_all_widgets2(int arg)
+{
+   for_each(struct_ptrs.begin(), struct_ptrs.end(),
+      <strong>std::binder2nd&lt;std::mem_fun1_t&lt;void, widget, int&gt; &gt;</strong>(
+          std::<strong>mem_fun1_t&lt;void, widget, int&gt;</strong>(&amp;widget::tweak), arg));
+}
+</pre>
+
+              <p>As expressions get more complicated the need to reduce the
+              verbosity of type specification gets more compelling.</p>
+
+              <h2><a name="policy" id="policy">Policy Classes</a></h2>
+
+              <p>A policy class is a template parameter used to transmit
+              behavior. An example from the standard library is
+              <code>std::<a href=
+              "http://www.dinkumware.com/manuals/default.aspx?manual=compleat&amp;page=memory.html#allocator">allocator</a></code>,
+              which supplies memory management behaviors to standard <a href=
+              "http://www.sgi.com/tech/stl/Container.html">containers</a>.</p>
+
+              <p>Policy classes have been explored in detail by <a href=
+              "http://www.moderncppdesign.com/">Andrei Alexandrescu</a> in
+              <a href=
+              "http://www.informit.com/articles/article.aspx?p=167842">this
+              chapter</a> of his book, <i>Modern C++ Design</i>. He
+              writes:</p>
+
+              <blockquote>
+                <p>In brief, policy-based class design fosters assembling a
+                class with complex behavior out of many little classes
+                (called policies), each of which takes care of only one
+                behavioral or structural aspect. As the name suggests, a
+                policy establishes an interface pertaining to a specific
+                issue. You can implement policies in various ways as long as
+                you respect the policy interface.</p>
+
+                <p>Because you can mix and match policies, you can achieve a
+                combinatorial set of behaviors by using a small core of
+                elementary components.</p>
+              </blockquote>
+
+              <p>Andrei's description of policy classes suggests that their
+              power is derived from granularity and orthogonality.
+              Less-granular policy interfaces have been shown to work well in
+              practice, though. <a href=
+              "http://svn.boost.org/trac/boost/browser/trunk/boost/libs/utility/iterator_adaptors.pdf?rev=11508&amp;format=raw">
+              This paper</a> describes an old version of <a href=
+              "/doc/libs/release/libs/iterator/doc/iterator_adaptor.html"><code>
+              iterator_adaptor</code></a> that used non-orthogonal policies.
+              There is also precedent in the standard library: <a href=
+              "http://www.dinkumware.com/manuals/default.aspx?manual=compleat&amp;page=string2.html#char_traits">
+              <code>std::char_traits</code></a>, despite its name, acts as a
+              policies class that determines the behaviors of <a href=
+              "http://www.dinkumware.com/manuals/default.aspx?manual=compleat&amp;page=string2.html#basic_string">
+              std::basic_string</a>.</p>
+
+              <h2>Notes</h2>
+
+              <p><a name="footnote1" id="footnote1">[1]</a> Type generators
+              are sometimes viewed as a workaround for the lack of
+              ``templated typedefs'' in C++.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sidebar">
+        <!--#include virtual="/common/sidebar-common.html" -->
+        <!--#include virtual="/common/sidebar-community.html" -->
+      </div>
+
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <div id="footer-left">
+      <div id="revised">
+        <p>Revised $Date$</p>
+      </div>
+
+      <div id="copyright">
+        <p>Copyright David Abrahams 2001.</p>
+      </div><!--#include virtual="/common/footer-license.html" -->
+    </div>
+
+    <div id="footer-right">
+      <!--#include virtual="/common/footer-banners.html" -->
+    </div>
+
+    <div class="clear"></div>
+  </div>
+</body>
+</html>

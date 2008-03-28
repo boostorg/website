@@ -1,0 +1,738 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>Counted Body Techniques</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+  <link rel="icon" href="/favicon.ico" type="image/ico" />
+  <link rel="stylesheet" type="text/css" href=
+  "/style/section-community.css" />
+  <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
+</head>
+
+<body>
+  <div id="heading">
+    <!--#include virtual="/common/heading.html" -->
+  </div>
+
+  <div id="body">
+    <div id="body-inner">
+      <div id="content">
+        <div class="section" id="intro">
+          <div class="section-0">
+            <div class="section-title">
+              <h1>Counted Body Techniques</h1>
+            </div>
+
+            <div class="section-body">
+              <p style="text-align: center"><a href=
+              "/users/people/kevlin_henney.html">Kevlin Henney</a><br />
+              (<a href=
+              "mailto:kevlin@curbralan.com">kevlin@curbralan.com</a>)</p>
+
+              <p>Reference counting techniques? Nothing new, you might think.
+              Every good C++ text that takes you to an intermediate or
+              advanced level will introduce the concept. It has been explored
+              with such thoroughness in the past that you might be forgiven
+              for thinking that everything that can be said has been said.
+              Well, let's start from first principles and see if we can
+              unearth something new....</p>
+
+              <h2>And then there were none...</h2>
+
+              <p>The principle behind reference counting is to keep a running
+              usage count of an object so that when it falls to zero we know
+              the object is unused. This is normally used to simplify the
+              memory management for dynamically allocated objects: keep a
+              count of the number of references held to that object and, on
+              zero, delete the object.</p>
+
+              <p>How to keep a track of the number of users of an object?
+              Well, normal pointers are quite dumb, and so an extra level of
+              indirection is required to manage the count. This is
+              essentially the PROXY pattern described in <i>Design
+              Patterns</i> [Gamma, Helm, Johnson &amp; Vlissides,
+              Addison-Wesley, ISBN 0-201-63361-2]. The intent is given as</p>
+
+              <blockquote>
+                <p><i>Provide a surrogate or placeholder for another object
+                to control access to it.</i></p>
+              </blockquote>
+
+              <p>Coplien [<i>Advanced C++ Programming Styles and Idioms</i>,
+              Addison-Wesley, ISBN 0-201-56365-7] defines a set of idioms
+              related to this essential separation of a handle and a body
+              part. The <i>Taligent Guide to Designing Programs</i>
+              [Addison-Wesley, ISBN 0-201-40888-0] identifies a number of
+              specific categories for proxies (aka surrogates). Broadly
+              speaking they fall into two general categories:</p>
+
+              <ul>
+                <li><i>Hidden</i>: The handle is the object of interest,
+                hiding the body itself. The functionality of the handle is
+                obtained by delegation to the body, and the user of the
+                handle is unaware of the body. Reference counted strings
+                offer a transparent optimisation. The body is shared between
+                copies of a string until such a time as a change is needed,
+                at which point a copy is made. Such a COPY ON WRITE pattern
+                (a specialisation of LAZY EVALUATION) requires the use of a
+                hidden reference counted body.</li>
+
+                <li><i>Explicit</i>: Here the body is of interest and the
+                handle merely provides intelligence for its access and
+                housekeeping. In C++ this is often implemented as the SMART
+                POINTER idiom. One such application is that of reference
+                counted smart pointers that collaborate to keep a count of an
+                object, deleting it when the count falls to zero.</li>
+              </ul>
+
+              <h2>Attached vs detached</h2>
+
+              <p>For reference counted smart pointers there are two places
+              the count can exist, resulting in two different patterns, both
+              outlined in <i>Software Patterns</i> [Coplien, SIGS, ISBN
+              0-884842-50-X]:</p>
+
+              <ul>
+                <li>COUNTED BODY or ATTACHED COUNTED HANDLE/BODY places the
+                count within the object being counted. The benefits are that
+                countability is a part of the object being counted, and that
+                reference counting does not require an additional object. The
+                drawbacks are clearly that this is intrusive, and that the
+                space for the reference count is wasted when the object is
+                not heap based. Therefore the reference counting ties you to
+                a particular implementation and style of use.</li>
+
+                <li>DETACHED COUNTED HANDLE/BODY places the count outside the
+                object being counted, such that they are handled together.
+                The clear benefit of this is that this technique is
+                completely unintrusive, with all of the intelligence and
+                support apparatus in the smart pointer, and therefore can be
+                used on classes created independently of the reference
+                counted pointer. The main disadvantage is that frequent use
+                of this can lead to a proliferation of small objects, i.e.
+                the counter, being created on the heap.</li>
+              </ul>
+
+              <p>Even with this simple analysis, it seems that the DETACHED
+              COUNTED HANDLE/BODY approach is ahead. Indeed, with the
+              increasing use of templates this is often the favourite, and is
+              the principle behind the common - but not standard -
+              <code>counted_ptr</code>. <i>[The Boost name is <a href=
+              "/doc/libs/release/libs/smart_ptr/shared_ptr.htm"><code>shared_ptr</code></a>
+              rather than <code>counted_ptr</code>.]</i></p>
+
+              <p>A common implementation of COUNTED BODY is to provide the
+              counting mechanism in a base class that the counted type is
+              derived from. Either that, or the reference counting mechanism
+              is provided anew for each class that needs it. Both of these
+              approaches are unsatisfactory because they are quite closed,
+              coupling a class into a particular framework. Added to this the
+              non-cohesiveness of having the count lying dormant in a
+              non-counted object, and you get the feeling that excepting its
+              use in widespread object models such as COM and CORBA the
+              COUNTED BODY approach is perhaps only of use in specialised
+              situations.</p>
+
+              <h2>A requirements based approach</h2>
+
+              <p>It is the question of openness that convinced me to revisit
+              the problems with the COUNTED BODY idiom. Yes, there is a
+              certain degree of intrusion expected when using this idiom, but
+              is there anyway to minimise this and decouple the choice of
+              counting mechanism from the smart pointer type used?</p>
+
+              <p>In recent years the most instructive body of code and
+              specification for constructing open general purpose components
+              has been the Stepanov and Lee's STL (Standard Template
+              Library), now part of the C++ standard library. The STL
+              approach makes extensive use of compile time polymorphism based
+              on well defined operational requirements for types. For
+              instance, each container, contained and iterator type is
+              defined by the operations that should be performable on an
+              object of that type, often with annotations describing
+              additional constraints. Compile time polymorphism, as its name
+              suggests, resolves functions at compile time based on function
+              name and argument usage, i.e. overloading. This is less
+              intrusive, although less easily diagnosed if incorrect, than
+              runtime poymorphism that is based on types, names and function
+              signatures.</p>
+
+              <p>This requirements based approach can be applied to reference
+              counting. The operations we need for a type to be
+              <i>Countable</i> are loosely:</p>
+
+              <ul>
+                <li>An <code>acquire</code> operation that registers interest
+                in a <i>Countable</i> object.</li>
+
+                <li>A <code>release</code> operation unregisters interest in
+                a <i>Countable</i> object.</li>
+
+                <li>An <code>acquired</code> query that returns whether or
+                not a <i>Countable</i> object is currently acquired.</li>
+
+                <li>A <code>dispose</code> operation that is responsible for
+                disposing of an object that is no longer acquired.</li>
+              </ul>
+
+              <p>Note that the count is deduced as a part of the abstract
+              state of this type, and is not mentioned or defined in any
+              other way. The openness of this approach derives in part from
+              the use of global functions, meaning that no particular member
+              functions are implied; a perfect way to wrap up an existing
+              counted body class without modifying the class itself. The
+              other aspect to the openness comes from a more precise
+              specification of the operations.</p>
+
+              <p>For a type to be <i>Countable</i> it must satisfy the
+              following requirements, where <code>ptr</code> is a non-null
+              pointer to a single object (i.e. not an array) of the type, and
+              <i><code>#function</code></i> indicates number of calls to
+              <code><i>function(</i>ptr<i>)</i></code>:</p>
+
+              <table border="1" cellspacing="2" cellpadding="2" summary="">
+                <tr>
+                  <td><i>Expression</i></td>
+
+                  <td><i>Return type</i></td>
+
+                  <td><i>Semantics and notes</i></td>
+                </tr>
+
+                <tr>
+                  <td><code>acquire(ptr)</code></td>
+
+                  <td>no requirement</td>
+
+                  <td><i>post</i>: <code>acquired(ptr)</code></td>
+                </tr>
+
+                <tr>
+                  <td><code>release(ptr)</code></td>
+
+                  <td>no requirement</td>
+
+                  <td><i>pre</i>: <code>acquired(ptr)<br /></code>
+                  <i>post</i>: <code>acquired(ptr) == #acquire -
+                  #release</code></td>
+                </tr>
+
+                <tr>
+                  <td><code>acquired(ptr)</code></td>
+
+                  <td>convertible to <code>bool</code></td>
+
+                  <td><i>return</i>: <code>#acquire &gt; #release</code></td>
+                </tr>
+
+                <tr>
+                  <td><code>dispose(ptr, ptr)</code></td>
+
+                  <td>no requirement</td>
+
+                  <td><i>pre</i>: <code>!acquired(ptr)<br /></code>
+                  <i>post</i>: <code>*ptr</code> no longer usable</td>
+                </tr>
+              </table>
+
+              <p>Note that the two arguments to <code>dispose</code> are to
+              support selection of the appropriate type safe version of the
+              function to be called. In the general case the intent is that
+              the first argument determines the type to be deleted, and would
+              typically be templated, while the second selects which template
+              to use, e.g. by conforming to a specific base class.</p>
+
+              <p>In addition the following requirements must also be
+              satisfied, where <code>null</code> is a null pointer to the
+              <i>Countable</i> type:</p>
+
+              <table border="1" summary="">
+                <tr>
+                  <td><i>Expression</i></td>
+
+                  <td><i>Return type</i></td>
+
+                  <td><i>Semantics and notes</i></td>
+                </tr>
+
+                <tr>
+                  <td><code>acquire(null)</code></td>
+
+                  <td>no requirement</td>
+
+                  <td><i>action</i>: none</td>
+                </tr>
+
+                <tr>
+                  <td><code>release(null)</code></td>
+
+                  <td>no requirement</td>
+
+                  <td><i>action</i>: none</td>
+                </tr>
+
+                <tr>
+                  <td><code>acquired(null)</code></td>
+
+                  <td>convertible to <code>bool</code></td>
+
+                  <td><i>return</i>: <code>false</code></td>
+                </tr>
+
+                <tr>
+                  <td><code>dispose(null, null)</code></td>
+
+                  <td>no requirement</td>
+
+                  <td><i>action</i>: none</td>
+                </tr>
+              </table>
+
+              <p>Note that there are no requirements on these functions in
+              terms of exceptions thrown or not thrown, except that if
+              exceptions are thrown the functions themselves should be
+              exception safe.</p>
+
+              <h2>Getting smart</h2>
+
+              <p>Given the <i>Countable</i> requirements for a type, it is
+              possible to define a generic smart pointer type that uses them
+              for reference counting:</p>
+              <pre>
+template&lt;typename countable_type&gt;
+class countable_ptr
+{
+public: // construction and destruction
+
+    explicit countable_ptr(countable_type *);
+    countable_ptr(const countable_ptr &amp;);
+    ~countable_ptr();
+
+public: // access
+
+    countable_type *operator-&gt;() const;
+    countable_type &amp;operator*() const;
+    countable_type *get() const;
+
+public: // modification
+
+    countable_ptr &amp;clear();
+    countable_ptr &amp;assign(countable_type *);
+    countable_ptr &amp;assign(const countable_ptr &amp;);
+    countable_ptr &amp;operator=(const countable_ptr &amp;);
+
+private: // representation
+
+    countable_type *body;
+
+};
+</pre>
+
+              <p>The interface to this class has been kept intentionally
+              simple, e.g. member templates and <code>throw</code> specs have
+              been omitted, for exposition. The majority of the functions are
+              quite simple in implementation, relying very much on the
+              <code>assign</code> member as a keystone function:</p>
+              <pre>
+template&lt;typename countable_type&gt;
+countable_ptr&lt;countable_type&gt;::countable_ptr(countable_type *initial)
+  : body(initial)
+{
+    acquire(body);
+}
+
+template&lt;typename countable_type&gt;
+countable_ptr&lt;countable_type&gt;::countable_ptr(const countable_ptr &amp;other)
+  : body(other.body)
+{
+    acquire(body);
+}
+
+template&lt;typename countable_type&gt;
+countable_ptr&lt;countable_type&gt;::~countable_ptr()
+{
+    clear();
+}
+
+template&lt;typename countable_type&gt;
+countable_type *countable_ptr&lt;countable_type&gt;::operator-&gt;() const
+{
+    return body;
+}
+
+template&lt;typename countable_type&gt;
+countable_type &amp;countable_ptr&lt;countable_type&gt;::operator*() const
+{
+    return *body;
+}
+
+template&lt;typename countable_type&gt;
+countable_type *countable_ptr&lt;countable_type&gt;::get() const
+{
+    return body;
+}
+
+template&lt;typename countable_type&gt;
+countable_ptr&lt;countable_type&gt; &amp;countable_ptr&lt;countable_type&gt;::clear()
+{
+    return assign(0);
+}
+
+template&lt;typename countable_type&gt;
+countable_ptr&lt;countable_type&gt; &amp;countable_ptr&lt;countable_type&gt;::assign(countable_type *rhs)
+{
+    // set to rhs (uses Copy Before Release idiom which is self assignment safe)
+    acquire(rhs);
+    countable_type *old_body = body;
+    body = rhs;
+
+    // tidy up
+    release(old_body);
+    if(!acquired(old_body))
+    {
+        dispose(old_body, old_body);
+    }
+
+    return *this;
+}
+
+template&lt;typename countable_type&gt;
+countable_ptr&lt;countable_type&gt; &amp;countable_ptr&lt;countable_type&gt;::assign(const countable_ptr &amp;rhs)
+{
+    return assign(rhs.body);
+}
+
+template&lt;typename countable_type&gt;
+countable_ptr&lt;countable_type&gt; &amp;countable_ptr&lt;countable_type&gt;::operator=(const countable_ptr &amp;rhs)
+{
+    return assign(rhs);
+}
+</pre>
+
+              <h2>Public accountability</h2>
+
+              <p>Conformance to the requirements means that a type can be
+              used with <code>countable_ptr</code>. Here is an implementation
+              mix-in class (<i>mix-imp</i>) that confers countability on its
+              derived classes through member functions. This class can be
+              used as a class adaptor:</p>
+              <pre>
+class countability
+{
+public: // manipulation
+
+    void acquire() const;
+    void release() const;
+    size_t acquired() const;
+
+protected: // construction and destruction
+
+    countability();
+    ~countability();
+
+private: // representation
+
+    mutable size_t count;
+
+private: // prevention
+
+    countability(const countability &amp;);
+    countability &amp;operator=(const countability &amp;);
+
+};
+</pre>
+
+              <p>Notice that the manipulation functions are
+              <code>const</code> and that the <code>count</code> member
+              itself is <code>mutable</code>. This is because countability is
+              not a part of an object's abstract state: memory management
+              does not depend on the <code>const</code>-ness or otherwise of
+              an object. I won't include the definitions of the member
+              functions here as you can probably guess them: increment,
+              decrement and return the current count, respectively for the
+              manipulation functions. In a multithreaded environment you
+              should ensure that such read and write operations are
+              atomic.</p>
+
+              <p>So how do we make this class <i>Countable</i>? A simple set
+              of forwarding functions does the job:</p>
+              <pre>
+void acquire(const countability *ptr)
+{
+    if(ptr)
+    {
+        ptr-&gt;acquire();
+    }
+}
+
+void release(const countability *ptr)
+{
+    if(ptr)
+    {
+        ptr-&gt;release();
+    }
+}
+
+size_t acquired(const countability *ptr)
+{
+    return ptr ? ptr-&gt;acquired() : 0;
+}
+
+template&lt;class countability_derived&gt;
+void dispose(const countability_derived *ptr, const countability *)
+{
+    delete ptr;
+}
+</pre>
+
+              <p>Any type that now derives from <code>countability</code> may
+              now be used with <code>countable_ptr</code>:</p>
+              <pre>
+class example : public countability
+{
+    ...
+};
+
+void simple()
+{
+    countable_ptr&lt;example&gt; ptr(new example);
+    countable_ptr&lt;example&gt; qtr(ptr);
+    ptr.clear(); // set ptr to point to null
+}   // allocated object deleted when qtr destructs
+</pre>
+
+              <h2>Runtime mixin</h2>
+
+              <p>The challenge is to apply COUNTED BODY in a non-intrusive
+              fashion, such that there is no overhead when an object is not
+              counted. What we would like to do is confer this capability on
+              a per object rather than on a per class basis. Effectively we
+              are after <i>Countability</i> on any object, i.e. anything
+              pointed to by a <code>void *</code>! It goes without saying
+              that <code>void</code> is perhaps the least committed of any
+              type.</p>
+
+              <p>The forces to resolve on this are quite interesting, to say
+              the least. Interesting, but not insurmountable. Given that the
+              class of a runtime object cannot change dynamically in any well
+              defined manner, and the layout of the object must be fixed, we
+              have to find a new place and time to add the counting state.
+              The fact that this must be added only on heap creation suggests
+              the following solution:</p>
+              <pre>
+struct countable_new;
+extern const countable_new countable;
+
+void *operator new(size_t, const countable_new &amp;);
+void operator delete(void *, const countable_new &amp;);
+</pre>
+
+              <p>We have overloaded <code>operator new</code> with a dummy
+              argument to distinguish it from the regular global
+              <code>operator new</code>. This is comparable to the use of the
+              <code>std::nothrow_t</code> type and <code>std::nothrow</code>
+              object in the standard library. The placement <code>operator
+              delete</code> is there to perform any tidy up in the event of
+              failed construction. Note that this is not yet supported on all
+              that many compilers.</p>
+
+              <p>The result of a <code>new</code> expression using
+              <code>countable</code> is an object allocated on the heap that
+              has a header block that holds the count, i.e. we have extended
+              the object by prefixing it. We can provide a couple of features
+              in an anonymous namespace (not shown) in the implementation
+              file for for supporting the count and its access from a raw
+              pointer:</p>
+              <pre>
+struct count
+{
+    size_t value;
+};
+
+count *header(const void *ptr)
+{
+    return const_cast&lt;count *&gt;(static_cast&lt;const count *&gt;(ptr) - 1);
+}
+</pre>
+
+              <p>An important constraint to observe here is the alignment of
+              <code>count</code> should be such that it is suitably aligned
+              for any type. For the definition shown this will be the case on
+              almost all platforms. However, you may need to add a padding
+              member for those that don't, e.g. using an anonymous
+              <code>union</code> to coalign <code>count</code> and the most
+              aligned type. Unfortunately, there is no portable way of
+              specifying this such that the minimum alignment is also
+              observed - this is a common problem when specifying your own
+              allocators that do not directly use the results of either
+              <code>new</code> or <code>malloc</code>.</p>
+
+              <p>Again, note that the count is not considered to be a part of
+              the logical state of the object, and hence the conversion from
+              <code>const</code> to non-<code>const</code> -
+              <code>count</code> is in effect a <code>mutable</code>
+              type.</p>
+
+              <p>The allocator functions themselves are fairly
+              straightforward:</p>
+              <pre>
+void *operator new(size_t size, const countable_new &amp;)
+{
+    count *allocated = static_cast&lt;count *&gt;(::operator new(sizeof(count) + size));
+    *allocated = count(); // initialise the header
+    return allocated + 1; // adjust result to point to the body
+}
+
+void operator delete(void *ptr, const countable_new &amp;)
+{
+    ::operator delete(header(ptr));
+}
+</pre>
+
+              <p>Given a correctly allocated header, we now need the
+              <i>Countable</i> functions to operate on <code>const void
+              *</code> to complete the picture:</p>
+              <pre>
+void acquire(const void *ptr)
+{
+    if(ptr)
+    {
+        ++header(ptr)-&gt;value;
+    }
+}
+
+void release(const void *ptr)
+{
+    if(ptr)
+    {
+        --header(ptr)-&gt;value;
+    }
+}
+
+size_t acquired(const void *ptr)
+{
+    return ptr ? header(ptr)-&gt;value : 0;
+}
+
+template&lt;typename countable_type&gt;
+void dispose(const countable_type *ptr, const void *)
+{
+    ptr-&gt;~countable_type();
+    operator delete(const_cast&lt;countable_type *&gt;(ptr), countable);
+}
+</pre>
+
+              <p>The most complex of these is the <code>dispose</code>
+              function that must ensure that the correct type is destructed
+              and also that the memory is collected from the correct offset.
+              It uses the value and type of first argument to perform this
+              correctly, and the second argument merely acts as a strategy
+              selector, i.e. the use of <code>const void *</code>
+              distinguishes it from the earlier dispose shown for <code>const
+              countability *</code>.</p>
+
+              <h2>Getting smarter</h2>
+
+              <p>Now that we have a way of adding countability at creation
+              for objects of any type, what extra is needed to make this work
+              with the <code>countable_ptr</code> we defined earlier? Good
+              news: nothing!</p>
+              <pre>
+class example
+{
+    ...
+};
+
+void simple()
+{
+    countable_ptr&lt;example&gt; ptr(new(countable) example);
+    countable_ptr&lt;example&gt; qtr(ptr);
+    ptr.clear(); // set ptr to point to null
+}   // allocated object deleted when qtr destructs
+</pre>
+
+              <p>The <code>new(countable)</code> expression defines a
+              different policy for allocation and deallocation and, in common
+              with other allocators, any attempt to mix your allocation
+              policies, e.g. call <code>delete</code> on an object allocated
+              with <code>new(countable)</code>, results in undefined
+              behaviour. This is similar to what happens when you mix
+              <code>new[]</code> with <code>delete</code> or
+              <code>malloc</code> with <code>delete</code>. The whole point
+              of <i>Countable</i> conformance is that <i>Countable</i>
+              objects are used with <code>countable_ptr</code>, and this
+              ensures the correct use.</p>
+
+              <p>However, accidents will happen, and inevitably you may
+              forget to allocate using <code>new(countable)</code> and
+              instead use <code>new</code>. This error and others can be
+              detected in most cases by extending the code shown here to add
+              a check member to the <code>count</code>, validating the check
+              on every access. A benefit of ensuring clear separation between
+              header and implementation source files means that you can
+              introduce a checking version of this allocator without having
+              to recompile your code.</p>
+
+              <h2>Conclusion</h2>
+
+              <p>There are two key concepts that this article has
+              introduced:</p>
+
+              <ul>
+                <li>The use of a generic requirements based approach to
+                simplify and adapt the use of the COUNTED BODY pattern.</li>
+
+                <li>The ability, through control of allocation, to
+                dynamically and non-intrusively add capabilities to fixed
+                types using the RUNTIME MIXIN pattern.</li>
+              </ul>
+
+              <p>The application of the two together gives rise to a new
+              variant of the essential COUNTED BODY pattern, UNINTRUSIVE
+              COUNTED BODY. You can take this theme even further and contrive
+              a simple garbage collection system for C++.</p>
+
+              <p>The complete code for <code>countable_ptr</code>,
+              <code>countability</code>, and the <code>countable new</code>
+              is also available.</p>
+
+              <div style="text-align: right">
+                <i>First published in</i> <a href=
+                "http://www.accu.org/index.php/overloadonline">Overload</a>
+                <i>25, April 1998, ISSN 1354-3172</i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sidebar">
+        <!--#include virtual="/common/sidebar-common.html" -->
+        <!--#include virtual="/common/sidebar-community.html" -->
+      </div>
+
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <div id="footer-left">
+      <div id="revised">
+        <p>Revised $Date$</p>
+      </div>
+
+      <div id="copyright">
+        <p>Copyright Kevlin Henney 1998-1999.</p>
+      </div><!--#include virtual="/common/footer-license.html" -->
+    </div>
+
+    <div id="footer-right">
+      <!--#include virtual="/common/footer-banners.html" -->
+    </div>
+
+    <div class="clear"></div>
+  </div>
+</body>
+</html>

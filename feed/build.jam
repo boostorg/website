@@ -1,0 +1,90 @@
+# Copyright 2006-2007 Rene Rivera
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+
+build-project downloads ;
+build-project history ;
+build-project news ;
+
+import feature ;
+import property ;
+import path ;
+import set ;
+
+feature.feature title : : free ;
+feature.feature uri : : free ;
+feature.feature count : : free ;
+feature.feature cwd : : free ;
+
+rule get ( property : properties * )
+{
+    local r = [ property.select $(property) : $(properties) ] ;
+    return $(r:G=) ;
+}
+
+rule rss ( targets * : sources * : properties * )
+{
+    TITLE on $(targets)
+        = [ get <title> : $(properties) ] ;
+    LINK on $(targets)
+        = [ get <uri> : $(properties) ] ;
+    COUNT on $(targets)
+        = [ get <count> : $(properties) ] ;
+    BB2RSS on $(targets)
+        = [ path.native [ path.join [ get <cwd> : $(properties) ] bbook2rss.py ] ] ;
+    JAMSHELL on $(targets)
+        = % ;
+    PYTHON on $(targets)
+        = [ property.select <python.interpreter> : $(properties) ] ;
+}
+
+actions rss
+{
+    "$(PYTHON:G=:E=python)" "$(BB2RSS)" "--channel-title=$(TITLE)" "--channel-link=$(LINK)" "--count=$(COUNT)" "--output=$(<)" "$(>)"
+}
+
+rule glob-rss ( p + )
+{
+    local files = [ glob $(p:S=.qbk) ] ;
+    files = $(files:S=.xml) ;
+    local result ;
+    for local f in $(files)
+    {
+        local d = $(f:D) ;
+        result += $(d:B)//$(f:D=) ;
+    }
+    return $(result) ;
+}
+
+path-constant CWD : . ;
+
+make downloads.rss : [ glob-rss history/boost_1_34_1 downloads/* ]
+    : @rss :
+    <title>"Boost Downloads"
+    <uri>"http://www.boost.org/feed/download.rss"
+    <count>5
+    <location>$(CWD)
+    <cwd>$(CWD)
+    ;
+
+make history.rss : [ glob-rss history/* ]
+    : @rss :
+    <title>"Boost History"
+    <uri>"http://beta.boost.org/feed/history.rss"
+    <location>$(CWD)
+    <cwd>$(CWD)
+    ;
+
+make news.rss
+    : [ set.difference
+        [ glob-rss news/* history/* ] :
+            ## Uncomment the following line out to hide the item from the result.
+            [ glob-rss history/boost_1_35_0 ]
+        ]
+    : @rss :
+    <title>"Boost News"
+    <uri>"http://beta.boost.org/feed/news.rss"
+    <count>5
+    <location>$(CWD)
+    <cwd>$(CWD)
+    ;

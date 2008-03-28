@@ -1,0 +1,52 @@
+[article Version 1.30.1
+    [quickbook 1.4]
+    [source-mode c++]
+    [purpose Withdrawn bug fix release, fixes for Lambda, Spirit, MPL, Function, Config,
+        Format, Regex, Smart Pointers, Python]
+    [authors [Abrahams, David]]
+    [last-revision Mon,  4 Aug 2003 12:00:00 GMT]
+]
+
+[include ext.qbk]
+
+This release was withdrawn on the 12 Aug 2003.
+
+Fixes were made to the following libraries:
+* The [@/libs/lambda/doc/index.html Boost.Lambda] ..library is now usable
+  with gcc-2.95.2
+* [phrase library..[@/libs/spirit/index.html Boost.Spirit]:] 
+  * Fixed. Using MSVC++6 (SP5), calling the assign action with a string value
+    on parsers using the file_iterator will not work.
+  * Fixed: using assign semantic action in a grammar with a multi_pass iterator
+    adaptor applied to an std::istream_iterator resulted in a failure to
+    compile under msvc 7.0.
+  * Fixed: There is a bug in the [^range_run<CharT>::set(range<CharT> const&
+    r)] function in "../boost/spirit/utility/impl/chset/range_run.ipp".
+  * Fixed: handling of trailing whitespace bug (ast_parse/pt_parse related)
+  * Fixed: comment_p and end of data bug
+  * Fixed: Most trailing space bug
+  * Fixed: `chset<>::operator ~(range<>)` bug, `operator &(chset<>, range<>)`
+    bug, `operator &(range<>, chset<>)` bug
+  * Fixed: `impl::detach_clear` bug
+  * Fixed: mismatch closure return type bug
+  * Fixed: `access_node_d[]` and `access_match_d[]` iterator bugs
+  * Fixed a bug regarding thread safety of Phoenix/Spirit closures.
+* The Boost Template [@/libs/mpl/doc/index.html Metaprogramming Library
+  (MPL)]'s ..typeof implementation is now compatible with Metrowerks
+  CodeWarrior Pro8.
+* [phrase library..[@/libs/function/index.html Boost.Function]:] workaround for
+  the new Borland patch (version 0x564) and MSVC++ .NET 2003.
+* [phrase library..[@/libs/config/index.html Boost.Config]],
+  [@/libs/format/doc/format.html Boost.Format], and
+  [@/libs/regex/index.html Boost.Regex] ..have been adjusted to avoid
+  warnings with GCC-3.3, and Boost.Format also now works with string types
+  other than `std::string`.
+* [phrase library..[@/libs/smart_ptr/index.html Smart Pointers]:] 
+  * `checked_delete` now works on more platforms
+  * Compatibility with the SunPro compiler
+  * Added missing `#include`s.
+  * [phrase library..[@/libs/python/index.html Boost.Python]:] 
+  * warning suppression for finicky compilers
+  * fixed a crashing bug in the `raw_function` facility when no keyword
+    arguments were passed.
+  * Improved conversion of NULL `shared_ptr`s to Python.

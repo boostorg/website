@@ -1,0 +1,418 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>Boost C++ Libraries - Updating Website</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+  <link rel="icon" href="/favicon.ico" type="image/ico" />
+  <link rel="stylesheet" type="text/css" href=
+  "../style/section-development.css" />
+  <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
+</head>
+
+<body>
+  <div id="heading">
+    <!--#include virtual="/common/heading.html" -->
+  </div>
+
+  <div id="body">
+    <div id="body-inner">
+      <div id="content">
+        <div class="section" id="intro">
+          <div class="section-0">
+            <div class="section-title">
+              <h1>Updating and Editing Website Content</h1>
+            </div>
+
+            <div class="section-body">
+              <ul class="toc">
+                <li><a href="#GettingContent">Getting Content</a></li>
+
+                <li><a href="#ExistingPage">Existing Page</a></li>
+
+                <li><a href="#NewPage">New Page</a></li>
+
+                <li><a href="#Menus">Menus, Sidebars, and Index</a></li>
+
+                <li><a href="#Feeds">Feeds</a></li>
+
+                <li><a href="#Local_Server">Local Server</a></li>
+              </ul>
+
+              <h2><a name="GettingContent" id="GettingContent"></a>Getting
+              Content</h2>
+
+              <p>The website content lives in the <a href=
+              "http://svn.boost.org">Boost Subversion repository</a>. To get
+              the website content, retrieve the <tt>website</tt> module from
+              the Boost Subversion repository. For in progress work:</p>
+              <pre>
+svn co https://svn.boost.org/svn/boost/website/public_html/beta
+</pre>
+
+              <p>And for the live website:</p>
+              <pre>
+svn co https://svn.boost.org/svn/boost/website/public_html/live
+</pre>
+
+              <h2><a name="ExistingPage" id="ExistingPage"></a>Existing
+              Page</h2>
+
+              <p>The web content is structured to be as simple as possible to
+              make generic editing possible. At minimum only a text editor
+              and <a href="http://tidy.sourceforge.net/" class=
+              "external">HTML Tidy</a> are needed to edit content. The
+              content uses <a href="http://www.w3.org/TR/xhtml1/" class=
+              "external">XHTML 1.0 Strict</a> for various reasons, the most
+              important being to increase accessibility and to enforce the
+              separation of style from content. After getting the content you
+              want to edit as above, make the changes you want and run the
+              result through HTML Tidy with these options:</p>
+              <pre>
+tidy --tidy-mark no -i -wrap 78 -m -asxhtml --merge-divs no --merge-spans no --doctype strict <i>fname</i>
+</pre>
+
+              <p>Running HTML Tidy with a consistent set of options also
+              helps in keeping an accurate change history in the repository.
+              There are <a href="/development/exemplar.html">examples</a> of
+              the kinds of styles supported either directly or through the
+              use of [<tt>class="<i>value</i>"</tt>] attributes for the
+              various XHTML tags. Please pay attention to any errors and
+              warnings that HTML Tidy mentions and strive to remove all of
+              them.</p>
+
+              <p><strong>NOTE:</strong> The options for <tt>tidy</tt> are for
+              the latest version. In particular the <tt>--merge-*</tt>
+              options may not be available in the version that comes as part
+              of many Unix/Linux distributions, and Windows utilities.
+              Removing the unavailable options is possible and will work. But
+              we recommend installing the latest <tt>tidy</tt> if possible.
+              You can obtain up to date Windows binaries, and sources from
+              the <a href="http://tidy.sourceforge.net/" class=
+              "external">HTML Tidy Library Project</a>.</p>
+
+              <p>The pages should be viewable in most browsers. If possible
+              test you changes in as many as possible. Preferably at least
+              with IE and one other modern browser if you are on Windows. But
+              if you are on another platform testing with the "default"
+              browser is best. Normally viewing the page in outside of the a
+              web server context will only show you the content and part of
+              the footer. This is because the site uses Server Side Includes
+              (SSI) which most browsers will not process. To look at the
+              complete content you will need to either run your own Apache
+              server, or commit the changes and view the changes online
+              at:</p>
+
+              <table summary="Website Locations">
+                <tr>
+                  <th>Site</th>
+
+                  <th>URL</th>
+
+                  <th>Subversion</th>
+                </tr>
+
+                <tr>
+                  <td>Beta</td>
+
+                  <td><a href=
+                  "http://beta.boost.org/">http://beta.boost.org/</a></td>
+
+                  <td><a href=
+                  "https://svn.boost.org/svn/boost/website/public_html/beta/">
+                  https://svn.boost.org/svn/boost/website/public_html/beta/</a></td>
+                </tr>
+
+                <tr>
+                  <td colspan="3">This is the experimetal version of the
+                  website. Changes should be made here first and then merged
+                  to the live website.</td>
+                </tr>
+
+                <tr>
+                  <td>Live</td>
+
+                  <td><a href=
+                  "http://www.boost.org/">http://www.boost.org/</a></td>
+
+                  <td><a href=
+                  "https://svn.boost.org/svn/boost/website/public_html/live/">
+                  https://svn.boost.org/svn/boost/website/public_html/live/</a></td>
+                </tr>
+
+                <tr>
+                  <td colspan="3">The website the general public will
+                  see.</td>
+                </tr>
+              </table>
+
+              <h2><a name="NewPage" id="NewPage"></a>New Page</h2>
+
+              <p>To make adding new pages easier there is a <a href=
+              "http://svn.boost.org/svn/boost/website/workplace/template.html">
+              template</a> to get one started. There are also
+              <code>_template_.html</code> files in the various site sections
+              which already include the correct sidebar menus. To start, copy
+              the template to the section of the website you want to add to
+              and name the new file with a reasonably clear name. The section
+              is up to you but the intended type of content for each is:</p>
+
+              <dl>
+                <dt><dfn>Introduction</dfn></dt>
+
+                <dd>Content to help new users understand what Boost is for
+                and what it is about. This is the one place where new
+                visitors are going to visit. Directory: <tt>/users</tt></dd>
+
+                <dt><dfn>Community</dfn></dt>
+
+                <dd>For users who are interested in participating, or are
+                already participitating, this section describes how the Boost
+                community of users and developers functions. Directory:
+                <tt>/community</tt></dd>
+
+                <dt><dfn>Development</dfn></dt>
+
+                <dd>Prospective or existing Boost developers make use of this
+                section to quickly get to the most frequetly used content.
+                This section is intended to hold the references to resources
+                or directly include content that changes frequently. Or
+                content that only pertains to library developers, although it
+                may be of more widespread interest as users become more
+                involved in the Boost community. Directory:
+                <tt>/development</tt></dd>
+
+                <dt><dfn>Support</dfn></dt>
+
+                <dd>Content to help users in getting problems resolved can go
+                here. This would include both public support as informally
+                provided by the Boost developers and the over all Boost
+                community and commercial support when available. Directory:
+                <tt>/support</tt></dd>
+
+                <dt><dfn>Documentation</dfn></dt>
+
+                <dd>This section organizes documents specific to the Boost
+                libraries. This includes at minimum the library documentation
+                published with each of the Boost releases. Also included is
+                access to the community maintained Wiki. Directory:
+                <tt>/doc</tt></dd>
+              </dl>
+
+              <p>To provide the section user interface look and feel there
+              are some changes that need to be done to the template:</p>
+
+              <ul>
+                <li>
+                  <p>Each section has a different CSS style reference
+                  included in the <tt>head</tt> section. This reference needs
+                  to change to one of:</p>
+
+                  <ul>
+                    <li>Introduction: <tt>/style/section-boost.css</tt></li>
+
+                    <li>Community: <tt>/style/section-community.css</tt></li>
+
+                    <li>Development:
+                    <tt>/style/section-development.css</tt></li>
+
+                    <li>Support: <tt>/style/section-support.css</tt></li>
+
+                    <li>Documentation: <tt>/style/section-doc.css</tt></li>
+                  </ul>
+                </li>
+
+                <li>
+                  <p>Each section displays a different context sensitive
+                  sidebar menu through the use of SSI. The reference to the
+                  sidebar to display needs to change in the <tt>sidebar</tt>
+                  section to one of:</p>
+
+                  <ul>
+                    <li>Introduction:
+                    <tt>/common/sidebar-boost.html</tt></li>
+
+                    <li>Community:
+                    <tt>/common/sidebar-community.html</tt></li>
+
+                    <li>Development:
+                    <tt>/common/sidebar-development.html</tt></li>
+
+                    <li>Support: <tt>/common/sidebar-support.html</tt></li>
+
+                    <li>Documentation: <tt>/common/sidebar-doc.html</tt></li>
+                  </ul>
+
+                  <p>In the <tt>sidebar</tt> section there are two menus
+                  included the first is common to all the pages and contains
+                  the download link and search box. Do not replace that
+                  sidebar (<tt>/common/sidebar-common.html</tt>). It's the
+                  second <tt>#include</tt> that should be changed to reflect
+                  the current section.</p>
+                </li>
+
+                <li>
+                  <p>Since this is a new page, you will also need to insert
+                  your own corresponding copyright in the footer.</p>
+                </li>
+
+                <li>
+                  <p>To insert the new content you need to insert it into the
+                  <tt>section-body</tt> section. Replace the <tt>{stuff}</tt>
+                  placeholder with the content you want. In addition you
+                  might also want to change the title, in the <tt>head</tt>,
+                  and in the <tt>section-title</tt> section.</p>
+                </li>
+              </ul>
+
+              <p>In addition to the immediate content for the new page one
+              needs to add an entry to the page so it can be accessed from
+              the sidebar and index. See below...</p>
+
+              <h2><a name="Menus" id="Menus"></a>Menus, Sidebars, and
+              Index</h2>
+
+              <p>The various navigation elements are structured to make
+              adding new entries easy and to keep all places where wuch
+              entries show consistent. To do this the site makes use of SSI
+              to reduce the locations that have those entries to
+              <em>one</em>. This means that changing it at the single common
+              place one doesn't have to worry about changing all the pages,
+              they all reflect the new content immediately. To add items to
+              the various section menus edit the corresponding menu file in
+              the <tt>website/common</tt> directory:</p>
+
+              <ul>
+                <li>Introduction: <tt>/common/menu-boost.html</tt></li>
+
+                <li>Community: <tt>/common/menu-community.html</tt></li>
+
+                <li>Development: <tt>/common/menu-development.html</tt></li>
+
+                <li>Support: <tt>/common/menu-support.html</tt></li>
+
+                <li>Documentation: <tt>/common/menu-doc.html</tt></li>
+              </ul>
+
+              <h2><a name="Feeds" id="Feeds"></a>Feeds</h2>
+
+              <p>There are various section of the web site that correspond to
+              RSS feeds: news, downloads, and the version history. Even
+              though they are displayed in various locations on the site the
+              source feed documents are in the <tt>/feed</tt> directory. The
+              content is not directly editable, but instead is generated from
+              source Quickbook documents. For example to add a news item one
+              would:</p>
+
+              <ol>
+                <li>Create a new file in the <tt>/feed/news</tt> directory,
+                say <tt>/feed/news/gui_review_ends.qbk</tt>.</li>
+
+                <li>In a shell, go to the <tt>/feed</tt> directory, and run
+                <tt>bjam --boost-build=/path/to/tools/build/v2</tt>, or
+                <tt>bjam --boost=/path/to/boost-root</tt>. This will generate
+                the BoostBook XML for the new news item and regenerate the
+                <tt>/feed/news.rss</tt> file.</li>
+
+                <li>Add the new files to the SVN repository, and commit.</li>
+              </ol>
+
+              <p>The same procedure applies to the other feeds, but keep in
+              mind that some feeds may combine entries from more than one
+              feed subdirectory. Currently this requires Quickbook be
+              precompiled and preconfigured in your <tt>user-config.jam</tt>.
+              And also requires Python, in the path, to do the BoostBook to
+              RSS translation.</p>
+
+              <h2><a name="Local_Server" id="Local_Server"></a>Local
+              Server</h2>
+
+              <p>Even though the web site is designed so that one only needs
+              some basic tools and a web browser to make changes there are
+              some aspects that are dynamic and hence will not work without
+              an accompanying web server. To set up local web server for
+              doing changes to the dynamic content one needs to:</p>
+
+              <ol>
+                <li>
+                  <p>Install and get working <a href=
+                  "http://httpd.apache.org/">Apache 2.x.</a> and <a href=
+                  "http://php.net/">PHP 4.x or 5.x</a> (install PHP as an
+                  Apache module, not as CGI).</p>
+                </li>
+
+                <li>
+                  <p>Set up a symbolic host lookup in your <tt>hosts</tt>
+                  file by adding "<tt>127.0.0.1 boost.localhost</tt>".</p>
+                </li>
+
+                <li>
+                  <p>Add a virtual host in Apache to match the new local
+                  host. A likely configuration to work is:</p>
+                  <pre>
+&lt;VirtualHost 127.0.0.1:80&gt;
+  ServerName boost.localhost
+  DocumentRoot "/path/to/boost/website/public_html/beta"
+  &lt;Directory "/path/to/boost/website/public_html/beta"&gt;
+    Options MultiViews Includes ExecCGI FollowSymLinks +Includes
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+  &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</pre>
+                </li>
+
+                <li>
+                  <p>Create a local PHP configuration file for Boost specific
+                  settings as
+                  "<tt>/path/to/boost/website/public_html/beta/common/code/boost_config_local.php</tt>"
+                  that contains something like:</p>
+                  <pre>
+&lt;?php
+define('BOOST_RSS_DIR', '/path/to/boost/website/workplace/rss');
+define('ARCHIVE_DIR', '/path/to/boost/website/workplace/archives');
+define('RESULTS_DIR', '/path/to/boost/website/workplace/testing');
+define('UNZIP', 'unzip');
+?&gt;
+</pre>
+
+                  <p>For a brief explanation of the settings see the <a href=
+                  "http://svn.boost.org/trac/boost/browser/website/public_html/beta/common/code/boost_config.php">
+                  <tt>common/code/boost_config.php</tt></a> file.</p>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sidebar">
+        <!--#include virtual="/common/sidebar-common.html" -->
+        <!--#include virtual="/common/sidebar-development.html" -->
+      </div>
+
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <div id="footer-left">
+      <div id="revised">
+        <p>Revised $Date$</p>
+      </div>
+
+      <div id="copyright">
+        <p>Copyright Rene Rivera 2006-2007.</p>
+      </div><!--#include virtual="/common/footer-license.html" -->
+    </div>
+
+    <div id="footer-right">
+      <!--#include virtual="/common/footer-banners.html" -->
+    </div>
+
+    <div class="clear"></div>
+  </div>
+</body>
+</html>

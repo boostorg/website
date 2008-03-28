@@ -1,0 +1,171 @@
+[article Version 1.32.0
+    [quickbook 1.4]
+    [source-mode c++]
+    [purpose
+        New Libraries: Assignment, Minmax, Multi-Index, Numeric Conversion,
+        Program Options, Range, Serialization, String, Tribool.
+
+        Updated Libraries: Graph, MPL, Python, Signals, Utility, Test.
+
+        Removed Libraries: Compose.
+    ]
+    [authors [Gurtovoy, Aleksey]]
+    [last-revision Fri, 19 Nov 2004 12:00:00 GMT]
+]
+
+[include ext.qbk]
+
+[download http://sourceforge.net/project/showfiles.php?group_id=7586&package_id=8041&release_id=284047]
+
+[section Important - New Toolset Names]
+
+The names of some the Boost.Build
+[@/doc/libs/1_32_0/more/getting_started.html#Tools toolsets] have been changed
+to remove the "[^.]" (dot) character and to fix some other naming
+inconsistencies. For example, [^vc7.1] toolset was renamed to become [^vc-7_1].
+Please refer to the [@/doc/libs/1_32_0/more/getting_started.html#Tools
+Supported Toolsets] section of the installation guide for the complete list of
+the current toolset names. This change was made as a part of the effort to make
+the Boost distribution compatible with ISO 9660 level 2 requirements.
+
+[endsect]
+
+[section New Libraries]
+
+* [phrase library..[@/doc/libs/1_32_0/libs/assign/index.html Assignment
+  Library]:] Filling containers with constant or generated data has never been
+  easier, from Thorsten Ottosen.
+* [phrase library..[@/doc/libs/1_32_0/libs/algorithm/minmax/index.html Minmax
+  Library]:] Standard library extensions for simultaneous min/max and min/max
+  element computations, from Herve Bronnimann.
+* [phrase library..[@/doc/libs/1_32_0/libs/multi_index/doc/index.html
+  Multi-index Containers Library]:] Containers with multiple STL-compatible
+  access interfaces, from Joaquin M Lopez Munoz.
+* [phrase library..[@/doc/libs/1_32_0/libs/numeric/conversion/index.html
+  Numeric Conversion Library]:] Optimized policy-based numeric conversions,
+  from Fernando Cacciola.
+* [phrase library..[@/doc/libs/1_32_0/doc/html/program_options.html Program
+  Options Library]:] Access to configuration data given on command line, in
+  config files and other sources, from Vladimir Prus.
+* [phrase library..[@/doc/libs/1_32_0/libs/range/index.html Range Library]:] a
+  new infrastructure for generic algorithms that builds on top of the new
+  iterator concepts, from Thorsten Ottosen.
+* [phrase library..[@/doc/libs/1_32_0/libs/serialization/doc/index.html
+  Serialization Library]:] Serialization/de-serialization of arbitrary C++ data
+  structures to various formats including text, binary, and xml, from Robert
+  Ramey.
+* [phrase library..[@/doc/libs/1_32_0/libs/algorithm/string/index.html String
+  Algorithms Library]:] Collection of string related algorithms for case
+  conversion, trimming, find/replace operations and more, from Pavol Droba.
+* [phrase library..[@/doc/libs/1_32_0/doc/html/tribool.html Tribool]:] 3-state boolean type
+  library, from Doug Gregor.
+
+[endsect]
+
+[section Updated Libraries]
+
+* Compose: This deprecated library has been removed.
+* [phrase library..[@/doc/libs/1_32_0/libs/graph/index.html Graph]:] 
+  * Added [@/doc/libs/1_32_0/libs/graph/doc/bundles.html bundled properties] to the
+    [@/doc/libs/1_32_0/libs/graph/doc/adjacency_list.html `adjacency_list`] and
+    [@/doc/libs/1_32_0/libs/graph/doc/adjacency_matrix.html `adjacency_matrix`] class
+    templates, greatly simplifying the introduction of internal vertex and edge
+    properties.
+  * The [@/doc/libs/1_32_0/libs/graph/doc/leda_conversion.html LEDA graph adaptors] have been
+    ported to LEDA 4.5.
+  * Added algorithms for [@/doc/libs/1_32_0/libs/graph/doc/betweenness_centrality.html
+    betweenness centrality] and [@/doc/libs/1_32_0/libs/graph/doc/bc_clustering.html
+    betweenness centrality clustering].
+  * Added [@/doc/libs/1_32_0/libs/graph/doc/circle_layout.html circle layout] and
+    [@/doc/libs/1_32_0/libs/graph/doc/kamada_kawai_spring_layout.html undirected spring
+    layout] algorithms.
+* [phrase library..[@/doc/libs/1_32_0/libs/mpl/doc/index.html MPL Library]:] 
+  * Updated to use the Boost Software License.
+  * New [@/doc/libs/1_32_0/libs/mpl/doc/index.html documentation], including a complete
+    [@/doc/libs/1_32_0/libs/mpl/doc/refmanual.html reference manual.]
+  * Major interface changes and improvements, many of which are not backward
+    compatible. Please refer to the
+    [@/doc/libs/1_32_0/libs/mpl/doc/tutorial/changes-in-boost-1-32-0.html 1.32 changelog] for
+    the detailed information about upgrading to the new version.
+* [phrase library..[@/doc/libs/1_32_0/libs/python/doc/index.html Python Library]:] 
+  * Updated to use the Boost Software License.
+  * a new,
+    [@/doc/libs/1_32_0/libs/python/doc/tutorial/doc/html/python/exposing.html#python.class_virtual_functions
+    better method of wrapping classes with virtual functions] has been
+    implemented.
+  * Support for the new Python Bool type, thanks to Daniel Holth.
+  * Support for upcoming GCC symbol export control features have been folded
+    in, thanks to Niall Douglas.
+  * Improved support for `std::auto_ptr`-like types.
+  * Components used by other libraries have been moved out of [^python/detail]
+    and into [^boost/detail] to improve dependency relationships.
+  * Miscellaneous bug fixes and compiler workarounds.
+* [phrase library..[@/doc/libs/1_32_0/doc/html/signals.html Signals Library]:] Introduced
+  deterministic slot ordering, permitting slots to be connected at the
+  beginning or end of slot groups or the slot list itself. Combiners may safely
+  have state and are accessible from the signal.
+* [phrase library..[@/doc/libs/1_32_0/libs/utility/utility.htm Utility]:] class template
+  [@/doc/libs/1_32_0/libs/utility/utility.htm#result_of result_of] added.
+* [phrase library..[@/doc/libs/1_32_0/libs/test/index.html Test Library]:] 
+  '''<itemizedlist>
+    <listitem>namespace names gets shorten; old one still supported till next
+      release</listitem>
+    <listitem>added proper encoding of XML PCDATA</listitem>
+    <listitem>support for wide string comparison implemented</listitem>
+  </itemizedlist>
+  <para>
+    For complete list of changes see Test Library
+    <ulink url="/doc/libs/1_32_0/libs/test/doc/release_notes.html#v1_32_0">release notes</ulink>.
+  </para>'''
+
+[endsect]
+
+[section Regression tests]
+
+This release has been extensively tested on a variety of different compilers
+and platforms. It is known to contain no regressions against the previous
+reference release on the compilers and configurations tested. Please refer to
+the corresponding
+[@http://www.meta-comm.com/engineering/boost-regression/1_32_0/index.html
+regression reports] to see how well your compiler performs on the new Boost
+codebase.
+
+[endsect]
+
+[section Acknowledgements]
+
+[$http://boost.sourceforge.net/photos/aleksey_gurtovoy2.jpg]
+[@/users/people/aleksey_gurtovoy.html Aleksey Gurtovoy] managed this release.
+[@/doc/libs/1_32_0/more/release_procedures.htm Managing a release] at all is an
+enormous job, and Aleksey always goes beyond merely meeting requirements by
+insisting on the highest possible quality. The Boost membership owes him a debt
+of gratitude.
+
+This release wouldn't have been possible without the dedicated effort of many,
+many members of the Boost community who generously contributed their
+outstanding expertise, time and energy to making it happen. For patches, bug
+fixes, troubleshooting, expert advice, and prompt responses to the release
+manager's requests we thank:
+
+David Abrahams, Misha Bergal, Jonathan Brandmeyer, Fernando Cacciola, Marshall
+Clow, Christopher Currie, Pavol Droba, Caleb Epstein, Eric Friedman, Jeff
+Garland, Michael Glassford, Doug Gregor, Joel de Guzman, Hubert Holin, Jaakko
+Jarvi, Hartmut Kaiser, Bronek Kozicki, Tarjei Knapstad, Toon Knapen, Aaron W.
+LaFramboise, Joaquin M Lopez Munoz, Christoph Ludwig, John Maddock, Paul
+Mensonides, Guillaume Melquiond, Thorsten Ottosen, Vladimir Prus, Robert Ramey,
+Rene Rivera, Gennadiy Rozental, Stefan Slapeta, Jonathan Turkanis, Pavel
+Vozenilek, Jonathan Wakely, Daryle Walker, Victor A. Wagner Jr. and Martin
+Wille.
+
+Also, our special thanks go to: John Maddock for the managing the effort of
+converting the majority of the Boost libraries to the
+[@/doc/libs/1_32_0/more/license_info.html Boost Software License], Eric Niebler
+and Joel de Guzman for taking on the important job of improving the Boost
+documentation's look and feel, and last, but not least, to our regression test
+runners, without whom we simply would never have released: Toon Knapen, Bronek
+Kozicki, Rene Rivera, Markus Schopflin, Stefan Slapeta, Victor A. Wagner Jr.
+and Martin Wille.
+
+Thank you everybody!
+
+[endsect]
