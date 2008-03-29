@@ -254,6 +254,7 @@ HTML
         $text = substr($text,0,strpos($text,'</body>'));
         $text = str_replace('<hr>','',$text);
         $text = str_replace('<table width="100%">','<table class="footer-table">',$text);
+        $text = str_replace('<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%">','<table class="footer-table">',$text);
         $text = preg_replace(
             '@[\s]+(border|cellpadding|cellspacing|width|height|valign|frame|rules|naturalsizeflag|background)=[^\s>]+@i',
             '',
@@ -261,7 +262,7 @@ HTML
         /* */
         for ($i = 0; $i < 8; $i++) {
             $text = preg_replace(
-                '@<img src="[\./]*images/([^.]+)\.png" alt="([^"]+)"([ /]*)>@Ssm',
+                '@<img src="[\./a-z]*images/([^.]+)\.png" alt="([^"]+)"([ /]*)>@Ssm',
                 '<img src="/gfx/space.png" alt="${2}" class="${1}_image" />',
                 $text );
         }
