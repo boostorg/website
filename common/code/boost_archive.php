@@ -284,6 +284,16 @@ HTML
         preg_match('@</body>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
         if (!isset($body_begin[0]))
         {
+            //~ Attempt to recover some content from illegal HTML that is missing the body tag.
+            preg_match('@</head>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
+        }
+        if (!isset($body_begin[0]))
+        {
+            //~ Attempt to recover some content from illegal HTML that is missing the body tag.
+            preg_match('@<html[^>]*>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
+        }
+        if (!isset($body_begin[0]))
+        {
             return;
         }
         else if (!isset($body_end[0]))
