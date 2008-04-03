@@ -114,6 +114,7 @@ if (!$_file->is_raw()) {
     </div>
 
     <div class="clear"></div>
-  </div><?php } ?>
+  </div>
 </body>
 </html>
+<?php } ?>
