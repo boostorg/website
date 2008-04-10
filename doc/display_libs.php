@@ -28,6 +28,7 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   //~ special cases that can't be processed at all (some redirects)
   array('@.*@','@^libs/index.html$@i','raw','text/html'),
   array('@.*@','@^libs/bind/ref.html$@i','raw','text/html'),
+  array('@.*@','@^libs/config/config.htm$@i','raw','text/html'),
   array('@.*@','@^libs/gil/doc/.*(html|htm)$@i','raw','text/html'),
   array('@.*@','@^libs/math/doc/common_factor.html$@i','raw','text/html'),
   array('@.*@','@^libs/preprocessor/doc/.*(html|htm)$@i','raw','text/html'),
