@@ -32,7 +32,7 @@ done
  "--quiet" \
  "--output=/home/grafik/www.boost.org/testing/webcheck" \
  "--force" \
- "http://beta.boost.org/" 2>&1 > /dev/null
+ "http://beta.boost.org/" 2>&1
 
 day=`date "+%w"`
 case "$day" in
