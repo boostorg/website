@@ -70,8 +70,8 @@ class boost_archive
         if (! $this->extractor_)
         {
             # File doesn't exist, or we don't know how to handle it.
-            header("HTTP/1.0 404 Not Found");
-            $this->extractor_ = 'raw';
+            $this->extractor_ = '404';
+            $this->_init_404();
         }
         else if ($get_as_raw || $this->extractor_ == 'raw')
         {
@@ -121,8 +121,13 @@ HTML
         while ($file_handle && !feof($file_handle)) {
             $text .= fread($file_handle,8*1024);
         }
-        pclose($file_handle);
-        return $text;
+        if(pclose($file_handle) == 0) {
+            return $text;
+        }
+        else {
+            $this->extractor_ = '404';
+            return '';
+        }
     }
 
     function _extract_raw($unzip)
@@ -131,7 +136,11 @@ HTML
         ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
         $file_handle = popen($unzip,'rb');
         fpassthru($file_handle);
-        pclose($file_handle);
+        if(pclose($file_handle) != 0) {
+            // TODO: Maybe I should buffer the file so that I can return a
+            // proper 404 error.
+            echo "File not found.";
+        }
     }
     
     function content()
@@ -481,6 +490,20 @@ HTML
     function _content_simple()
     {
         print $this->_content_html_pre();
+    }
+
+    function _init_404()
+    {
+        header("HTTP/1.0 404 Not Found");
+    }
+
+    function _content_404()
+    {
+        # This might also be an error extracting the file, or because we don't
+        # know how to deal with the file. It would be good to give a better
+        # error in those cases.
+
+        print '<h1>404 Not Found</h1><p>File not found.</p>';
     }
 }
 ?>
