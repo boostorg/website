@@ -32,6 +32,7 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   array('@.*@','@^libs/gil/doc/.*(html|htm)$@i','raw','text/html'),
   array('@.*@','@^libs/math/doc/common_factor.html$@i','raw','text/html'),
   array('@.*@','@^libs/preprocessor/doc/.*(html|htm)$@i','raw','text/html'),
+  array('@.*@','@^libs/test/doc/components/test_tools/reference/.*(html|htm)$@i','raw','text/html'),
   array('@.*@','@^libs/python/doc/PyConDC_2003/bpl.html$@i','raw','text/html'),
   array('@.*@','@^libs/spirit/.*(html|htm)$@i','raw','text/html'),
   array('@.*@','@^libs/static_assert/static_assert.htm$@i','raw','text/html'),
