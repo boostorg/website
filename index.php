@@ -19,6 +19,11 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/
   <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
 </head>
 
+<!--
+Note: Editing website content is documented at:
+http://www.boost.org/development/website_updating.html
+-->
+
 <body>
   <div id="heading">
     <?php virtual("/common/heading.html"); ?>
