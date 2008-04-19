@@ -1,6 +1,11 @@
 RewriteEngine On
 RewriteBase /doc
 
+# Redirect to the canonical URL.
+
+RewriteCond %{HTTP_HOST} ^boost\.org [NC]
+RewriteRule ^.*$ http://www\.boost\.org%{REQUEST_URI} [R=301]
+
 #~  RewriteRule ^wiki$ wiki/ [R]
 #~  RewriteRule ^wiki/(.*)$ wiki.php/$1 [L]
 RewriteRule ^html(/.*)?$ libs/release/doc/html$1 [R]
