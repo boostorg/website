@@ -1,6 +1,11 @@
 RewriteEngine On
 RewriteBase /development
 
+# Redirect to the canonical URL.
+
+RewriteCond %{HTTP_HOST} ^boost\.org [NC]
+RewriteRule ^.*$ http://www\.boost\.org%{REQUEST_URI} [R=301]
+
 #~  Locally available regression result archives.
 RewriteRule ^tests$ tests/ [R]
 RewriteRule ^tests/([^/]+)/([^/]+)/$ tests/$1/$2/index.html [R]
