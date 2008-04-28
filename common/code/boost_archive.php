@@ -31,7 +31,7 @@ class boost_archive
         
         $info_map = array_merge($content_map, array(
             array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh)$@i','text','text/plain'),
-            array('@.*@','@[.](cpp|hpp)$@i','cpp','text/plain'),
+            array('@.*@','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
             array('@.*@','@[.]png$@i','raw','image/png'),
             array('@.*@','@[.]gif$@i','raw','image/gif'),
             array('@.*@','@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
