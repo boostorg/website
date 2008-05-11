@@ -99,7 +99,7 @@ function libbuildlink($lib)
                 <li><a href="?sort=key">Key</a></li>
               </ul>
 
-              <dl>
+              <dl class="library-list">
                 <?php
                 foreach ($libs->db as $key => $lib) {
                   $libversion = explode('.',$lib['boost-version']);
