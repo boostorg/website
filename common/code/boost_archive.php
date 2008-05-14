@@ -239,7 +239,7 @@ HTML
             'href="/users/people/${1}l"',
             $text );
         $text = preg_replace(
-            '@href="?(?:\.\./)+(LICENSE_.*\.txt)"?@i',
+            '@href="?(?:\.\./)+(LICENSE_[^"\s]*\.txt)"?@i',
             'href="/${1}"',
             $text );
         $text = preg_replace(
