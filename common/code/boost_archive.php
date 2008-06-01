@@ -503,7 +503,7 @@ HTML
         # know how to deal with the file. It would be good to give a better
         # error in those cases.
 
-        print '<h1>404 Not Found</h1><p>File not found.</p>';
+        print '<h1>404 Not Found</h1><p>File "' . $this->file_ . '"not found.</p>';
     }
 }
 ?>
