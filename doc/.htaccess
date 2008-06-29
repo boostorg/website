@@ -14,7 +14,9 @@ RewriteRule ^html(/.*)?$ libs/release/doc/html$1 [R]
 RewriteRule ^libs/release(/.*)?$ libs/1_35_0$1 [R]
 RewriteRule ^libs/development(/.*)?$ libs/1_36_0$1 [R]
 
-# In case we don't get a file looking URI we send it to the index.html file.
+#~  # In case we don't get a file looking URI we send it to the index.html file.
+#~  # - With some exceptions.
+RewriteCond %{REQUEST_URI} !^/doc/libs/([0-9_]+)/([^.]*[^./])/(Jamroot|Jamfile)$
 RewriteRule ^libs/([0-9_]+)/([^.]*[^./])/?$ libs/$1/$2/index.html [R]
 
 # Rewrite specific versions to the dynamic handlers.

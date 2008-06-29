@@ -56,6 +56,7 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   //~ default to processed output for libs and tools
   array('@.*@','@^libs/[^/]+/doc/html/.*(html|htm)$@i','boost_book_html','text/html'),
   array('@.*@','@^libs/[^/]+/doc/[^/]+/html/.*(html|htm)$@i','boost_book_html','text/html'),
+  array('@.*@','@^libs/[^/]+/doc/[^/]+/doc/html/.*(html|htm)$@i','boost_book_html','text/html'),
   array('@.*@','@^libs.*(html|htm)$@i','boost_libs_html','text/html'),
   array('@.*@','@^tools.*(html|htm)$@i','boost_libs_html','text/html'),
   array('@.*@','@^doc/html/.*html$@i','boost_book_html','text/html'),
