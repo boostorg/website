@@ -53,7 +53,7 @@ class boost_archive
             $this->file_ = $archive_file_prefix . $this->key_;
         }
         $this->archive_ = str_replace('\\','/', $archive_dir . '/' . $this->version_ . '.zip');
-        
+
         foreach ($info_map as $i)
         {
             if (preg_match($i[1],$this->key_))
@@ -137,10 +137,16 @@ HTML
         ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
         $file_handle = popen($unzip,'rb');
         fpassthru($file_handle);
-        if(pclose($file_handle) != 0) {
-            // TODO: Maybe I should buffer the file so that I can return a
-            // proper 404 error.
-            echo "File not found.";
+        $exit_status = pclose($file_handle);
+        if($exit_status != 0) {
+            if($exit_status == 9) {
+                echo "File not found.";
+            }
+            else {
+                echo "Error extracting file: $exit_status";
+                echo "<br>\n";
+                echo "<code>".htmlentities($unzip)."</code>";
+            }
         }
     }
     
