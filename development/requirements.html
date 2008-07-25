@@ -8,7 +8,8 @@
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href=
   "../style/section-development.css" />
-  <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
+  <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> 
+  <![endif]-->
 </head><!--
 Note: Editing website content is documented at:
 http://www.boost.org/development/website_updating.html
@@ -77,6 +78,9 @@ http://www.boost.org/development/website_updating.html
                     rationale</a></li>
 
                     <li><a href="#Tabs">Tabs rationale</a></li>
+
+                    <li><a href="#FileNamesRat">Directory and filename
+                    rationale</a></li>
 
                     <li><a href="#JavaScript">ECMAScript/JavaScript
                     rationale</a></li>
@@ -411,29 +415,41 @@ http://www.boost.org/development/website_updating.html
               "Directory_structure"></a>Directory Structure and
               Filenames</h3>
 
-              <p>Naming requirements ensure file and directory names are
-              relatively portable, including to ISO 9660:1999 and other
-              relatively limited file systems.</p>
+              <p>Naming requirements ensure that file and directory names are
+              relatively portable, including to ISO 9660:1999 (with
+              extensions) and other relatively limited file systems.
+              Superscript links are provided to detailed rationale for each
+              choice.</p>
 
               <ul>
-                <li>File and directory names include only
-                <strong>lowercase</strong> ASCII letters
-                (<code>"a"</code>-<code>"z"</code>), numbers
-                (<code>"0"</code>-<code>"9"</code>), and underscores
-                (<code>"_"</code>). Spaces are not allowed.</li>
+                <li>Names must contain only
+                <strong>lowercase</strong><sup><a href=
+                "#Filename_rationale_1">1</a></sup> ASCII letters
+                (<code>'a'</code>-<code>'z'</code>), numbers
+                (<code>'0'</code>-<code>'9'</code>), underscores
+                (<code>'_'</code>), hyphens (<code>'-'</code>), and periods
+                (<code>'.'</code>). Spaces are not allowed<sup><a href=
+                "#Filename_rationale_2">2</a></sup>.</li>
 
-                <li>File names may include one dot character
-                (<code>"."</code>), but it must not be the first or last
-                character..</li>
+                <li>Directory names must not contain periods
+                (<code>'.'</code>)<sup><a href=
+                "#Filename_Rationale_3">3</a></sup>.</li>
 
-                <li>Directory names must not include dot characters
-                (<code>"."</code>).</li>
+                <li>The first and last character of a file name must not be a
+                period (<code>'.'</code>)<sup><a href=
+                "#Filename_rationale_4">4</a></sup>.</li>
 
-                <li>The first character of both directory and file names must
-                be alphabetic.</li>
+                <li>The first character of names must not be a hyphen
+                (<code>'-'</code>)<sup><a href=
+                "#Filename_rationale_5">5</a></sup>.</li>
 
                 <li>The maximum length of directory and file names is 31
-                characters.</li>
+                characters<sup><a href=
+                "#Filename_rationale_6">6</a></sup>.</li>
+
+                <li>The total path length must not exceed 207
+                characters<sup><a href=
+                "#Filename_rationale_7">7</a></sup>.</li>
               </ul>
 
               <p>Other conventions ease communication:</p>
@@ -692,7 +708,7 @@ http://www.boost.org/development/website_updating.html
 
               <p>Exception specifications [ISO 15.4] are sometimes coded to
               indicate what exceptions may be thrown, or because the
-              programmer hopes they will improved performance. But consider
+              programmer hopes they will improve performance. But consider
               the following member from a smart pointer:</p>
               <pre>
 T&amp; operator*() const throw()  { return *ptr; }
@@ -771,6 +787,46 @@ T&amp; operator*() const throw()  { return *ptr; }
               "no tabs". Discussions concluded that Boost files should either
               all use tabs, or all use spaces, and thus the decision to stick
               with spaces.</p>
+
+              <h3><a name="FileNamesRat" id="FileNamesRat"></a>Directory and
+              File Names rationale</h3>
+
+              <p><a name="Filename_rationale_1" id=
+              "Filename_rationale_1">1</a>. Some legacy file systems require
+              single-case names. Single-case names eliminate casing mistakes
+              when moving from case-insensitive to case-sensitive file
+              systems.</p>
+
+              <p><a name="Filename_rationale_2" id=
+              "Filename_rationale_2">2</a>. This is the lowercase portion of
+              the POSIX portable filename character set. To quote the POSIX
+              standard, "Filenames should be constructed from the portable
+              filename character set because the use of other characters can
+              be confusing or ambiguous in certain contexts."</p>
+
+              <p><a name="Filename_Rationale_3" id=
+              "Filename_Rationale_3">3</a>. Strict implementations of ISO
+              9660:1999 and some legacy operating systems prohibit dots in
+              directory names. The need for this restriction is fading, and
+              it will probably be removed fairly soon.</p>
+
+              <p><a name="Filename_rationale_4" id=
+              "Filename_rationale_4">4</a>. POSIX has special rules for names
+              beginning with a period. Windows prohibits names ending in a
+              period.</p>
+
+              <p><a name="Filename_rationale_5" id=
+              "Filename_rationale_5">5</a>. Would be too confusing or
+              ambiguous in certain contexts.</p>
+
+              <p><a name="Filename_rationale_6" id=
+              "Filename_rationale_6">6</a>. We had to draw the line
+              somewhere, and so the limit imposed by a now obsolete Apple
+              file system was chosen years ago. It still seems a reasonable
+              limit to aid human comprehension.</p>
+
+              <p><a name="Filename_rationale_7" id=
+              "Filename_rationale_7">7</a>. ISO 9660:1999.</p>
 
               <h3><a name="JavaScript" id=
               "JavaScript"></a>ECMAScript/JavaScript rationale</h3>

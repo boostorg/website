@@ -53,7 +53,7 @@ class boost_archive
             $this->file_ = $archive_file_prefix . $this->key_;
         }
         $this->archive_ = str_replace('\\','/', $archive_dir . '/' . $this->version_ . '.zip');
-        
+
         foreach ($info_map as $i)
         {
             if (preg_match($i[1],$this->key_))
@@ -137,11 +137,9 @@ HTML
         ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
         $file_handle = popen($unzip,'rb');
         fpassthru($file_handle);
-        if(pclose($file_handle) != 0) {
-            // TODO: Maybe I should buffer the file so that I can return a
-            // proper 404 error.
-            echo "File not found.";
-        }
+        $exit_status = pclose($file_handle);
+        if($exit_status != 0)
+            echo 'Error extracting file: '.unzip_error($exit_status);
     }
     
     function content()
@@ -510,6 +508,30 @@ HTML
         # error in those cases.
 
         print '<h1>404 Not Found</h1><p>File "' . $this->file_ . '"not found.</p>';
+    }
+}
+
+// Return a readable error message for unzip exit state.
+
+function unzip_error($exit_status) {
+    switch($exit_status) {
+    case 0: return 'No error.';
+    case 1: return 'One  or  more  warning  errors  were  encountered.';
+    case 2: return 'A generic error in the zipfile format was detected.';
+    case 3: return 'A severe error in the zipfile format was detected.';
+    case 4: return 'Unzip was unable to allocate memory for one or more buffers during program initialization.';
+    case 5: return 'Unzip was unable to allocate memory or unable to obtain a tty to read the decryption password(s).';
+    case 6: return 'Unzip was unable to allocate memory during decompression to disk.';
+    case 7: return 'Unzip was unable to allocate memory during in-memory decompression.';
+    case 9: return 'The specified zipfiles were not found.';
+    case 10: return 'Invalid options were specified on the command line.';
+    case 11: return 'No matching files were found.';
+    case 50: return 'The disk is (or was) full during extraction.';
+    case 51: return 'The end of the ZIP archive was encountered prematurely.';
+    case 80: return 'The user aborted unzip prematurely with control-C (or similar).';
+    case 81: return 'Testing or extraction of one or more files failed due to unsupported compression methods or unsupported decryption.';
+    case 82: return 'No files were found due to bad decryption password(s).';
+    default: return 'Unknown unzip error code: ' + $exit_status;
     }
 }
 ?>
