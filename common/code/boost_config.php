@@ -33,11 +33,6 @@ switch ($_SERVER['HTTP_HOST'])
   }
   break;
 
-  case 'beta.boost.local':
-  {
-    define('BOOST_CONFIG_FILE','/home/daniel/config.php');
-  }
-  
   default:
   {
     define('BOOST_CONFIG_FILE',dirname(__FILE__) . '/boost_config_local.php');
