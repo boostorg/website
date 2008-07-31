@@ -138,8 +138,11 @@ HTML
         $file_handle = popen($unzip,'rb');
         fpassthru($file_handle);
         $exit_status = pclose($file_handle);
-        if($exit_status != 0)
-            echo 'Error extracting file: '.unzip_error($exit_status);
+        
+        // Disable the error message because it was appearing for several files.
+        //
+        // if($exit_status != 0)
+        //     echo 'Error extracting file: '.unzip_error($exit_status);
     }
     
     function content()
