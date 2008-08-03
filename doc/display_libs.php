@@ -9,10 +9,10 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
       '34','35',
       )).')_[0-9]@',
     '@^libs/('.implode('|',array(
-      'algorithm/string','any','array','asio','assign','bind','bimap',
+      'accumulators','algorithm/string','any','array','asio','assign','bind','bimap',
       'circular_buffer',
       'concept_check','config','date_time','date_time/doc','disjoint_sets',
-      'dynamic_bitset','filesystem','foreach','function','functional/hash',
+      'dynamic_bitset','exception','filesystem','foreach','function','functional/hash',
       'function_types','fusion','graph','interprocess','intrusive',
       'io','iostreams','iterator','lambda',
       'lambda/doc','math','math/doc','mem_fn','mpl',
@@ -22,7 +22,7 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
       'python/doc/tutorial','python/doc/v2','regex','serialization','signals',
       'signals/doc','smart_ptr','statechart','static_assert','system','test',
       'thread','thread/doc','tr1','tuple','typeof',
-      'type_traits','variant','xpressive'
+      'type_traits','units','unordered','variant','xpressive'
       )).')/index.(html|htm)$@i',
     'raw','text/html'),
   //~ special cases that can't be processed at all (some redirects)
