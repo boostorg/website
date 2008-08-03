@@ -43,6 +43,7 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   array('@.*@','@^more/lib_guide.htm$@i','raw','text/html'),
   array('@.*@','@^more/regression.html$@i','raw','text/html'),
   array('@.*@','@^status/index.html$@i','raw','text/html'),
+  array('@.*@','@^tools/boostbook/index.html$@i','raw','text/html'),
   array('@.*@','@^tools/build/index.html$@i','raw','text/html'),
   array('@.*@','@^tools/jam/index.html$@i','raw','text/html'),
   array('@.*@','@^tools/quickbook/index.html$@i','raw','text/html'),
