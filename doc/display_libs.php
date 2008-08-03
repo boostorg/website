@@ -55,6 +55,8 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   array('@.*@','@^libs/system/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/numeric/conversion/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/optional/doc/.*(html|htm)$@i','simple','text/html'),
+  //~ special cases that look like boost book, but aren't
+  array('@.*@','@^libs/parameter/doc/html/.*(html|htm)$@i','boost_libs_html','text/html'),
   //~ default to processed output for libs and tools
   array('@.*@','@^libs/[^/]+/doc/html/.*(html|htm)$@i','boost_book_html','text/html'),
   array('@.*@','@^libs/[^/]+/doc/[^/]+/html/.*(html|htm)$@i','boost_book_html','text/html'),
