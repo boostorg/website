@@ -39,7 +39,7 @@ class boost_archive
             array('@.*@','@[.]js$@i','raw','application/x-javascript'),
             array('@.*@','@[.]pdf$@i','raw','application/pdf'),
             array('@.*@','@[.](html|htm)$@i','raw','text/html'),
-            array('@.*@','@[^.](Jamroot|Jamfile)$@i','text','text/plain'),
+            array('@.*@','@[^.](Jamroot|Jamfile|ChangeLog)$@i','text','text/plain'),
             ));
         
         $this->version_ = $path_parts[1];
