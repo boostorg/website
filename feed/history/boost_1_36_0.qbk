@@ -2,7 +2,7 @@
     [quickbook 1.4]
     [source-mode c++]
     [purpose New Libraries: Accumulators, Exception, Units, Unordered.
-    Updated Libraries: Assign, Foreach, Hash, Interprocess, Intrusive, Math, Multi-index Containers,
+    Updated Libraries: Asio, Assign, Foreach, Hash, Interprocess, Intrusive, Math, Multi-index Containers,
     PtrContainer, Spirit, Thread, Wave, Xpressive.]
     [authors [Dawes, Beman]]
     [last-revision ]
@@ -36,6 +36,18 @@
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/asio/index.html Asio]:]
+  * Added support for serial ports.
+  * Added support for UNIX domain sockets.
+  * Added support for raw sockets and ICMP.
+  * Added wrappers for POSIX stream-oriented file descriptors (excluding regular files).
+  * Added wrappers for Windows stream-oriented `HANDLE`s such as named pipes (requires `HANDLE`s that work with I/O completion ports).
+  * Added wrappers for Windows random-access `HANDLE`s such as files (requires `HANDLE`s that work with I/O completion ports).
+  * Added support for reactor-style operations (i.e. they report readiness but perform no I/O) using a new `null_buffers` type.
+  * Added an iterator type for bytewise traversal of buffer sequences.
+  * Added new `read_until()` and `async_read_until()` overloads that take a user-defined function object for locating message boundaries.
+  * Added an experimental two-lock queue (enabled by defining `BOOST_ASIO_ENABLE_TWO_LOCK_QUEUE`) that may provide better `io_service` scalability across many processors.
+  * Various fixes, performance improvements, and more complete coverage of the custom memory allocation support.
 * [phrase library..[@/libs/assign/index.html Assign]:]
   `list_of()` (and its variants) now has overloaded comparison operators. This
   allows you to write test code such as
