@@ -8,8 +8,8 @@
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
   <item><title>Version 1.36.0</title><pubDate>$Date$</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Accumulators, Exception, Units, Unordered. Updated Libraries:
-      Assign, Foreach, Interprocess, Intrusive, Math, Multi-index Containers, PtrContainer,
-      Spirit, Thread, Xpressive.
+      Asio, Assign, Foreach, Hash, Interprocess, Intrusive, Math, Multi-index Containers,
+      PtrContainer, Spirit, Thread, Wave, Xpressive.
     &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=616969</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   &lt;div id=&quot;version_1_36_0.new_libraries&quot;&gt;
@@ -43,6 +43,55 @@
     &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
     &lt;ul&gt;
       &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Added support for serial ports.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added support for UNIX domain sockets.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added support for raw sockets and ICMP.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added wrappers for POSIX stream-oriented file descriptors (excluding
+            regular files).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added wrappers for Windows stream-oriented &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;HANDLE&lt;/span&gt;&lt;/code&gt;s
+            such as named pipes (requires &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;HANDLE&lt;/span&gt;&lt;/code&gt;s
+            that work with I/O completion ports).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added wrappers for Windows random-access &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;HANDLE&lt;/span&gt;&lt;/code&gt;s
+            such as files (requires &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;HANDLE&lt;/span&gt;&lt;/code&gt;s
+            that work with I/O completion ports).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added support for reactor-style operations (i.e. they report readiness
+            but perform no I/O) using a new &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;null_buffers&lt;/span&gt;&lt;/code&gt;
+            type.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added an iterator type for bytewise traversal of buffer sequences.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added new &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;read_until&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;async_read_until&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; overloads that take a user-defined
+            function object for locating message boundaries.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added an experimental two-lock queue (enabled by defining &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_ASIO_ENABLE_TWO_LOCK_QUEUE&lt;/span&gt;&lt;/code&gt;) that
+            may provide better &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_service&lt;/span&gt;&lt;/code&gt;
+            scalability across many processors.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Various fixes, performance improvements, and more complete coverage of
+            the custom memory allocation support.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/assign/index.html&quot;&gt;Assign&lt;/a&gt;:&lt;/span&gt;
   &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;list_of&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
         (and its variants) now has overloaded comparison operators. This allows you
@@ -58,6 +107,20 @@
             macro for iterating over a sequence in reverse.
           &lt;/li&gt;
         &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/function/index.html&quot;&gt;Function&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Improved allocator support, from Emil Dotchevski.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/functional/hash/index.html&quot;&gt;Hash&lt;/a&gt;:&lt;/span&gt;
+  Minor updates
+        and fixes, for more info see the &lt;a href=&quot;/doc/html/hash/changes.html#hash.changes.boost_1_36_0&quot;&gt;change
+        log&lt;/a&gt;.
       &lt;/li&gt;
       &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/interprocess/index.html&quot;&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
@@ -101,7 +164,7 @@
         &lt;/ul&gt;
       &lt;/li&gt;
       &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/math/doc/sf_and_dist/html/index.html&quot;&gt;Boost.Math&lt;/a&gt;:&lt;/span&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/math/doc/sf_and_dist/html/index.html&quot;&gt;Math&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
             Added new non-central Chi-Square, Beta, F and T distributions.
@@ -117,6 +180,17 @@
           &lt;/li&gt;
           &lt;li&gt;
             Added a few SSE2 based optimisations for the Lanczos approximations.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/html/mpi.html&quot;&gt;MPI&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Added support for non-blocking operations in Python, from Andreas Klöckner.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added support for graph topologies.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
