@@ -39,7 +39,7 @@ class boost_archive
             array('@.*@','@[.]js$@i','raw','application/x-javascript'),
             array('@.*@','@[.]pdf$@i','raw','application/pdf'),
             array('@.*@','@[.](html|htm)$@i','raw','text/html'),
-            array('@.*@','@[^.](Jamroot|Jamfile)$@i','text','text/plain'),
+            array('@.*@','@[^.](Jamroot|Jamfile|ChangeLog)$@i','text','text/plain'),
             ));
         
         $this->version_ = $path_parts[1];
@@ -325,23 +325,18 @@ HTML
         }
         
         # nasty code, because (?!fubar) causes an ICE...
-        preg_match('@<table@i',$text,$table_begin,PREG_OFFSET_CAPTURE);
+        preg_match('@<table[^<>]*>?@i',$text,$table_begin,PREG_OFFSET_CAPTURE);
         preg_match('@</table>@i',$text,$table_end,PREG_OFFSET_CAPTURE);
-        if (isset($table_begin[0]) && isset($table_end[0]) &&
-            strpos(substr($text,0,$table_end[0][1]),'boost.png',$table_begin[0][1]) !== FALSE)
-        {
-            $text = substr($text,$table_end[0][1]+strlen($table_end[0][0]));
-        }
-        
-        preg_match('@<h[12]@i',$text,$h1_begin,PREG_OFFSET_CAPTURE);
-        preg_match('@</h[12]>@i',$text,$h1_end,PREG_OFFSET_CAPTURE);
-        preg_match('@<table@i',$text,$table_begin,PREG_OFFSET_CAPTURE);
-        preg_match('@</table>@i',$text,$table_end,PREG_OFFSET_CAPTURE);
-        if (isset($h1_begin[0]) && isset($table_end[0]) &&
-            $table_begin[0][1] < $h1_begin[0][1] && $h1_begin[0][1] < $table_end[0][1]+8)
-        {
-            $text = substr($text,$h1_begin[0][1],
-                $h1_begin[0][1]-$h1_end[0][1]+5) . substr($text,$table_end[0][1]+8);
+        if (isset($table_begin[0]) && isset($table_end[0])) {
+            $table_contents_start = $table_begin[0][1] + strlen($table_begin[0][0]);
+            $table_contents = substr($text, $table_contents_start,
+                $table_end[0][1] - $table_contents_start);
+            if(strpos($table_contents, 'boost.png') !== FALSE) {
+                preg_match('@<td[^<>]*>?([^<]*<(h[12]|p).*?)</td>@is', $table_contents,
+                    $table_contents_header, PREG_OFFSET_CAPTURE);
+                $text = (isset($table_contents_header[1]) ? $table_contents_header[1][0] : '').
+                    substr($text, $table_end[0][1] + 8);
+            }
         }
         #else
         #{

@@ -1,0 +1,138 @@
+[article Version 1.36.0
+    [quickbook 1.4]
+    [source-mode c++]
+    [purpose New Libraries: Accumulators, Exception, Units, Unordered.
+    Updated Libraries: Asio, Assign, Foreach, Function, Hash, Interprocess,
+    Intrusive, Math, Multi-index Containers, MPI, PtrContainer, Spirit, Thread,
+    Wave, Xpressive.]
+    [authors [Dawes, Beman]]
+    [last-revision ]
+]
+
+[include ext.qbk]
+
+[/ TODO: Update download link on each release]
+[download http://sourceforge.net/project/showfiles.php?group_id=7586&package_id=8041&release_id=616969]
+
+[/
+    When adding libraries:
+
+    1. Libraries are listed in alphabetical order.
+    2. Besides the dedicated entry, the lib name should be added to the
+       [purpose] section at the beginning of the page.
+]
+
+[section New Libraries]
+
+* [phrase library..[@/libs/accumulators/index.html Accumulators]:] Framework for
+  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
+* [phrase library..[@/libs/exception/doc/boost-exception.html Exception]:] 
+  A library for transporting of arbitrary data in exception objects, and transporting of exceptions between threads, from Emil Dotchevski.
+* [phrase library..[@/libs/units/index.html Units]:]
+  Zero-overhead dimensional analysis and unit/quantity manipulation and conversion, from Matthias Schabel and Steven Watanabe
+* [phrase library..[@/libs/unordered/index.html Unordered]:] 
+  Unordered associative containers, from Daniel James.
+
+[endsect]
+
+[section Updated Libraries]
+
+* [phrase library..[@/libs/asio/index.html Asio]:]
+  * Added support for serial ports.
+  * Added support for UNIX domain sockets.
+  * Added support for raw sockets and ICMP.
+  * Added wrappers for POSIX stream-oriented file descriptors (excluding regular files).
+  * Added wrappers for Windows stream-oriented `HANDLE`s such as named pipes (requires `HANDLE`s that work with I/O completion ports).
+  * Added wrappers for Windows random-access `HANDLE`s such as files (requires `HANDLE`s that work with I/O completion ports).
+  * Added support for reactor-style operations (i.e. they report readiness but perform no I/O) using a new `null_buffers` type.
+  * Added an iterator type for bytewise traversal of buffer sequences.
+  * Added new `read_until()` and `async_read_until()` overloads that take a user-defined function object for locating message boundaries.
+  * Added an experimental two-lock queue (enabled by defining `BOOST_ASIO_ENABLE_TWO_LOCK_QUEUE`) that may provide better `io_service` scalability across many processors.
+  * Various fixes, performance improvements, and more complete coverage of the custom memory allocation support.
+* [phrase library..[@/libs/assign/index.html Assign]:]
+  `list_of()` (and its variants) now has overloaded comparison operators. This
+  allows you to write test code such as
+  `BOOST_CHECK_EQUAL( my_container, list_of(2)(3)(4)(5) );`.
+* [phrase library..[@/libs/foreach/index.html Foreach]:] `BOOST_FOREACH` macro for
+  easily iterating over the elements of a sequence, from Eric Niebler.
+  * New `BOOST_REVERSE_FOREACH` macro for iterating over a sequence in reverse.
+* [phrase library..[@/libs/function/index.html Function]:] 
+  * Improved allocator support, from Emil Dotchevski.
+* [phrase library..[@/libs/functional/hash/index.html Hash]:]
+  Minor updates and fixes, for more info see the
+  [@/doc/html/hash/changes.html#hash.changes.boost_1_36_0 change log].
+* [phrase library..[@/libs/interprocess/index.html Interprocess]:]
+  * Added anonymous shared memory for UNIX systems.
+  * Fixed missing move semantics on managed memory classes.
+  * Added copy_on_write and open_read_only options for shared memory
+    and mapped file managed classes.
+  * `shared_ptr` is movable and supports aliasing.
+* [phrase library..[@/libs/intrusive/index.html Intrusive]:]
+  * Added `linear<>` and `cache_last<>` options to singly linked lists.
+  * Added `optimize_multikey<>` option to unordered container hooks.
+  * Optimized unordered containers when `store_hash` option is used
+    in the hook.
+  * Implementation changed to avoid explicit use of `try`-`catch`
+    blocks and be compilable with exceptions disabled.
+* [phrase library..[@/libs/math/doc/sf_and_dist/html/index.html Math]:]
+  * Added new non-central Chi-Square, Beta, F and T distributions.
+  * Added Exponential Integral and Zeta special functions.
+  * Added Rounding, Truncation, and Unit-in-the-last-place functions.
+  * Added support for compile time powers of a runtime base.
+  * Added a few SSE2 based optimisations for the Lanczos approximations.
+* [phrase library..[@/doc/html/mpi.html MPI]:]
+  * Added support for non-blocking operations in Python, from Andreas Klöckner.
+  * Added support for graph topologies.
+* [phrase library..[@/libs/multi_index/doc/index.html Multi-index Containers]:]
+  Minor additions and maintenance fixes. Consult the library
+  [@/libs/multi_index/doc/release_notes.html#boost_1_36 release notes] for
+  further information.
+* [phrase library..[@/libs/ptr_container/index.html PtrContainer]:]
+  Support for a few more containers, and addition of insert iterators.
+  For details see
+  [@/libs/ptr_container/doc/ptr_container.html#upgrading-from-boost-v-1-35
+  upgrading details].
+* [phrase library..[@/libs/spirit/index.html Spirit]:]
+  Integrated the "Classic" Spirit V1.8.x code base with Spirit V2, "The
+  New Generation". See [@/libs/spirit/classic/change_log.html Change Log].
+* [phrase library..[@/libs/thread/index.html Thread]:]
+  * New generic `lock` and `try_lock` functions for locking multiple mutexes at once.
+  * Rvalue reference support for move semantics where the compilers supports it.
+  * A few bugs fixed and missing functions added (including the serious win32 condition variable bug).
+  * `scoped_try_lock` types are now backwards-compatible with Boost 1.34.0 and previous releases.
+  * Support for passing function arguments to the thread function by supplying additional arguments to the `thread` constructor.
+  * Backwards-compatibility overloads added for `timed_lock` and `timed_wait` functions to allow use of `xtime` for timeouts.
+* [phrase library..[@/libs/wave/index.html Wave]:] 
+  * Wave V2.0 is a new major release introducing some breaking API changes, 
+    preventing it to be used with Boost versions earlier than V1.36.0. 
+    Mainly, the API and hook interface have been streamlined for more 
+    consistency.
+  * Fixed a couple of bugs, improved regression test system to include testing 
+    of the preporcessing hooks interface (for details see: 
+    [@/libs/wave/ChangeLog Changelog]).
+* [phrase library..[@/libs/xpressive/index.html Xpressive]:] 
+  Regular expressions that can be written as strings or as expression templates,
+  and that can refer to each other and themselves recursively with the power of
+  context-free grammars, from Eric Niebler.
+  * `skip()` for specifying which parts of the input sequence to ignore when
+    matching it against a regex.
+  * `regex_replace()` accepts formatter objects and formatter expressions
+    in addition to format strings.
+  * Range-based `regex_replace()` algorithm.
+  * Fix crash when semantic actions are placed in look-aheads, look-behinds or
+    independent sub-expressions.
+
+[endsect]
+
+[section Supported Compilers]
+
+[/ TODO: Insert supported compilers here]
+
+[endsect]
+
+[section Acknowledgements]
+
+[@/users/people/beman_dawes.html Beman Dawes] managed this release.
+
+[endsect]
+
