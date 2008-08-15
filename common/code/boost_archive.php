@@ -193,7 +193,7 @@ HTML
     {
         $h = '';
         
-        preg_match('@text/html; charset=([^\s"]+)@i',$this->content_,$charset);
+        preg_match('@text/html; charset=([^\s"\']+)@i',$this->content_,$charset);
         if (isset($charset[1]))
         {
             $h .= <<<HTML
