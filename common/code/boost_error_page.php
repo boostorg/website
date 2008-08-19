@@ -1,19 +1,22 @@
 <?php
-require_once(dirname(__FILE__) . '/../../common/code/boost_feed.php');
-$_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/users/download');
-$_guid = basename($_SERVER["PATH_INFO"]);
-if(!isset($_downloads->db[$_guid])) {
-    require_once(dirname(__FILE__) . '/../../common/code/boost_error_page.php');
-    error_page_404();
-    exit(0);
+function error_page_404($location = null) {
+    if(!$location && isset($_SERVER['REQUEST_URI'])) {
+        $location = $_SERVER['REQUEST_URI'];
+    }
+
+    error_page('HTTP/1.0 404 Not Found', '404 Not Found',
+        $location ? 'File "' . $location . '" not found.' : null);
 }
+
+function error_page($header, $title, $message) {
+    if($header) header($header);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title><?php print $_downloads->db[$_guid]['title']; ?></title>
+  <title><?php print htmlentities($title); ?></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-boost.css" />
@@ -31,20 +34,14 @@ if(!isset($_downloads->db[$_guid])) {
         <div class="section" id="intro">
           <div class="section-0">
             <div class="section-title">
-              <h1><?php print $_downloads->db[$_guid]['title']; ?></h1>
+              <h1><?php print htmlentities($title); ?></h1>
             </div>
 
+            <?php if($message) : ?>
             <div class="section-body">
-              <h2><span class=
-              "news-title"><?php print $_downloads->db[$_guid]['title']; ?></span></h2>
-
-              <p><span class=
-              "news-date"><?php print $_downloads->db[$_guid]['date']; ?></span></p>
-
-              <div class="news-description">
-                <?php print $_downloads->db[$_guid]['description']; ?>
-              </div>
+              <p><?php print htmlentities($message); ?></p>
             </div>
+            <?php endif ?>
           </div>
         </div>
       </div>
@@ -76,3 +73,6 @@ if(!isset($_downloads->db[$_guid])) {
   </div>
 </body>
 </html>
+<?php
+}
+?>
