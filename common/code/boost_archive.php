@@ -273,7 +273,7 @@ HTML
         /* */
         for ($i = 0; $i < 8; $i++) {
             $text = preg_replace(
-                '@<img src="[\./a-z]*images/([^.]+)\.png" alt="([^"]+)"([ /]*)>@Ssm',
+                '@<img src="[\./a-z]*images/(prev|up|home|next|tip|note|warning|important|caution|sidebar|hint|alert)\.png" alt="([^"]+)"([ /]*)>@Ssm',
                 '<img src="/gfx/space.png" alt="${2}" class="${1}_image" />',
                 $text );
         }
