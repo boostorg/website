@@ -358,8 +358,9 @@ HTML
             '@<img(.*)align="?absmiddle"?[^>]*>@i',
             '<img${1} class="inline" />',
             $text );
+        /* Remove certain attributes */
         $text = preg_replace(
-            '@[\s]+(border|cellpadding|cellspacing|width|height|valign|align|frame|rules|naturalsizeflag|background)=[^\s>]+@i',
+            '@[\s]+(border|cellpadding|cellspacing|width|height|valign|align|frame|rules|naturalsizeflag|background)=("[^"]*"?|\'[^\']*\'?|[^\s/>]+)@i',
             '',
             $text );
         $text = preg_replace(
