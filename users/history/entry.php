@@ -2,6 +2,11 @@
 require_once(dirname(__FILE__) . '/../../common/code/boost_feed.php');
 $_history = new boost_feed(dirname(__FILE__) . '/../../feed/history.rss', '/users/history');
 $_guid = basename($_SERVER["PATH_INFO"]);
+if(!isset($_history->db[$_guid])) {
+    require_once(dirname(__FILE__) . '/../../common/code/boost_error_page.php');
+    error_page_404();
+    exit(0);
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

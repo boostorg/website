@@ -193,7 +193,7 @@ HTML
     {
         $h = '';
         
-        preg_match('@text/html; charset=([^\s"]+)@i',$this->content_,$charset);
+        preg_match('@text/html; charset=([^\s"\']+)@i',$this->content_,$charset);
         if (isset($charset[1]))
         {
             $h .= <<<HTML
@@ -273,7 +273,7 @@ HTML
         /* */
         for ($i = 0; $i < 8; $i++) {
             $text = preg_replace(
-                '@<img src="[\./a-z]*images/([^.]+)\.png" alt="([^"]+)"([ /]*)>@Ssm',
+                '@<img src="[\./a-z]*images/(prev|up|home|next|tip|note|warning|important|caution|sidebar|hint|alert)\.png" alt="([^"]+)"([ /]*)>@Ssm',
                 '<img src="/gfx/space.png" alt="${2}" class="${1}_image" />',
                 $text );
         }
@@ -358,8 +358,9 @@ HTML
             '@<img(.*)align="?absmiddle"?[^>]*>@i',
             '<img${1} class="inline" />',
             $text );
+        /* Remove certain attributes */
         $text = preg_replace(
-            '@[\s]+(border|cellpadding|cellspacing|width|height|valign|align|frame|rules|naturalsizeflag|background)=[^\s>]+@i',
+            '@[\s]+(border|cellpadding|cellspacing|width|height|valign|align|frame|rules|naturalsizeflag|background)=("[^"]*"?|\'[^\']*\'?|[^\s/>]+)@i',
             '',
             $text );
         $text = preg_replace(
