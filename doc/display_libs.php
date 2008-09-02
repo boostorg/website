@@ -47,6 +47,7 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   array('@.*@','@^tools/build/index.html$@i','raw','text/html'),
   array('@.*@','@^tools/jam/index.html$@i','raw','text/html'),
   array('@.*@','@^tools/quickbook/index.html$@i','raw','text/html'),
+  array('@.*@','@^tools/regression/index.html?$@i','raw','text/html'),
   array('@.*@','@^wiki/index.html$@i','raw','text/html'),
   //~ special cases that can't be embeded in the standard frame
   array('@.*@','@^libs/iostreams/doc/.*(html|htm)$@i','simple','text/html'),
