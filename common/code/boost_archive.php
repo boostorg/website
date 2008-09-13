@@ -110,6 +110,11 @@ HTML
         }
     }
     
+    function is_basic()
+    {
+        return $this->extractor_ == 'basic';
+    }
+    
     function is_raw()
     {
         return $this->extractor_ == 'raw' || $this->extractor_ == 'simple';
@@ -493,6 +498,25 @@ HTML
     function _content_simple()
     {
         print $this->_content_html_pre();
+    }
+
+    function _init_basic()
+    {
+    }
+
+    function _content_basic()
+    {
+        $text = $this->_content_html_pre();
+        $text = preg_split('@(</head>)|(<body[^>]*>)@i',$text,-1,PREG_SPLIT_DELIM_CAPTURE);
+        print $text[0];
+        print '<link rel="icon" href="/favicon.ico" type="image/ico" />';
+        print '<link rel="stylesheet" type="text/css" href="/style/section-basic.css" />';
+        print $text[1];
+        print $text[2];
+        print $text[3];
+        print $text[4];
+        virtual("/common/heading-doc.html");
+        print $text[5];
     }
 
     function _init_404()
