@@ -39,9 +39,6 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   array('@.*@','@^libs/type_traits/cxx_type_traits.htm$@i','raw','text/html'),
   array('@.*@','@^libs/utility/iterator_adaptors.htm$@i','raw','text/html'),
   array('@.*@','@^libs/wave/.*(html|htm)$@i','raw','text/html'),
-  array('@.*@','@^more/getting_started.html$@i','raw','text/html'),
-  array('@.*@','@^more/lib_guide.htm$@i','raw','text/html'),
-  array('@.*@','@^more/regression.html$@i','raw','text/html'),
   array('@.*@','@^status/index.html$@i','raw','text/html'),
   array('@.*@','@^tools/boostbook/index.html$@i','raw','text/html'),
   array('@.*@','@^tools/build/index.html$@i','raw','text/html'),
@@ -56,20 +53,22 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   array('@.*@','@^libs/system/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/numeric/conversion/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/optional/doc/.*(html|htm)$@i','simple','text/html'),
-  //~ special cases that look like boost book, but aren't
-  array('@.*@','@^libs/parameter/doc/html/.*(html|htm)$@i','boost_libs_html','text/html'),
   //~ default to processed output for libs and tools
-  array('@.*@','@^libs/[^/]+/doc/html/.*(html|htm)$@i','boost_book_html','text/html'),
-  array('@.*@','@^libs/[^/]+/doc/[^/]+/html/.*(html|htm)$@i','boost_book_html','text/html'),
-  array('@.*@','@^libs/[^/]+/doc/[^/]+/doc/html/.*(html|htm)$@i','boost_book_html','text/html'),
-  array('@.*@','@^libs.*(html|htm)$@i','boost_libs_html','text/html'),
-  array('@.*@','@^tools.*(html|htm)$@i','boost_libs_html','text/html'),
-  array('@.*@','@^doc/html/.*html$@i','boost_book_html','text/html'),
+  array('@.*@','@^libs/[^/]+/doc/html/.*(html|htm)$@i','basic','text/html'),
+  array('@.*@','@^libs/[^/]+/doc/[^/]+/html/.*(html|htm)$@i','basic','text/html'),
+  array('@.*@','@^libs/[^/]+/doc/[^/]+/doc/html/.*(html|htm)$@i','basic','text/html'),
+  array('@.*@','@^libs.*(html|htm)$@i','basic','text/html'),
+  array('@.*@','@^tools.*(html|htm)$@i','basic','text/html'),
+  array('@.*@','@^doc/html/.*html$@i','basic','text/html'),
+  array('@.*@','@^more/.*html$@i','basic','text/html'),
   //~ the headers are text files displayed in an embeded page
   array('@.*@','@^boost/.*$@i','cpp','text/plain')
   ));
 
-if (!$_file->is_raw()) {
+if ($_file->is_basic()) {
+  print $_file->content();
+}
+else if (!$_file->is_raw()) {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
