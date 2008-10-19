@@ -7,8 +7,8 @@
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
   <item><title>Version 1.37.0</title><pubDate>$Date$</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
-      New Library: Proto. Updated Libraries: Circular Buffer, Dynamic Bitset, Hash,
-      Interprocess, Intrusive, Unordered
+      New Library: Proto. Updated Libraries: Asio, Circular Buffer, Dynamic Bitset,
+      Hash, Interprocess, Intrusive, Unordered Math Type Traits
     &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=616969</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   &lt;div id=&quot;version_1_37_0.new_libraries&quot;&gt;
@@ -28,6 +28,40 @@
   &lt;div id=&quot;version_1_37_0.updated_libraries&quot;&gt;
     &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
     &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Enhanced CompletionCondition concept with the signature &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;CompletionCondition&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;error_code&lt;/span&gt;
+            &lt;span class=&quot;identifier&quot;&gt;ec&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;identifier&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;&lt;/code&gt;, where the return value indicates the
+            maximum number of bytes to be transferred on the next read or write operation.
+            (The old CompletionCondition signature is still supported for backwards
+            compatibility).
+          &lt;/li&gt;
+          &lt;li&gt;
+            New windows::overlapped_ptr class to allow arbitrary overlapped I/O functions
+            (such as TransmitFile) to be used with Asio.
+          &lt;/li&gt;
+          &lt;li&gt;
+            On recent versions of Linux, an eventfd descriptor is now used (rather
+            than a pipe) to interrupt a blocked select/epoll reactor.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added const overloads of lowest_layer().
+          &lt;/li&gt;
+          &lt;li&gt;
+            Synchronous read, write, accept and connect operations are now thread
+            safe (meaning that it is now permitted to perform concurrent synchronous
+            operations on an individual socket, if supported by the OS).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Reactor-based io_service implementations now use lazy initialisation
+            to reduce the memory usage of an io_service object used only as a message
+            queue.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
       &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/circular_buffer/index.html&quot;&gt;Circular Buffer&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
@@ -93,6 +127,17 @@
             Minor bug fixes.
           &lt;/li&gt;
         &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/math/doc/sf_and_dist/html/index.html&quot;&gt;Math.Special
+        Functions&lt;/a&gt;:&lt;/span&gt;
+   Improved accuracy and testing of the inverse hypergeometric
+        functions.
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/type_traits/index.html&quot;&gt;Type Traits&lt;/a&gt;:&lt;/span&gt;
+   Added
+        better support for the Codegear compiler.
       &lt;/li&gt;
       &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/unordered/index.html&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
