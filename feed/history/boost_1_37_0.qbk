@@ -2,7 +2,7 @@
     [quickbook 1.4]
     [source-mode c++]
     [purpose New Library: Proto.
-        Updated Libraries: Circular Buffer, Dynamic Bitset, Hash,
+        Updated Libraries: Asio, Circular Buffer, Dynamic Bitset, Hash,
         Interprocess, Intrusive, Unordered]
     [authors [Dawes, Beman]]
     [last-revision ]
@@ -31,6 +31,23 @@
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/asio/index.html Asio]:]
+  * Enhanced CompletionCondition concept with the signature
+    `size_t CompletionCondition(error_code ec, size_t total)`, where the return
+    value indicates the maximum number of bytes to be transferred on the next
+    read or write operation. (The old CompletionCondition signature is still
+    supported for backwards compatibility).
+  * New windows::overlapped_ptr class to allow arbitrary overlapped I/O
+    functions (such as TransmitFile) to be used with Asio.
+  * On recent versions of Linux, an eventfd descriptor is now used (rather than
+    a pipe) to interrupt a blocked select/epoll reactor.
+  * Added const overloads of lowest_layer().
+  * Synchronous read, write, accept and connect operations are now thread safe
+    (meaning that it is now permitted to perform concurrent synchronous
+    operations on an individual socket, if supported by the OS).
+  * Reactor-based io_service implementations now use lazy initialisation to
+    reduce the memory usage of an io_service object used only as a message
+    queue.
 * [phrase library..[@/libs/circular_buffer/index.html Circular Buffer]:]
   * Added new methods `is_linearized()` and `rotate(const_iterator)`.
   * Minor bug fixes and documentation updates.
