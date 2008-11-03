@@ -1,0 +1,126 @@
+[article Version 1.37.0
+    [quickbook 1.4]
+    [source-mode c++]
+    [purpose New Library: Proto.
+        Updated Libraries: Asio, Circular Buffer, Dynamic Bitset, Hash,
+        Interprocess, Intrusive, Math Type, Traits, Unordered]
+    [authors [Dawes, Beman]]
+    [last-revision Mon, 03 Nov 2008 12:00:00 GMT]
+]
+
+[include ext.qbk]
+
+[download http://sourceforge.net/project/showfiles.php?group_id=7586&package_id=8041&release_id=637761]
+
+[section New Libraries]
+
+* [phrase library..[@/libs/proto/index.html Proto]:]
+  * Expression template library and compiler construction toolkit for
+    domain-specific embedded languages, from Eric Niebler.
+
+[endsect]
+
+[section Updated Libraries]
+
+* [phrase library..[@/libs/asio/index.html Asio]:]
+  * Enhanced CompletionCondition concept with the signature
+    `size_t CompletionCondition(error_code ec, size_t total)`, where the return
+    value indicates the maximum number of bytes to be transferred on the next
+    read or write operation. (The old CompletionCondition signature is still
+    supported for backwards compatibility).
+  * New windows::overlapped_ptr class to allow arbitrary overlapped I/O
+    functions (such as TransmitFile) to be used with Asio.
+  * On recent versions of Linux, an eventfd descriptor is now used (rather than
+    a pipe) to interrupt a blocked select/epoll reactor.
+  * Added const overloads of lowest_layer().
+  * Synchronous read, write, accept and connect operations are now thread safe
+    (meaning that it is now permitted to perform concurrent synchronous
+    operations on an individual socket, if supported by the OS).
+  * Reactor-based io_service implementations now use lazy initialisation to
+    reduce the memory usage of an io_service object used only as a message
+    queue.
+* [phrase library..[@/libs/circular_buffer/index.html Circular Buffer]:]
+  * Added new methods `is_linearized()` and `rotate(const_iterator)`.
+  * Minor bug fixes and documentation updates.
+* [phrase library..[@/libs/dynamic_bitset/ Dynamic Bitset]:]
+  * Constructor "do the right thing" dispatch, a la standard sequence
+    containers (follows the proposed resolution of
+    [@http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#438
+    library issue 438], currently in the [^C++0x] working paper).
+  * Improvements to documentation, code examples and implementation.
+* [phrase library..[@/libs/functional/hash/index.html Hash]:]
+  * Minor bug fix ([@http://svn.boost.org/trac/boost/ticket/2264 ticket 2264]).
+* [phrase library..[@/libs/interprocess/index.html Interprocess]:]
+  *  Added placement insertion (`emplace()`, `emplace_back()`...) methods to
+     containers.
+  *  Containers can be used now in recursive types.
+  *  Minor bug fixes.
+* [phrase library..[@/libs/intrusive/index.html Intrusive]:]
+  *  Intrusive now takes advantage of compilers with variadic templates.
+  *  `clone_from` functions now copy predicates and hash functions of
+     associative containers.
+  *  Added incremental hashing to unordered containers via `incremental<>`
+     option.
+  *  Minor bug fixes.
+* [phrase library..[@/libs/math/doc/sf_and_dist/html/index.html Math.Special Functions]:]
+   Improved accuracy and testing of the inverse hypergeometric functions.
+* [phrase library..[@/libs/type_traits/index.html Type Traits]:]
+   Added better support for the Codegear compiler.
+* [phrase library..[@/libs/unordered/index.html Unordered]:]
+  * Rename overload of `emplace` with hint, to `emplace_hint` as specified in
+    [@http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2008/n2691.pdf n2691].
+  * Provide forwarding headers at `<boost/unordered/unordered_map_fwd.hpp>` and
+    `<boost/unordered/unordered_set_fwd.hpp>`.
+  * Move all of the implementation inside the `boost/unordered` directory.
+
+[endsect]
+
+[section Compilers Tested]
+
+Boost's primary test compilers are:
+
+* GCC 4.01 on Mac OS X 10.4.10 with both Intel and Power PC
+* GCC 4.2.4 on Ubuntu Linux 8.10
+* GCC 4.3.2 on Debian Sid
+* HP C/aC++ B3910B A.06.17 on HP-UX 64-bit
+* Visual C++ 9.0 SP1, 8.0, and 7.1 SP1, all on Windows XP
+
+Boost's additional test compilers include:
+
+* GCC 4.1.2 on NetBSD
+* HP aCC on OS: HP-UX B.11.31 U ia64 and HP-UX B.11.31 9000/800 RISC
+* IBM XL C/C++ Enterprise Edition for AIX, V10.1.0.0, on AIX Version
+  5.3.0.40
+* Intel 9.1, 10.0, and 10.1, on Mac OS X 10.4.10
+* Compaq C++ V7.1-006 for Compaq Tru64 Unix on an OSF1 V5.1 platform.
+* Sun C++ 5.7, 5.8, 5.9 and GCC 3.4.6 on Sun Solaris 5.10.
+* On Linux:
+  * GCC 3.4.3, 4.0.1, 4.2.1, 4.2.4, 4.3.2.
+  * GCC 4.3.2 with C++0x extensions.
+  * GCC 4.1.1, 4.2.1 on 64 bit linux.
+  * Intel C++ 8.1, 9.0, 9.1 and 10.0
+  * QLogic PathScale(TM) Compiler Suite: Version 3.1
+  * Sun Compiler 5.9, 5.10 with stdcxx
+* On Windows:
+  * Several testers using Visual C++ 7.1, 8.0, 9.0 and 10.0
+  * Visual C++ 7.1 with Apache C++ Standard Library 4.2.x branch.
+  * Visual C++ 8.0 with STLport 5.1
+  * Visual C++ 8.0 with STLport 5.1 cross-compiling for Windows Mobile 5.0
+    Pocket PC SDK (ARMV4I).
+  * Intel 10.1, with Visual C++ 9 backend.
+  * Borland 5.9.3 and 6.10.0
+  * 64 bit Intel 10.1, with Visual C++ 9 backend.
+  * 64 bit Visual C++ 9.0.
+  * 64-bit Visual C++ 9.0 with Apache C++ Standard Library 4.2.x branch.
+  * Comeau C++ 4.3.10.1 beta 2, with Visual C++ 9 backend.
+
+[endsect]
+
+[section Acknowledgements]
+
+[@/users/people/beman_dawes.html Beman Dawes],
+Eric Niebler,
+[@/users/people/rene_rivera.html Rene Rivera],
+and Daniel James managed this release.
+
+[endsect]

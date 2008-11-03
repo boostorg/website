@@ -6,7 +6,273 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.36.0</title><pubDate>Thu, 14 Aug 2008 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+  <item><title>Version 1.37.0</title><pubDate>Mon, 03 Nov 2008 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+      New Library: Proto. Updated Libraries: Asio, Circular Buffer, Dynamic Bitset,
+      Hash, Interprocess, Intrusive, Math Type, Traits, Unordered
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=637761</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+  
+  &lt;div id=&quot;version_1_37_0.new_libraries&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/proto/index.html&quot;&gt;Proto&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Expression template library and compiler construction toolkit for domain-specific
+            embedded languages, from Eric Niebler.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_37_0.updated_libraries&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Enhanced CompletionCondition concept with the signature &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;CompletionCondition&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;error_code&lt;/span&gt;
+            &lt;span class=&quot;identifier&quot;&gt;ec&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;identifier&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;&lt;/code&gt;, where the return value indicates the
+            maximum number of bytes to be transferred on the next read or write operation.
+            (The old CompletionCondition signature is still supported for backwards
+            compatibility).
+          &lt;/li&gt;
+          &lt;li&gt;
+            New windows::overlapped_ptr class to allow arbitrary overlapped I/O functions
+            (such as TransmitFile) to be used with Asio.
+          &lt;/li&gt;
+          &lt;li&gt;
+            On recent versions of Linux, an eventfd descriptor is now used (rather
+            than a pipe) to interrupt a blocked select/epoll reactor.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added const overloads of lowest_layer().
+          &lt;/li&gt;
+          &lt;li&gt;
+            Synchronous read, write, accept and connect operations are now thread
+            safe (meaning that it is now permitted to perform concurrent synchronous
+            operations on an individual socket, if supported by the OS).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Reactor-based io_service implementations now use lazy initialisation
+            to reduce the memory usage of an io_service object used only as a message
+            queue.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/circular_buffer/index.html&quot;&gt;Circular Buffer&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Added new methods &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;is_linearized&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;rotate&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;const_iterator&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;&lt;/code&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Minor bug fixes and documentation updates.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/dynamic_bitset/&quot;&gt;Dynamic Bitset&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Constructor &amp;quot;do the right thing&amp;quot; dispatch, a la standard sequence
+            containers (follows the proposed resolution of &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#438&quot;&gt;library
+            issue 438&lt;/a&gt;, currently in the &lt;tt&gt;C++0x&lt;/tt&gt; working
+            paper).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Improvements to documentation, code examples and implementation.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/functional/hash/index.html&quot;&gt;Hash&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Minor bug fix (&lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/2264&quot;&gt;ticket
+            2264&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/interprocess/index.html&quot;&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Added placement insertion (&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;emplace&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;emplace_back&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;...) methods to containers.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Containers can be used now in recursive types.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Minor bug fixes.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/intrusive/index.html&quot;&gt;Intrusive&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Intrusive now takes advantage of compilers with variadic templates.
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;clone_from&lt;/span&gt;&lt;/code&gt; functions
+            now copy predicates and hash functions of associative containers.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added incremental hashing to unordered containers via &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;incremental&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt; option.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Minor bug fixes.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/math/doc/sf_and_dist/html/index.html&quot;&gt;Math.Special
+        Functions&lt;/a&gt;:&lt;/span&gt;
+   Improved accuracy and testing of the inverse hypergeometric
+        functions.
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/type_traits/index.html&quot;&gt;Type Traits&lt;/a&gt;:&lt;/span&gt;
+   Added
+        better support for the Codegear compiler.
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/unordered/index.html&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Rename overload of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;emplace&lt;/span&gt;&lt;/code&gt;
+            with hint, to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;emplace_hint&lt;/span&gt;&lt;/code&gt;
+            as specified in &lt;a href=&quot;http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2008/n2691.pdf&quot;&gt;n2691&lt;/a&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Provide forwarding headers at &lt;code&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;unordered&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;unordered_map_fwd&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
+            and &lt;code&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;unordered&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;unordered_set_fwd&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Move all of the implementation inside the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;unordered&lt;/span&gt;&lt;/code&gt;
+            directory.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_37_0.compilers_tested&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Compilers Tested&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      Boost's primary test compilers are:
+    &lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        GCC 4.01 on Mac OS X 10.4.10 with both Intel and Power PC
+      &lt;/li&gt;
+      &lt;li&gt;
+        GCC 4.2.4 on Ubuntu Linux 8.10
+      &lt;/li&gt;
+      &lt;li&gt;
+        GCC 4.3.2 on Debian Sid
+      &lt;/li&gt;
+      &lt;li&gt;
+        HP C/aC++ B3910B A.06.17 on HP-UX 64-bit
+      &lt;/li&gt;
+      &lt;li&gt;
+        Visual C++ 9.0 SP1, 8.0, and 7.1 SP1, all on Windows XP
+      &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;p&gt;
+      Boost's additional test compilers include:
+    &lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        GCC 4.1.2 on NetBSD
+      &lt;/li&gt;
+      &lt;li&gt;
+        HP aCC on OS: HP-UX B.11.31 U ia64 and HP-UX B.11.31 9000/800 RISC
+      &lt;/li&gt;
+      &lt;li&gt;
+        IBM XL C/C++ Enterprise Edition for AIX, V10.1.0.0, on AIX Version 5.3.0.40
+      &lt;/li&gt;
+      &lt;li&gt;
+        Intel 9.1, 10.0, and 10.1, on Mac OS X 10.4.10
+      &lt;/li&gt;
+      &lt;li&gt;
+        Compaq C++ V7.1-006 for Compaq Tru64 Unix on an OSF1 V5.1 platform.
+      &lt;/li&gt;
+      &lt;li&gt;
+        Sun C++ 5.7, 5.8, 5.9 and GCC 3.4.6 on Sun Solaris 5.10.
+      &lt;/li&gt;
+      &lt;li&gt;
+        On Linux:
+        &lt;ul&gt;
+          &lt;li&gt;
+            GCC 3.4.3, 4.0.1, 4.2.1, 4.2.4, 4.3.2.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.3.2 with C++0x extensions.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.1.1, 4.2.1 on 64 bit linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel C++ 8.1, 9.0, 9.1 and 10.0
+          &lt;/li&gt;
+          &lt;li&gt;
+            QLogic PathScale(TM) Compiler Suite: Version 3.1
+          &lt;/li&gt;
+          &lt;li&gt;
+            Sun Compiler 5.9, 5.10 with stdcxx
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        On Windows:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Several testers using Visual C++ 7.1, 8.0, 9.0 and 10.0
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 7.1 with Apache C++ Standard Library 4.2.x branch.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 8.0 with STLport 5.1
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 8.0 with STLport 5.1 cross-compiling for Windows Mobile 5.0
+            Pocket PC SDK (ARMV4I).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 10.1, with Visual C++ 9 backend.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Borland 5.9.3 and 6.10.0
+          &lt;/li&gt;
+          &lt;li&gt;
+            64 bit Intel 10.1, with Visual C++ 9 backend.
+          &lt;/li&gt;
+          &lt;li&gt;
+            64 bit Visual C++ 9.0.
+          &lt;/li&gt;
+          &lt;li&gt;
+            64-bit Visual C++ 9.0 with Apache C++ Standard Library 4.2.x branch.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Comeau C++ 4.3.10.1 beta 2, with Visual C++ 9 backend.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_37_0.acknowledgements&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Acknowledgements&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      &lt;a href=&quot;/users/people/beman_dawes.html&quot;&gt;Beman Dawes&lt;/a&gt;, Eric Niebler,
+      &lt;a href=&quot;/users/people/rene_rivera.html&quot;&gt;Rene Rivera&lt;/a&gt;, and Daniel
+      James managed this release.
+    &lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Version 1.36.0</title><pubDate>Thu, 14 Aug 2008 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Accumulators, Exception, Units, Unordered. Updated Libraries:
       Asio, Assign, Circular Buffer, Foreach, Function, Hash, Interprocess, Intrusive,
       Math, Multi-index Containers, MPI, PtrContainer, Spirit, Thread, Wave, Xpressive.

@@ -22,7 +22,6 @@ class boost_feed
         //~ print "<!-- boost_fead (2) ".$xml_file." -->\n";
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
-        xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
         xml_parse_into_struct($parser, $xml, $values);
         xml_parser_free($parser);
         
@@ -50,7 +49,7 @@ class boost_feed
                     {
                         if (isset($val['value']))
                         {
-                            $item[strtolower($val['tag'])] = html_entity_decode(trim($val['value']));
+                            $item[strtolower($val['tag'])] = trim($val['value']);
                             switch (strtolower($val['tag']))
                             {
                                 case 'pubdate':

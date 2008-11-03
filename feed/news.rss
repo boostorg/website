@@ -6,7 +6,273 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.36.0</title><pubDate>Thu, 14 Aug 2008 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+  <item><title>Version 1.37.0</title><pubDate>Mon, 03 Nov 2008 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+      New Library: Proto. Updated Libraries: Asio, Circular Buffer, Dynamic Bitset,
+      Hash, Interprocess, Intrusive, Math Type, Traits, Unordered
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=637761</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+  
+  &lt;div id=&quot;version_1_37_0.new_libraries&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/proto/index.html&quot;&gt;Proto&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Expression template library and compiler construction toolkit for domain-specific
+            embedded languages, from Eric Niebler.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_37_0.updated_libraries&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Enhanced CompletionCondition concept with the signature &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;CompletionCondition&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;error_code&lt;/span&gt;
+            &lt;span class=&quot;identifier&quot;&gt;ec&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;identifier&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;&lt;/code&gt;, where the return value indicates the
+            maximum number of bytes to be transferred on the next read or write operation.
+            (The old CompletionCondition signature is still supported for backwards
+            compatibility).
+          &lt;/li&gt;
+          &lt;li&gt;
+            New windows::overlapped_ptr class to allow arbitrary overlapped I/O functions
+            (such as TransmitFile) to be used with Asio.
+          &lt;/li&gt;
+          &lt;li&gt;
+            On recent versions of Linux, an eventfd descriptor is now used (rather
+            than a pipe) to interrupt a blocked select/epoll reactor.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added const overloads of lowest_layer().
+          &lt;/li&gt;
+          &lt;li&gt;
+            Synchronous read, write, accept and connect operations are now thread
+            safe (meaning that it is now permitted to perform concurrent synchronous
+            operations on an individual socket, if supported by the OS).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Reactor-based io_service implementations now use lazy initialisation
+            to reduce the memory usage of an io_service object used only as a message
+            queue.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/circular_buffer/index.html&quot;&gt;Circular Buffer&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Added new methods &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;is_linearized&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;rotate&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;const_iterator&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;&lt;/code&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Minor bug fixes and documentation updates.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/dynamic_bitset/&quot;&gt;Dynamic Bitset&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Constructor &amp;quot;do the right thing&amp;quot; dispatch, a la standard sequence
+            containers (follows the proposed resolution of &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#438&quot;&gt;library
+            issue 438&lt;/a&gt;, currently in the &lt;tt&gt;C++0x&lt;/tt&gt; working
+            paper).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Improvements to documentation, code examples and implementation.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/functional/hash/index.html&quot;&gt;Hash&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Minor bug fix (&lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/2264&quot;&gt;ticket
+            2264&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/interprocess/index.html&quot;&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Added placement insertion (&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;emplace&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;emplace_back&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;...) methods to containers.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Containers can be used now in recursive types.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Minor bug fixes.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/intrusive/index.html&quot;&gt;Intrusive&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Intrusive now takes advantage of compilers with variadic templates.
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;clone_from&lt;/span&gt;&lt;/code&gt; functions
+            now copy predicates and hash functions of associative containers.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added incremental hashing to unordered containers via &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;incremental&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt; option.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Minor bug fixes.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/math/doc/sf_and_dist/html/index.html&quot;&gt;Math.Special
+        Functions&lt;/a&gt;:&lt;/span&gt;
+   Improved accuracy and testing of the inverse hypergeometric
+        functions.
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/type_traits/index.html&quot;&gt;Type Traits&lt;/a&gt;:&lt;/span&gt;
+   Added
+        better support for the Codegear compiler.
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/unordered/index.html&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Rename overload of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;emplace&lt;/span&gt;&lt;/code&gt;
+            with hint, to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;emplace_hint&lt;/span&gt;&lt;/code&gt;
+            as specified in &lt;a href=&quot;http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2008/n2691.pdf&quot;&gt;n2691&lt;/a&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Provide forwarding headers at &lt;code&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;unordered&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;unordered_map_fwd&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
+            and &lt;code&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;unordered&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;unordered_set_fwd&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Move all of the implementation inside the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;unordered&lt;/span&gt;&lt;/code&gt;
+            directory.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_37_0.compilers_tested&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Compilers Tested&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      Boost's primary test compilers are:
+    &lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        GCC 4.01 on Mac OS X 10.4.10 with both Intel and Power PC
+      &lt;/li&gt;
+      &lt;li&gt;
+        GCC 4.2.4 on Ubuntu Linux 8.10
+      &lt;/li&gt;
+      &lt;li&gt;
+        GCC 4.3.2 on Debian Sid
+      &lt;/li&gt;
+      &lt;li&gt;
+        HP C/aC++ B3910B A.06.17 on HP-UX 64-bit
+      &lt;/li&gt;
+      &lt;li&gt;
+        Visual C++ 9.0 SP1, 8.0, and 7.1 SP1, all on Windows XP
+      &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;p&gt;
+      Boost's additional test compilers include:
+    &lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        GCC 4.1.2 on NetBSD
+      &lt;/li&gt;
+      &lt;li&gt;
+        HP aCC on OS: HP-UX B.11.31 U ia64 and HP-UX B.11.31 9000/800 RISC
+      &lt;/li&gt;
+      &lt;li&gt;
+        IBM XL C/C++ Enterprise Edition for AIX, V10.1.0.0, on AIX Version 5.3.0.40
+      &lt;/li&gt;
+      &lt;li&gt;
+        Intel 9.1, 10.0, and 10.1, on Mac OS X 10.4.10
+      &lt;/li&gt;
+      &lt;li&gt;
+        Compaq C++ V7.1-006 for Compaq Tru64 Unix on an OSF1 V5.1 platform.
+      &lt;/li&gt;
+      &lt;li&gt;
+        Sun C++ 5.7, 5.8, 5.9 and GCC 3.4.6 on Sun Solaris 5.10.
+      &lt;/li&gt;
+      &lt;li&gt;
+        On Linux:
+        &lt;ul&gt;
+          &lt;li&gt;
+            GCC 3.4.3, 4.0.1, 4.2.1, 4.2.4, 4.3.2.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.3.2 with C++0x extensions.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.1.1, 4.2.1 on 64 bit linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel C++ 8.1, 9.0, 9.1 and 10.0
+          &lt;/li&gt;
+          &lt;li&gt;
+            QLogic PathScale(TM) Compiler Suite: Version 3.1
+          &lt;/li&gt;
+          &lt;li&gt;
+            Sun Compiler 5.9, 5.10 with stdcxx
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        On Windows:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Several testers using Visual C++ 7.1, 8.0, 9.0 and 10.0
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 7.1 with Apache C++ Standard Library 4.2.x branch.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 8.0 with STLport 5.1
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 8.0 with STLport 5.1 cross-compiling for Windows Mobile 5.0
+            Pocket PC SDK (ARMV4I).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 10.1, with Visual C++ 9 backend.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Borland 5.9.3 and 6.10.0
+          &lt;/li&gt;
+          &lt;li&gt;
+            64 bit Intel 10.1, with Visual C++ 9 backend.
+          &lt;/li&gt;
+          &lt;li&gt;
+            64 bit Visual C++ 9.0.
+          &lt;/li&gt;
+          &lt;li&gt;
+            64-bit Visual C++ 9.0 with Apache C++ Standard Library 4.2.x branch.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Comeau C++ 4.3.10.1 beta 2, with Visual C++ 9 backend.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_37_0.acknowledgements&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Acknowledgements&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      &lt;a href=&quot;/users/people/beman_dawes.html&quot;&gt;Beman Dawes&lt;/a&gt;, Eric Niebler,
+      &lt;a href=&quot;/users/people/rene_rivera.html&quot;&gt;Rene Rivera&lt;/a&gt;, and Daniel
+      James managed this release.
+    &lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Version 1.36.0</title><pubDate>Thu, 14 Aug 2008 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Accumulators, Exception, Units, Unordered. Updated Libraries:
       Asio, Assign, Circular Buffer, Foreach, Function, Hash, Interprocess, Intrusive,
       Math, Multi-index Containers, MPI, PtrContainer, Spirit, Thread, Wave, Xpressive.
@@ -884,486 +1150,6 @@
       release possible. Special thanks go to Kim Barrett consolidating Boost.Iostreams
       changes from various branches and Rene Rivera for general build and installation
       support.
-    &lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>Version 1.34.0</title><pubDate>Sat, 12 May 2007 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
-      New Libraries: Foreach, Statechart, TR1, Typeof, Xpressive. Updated Libraries:
-      Assign, Date_time, Filesystem, Function, Hash, Graph, MultiArray, Multi-Index,
-      Optional, Parameter, Pointer Container, Python, Signals, Smart Pointer, String
-      Algorithm, Wave
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=507975</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
-  
-  &lt;div id=&quot;version_1_34_0.new_libraries&quot;&gt;
-    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/doc/html/foreach.html&quot;&gt;Foreach Library&lt;/a&gt;:&lt;/span&gt; &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_FOREACH&lt;/span&gt;&lt;/code&gt; macro for easily iterating
-        over the elements of a sequence, from Eric Niebler.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/statechart/doc/index.html&quot;&gt;Statechart
-        Library&lt;/a&gt;:&lt;/span&gt;
-  Arbitrarily complex finite state machines can be implemented
-        in easily readable and maintainable C++ code, from Andreas Huber.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/tr1/index.html&quot;&gt;TR1 Library&lt;/a&gt;:&lt;/span&gt; An
-        implementation of the C++ Technical Report on Standard Library Extensions,
-        from John Maddock. This library does not itself implement the TR1 components,
-        rather it's a thin wrapper that will include your standard library's TR1
-        implementation (if it has one), otherwise it will include the Boost Library
-        equivalents, and import them into namespace &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;tr1&lt;/span&gt;&lt;/code&gt;.
-        Highlights include: Reference Wrappers, Smart Pointers, result_of, Function
-        Object Binders, Polymorphic function wrappers, Type Traits, Random Number
-        Generators and Distributions, Tuples, Fixed Size Array, Hash Function Objects,
-        Regular Expressions, and Complex Number Additional Algorithms.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/doc/html/typeof.html&quot;&gt;Typeof Library&lt;/a&gt;:&lt;/span&gt; Typeof
-        operator emulation, from Arkadiy Vertleyb and Peder Holt.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/doc/html/xpressive.html&quot;&gt;Xpressive Library&lt;/a&gt;:&lt;/span&gt; Regular
-        expressions that can be written as strings or as expression templates, and
-        that can refer to each other and themselves recursively with the power of
-        context-free grammars, from Eric Niebler.
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/div&gt;
-  &lt;div id=&quot;version_1_34_0.updated_libraries&quot;&gt;
-    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/assign/index.html&quot;&gt;Assign Library&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            Support for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ptr_map&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
-            via the new function &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ptr_map_insert&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
-          &lt;/li&gt;
-          &lt;li&gt;
-            Support for initialization of &lt;a href=&quot;/doc/libs/1_34_0/libs/ptr_container/index.html&quot;&gt;Pointer
-            Containers&lt;/a&gt; when the containers hold pointers to an abstract base
-            class.
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/doc/html/date_time.html&quot;&gt;Date_time library&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            Support for new US/Canada timezone rules and other bug fixes. See &lt;a href=&quot;/doc/libs/1_34_0/doc/html/date_time/details.html#changes&quot;&gt;Change
-            History&lt;/a&gt; for details.
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/filesystem/doc/index.htm&quot;&gt;Filesystem
-        Library&lt;/a&gt;:&lt;/span&gt; Major upgrade in preparation for submission to the C++ Standards
-        Committee for TR2. Changes include:
-        &lt;ul&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/filesystem/doc/i18n.html#Internationalization&quot;&gt;Internationalization&lt;/a&gt;,
-            provided by class templates &lt;em&gt;basic_path&lt;/em&gt;, &lt;em&gt;basic_filesystem_error&lt;/em&gt;,
-            &lt;em&gt;basic_directory_iterator&lt;/em&gt;, and &lt;em&gt;basic_directory_entry&lt;/em&gt;.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/filesystem/doc/i18n.html#Simplification&quot;&gt;Simplification&lt;/a&gt;
-            of the path interface by eliminating special constructors to identify
-            native formats.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/filesystem/doc/i18n.html#Rationalization&quot;&gt;Rationalization&lt;/a&gt;
-            of predicate function design, including the addition of several new functions.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Clearer specification by reference to &lt;a href=&quot;/doc/libs/1_34_0/libs/filesystem/doc/design.htm#POSIX-01&quot;&gt;POSIX&lt;/a&gt;,
-            the ISO/IEEE Single Unix Standard, with provisions for Windows and other
-            operating systems.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/filesystem/doc/i18n.html#Preservation&quot;&gt;Preservation&lt;/a&gt;
-            of existing user code whenever possible.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/filesystem/doc/i18n.html#More_efficient&quot;&gt;More
-            efficient&lt;/a&gt; directory iteration.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Addition of a &lt;a href=&quot;/doc/libs/1_34_0/libs/filesystem/doc/tr2_proposal.html#Class-template-basic_recursive_directory_iterator&quot;&gt;recursive
-            directory iterator&lt;/a&gt;.
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/function/index.html&quot;&gt;Function Library&lt;/a&gt;:&lt;/span&gt;
-  Boost.Function
-        now implements a small buffer optimization, which can drastically improve
-        the performance when copying or constructing Boost.Function objects storing
-        small function objects. For instance, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;bind&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&amp;amp;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;special&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;_1&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;identifier&quot;&gt;_2&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;&lt;/code&gt;
-        requires no heap allocation when placed into a Boost.Function object.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/functional/hash/index.html&quot;&gt;Functional/Hash
-        Library&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            Use declarations for standard classes, so that the library doesn't need
-            to include all of their headers
-          &lt;/li&gt;
-          &lt;li&gt;
-            Deprecated the &lt;tt&gt;&amp;lt;boost/functional&lt;em&gt;hash&lt;/em&gt;*.hpp&amp;gt;&lt;/tt&gt;
-            headers.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Add support for the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_HASH_NO_EXTENSIONS&lt;/span&gt;&lt;/code&gt;
-            macro, which disables the extensions to TR1
-          &lt;/li&gt;
-          &lt;li&gt;
-            Minor improvements to the hash functions for floating point numbers.
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/graph/doc/index.html&quot;&gt;Graph Library&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/graph/doc/maximum_matching.html&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;edmonds_maximum_cardinality_matching&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
-            from Aaron Windsor.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/graph/doc/lengauer_tarjan_dominator.htm&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;lengauer_tarjan_dominator_tree&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
-            from JongSoo Park.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/graph/doc/compressed_sparse_row.html&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;compressed_sparse_row_graph&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
-            from Jeremiah Willcock and Douglas Gregor of Indiana University.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/graph/doc/sorted_erdos_renyi_gen.html&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;sorted_erdos_renyi_iterator&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
-            from Jeremiah Willcock of Indiana University.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/graph/doc/biconnected_components.html&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;biconnected_components&lt;/span&gt;&lt;/code&gt;&lt;/a&gt; now
-            supports a visitor and named parameters, from Janusz Piwowarski.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/graph/doc/adjacency_matrix.html&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;adjacency_matrix&lt;/span&gt;&lt;/code&gt;&lt;/a&gt; now models
-            the &lt;a href=&quot;/doc/libs/1_34_0/libs/graph/doc/BidirectionalGraph.html&quot;&gt;Bidirectional
-            Graph&lt;/a&gt; concept.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/graph/doc/dijkstra_shortest_paths.html&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;dijkstra_shortest_paths&lt;/span&gt;&lt;/code&gt;&lt;/a&gt; now
-            calls &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;vis&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;initialize_vertex&lt;/span&gt;&lt;/code&gt; for each vertex during
-            initialization.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;em&gt;Note:&lt;/em&gt; the name of the compiled library
-            for the &lt;a href=&quot;/doc/libs/1_34_0/libs/graph/doc/read_graphviz.html&quot;&gt;GraphViz
-            reader&lt;/a&gt; has changed to &lt;tt&gt;boost_graph&lt;/tt&gt; (from &lt;tt&gt;bgl-viz&lt;/tt&gt;)
-            to match Boost conventions.
-          &lt;/li&gt;
-          &lt;li&gt;
-            See the &lt;a href=&quot;/doc/libs/1_34_0/libs/graph/doc/history.html#1.34.0&quot;&gt;complete
-            revision history&lt;/a&gt; for more information.
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/multi_array/index.html&quot;&gt;MultiArray
-        Library&lt;/a&gt;:&lt;/span&gt;
-  Boost.MultiArray now by default provides range-checking for
-        &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;operator&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;[]&lt;/span&gt;&lt;/code&gt;.
-        Range checking can be disabled by defining the macro &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_DISABLE_ASSERTS&lt;/span&gt;&lt;/code&gt;
-        before including &lt;tt&gt;multi_array.hpp&lt;/tt&gt;. A bug in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;multi_array&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;resize&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
-        related to storage orders was fixed.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/multi_index/doc/index.html&quot;&gt;Multi-index
-        Containers Library&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            New &lt;a href=&quot;/doc/libs/1_34_0/libs/multi_index/doc/tutorial/indices.html#rnd_indices&quot;&gt;random
-            access indices&lt;/a&gt;.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Non key-based indices feature new &lt;a href=&quot;/doc/libs/1_34_0/libs/multi_index/doc/tutorial/indices.html#rearrange&quot;&gt;rearrange
-            facilities&lt;/a&gt;.
-          &lt;/li&gt;
-          &lt;li&gt;
-            This version also includes a number of optimizations and usage improvements.
-            For a complete list of changes, see the library &lt;a href=&quot;/doc/libs/1_34_0/libs/multi_index/doc/release_notes.html#boost_1_34&quot;&gt;release
-            notes&lt;/a&gt;.
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/optional/index.html&quot;&gt;Optional Library&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;none_t&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;and&lt;/span&gt;
-            &lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;none&lt;/span&gt;&lt;/code&gt; now added to Optional's documentation
-          &lt;/li&gt;
-          &lt;li&gt;
-            Relational operators now directly support arguments of type &lt;code&gt;&lt;span class=&quot;char&quot;&gt;'T'&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;char&quot;&gt;'none_t'&lt;/span&gt;&lt;/code&gt;
-          &lt;/li&gt;
-          &lt;li&gt;
-            operator-&amp;gt;() now also works with reference types.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Helper functions &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;make_optional&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;make_optional&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;cond&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;get_optional_value_or&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;opt&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;alternative_value&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;&lt;/code&gt;
-            added.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Constructor taking a boolean condition (as well as a value) added.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Member function &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;get_value_or&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;alternative_value&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;&lt;/code&gt; added.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Incompatbility bug with mpl::apply&amp;lt;&amp;gt; fixed.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Converting assignment bug with uninitialized lvalues fixed.
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/parameter/index.html&quot;&gt;Parameter
-        Library&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            Every ArgumentPack is now a valid &lt;a href=&quot;/doc/libs/1_34_0/libs/mpl/doc/refmanual/forward-sequence.html&quot;&gt;MPL
-            Forward Sequence.&lt;/a&gt;
-          &lt;/li&gt;
-          &lt;li&gt;
-            Support for unnamed arguments (those whose keyword is deduced from their
-            types) is added.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Support for named and unnamed template arguments is added.
-          &lt;/li&gt;
-          &lt;li&gt;
-            New overload generation macros solve the &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2002/n1385.htm&quot;&gt;forwarding
-            problem&lt;/a&gt; directly.
-          &lt;/li&gt;
-          &lt;li&gt;
-            See also the Python library changes, below.
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/ptr_container/index.html&quot;&gt;Pointer
-        Container Library&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            Support for serialization via &lt;a href=&quot;/doc/libs/1_34_0/libs/serialization/index.html&quot;&gt;Boost.Serialization.&lt;/a&gt;
-          &lt;/li&gt;
-          &lt;li&gt;
-            Exceptions can be disabled by defining the macro BOOST_PTR_CONTAINER_NO_EXCEPTIONS
-            before including any header. This macro is defined by default if BOOST_NO_EXCEPTIONS
-            is defined.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Additional &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;auto_ptr&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
-            overloads added s.t. one can also pass &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;auto_ptr&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt; instead of only &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;*&lt;/span&gt;&lt;/code&gt; arguments to member functions.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;transfer&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
-            now has weaker requirements s.t. one can transfer objects from &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ptr_container&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;Derived&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
-            to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ptr_container&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;,
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/python/index.html&quot;&gt;Python Library&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            Boost.Python now automatically appends C++ signatures to docstrings.
-            The new &lt;a href=&quot;/doc/libs/1_34_0/libs/python/doc/v2/docstring_options.html&quot;&gt;&lt;tt&gt;docstring_options.hpp&lt;/tt&gt;&lt;/a&gt;
-            header is available to control the content of docstrings.
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/python/doc/v2/stl_iterator.html#stl_input_iterator-spec&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;stl_input_iterator&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;, for turning
-            a Python iterable object into an STL input iterator, from Eric Niebler.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Support for &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;*&lt;/span&gt;&lt;/code&gt;
-            conversions is added.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Integrated support for wrapping C++ functions built with the parameter
-            library; keyword names are automatically known to docsstrings.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Enhancements to the API for better embedding support (&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;python&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;python&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;, and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;python&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;exec_file&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;).
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/doc/html/signals.html&quot;&gt;Signals Library&lt;/a&gt;:&lt;/span&gt; More
-        improvements to signal invocation performance from Robert Zeh.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/smart_ptr/smart_ptr.htm&quot;&gt;Smart Pointers
-        Library&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/smart_ptr/shared_ptr.htm#allocator_constructor&quot;&gt;Allocator
-            support&lt;/a&gt; as proposed in &lt;a href=&quot;http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2005/n1851.pdf&quot;&gt;N1851&lt;/a&gt;
-            (162 Kb PDF).
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;a href=&quot;/doc/libs/1_34_0/libs/smart_ptr/pointer_cast.html&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;pointer_cast&lt;/span&gt;&lt;/code&gt;&lt;/a&gt; and &lt;a href=&quot;/doc/libs/1_34_0/libs/smart_ptr/pointer_to_other.html&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;pointer_to_other&lt;/span&gt;&lt;/code&gt;&lt;/a&gt; utilities
-            to allow pointer-independent code, from Ion Gaztanaga.
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/algorithm/string/index.html&quot;&gt;String
-        Algorithm Library&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;lexicographical_compare&lt;/span&gt;&lt;/code&gt;
-          &lt;/li&gt;
-          &lt;li&gt;
-            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;join&lt;/span&gt;&lt;/code&gt;
-          &lt;/li&gt;
-          &lt;li&gt;
-            New comparison predicates &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;is_less&lt;/span&gt;&lt;/code&gt;,
-            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;is_not_greater&lt;/span&gt;&lt;/code&gt;.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Negative indexes support (like Perl) in various algorihtms (&lt;code&gt;&lt;span class=&quot;special&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;_head&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;tail&lt;/span&gt;&lt;/code&gt;,
-            &lt;code&gt;&lt;span class=&quot;special&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;_nth&lt;/span&gt;&lt;/code&gt;).
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/libs/1_34_0/libs/wave/index.html&quot;&gt;Wave Library&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            Wave now correctly recognizes pp-number tokens as mandated by the C++
-            Standard, which are converted to C++ tokens right before they are returned
-            from the library.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Several new preprocessing hooks have been added. For a complete description
-            please refer to the related documentation page: &lt;a href=&quot;/doc/libs/1_34_0/libs/wave/doc/class_reference_ctxpolicy.html&quot;&gt;The
-            Context Policy&lt;/a&gt;.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Shared library (dll) support has been added for the generated Wave libraries.
-          &lt;/li&gt;
-          &lt;li&gt;
-            The overall error handling has been improved. It is now possible to recover
-            and continue after an error or a warning was issued.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Support for optional comment and/or full whitespace preservation in the
-            generated output stream has been added.
-          &lt;/li&gt;
-          &lt;li&gt;
-            The Wave library now performs automatic include guard detection to avoid
-            accessing header files more than once, if appropriate.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Full interactive mode has been added to the Wave tool. Now the Wave tool
-            can be used just like Python or Perl for instance to interactively try
-            out your BOOST_PP macros. Additionally it is now possible to load and
-            save the current state of an interactive session (macro tables et.al.).
-          &lt;/li&gt;
-          &lt;li&gt;
-            The overall performance has been improved by upto 40-60%, depending on
-            the concrete files to process.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Support for new pragmas has been added allowing to control certain library
-            features from inside the preprocessed sources (partial output redirection,
-            control of generated whitespace and #line directives).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Optional support for #pragma message &amp;quot;...&amp;quot; has been added.
-          &lt;/li&gt;
-          &lt;li&gt;
-            This version also includes a number of bug fixes and usage improvements.
-            For a complete list of changes, see the libraries &lt;a href=&quot;/doc/libs/1_34_0/libs/wave/ChangeLog&quot;&gt;change
-            log&lt;/a&gt;.
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/div&gt;
-  &lt;div id=&quot;version_1_34_0.supported_compilers&quot;&gt;
-    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Supported Compilers&lt;/span&gt;&lt;/h3&gt;
-    &lt;p&gt;
-      Boost is tested on a wide range of compilers and platforms. Since Boost libraries
-      rely on modern C++ features not available in all compilers, not all Boost libraries
-      will work with every compiler. The following compilers and platforms have been
-      extensively tested with Boost, although many other compilers and platforms
-      will work as well. For more information, see the &lt;a href=&quot;http://www.boost.org/regression/release/user/&quot;&gt;regression
-      test results&lt;/a&gt;.
-    &lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;a href=&quot;http://developer.apple.com/&quot;&gt;Apple GCC&lt;/a&gt; 4.0.1 on Mac OS
-        X.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;a href=&quot;http://www.codegear.com/products/cppbuilder&quot;&gt;Borland C++&lt;/a&gt;
-        5.8.2 on Windows.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;a href=&quot;http://gcc.gnu.org/&quot;&gt;GNU C++&lt;/a&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            3.2.x., 3.3.x, 3.4.x, 4.0.x, 4.1.x on Linux
-          &lt;/li&gt;
-          &lt;li&gt;
-            4.1.x on Solaris
-          &lt;/li&gt;
-          &lt;li&gt;
-            3.4.x on Windows
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;a href=&quot;http://h30097.www3.hp.com/cplus/&quot;&gt;HP aC++ A.06.14&lt;/a&gt;.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;a href=&quot;http://www.intel.com/cd/software/products/asmo-na/eng/compilers/index.htm&quot;&gt;Intel
-        C++&lt;/a&gt; 9.1 on Windows, 9.0 on Linux.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;a href=&quot;http://www.metrowerks.com/&quot;&gt;Metrowerks CodeWarrior&lt;/a&gt; 9.4
-        on Windows.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;a href=&quot;http://msdn.microsoft.com/visualc/&quot;&gt;Microsoft Visual C++&lt;/a&gt;
-        6.0 (sp5, with and without STLport), 7.0, 7.1, 8.0. Note: Boost does not
-        support the non-standard &amp;quot;Safe&amp;quot; C++ Library shipping with Visual
-        C++ 8.0, which may result in many spurious warnings from Boost headers and
-        other standards-conforming C++ code. To suppress these warnings, define the
-        macro &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;_SCL_SECURE_NO_DEPRECATE&lt;/span&gt;&lt;/code&gt;.
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;a href=&quot;http://developers.sun.com/sunstudio/compilers_index.html&quot;&gt;Sun
-        Studio 11&lt;/a&gt; on Solaris.
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/div&gt;
-  &lt;div id=&quot;version_1_34_0.acknowledgements&quot;&gt;
-    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Acknowledgements&lt;/span&gt;&lt;/h3&gt;
-    &lt;p&gt;
-      &lt;a href=&quot;/users/people/thomas_witt.html&quot;&gt;Thomas Witt&lt;/a&gt; managed this
-      release.
-    &lt;/p&gt;
-    &lt;p&gt;
-      A great number of people contributed their time and expertise to make this
-      release possible. Special thanks go to Vladimir Prus for making Boost.Build
-      version 2 a reality, David Abrahams for authoring a new getting started guide
-      and Greg D. for answering countless questions.
     &lt;/p&gt;
   &lt;/div&gt;
 &lt;/div&gt;</description></item></channel>
