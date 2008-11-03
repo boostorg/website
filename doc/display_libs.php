@@ -18,7 +18,7 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
       'lambda/doc','math','math/doc','mem_fn','mpl',
       'multi_array','multi_index','numeric','numeric/conversion','numeric/interval/doc',
       'numeric/ublas','unmeric/ublas/doc','optional','parameter','pool','preprocessor',
-      'program_options','program_options/doc','property_map','protop','ptr_container','python',
+      'program_options','program_options/doc','property_map','proto','ptr_container','python',
       'python/doc/tutorial','python/doc/v2','regex','serialization','signals',
       'signals/doc','smart_ptr','statechart','static_assert','system','test',
       'thread','thread/doc','tr1','tuple','typeof',
