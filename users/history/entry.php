@@ -51,6 +51,10 @@ if(!isset($_history->db[$_guid])) {
               <p><span class=
               "news-date"><?php print $_history->db[$_guid]['date']; ?></span></p>
 
+              <?php if($_history->db[$_guid]['boostbook:download']) : ?>
+              <p><span class="news-download"><a href="<?php print $_history->db[$_guid]['boostbook:download']; ?>">Download</a></span></p>
+              <?php endif; ?>
+
               <div class="news-description">
                 <?php print $_history->db[$_guid]['description']; ?>
               </div>

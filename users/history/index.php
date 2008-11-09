@@ -44,7 +44,16 @@ $_history->sort_by('pubdate');
 
               <div class="news-description">
                 <?php print $_item['boostbook:purpose']; ?>
-              </div><?php } ?>
+              </div>
+
+              <ul class="menu">
+                <li>
+                <?php print '<a href="'.$_item['link'].'">Details</a>'; ?></li>
+
+                <?php if($_item['boostbook:download']) : ?>
+                <li><?php print '<a href="'.$_item['boostbook:download'].'">Download</a>'; ?></li>
+                <?php endif; ?>
+              </ul><?php } ?>
             </div>
           </div>
         </div>

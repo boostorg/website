@@ -41,6 +41,10 @@ if(!isset($_downloads->db[$_guid])) {
               <p><span class=
               "news-date"><?php print $_downloads->db[$_guid]['date']; ?></span></p>
 
+              <?php if($_downloads->db[$_guid]['boostbook:download']) : ?>
+              <p><span class="news-download"><a href="<?php print $_downloads->db[$_guid]['boostbook:download']; ?>">Download</a></span></p>
+              <? endif; ?>
+
               <div class="news-description">
                 <?php print $_downloads->db[$_guid]['description']; ?>
               </div>
