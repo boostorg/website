@@ -48,10 +48,10 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/
 
               <ul class="menu">
                 <li>
-                <?php print '<a href="'.$_item['link'].'">Details</a>'; ?></li>
+                <?php print '<a href="'.htmlentities($_item['link']).'">Details</a>'; ?></li>
 
                 <li>
-                <?php print '<a href="'.$_item['boostbook:download'].'">Download</a>'; ?></li>
+                <?php print '<a href="'.htmlentities($_item['boostbook:download']).'">Download</a>'; ?></li>
               </ul><?php } ?>
 
               <h2><a name="repository" id="repository"></a>Subversion

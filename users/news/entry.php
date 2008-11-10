@@ -52,7 +52,7 @@ if(!isset($_news->db[$_guid])) {
               "news-date"><?php print $_news->db[$_guid]['date']; ?></span></p>
 
               <?php if($_news->db[$_guid]['boostbook:download']) : ?>
-              <p><span class="news-download"><a href="<?php print $_news->db[$_guid]['boostbook:download']; ?>">Download</a></span></p>
+              <p><span class="news-download"><a href="<?php print htmlentities($_news->db[$_guid]['boostbook:download']); ?>">Download</a></span></p>
               <?php endif; ?>
 
               <div class="news-description">
