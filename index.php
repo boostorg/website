@@ -93,6 +93,22 @@ http://www.boost.org/development/website_updating.html
                   Community</a>.</span></p>
                 </div>
 
+                <div class="directory-item" id="important-downloads">
+                  <h2>Downloads</h2>
+
+                  <ul id="downloads">
+                    <?php $_count = 0; foreach ( $_downloads->db as $_guid => $_item ) { $_count += 1; if ($_count > 5) { break; } ?>
+
+                    <li><span class=
+                    "news-title"><?php print '<a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
+                    <span class=
+                    "news-date"><?php print $_item['date']; ?></span></li><?php } ?>
+                  </ul>
+
+                  <p><a href="/users/download/">More Downloads...</a>
+                  (<a href="feed/downloads.rss">RSS</a>)</p>
+                </div>
+
                 <div class="directory-item" id="important-news">
                   <h2>News</h2>
 
@@ -109,22 +125,6 @@ http://www.boost.org/development/website_updating.html
 
                   <p><a href="/users/news/">More News...</a> (<a href=
                   "feed/news.rss">RSS</a>)</p>
-                </div>
-
-                <div class="directory-item" id="important-downloads">
-                  <h2>Downloads</h2>
-
-                  <ul id="downloads">
-                    <?php $_count = 0; foreach ( $_downloads->db as $_guid => $_item ) { $_count += 1; if ($_count > 5) { break; } ?>
-
-                    <li><span class=
-                    "news-title"><?php print '<a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
-                    <span class=
-                    "news-date"><?php print $_item['date']; ?></span></li><?php } ?>
-                  </ul>
-
-                  <p><a href="/users/download/">More Downloads...</a>
-                  (<a href="feed/downloads.rss">RSS</a>)</p>
                 </div>
 
                 <div class="clear"></div>
