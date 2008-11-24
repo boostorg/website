@@ -59,7 +59,7 @@ function libbuildlink($lib)
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Boost C++ Libraries</title>
+  <title>Boost Library Documention</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-doc.css" />
@@ -77,7 +77,7 @@ function libbuildlink($lib)
         <div class="section" id="intro">
           <div class="section-0">
             <div class="section-title">
-              <h1>Boost C++ Libraries</h1>
+              <h1>Boost Library Documentation</h1>
             </div>
 
             <div class="section-body">
