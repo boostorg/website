@@ -1,16 +1,70 @@
 <?php
+
 require_once(dirname(__FILE__) . '/../common/code/boost_version.php');
 require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
 
 $libs = new boost_libraries(dirname(__FILE__) . '/libraries.xml');
-if (isset($_REQUEST['sort']))
-{
-  $libs->sort_by($_REQUEST['sort']);
+
+// Display types:
+
+$view_fields = Array(
+    '' => 'All',
+    'categorized' => 'Categorized'
+);
+$filter_fields = Array(
+    'std-proposal' => 'Standard Proposals',
+    'std-tr1' => 'TR1 libraries',
+    'header-only' => 'Header Only Libraries',
+    'autolink' => 'Automatic Linking');
+$sort_fields =  Array(
+    '' => 'Name',
+    'boost-version' => 'First Release');
+
+// View
+
+$view_value = isset($_REQUEST['view']) ? $_REQUEST['view'] : '';
+
+$category_value = '';
+$filter_value = '';
+
+if(strpos($view_value, 'filtered_') === 0) {
+    $filter_value = substr($view_value, strlen('filtered_'));
+    if(!isset($filter_fields[$filter_value])) {
+        echo 'Invalid filter field.'; exit(0);
+    }
 }
-else
-{
-  $libs->sort_by('name');
+else if(strpos($view_value, 'category_') === 0) {
+    $category_value = substr($view_value, strlen('category_'));
+    if(!isset($libs->categories[$category_value])) {
+        echo 'Invalid category: '.htmlentities($category_value); exit(0);
+    }
 }
+else {
+    $filter_value = '';
+    if(!isset($view_fields[$view_value])) {
+        echo 'Invalid view value.'; exit(0);
+    }
+}
+
+// Sort
+
+$sort_value = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : '';
+
+if(!isset($sort_fields[$sort_value])) {
+    echo 'Invalid sort field.'; exit(0);
+}
+
+function library_filter($lib) {
+  global $filter_value, $category_value;
+
+  return boost_version($libversion[0],$libversion[1],$libversion[2]) &&
+      (!$filter_value || ($lib[$filter_value] && $lib[$filter_value] != 'false')) &&
+      (!isset($_REQUEST['filter']) || $lib[$_REQUEST['filter']]) &&
+      (!$category_value || $category_value == 'all' ||
+        array_search($category_value, $lib['category']) !== FALSE);
+}
+
+// Library display functions:
 
 function libref($lib)
 {
@@ -53,6 +107,40 @@ function libbuildlink($lib)
   if ($lib['autolink'] == 'true') { $p[] = 'Automatic linking'; }
   print ($p ? implode(', ',$p) : '&nbsp;');
 }
+
+function option_link($description, $field, $value)
+{
+  $base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
+  $current_value = isset($_REQUEST[$field]) ? $_REQUEST[$field] : '';
+
+  if($current_value == $value) {
+    echo '<span>';
+  }
+  else {
+    $params = $_REQUEST;
+    $params[$field] = $value;
+
+    $url_params = '';
+    foreach($params as $k => $v) {
+      if($v) {
+        $url_params .= $url_params ? '&' : '?';
+        $url_params .= urlencode($k) . '='. urlencode($v);
+      }
+    }
+
+    echo '<a href="'.htmlentities($base_uri.$url_params).'">';
+  }
+
+  echo htmlentities($description);
+
+  if($current_value == $value) {
+    echo '</span>';
+  }
+  else {
+    echo '</a>';
+  }
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -81,29 +169,34 @@ function libbuildlink($lib)
             </div>
 
             <div class="section-body">
-              <ul class="menu">
-                <li>Sort By</li>
+              <div id="options">
+                  <div id="view-options">
+                    <ul class="menu">
+                    <?php foreach($view_fields as $key => $description) : ?>
+                      <li><?php option_link($description, 'view', $key); ?></li><?php
+                    endforeach; ?>
+                    <?php foreach($filter_fields as $key => $description) : ?>
+                      <li><?php option_link($description, 'view', 'filtered_'.$key); ?></li>
+                    <?php endforeach; ?>
+                    </ul>
+                  </div>
+                  <div id="sort-options">
+                    <div class="label">Sort by:</div>
+                    <ul class="menu">
+                    <?php foreach($sort_fields as $key => $description) : ?>
+                      <li><?php option_link($description, 'sort', $key); ?></li>
+                    <?php endforeach; ?>
+                    </ul>
+                  </div>
+              </div>
 
-                <li><a href="?sort=name">Name</a></li>
+              <?php if($view_value != 'categorized') { ?>
 
-                <li><a href="?sort=boost-version">First Release</a></li>
-
-                <li><a href="?sort=std-proposal">STD Proposal</a></li>
-
-                <li><a href="?sort=std-tr1">STD::TR1</a></li>
-
-                <li><a href="?sort=header-only">Header Only Use</a></li>
-
-                <li><a href="?sort=autolink">Automatic Linking</a></li>
-
-                <li><a href="?sort=key">Key</a></li>
-              </ul>
+              <?php if($category_value) echo '<h2>', htmlentities($libs->categories[$category_value]['title']), '</h2>'; ?>
 
               <dl>
                 <?php
-                foreach ($libs->db as $key => $lib) {
-                  $libversion = explode('.',$lib['boost-version']);
-                  if (boost_version($libversion[0],$libversion[1],$libversion[2])) { ?>
+                foreach ($libs->get($sort_value, 'library_filter') as $key => $lib) { ?>
 
                 <dt><?php libref($lib); ?></dt>
 
@@ -128,8 +221,24 @@ function libbuildlink($lib)
 
                     <dd><?php libbuildlink($lib); ?></dd>
                   </dl>
-                </dd><!-- --><?php } } ?>
+                </dd><!-- --><?php } ?>
               </dl>
+
+              <?php } else { ?>
+
+              <h2>By Category</h2>
+              <?php
+              foreach ($libs->get_categorized($sort_value, 'library_filter') as $name => $category) {
+                if(count($category['libraries'])) {?>
+                  <h3><?php option_link(isset($category['title']) ? $category['title'] : $name,
+                    'view', 'category_'.$name); ?></h3>
+                  <ul><?php foreach ($category['libraries'] as $lib) { ?>
+                    <li><?php libref($lib); ?>: <?php echo ($lib['description'] ? htmlentities($lib['description'],ENT_NOQUOTES,'UTF-8') : '&nbsp;'); ?></li>
+                  <?php } ?></ul>
+                <?php } ?>
+              <?php } ?>
+
+              <?php } ?>
             </div>
           </div>
         </div>
