@@ -6,7 +6,98 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.37.0</title><pubDate>Mon, 03 Nov 2008 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+  <item><title>Boost Jam 3.1.17</title><pubDate>Sat, 29 Nov 2008 04:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+      A year in the making this release has many stability improvements and various
+      performance improvements. And because of the efforts of Jurko the code is considerably
+      more readable!
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=72941&amp;release_id=643622</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+  
+  &lt;p&gt;
+    A year in the making this release has many stability improvements and various
+    performance improvements. And because of the efforts of Jurko the code is considerably
+    more readable!
+  &lt;/p&gt;
+  &lt;p&gt;
+    [list [li Reflect the results of calling bjam from Python. -- &lt;em&gt;Rene
+    R.&lt;/em&gt; ] [li For building on Windows: Rework how arguments are parsed
+    and tested to fix handling of quoted arguments, options arguments, and arguments
+    with &amp;quot;=&amp;quot;. -- &lt;em&gt;Rene R.&lt;/em&gt; ] [li Try to work around
+    at least one compiler bug with GCC and variable aliasing that causes crashes
+    with hashing file cache entries. -- &lt;em&gt;Rene R.&lt;/em&gt; ] [li Add -Wc,-fno-strict-aliasing
+    for QCC/QNX to avoid the same aliasing crashes as in the general GCC 4.x series
+    (thanks to Niklas Angare for the fix). -- &lt;em&gt;Rene R.&lt;/em&gt; ] [li
+    On Windows let the child bjam commands inherit stdin, as some commands assume
+    it's available. -- &lt;em&gt;Rene R.&lt;/em&gt; ] [li On Windows don't limit
+    bjam output to ASCII as some tools output characters in extended character sets.
+    -- &lt;em&gt;Rene R.&lt;/em&gt; ] [li Isolate running of bjam tests to individual
+    bjam instances to prevent possible spillover errors from one test affecting another
+    test. Separate the bjam used to run the tests vs. the bjam being tested. And
+    add automatic re-building of the bjam being tested. -- &lt;em&gt;Rene R.&lt;/em&gt;
+    ] [li Fix some possible overrun issues revealed by Fortify build. Thanks to Steven
+    Robbins for pointing out the issues. -- &lt;em&gt;Rene R.&lt;/em&gt; ] [li Handle
+    \n and \r escape sequences. -- &lt;em&gt;Vladimir P.&lt;/em&gt; ] [li Minor edits
+    to remove -Wall warnings. -- &lt;em&gt;Rene R.&lt;/em&gt; ] [li Dynamically adjust
+    pwd buffer query size to allow for when PATH_MAX is default defined instead of
+    being provided by the system C library. -- &lt;em&gt;Rene R.&lt;/em&gt; ] [li
+    Minor perf improvement for bjam by replacing hash function with faster version.
+    Only 1% diff for Boost tree. -- &lt;em&gt;Rene R.&lt;/em&gt; ] [li Updated Boost
+    Jam's error location reporting when parsing Jamfiles. Now it reports the correct
+    error location information when encountering an unexpected EOF. It now also reports
+    where an invalid lexical token being read started instead of finished which makes
+    it much easier to find errors like unclosed quotes or curly braces. -- &lt;em&gt;Jurko
+    G.&lt;/em&gt; ] [li Removed the -xarch=generic architecture from build.jam as
+    this option is unknown so the Sun compilers on Linux. -- &lt;em&gt;Noel B.&lt;/em&gt;
+    ] [li Fixed a bug with T_FATE_ISTMP getting reported as T_FATE_ISTMP &amp;amp; T_FATE_NEEDTMP
+    at the same time due to a missing break in a switch statement. -- &lt;em&gt;Jurko
+    G.&lt;/em&gt; ] [li Fixed a Boost Jam bug causing it to sometimes trigger actions
+    depending on targets that have not been built yet. -- &lt;em&gt;Jurko G.&lt;/em&gt;
+    ] [li Added missing documentation for Boost Jam's :T variable expansion modifier
+    which converts all back-slashes ('\') to forward slashed ('/'). -- &lt;em&gt;Jurko
+    G.&lt;/em&gt; ] [li Added Boost Jam support for executing command lines longer
+    than 2047 characters (up to 8191) characters when running on Windows XP or later
+    OS version. -- &lt;em&gt;Jurko G.&lt;/em&gt; ] [li Fixed a Boost Jam bug on Windows
+    causing its SHELL command not to work correctly with some commands containing
+    quotes. -- &lt;em&gt;Jurko G.&lt;/em&gt; ] [li Corrected a potential memory leak
+    in Boost Jam's builtin_shell() function that would appear should Boost Jam ever
+    start to release its allocated string objects. -- &lt;em&gt;Jurko G.&lt;/em&gt;
+    ] [li Made all Boost Jam's ECHO commands automatically flush the standard output
+    to make that output more promptly displayed to the user. -- &lt;em&gt;Jurko G.&lt;/em&gt;
+    ] [li Made Boost Jam tests quote their bjam executable name when calling it allowing
+    those executables to contain spaces in their name and/or path. -- &lt;em&gt;Jurko
+    G.&lt;/em&gt; ] [li Change execunix.c to always use fork() instead of vfork()
+    on the Mac. This works around known issues with bjam on PPC under Tiger and a
+    problem reported by Rene with bjam on x86 under Leopard. -- &lt;em&gt;Noel B.&lt;/em&gt;
+    ] [li Corrected a bug in Boost Jam's base Jambase script causing it to trim the
+    error message displayed when its boost-build rule gets called multiple times.
+    -- &lt;em&gt;Jurko G.&lt;/em&gt; ] [li When importing from Python into an module
+    with empty string as name, import into root module. -- &lt;em&gt;Vladimir P.&lt;/em&gt;
+    ] [li Patch for the NORMALIZE_PATH builtin Boost Jam rule as well as an appropriate
+    update for the path.jam Boost Build module where that rule was being used to
+    implement path join and related operations. -- &lt;em&gt;Jurko G.&lt;/em&gt;
+    ] [li Fixed a bug causing Boost Jam not to handle target file names specified
+    as both short and long file names correctly. -- &lt;em&gt;Jurko G.&lt;/em&gt;
+    ] [li Relaxed test, ignoring case of drive letter. -- &lt;em&gt;Roland S.&lt;/em&gt;
+    ] [li Implemented a patch contributed by Igor Nazarenko reimplementing the list_sort()
+    function to use a C qsort() function instead of a hand-crafted merge-sort algorithm.
+    Makes some list sortings (e.g. 1,2,1,2,1,2,1,2, ...) extremely faster, in turn
+    significantly speeding up some project builds. -- &lt;em&gt;Jurko G.&lt;/em&gt;
+    ] [li Fixed a bug with bjam not handling the '' root Windows path correctly without
+    its drive letter being specified. -- &lt;em&gt;Jurko G.&lt;/em&gt; ] [li Solved
+    the problem with child process returning the value 259 (Windows constant STILL_ACTIVE)
+    causing bjam never to detect that it exited and therefore keep running in an
+    endless loop. -- &lt;em&gt;Jurko G.&lt;/em&gt; ] [li Solved the problem with
+    bjam going into an active wait state, hogging up processor resources, when waiting
+    for one of its child processes to terminate while not all of its available child
+    process slots are being used. -- &lt;em&gt;Jurko G.&lt;/em&gt; ] [li Solved a
+    race condition between bjam's output reading/child process termination detection
+    and the child process's output generation/termination which could have caused
+    bjam not to collect the terminated process's final output. -- &lt;em&gt;Jurko
+    G.&lt;/em&gt; ] [li Change from vfork to fork for executing actions on Darwin
+    to improve stability. -- &lt;em&gt;Noel B.&lt;/em&gt; ] [li Code reformatting
+    and cleanups. -- &lt;em&gt;Jurko G.&lt;/em&gt; ] [li Implement ISFILE built-in.
+    -- &lt;em&gt;Vladimir P.&lt;/em&gt; ] ]
+  &lt;/p&gt;
+&lt;/div&gt;</description></item><item><title>Version 1.37.0</title><pubDate>Mon, 03 Nov 2008 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Library: Proto. Updated Libraries: Asio, Circular Buffer, Dynamic Bitset,
       Exception, Hash, Interprocess, Intrusive, Math, Type Traits, Unordered
     &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=637761</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
@@ -292,80 +383,5 @@
       James managed this release.
     &lt;/p&gt;
   &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>Boost Jam 3.1.16</title><pubDate>Mon, 3 Dec 2007 04:09:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
-      This is mostly a bug fix release.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>https://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=72941&amp;release_id=558771</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
-  
-  &lt;p&gt;
-    This is mostly a bug fix release.
-  &lt;/p&gt;
-  &lt;ul&gt;
-    &lt;li&gt;
-      Work around some Windows CMD.EXE programs that will fail executing a totally
-      empty batch file. -- Rene R.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Add support for detection and building with vc9. -- John P.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Plug memory leak when closing out actions. Thanks to Martin Kortmann for finding
-      this. -- Rene R.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Various improvements to __TIMING&lt;em&gt;RULE&lt;/em&gt;_
-      and __ACTION&lt;em&gt;RULE&lt;/em&gt;_ target variable hooks.
-      -- Rene R.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Change JAMDATE to use common ISO date format. -- Rene R.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Add test for result status values of simple actions, i.e. empty actions. --
-      Rene R.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Fix buffer overrun bug in expanding @() subexpressions. -- Rene R.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Check empty string invariants, instead of assuming all strings are allocated.
-      And reset strings when they are freed. -- Rene R.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Add OSPLAT=PARISC for HP-UX PA-RISC. -- Boris G.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Make quietly actions really quiet by not printing the command output. The output
-      for the quietly actions is still available through __ACTION&lt;em&gt;RULE&lt;/em&gt;_.
-      -- Rene R.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Switch intel-win32 to use static multi thread runtime since the single thread
-      static runtime is no longer available. -- Rene R.
-    &lt;/li&gt;
-    &lt;li&gt;
-      When setting OSPLAT, check __ia64 macro. -- Boris G.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Get the unix timing working correctly. -- Noel B.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Add -fno-strict-aliasing to compilation with gcc. Which works around GCC-4.2
-      crash problems. -- Boris G.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Increased support for Python integration. -- Vladimir P., Daniel W.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Allow specifying options with quotes, i.e. --with-python=xyz, to work around
-      the CMD shell using = as an argument separator. -- Rene R.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Add values of variables specified with -s to .EVNRION module, so that we can
-      override environment on command line. -- Vladimir P.
-    &lt;/li&gt;
-    &lt;li&gt;
-      Make NORMALIZE_PATH convert to /. -- Vladimir P.
-    &lt;/li&gt;
-  &lt;/ul&gt;
 &lt;/div&gt;</description></item></channel>
 </rss>
