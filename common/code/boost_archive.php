@@ -40,6 +40,7 @@ class boost_archive
             array('@.*@','@[.]pdf$@i','raw','application/pdf'),
             array('@.*@','@[.](html|htm)$@i','raw','text/html'),
             array('@.*@','@[^.](Jamroot|Jamfile|ChangeLog)$@i','text','text/plain'),
+            array('@.*@','@[.]dtd$@i','raw','application/xml-dtd'),
             ));
         
         $this->version_ = $path_parts[1];
