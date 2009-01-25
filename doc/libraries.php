@@ -17,8 +17,18 @@ $filter_fields = Array(
     'header-only' => 'Header Only Libraries',
     'autolink' => 'Automatic Linking');
 $sort_fields =  Array(
+    'name' => 'Name',
+    'boost-version' => 'First Release',
+    'std-proposal' => 'STD Proposal',
+    'std-tr1' => 'STD::TR1',
+    'header-only' => 'Header Only Use',
+    'autolink' => 'Automatic Linking',
+    'key' => 'Key'
+);
+$display_sort_fields = Array(
     '' => 'Name',
-    'boost-version' => 'First Release');
+    'boost-version' => 'First Release'
+);
 
 // View
 
@@ -48,7 +58,8 @@ else {
 
 // Sort
 
-$sort_value = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : '';
+$sort_value = isset($_REQUEST['sort']) && $_REQUEST['sort'] ?
+    $_REQUEST['sort'] : 'name';
 
 if(!isset($sort_fields[$sort_value])) {
     echo 'Invalid sort field.'; exit(0);
@@ -201,7 +212,7 @@ function category_link($name, $category) {
                   <div id="sort-options">
                     <div class="label">Sort by:</div>
                     <ul class="menu">
-                    <?php foreach($sort_fields as $key => $description) : ?>
+                    <?php foreach($display_sort_fields as $key => $description) : ?>
                       <li><?php option_link($description, 'sort', $key); ?></li>
                     <?php endforeach; ?>
                     </ul>
