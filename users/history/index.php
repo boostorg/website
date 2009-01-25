@@ -30,12 +30,7 @@ $_history->sort_by('pubdate');
             </div>
 
             <div class="section-body">
-              <ul class="toc">
-                <?php foreach ( $_history->db as $_guid => $_item ) { ?>
-
-                <li><span class=
-                "news-title"><?php print '<a href="#i'.$_item['guid'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span></li><?php } ?>
-              </ul><?php foreach ( $_history->db as $_guid => $_item ) { ?>
+              <?php foreach ( $_history->db as $_guid => $_item ) { ?>
 
               <h2 class="news-title">
               <?php print '<a name="i'.$_item['guid'].'" id="i'.$_item['guid'].'"></a><a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></h2>
