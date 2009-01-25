@@ -68,6 +68,7 @@ if(!isset($sort_fields[$sort_value])) {
 function library_filter($lib) {
   global $filter_value, $category_value;
 
+  $libversion = explode('.',$lib['boost-version']);
   return boost_version($libversion[0],$libversion[1],$libversion[2]) &&
       (!$filter_value || ($lib[$filter_value] && $lib[$filter_value] != 'false')) &&
       (!isset($_REQUEST['filter']) || $lib[$_REQUEST['filter']]) &&
