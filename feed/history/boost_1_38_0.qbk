@@ -1,8 +1,8 @@
 [article Version 1.38.0
     [quickbook 1.4]
     [source-mode c++]
-    [purpose New Libraries: Flyweight
-        Updated Libraries: ]
+    [purpose New Libraries: Flyweight, Swap
+        Updated Libraries: Hash, Unordered]
     [authors [Dawes, Beman]]
     [last-revision ]
 ]
@@ -17,20 +17,6 @@
     1. Libraries are listed in alphabetical order.
     2. Besides the dedicated entry, the lib name should be added to the
        [purpose] section at the beginning of the page.
-
-    Example new libraries message:
-
-* [phrase library..[@/libs/accumulators/index.html Accumulators]:] Framework for
-  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
-
-    Example update message:
-
-* [phrase library..[@/libs/interprocess/index.html Interprocess]:]
-  * Added anonymous shared memory for UNIX systems.
-  * Fixed missing move semantics on managed memory classes.
-  * Added copy_on_write and open_read_only options for shared memory
-    and mapped file managed classes.
-  * `shared_ptr` is movable and supports aliasing.
 ]
 
 [section New Libraries]
@@ -39,11 +25,33 @@
   * Design pattern to manage larque quantities of highly redundant objects,
     from Joaqu'''&#237;'''n M L'''&#243;'''pez Mu'''&#241;'''oz.
 
+* [phrase library..[@/libs/utility/swap.html Swap]:]
+  * Enhanced generic swap function.,
+    from Joseph Gauterin.
+
 [endsect]
 
 [section Updated Libraries]
 
-* /TODO/
+* [phrase library..[@/libs/functional/hash/index.html Hash]:]
+  * `boost/functional/detail/container_fwd.hpp` has been moved to
+    `boost/detail/container_fwd.hpp`.
+    The current location is deprecated.
+  * For more detail, see the
+    [@/doc/html/hash/changes.html#hash.changes.boost_1_38_0
+    library changelog].
+
+* [phrase library..[@/libs/unordered/index.html Unordered]:]
+  * Use [@/libs/utility/swap.html `boost::swap`].
+  * Use a larger prime number list for selecting the number of buckets.
+  * Use
+    [@/libs/type_traits/doc/html/boost_typetraits/category/alignment.html
+    aligned storage] to store the types.
+  * Add support for C++0x initializer lists where they're available.
+  * For more detail, see the
+    [@/doc/html/unordered/changes.html#unordered.changes.boost_1_38_0
+    library changelog].
+
 
 [endsect]
 
