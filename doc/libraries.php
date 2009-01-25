@@ -107,6 +107,16 @@ function libbuildlink($lib)
   if ($lib['autolink'] == 'true') { $p[] = 'Automatic linking'; }
   print ($p ? implode(', ',$p) : '&nbsp;');
 }
+function libcategories($lib, $categories)
+{
+  $first = true;
+  foreach($lib['category'] as $category_name) {
+    if(!$first) echo ', ';
+    $first = false;
+    category_link($category_name, $categories[$category_name]);
+  }
+  if($first) echo '&nbsp;';
+}
 
 function option_link($description, $field, $value)
 {
@@ -139,6 +149,12 @@ function option_link($description, $field, $value)
   else {
     echo '</a>';
   }
+}
+
+function category_link($name, $category) {
+  option_link(
+    isset($category['title']) ? $category['title'] : $name,
+    'view', 'category_'.$name);
 }
 
 ?>
@@ -220,6 +236,10 @@ function option_link($description, $field, $value)
                     <dt>Build&nbsp;&amp;&nbsp;Link</dt>
 
                     <dd><?php libbuildlink($lib); ?></dd>
+
+                    <dt>Categories</dt>
+
+                    <dd><?php libcategories($lib, $libs->categories); ?></dd>
                   </dl>
                 </dd><!-- --><?php } ?>
               </dl>
@@ -230,8 +250,7 @@ function option_link($description, $field, $value)
               <?php
               foreach ($libs->get_categorized($sort_value, 'library_filter') as $name => $category) {
                 if(count($category['libraries'])) {?>
-                  <h3><?php option_link(isset($category['title']) ? $category['title'] : $name,
-                    'view', 'category_'.$name); ?></h3>
+                  <h3><?php category_link($name, $category); ?></h3>
                   <ul><?php foreach ($category['libraries'] as $lib) { ?>
                     <li><?php libref($lib); ?>: <?php echo ($lib['description'] ? htmlentities($lib['description'],ENT_NOQUOTES,'UTF-8') : '&nbsp;'); ?></li>
                   <?php } ?></ul>
