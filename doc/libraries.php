@@ -110,10 +110,12 @@ function libbuildlink($lib)
 function libcategories($lib, $categories)
 {
   $first = true;
-  foreach($lib['category'] as $category_name) {
-    if(!$first) echo ', ';
-    $first = false;
-    category_link($category_name, $categories[$category_name]);
+  if($lib['category']) {
+    foreach($lib['category'] as $category_name) {
+      if(!$first) echo ', ';
+      $first = false;
+      category_link($category_name, $categories[$category_name]);
+    }
   }
   if($first) echo '&nbsp;';
 }
