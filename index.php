@@ -56,9 +56,11 @@ http://www.boost.org/development/website_updating.html
                   "external">C++ Standards Committee's</a> Library Technical
                   Report (<a href=
                   "http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1745.pdf"
-                  class="external">TR1</a>) as a step toward becoming part of
-                  a future C++ Standard. More Boost libraries are proposed
-                  for the upcoming <a href=
+                  class="external">TR1</a>) and will be in the new C++0x
+                  Standard now being finalized. C++0x will also include several
+                  more Boost libraries in addition to those from TR1.
+                  More Boost libraries are proposed
+                  for <a href=
                   "http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1810.html"
                   class="external">TR2</a>.</p>
 
