@@ -21,8 +21,6 @@ if(!isset($_history->db[$_guid])) {
 <body>
   <h2><?php print $_history->db[$_guid]['title']; ?></h2>
 
-  <p><span class="news-date"><?php print $_history->db[$_guid]['date']; ?></span></p>
-
   <?php print $_history->db[$_guid]['description']; ?>
 </body>
 </html>
