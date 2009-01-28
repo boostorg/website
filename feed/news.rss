@@ -6,9 +6,11 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.38.0</title><pubDate>$Date$</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+  <item><title>Version 1.38.0</title><pubDate>$Date: 2009/01/28 22:53:48 $</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Flyweight, ScopeExit, Swap. Updated Libraries: Accumulators,
-      Exception, Hash, Multi-index Containers, Proto, Unordered, Xpressive
+      Date_Time, Exception, Hash, Interprocess, Intrusive, Math, Multi-index Containers,
+      Proto, Regex, Unordered, Xpressive. Also, introduces the experimental CMake
+      build system.
     &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><description>&lt;div class=&quot;description&quot;&gt;
   &lt;div id=&quot;version_1_38_0.new_libraries&quot;&gt;
     &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
@@ -53,6 +55,26 @@
         &lt;/ul&gt;
       &lt;/li&gt;
       &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/date_time/index.html&quot;&gt;Date_Time&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Added support for formatting and reading time durations longer than 24
+            hours with new formatter: &lt;code&gt;&lt;span class=&quot;special&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;&lt;/code&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Removed the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;testfrmwk&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;
+            file from the public include directory.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed several bugs and compile errors.
+          &lt;/li&gt;
+          &lt;li&gt;
+            For full details see the &lt;a href=&quot;/doc/libs/1_38_0/doc/html/date_time/details.html#date_time.changes&quot;&gt;change
+            history&lt;/a&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/exception/index.html&quot;&gt;Exception&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
@@ -70,6 +92,47 @@
           &lt;li&gt;
             For more detail, see the &lt;a href=&quot;/doc/html/hash/changes.html#hash.changes.boost_1_38_0&quot;&gt;library
             changelog&lt;/a&gt;.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/interprocess/index.html&quot;&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Updated documentation to show rvalue-references funcions instead of emulation
+            functions.
+          &lt;/li&gt;
+          &lt;li&gt;
+            More non-copyable classes are now movable.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Move-constructor and assignments now leave moved object in default-constructed
+            state instead of just swapping contents.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Several bugfixes (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2391&quot;&gt;#2391&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2431&quot;&gt;#2431&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1390&quot;&gt;#1390&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2570&quot;&gt;#2570&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2528&quot;&gt;#2528&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/intrusive/index.html&quot;&gt;Intrusive&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            New treap-based containers: treap, treap_set, treap_multiset.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Corrected compilation bug for Windows-based 64 bit compilers.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Corrected exception-safety bugs in container constructors.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Updated documentation to show rvalue-references funcions instead of emulation
+            functions.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -213,13 +276,81 @@
       &lt;li&gt;
         &lt;em&gt;TODO&lt;/em&gt;
       &lt;/li&gt;
+      &lt;li&gt;
+        GCC 4.0.1 on OS X 10.4.10 and 10.5.2 on Intel and 10.4.9 on Power PC.
+      &lt;/li&gt;
+      &lt;li&gt;
+        GCC 4.3.2 on Ubuntu Linux.
+      &lt;/li&gt;
+      &lt;li&gt;
+        GCC 4.3.3 on Unstable Debian.
+      &lt;/li&gt;
+      &lt;li&gt;
+        GCC 4.2.1 on HP-UX 64-bit.
+      &lt;/li&gt;
+      &lt;li&gt;
+        HP C/aC++ B3910B A.06.17 on HP-UX 64-bit.
+      &lt;/li&gt;
+      &lt;li&gt;
+        Visual C++ 7.1 SP1, 8.0 SP1 and 9.0 SP1 on Windows XP.
+      &lt;/li&gt;
     &lt;/ul&gt;
     &lt;p&gt;
       Boost's additional test compilers include:
     &lt;/p&gt;
     &lt;ul&gt;
       &lt;li&gt;
-        &lt;em&gt;TODO&lt;/em&gt;
+        OS X:
+        &lt;ul&gt;
+          &lt;li&gt;
+            GCC 4.0.1 on OS X 10.4.10 and 10.5.2 on Intel, OS X 10.4.9 on PowerPC
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 9.1, 10.0 on OS X 10.4.10
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 10.1, 11.0 on OS X 10.5.2
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        On Linux:
+        &lt;ul&gt;
+          &lt;li&gt;
+            GCC 4.1.1, 4.2.1 on 64-bit Red Hat Enterprise Linux
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.1.2 on 64-bit Redhat Server 5.1
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 3.4.3, GCC 4.0.1, GCC 4.2.4 and GCC 4.3.2 on Red Hat Enterprise Linux
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.3.2 with C++0x extensions
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.2.1 on OpenSuSE Linux
+          &lt;/li&gt;
+          &lt;li&gt;
+            pgCC 8.0-0a 64-bit target on Red Hat Enterprise Linux
+          &lt;/li&gt;
+          &lt;li&gt;
+            QLogic PathScale(TM) Compiler Suite: Version 3.1 on Red Hat Enterprise
+            Linux
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        IBM XL C/C++ Enterprise Edition for AIX, V10.1.0.0, on AIX Version 5.3.0.40
+      &lt;/li&gt;
+      &lt;li&gt;
+        GCC 4.2.1 on FreeBSD 7.
+      &lt;/li&gt;
+      &lt;li&gt;
+        GCC 4.2.1 on HP-UX Integrity
+      &lt;/li&gt;
+      &lt;li&gt;
+        HP C/aC++ B3910B A.06.17 on HP-UX 64-bit.
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/div&gt;
