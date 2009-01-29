@@ -32,7 +32,7 @@ $display_sort_fields = Array(
 
 // View
 
-$view_value = isset($_REQUEST['view']) ? $_REQUEST['view'] : '';
+$view_value = isset($_GET['view']) ? $_GET['view'] : '';
 
 $category_value = '';
 $filter_value = '';
@@ -58,8 +58,8 @@ else {
 
 // Sort
 
-$sort_value = isset($_REQUEST['sort']) && $_REQUEST['sort'] ?
-    $_REQUEST['sort'] : 'name';
+$sort_value = isset($_GET['sort']) && $_GET['sort'] ?
+    $_GET['sort'] : 'name';
 
 if(!isset($sort_fields[$sort_value])) {
     echo 'Invalid sort field.'; exit(0);
@@ -71,7 +71,7 @@ function library_filter($lib) {
   $libversion = explode('.',$lib['boost-version']);
   return boost_version($libversion[0],$libversion[1],$libversion[2]) &&
       (!$filter_value || ($lib[$filter_value] && $lib[$filter_value] != 'false')) &&
-      (!isset($_REQUEST['filter']) || $lib[$_REQUEST['filter']]) &&
+      (!isset($_GET['filter']) || $lib[$_GET['filter']]) &&
       (!$category_value || $category_value == 'all' ||
         array_search($category_value, $lib['category']) !== FALSE);
 }
@@ -135,13 +135,13 @@ function libcategories($lib, $categories)
 function option_link($description, $field, $value)
 {
   $base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
-  $current_value = isset($_REQUEST[$field]) ? $_REQUEST[$field] : '';
+  $current_value = isset($_GET[$field]) ? $_GET[$field] : '';
 
   if($current_value == $value) {
     echo '<span>';
   }
   else {
-    $params = $_REQUEST;
+    $params = $_GET;
     $params[$field] = $value;
 
     $url_params = '';
