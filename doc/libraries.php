@@ -65,6 +65,13 @@ if(!isset($sort_fields[$sort_value])) {
     echo 'Invalid sort field.'; exit(0);
 }
 
+// Page title
+
+$page_title = boost_title().' Library Documentation';
+if($category_value) $page_title.= ' - '. $libs->categories[$category_value]['title'];
+
+// Functions
+
 function library_filter($lib) {
   global $filter_value, $category_value;
 
@@ -177,7 +184,7 @@ function category_link($name, $category) {
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title><?php echo boost_title(); ?> Library Documention</title>
+  <title><?php echo htmlentities($page_title); ?></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-doc.css" />
@@ -195,7 +202,7 @@ function category_link($name, $category) {
         <div class="section" id="intro">
           <div class="section-0">
             <div class="section-title">
-              <h1><?php echo boost_title(); ?> Library Documentation</h1>
+              <h1><?php echo htmlentities($page_title); ?></h1>
             </div>
 
             <div class="section-body">
