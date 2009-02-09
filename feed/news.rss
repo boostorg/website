@@ -8,10 +8,11 @@
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
   <item><title>Version 1.38.0</title><pubDate>Sun, 08 Feb 2009 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Flyweight, ScopeExit, Swap. Updated Libraries: Accumulators,
-      Config, Date_Time, Exception, Filesystem, Graph, Hash, Interprocess, Intrusive,
-      Math, Multi-index Containers, Proto, Regex, TR1, Type Traits, Unordered, Xpressive.
-      Other Changes: Experimental CMake build system.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+      Any, Asio, Config, Date_Time, Exception, Filesystem, Graph, Hash, Interprocess,
+      Intrusive, Lexical Cast, Math, Multi-index Containers, Proto, Regex, Thread,
+      TR1, Type Traits, Unordered, Xpressive. Other Changes: Experimental CMake build
+      system.
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=659602</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   &lt;div id=&quot;version_1_38_0.new_libraries&quot;&gt;
     &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
@@ -47,6 +48,15 @@
     &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
     &lt;ul&gt;
       &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/accumulators/index.html&quot;&gt;Accumulators&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Add &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;rolling_sum&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;rolling_count&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;rolling_mean&lt;/span&gt;&lt;/code&gt;
+            accumulators.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/doc/html/any.html&quot;&gt;Any&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
@@ -55,11 +65,32 @@
         &lt;/ul&gt;
       &lt;/li&gt;
       &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/accumulators/index.html&quot;&gt;Accumulators&lt;/a&gt;:&lt;/span&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
-            Add &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;rolling_sum&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;rolling_count&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;rolling_mean&lt;/span&gt;&lt;/code&gt;
-            accumulators.
+            Improved compatibility with some Windows firewall software.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Ensured arguments to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;windows&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;overlapped_ptr&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;complete&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; are correctly passed to the completion
+            handler (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2614&quot;&gt;#2614&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed a link problem and multicast failure on QNX (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2504&quot;&gt;#2504&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2530&quot;&gt;#2530&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed a compile error in SSL support on MinGW / g++ 3.4.5.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Drop back to using a pipe for notification if eventfd is not available
+            at runtime on Linux (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2683&quot;&gt;#2683&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Various minor bug and documentation fixes (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2534&quot;&gt;#2534&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2541&quot;&gt;#2541&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2607&quot;&gt;#2607&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2617&quot;&gt;#2617&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2619&quot;&gt;#2619&lt;/a&gt;)
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -132,8 +163,9 @@
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/graph/index.html&quot;&gt;Graph&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
-            Added a new algorithms for Traveling Salesman Problem approximation (&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;metric_tsp_approx&lt;/span&gt;&lt;/code&gt;) and resource-constrained
-            Shortest Paths (&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;r_c_shortest_paths&lt;/span&gt;&lt;/code&gt;).
+            Added a new algorithms for Travelling Salesman Problem approximation
+            (&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;metric_tsp_approx&lt;/span&gt;&lt;/code&gt;) and
+            resource-constrained Shortest Paths (&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;r_c_shortest_paths&lt;/span&gt;&lt;/code&gt;).
           &lt;/li&gt;
           &lt;li&gt;
             Support for named vertices in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;adjacency_list&lt;/span&gt;&lt;/code&gt;.
@@ -165,8 +197,8 @@
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/interprocess/index.html&quot;&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
-            Updated documentation to show rvalue-references funcions instead of emulation
-            functions.
+            Updated documentation to show rvalue-references functions instead of
+            emulation functions.
           &lt;/li&gt;
           &lt;li&gt;
             More non-copyable classes are now movable.
@@ -197,8 +229,8 @@
             Corrected exception-safety bugs in container constructors.
           &lt;/li&gt;
           &lt;li&gt;
-            Updated documentation to show rvalue-references funcions instead of emulation
-            functions.
+            Updated documentation to show rvalue-references functions instead of
+            emulation functions.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -373,7 +405,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         Fixed subversion properties for several files. Most notably, unix shell scripts
-        should alway have unix line endings, even in the windows packages.
+        should always have unix line endings, even in the windows packages.
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/div&gt;

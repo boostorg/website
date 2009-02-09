@@ -2,10 +2,10 @@
     [quickbook 1.4]
     [source-mode c++]
     [purpose New Libraries: Flyweight, ScopeExit, Swap.
-        Updated Libraries: Accumulators, Config, Date_Time, Exception,
-        Filesystem, Graph, Hash, Interprocess,
-        Intrusive, Math, Multi-index Containers, Proto, Regex, TR1,
-        Type Traits, Unordered, Xpressive.
+        Updated Libraries: Accumulators, Any, Asio, Config,
+        Date_Time, Exception, Filesystem, Graph, Hash, Interprocess,
+        Intrusive, Lexical Cast, Math, Multi-index Containers, Proto,
+        Regex, Thread, TR1, Type Traits, Unordered, Xpressive.
         Other Changes: Experimental CMake build system.]
     [authors [Dawes, Beman]]
     [last-revision Sun, 08 Feb 2009 12:00:00 GMT]
@@ -13,9 +13,7 @@
 
 [include ext.qbk]
 
-[/ TODO: Update download link on release, it currently just links to the list
-         of versions of boost on sourceforge.]
-[download http://sourceforge.net/project/showfiles.php?group_id=7586&package_id=8041]
+[download http://sourceforge.net/project/showfiles.php?group_id=7586&package_id=8041&release_id=659602]
 
 [section New Libraries]
 
@@ -35,12 +33,36 @@
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/accumulators/index.html Accumulators]:]
+  * Add `rolling_sum`, `rolling_count` and `rolling_mean` accumulators.
+
 * [phrase library..[@/doc/html/any.html Any]:]
   * Use a by-value argument for `operator=`
     ([@https://svn.boost.org/trac/boost/ticket/2311 #2311]).
 
-* [phrase library..[@/libs/accumulators/index.html Accumulators]:]
-  * Add `rolling_sum`, `rolling_count` and `rolling_mean` accumulators.
+* [phrase library..[@/libs/asio/index.html Asio]:]
+  * Improved compatibility with some Windows firewall software.
+
+  * Ensured arguments to `windows::overlapped_ptr::complete()` are
+    correctly passed to the completion handler
+    ([@https://svn.boost.org/trac/boost/ticket/2614 #2614]).
+
+  * Fixed a link problem and multicast failure on QNX
+    ([@https://svn.boost.org/trac/boost/ticket/2504 #2504],
+    [@https://svn.boost.org/trac/boost/ticket/2530 #2530]).
+
+  * Fixed a compile error in SSL support on MinGW / g++ 3.4.5.
+
+  * Drop back to using a pipe for notification if eventfd is not
+    available at runtime on Linux
+    ([@https://svn.boost.org/trac/boost/ticket/2683 #2683]).
+
+  * Various minor bug and documentation fixes
+    ([@https://svn.boost.org/trac/boost/ticket/2534 #2534],
+    [@https://svn.boost.org/trac/boost/ticket/2541 #2541],
+    [@https://svn.boost.org/trac/boost/ticket/2607 #2607],
+    [@https://svn.boost.org/trac/boost/ticket/2617 #2617],
+    [@https://svn.boost.org/trac/boost/ticket/2619 #2619])
 
 * [phrase library..[@/libs/config/index.html Config]:]
   * Add new macros BOOST_NO_STD_UNORDERED and BOOST_NO_INITIALIZER_LISTS.
@@ -68,7 +90,7 @@
     [@https://svn.boost.org/trac/boost/ticket/2542 #2542]).
 
 * [phrase library..[@/libs/graph/index.html Graph]:]
-  * Added a new algorithms for Traveling Salesman Problem approximation
+  * Added a new algorithms for Travelling Salesman Problem approximation
     (`metric_tsp_approx`) and resource-constrained Shortest Paths
     (`r_c_shortest_paths`).
   * Support for named vertices in `adjacency_list`.
@@ -90,7 +112,7 @@
     library changelog].
 
 * [phrase library..[@/libs/interprocess/index.html Interprocess]:]
- *  Updated documentation to show rvalue-references funcions instead of emulation functions.
+ *  Updated documentation to show rvalue-references functions instead of emulation functions.
  *  More non-copyable classes are now movable.
  *  Move-constructor and assignments now leave moved object in default-constructed state
     instead of just swapping contents.
@@ -104,7 +126,7 @@
  *  New treap-based containers: treap, treap_set, treap_multiset.
  *  Corrected compilation bug for Windows-based 64 bit compilers.
  *  Corrected exception-safety bugs in container constructors.
- *  Updated documentation to show rvalue-references funcions instead of emulation functions.
+ *  Updated documentation to show rvalue-references functions instead of emulation functions.
 
 * [phrase library..[@/libs/conversion/lexical_cast.htm Lexical Cast]:]
   * Changed to work without RTTI when `BOOST_NO_TYPEID` is defined
@@ -193,7 +215,7 @@
   Boost-cmake mailing list].
 
 * Fixed subversion properties for several files. Most notably, unix shell
-  scripts should alway have unix line endings, even in the windows packages.
+  scripts should always have unix line endings, even in the windows packages.
 
 [endsect]
 
