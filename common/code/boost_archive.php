@@ -40,6 +40,7 @@ class boost_archive
             array('@.*@','@[.]pdf$@i','raw','application/pdf'),
             array('@.*@','@[.](html|htm)$@i','raw','text/html'),
             array('@.*@','@[^.](Jamroot|Jamfile|ChangeLog)$@i','text','text/plain'),
+            array('@.*@','@[.]dtd$@i','raw','application/xml-dtd'),
             ));
         
         $this->version_ = $path_parts[1];
@@ -144,10 +145,12 @@ HTML
         fpassthru($file_handle);
         $exit_status = pclose($file_handle);
         
-        // Disable the error message because it was appearing for several files.
-        //
-        // if($exit_status != 0)
-        //     echo 'Error extracting file: '.unzip_error($exit_status);
+        // Don't display errors for a corrupt zip file, as we seemd to
+        // be getting them for legitimate files.
+
+        if($exit_status > 3)
+            echo 'Error extracting file: '.unzip_error($exit_status);
+
     }
     
     function content()

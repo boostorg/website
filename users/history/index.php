@@ -30,12 +30,7 @@ $_history->sort_by('pubdate');
             </div>
 
             <div class="section-body">
-              <ul class="toc">
-                <?php foreach ( $_history->db as $_guid => $_item ) { ?>
-
-                <li><span class=
-                "news-title"><?php print '<a href="#i'.$_item['guid'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span></li><?php } ?>
-              </ul><?php foreach ( $_history->db as $_guid => $_item ) { ?>
+              <?php foreach ( $_history->db as $_guid => $_item ) { ?>
 
               <h2 class="news-title">
               <?php print '<a name="i'.$_item['guid'].'" id="i'.$_item['guid'].'"></a><a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></h2>
@@ -44,7 +39,16 @@ $_history->sort_by('pubdate');
 
               <div class="news-description">
                 <?php print $_item['boostbook:purpose']; ?>
-              </div><?php } ?>
+              </div>
+
+              <ul class="menu">
+                <li>
+                <?php print '<a href="'.htmlentities($_item['link']).'">Details</a>'; ?></li>
+
+                <?php if($_item['boostbook:download']) : ?>
+                <li><?php print '<a href="'.htmlentities($_item['boostbook:download']).'">Download</a>'; ?></li>
+                <?php endif; ?>
+              </ul><?php } ?>
             </div>
           </div>
         </div>

@@ -56,9 +56,11 @@ http://www.boost.org/development/website_updating.html
                   "external">C++ Standards Committee's</a> Library Technical
                   Report (<a href=
                   "http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1745.pdf"
-                  class="external">TR1</a>) as a step toward becoming part of
-                  a future C++ Standard. More Boost libraries are proposed
-                  for the upcoming <a href=
+                  class="external">TR1</a>) and will be in the new C++0x
+                  Standard now being finalized. C++0x will also include several
+                  more Boost libraries in addition to those from TR1.
+                  More Boost libraries are proposed
+                  for <a href=
                   "http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1810.html"
                   class="external">TR2</a>.</p>
 
@@ -93,6 +95,22 @@ http://www.boost.org/development/website_updating.html
                   Community</a>.</span></p>
                 </div>
 
+                <div class="directory-item" id="important-downloads">
+                  <h2>Downloads</h2>
+
+                  <ul id="downloads">
+                    <?php $_count = 0; foreach ( $_downloads->db as $_guid => $_item ) { $_count += 1; if ($_count > 5) { break; } ?>
+
+                    <li><span class=
+                    "news-title"><?php print '<a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
+                    <span class=
+                    "news-date"><?php print $_item['date']; ?></span></li><?php } ?>
+                  </ul>
+
+                  <p><a href="/users/download/">More Downloads...</a>
+                  (<a href="feed/downloads.rss">RSS</a>)</p>
+                </div>
+
                 <div class="directory-item" id="important-news">
                   <h2>News</h2>
 
@@ -109,22 +127,6 @@ http://www.boost.org/development/website_updating.html
 
                   <p><a href="/users/news/">More News...</a> (<a href=
                   "feed/news.rss">RSS</a>)</p>
-                </div>
-
-                <div class="directory-item" id="important-downloads">
-                  <h2>Downloads</h2>
-
-                  <ul id="downloads">
-                    <?php $_count = 0; foreach ( $_downloads->db as $_guid => $_item ) { $_count += 1; if ($_count > 5) { break; } ?>
-
-                    <li><span class=
-                    "news-title"><?php print '<a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
-                    <span class=
-                    "news-date"><?php print $_item['date']; ?></span></li><?php } ?>
-                  </ul>
-
-                  <p><a href="/users/download/">More Downloads...</a>
-                  (<a href="feed/downloads.rss">RSS</a>)</p>
                 </div>
 
                 <div class="clear"></div>

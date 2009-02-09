@@ -32,6 +32,8 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/
               <ul class="toc">
                 <li><a href="#releases">Packaged Releases</a></li>
 
+                <li><a href="#history">Old Boost Releases</a></li>
+
                 <li><a href="#repository">Subversion Repository</a></li>
               </ul>
 
@@ -48,11 +50,19 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/
 
               <ul class="menu">
                 <li>
-                <?php print '<a href="'.$_item['link'].'">Details</a>'; ?></li>
+                <?php print '<a href="'.htmlentities($_item['link']).'">Details</a>'; ?></li>
 
                 <li>
-                <?php print '<a href="'.$_item['boostbook:download'].'">Download</a>'; ?></li>
+                <?php print '<a href="'.htmlentities($_item['boostbook:download']).'">Download</a>'; ?></li>
               </ul><?php } ?>
+
+              <h2><a name="history" id="history"></a>Old Boost Releases</h2>
+
+              <p>Old versions of boost can be found on the <a href=
+              "/users/history/">version history</a> page or from <a class=
+              "external" href=
+              "http://sourceforge.net/project/showfiles.php?group_id=7586">the
+              sourceforge download page</a>.</p>
 
               <h2><a name="repository" id="repository"></a>Subversion
               Repository</h2>

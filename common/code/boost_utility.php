@@ -78,7 +78,7 @@ function _field_cmp_less_($i,$j)
 }
 
 function _field_cmp_name_($a,$b)
-{ return strcmp($a['name'],$b['name']); }
+{ return strcasecmp($a['name'],$b['name']); }
 
 function _field_cmp_pubdate_($a,$b)
 { return _field_cmp_less_($b['pubdate'],$a['pubdate']); }

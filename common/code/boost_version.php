@@ -6,6 +6,20 @@
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
+function boost_title()
+{
+    $vinfo = array();
+    if (isset($_SERVER["PATH_INFO"])) {
+        preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$_SERVER["PATH_INFO"],$vinfo);
+    }
+    if (isset($vinfo[0])) {
+        array_shift($vinfo);
+        return 'Boost '.implode('.', $vinfo);
+    }
+    else {
+        return 'Boost';
+    }
+}
 
 function boost_version($v,$r,$p)
 {
