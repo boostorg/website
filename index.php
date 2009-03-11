@@ -102,7 +102,9 @@ http://www.boost.org/development/website_updating.html
                     <?php $_count = 0; foreach ( $_downloads->db as $_guid => $_item ) { $_count += 1; if ($_count > 5) { break; } ?>
 
                     <li><span class=
-                    "news-title"><?php print '<a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></span>
+                    "news-title"><?php print '<a href="'.$_item['boostbook:download'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?>
+                    (<?php print '<a href="'.$_item['link'].'">'; ?>details<?php print '</a>'; ?>)
+                    </span>
                     <span class=
                     "news-date"><?php print $_item['date']; ?></span></li><?php } ?>
                   </ul>
