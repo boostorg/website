@@ -14,7 +14,8 @@ class boost_archive
     var $archive_ = NULL;
     var $extractor_ = NULL;
     var $type_ = NULL;
-    var $head_content_ = NULL;
+    var $title_ = NULL;
+    var $charset_ = NULL;
     var $content_ = NULL;
     
     function boost_archive(
@@ -97,18 +98,13 @@ class boost_archive
     
     function content_head()
     {
-        if ($this->head_content_)
-        {
-            print $this->head_content_;
-        }
-        else
-        {
-            print <<<HTML
-  <title>Boost C++ Libraries</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
-HTML
-                ;
-        }
+        $charset = $this->charset_ ? $this->charset_ : 'us-ascii';
+        $title = $this->title_ ? 'Boost C++ Libraries - '.$this->title_ : 'Boost C++ Libraries';
+
+        print <<<HTML
+  <meta http-equiv="Content-Type" content="text/html; charset=${charset}" />
+  <title>${title}</title>
+HTML;
     }
     
     function is_basic()
@@ -164,11 +160,12 @@ HTML
 
     function _init_text()
     {
+        $this->title_ = htmlentities($this->key_);
     }
     
     function _content_text()
     {
-        print "<h3>".$this->key_."</h3>\n";
+        print "<h3>".htmlentities($this->key_)."</h3>\n";
         print "<pre>\n";
         print htmlentities($this->content_);
         print "</pre>\n";
@@ -176,13 +173,14 @@ HTML
 
     function _init_cpp()
     {
+        $this->title_ = htmlentities($this->key_);
     }
 
     function _content_cpp()
     {
         $text = htmlentities($this->content_);
         
-        print "<h3>".$this->key_."</h3>\n";
+        print "<h3>".htmlentities($this->key_)."</h3>\n";
         print "<pre>\n";
         $root = dirname(preg_replace('@([^/]+/)@','../',$this->key_));
         $text = preg_replace(
@@ -199,36 +197,16 @@ HTML
 
     function _init_html_pre()
     {
-        $h = '';
-        
         preg_match('@text/html; charset=([^\s"\']+)@i',$this->content_,$charset);
         if (isset($charset[1]))
         {
-            $h .= <<<HTML
-  <meta http-equiv="Content-Type" content="text/html; charset=${charset[1]}" />
-HTML
-                ;
+            $this->charset_ = $charset[1];
         }
         
         preg_match('@<title>([^<]+)</title>@i',$this->content_,$title);
         if (isset($title[1]))
         {
-            $h .= <<<HTML
-  <title>Boost C++ Libraries - ${title[1]}</title>
-HTML
-                ;
-        }
-        else if ($h !== '')
-        {
-            $h .= <<<HTML
-  <title>Boost C++ Libraries</title>
-HTML
-                ;
-        }
-        
-        if ($h !== '')
-        {
-            $this->head_content_ = $h;
+            $this->title_ = $title[1];
         }
     }
     
