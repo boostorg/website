@@ -488,16 +488,24 @@ HTML;
     function _content_basic()
     {
         $text = $this->_content_html_pre();
-        $text = preg_split('@(</head>)|(<body[^>]*>)@i',$text,-1,PREG_SPLIT_DELIM_CAPTURE);
-        print $text[0];
-        print '<link rel="icon" href="/favicon.ico" type="image/ico" />';
-        print '<link rel="stylesheet" type="text/css" href="/style/section-basic.css" />';
-        print $text[1];
-        print $text[2];
-        print $text[3];
-        print $text[4];
-        virtual("/common/heading-doc.html");
-        print $text[5];
+        $text = preg_split('@(</head>|<body[^>]*>)@i',$text,-1,PREG_SPLIT_DELIM_CAPTURE);
+        $state = 0;
+        foreach($text as $section) {
+            print($section);
+            switch($state) {
+            case 0:
+                print '<link rel="icon" href="/favicon.ico" type="image/ico" />';
+                print '<link rel="stylesheet" type="text/css" href="/style/section-basic.css" />';
+                $state = 1;
+                break;
+            case 1:
+                if(strpos($section, '<body') === 0) {
+                    $state = 2;
+                    virtual("/common/heading-doc.html");
+                }
+                break;
+            }
+        }
     }
 
     function _init_404()
