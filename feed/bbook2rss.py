@@ -121,27 +121,32 @@ class BoostBook2RSS:
         return result
     
     def x_article(self,node):
-        description_xhtml = self.new_node('div',klass='description')
         brief_xhtml = self.new_node('span',
             self.x(self.get_child(self.get_child(node,tag='articleinfo'),
                 tag='articlepurpose'
                 )),
             klass='brief'
             )
-        body_item = self.get_child(node,tag='title').nextSibling
+
+        title_xhtml = self.new_node('title',
+            *self.x_children(self.get_child(node,tag='title')))
+
+        description_xhtml = self.new_node('div',klass='description')
         download_item = None
+        body_item = node.firstChild
         while body_item:
-            item = self.x(body_item)
-            if item:
-                download_i = self.get_child(item,tag='boostbook:download')
-                if download_i:
-                    download_item = download_i
-                else:
-                    description_xhtml.appendChild(item)
+            if body_item.nodeName not in ['title', 'articleinfo']:
+                item = self.x(body_item)
+                if item:
+                    download_i = self.get_child(item,tag='boostbook:download')
+                    if download_i:
+                        download_item = download_i
+                    else:
+                        description_xhtml.appendChild(item)
             body_item = body_item.nextSibling
         return self.new_node(
             'item',
-            self.new_text('title',node.getAttribute('name')),
+            title_xhtml,
             self.new_text('pubDate',node.getAttribute('last-revision')),
             self.new_text('boostbook:purpose',brief_xhtml.toxml('utf-8')),
             download_item,
