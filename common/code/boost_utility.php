@@ -74,7 +74,7 @@ function _field_cmp_key_($a,$b)
 
 function _field_cmp_less_($i,$j)
 {
-    return ($i == $j) ? 0 : (($i < $j) ? -1 : 1);
+    return ($i == $j) ? 0 : ($i !== FALSE && ($j === FALSE || $i < $j) ? -1 : 1);
 }
 
 function _field_cmp_name_($a,$b)
