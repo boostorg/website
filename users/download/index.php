@@ -50,7 +50,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/
 
               <ul class="menu">
                 <li>
-                <?php print '<a href="'.htmlentities($_item['link']).'">Details</a>'; ?></li>
+                <?php print '<a href="'.htmlentities($_item['link']).'">Release Notes</a>'; ?></li>
 
                 <li>
                 <?php print '<a href="'.htmlentities($_item['boostbook:download']).'">Download</a>'; ?></li>
