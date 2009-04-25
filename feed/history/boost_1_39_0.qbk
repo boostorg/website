@@ -2,8 +2,9 @@
     [quickbook 1.4]
     [source-mode c++]
     [purpose New Libraries: Signals2.
-        Updated Libraries: Flyweight, Foreach, Hash, Interprocess, Intrusive,
-            Program.Options, Proto, PtrContainer, Range, Unordered, Xpressive.
+        Updated Libraries: Asio, Flyweight, Foreach, Hash, Interprocess,
+            Intrusive, Program.Options, Proto, PtrContainer, Range, Unordered,
+            Xpressive.
         Updated Tools: Boostbook, Quickbook.]
     [authors [Dawes, Beman]]
     [last-revision ]
@@ -32,6 +33,38 @@
 [endsect]
 
 [section Updated Libraries]
+
+* [phrase library..[@/libs/asio/index.html Asio]:]
+  * Implement automatic resizing of the bucket array in the internal hash maps.
+    This is to improve performance for very large numbers of asynchronous
+    operations and also to reduce memory usage for very small numbers. A new
+    macro `BOOST_ASIO_HASH_MAP_BUCKETS` may be used to tweak the sizes used for
+    the bucket arrays.
+  * Add performance optimisation for the Windows IOCP backend for when no timers
+    are used.
+  * Prevent locale settings from affecting formatting of TCP and UDP endpoints
+    ([@https://svn.boost.org/trac/boost/ticket/2682 #2682]).
+  * Fix a memory leak that occurred when an asynchronous SSL operation's
+    completion handler threw an exception
+    ([@https://svn.boost.org/trac/boost/ticket/2910 #2910]).
+  * Fix the implementation of `io_control()` so that it adheres to the
+    documented type requirements for IoControlCommand
+    ([@https://svn.boost.org/trac/boost/ticket/2820 #2820]).
+  * Fix incompatibility between Asio and ncurses.h
+    ([@https://svn.boost.org/trac/boost/ticket/2156 #2156]).
+  * On Windows, specifically handle the case when an overlapped `ReadFile` call
+    fails with `ERROR_MORE_DATA`. This enables a hack where a
+    `windows::stream_handle` can be used with a message-oriented named pipe
+    ([@https://svn.boost.org/trac/boost/ticket/2936 #2936]).
+  * Fix system call wrappers to always clear the error on success, as POSIX
+    allows successful system calls to modify errno 
+    ([@https://svn.boost.org/trac/boost/ticket/2953 #2953]).
+  * Don't include termios.h if `BOOST_ASIO_DISABLE_SERIAL_PORT` is defined
+    ([@https://svn.boost.org/trac/boost/ticket/2917 #2917]).
+  * Cleaned up some more MSVC level 4 warnings
+    ([@https://svn.boost.org/trac/boost/ticket/2828 #2828]).
+  * Various documentation fixes
+    ([@https://svn.boost.org/trac/boost/ticket/2871 #2871]).
 
 * [phrase library..[@/libs/flyweight/index.html Flyweight]:]
   * The [@/libs/flyweight/doc/tutorial/configuration.html#refcounted refcounted]
