@@ -7,10 +7,10 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.39.0</title><pubDate>$Date: 2009/04/21 17:23:17 $</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
-      New Libraries: Signals2. Updated Libraries: Flyweight, Foreach, Hash, Interprocess,
-      Intrusive, Program.Options, Proto, PtrContainer, Range, Unordered, Xpressive.
-      Updated Tools: Boostbook, Quickbook.
+  <item><title>Version 1.39.0</title><pubDate>$Date: 2009/04/25 16:33:50 $</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+      New Libraries: Signals2. Updated Libraries: Asio, Flyweight, Foreach, Hash,
+      Interprocess, Intrusive, Program.Options, Proto, PtrContainer, Range, Unordered,
+      Xpressive. Updated Tools: Boostbook, Quickbook.
     &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
@@ -28,6 +28,56 @@
   &lt;div id=&quot;version_1_39_0.updated_libraries&quot;&gt;
     &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
     &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Implement automatic resizing of the bucket array in the internal hash
+            maps. This is to improve performance for very large numbers of asynchronous
+            operations and also to reduce memory usage for very small numbers. A
+            new macro &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_ASIO_HASH_MAP_BUCKETS&lt;/span&gt;&lt;/code&gt;
+            may be used to tweak the sizes used for the bucket arrays.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Add performance optimisation for the Windows IOCP backend for when no
+            timers are used.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Prevent locale settings from affecting formatting of TCP and UDP endpoints
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2682&quot;&gt;#2682&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fix a memory leak that occurred when an asynchronous SSL operation's
+            completion handler threw an exception (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2910&quot;&gt;#2910&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fix the implementation of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_control&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; so that it adheres to the documented
+            type requirements for IoControlCommand (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2820&quot;&gt;#2820&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fix incompatibility between Asio and ncurses.h (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2156&quot;&gt;#2156&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            On Windows, specifically handle the case when an overlapped &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ReadFile&lt;/span&gt;&lt;/code&gt; call fails with &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ERROR_MORE_DATA&lt;/span&gt;&lt;/code&gt;. This enables a hack
+            where a &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;windows&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;stream_handle&lt;/span&gt;&lt;/code&gt; can be used with a message-oriented
+            named pipe (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2936&quot;&gt;#2936&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fix system call wrappers to always clear the error on success, as POSIX
+            allows successful system calls to modify errno (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2953&quot;&gt;#2953&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Don't include termios.h if &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_ASIO_DISABLE_SERIAL_PORT&lt;/span&gt;&lt;/code&gt;
+            is defined (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2917&quot;&gt;#2917&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Cleaned up some more MSVC level 4 warnings (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2828&quot;&gt;#2828&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Various documentation fixes (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2871&quot;&gt;#2871&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
       &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/flyweight/index.html&quot;&gt;Flyweight&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
@@ -55,7 +105,7 @@
         &lt;ul&gt;
           &lt;li&gt;
             Remove deprecated headers for hashing containers. Everything that was
-            in them is included in &lt;code&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;functional&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hash&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
+            in them is included in &lt;code&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;functional&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hash&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
             (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2412&quot;&gt;#2412&lt;/a&gt;).
           &lt;/li&gt;
           &lt;li&gt;
