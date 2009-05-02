@@ -95,7 +95,7 @@ function libref($lib)
     }
     else
     {
-      $docref = '/doc/libs/1_38_0/'.$lib['documentation'];
+      $docref = '/doc/libs/1_39_0/'.$lib['documentation'];
     }
     print '<a href="'.$docref.'">'.($lib['name'] ? $lib['name'] : $lib['key']).'</a>';
   }
@@ -115,15 +115,15 @@ function libavailable($lib)
 function libstandard($lib)
 {
   $p = array();
-  if ($lib['std-proposal'] == 'true') { $p[] = 'Proposed'; }
-  if ($lib['std-tr1'] == 'true') { $p[] = 'TR1'; }
+  if ($lib['std-proposal']) { $p[] = 'Proposed'; }
+  if ($lib['std-tr1']) { $p[] = 'TR1'; }
   print ($p ? implode(', ',$p) : '&nbsp;');
 }
 function libbuildlink($lib)
 {
   $p = array();
-  if ($lib['header-only'] == 'true') { $p[] = 'Header only'; }
-  if ($lib['autolink'] == 'true') { $p[] = 'Automatic linking'; }
+  if ($lib['header-only']) { $p[] = 'Header only'; }
+  if ($lib['autolink']) { $p[] = 'Automatic linking'; }
   print ($p ? implode(', ',$p) : '&nbsp;');
 }
 function libcategories($lib, $categories)

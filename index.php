@@ -103,7 +103,7 @@ http://www.boost.org/development/website_updating.html
 
                     <li><span class=
                     "news-title"><?php print '<a href="'.$_item['boostbook:download'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?>
-                    (<?php print '<a href="'.$_item['link'].'">'; ?>details<?php print '</a>'; ?>)
+                    (<?php print '<a href="'.$_item['link'].'">'; ?>release notes<?php print '</a>'; ?>)
                     </span>
                     <span class=
                     "news-date"><?php print $_item['date']; ?></span></li><?php } ?>

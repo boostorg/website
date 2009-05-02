@@ -54,13 +54,23 @@ class boost_libraries
                     case 'authors':
                     case 'description':
                     case 'documentation':
+                    {
+                        if (isset($val['value'])) { $lib[$val['tag']] = trim($val['value']); }
+                        else { $lib[$val['tag']] = ''; }
+                    }
+                    break;
                     case 'std-proposal':
                     case 'std-tr1':
                     case 'header-only':
                     case 'autolink':
                     {
-                        if (isset($val['value'])) { $lib[$val['tag']] = trim($val['value']); }
-                        else { $lib[$val['tag']] = ''; }
+                        $value = isset($val['value']) ? trim($val['value']) : false;
+                        if($value && $value != 'true' && $value != 'false') {
+                            echo 'Invalid value for ',htmlentities($val['tag']),
+                                ': ', $value;
+                            exit(0);
+                        }
+                        $lib[$val['tag']] = ($value == 'true');
                     }
                     break;
                     case 'category':
