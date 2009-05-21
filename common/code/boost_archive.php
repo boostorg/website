@@ -499,7 +499,7 @@ HTML;
                 $state = 1;
                 break;
             case 1:
-                if(strpos($section, '<body') === 0) {
+                if(stripos($section, '<body') === 0) {
                     $state = 2;
                     virtual("/common/heading-doc.html");
                 }
