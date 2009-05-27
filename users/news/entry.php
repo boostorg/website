@@ -27,7 +27,7 @@ if(!isset($_news->db[$_guid])) {
   }
   /*]]>*/
   </style>
-  <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
+  <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style/csshover3.htc); } </style> <![endif]-->
 </head>
 
 <body>
