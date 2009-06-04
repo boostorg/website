@@ -105,7 +105,7 @@ Lexer
 -----
 :Author: Ben Hanson
 
-:Review Manager: Eric Neibler
+:Review Manager: Eric Niebler
 
 :Download: `Boost Vault <http://boost-consulting.com/vault/index.php?action=downloadfile&filename=boost.lexer.zip&directory=Strings%20-%20Text%20Processing>`__
 
