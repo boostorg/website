@@ -1,9 +1,22 @@
 <?php
 require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
+function add_boost_build_analytics($content) {
+    $analytics = <<<EOS
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-2917240-2";
+urchinTracker();
+</script>
+EOS;
+
+    return stripos($content, '_uacct = "UA-2917240-2"') !== FALSE ? $content :
+        str_ireplace('</body>', $analytics.'</body>', $content);
+}
 $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type),
-  array('@.*@','@^boost-build/index[.]html$@i','simple','text/html'),
+  array('@.*@','@^boost-build/index[.]html$@i','simple','text/html', 'add_boost_build_analytics'),
   array('@.*@','@[.](html|htm)$@i','boost_book_html','text/html')
   ),false,false);
 
@@ -17,7 +30,7 @@ if (!$_file->is_raw()) {
   <?php $_file->content_head(); ?>
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-doc.css" />
-  <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
+  <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style/csshover3.htc); } </style> <![endif]-->
   <?php #~ pwn_head(); ?>
   <style type="text/css">
 /*<![CDATA[*/

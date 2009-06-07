@@ -12,7 +12,7 @@ $_irc = new boost_irc_stats('http://www.acc.umu.se/~zao/stats/ibd.html');
   <?php $_irc->content_head(); ?>
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style/section-community.css" />
-  <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
+  <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style/csshover3.htc); } </style> <![endif]-->
 </head>
 
 <body>

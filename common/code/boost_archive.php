@@ -14,6 +14,7 @@ class boost_archive
     var $archive_ = NULL;
     var $extractor_ = NULL;
     var $type_ = NULL;
+    var $preprocess_ = NULL;
     var $title_ = NULL;
     var $charset_ = NULL;
     var $content_ = NULL;
@@ -62,6 +63,7 @@ class boost_archive
             {
                 $this->extractor_ = $i[2];
                 $this->type_ = $i[3];
+                $this->preprocess_ = isset($i[4]) ? $i[4] : NULL;
                 break;
             }
         }
@@ -88,6 +90,9 @@ class boost_archive
             $this->content_ = $this->_extract_string($unzip);
             $f = '_init_'.$this->extractor_;
             $this->$f();
+            if($this->preprocess_) {
+                $this->content_ = call_user_func($this->preprocess_, $this->content_);
+            }
             if ($this->extractor_ == 'simple')
             {
                 $f = '_content_'.$this->extractor_;
@@ -499,7 +504,7 @@ HTML;
                 $state = 1;
                 break;
             case 1:
-                if(strpos($section, '<body') === 0) {
+                if(stripos($section, '<body') === 0) {
                     $state = 2;
                     virtual("/common/heading-doc.html");
                 }
