@@ -492,6 +492,9 @@ HTML;
 
     function _content_basic()
     {
+        $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $text);
+        $tag_end = $is_xhtml ? '/>' : '>';
+        
         $text = $this->_content_html_pre();
         $text = preg_split('@(</head>|<body[^>]*>)@i',$text,-1,PREG_SPLIT_DELIM_CAPTURE);
         $state = 0;
@@ -499,8 +502,8 @@ HTML;
             print($section);
             switch($state) {
             case 0:
-                print '<link rel="icon" href="/favicon.ico" type="image/ico" />';
-                print '<link rel="stylesheet" type="text/css" href="/style/section-basic.css" />';
+                print '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
+                print '<link rel="stylesheet" type="text/css" href="/style/section-basic.css"'.$tag_end;
                 $state = 1;
                 break;
             case 1:
