@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
 $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
-  //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type),
+  //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type[,preprocess hook]),
   //~ this handles most of the simple cases of index.htm(l) redirect files
   array(
     '@1_('.implode('|',array(
