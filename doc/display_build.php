@@ -1,9 +1,22 @@
 <?php
 require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
+function add_boost_build_analytics($content) {
+    $analytics = <<<EOS
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-2917240-2";
+urchinTracker();
+</script>
+EOS;
+
+    return stripos($content, '_uacct = "UA-2917240-2"') !== FALSE ? $content :
+        str_ireplace('</body>', $analytics.'</body>', $content);
+}
 $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type),
-  array('@.*@','@^boost-build/index[.]html$@i','simple','text/html'),
+  array('@.*@','@^boost-build/index[.]html$@i','simple','text/html', 'add_boost_build_analytics'),
   array('@.*@','@[.](html|htm)$@i','boost_book_html','text/html')
   ),false,false);
 
