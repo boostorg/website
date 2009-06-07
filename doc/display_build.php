@@ -15,7 +15,7 @@ EOS;
         str_ireplace('</body>', $analytics.'</body>', $content);
 }
 $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
-  //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type),
+  //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type[,preprocess hook]),
   array('@.*@','@^boost-build/index[.]html$@i','simple','text/html', 'add_boost_build_analytics'),
   array('@.*@','@[.](html|htm)$@i','boost_book_html','text/html')
   ),false,false);
