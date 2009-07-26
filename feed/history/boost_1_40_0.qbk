@@ -1,7 +1,8 @@
 [article Version 1.40.0
     [quickbook 1.4]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: ]
+    [purpose Build System improvements.
+        Updated Libraries: Foreach, Function, Hash, Program.Options, Serialization, Unordered.]
     [authors [Dawes, Beman]]
     [last-revision ]
 ]
@@ -18,34 +19,32 @@
     1. Libraries are listed in alphabetical order.
     2. Besides the dedicated entry, the lib name should be added to the
        [purpose] section at the beginning of the page.
-
-    Example new libraries message:
-
-* [phrase library..[@/libs/accumulators/index.html Accumulators]:] Framework for
-  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
-
-    Example update message:
-
-* [phrase library..[@/libs/interprocess/index.html Interprocess]:]
-  * Added anonymous shared memory for UNIX systems.
-  * Fixed missing move semantics on managed memory classes.
-  * Added copy_on_write and open_read_only options for shared memory
-    and mapped file managed classes.
-  * `shared_ptr` is movable and supports aliasing.
 ]
-
-[section New Libraries]
-
-* /TODO/
-
-[endsect]
 
 [section Updated Libraries]
 
 * [phrase library..[@/libs/foreach/index.html Foreach]:]
   * Workaround for conflict with Python headers
     ([@https://svn.boost.org/trac/boost/ticket/3000 #3000]).
-    
+
+* [phrase library..[@/libs/function/index.html Function]:]
+  * Optimize the use of small target objects.
+  * Make Boost.Function compile under BOOST_NO_EXCEPTIONS
+    ([@https://svn.boost.org/trac/boost/ticket/2499 #2499],
+     [@https://svn.boost.org/trac/boost/ticket/2494 #2494],
+     [@https://svn.boost.org/trac/boost/ticket/2469 #2469],
+     [@https://svn.boost.org/trac/boost/ticket/2466 #2466],  
+     [@https://svn.boost.org/trac/boost/ticket/2900 #2900])
+  * Various minor fixes
+    ([@https://svn.boost.org/trac/boost/ticket/2642 #2642],
+     [@https://svn.boost.org/trac/boost/ticket/2847 #2847],
+     [@https://svn.boost.org/trac/boost/ticket/2929 #2929]
+     [@https://svn.boost.org/trac/boost/ticket/3012 #3012])
+
+* [phrase library..[@/libs/hash/index.html Hash]:]
+  * Automatically configure the float functions using template metaprogramming
+    instead of trying to configure every possibility manually.
+
 * [phrase library..[@/libs/program_options/index.html Program.Options]:]
   * Support for building with disabled exceptions
     ([@https://svn.boost.org/trac/boost/ticket/2096 #2096]).
@@ -53,6 +52,24 @@
     ([@https://svn.boost.org/trac/boost/ticket/2425 #2425]).
   * Fixed crash on user-inserted items in `variables_map`
     ([@https://svn.boost.org/trac/boost/ticket/2782 #2782]).    
+
+* [phrase library..[@/libs/serialization/index.html Serialization]:]
+  * Removed deprecated headers: `boost/static_warning.hpp`,
+    `boost/state_saver.hpp`, `boost/smart_cast.hpp`, `boost/pfto.hpp`.
+    Use the the equivalent headers in the `boost/serialization/` directory
+    instead
+    ([@https://svn.boost.org/trac/boost/ticket/3062 #3062]).
+
+* [phrase library..[@/libs/unordered/index.html Unordered]:]
+  * Implement `emplace` for all compilers, not just ones with
+    rvalue references and variadic templates
+    ([@https://svn.boost.org/trac/boost/ticket/1978 #1978]).
+  * Create less buckets by default.
+  * Some minor tweaks for better compiler support
+    ([@https://svn.boost.org/trac/boost/ticket/2908 #2908],
+    [@https://svn.boost.org/trac/boost/ticket/3096 #3096],
+    [@https://svn.boost.org/trac/boost/ticket/3082 Ticket 3082]).
+    Disable incorrect Visual C++ warnings.
     
 [endsect]
 
@@ -68,9 +85,16 @@ longer requires that target architecture be specified.
 
 [section Updated Tools]
 
+* [phrase library..[@/tools/boostbook/index.html Boostbook]:]
+  * Hide `INTERNAL ONLY` enums in doxygen documentation
+    ([@https://svn.boost.org/trac/boost/ticket/3242 #3242]).
+  * Tweaked appearance of member classes/structs/unions in a class synopsis.
+
 * [phrase library..[@/tools/quickbook/index.html Quickbook]:]
   * Support python code snippets
     ([@https://svn.boost.org/trac/boost/ticket/3029 #3029]).
+  * Add `teletype` source mode
+    ([@https://svn.boost.org/trac/boost/ticket/1202 #1202])
     
 [endsect]
     
