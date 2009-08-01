@@ -61,7 +61,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/
               <p>Old versions of boost can be found on the <a href=
               "/users/history/">version history</a> page or from <a class=
               "external" href=
-              "http://sourceforge.net/project/showfiles.php?group_id=7586">the
+              "http://sourceforge.net/projects/boost/files/">the
               sourceforge download page</a>.</p>
 
               <h2><a name="repository" id="repository"></a>Subversion
