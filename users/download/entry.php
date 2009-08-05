@@ -41,9 +41,7 @@ if(!isset($_downloads->db[$_guid])) {
               <p><span class=
               "news-date"><?php print $_downloads->db[$_guid]['date']; ?></span></p>
 
-              <?php if($_downloads->db[$_guid]['boostbook:download']) : ?>
-              <p><span class="news-download"><a href="<?php print htmlentities($_downloads->db[$_guid]['boostbook:download']); ?>">Download this release.</a></span></p>
-              <? endif; ?>
+              <?php $_downloads->echo_download_table($_guid); ?>
 
               <div class="news-description">
                 <?php print $_downloads->db[$_guid]['description']; ?>
