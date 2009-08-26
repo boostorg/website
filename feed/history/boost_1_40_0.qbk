@@ -2,7 +2,7 @@
     [quickbook 1.4]
     [source-mode c++]
     [purpose Build System improvements.
-        Updated Libraries: Accumulators, Circular Buffer, Foreach, Function, Fusion, Hash,
+        Updated Libraries: Accumulators, Asio, Circular Buffer, Foreach, Function, Fusion, Hash,
         Interprocess, Intrusive, MPL, Program.Options, Proto, Serialization, Unordered,
         Xpressive.]
     [authors [Dawes, Beman]]
@@ -26,6 +26,38 @@
 
 * [phrase library..[@/libs/accumulators/index.html Accumulators]:]
   * Works on GCC 4.4.
+
+* [phrase library..[@/libs/asio/index.html Asio]:]
+  * Added a new ping example to illustrate the use of ICMP sockets.
+  * Changed the `buffered*_stream<>` templates to treat 0-byte reads and writes
+    as no-ops, to comply with the documented type requirements for
+    `SyncReadStream`, `AsyncReadStream`, `SyncWriteStream` and
+    `AsyncWriteStream`.
+  * Changed some instances of the `throw` keyword to `boost::throw_exception()`
+    to allow Asio to be used when exception support is disabled. Note that the
+    SSL wrappers still require exception support
+    ([@https://svn.boost.org/trac/boost/ticket/2754 #2754]).
+  * Made Asio compatible with the OpenSSL 1.0 beta
+    ([@https://svn.boost.org/trac/boost/ticket/3256 #3256]).
+  * Eliminated a redundant system call in the Solaris [^/dev/poll] backend.
+  * Fixed a bug in resizing of the bucket array in the internal hash maps
+    ([@https://svn.boost.org/trac/boost/ticket/3095 #3095]).
+  * Ensured correct propagation of the error code when a synchronous accept
+    fails ([@https://svn.boost.org/trac/boost/ticket/3216 #3216]).
+  * Ensured correct propagation of the error code when a synchronous read or
+    write on a Windows HANDLE fails.
+  * Fixed failures reported when `_GLIBCXX_DEBUG` is defined
+    ([@https://svn.boost.org/trac/boost/ticket/3098 #3098]).
+  * Fixed custom memory allocation support for timers
+    ([@https://svn.boost.org/trac/boost/ticket/3107 #3107]).
+  * Tidied up various warnings reported by g++
+    ([@https://svn.boost.org/trac/boost/ticket/1341 #1341],
+    [@https://svn.boost.org/trac/boost/ticket/2618 #2618]).
+  * Various documentation improvements, including more obvious hyperlinks to
+    function overloads, header file information, examples for the handler type
+    requirements, and adding enum values to the index
+    ([@https://svn.boost.org/trac/boost/ticket/3157 #3157],
+    [@https://svn.boost.org/trac/boost/ticket/2620 #2620]).
 
 * [phrase library..[@/libs/circular_buffer/index.html Circular Buffer]:]
   * Fixed bugs
