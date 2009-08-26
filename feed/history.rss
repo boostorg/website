@@ -6,9 +6,9 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.40.0</title><pubDate>$Date: 2009/08/19 23:00:51 $</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
-      Build System improvements. Updated Libraries: Accumulators, Circular Buffer,
-      Foreach, Function, Fusion, Hash, Interprocess, Intrusive, MPL, Program.Options,
+  <item><title>Version 1.40.0</title><pubDate>$Date: 2009/08/26 22:58:23 $</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+      Build System improvements. Updated Libraries: Accumulators, Asio, Circular
+      Buffer, Foreach, Function, Fusion, Hash, Interprocess, Intrusive, MPL, Program.Options,
       Proto, Serialization, Unordered, Xpressive.
     &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.40.0.beta.1/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
@@ -22,6 +22,62 @@
         &lt;ul&gt;
           &lt;li&gt;
             Works on GCC 4.4.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Added a new ping example to illustrate the use of ICMP sockets.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;buffered&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;_stream&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt; templates to treat 0-byte reads
+            and writes as no-ops, to comply with the documented type requirements
+            for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;SyncReadStream&lt;/span&gt;&lt;/code&gt;,
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;AsyncReadStream&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;SyncWriteStream&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;AsyncWriteStream&lt;/span&gt;&lt;/code&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed some instances of the &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;throw&lt;/span&gt;&lt;/code&gt;
+            keyword to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;throw_exception&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+            to allow Asio to be used when exception support is disabled. Note that
+            the SSL wrappers still require exception support (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2754&quot;&gt;#2754&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Made Asio compatible with the OpenSSL 1.0 beta (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3256&quot;&gt;#3256&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Eliminated a redundant system call in the Solaris &lt;tt&gt;/dev/poll&lt;/tt&gt;
+            backend.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed a bug in resizing of the bucket array in the internal hash maps
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3095&quot;&gt;#3095&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Ensured correct propagation of the error code when a synchronous accept
+            fails (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3216&quot;&gt;#3216&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Ensured correct propagation of the error code when a synchronous read
+            or write on a Windows HANDLE fails.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed failures reported when &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;_GLIBCXX_DEBUG&lt;/span&gt;&lt;/code&gt;
+            is defined (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3098&quot;&gt;#3098&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed custom memory allocation support for timers (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3107&quot;&gt;#3107&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Tidied up various warnings reported by g++ (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1341&quot;&gt;#1341&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2618&quot;&gt;#2618&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Various documentation improvements, including more obvious hyperlinks
+            to function overloads, header file information, examples for the handler
+            type requirements, and adding enum values to the index (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3157&quot;&gt;#3157&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2620&quot;&gt;#2620&lt;/a&gt;).
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -169,6 +225,12 @@
             &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;pfto&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;. Use the the equivalent headers
             in the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;serialization&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;/code&gt;
             directory instead (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3062&quot;&gt;#3062&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;detail&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;archive_serializer_map&lt;/span&gt;&lt;/code&gt; should now be
+            used instead of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;detail&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;archive_pointer_iserializer&lt;/span&gt;&lt;/code&gt;.
+            For more details see &lt;a href=&quot;/doc/libs/1_40_0/libs/serialization/doc/release.html&quot;&gt;the
+            library release notes&lt;/a&gt;.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
