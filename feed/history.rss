@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
   <channel>
     <generator>BoostBook2RSS</generator>
     <title>Boost History</title>
@@ -7,11 +6,487 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.39.0</title><pubDate>Sat, 02 May 2009 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+  <item><title>Version 1.40.0</title><pubDate>$Date$</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+      Build System improvements. Updated Libraries: Accumulators, Asio, Circular
+      Buffer, Foreach, Function, Fusion, Hash, Interprocess, Intrusive, MPL, Program.Options,
+      Proto, Serialization, Unordered, Xpressive.
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.40.0.beta.1/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+  
+  
+  
+  &lt;div id=&quot;version_1_40_0.updated_libraries&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/accumulators/index.html&quot;&gt;Accumulators&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Works on GCC 4.4.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Added a new ping example to illustrate the use of ICMP sockets.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;buffered&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;_stream&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt; templates to treat 0-byte reads
+            and writes as no-ops, to comply with the documented type requirements
+            for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;SyncReadStream&lt;/span&gt;&lt;/code&gt;,
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;AsyncReadStream&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;SyncWriteStream&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;AsyncWriteStream&lt;/span&gt;&lt;/code&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed some instances of the &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;throw&lt;/span&gt;&lt;/code&gt;
+            keyword to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;throw_exception&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+            to allow Asio to be used when exception support is disabled. Note that
+            the SSL wrappers still require exception support (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2754&quot;&gt;#2754&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Made Asio compatible with the OpenSSL 1.0 beta (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3256&quot;&gt;#3256&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Eliminated a redundant system call in the Solaris &lt;tt&gt;/dev/poll&lt;/tt&gt;
+            backend.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed a bug in resizing of the bucket array in the internal hash maps
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3095&quot;&gt;#3095&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Ensured correct propagation of the error code when a synchronous accept
+            fails (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3216&quot;&gt;#3216&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Ensured correct propagation of the error code when a synchronous read
+            or write on a Windows HANDLE fails.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed failures reported when &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;_GLIBCXX_DEBUG&lt;/span&gt;&lt;/code&gt;
+            is defined (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3098&quot;&gt;#3098&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed custom memory allocation support for timers (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3107&quot;&gt;#3107&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Tidied up various warnings reported by g++ (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1341&quot;&gt;#1341&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2618&quot;&gt;#2618&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Various documentation improvements, including more obvious hyperlinks
+            to function overloads, header file information, examples for the handler
+            type requirements, and adding enum values to the index (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3157&quot;&gt;#3157&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2620&quot;&gt;#2620&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/circular_buffer/index.html&quot;&gt;Circular Buffer&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Fixed bugs &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2785&quot;&gt;#2785&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3285&quot;&gt;#3285&lt;/a&gt;.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/foreach/index.html&quot;&gt;Foreach&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Workaround for conflict with Python headers (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3000&quot;&gt;#3000&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/function/index.html&quot;&gt;Function&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Optimize the use of small target objects.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Make Boost.Function compile under BOOST_NO_EXCEPTIONS (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2499&quot;&gt;#2499&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2494&quot;&gt;#2494&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2469&quot;&gt;#2469&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2466&quot;&gt;#2466&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2900&quot;&gt;#2900&lt;/a&gt;)
+          &lt;/li&gt;
+          &lt;li&gt;
+            Various minor fixes (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2642&quot;&gt;#2642&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2847&quot;&gt;#2847&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2929&quot;&gt;#2929&lt;/a&gt;
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3012&quot;&gt;#3012&lt;/a&gt;)
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/fusion/index.html&quot;&gt;Fusion&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Improved compile times for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;fusion&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;vector&lt;/span&gt;&lt;/code&gt;.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/hash/index.html&quot;&gt;Hash&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Automatically configure the float functions using template metaprogramming
+            instead of trying to configure every possibility manually.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/interprocess/index.html&quot;&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Windows shared memory is created in Shared Documents folder so that it
+            can be shared between services and processes
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed bugs &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2967&quot;&gt;#2967&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2973&quot;&gt;#2973&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2992&quot;&gt;#2992&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3138&quot;&gt;#3138&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3166&quot;&gt;#3166&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3205&quot;&gt;#3205&lt;/a&gt;.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/intrusive/index.html&quot;&gt;Intrusive&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Code cleanup in tree_algorithms.hpp and avl_tree_algorithms.hpp
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed bug &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3164&quot;&gt;#3164&lt;/a&gt;.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/mpl/index.html&quot;&gt;MPL&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Added &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;mpl&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;char_&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;mpl&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;string&lt;/span&gt;&lt;/code&gt;
+            for compile-time string manipulation, based on multichar literals (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2905&quot;&gt;#2905&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Updated &lt;a href=&quot;/libs/mpl/doc/refmanual.html&quot;&gt;MPL Reference Manual&lt;/a&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Bug fixes.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/program_options/index.html&quot;&gt;Program.Options&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Support for building with disabled exceptions (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2096&quot;&gt;#2096&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Unicode parser no longer drops original tokens (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2425&quot;&gt;#2425&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed crash on user-inserted items in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;variables_map&lt;/span&gt;&lt;/code&gt;
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2782&quot;&gt;#2782&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/proto/index.html&quot;&gt;Proto&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            PrimitiveTransforms have stricter conformance to ResultOf protocol. (Warning:
+            some invalid code may break.)
+          &lt;/li&gt;
+          &lt;li&gt;
+            Add a sensible default for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;proto&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;_default&lt;/span&gt;&lt;/code&gt;'s
+            template parameter.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Improved default evaluation strategy for pointers to members.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 3.4 portability fixes (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3021&quot;&gt;#3021&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Work around Visual C++'s non-std-compliant ciso646 macros.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/serialization/index.html&quot;&gt;Serialization&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Removed deprecated headers: &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;static_warning&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;,
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;state_saver&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;smart_cast&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;,
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;pfto&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;. Use the the equivalent headers
+            in the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;serialization&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;/code&gt;
+            directory instead (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3062&quot;&gt;#3062&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;detail&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;archive_serializer_map&lt;/span&gt;&lt;/code&gt; should now be
+            used instead of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;detail&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;archive_pointer_iserializer&lt;/span&gt;&lt;/code&gt;.
+            For more details see &lt;a href=&quot;/doc/libs/1_40_0/libs/serialization/doc/release.html&quot;&gt;the
+            library release notes&lt;/a&gt;.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/unordered/index.html&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Implement &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;emplace&lt;/span&gt;&lt;/code&gt; for
+            all compilers, not just ones with rvalue references and variadic templates
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1978&quot;&gt;#1978&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Create less buckets by default.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Some minor tweaks for better compiler support (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2908&quot;&gt;#2908&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3096&quot;&gt;#3096&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3082&quot;&gt;#3082&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/xpressive/index.html&quot;&gt;Xpressive&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Works on Visual C++ 10.0 (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3124&quot;&gt;#3124&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_40_0.build_system&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Build System&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      The default naming of libraries in Unix-like environment now matches system
+      conventions, and does not include various decorations. Naming of libraries
+      on Cygwin was also fixed. Support for beta versions of Microsoft Visual Studio
+      10 was added. With gcc, 64-bit compilation no longer requires that target architecture
+      be specified.
+    &lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_40_0.updated_tools&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Tools&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/tools/boostbook/index.html&quot;&gt;Boostbook&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Hide &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;INTERNAL&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;ONLY&lt;/span&gt;&lt;/code&gt;
+            enums in doxygen documentation (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3242&quot;&gt;#3242&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Tweaked appearance of member classes/structs/unions in a class synopsis.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/tools/quickbook/index.html&quot;&gt;Quickbook&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Support python code snippets (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3029&quot;&gt;#3029&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Add &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;teletype&lt;/span&gt;&lt;/code&gt; source mode
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1202&quot;&gt;#1202&lt;/a&gt;)
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_40_0.compilers_tested&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Compilers Tested&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      Boost's primary test compilers are:
+    &lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        OS X:
+        &lt;ul&gt;
+          &lt;li&gt;
+            GCC 4.0.1 on Intel Tiger and Leopard
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.0.1 on PowerPC Tiger
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        Linux:
+        &lt;ul&gt;
+          &lt;li&gt;
+            GCC 4.3.3 on Ubuntu Linux.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        Windows:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Visual C++ 7.1 SP1, 8.0 SP1 and 9.0 SP1 on Windows XP.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;p&gt;
+      Boost's additional test compilers include:
+    &lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        Linux:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Intel 9.0 on Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 10.0 on Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 10.1 on 64-bit Linux Redhat 5.1 Server.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 10.1 on Suse Linux on 64 bit Itanium.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 11.0 on Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 11.1 on Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 3.4.3, GCC 4.0.1, GCC 4.2.4, GCC 4.3.3 and GCC 4.4.0 on Red Hat Enterprise
+            Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.3.3 and GCC 4.4.0 with C++0x extensions on Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.1.1, 4.2.1 on 64-bit Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.1.2 on Suse Linux on 64 bit Itanium.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.1.2 on 64-bit Redhat Server 5.1.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC Open64 4.2.2 on Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.3.4 on Debian unstable.
+          &lt;/li&gt;
+          &lt;li&gt;
+            QLogic PathScale(TM) Compiler Suite: Version 3.1 on Red Hat Enterprise
+            Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC version 4.2.0 (PathScale 3.2 driver) on 64-bit Red Hat Enterprise
+            Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Sun 5.9 on Red Hat Enterprise Linux.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        OS X:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Intel 10.1, 11.0 on Intel Leopard.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 10.1, 11.0 on Intel Tiger.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.0.1, 4.2.1 on Intel Leopard.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.0.1 on Intel Tiger.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.0.1 on PowerPC Tiger.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        Windows:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Visual C++ 7.1 on XP.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 9.0 on XP.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 9.0 on Vista.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 9.0 on Vista 64-bit.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 9.0, using STLport 5.2, on XP and Windows Mobile 5.0.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 10.0 beta.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Borland 5.9.3, 6.1.0, 6.1.3.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Borland C++ Builder 2007 and 2009.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel C++ 11.1, with a Visual C++ 9.0 backend, on Vista 32-bit.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel C++ 11.1, with a Visual C++ 9.0 backend, on Vista 64-bit.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.3.3 and 4.4.0, on Mingw with C++0x features.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        AIX:
+        &lt;ul&gt;
+          &lt;li&gt;
+            IBM XL C/C++ Enterprise Edition for AIX, V10.1.0.0, on AIX Version 5.3.0.40.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        Solaris:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Sun C++ 5.7, 5.8, 5.9 on Solaris 5.10.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 3.4.6 on Solaris 5.10.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_40_0.acknowledgements&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Acknowledgements&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      &lt;a href=&quot;/users/people/beman_dawes.html&quot;&gt;Beman Dawes&lt;/a&gt;, Eric Niebler,
+      &lt;a href=&quot;/users/people/rene_rivera.html&quot;&gt;Rene Rivera&lt;/a&gt;, and Daniel
+      James managed this release.
+    &lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Version 1.39.0</title><pubDate>Sat, 02 May 2009 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Signals2. Updated Libraries: Asio, Flyweight, Foreach, Hash,
       Interprocess, Intrusive, Program.Options, Proto, PtrContainer, Range, Unordered,
       Xpressive. Updated Tools: Boostbook, Quickbook.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=679861</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.39.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -489,7 +964,7 @@
       Intrusive, Lexical Cast, Math, Multi-index Containers, Proto, Regex, Thread,
       TR1, Type Traits, Unordered, Xpressive. Other Changes: Experimental CMake build
       system.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=659602</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.38.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -1073,7 +1548,7 @@
 &lt;/div&gt;</description></item><item><title>Version 1.37.0</title><pubDate>Mon, 03 Nov 2008 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Library: Proto. Updated Libraries: Asio, Circular Buffer, Dynamic Bitset,
       Exception, Hash, Interprocess, Intrusive, Math, Type Traits, Unordered
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=637761</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.37.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -1362,7 +1837,7 @@
       New Libraries: Accumulators, Exception, Units, Unordered. Updated Libraries:
       Asio, Assign, Circular Buffer, Foreach, Function, Hash, Interprocess, Intrusive,
       Math, Multi-index Containers, MPI, PtrContainer, Spirit, Thread, Wave, Xpressive.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=619445</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.36.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -1766,7 +2241,7 @@
       Intrusive, Math/Special Functions, Math/Statistical Distributions, MPI, System.
       Updated Libraries: Graph, Hash, Iostreams, Multi Array, Multi-index Containers,
       Serialization, Thread, Wave, Xpressive.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=587936</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.35.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -2148,7 +2623,7 @@
   &lt;/div&gt;
 &lt;/div&gt;</description></item><item><title>Version 1.34.1</title><pubDate>Tue, 24 Jul 2007 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       Bugfix Release.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=527428</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.34.1/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -2239,7 +2714,7 @@
       Assign, Date_time, Filesystem, Function, Hash, Graph, MultiArray, Multi-Index,
       Optional, Parameter, Pointer Container, Python, Signals, Smart Pointer, String
       Algorithm, Wave
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=507975</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.34.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -2719,7 +3194,7 @@
 &lt;/div&gt;</description></item><item><title>Version 1.33.1</title><pubDate>Tue,  5 Dec 2006 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       Updated Libraries: Any, Config, Python, Smart Pointer, Regex, Iostreams, Functional/Hash,
       Multi-index Containers, Graph, Signals, Thread, and Wave.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=376197</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.33.1/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -2921,7 +3396,7 @@
       New Libraries: Iostream, Hash, Parameter, Pointer Container, Wave. Updated
       Libraries: Any, Assignment, Bind, Date-Time, Graph, Multi-Index, Program Options,
       Property Map, Python, Random Number, Range, Regex, Serialization, Signals.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=348655</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.33.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -3259,7 +3734,7 @@
       New Libraries: Assignment, Minmax, Multi-Index, Numeric Conversion, Program
       Options, Range, Serialization, String, Tribool. Updated Libraries: Graph, MPL,
       Python, Signals, Utility, Test. Removed Libraries: Compose.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=284047</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.32.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -3484,7 +3959,7 @@
       New Libraries: enable_if, Variant. Updated Libraries: Date Time, Filesystem,
       Iterator, MultiArray, Python, Random Number, Regex, Spirit, Test. Deprecated
       Libraries: Compose.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=214915</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.31.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -3670,7 +4145,7 @@
   &lt;/div&gt;
 &lt;/div&gt;</description></item><item><title>Version 1.30.2</title><pubDate>Tue, 19 Aug 2003 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       Bugfix release
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=178835</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.30.2/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -3766,7 +4241,7 @@
 &lt;/div&gt;</description></item><item><title>Version 1.30.0</title><pubDate>Wed, 19 Mar 2003 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Filesystem, Optional, Interval, MPL, Spirit Updated Libraries:
       Smart Pointers, Utility, Date-Time, Function, Operators, Test
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=147682</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.30.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -3864,7 +4339,7 @@
 &lt;/div&gt;</description></item><item><title>Version 1.29.0</title><pubDate>Thu, 10 Oct 2002 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Date-Time, Dynamic Bitset, Format. Updated Libraries: Function,
       Multi-Array, Preprocessor, Python, Signals, uBLASH.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=137397</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.29.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -3925,7 +4400,7 @@
 &lt;/div&gt;</description></item><item><title>Version 1.28.0</title><pubDate>Wed, 15 May 2002 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Lambda, I/O State Saver. Updated Libraries: Configuration, Random
       Number, Smart Pointers, Function Utility.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=123324</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.28.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -3977,7 +4452,7 @@
 &lt;/div&gt;</description></item><item><title>Version 1.27.0</title><pubDate>Tue,  5 Feb 2002 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       Updated Libraries: Python, Integer, Function, Quaternions, Octonions, Smart
       Pointers, Preprocessor, Threads.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=77358</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.27.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -4035,7 +4510,7 @@
 &lt;/div&gt;</description></item><item><title>Version 1.26.0</title><pubDate>Fri, 30 Nov 2001 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Common Factor, Preprocessor. Updated Libraries: Iterator Adaptor,
       Random Number, Operators.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=138095</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.26.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -4076,7 +4551,7 @@
   &lt;/ul&gt;
 &lt;/div&gt;</description></item><item><title>Version 1.25.1</title><pubDate>Mon,  5 Nov 2001 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       Updated Libraries: Graph, Thread, Function.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=138097</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.25.1/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -4117,7 +4592,7 @@
 &lt;/div&gt;</description></item><item><title>Version 1.25.0</title><pubDate>Mon,  1 Oct 2001 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Thread, Bind. Updated Libraries: Utility, Array, Config, Random
       Number, Math, Tokenizer.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=138098</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.25.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -4168,7 +4643,7 @@
   &lt;/ul&gt;
 &lt;/div&gt;</description></item><item><title>Version 1.24.0</title><pubDate>Sun, 19 Aug 2001 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Library: Tuple.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=138099</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.24.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -4195,7 +4670,7 @@
 &lt;/div&gt;</description></item><item><title>Version 1.23.0</title><pubDate>Fri,  6 Jul 2001 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Any, Function, Tokenizer, Special functions, Octonions, Quaternions.
       Updated Library: Smart Pointer.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=138102</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.23.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -4231,7 +4706,7 @@
   &lt;/ul&gt;
 &lt;/div&gt;</description></item><item><title>Version 1.22.0</title><pubDate>Fri, 25 May 2001 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libary: CRC. Updated Libraries: Graph, Integer, Regex, Smart Pointer, Utility.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=138104</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.22.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -4264,7 +4739,7 @@
   &lt;/ul&gt;
 &lt;/div&gt;</description></item><item><title>Version 1.21.2</title><pubDate>Tue, 24 Apr 2001 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Compatibility. Updated Libraries: Random Number, Integer, Graph.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=138108</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.21.2/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
@@ -4304,7 +4779,7 @@
   &lt;/ul&gt;
 &lt;/div&gt;</description></item><item><title>Version 1.21.1</title><pubDate>Wed, 14 Mar 2001 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       Updated Libraries: Graph, Python, Regex.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=8041&amp;release_id=138111</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.21.1/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
