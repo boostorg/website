@@ -76,10 +76,11 @@ function library_filter($lib) {
   global $filter_value, $category_value;
 
   $libversion = explode('.',$lib['boost-version']);
+
   return boost_version($libversion[0],$libversion[1],$libversion[2]) &&
-      (!$filter_value || ($lib[$filter_value] && $lib[$filter_value] != 'false')) &&
+      (!$filter_value || ($lib[$filter_value] && $lib[$filter_value] !== 'false')) &&
       (!isset($_GET['filter']) || $lib[$_GET['filter']]) &&
-      (!$category_value || $category_value == 'all' ||
+      (!$category_value || $category_value === 'all' ||
         array_search($category_value, $lib['category']) !== FALSE);
 }
 
