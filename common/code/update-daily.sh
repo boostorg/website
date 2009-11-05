@@ -2,8 +2,8 @@
 
 cd ${HOME}/www.boost.org/archives/incoming
 
-wget -q -O boost-build.zip http://zigzag.cs.msu.su/~ghost/boost_build_nightly/boost-build.zip
-wget -q -O boost-build.tar.bz2 http://zigzag.cs.msu.su/~ghost/boost_build_nightly/boost-build.tar.bz2
+wget -q -O boost-build.zip http://lvk.cs.msu.su/~ghost/boost_build_nightly/boost-build.zip
+wget -q -O boost-build.tar.bz2 http://lvk.cs.msu.su/~ghost/boost_build_nightly/boost-build.tar.bz2
 
 cd ${HOME}/www.boost.org/archives
 
