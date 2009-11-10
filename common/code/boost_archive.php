@@ -135,7 +135,8 @@ HTML;
         }
         else {
             $this->extractor_ = '404';
-            return unzip_error($exit_status);
+            return strstr($_SERVER['HTTP_HOST'], 'beta')
+                ? unzip_error($exit_status) : '';
         }
     }
 
