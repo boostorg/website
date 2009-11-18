@@ -53,20 +53,11 @@ class boost_feed
                             switch (strtolower($val['tag']))
                             {
                                 case 'pubdate':
-                                $item['pubdate'] = strtotime($item['pubdate']);
-                                if ($item['pubdate'] != 0)
-                                {
-                                    $item['date'] = gmdate('F jS, Y H:i ',$item['pubdate']).'GMT';
-                                }
-                                else
-                                {
-                                    $item['pubdate'] = time();
-                                    $item['date'] = "In Progress";
-                                }
-                                break;
-                                
                                 case 'dc:date':
-                                $item['pubdate'] = strtotime($item['dc:date']);
+                                $old_tz = date_default_timezone_get();
+                                date_default_timezone_set('GMT');
+                                $item['pubdate'] = strtotime($item[strtolower($val['tag'])]);
+                                date_default_timezone_set($old_tz);
                                 if ($item['pubdate'] != 0)
                                 {
                                     $item['date'] = gmdate('F jS, Y H:i ',$item['pubdate']).'GMT';

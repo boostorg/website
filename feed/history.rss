@@ -6,7 +6,423 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.40.0</title><pubDate>Thu, 27 Aug 2009 17:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+  <item><title>Version 1.41.0</title><pubDate>Tue, 17 Nov 2009 17:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+      New Library: Property Tree. Updated libraries: DateTime, Filesystem, Iostreams,
+      Math, Multi-index Containers, Proto, Python, Regex, Spirit, System, Thread,
+      Unordered, Utility, Wave, Xpressive. Updates to boost build and quickbook.
+      CMake has been removed from the main release.
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.41.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+  
+  
+  
+  &lt;div id=&quot;version_1_41_0.new_libraries&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/property_tree/index.html&quot;&gt;Property Tree&lt;/a&gt;:&lt;/span&gt; A
+        tree data structure especially suited to storing configuration data, from
+        Marcin Kalicinski and Sebastian Redl.
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_41_0.updated_libraries&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/date_time/index.html&quot;&gt;DateTime&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            The default format for time durations is now &amp;quot;&lt;code&gt;&lt;span class=&quot;special&quot;&gt;%-%&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;O&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;:%&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;:%&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;S&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;F&lt;/span&gt;&lt;/code&gt;&amp;quot; instead of &amp;quot;&lt;code&gt;&lt;span class=&quot;special&quot;&gt;%-%&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;H&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;:%&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;:%&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;S&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;F&lt;/span&gt;&lt;/code&gt;&amp;quot;
+            that was used previously. In order to retain the old behavior, the format
+            string has to be specified explicitly during the time IO facet construction
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1861&quot;&gt;#1861&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Gregorian dates now use 32-bit integer type internally on 64-bit platforms
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3308&quot;&gt;#3308&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            See the &lt;a href=&quot;/doc/html/date_time/details.html#date_time.changes&quot;&gt;full
+            changelog&lt;/a&gt; for more detail.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/filesystem/index.html&quot;&gt;Filesystem&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Bug fixes: (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3385&quot;&gt;#3385&lt;/a&gt;).
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3528&quot;&gt;#3528&lt;/a&gt;).
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3509&quot;&gt;#3509&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/iostreams/index.html&quot;&gt;Iostreams&lt;/a&gt;:&lt;/span&gt;
+  Some old
+        unreleased developments. There are still several open issues that should
+        be fixed in the next version.
+        &lt;ul&gt;
+          &lt;li&gt;
+            Add a grep filter (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1627&quot;&gt;#1627&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Support archives with multiple members (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1896&quot;&gt;#1896&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Make &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;tee&lt;/span&gt;&lt;/code&gt; work with input
+            streams (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/791&quot;&gt;#791&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Improved filesystem interoperability.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Several warnings fixed or suppressed (including &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1618&quot;&gt;#1618&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1875&quot;&gt;#1875&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2779&quot;&gt;#2779&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Various other fixes (including &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1580&quot;&gt;#1580&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1671&quot;&gt;#1671&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/math/index.html&quot;&gt;Math&lt;/a&gt;:&lt;/span&gt;
+  Substantially improved
+        the performance of the incomplete gamma function and it's inverse: this enhances
+        the performance of the gamma, poisson, chi-squared and non-central chi-squared
+        distributions.
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/multi_index/doc/index.html&quot;&gt;Multi-index Containers&lt;/a&gt;:&lt;/span&gt;
+  Maintenance
+        fixes. Consult the library &lt;a href=&quot;/libs/multi_index/doc/release_notes.html#boost_1_41&quot;&gt;release
+        notes&lt;/a&gt; for further information.
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/proto/index.html&quot;&gt;Proto&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Clean up some MSVC warnings and errors in /Za (disable Microsoft extensions)
+            mode.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixes for c++0x mode on various compilers.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/python/index.html&quot;&gt;Python&lt;/a&gt;:&lt;/span&gt;
+  Boost.Python now
+        supports Python 3 (Haoyu Bai's Google Summer of Code project, mentored by
+        Stefan Seefeld).
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/regex/index.html&quot;&gt;Regex&lt;/a&gt;:&lt;/span&gt;
+  Added support for
+        many Perl 5.10 syntax elements including named sub-expressions, branch resets
+        and recursive regular expressions.
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/spirit/index.html&quot;&gt;Spirit&lt;/a&gt;:&lt;/span&gt; This is the initial
+        official release of the new Spirit V2.1, a completely new library for parsing,
+        lexing, and output generation. Note: this release is not backwards compatible
+        with earlier versions. Known issue: &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;qi&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;symbol&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;find&lt;/span&gt;&lt;/code&gt;
+        will match a symbol that starts with the string you're searching for. This
+        will be fixed in the next version.
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/system/index.html&quot;&gt;System&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Bug fix: (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3559&quot;&gt;#3559&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/thread/index.html&quot;&gt;Thread&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Support for futures, promises and packaged tasks added
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;thread_specific_ptr&lt;/span&gt;&lt;/code&gt; is now faster when
+            there are lots of thread-specific objects
+          &lt;/li&gt;
+          &lt;li&gt;
+            Some Boost.Thread facilities are now header-only
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/unordered/index.html&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
+  Major update:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Replaced a lot of the macro based implementation with a cleaner template
+            based implementation.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Reduced memory use.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Full details in &lt;a href=&quot;/doc/html/unordered/changes.html#unordered.changes.boost_1_41_1&quot;&gt;the
+            changelog&lt;/a&gt;.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/utility/index.html&quot;&gt;Utility&lt;/a&gt;:&lt;/span&gt;
+  A &amp;quot;const&amp;quot;
+        issue of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;value_initialized&lt;/span&gt;&lt;/code&gt;
+        is fixed: Its &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+        member function and its conversion operator are replaced by overloads for
+        const and non-const access (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2548&quot;&gt;#2548&lt;/a&gt;).
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/wave/index.html&quot;&gt;Wave&lt;/a&gt;:&lt;/span&gt;
+  See the &lt;a href=&quot;/libs/wave/ChangeLog&quot;&gt;changelog&lt;/a&gt;
+        for details.
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/xpressive/index.html&quot;&gt;Xpressive&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Fix infinite loop with some uses of &lt;tt&gt;\Q...\E&lt;/tt&gt; quotemeta
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3586&quot;&gt;#3586&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Eliminate unreachable code warnings on MSVC
+          &lt;/li&gt;
+          &lt;li&gt;
+            Clean up some MSVC warnings and errors in /Za (&amp;quot;disable Microsoft
+            extensions&amp;quot;) mode.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixes for c++0x mode on various compilers.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_41_0.build_system&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Build System&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      A bug preventing &amp;quot;fat&amp;quot; 32-bit + 64-bit builds on OSX has been fixed.
+    &lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_41_0.boost_cmake_moved&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Boost.CMake moved&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      The cmake version of boost has moved; the Boost.CMmake release will be separate
+      and will lag the main release slightly, but will also be capable of producing
+      patch releases as necessary.
+    &lt;/p&gt;
+    &lt;p&gt;
+      More information on the &lt;a href=&quot;https:://svn.boost.org/trac/boost/wiki/CMake&quot;&gt;Boost
+      CMake wiki page&lt;/a&gt;.
+    &lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_41_0.updated_tools&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Tools&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/tools/quickbook/index.html&quot;&gt;Quickbook 1.5&lt;/a&gt;:&lt;/span&gt;
+  These
+        changes require your document to use the &lt;code&gt;&lt;span class=&quot;special&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;quickbook&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1.5&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;]&lt;/span&gt;&lt;/code&gt; tag:
+        &lt;ul&gt;
+          &lt;li&gt;
+            More intuitive syntax and variable lookup for template calls (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1174&quot;&gt;#1174&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2034&quot;&gt;#2034&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2036&quot;&gt;#2036&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Image attributes (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1157&quot;&gt;#1157&lt;/a&gt;)
+          &lt;/li&gt;
+          &lt;li&gt;
+            Table Ids (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1194&quot;&gt;#1194&lt;/a&gt;)
+          &lt;/li&gt;
+          &lt;li&gt;
+            Better handling of whitespace in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;section&lt;/span&gt;&lt;/code&gt;
+            syntax. (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2712&quot;&gt;#2712&lt;/a&gt;)
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_41_0.compilers_tested&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Compilers Tested&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      Boost's primary test compilers are:
+    &lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        OS X:
+        &lt;ul&gt;
+          &lt;li&gt;
+            GCC 4.0.1 on Intel Tiger and Leopard.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.0.1 on PowerPC Tiger.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        Linux:
+        &lt;ul&gt;
+          &lt;li&gt;
+            GCC 4.4.1 on Ubuntu Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.4 on Debian
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        Windows:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Visual C++ 7.1 SP1, 8.0 SP1 and 9.0 SP1 on Windows XP.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;p&gt;
+      Boost's additional test compilers include:
+    &lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        Linux:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Intel 10.1 on Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 10.1 on 64-bit Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 10.1 on Suse Linux on 64 bit Itanium.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 11.0 on 32 bit Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 11.0 on 64 bit Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 11.1 on 64 bit Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel 11.1 on 64 bit Linux Redhat 5.1 Server.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 3.4.3, GCC 4.2.4, GCC 4.3.3 and GCC 4.4.1 on Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.3.3 and GCC 4.4.1 with C++0x extensions on Red Hat Enterprise Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.3.3 on 64-bit Redhat Server 5.1.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.3.3 on 64 bit Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.3.4 on Debian unstable.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.3.2 on 64 bit Gentoo.
+          &lt;/li&gt;
+          &lt;li&gt;
+            QLogic PathScale(TM) Compiler Suite: Version 3.2 on Red Hat Enterprise
+            Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Sun 5.9 on Red Hat Enterprise Linux.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        OS X:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Intel C++ Compiler 11.1 on Leopard.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel C++ Compiler 10.1, 11.0.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.0.1 on Intel Tiger.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.0.1 on PowerPC Tiger.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        Windows:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Visual C++ 7.1, 8,0, 9,0 on XP.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 9.0 on 32-bit Vista.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 9.0 on AMD 64-bit Vista.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 9.0 using STLport 5.2 on XP and Windows Mobile 5.0.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Visual C++ 10.0 beta 1 with &lt;a href=&quot;http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=457199&quot;&gt;a
+            patch for the program options lib&lt;/a&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Borland/Codegear C++ 5.9.3, 6.1.3 (2009), 6.2.0 (2010).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Intel C++ 11.1, with a Visual C++ 9.0 backend, on Vista 32-bit.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.4.1 on Mingw, with and without C++0x extensions.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        AIX:
+        &lt;ul&gt;
+          &lt;li&gt;
+            IBM XL C/C++ Enterprise Edition for AIX, V10.1.0.0, on AIX Version 5.3.0.40.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        FreeBSD:
+        &lt;ul&gt;
+          &lt;li&gt;
+            GCC 4.2.1 on FreeBSD 7.0.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        Solaris:
+        &lt;ul&gt;
+          &lt;li&gt;
+            Sun C++ 5.10 on Solaris 5.10.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_41_0.acknowledgements&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Acknowledgements&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      &lt;a href=&quot;/users/people/beman_dawes.html&quot;&gt;Beman Dawes&lt;/a&gt;, Eric Niebler,
+      &lt;a href=&quot;/users/people/rene_rivera.html&quot;&gt;Rene Rivera&lt;/a&gt;, and Daniel
+      James managed this release.
+    &lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Version 1.40.0</title><pubDate>Thu, 27 Aug 2009 17:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       Build System improvements. Updated Libraries: Accumulators, Asio, Circular
       Buffer, Foreach, Function, Fusion, Hash, Interprocess, Intrusive, MPL, Program.Options,
       Proto, Random, Serialization, Unordered, Xpressive.

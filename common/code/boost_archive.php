@@ -129,12 +129,14 @@ HTML;
         while ($file_handle && !feof($file_handle)) {
             $text .= fread($file_handle,8*1024);
         }
-        if(pclose($file_handle) == 0) {
+        $exit_status = pclose($file_handle);
+        if($exit_status == 0) {
             return $text;
         }
         else {
             $this->extractor_ = '404';
-            return '';
+            return strstr($_SERVER['HTTP_HOST'], 'beta')
+                ? unzip_error($exit_status) : '';
         }
     }
 
@@ -529,6 +531,9 @@ HTML;
         # error in those cases.
 
         print '<h1>404 Not Found</h1><p>File "' . $this->file_ . '"not found.</p>';
+        if($this->content_) {
+            print '<p>Unzip error: '.htmlentities($this->content_).'</p>';
+        }
     }
 }
 
@@ -544,7 +549,7 @@ function unzip_error($exit_status) {
     case 5: return 'Unzip was unable to allocate memory or unable to obtain a tty to read the decryption password(s).';
     case 6: return 'Unzip was unable to allocate memory during decompression to disk.';
     case 7: return 'Unzip was unable to allocate memory during in-memory decompression.';
-    case 9: return 'The specified zipfiles were not found.';
+    case 9: return 'The specified zipfile was not found.';
     case 10: return 'Invalid options were specified on the command line.';
     case 11: return 'No matching files were found.';
     case 50: return 'The disk is (or was) full during extraction.';
