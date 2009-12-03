@@ -3,16 +3,22 @@ require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
 function add_boost_build_analytics($content) {
     $analytics = <<<EOS
-<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
-</script>
 <script type="text/javascript">
-_uacct = "UA-2917240-2";
-urchinTracker();
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2917240-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
 </script>
 EOS;
 
     return stripos($content, '_uacct = "UA-2917240-2"') !== FALSE ? $content :
-        str_ireplace('</body>', $analytics.'</body>', $content);
+        str_ireplace('</head>', $analytics.'</head>', $content);
 }
 $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type[,preprocess hook]),
@@ -42,7 +48,18 @@ div.sidebar {
 }
   /*]]>*/
   </style>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2917240-2']);
+  _gaq.push(['_trackPageview']);
 
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
 </head><!-- <?php print $_file->file_; ?> -->
 
 <body>
@@ -85,11 +102,5 @@ div.sidebar {
 
     <div class="clear"></div>
   </div>
-  <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
-  </script>
-  <script type="text/javascript">
-  _uacct = "UA-2917240-2";
-  urchinTracker();
-  </script>  
 </body>
 </html><?php } ?>

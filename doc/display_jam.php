@@ -19,6 +19,18 @@ if (!$_file->is_raw()) { #~ require_once(dirname(__FILE__) . '/../common/code/we
   <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style/csshover3.htc); } </style> <![endif]-->
   <?php #~ pwn_head(); ?>
 
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2917240-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
 </head><!-- <?php print $_file->file_; ?> -->
 
 <body>
@@ -68,12 +80,6 @@ if (!$_file->is_raw()) { #~ require_once(dirname(__FILE__) . '/../common/code/we
     </div>
 
     <div class="clear"></div>
-  </div>
-  <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
-  </script>
-  <script type="text/javascript">
-  _uacct = "UA-2917240-2";
-  urchinTracker();
-  </script>  
+  </div> 
 </body>
 </html><?php } ?>
