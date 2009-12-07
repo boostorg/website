@@ -2,9 +2,10 @@
     [quickbook 1.4]
     [source-mode c++]
     [purpose Build System improvements.
-        Updated Libraries: Accumulators, Asio, Circular Buffer, Foreach, Function, Fusion, Hash,
-        Interprocess, Intrusive, MPL, Program.Options, Proto, Random, Serialization, Unordered,
-        Xpressive.]
+        Updated Libraries: Accumulators, Asio, Circular Buffer, Foreach,
+        Function, Fusion, Graph, Hash, Interprocess, Intrusive, MPL,
+        Program.Options, Property Map, Proto, Random, Serialization,
+        Unordered, Xpressive.]
     [authors [Dawes, Beman]]
     [last-revision Thu, 27 Aug 2009 17:00:00 GMT]
 ]
@@ -12,6 +13,12 @@
 [include ext.qbk]
 
 [download http://sourceforge.net/projects/boost/files/boost/1.40.0/]
+
+[section Update]
+
+Added missing notes for Graph and Property Map.
+
+[endsect]
 
 [section Boost.CMake]
 
@@ -85,6 +92,18 @@ for pointers to working versions.
 * [phrase library..[@/libs/fusion/index.html Fusion]:]
   * Improved compile times for `fusion::vector`.
 
+* [phrase library..[@/libs/graph/index.html Graph]:]
+  * Merged in the [@/libs/graph_parallel/doc/html/index.html Parallel Boost
+    Graph Library], giving a full suite of graph algorithms and data
+    structures for distributed-memory computers (such as clusters).
+  * Updates to the interface of the compressed sparse row graph, including
+    constructors from unsorted edge lists.
+  * An implicit grid graph, saving memory over using the former generator.
+  * New algorithms: Dijkstra's single-source shortest path algorithm without a
+    separate color map and an algorithm to find maximal common subgraphs
+    between two graphs.
+  * Assorted bug fixes.
+
 * [phrase library..[@/libs/functional/hash/index.html Hash]:]
   * Automatically configure the float functions using template metaprogramming
     instead of trying to configure every possibility manually.
@@ -119,6 +138,14 @@ for pointers to working versions.
     ([@https://svn.boost.org/trac/boost/ticket/2425 #2425]).
   * Fixed crash on user-inserted items in `variables_map`
     ([@https://svn.boost.org/trac/boost/ticket/2782 #2782]).    
+
+* [phrase library..[@/libs/property_map/index.html Property Map]:]
+ * Moved property map code into a separate directory, `boost/property_map/`. The
+   old files exist and forward to the new ones; the previous files directly in
+   `boost/` will be removed in Boost 1.42.0.
+ * Moved distributed property maps to `boost::graph::parallel` namespace.
+ * Added a property map based on a `boost::shared_array`, providing a simpler
+   interface.
 
 * [phrase library..[@/libs/proto/index.html Proto]:]
   * PrimitiveTransforms have stricter conformance to ResultOf protocol.
