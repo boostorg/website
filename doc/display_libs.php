@@ -24,7 +24,7 @@ EOS;
 
     $content = preg_replace(
         '@<a\s+href="(http://spirit.sourceforge.net[^"]*)"@i',
-        '<a href="${1}" onclick=\'_gaq.push(["_link", "${1}"); return false;\'',
+        '<a href="${1}" onclick=\'_gaq.push(["_link", "${1}"]); return false;\'',
         $content );
 
     return str_ireplace('</head>', $analytics.'</head>', $content);
