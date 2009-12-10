@@ -2,11 +2,16 @@
 require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
 function add_spirit_analytics($content) {
+    if(stripos($content, '_uacct = "UA-11715441-2"') !== FALSE)
+        return $content;
+
     $analytics = <<<EOS
 <script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-11715441-2']);
   _gaq.push(['_trackPageview']);
+  _gaq.push(['_setDomainName', 'none']);
+  _gaq.push(['_setAllowLinker', true]);
 
   (function() {
     var ga = document.createElement('script');
@@ -17,8 +22,12 @@ function add_spirit_analytics($content) {
 </script>
 EOS;
 
-    return stripos($content, '_uacct = "UA-11715441-2"') !== FALSE ? $content :
-        str_ireplace('</head>', $analytics.'</head>', $content);
+    $content = preg_replace(
+        '@<a\s+href="(http://spirit.sourceforge.net[^"]*)"@i',
+        '<a href="${1}" onclick=\'_gaq.push(["_link", "${1}"); return false;\'',
+        $content );
+
+    return str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
 $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
