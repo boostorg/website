@@ -8,10 +8,16 @@ function add_spirit_analytics($content) {
     $analytics = <<<EOS
 <script type="text/javascript">
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-11715441-2']);
-  _gaq.push(['_trackPageview']);
-  _gaq.push(['_setDomainName', 'none']);
-  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(
+    ['_setAccount', 'UA-11715441-2'],
+    ['_trackPageview'],
+    ['_setDomainName', 'none'],
+    ['_setAllowLinker', true],
+    ['test._setAccount', 'UA-9234413-1'],
+    ['test._trackPageview'],
+    ['test._setDomainName', 'none'],
+    ['test._setAllowLinker', true],
+    );
 
   (function() {
     var ga = document.createElement('script');
@@ -64,6 +70,7 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   array('@.*@','@^libs/test/doc/components/test_tools/reference/.*(html|htm)$@i','raw','text/html'),
   array('@.*@','@^libs/python/doc/PyConDC_2003/bpl.html$@i','raw','text/html'),
   array('@.*@','@^libs/spirit/.*(html|htm)$@i','simple','text/html', 'add_spirit_analytics'),
+  array('@.*@','@^libs/fusion/.*(html|htm)$@i','basic','text/html', 'add_spirit_analytics'),
   array('@.*@','@^libs/static_assert/static_assert.htm$@i','raw','text/html'),
   array('@.*@','@^libs/type_traits/cxx_type_traits.htm$@i','raw','text/html'),
   array('@.*@','@^libs/utility/iterator_adaptors.htm$@i','raw','text/html'),
