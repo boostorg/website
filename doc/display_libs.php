@@ -16,7 +16,7 @@ function add_spirit_analytics($content) {
     ['test._setAccount', 'UA-9234413-1'],
     ['test._trackPageview'],
     ['test._setDomainName', 'none'],
-    ['test._setAllowLinker', true],
+    ['test._setAllowLinker', true]
     );
 
   (function() {
