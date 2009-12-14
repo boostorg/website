@@ -12,11 +12,7 @@ function add_spirit_analytics($content) {
     ['_setAccount', 'UA-11715441-2'],
     ['_trackPageview'],
     ['_setDomainName', 'none'],
-    ['_setAllowLinker', true],
-    ['test._setAccount', 'UA-9234413-1'],
-    ['test._trackPageview'],
-    ['test._setDomainName', 'none'],
-    ['test._setAllowLinker', true]
+    ['_setAllowLinker', true]
     );
 
   (function() {
