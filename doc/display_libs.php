@@ -1,6 +1,37 @@
 <?php
 require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
+function add_spirit_analytics($content) {
+    if(stripos($content, '_uacct = "UA-11715441-2"') !== FALSE)
+        return $content;
+
+    $analytics = <<<EOS
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(
+    ['_setAccount', 'UA-11715441-2'],
+    ['_trackPageview'],
+    ['_setDomainName', 'none'],
+    ['_setAllowLinker', true]
+    );
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
+EOS;
+
+    $content = preg_replace(
+        '@<a\s+href="(http://spirit.sourceforge.net[^"]*)"@i',
+        '<a href="${1}" onclick=\'_gaq.push(["_link", "${1}"]); return false;\'',
+        $content );
+
+    return str_ireplace('</head>', $analytics.'</head>', $content);
+}
+
 $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type[,preprocess hook]),
   //~ this handles most of the simple cases of index.htm(l) redirect files
@@ -34,7 +65,8 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   array('@.*@','@^libs/preprocessor/doc/.*(html|htm)$@i','raw','text/html'),
   array('@.*@','@^libs/test/doc/components/test_tools/reference/.*(html|htm)$@i','raw','text/html'),
   array('@.*@','@^libs/python/doc/PyConDC_2003/bpl.html$@i','raw','text/html'),
-  array('@.*@','@^libs/spirit/.*(html|htm)$@i','raw','text/html'),
+  array('@.*@','@^libs/spirit/.*(html|htm)$@i','simple','text/html', 'add_spirit_analytics'),
+  array('@.*@','@^libs/fusion/.*(html|htm)$@i','basic','text/html', 'add_spirit_analytics'),
   array('@.*@','@^libs/static_assert/static_assert.htm$@i','raw','text/html'),
   array('@.*@','@^libs/type_traits/cxx_type_traits.htm$@i','raw','text/html'),
   array('@.*@','@^libs/utility/iterator_adaptors.htm$@i','raw','text/html'),
