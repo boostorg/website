@@ -550,7 +550,7 @@ Bitfield
 
 :Review Manager: Needed
 
-:Download: http://svn.boost.org/svn/boost/sandbox/bitfield with documentation available at http://svn.boost.org/svn/boost/sandbox/bitfield/libs/bitfield/doc/index.html
+:Download: http://svn.boost.org/svn/boost/sandbox/bitfield with documentation available at http://svn.boost.org/svn/boost/sandbox/bitfield/libs/integer/doc/index.html
 
 :Description:
 
