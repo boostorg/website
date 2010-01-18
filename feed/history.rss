@@ -6,7 +6,7 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.42.0</title><pubDate>$Date$</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+  <item><title>Version 1.42.0</title><pubDate>$Date: 2010/01/18 19:05:59 $</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Updated Libraries:
     &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.42.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
@@ -25,6 +25,69 @@
   &lt;div id=&quot;version_1_42_0.updated_libraries&quot;&gt;
     &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
     &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Added a new HTTP Server 4 example illustrating the use of stackless coroutines
+            with Asio.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed handler allocation and invocation to use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;addressof&lt;/span&gt;&lt;/code&gt;
+            to get the address of handler objects, rather than applying &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;operator&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;amp;&lt;/span&gt;&lt;/code&gt;
+            directly (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2977&quot;&gt;#2977&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Restricted MSVC buffer debugging workaround to 2008, as it causes a crash
+            with 2010 beta 2 (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3796&quot;&gt;#3796&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3822&quot;&gt;#3822&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed a problem with the lifetime of handler memory, where Windows needs
+            the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;OVERLAPPED&lt;/span&gt;&lt;/code&gt; structure
+            to be valid until both the initiating function call has returned and
+            the completion packet has been delivered.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Don't block signals while performing system calls, but instead restart
+            the calls if they are interrupted.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Documented the guarantee made by strand objects with respect to order
+            of handler invocation.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed strands to use a pool of implementations, to make copying of
+            strands cheaper.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Ensured that kqueue support is enabled for BSD platforms (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3626&quot;&gt;#3626&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added a &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost_&lt;/span&gt;&lt;/code&gt; prefix
+            to the &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;extern&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&amp;quot;C&amp;quot;&lt;/span&gt;&lt;/code&gt;
+            thread entry point function (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3809&quot;&gt;#3809&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            In &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;getaddrinfo&lt;/span&gt;&lt;/code&gt; emulation,
+            only check the socket type (&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;SOCK_STREAM&lt;/span&gt;&lt;/code&gt;
+            or &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;SOCK_DGRAM&lt;/span&gt;&lt;/code&gt;) if a service
+            name has been specified. This should allow the emulation to work with
+            raw sockets.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added a workaround for some broken Windows firewalls that make a socket
+            appear bound to 0.0.0.0 when it is in fact bound to 127.0.0.1.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Applied a fix for reported excessive CPU usage under Solaris (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3670&quot;&gt;#3670&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added some support for platforms that use older compilers such as g++
+            2.95 (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3743&quot;&gt;#3743&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
       &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/circular_buffer/index.html&quot;&gt;Circular Buffer&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
@@ -215,6 +278,12 @@
             &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3764&quot;&gt;#3764&lt;/a&gt;
           &lt;/li&gt;
         &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/spirit/index.html&quot;&gt;Spirit&lt;/a&gt;:&lt;/span&gt;
+  Spirit V2.2, see
+        the '&lt;a href=&quot;/doc/libs/1_42_0/libs/spirit/doc/html/spirit/what_s_new.html&quot;&gt;What's
+        New&lt;/a&gt;' section for details.
       &lt;/li&gt;
       &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/unordered/index.html&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
