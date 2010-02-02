@@ -96,7 +96,7 @@ function libref($lib)
     }
     else
     {
-      $docref = '/doc/libs/1_41_0/'.$lib['documentation'];
+      $docref = '/doc/libs/1_42_0/'.$lib['documentation'];
     }
     print '<a href="'.$docref.'">'.($lib['name'] ? $lib['name'] : $lib['key']).'</a>';
   }
