@@ -499,22 +499,33 @@ HTML;
         $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $text);
         $tag_end = $is_xhtml ? '/>' : '>';
         
-        $text = preg_split('@(</head>|<body[^>]*>)@i',$text,-1,PREG_SPLIT_DELIM_CAPTURE);
-        $state = 0;
-        foreach($text as $section) {
-            print($section);
-            switch($state) {
-            case 0:
-                print '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
-                print '<link rel="stylesheet" type="text/css" href="/style/section-basic.css"'.$tag_end;
-                $state = 1;
+        $sections = preg_split('@(</head>|<body[^>]*>)@i',$text,-1,PREG_SPLIT_DELIM_CAPTURE);
+
+        $body_index = 0;
+        $index = 0;
+        foreach($sections as $section) {
+            if(stripos($section, '<body') === 0) {
+                $body_index = $index;
                 break;
-            case 1:
-                if(stripos($section, '<body') === 0) {
-                    $state = 2;
+            }
+            ++$index;
+        }
+
+        if(!$body_index) {
+            print($text);
+        }
+        else {
+            $index = 0;
+            foreach($sections as $section) {
+                print($section);
+                if($index == 0) {
+                    print '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
+                    print '<link rel="stylesheet" type="text/css" href="/style/section-basic.css"'.$tag_end;
+                }
+                else if($index == $body_index) {
                     virtual("/common/heading-doc.html");
                 }
-                break;
+                ++$index;
             }
         }
     }
