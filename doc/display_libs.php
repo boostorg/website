@@ -71,6 +71,7 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   array('@.*@','@^libs/type_traits/cxx_type_traits.htm$@i','raw','text/html'),
   array('@.*@','@^libs/utility/iterator_adaptors.htm$@i','raw','text/html'),
   array('@.*@','@^libs/wave/.*(html|htm)$@i','raw','text/html'),
+  array('@.*@','@^libs/range/doc/.*(html|htm)$@i','raw','text/html'),
   array('@.*@','@^status/index.html$@i','raw','text/html'),
   array('@.*@','@^tools/boostbook/index.html$@i','raw','text/html'),
   array('@.*@','@^tools/build/index.html$@i','raw','text/html'),
