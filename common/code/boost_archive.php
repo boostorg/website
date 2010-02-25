@@ -256,34 +256,6 @@ class html_base_filter extends extract_filter_base
             $archive->title_ = $title[1];
         }
     }
-    
-    function content($archive)
-    {
-        $text = $archive->content_;
-        
-        $text = preg_replace(
-            '@href="?http://www.boost.org/?([^"\s]*)"?@i',
-            'href="/${1}"',
-            $text );
-        $text = preg_replace(
-            '@href="?http://boost.org/?([^"\s]*)"?@i',
-            'href="/${1}"',
-            $text );
-        $text = preg_replace(
-            '@href="?(?:\.\./)+people/(.*\.htm)"?@i',
-            'href="/users/people/${1}l"',
-            $text );
-        $text = preg_replace(
-            '@href="?(?:\.\./)+(LICENSE_[^"\s]*\.txt)"?@i',
-            'href="/${1}"',
-            $text );
-        $text = preg_replace(
-            '@<a\s+(class="[^"]+")?\s*href="?(http|mailto)(:[^"\s]*)"?@i',
-            '<a class="external" href="${2}${3}"',
-            $text );
-        
-        return $text;
-    }
 }
 
 class boost_book_html_filter extends html_base_filter
@@ -295,7 +267,7 @@ class boost_book_html_filter extends html_base_filter
 
     function content($archive)
     {
-        $text = parent::content($archive);
+        $text = prepare_html($archive->content_);
         
         $text = substr($text,strpos($text,'<div class="spirit-nav">'));
         $text = substr($text,0,strpos($text,'</body>'));
@@ -332,7 +304,7 @@ class boost_libs_filter extends html_base_filter
 
     function content($archive)
     {
-        $text = parent::content($archive);
+        $text = prepare_html($archive->content_);
         
         preg_match('@<body[^>]*>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
         preg_match('@</body>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
@@ -516,7 +488,7 @@ class boost_frame1_filter extends html_base_filter
 
     function content($archive)
     {
-        $text = parent::content($archive);
+        $text = prepare_html($archive->content_);
         
         $text = substr($text,strpos($text,'<div class="spirit-nav">'));
         $text = substr($text,0,strpos($text,'</body>'));
@@ -549,7 +521,7 @@ class simple_filter extends html_base_filter
 
     function content($archive)
     {
-        print parent::content($archive);
+        print prepare_html($archive->content_);
     }
     
     function render($archive)
@@ -566,7 +538,7 @@ class basic_filter extends html_base_filter
 
     function content($archive)
     {
-        $text = parent::content($archive);
+        $text = prepare_html($archive->content_);
 
         $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $text);
         $tag_end = $is_xhtml ? '/>' : '>';
@@ -630,6 +602,31 @@ class h404_filter extends filter_base
     function render($archive) {
         $archive->display_template();
     }
+}
+
+function prepare_html($text) {
+    $text = preg_replace(
+        '@href="?http://www.boost.org/?([^"\s]*)"?@i',
+        'href="/${1}"',
+        $text );
+    $text = preg_replace(
+        '@href="?http://boost.org/?([^"\s]*)"?@i',
+        'href="/${1}"',
+        $text );
+    $text = preg_replace(
+        '@href="?(?:\.\./)+people/(.*\.htm)"?@i',
+        'href="/users/people/${1}l"',
+        $text );
+    $text = preg_replace(
+        '@href="?(?:\.\./)+(LICENSE_[^"\s]*\.txt)"?@i',
+        'href="/${1}"',
+        $text );
+    $text = preg_replace(
+        '@<a\s+(class="[^"]+")?\s*href="?(http|mailto)(:[^"\s]*)"?@i',
+        '<a class="external" href="${2}${3}"',
+        $text );
+    
+    return $text;
 }
 
 // Return a readable error message for unzip exit state.
