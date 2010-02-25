@@ -523,10 +523,13 @@ function remove_html_banner($text) {
         if(strpos($table_contents, 'boost.png') !== FALSE) {
             preg_match('@<td[^<>]*>?([^<]*<(h[12]|p).*?)</td>@is', $table_contents,
                 $table_contents_header, PREG_OFFSET_CAPTURE);
-            $text =
-                substr($text, 0, $table_begin[0][1]).
-                (isset($table_contents_header[1]) ? $table_contents_header[1][0] : '').
-                substr($text, $table_end[0][1] + strlen($table_end[0][0]));
+            
+            $head = substr($text, 0, $table_begin[0][1]);
+            $header = isset($table_contents_header[1]) ? $table_contents_header[1][0] : '';
+            $tail = substr($text, $table_end[0][1] + strlen($table_end[0][0]));
+            $tail = preg_replace('@^\s*<hr\s*/?>\s*@', '', $tail);
+                
+            $text = $head.$header.$tail;
         }
     }
     return $text;
