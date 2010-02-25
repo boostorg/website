@@ -96,36 +96,27 @@ class boost_archive
             }
         }
         
+        if ($get_as_raw) $this->extractor_ = 'raw';
+        else if (!$this->extractor_) $this->extractor_ = 'h404';
+
+        $extractor_name = $this->extractor_.'_filter';
+        $this->extractor_instance_ = new $extractor_name;
+
         $unzip =
           UNZIP
           .' -p '.escapeshellarg($this->archive_)
           .' '.escapeshellarg($this->file_);
 
-        if (! $this->extractor_)
-        {
-            # File doesn't exist, or we don't know how to handle it.
-            $this->extractor_ = 'h404';
-            $this->extractor_instance_ = new h404_filter;
-            $this->extractor_instance_->init($this);
-        }
-        else if ($get_as_raw || $this->extractor_ == 'raw')
-        {
-            $this->_extract_raw($unzip);
-            $this->extractor_instance_ = new raw_filter;
-            //~ print "--- $unzip";
-        }
-        else
-        {
-            /* We pre-extract so we can get this like meta tag information
-               before we have to print it out. */
-            $this->content_ = $this->_extract_string($unzip);
+        // Note: this can change $this->extractor_instance_:
+        $this->content_ = $this->extractor_instance_->extract($this, $unzip);
+        $this->extractor_instance_->init($this);
 
-            $extractor_name = $this->extractor_.'_filter';
-            $this->extractor_instance_ = new $extractor_name;
-            $this->extractor_instance_->init($this);
+        if ($this->extractor_ != 'h404' && $this->extractor_ != 'raw')
+        {
             if($this->preprocess_) {
                 $this->content_ = call_user_func($this->preprocess_, $this->content_);
             }
+
             if ($this->extractor_ == 'simple')
             {
                 $this->extractor_instance_->content($this);
@@ -154,41 +145,6 @@ HTML;
         return $this->extractor_ == 'raw' || $this->extractor_ == 'simple';
     }
 
-    function _extract_string($unzip)
-    {
-        $file_handle = popen($unzip,'r');
-        $text = '';
-        while ($file_handle && !feof($file_handle)) {
-            $text .= fread($file_handle,8*1024);
-        }
-        $exit_status = pclose($file_handle);
-
-        if($exit_status == 0) {
-            return $text;
-        }
-        else {
-            $this->extractor_ = 'h404';
-            return strstr($_SERVER['HTTP_HOST'], 'beta')
-                ? unzip_error($exit_status) : '';
-        }
-    }
-
-    function _extract_raw($unzip)
-    {
-        header('Content-type: '.$this->type_);
-        ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
-        $file_handle = popen($unzip,'rb');
-        fpassthru($file_handle);
-        $exit_status = pclose($file_handle);
-        
-        // Don't display errors for a corrupt zip file, as we seemd to
-        // be getting them for legitimate files.
-
-        if($exit_status > 3)
-            echo 'Error extracting file: '.unzip_error($exit_status);
-
-    }
-    
     function content()
     {
         if ($this->extractor_instance_)
@@ -213,12 +169,53 @@ HTML;
     }
 }
 
-class raw_filter
+class filter_base
 {
-    // No methods, since they shouldn't be called at the moment.
-}
+    function extract($archive, $unzip) {}
+    function init($archive) {}
+    function content($archive) {}
+};
 
-class text_filter
+class raw_filter extends filter_base
+{    
+    function extract($archive, $unzip) {
+        header('Content-type: '.$archive->type_);
+        ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
+        $file_handle = popen($unzip,'rb');
+        fpassthru($file_handle);
+        $exit_status = pclose($file_handle);
+        
+        // Don't display errors for a corrupt zip file, as we seemd to
+        // be getting them for legitimate files.
+
+        if($exit_status > 3)
+            echo 'Error extracting file: '.unzip_error($exit_status);
+    }
+};
+
+class extract_filter_base extends filter_base
+{
+    function extract($archive, $unzip) {
+        $file_handle = popen($unzip,'r');
+        $text = '';
+        while ($file_handle && !feof($file_handle)) {
+            $text .= fread($file_handle,8*1024);
+        }
+        $exit_status = pclose($file_handle);
+
+        if($exit_status == 0) {
+            return $text;
+        }
+        else {
+            $archive->extractor_ = 'h404';
+            $archive->extractor_instance_ = new h404_filter;
+            return strstr($_SERVER['HTTP_HOST'], 'beta')
+                ? unzip_error($exit_status) : '';
+        }
+    }
+};
+
+class text_filter extends extract_filter_base
 {
     function init($archive)
     {
@@ -234,7 +231,7 @@ class text_filter
     }
 }
 
-class cpp_filter
+class cpp_filter extends extract_filter_base
 {
     function init($archive)
     {
@@ -261,7 +258,7 @@ class cpp_filter
     }
 }
 
-class html_base_filter
+class html_base_filter extends extract_filter_base
 {
     function init($archive)
     {
@@ -607,7 +604,7 @@ class basic_filter extends html_base_filter
     }
 }
 
-class h404_filter
+class h404_filter extends filter_base
 {
     function init($archive)
     {
