@@ -41,9 +41,9 @@ function get_archive_location(
 function display_from_archive(
     $archive_location_details,
     $content_map = array(),
-    $get_as_raw = false)
+    $extractor = null)
 {
-    $_file = new boost_archive($archive_location_details, $content_map, $get_as_raw);
+    $_file = new boost_archive($archive_location_details, $content_map, $extractor);
 }
 
 class boost_archive
@@ -63,7 +63,7 @@ class boost_archive
     function boost_archive(
         $archive_location_details,
         $content_map = array(),
-        $get_as_raw = false)
+        $extractor = null)
     {
         $this->version_ = $archive_location_details['version'];
         $this->key_ = $archive_location_details['key'];
@@ -95,8 +95,8 @@ class boost_archive
             }
         }
         
-        if ($get_as_raw) $this->extractor_ = 'raw';
-        else if (!$this->extractor_) $this->extractor_ = 'h404';
+        if ($extractor) $this->extractor_ = $extractor;
+        if (!$this->extractor_) $this->extractor_ = 'h404';
 
         $extractor_name = $this->extractor_.'_filter';
         $this->extractor_instance_ = new $extractor_name;

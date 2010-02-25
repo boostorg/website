@@ -10,5 +10,5 @@ display_from_archive(
   array(
   //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type),
   ),
-  true // we always want raw output
+  'raw' // we always want raw output
 );
