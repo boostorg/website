@@ -304,11 +304,23 @@ class boost_libs_filter extends html_base_filter
 
     function content($archive)
     {
+        return $archive->content_;
+    }
+    
+    function render($archive)
+    {
         $text = extract_html_body($archive->content_);
-        $text = prepare_html($text);
-        $text = remove_html_banner($text);
-        $text = prepare_themed_html($text);        
-        print $text;
+        if($text) {
+            $text = prepare_html($text);
+            $text = remove_html_banner($text);
+            $text = prepare_themed_html($text);
+            $archive->content_ = $text;
+            
+            $archive->display_template();
+        }
+        else {
+            print $archive->content_;
+        }
     }
 
     function render($archive) {
@@ -376,6 +388,7 @@ class basic_filter extends html_base_filter
     function content($archive)
     {
         $text = prepare_html($archive->content_);
+        $text = remove_html_banner($text);
 
         $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $text);
         $tag_end = $is_xhtml ? '/>' : '>';
@@ -514,8 +527,10 @@ function remove_html_banner($text) {
         if(strpos($table_contents, 'boost.png') !== FALSE) {
             preg_match('@<td[^<>]*>?([^<]*<(h[12]|p).*?)</td>@is', $table_contents,
                 $table_contents_header, PREG_OFFSET_CAPTURE);
-            $text = (isset($table_contents_header[1]) ? $table_contents_header[1][0] : '').
-                substr($text, $table_end[0][1] + 8);
+            $text =
+                substr($text, 0, $table_begin[0][1]).
+                (isset($table_contents_header[1]) ? $table_contents_header[1][0] : '').
+                substr($text, $table_end[0][1] + strlen($table_end[0][0]));
         }
     }
     return $text;
