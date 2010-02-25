@@ -44,7 +44,6 @@ function display_from_archive(
     $get_as_raw = false)
 {
     $_file = new boost_archive($archive_location_details, $content_map, $get_as_raw);
-    $_file->render();
 }
 
 class boost_archive
@@ -111,17 +110,11 @@ class boost_archive
         $this->content_ = $this->extractor_instance_->extract($this, $unzip);
         $this->extractor_instance_->init($this);
 
-        if ($this->extractor_ != 'h404' && $this->extractor_ != 'raw')
-        {
-            if($this->preprocess_) {
-                $this->content_ = call_user_func($this->preprocess_, $this->content_);
-            }
-
-            if ($this->extractor_ == 'simple')
-            {
-                $this->extractor_instance_->content($this);
-            }
+        if ($this->extractor_ != 'h404' && $this->extractor_ != 'raw' && $this->preprocess_) {
+            $this->content_ = call_user_func($this->preprocess_, $this->content_);
         }
+        
+        $this->extractor_instance_->render($this);
     }
     
     function content_head()
@@ -135,31 +128,11 @@ class boost_archive
 HTML;
     }
     
-    function is_basic()
-    {
-        return $this->extractor_ == 'basic';
-    }
-    
-    function is_raw()
-    {
-        return $this->extractor_ == 'raw' || $this->extractor_ == 'simple';
-    }
-
     function content()
     {
         if ($this->extractor_instance_)
         {
             $this->extractor_instance_->content($this);
-        }
-    }
-    
-    function render()
-    {
-        if ($this->is_basic()) {
-            print $this->content();
-        }
-        else if(!$this->is_raw()) {
-            $this->display_template();
         }
     }
     
@@ -174,6 +147,7 @@ class filter_base
     function extract($archive, $unzip) {}
     function init($archive) {}
     function content($archive) {}
+    function render($archive) {}
 };
 
 class raw_filter extends filter_base
@@ -229,6 +203,10 @@ class text_filter extends extract_filter_base
         print htmlentities($archive->content_);
         print "</pre>\n";
     }
+
+    function render($archive) {
+        $archive->display_template();
+    }
 }
 
 class cpp_filter extends extract_filter_base
@@ -255,6 +233,10 @@ class cpp_filter extends extract_filter_base
             $text );
         print $text;
         print "</pre>\n";
+    }
+
+    function render($archive) {
+        $archive->display_template();
     }
 }
 
@@ -334,6 +316,10 @@ class boost_book_html_filter extends html_base_filter
         /* */
         
         print $text;
+    }
+
+    function render($archive) {
+        $archive->display_template();
     }
 }
 
@@ -515,6 +501,10 @@ class boost_libs_filter extends html_base_filter
         
         print $text;
     }
+
+    function render($archive) {
+        $archive->display_template();
+    }
 }
 
 class boost_frame1_filter extends html_base_filter
@@ -545,6 +535,10 @@ class boost_frame1_filter extends html_base_filter
         
         print $text;
     }
+
+    function render($archive) {
+        $archive->display_template();
+    }
 }
 
 class simple_filter extends html_base_filter
@@ -556,6 +550,11 @@ class simple_filter extends html_base_filter
     function content($archive)
     {
         print parent::content($archive);
+    }
+    
+    function render($archive)
+    {
+        $this->content($archive);
     }
 }
 
@@ -602,6 +601,11 @@ class basic_filter extends html_base_filter
             }
         }
     }
+    
+    function render($archive)
+    {
+        $this->content($archive);
+    }
 }
 
 class h404_filter extends filter_base
@@ -621,6 +625,10 @@ class h404_filter extends filter_base
         if($archive->content_) {
             print '<p>Unzip error: '.htmlentities($archive->content_).'</p>';
         }
+    }
+
+    function render($archive) {
+        $archive->display_template();
     }
 }
 
