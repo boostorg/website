@@ -13,6 +13,7 @@ class boost_archive
     var $file_ = NULL;
     var $archive_ = NULL;
     var $extractor_ = NULL;
+    var $extractor_instance_ = NULL;
     var $type_ = NULL;
     var $preprocess_ = NULL;
     var $title_ = NULL;
@@ -75,12 +76,14 @@ class boost_archive
         if (! $this->extractor_)
         {
             # File doesn't exist, or we don't know how to handle it.
-            $this->extractor_ = '404';
-            $this->_init_404();
+            $this->extractor_ = 'h404';
+            $this->extractor_instance_ = new h404_filter;
+            $this->extractor_instance_->init($this);
         }
         else if ($get_as_raw || $this->extractor_ == 'raw')
         {
             $this->_extract_raw($unzip);
+            $this->extractor_instance_ = new raw_filter;
             //~ print "--- $unzip";
         }
         else
@@ -88,15 +91,15 @@ class boost_archive
             /* We pre-extract so we can get this like meta tag information
                before we have to print it out. */
             $this->content_ = $this->_extract_string($unzip);
-            $f = '_init_'.$this->extractor_;
-            $this->$f();
+            $extractor_name = $this->extractor_.'_filter';
+            $this->extractor_instance_ = new $extractor_name;
+            $this->extractor_instance_->init($this);
             if($this->preprocess_) {
                 $this->content_ = call_user_func($this->preprocess_, $this->content_);
             }
             if ($this->extractor_ == 'simple')
             {
-                $f = '_content_'.$this->extractor_;
-                $this->$f();
+                $this->extractor_instance_->content($this);
             }
         }
     }
@@ -158,38 +161,48 @@ HTML;
     
     function content()
     {
-        if ($this->extractor_)
+        if ($this->extractor_instance_)
         {
-            $f = '_content_'.$this->extractor_;
-            $this->$f();
+            $this->extractor_instance_->content($this);
         }
     }
+}
 
-    function _init_text()
+class raw_filter
+{
+    // No methods, since they shouldn't be called at the moment.
+}
+
+class text_filter
+{
+    function init($archive)
     {
-        $this->title_ = htmlentities($this->key_);
+        $archive->title_ = htmlentities($archive->key_);
     }
     
-    function _content_text()
+    function content($archive)
     {
-        print "<h3>".htmlentities($this->key_)."</h3>\n";
+        print "<h3>".htmlentities($archive->key_)."</h3>\n";
         print "<pre>\n";
-        print htmlentities($this->content_);
+        print htmlentities($archive->content_);
         print "</pre>\n";
     }
+}
 
-    function _init_cpp()
+class cpp_filter
+{
+    function init($archive)
     {
-        $this->title_ = htmlentities($this->key_);
+        $archive->title_ = htmlentities($archive->key_);
     }
 
-    function _content_cpp()
+    function content($archive)
     {
-        $text = htmlentities($this->content_);
+        $text = htmlentities($archive->content_);
         
-        print "<h3>".htmlentities($this->key_)."</h3>\n";
+        print "<h3>".htmlentities($archive->key_)."</h3>\n";
         print "<pre>\n";
-        $root = dirname(preg_replace('@([^/]+/)@','../',$this->key_));
+        $root = dirname(preg_replace('@([^/]+/)@','../',$archive->key_));
         $text = preg_replace(
             '@(#[ ]*include[ ]+&lt;)(boost[^&]+)@Ssm',
             '${1}<a href="'.$root.'/${2}">${2}</a>',
@@ -201,25 +214,28 @@ HTML;
         print $text;
         print "</pre>\n";
     }
+}
 
-    function _init_html_pre()
+class html_base
+{
+    function init($archive)
     {
-        preg_match('@text/html; charset=([^\s"\']+)@i',$this->content_,$charset);
+        preg_match('@text/html; charset=([^\s"\']+)@i',$archive->content_,$charset);
         if (isset($charset[1]))
         {
-            $this->charset_ = $charset[1];
+            $archive->charset_ = $charset[1];
         }
         
-        preg_match('@<title>([^<]+)</title>@i',$this->content_,$title);
+        preg_match('@<title>([^<]+)</title>@i',$archive->content_,$title);
         if (isset($title[1]))
         {
-            $this->title_ = $title[1];
+            $archive->title_ = $title[1];
         }
     }
     
-    function _content_html_pre()
+    function content($archive)
     {
-        $text = $this->content_;
+        $text = $archive->content_;
         
         $text = preg_replace(
             '@href="?http://www.boost.org/?([^"\s]*)"?@i',
@@ -244,15 +260,18 @@ HTML;
         
         return $text;
     }
+}
 
-    function _init_boost_book_html()
+class boost_book_filter extends html_base
+{
+    function init($archive)
     {
-        $this->_init_html_pre();
+        parent::init($archive);
     }
 
-    function _content_boost_book_html()
+    function content($archive)
     {
-        $text = $this->_content_html_pre();
+        $text = parent::content($archive);
         
         $text = substr($text,strpos($text,'<div class="spirit-nav">'));
         $text = substr($text,0,strpos($text,'</body>'));
@@ -274,15 +293,18 @@ HTML;
         
         print $text;
     }
+}
 
-    function _init_boost_libs_html()
+class boost_libs_filter extends html_base
+{
+    function init($archive)
     {
-        $this->_init_html_pre();
+        parent::init($archive);
     }
 
-    function _content_boost_libs_html()
+    function content($archive)
     {
-        $text = $this->_content_html_pre();
+        $text = parent::content($archive);
         
         preg_match('@<body[^>]*>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
         preg_match('@</body>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
@@ -451,15 +473,18 @@ HTML;
         
         print $text;
     }
+}
 
-    function _init_boost_frame1_html()
+class boost_frame1_filter extends html_base
+{
+    function init($archive)
     {
-        $this->_init_html_pre();
+        parent::init($archive);
     }
 
-    function _content_boost_frame1_html()
+    function content($archive)
     {
-        $text = $this->_content_html_pre();
+        $text = parent::content($archive);
         
         $text = substr($text,strpos($text,'<div class="spirit-nav">'));
         $text = substr($text,0,strpos($text,'</body>'));
@@ -478,23 +503,29 @@ HTML;
         
         print $text;
     }
-    
-    function _init_simple()
+}
+
+class simple_filter extends html_base
+{
+    function init($archive)
     {
     }
 
-    function _content_simple()
+    function content($archive)
     {
-        print $this->_content_html_pre();
+        print parent::content($archive);
+    }
+}
+
+class basic_filter extends html_base
+{
+    function init($archive)
+    {
     }
 
-    function _init_basic()
+    function content($archive)
     {
-    }
-
-    function _content_basic()
-    {
-        $text = $this->_content_html_pre();
+        $text = parent::content($archive);
 
         $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $text);
         $tag_end = $is_xhtml ? '/>' : '>';
@@ -529,21 +560,24 @@ HTML;
             }
         }
     }
+}
 
-    function _init_404()
+class h404_filter
+{
+    function init($archive)
     {
         header("HTTP/1.0 404 Not Found");
     }
 
-    function _content_404()
+    function content($archive)
     {
         # This might also be an error extracting the file, or because we don't
         # know how to deal with the file. It would be good to give a better
         # error in those cases.
 
-        print '<h1>404 Not Found</h1><p>File "' . $this->file_ . '"not found.</p>';
-        if($this->content_) {
-            print '<p>Unzip error: '.htmlentities($this->content_).'</p>';
+        print '<h1>404 Not Found</h1><p>File "' . $archive->file_ . '"not found.</p>';
+        if($archive->content_) {
+            print '<p>Unzip error: '.htmlentities($archive->content_).'</p>';
         }
     }
 }
