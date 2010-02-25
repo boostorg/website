@@ -322,10 +322,6 @@ class boost_libs_filter extends html_base_filter
             print $archive->content_;
         }
     }
-
-    function render($archive) {
-        $archive->display_template();
-    }
 }
 
 class boost_frame1_filter extends html_base_filter
