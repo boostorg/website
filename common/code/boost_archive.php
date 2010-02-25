@@ -166,6 +166,21 @@ HTML;
             $this->extractor_instance_->content($this);
         }
     }
+    
+    function render()
+    {
+        if ($this->is_basic()) {
+            print $this->content();
+        }
+        else if(!$this->is_raw()) {
+            $this->display_template();
+        }
+    }
+    
+    function display_template() {
+        $_file = $this;
+        include(dirname(__FILE__)."/template.php");
+    }
 }
 
 class raw_filter
@@ -216,7 +231,7 @@ class cpp_filter
     }
 }
 
-class html_base
+class html_base_filter
 {
     function init($archive)
     {
@@ -262,7 +277,7 @@ class html_base
     }
 }
 
-class boost_book_filter extends html_base
+class boost_book_filter extends html_base_filter
 {
     function init($archive)
     {
@@ -295,7 +310,7 @@ class boost_book_filter extends html_base
     }
 }
 
-class boost_libs_filter extends html_base
+class boost_libs_filter extends html_base_filter
 {
     function init($archive)
     {
@@ -475,7 +490,7 @@ class boost_libs_filter extends html_base
     }
 }
 
-class boost_frame1_filter extends html_base
+class boost_frame1_filter extends html_base_filter
 {
     function init($archive)
     {
@@ -505,7 +520,7 @@ class boost_frame1_filter extends html_base
     }
 }
 
-class simple_filter extends html_base
+class simple_filter extends html_base_filter
 {
     function init($archive)
     {
@@ -517,7 +532,7 @@ class simple_filter extends html_base
     }
 }
 
-class basic_filter extends html_base
+class basic_filter extends html_base_filter
 {
     function init($archive)
     {
