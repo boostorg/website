@@ -21,7 +21,7 @@ EOS;
         str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
-$_file = new boost_archive(
+display_from_archive(
   get_archive_location(
     '@^[/]([^/]+)[/](.*)$@',
     $_SERVER["PATH_INFO"],
@@ -32,5 +32,3 @@ $_file = new boost_archive(
   array('@.*@','@^boost-build/index[.]html$@i','simple','text/html', 'add_boost_build_analytics'),
   array('@.*@','@[.](html|htm)$@i','boost_book_html','text/html')
 ));
-
-$_file->render();

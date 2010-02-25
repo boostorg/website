@@ -38,6 +38,15 @@ function get_archive_location(
     );
 }
 
+function display_from_archive(
+    $archive_location_details,
+    $content_map = array(),
+    $get_as_raw = false)
+{
+    $_file = new boost_archive($archive_location_details, $content_map, $get_as_raw);
+    $_file->render();
+}
+
 class boost_archive
 {
     var $version_ = NULL;

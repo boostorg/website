@@ -32,7 +32,7 @@ EOS;
     return str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
-$_file = new boost_archive(
+display_from_archive(
   get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"]),
   array(
   //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type[,preprocess hook]),
@@ -98,5 +98,3 @@ $_file = new boost_archive(
   //~ the headers are text files displayed in an embeded page
   array('@.*@','@^boost/.*$@i','cpp','text/plain')
 ));
-
-$_file->render();
