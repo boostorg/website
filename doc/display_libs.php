@@ -32,7 +32,9 @@ EOS;
     return str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
-$_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
+$_file = new boost_archive(
+  get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"]),
+  array(
   //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type[,preprocess hook]),
   //~ this handles most of the simple cases of index.htm(l) redirect files
   array(
@@ -95,6 +97,6 @@ $_file = new boost_archive('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],array(
   array('@.*@','@^more/.*html$@i','basic','text/html'),
   //~ the headers are text files displayed in an embeded page
   array('@.*@','@^boost/.*$@i','cpp','text/plain')
-  ));
+));
 
 $_file->render();

@@ -6,6 +6,38 @@
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
+function get_archive_location(
+    $pattern,
+    $vpath,
+    $archive_subdir = true,
+    $archive_dir = ARCHIVE_DIR,
+    $archive_file_prefix = ARCHIVE_FILE_PREFIX)
+{
+    $path_parts = array();
+    preg_match($pattern, $vpath, $path_parts);
+
+    $version = $path_parts[1];
+    $key = $path_parts[2];
+
+    if ($archive_subdir)
+    {
+        $file = $archive_file_prefix . $version . '/' . $key;
+    }
+    else
+    {
+        $file = $archive_file_prefix . $key;
+    }
+
+    $archive = str_replace('\\','/', $archive_dir . '/' . $version . '.zip');
+    
+    return array(
+        'version' => $version,
+        'key' => $key,
+        'file' => $file,
+        'archive' => $archive
+    );
+}
+
 class boost_archive
 {
     var $version_ = NULL;
@@ -21,17 +53,15 @@ class boost_archive
     var $content_ = NULL;
     
     function boost_archive(
-        $pattern,
-        $vpath,
+        $archive_location_details,
         $content_map = array(),
-        $get_as_raw = false,
-        $archive_subdir = true,
-        $archive_dir = ARCHIVE_DIR,
-        $archive_file_prefix = ARCHIVE_FILE_PREFIX)
+        $get_as_raw = false)
     {
-        $path_parts = array();
-        preg_match($pattern, $vpath, $path_parts);
-        
+        $this->version_ = $archive_location_details['version'];
+        $this->key_ = $archive_location_details['key'];
+        $this->file_ = $archive_location_details['file'];
+        $this->archive_ = $archive_location_details['archive'];
+    
         $info_map = array_merge($content_map, array(
             array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh|xml|qbk)$@i','text','text/plain'),
             array('@.*@','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
@@ -45,18 +75,6 @@ class boost_archive
             array('@.*@','@[^.](Jamroot|Jamfile|ChangeLog)$@i','text','text/plain'),
             array('@.*@','@[.]dtd$@i','raw','application/xml-dtd'),
             ));
-        
-        $this->version_ = $path_parts[1];
-        $this->key_ = $path_parts[2];
-        if ($archive_subdir)
-        {
-            $this->file_ = $archive_file_prefix . $this->version_ . '/' . $this->key_;
-        }
-        else
-        {
-            $this->file_ = $archive_file_prefix . $this->key_;
-        }
-        $this->archive_ = str_replace('\\','/', $archive_dir . '/' . $this->version_ . '.zip');
 
         foreach ($info_map as $i)
         {
@@ -73,6 +91,7 @@ class boost_archive
           UNZIP
           .' -p '.escapeshellarg($this->archive_)
           .' '.escapeshellarg($this->file_);
+
         if (! $this->extractor_)
         {
             # File doesn't exist, or we don't know how to handle it.
@@ -91,6 +110,7 @@ class boost_archive
             /* We pre-extract so we can get this like meta tag information
                before we have to print it out. */
             $this->content_ = $this->_extract_string($unzip);
+
             $extractor_name = $this->extractor_.'_filter';
             $this->extractor_instance_ = new $extractor_name;
             $this->extractor_instance_->init($this);
@@ -133,11 +153,12 @@ HTML;
             $text .= fread($file_handle,8*1024);
         }
         $exit_status = pclose($file_handle);
+
         if($exit_status == 0) {
             return $text;
         }
         else {
-            $this->extractor_ = '404';
+            $this->extractor_ = 'h404';
             return strstr($_SERVER['HTTP_HOST'], 'beta')
                 ? unzip_error($exit_status) : '';
         }
@@ -277,7 +298,7 @@ class html_base_filter
     }
 }
 
-class boost_book_filter extends html_base_filter
+class boost_book_html_filter extends html_base_filter
 {
     function init($archive)
     {
