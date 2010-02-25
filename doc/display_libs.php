@@ -97,6 +97,4 @@ display_from_archive(
   array('@.*@','@^more/.*html$@i','basic','text/html'),
   //~ the headers are text files displayed in an embeded page
   array('@.*@','@^boost/.*$@i','cpp','text/plain')
-),
-'raw'
-);
+));
