@@ -513,6 +513,7 @@ function prepare_html($text) {
 }
 
 function remove_html_banner($text) {
+
     # nasty code, because (?!fubar) causes an ICE...
     preg_match('@<table[^<>]*>?@i',$text,$table_begin,PREG_OFFSET_CAPTURE);
     preg_match('@</table>@i',$text,$table_end,PREG_OFFSET_CAPTURE);
@@ -520,6 +521,7 @@ function remove_html_banner($text) {
         $table_contents_start = $table_begin[0][1] + strlen($table_begin[0][0]);
         $table_contents = substr($text, $table_contents_start,
             $table_end[0][1] - $table_contents_start);
+
         if(strpos($table_contents, 'boost.png') !== FALSE) {
             preg_match('@<td[^<>]*>?([^<]*<(h[12]|p).*?)</td>@is', $table_contents,
                 $table_contents_header, PREG_OFFSET_CAPTURE);
@@ -530,9 +532,18 @@ function remove_html_banner($text) {
             $tail = preg_replace('@^\s*<hr\s*/?>\s*@', '', $tail);
                 
             $text = $head.$header.$tail;
+            return $text;
         }
     }
-    return $text;
+
+    $parts = preg_split('@(?=<(p|blockquote))@', $text, 2);
+    $header = $parts[0];
+    $content = $parts[1];
+    
+    $header = preg_replace('@(<h\d>\s*)<img[^>]*src="(\.\.\/)*boost\.png"[^>]*>@', '$1', $header);    
+    $header = preg_replace('@<img[^>]*src="(\.\.\/)*boost\.png"[^>]*>\s*<[hb]r.*?>@', '', $header);
+
+    return $header.$content;
 }
 
 function prepare_themed_html($text) {
