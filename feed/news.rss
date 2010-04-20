@@ -6,9 +6,9 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.43.0</title><pubDate>$Date: 2010/04/19 20:23:08 $</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
-      Updated: Array, Fusion, Iostreams, Multi-index Containers, Random, Range, Spirit,
-      Unordered, Wave, the build system and quickbook.
+  <item><title>Version 1.43.0</title><pubDate>$Date$</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+      Updated: Array, Asio, Fusion, Iostreams, Multi-index Containers, Random, Range,
+      Spirit, Thread, Unordered, Uuid, Wave, the build system and quickbook.
     &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.43.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
@@ -27,6 +27,73 @@
           &lt;/li&gt;
           &lt;li&gt;
             Changed exception code to use boost::throw_exception.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Improved performance.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Reduced compile times.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Reduced the size of generated code.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Extended the guarantee that background threads don't call user code to
+            all asynchronous operations (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3923&quot;&gt;#3923&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed to use edge-triggered epoll on Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed to use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;timerfd&lt;/span&gt;&lt;/code&gt;
+            for dispatching timers on Linux, when available.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed to use one-shot notifications with kqueue on Mac OS X and BSD
+            platforms.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added a bitmask type &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;resolver_query_base&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;flags&lt;/span&gt;&lt;/code&gt;
+            as per the TR2 proposal. This type prevents implicit conversion from
+            &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt;&lt;/code&gt; to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;flags&lt;/span&gt;&lt;/code&gt;,
+            allowing the compiler to catch cases where users incorrectly pass a numeric
+            port number as the service name.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added &lt;code&gt;&lt;span class=&quot;preprocessor&quot;&gt;#define&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;NOMINMAX&lt;/span&gt;&lt;/code&gt;
+            for all Windows compilers. Users can define &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_ASIO_NO_NOMINMAX&lt;/span&gt;&lt;/code&gt;
+            to suppress this definition (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3901&quot;&gt;#3901&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed a bug where 0-byte asynchronous reads were incorrectly passing
+            an &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;eof&lt;/span&gt;&lt;/code&gt; result to the completion handler
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/4023&quot;&gt;#4023&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_control&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; member functions to always call &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ioctl&lt;/span&gt;&lt;/code&gt; on the underlying descriptor
+            when modifying blocking mode (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3307&quot;&gt;#3307&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed the resolver implementation to longer require the typedefs &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;InternetProtocol&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;resolver_query&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;InternetProtocol&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;resolver_iterator&lt;/span&gt;&lt;/code&gt;,
+            as neither typedef is part of the documented &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;InternetProtocol&lt;/span&gt;&lt;/code&gt;
+            requirements. The corresponding typedefs in the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;tcp&lt;/span&gt;&lt;/code&gt;,
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;udp&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;icmp&lt;/span&gt;&lt;/code&gt;
+            classes have been deprecated.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed out-of-band handling for reactors not based on &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added new &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_ASIO_DISABLE_THREADS&lt;/span&gt;&lt;/code&gt;
+            macro that allows Asio's threading support to be independently disabled.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Minor documentation improvements.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -111,11 +178,40 @@
         New&lt;/a&gt;' section for details.
       &lt;/li&gt;
       &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/thread/index.html&quot;&gt;Thread&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Uses &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;throw_exception&lt;/span&gt;&lt;/code&gt; for all exceptions
+            except &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;thread_interrupted&lt;/span&gt;&lt;/code&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added fix for issue 2742
+          &lt;/li&gt;
+          &lt;li&gt;
+            Optimizations to mutex locks and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;call_once&lt;/span&gt;&lt;/code&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/unordered/index.html&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
             &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;erase_return_void&lt;/span&gt;&lt;/code&gt; is
             now &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;quick_erase&lt;/span&gt;&lt;/code&gt; (&lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/3966&quot;&gt;#3966&lt;/a&gt;).
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/uuid/index.html&quot;&gt;Uuid&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Split generators into separate files.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed bug in basic_random_generator.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Updated documentation.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
