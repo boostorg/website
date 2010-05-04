@@ -18,8 +18,9 @@ local rule if-has-file ( file + : dir * )
 
 #~ Attempts to find the Boost source tree...
 
-local boost-src = [ if-has-file configure :
+local boost-src = [ if-has-file bootstrap.sh :
     [ MATCH --boost=(.*) : $(ARGV) ]
+    $(BOOST_ROOT)
     $(BOOST)
     $(.boost-build-file:D)/../boost
     ] ;

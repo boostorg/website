@@ -6,6 +6,46 @@
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
+function get_archive_location(
+    $pattern,
+    $vpath,
+    $archive_subdir = true,
+    $archive_dir = ARCHIVE_DIR,
+    $archive_file_prefix = ARCHIVE_FILE_PREFIX)
+{
+    $path_parts = array();
+    preg_match($pattern, $vpath, $path_parts);
+
+    $version = $path_parts[1];
+    $key = $path_parts[2];
+
+    if ($archive_subdir)
+    {
+        $file = $archive_file_prefix . $version . '/' . $key;
+    }
+    else
+    {
+        $file = $archive_file_prefix . $key;
+    }
+
+    $archive = str_replace('\\','/', $archive_dir . '/' . $version . '.zip');
+    
+    return array(
+        'version' => $version,
+        'key' => $key,
+        'file' => $file,
+        'archive' => $archive
+    );
+}
+
+function display_from_archive(
+    $archive_location_details,
+    $content_map = array(),
+    $extractor = null)
+{
+    $_file = new boost_archive($archive_location_details, $content_map, $extractor);
+}
+
 class boost_archive
 {
     var $version_ = NULL;
@@ -13,6 +53,7 @@ class boost_archive
     var $file_ = NULL;
     var $archive_ = NULL;
     var $extractor_ = NULL;
+    var $extractor_instance_ = NULL;
     var $type_ = NULL;
     var $preprocess_ = NULL;
     var $title_ = NULL;
@@ -20,17 +61,15 @@ class boost_archive
     var $content_ = NULL;
     
     function boost_archive(
-        $pattern,
-        $vpath,
+        $archive_location_details,
         $content_map = array(),
-        $get_as_raw = false,
-        $archive_subdir = true,
-        $archive_dir = ARCHIVE_DIR,
-        $archive_file_prefix = ARCHIVE_FILE_PREFIX)
+        $extractor = null)
     {
-        $path_parts = array();
-        preg_match($pattern, $vpath, $path_parts);
-        
+        $this->version_ = $archive_location_details['version'];
+        $this->key_ = $archive_location_details['key'];
+        $this->file_ = $archive_location_details['file'];
+        $this->archive_ = $archive_location_details['archive'];
+    
         $info_map = array_merge($content_map, array(
             array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh|xml|qbk)$@i','text','text/plain'),
             array('@.*@','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
@@ -44,18 +83,6 @@ class boost_archive
             array('@.*@','@[^.](Jamroot|Jamfile|ChangeLog)$@i','text','text/plain'),
             array('@.*@','@[.]dtd$@i','raw','application/xml-dtd'),
             ));
-        
-        $this->version_ = $path_parts[1];
-        $this->key_ = $path_parts[2];
-        if ($archive_subdir)
-        {
-            $this->file_ = $archive_file_prefix . $this->version_ . '/' . $this->key_;
-        }
-        else
-        {
-            $this->file_ = $archive_file_prefix . $this->key_;
-        }
-        $this->archive_ = str_replace('\\','/', $archive_dir . '/' . $this->version_ . '.zip');
 
         foreach ($info_map as $i)
         {
@@ -68,37 +95,26 @@ class boost_archive
             }
         }
         
+        if ($extractor) $this->extractor_ = $extractor;
+        if (!$this->extractor_) $this->extractor_ = 'h404';
+
+        $extractor_name = $this->extractor_.'_filter';
+        $this->extractor_instance_ = new $extractor_name;
+
         $unzip =
           UNZIP
           .' -p '.escapeshellarg($this->archive_)
           .' '.escapeshellarg($this->file_);
-        if (! $this->extractor_)
-        {
-            # File doesn't exist, or we don't know how to handle it.
-            $this->extractor_ = '404';
-            $this->_init_404();
+
+        // Note: this can change $this->extractor_instance_:
+        $this->content_ = $this->extractor_instance_->extract($this, $unzip);
+        $this->extractor_instance_->init($this);
+
+        if ($this->extractor_ != 'h404' && $this->extractor_ != 'raw' && $this->preprocess_) {
+            $this->content_ = call_user_func($this->preprocess_, $this->content_);
         }
-        else if ($get_as_raw || $this->extractor_ == 'raw')
-        {
-            $this->_extract_raw($unzip);
-            //~ print "--- $unzip";
-        }
-        else
-        {
-            /* We pre-extract so we can get this like meta tag information
-               before we have to print it out. */
-            $this->content_ = $this->_extract_string($unzip);
-            $f = '_init_'.$this->extractor_;
-            $this->$f();
-            if($this->preprocess_) {
-                $this->content_ = call_user_func($this->preprocess_, $this->content_);
-            }
-            if ($this->extractor_ == 'simple')
-            {
-                $f = '_content_'.$this->extractor_;
-                $this->$f();
-            }
-        }
+        
+        $this->extractor_instance_->render($this);
     }
     
     function content_head()
@@ -112,37 +128,32 @@ class boost_archive
 HTML;
     }
     
-    function is_basic()
+    function content()
     {
-        return $this->extractor_ == 'basic';
+        if ($this->extractor_instance_)
+        {
+            $this->extractor_instance_->content($this);
+        }
     }
     
-    function is_raw()
-    {
-        return $this->extractor_ == 'raw' || $this->extractor_ == 'simple';
+    function display_template() {
+        $_file = $this;
+        include(dirname(__FILE__)."/template.php");
     }
+}
 
-    function _extract_string($unzip)
-    {
-        $file_handle = popen($unzip,'r');
-        $text = '';
-        while ($file_handle && !feof($file_handle)) {
-            $text .= fread($file_handle,8*1024);
-        }
-        $exit_status = pclose($file_handle);
-        if($exit_status == 0) {
-            return $text;
-        }
-        else {
-            $this->extractor_ = '404';
-            return strstr($_SERVER['HTTP_HOST'], 'beta')
-                ? unzip_error($exit_status) : '';
-        }
-    }
+class filter_base
+{
+    function extract($archive, $unzip) {}
+    function init($archive) {}
+    function content($archive) {}
+    function render($archive) {}
+};
 
-    function _extract_raw($unzip)
-    {
-        header('Content-type: '.$this->type_);
+class raw_filter extends filter_base
+{    
+    function extract($archive, $unzip) {
+        header('Content-type: '.$archive->type_);
         ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
         $file_handle = popen($unzip,'rb');
         fpassthru($file_handle);
@@ -153,43 +164,65 @@ HTML;
 
         if($exit_status > 3)
             echo 'Error extracting file: '.unzip_error($exit_status);
-
     }
-    
-    function content()
-    {
-        if ($this->extractor_)
-        {
-            $f = '_content_'.$this->extractor_;
-            $this->$f();
+};
+
+class extract_filter_base extends filter_base
+{
+    function extract($archive, $unzip) {
+        $file_handle = popen($unzip,'r');
+        $text = '';
+        while ($file_handle && !feof($file_handle)) {
+            $text .= fread($file_handle,8*1024);
+        }
+        $exit_status = pclose($file_handle);
+
+        if($exit_status == 0) {
+            return $text;
+        }
+        else {
+            $archive->extractor_ = 'h404';
+            $archive->extractor_instance_ = new h404_filter;
+            return strstr($_SERVER['HTTP_HOST'], 'beta')
+                ? unzip_error($exit_status) : '';
         }
     }
+};
 
-    function _init_text()
+class text_filter extends extract_filter_base
+{
+    function init($archive)
     {
-        $this->title_ = htmlentities($this->key_);
+        $archive->title_ = htmlentities($archive->key_);
     }
     
-    function _content_text()
+    function content($archive)
     {
-        print "<h3>".htmlentities($this->key_)."</h3>\n";
+        print "<h3>".htmlentities($archive->key_)."</h3>\n";
         print "<pre>\n";
-        print htmlentities($this->content_);
+        print htmlentities($archive->content_);
         print "</pre>\n";
     }
 
-    function _init_cpp()
+    function render($archive) {
+        $archive->display_template();
+    }
+}
+
+class cpp_filter extends extract_filter_base
+{
+    function init($archive)
     {
-        $this->title_ = htmlentities($this->key_);
+        $archive->title_ = htmlentities($archive->key_);
     }
 
-    function _content_cpp()
+    function content($archive)
     {
-        $text = htmlentities($this->content_);
+        $text = htmlentities($archive->content_);
         
-        print "<h3>".htmlentities($this->key_)."</h3>\n";
+        print "<h3>".htmlentities($archive->key_)."</h3>\n";
         print "<pre>\n";
-        $root = dirname(preg_replace('@([^/]+/)@','../',$this->key_));
+        $root = dirname(preg_replace('@([^/]+/)@','../',$archive->key_));
         $text = preg_replace(
             '@(#[ ]*include[ ]+&lt;)(boost[^&]+)@Ssm',
             '${1}<a href="'.$root.'/${2}">${2}</a>',
@@ -202,57 +235,39 @@ HTML;
         print "</pre>\n";
     }
 
-    function _init_html_pre()
+    function render($archive) {
+        $archive->display_template();
+    }
+}
+
+class html_base_filter extends extract_filter_base
+{
+    function init($archive)
     {
-        preg_match('@text/html; charset=([^\s"\']+)@i',$this->content_,$charset);
+        preg_match('@text/html; charset=([^\s"\']+)@i',$archive->content_,$charset);
         if (isset($charset[1]))
         {
-            $this->charset_ = $charset[1];
+            $archive->charset_ = $charset[1];
         }
         
-        preg_match('@<title>([^<]+)</title>@i',$this->content_,$title);
+        preg_match('@<title>([^<]+)</title>@i',$archive->content_,$title);
         if (isset($title[1]))
         {
-            $this->title_ = $title[1];
+            $archive->title_ = $title[1];
         }
     }
-    
-    function _content_html_pre()
+}
+
+class boost_book_html_filter extends html_base_filter
+{
+    function init($archive)
     {
-        $text = $this->content_;
-        
-        $text = preg_replace(
-            '@href="?http://www.boost.org/?([^"\s]*)"?@i',
-            'href="/${1}"',
-            $text );
-        $text = preg_replace(
-            '@href="?http://boost.org/?([^"\s]*)"?@i',
-            'href="/${1}"',
-            $text );
-        $text = preg_replace(
-            '@href="?(?:\.\./)+people/(.*\.htm)"?@i',
-            'href="/users/people/${1}l"',
-            $text );
-        $text = preg_replace(
-            '@href="?(?:\.\./)+(LICENSE_[^"\s]*\.txt)"?@i',
-            'href="/${1}"',
-            $text );
-        $text = preg_replace(
-            '@<a\s+(class="[^"]+")?\s*href="?(http|mailto)(:[^"\s]*)"?@i',
-            '<a class="external" href="${2}${3}"',
-            $text );
-        
-        return $text;
+        parent::init($archive);
     }
 
-    function _init_boost_book_html()
+    function content($archive)
     {
-        $this->_init_html_pre();
-    }
-
-    function _content_boost_book_html()
-    {
-        $text = $this->_content_html_pre();
+        $text = prepare_html($archive->content_);
         
         $text = substr($text,strpos($text,'<div class="spirit-nav">'));
         $text = substr($text,0,strpos($text,'</body>'));
@@ -275,191 +290,50 @@ HTML;
         print $text;
     }
 
-    function _init_boost_libs_html()
+    function render($archive) {
+        $archive->display_template();
+    }
+}
+
+class boost_libs_filter extends html_base_filter
+{
+    function init($archive)
     {
-        $this->_init_html_pre();
+        parent::init($archive);
     }
 
-    function _content_boost_libs_html()
+    function content($archive)
     {
-        $text = $this->_content_html_pre();
-        
-        preg_match('@<body[^>]*>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
-        preg_match('@</body>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
-        if (!isset($body_begin[0]))
-        {
-            //~ Attempt to recover some content from illegal HTML that is missing the body tag.
-            preg_match('@</head>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
+        return $archive->content_;
+    }
+    
+    function render($archive)
+    {
+        $text = extract_html_body($archive->content_);
+        if($text) {
+            $text = prepare_html($text);
+            $text = remove_html_banner($text);
+            $text = prepare_themed_html($text);
+            $archive->content_ = $text;
+            
+            $archive->display_template();
         }
-        if (!isset($body_begin[0]))
-        {
-            //~ Attempt to recover some content from illegal HTML that is missing the body tag.
-            preg_match('@<html[^>]*>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
+        else {
+            print $archive->content_;
         }
-        if (!isset($body_begin[0]))
-        {
-            //~ Attempt to recover some content from illegal HTML that is missing the body tag.
-            preg_match('@<(hr|div|img|p|h1|h2|h3|h4)[^>]*>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
-        }
-        if (!isset($body_begin[0]))
-        {
-            return;
-        }
-        else if (!isset($body_end[0]))
-        {
-            $text = substr($text,
-                $body_begin[0][1]+strlen($body_begin[0][0]));
-        }
-        else
-        {
-            $text = substr($text,
-                $body_begin[0][1]+strlen($body_begin[0][0]),
-                $body_end[0][1]-($body_begin[0][1]+strlen($body_begin[0][0])) );
-        }
-        
-        # nasty code, because (?!fubar) causes an ICE...
-        preg_match('@<table[^<>]*>?@i',$text,$table_begin,PREG_OFFSET_CAPTURE);
-        preg_match('@</table>@i',$text,$table_end,PREG_OFFSET_CAPTURE);
-        if (isset($table_begin[0]) && isset($table_end[0])) {
-            $table_contents_start = $table_begin[0][1] + strlen($table_begin[0][0]);
-            $table_contents = substr($text, $table_contents_start,
-                $table_end[0][1] - $table_contents_start);
-            if(strpos($table_contents, 'boost.png') !== FALSE) {
-                preg_match('@<td[^<>]*>?([^<]*<(h[12]|p).*?)</td>@is', $table_contents,
-                    $table_contents_header, PREG_OFFSET_CAPTURE);
-                $text = (isset($table_contents_header[1]) ? $table_contents_header[1][0] : '').
-                    substr($text, $table_end[0][1] + 8);
-            }
-        }
-        #else
-        #{
-        #    $text = substr($text,$h1_begin[0][1]);
-        #}
-        #if (isset($title[1]))
-        #{
-        #    $text = "<h1>${title[1]}</h1>\n" . $text;
-        #}
-        $text = preg_replace(
-            '@(<a[^>]+>[\s]*)?<img.*boost\.png[^>]*>([\s]*</a>)?@i',
-            '',
-            $text );
-        $text = preg_replace(
-            '@<img(.*)align="?right"?[^>]*>@i',
-            '<img${1} class="right-inset" />',
-            $text );
-        $text = preg_replace(
-            '@<img(.*)align="?absmiddle"?[^>]*>@i',
-            '<img${1} class="inline" />',
-            $text );
-        /* Remove certain attributes */
-        $text = preg_replace(
-            '@[\s]+(border|cellpadding|cellspacing|width|height|valign|align|frame|rules|naturalsizeflag|background)=("[^"]*"?|\'[^\']*\'?|[^\s/>]+)@i',
-            '',
-            $text );
-        $text = preg_replace(
-            '@<table[\s]+(border)[^\s>]*@i',
-            '<table',
-            $text );
-        $text = preg_replace(
-            '@<[/]?(font|hr)[^>]*>@i',
-            '',
-            $text );
-        $text = preg_replace(
-            '@<([^\s]+)[\s]+>@i',
-            '<${1}>',
-            $text );
-        $text = _preg_replace_bounds(
-            '@<blockquote>[\s]*(<pre>)@i','@(</pre>)[\s]*</blockquote>@i',
-            '${1}','${1}',
-            $text );
-        $text = _preg_replace_bounds(
-            '@<blockquote>[\s]*(<p>)@i','@(</p>)[\s]*</blockquote>@i',
-            '${1}','${1}',
-            $text );
-        $text = _preg_replace_bounds(
-            '@<blockquote>[\s]*(<table>)@i','@(</table>)[\s]*</blockquote>@i',
-            '${1}','${1}',
-            $text );
-        $text = _preg_replace_bounds(
-            '@<blockquote>[\s]*<li>@i','@</li>[\s]*</blockquote>@i',
-            '<ul><li>','</li></ul>',
-            $text );
-        $text = _preg_replace_bounds(
-            '@(?:<blockquote>[\s]*)+<h2>@i','@</h2>(?:[\s]*</blockquote>)+@i',
-            '<h2>','</h2>',
-            $text );
-        $text = preg_replace(
-            '@(<a name=[^\s>]+[\s]*>)[\s]*(</?[^a])@i',
-            '${1}</a>${2}',
-            $text );
-        $text = preg_replace(
-            '@<table>([\s]+<tr>[\s]+<td>.*_arr.*</td>[\s]+<td>.*</td>[\s]+<td>.*</td>[\s]+</tr>[\s]+)</table>@i',
-            '<table class="pyste-nav">${1}</table>',
-            $text );
-        $text = preg_replace(
-            '@<table>([\s]+<tr>[\s]+<td)[\s]+class="note_box">@i',
-            '<table class="note_box">${1}>',
-            $text );
-        $text = preg_replace(
-            '@<table>([\s]+<tr>[\s]+<td[\s]+class="table_title">)@i',
-            '<table class="toc">${1}',
-            $text );
-        $text = preg_replace(
-            '@src=".*theme/u_arr\.gif"@i',
-            'src="/gfx/space.png" class="up_image"',
-            $text );
-        $text = preg_replace(
-            '@src=".*theme/l_arr\.gif"@i',
-            'src="/gfx/space.png" class="prev_image"',
-            $text );
-        $text = preg_replace(
-            '@src=".*theme/r_arr\.gif"@i',
-            'src="/gfx/space.png" class="next_image"',
-            $text );
-        $text = preg_replace(
-            '@src=".*theme/u_arr_disabled\.gif"@i',
-            'src="/gfx/space.png" class="up_image_disabled"',
-            $text );
-        $text = preg_replace(
-            '@src=".*theme/l_arr_disabled\.gif"@i',
-            'src="/gfx/space.png" class="prev_image_disabled"',
-            $text );
-        $text = preg_replace(
-            '@src=".*theme/r_arr_disabled\.gif"@i',
-            'src="/gfx/space.png" class="next_image_disabled"',
-            $text );
-        $text = preg_replace(
-            '@src=".*theme/note\.gif"@i',
-            'src="/gfx/space.png" class="note_image"',
-            $text );
-        $text = preg_replace(
-            '@src=".*theme/alert\.gif"@i',
-            'src="/gfx/space.png" class="caution_image"',
-            $text );
-        $text = preg_replace(
-            '@src=".*theme/bulb\.gif"@i',
-            'src="/gfx/space.png" class="tip_image"',
-            $text );
-        $text = preg_replace(
-            '@<img src=".*theme/(?:bullet|lens)\.gif">@i',
-            '',
-            $text );
-        $text = preg_replace(
-            '@(<img src=".*theme/(?:arrow)\.gif")>@i',
-            '${1} class="inline">',
-            $text );
-        
-        print $text;
+    }
+}
+
+class boost_frame1_filter extends html_base_filter
+{
+    function init($archive)
+    {
+        parent::init($archive);
     }
 
-    function _init_boost_frame1_html()
+    function content($archive)
     {
-        $this->_init_html_pre();
-    }
-
-    function _content_boost_frame1_html()
-    {
-        $text = $this->_content_html_pre();
+        $text = prepare_html($archive->content_);
         
         $text = substr($text,strpos($text,'<div class="spirit-nav">'));
         $text = substr($text,0,strpos($text,'</body>'));
@@ -478,63 +352,311 @@ HTML;
         
         print $text;
     }
+
+    function render($archive) {
+        $archive->display_template();
+    }
+}
+
+class simple_filter extends html_base_filter
+{
+    function init($archive)
+    {
+    }
+
+    function content($archive)
+    {
+        print prepare_html($archive->content_);
+    }
     
-    function _init_simple()
+    function render($archive)
+    {
+        $this->content($archive);
+    }
+}
+
+class basic_filter extends html_base_filter
+{
+    function init($archive)
     {
     }
 
-    function _content_simple()
+    function content($archive)
     {
-        print $this->_content_html_pre();
-    }
-
-    function _init_basic()
-    {
-    }
-
-    function _content_basic()
-    {
-        $text = $this->_content_html_pre();
+        $text = prepare_html($archive->content_);
+        $text = remove_html_banner($text);
 
         $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $text);
         $tag_end = $is_xhtml ? '/>' : '>';
         
-        $text = preg_split('@(</head>|<body[^>]*>)@i',$text,-1,PREG_SPLIT_DELIM_CAPTURE);
-        $state = 0;
-        foreach($text as $section) {
-            print($section);
-            switch($state) {
-            case 0:
-                print '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
-                print '<link rel="stylesheet" type="text/css" href="/style/section-basic.css"'.$tag_end;
-                $state = 1;
+        $sections = preg_split('@(</head>|<body[^>]*>)@i',$text,-1,PREG_SPLIT_DELIM_CAPTURE);
+
+        $body_index = 0;
+        $index = 0;
+        foreach($sections as $section) {
+            if(stripos($section, '<body') === 0) {
+                $body_index = $index;
                 break;
-            case 1:
-                if(stripos($section, '<body') === 0) {
-                    $state = 2;
+            }
+            ++$index;
+        }
+
+        if(!$body_index) {
+            print($text);
+        }
+        else {
+            $index = 0;
+            foreach($sections as $section) {
+                print($section);
+                if($index == 0) {
+                    print '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
+                    print '<link rel="stylesheet" type="text/css" href="/style/section-basic.css"'.$tag_end;
+                }
+                else if($index == $body_index) {
                     virtual("/common/heading-doc.html");
                 }
-                break;
+                ++$index;
             }
         }
     }
+    
+    function render($archive)
+    {
+        $this->content($archive);
+    }
+}
 
-    function _init_404()
+class h404_filter extends filter_base
+{
+    function init($archive)
     {
         header("HTTP/1.0 404 Not Found");
     }
 
-    function _content_404()
+    function content($archive)
     {
         # This might also be an error extracting the file, or because we don't
         # know how to deal with the file. It would be good to give a better
         # error in those cases.
 
-        print '<h1>404 Not Found</h1><p>File "' . $this->file_ . '"not found.</p>';
-        if($this->content_) {
-            print '<p>Unzip error: '.htmlentities($this->content_).'</p>';
+        print '<h1>404 Not Found</h1><p>File "' . $archive->file_ . '"not found.</p>';
+        if($archive->content_) {
+            print '<p>Unzip error: '.htmlentities($archive->content_).'</p>';
         }
     }
+
+    function render($archive) {
+        $archive->display_template();
+    }
+}
+
+function extract_html_body($text) {
+    preg_match('@<body[^>]*>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
+    preg_match('@</body>@i',$text,$body_end,PREG_OFFSET_CAPTURE);
+    if (!isset($body_begin[0]))
+    {
+        //~ Attempt to recover some content from illegal HTML that is missing the body tag.
+        preg_match('@</head>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
+    }
+    if (!isset($body_begin[0]))
+    {
+        //~ Attempt to recover some content from illegal HTML that is missing the body tag.
+        preg_match('@<html[^>]*>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
+    }
+    if (!isset($body_begin[0]))
+    {
+        //~ Attempt to recover some content from illegal HTML that is missing the body tag.
+        preg_match('@<(hr|div|img|p|h1|h2|h3|h4)[^>]*>@i',$text,$body_begin,PREG_OFFSET_CAPTURE);
+    }
+    if (!isset($body_begin[0]))
+    {
+        return;
+    }
+    else if (!isset($body_end[0]))
+    {
+        $text = substr($text,
+            $body_begin[0][1]+strlen($body_begin[0][0]));
+    }
+    else
+    {
+        $text = substr($text,
+            $body_begin[0][1]+strlen($body_begin[0][0]),
+            $body_end[0][1]-($body_begin[0][1]+strlen($body_begin[0][0])) );
+    }
+
+    return $text;
+}
+
+function prepare_html($text) {
+    $text = preg_replace(
+        '@href="?http://www.boost.org/?([^"\s]*)"?@i',
+        'href="/${1}"',
+        $text );
+    $text = preg_replace(
+        '@href="?http://boost.org/?([^"\s]*)"?@i',
+        'href="/${1}"',
+        $text );
+    $text = preg_replace(
+        '@href="?(?:\.\./)+people/(.*\.htm)"?@i',
+        'href="/users/people/${1}l"',
+        $text );
+    $text = preg_replace(
+        '@href="?(?:\.\./)+(LICENSE_[^"\s]*\.txt)"?@i',
+        'href="/${1}"',
+        $text );
+    $text = preg_replace(
+        '@<a\s+(class="[^"]+")?\s*href="?(http|mailto)(:[^"\s]*)"?@i',
+        '<a class="external" href="${2}${3}"',
+        $text );
+    
+    return $text;
+}
+
+function remove_html_banner($text) {
+
+    # nasty code, because (?!fubar) causes an ICE...
+    preg_match('@<table[^<>]*>?@i',$text,$table_begin,PREG_OFFSET_CAPTURE);
+    preg_match('@</table>@i',$text,$table_end,PREG_OFFSET_CAPTURE);
+    if (isset($table_begin[0]) && isset($table_end[0])) {
+        $table_contents_start = $table_begin[0][1] + strlen($table_begin[0][0]);
+        $table_contents = substr($text, $table_contents_start,
+            $table_end[0][1] - $table_contents_start);
+
+        if(strpos($table_contents, 'boost.png') !== FALSE) {
+            preg_match('@<td[^<>]*>?([^<]*<(h[12]|p).*?)</td>@is', $table_contents,
+                $table_contents_header, PREG_OFFSET_CAPTURE);
+            
+            $head = substr($text, 0, $table_begin[0][1]);
+            $header = isset($table_contents_header[1]) ? $table_contents_header[1][0] : '';
+            $tail = substr($text, $table_end[0][1] + strlen($table_end[0][0]));
+            $tail = preg_replace('@^\s*<hr\s*/?>\s*@', '', $tail);
+                
+            $text = $head.$header.$tail;
+            return $text;
+        }
+    }
+
+    $parts = preg_split('@(?=<(p|blockquote))@', $text, 2);
+    $header = $parts[0];
+    $content = $parts[1];
+    
+    $header = preg_replace('@(<h\d>\s*)<img[^>]*src="(\.\.\/)*boost\.png"[^>]*>@', '$1', $header);    
+    $header = preg_replace('@<img[^>]*src="(\.\.\/)*boost\.png"[^>]*>\s*<[hb]r.*?>@', '', $header);
+
+    return $header.$content;
+}
+
+function prepare_themed_html($text) {
+    $text = preg_replace(
+        '@(<a[^>]+>[\s]*)?<img.*boost\.png[^>]*>([\s]*</a>)?@i',
+        '',
+        $text );
+    $text = preg_replace(
+        '@<img(.*)align="?right"?[^>]*>@i',
+        '<img${1} class="right-inset" />',
+        $text );
+    $text = preg_replace(
+        '@<img(.*)align="?absmiddle"?[^>]*>@i',
+        '<img${1} class="inline" />',
+        $text );
+    /* Remove certain attributes */
+    $text = preg_replace(
+        '@[\s]+(border|cellpadding|cellspacing|width|height|valign|align|frame|rules|naturalsizeflag|background)=("[^"]*"?|\'[^\']*\'?|[^\s/>]+)@i',
+        '',
+        $text );
+    $text = preg_replace(
+        '@<table[\s]+(border)[^\s>]*@i',
+        '<table',
+        $text );
+    $text = preg_replace(
+        '@<[/]?(font|hr)[^>]*>@i',
+        '',
+        $text );
+    $text = preg_replace(
+        '@<([^\s]+)[\s]+>@i',
+        '<${1}>',
+        $text );
+    $text = _preg_replace_bounds(
+        '@<blockquote>[\s]*(<pre>)@i','@(</pre>)[\s]*</blockquote>@i',
+        '${1}','${1}',
+        $text );
+    $text = _preg_replace_bounds(
+        '@<blockquote>[\s]*(<p>)@i','@(</p>)[\s]*</blockquote>@i',
+        '${1}','${1}',
+        $text );
+    $text = _preg_replace_bounds(
+        '@<blockquote>[\s]*(<table>)@i','@(</table>)[\s]*</blockquote>@i',
+        '${1}','${1}',
+        $text );
+    $text = _preg_replace_bounds(
+        '@<blockquote>[\s]*<li>@i','@</li>[\s]*</blockquote>@i',
+        '<ul><li>','</li></ul>',
+        $text );
+    $text = _preg_replace_bounds(
+        '@(?:<blockquote>[\s]*)+<h2>@i','@</h2>(?:[\s]*</blockquote>)+@i',
+        '<h2>','</h2>',
+        $text );
+    $text = preg_replace(
+        '@(<a name=[^\s>]+[\s]*>)[\s]*(</?[^a])@i',
+        '${1}</a>${2}',
+        $text );
+    $text = preg_replace(
+        '@<table>([\s]+<tr>[\s]+<td>.*_arr.*</td>[\s]+<td>.*</td>[\s]+<td>.*</td>[\s]+</tr>[\s]+)</table>@i',
+        '<table class="pyste-nav">${1}</table>',
+        $text );
+    $text = preg_replace(
+        '@<table>([\s]+<tr>[\s]+<td)[\s]+class="note_box">@i',
+        '<table class="note_box">${1}>',
+        $text );
+    $text = preg_replace(
+        '@<table>([\s]+<tr>[\s]+<td[\s]+class="table_title">)@i',
+        '<table class="toc">${1}',
+        $text );
+    $text = preg_replace(
+        '@src=".*theme/u_arr\.gif"@i',
+        'src="/gfx/space.png" class="up_image"',
+        $text );
+    $text = preg_replace(
+        '@src=".*theme/l_arr\.gif"@i',
+        'src="/gfx/space.png" class="prev_image"',
+        $text );
+    $text = preg_replace(
+        '@src=".*theme/r_arr\.gif"@i',
+        'src="/gfx/space.png" class="next_image"',
+        $text );
+    $text = preg_replace(
+        '@src=".*theme/u_arr_disabled\.gif"@i',
+        'src="/gfx/space.png" class="up_image_disabled"',
+        $text );
+    $text = preg_replace(
+        '@src=".*theme/l_arr_disabled\.gif"@i',
+        'src="/gfx/space.png" class="prev_image_disabled"',
+        $text );
+    $text = preg_replace(
+        '@src=".*theme/r_arr_disabled\.gif"@i',
+        'src="/gfx/space.png" class="next_image_disabled"',
+        $text );
+    $text = preg_replace(
+        '@src=".*theme/note\.gif"@i',
+        'src="/gfx/space.png" class="note_image"',
+        $text );
+    $text = preg_replace(
+        '@src=".*theme/alert\.gif"@i',
+        'src="/gfx/space.png" class="caution_image"',
+        $text );
+    $text = preg_replace(
+        '@src=".*theme/bulb\.gif"@i',
+        'src="/gfx/space.png" class="tip_image"',
+        $text );
+    $text = preg_replace(
+        '@<img src=".*theme/(?:bullet|lens)\.gif">@i',
+        '',
+        $text );
+    $text = preg_replace(
+        '@(<img src=".*theme/(?:arrow)\.gif")>@i',
+        '${1} class="inline">',
+        $text );
+    return $text;
 }
 
 // Return a readable error message for unzip exit state.
