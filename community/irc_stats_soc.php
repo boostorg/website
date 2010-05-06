@@ -11,8 +11,8 @@ $_irc = new boost_irc_stats('http://www.acc.umu.se/~zao/stats/boost-soc.html');
 <head>
   <?php $_irc->content_head(); ?>
   <link rel="icon" href="/favicon.ico" type="image/ico" />
-  <link rel="stylesheet" type="text/css" href="/style/section-community.css" />
-  <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style/csshover3.htc); } </style> <![endif]-->
+  <link rel="stylesheet" type="text/css" href="/style-v2/section-community.css" />
+  <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
 </head>
 
 <body>

@@ -340,7 +340,7 @@ class boost_frame1_filter extends html_base_filter
         for ($i = 0; $i < 8; $i++) {
             $text = preg_replace(
                 '@<img src="[\./]*images/(.*\.png)" alt="(.*)"([ ][/])?>@Ssm',
-                '<img src="/style/css_0/${1}" alt="${2}" />',
+                '<img src="/style-v2/css_0/${1}" alt="${2}" />',
                 $text );
         }
         $text = str_replace('<hr>','',$text);
@@ -410,7 +410,7 @@ class basic_filter extends html_base_filter
                 print($section);
                 if($index == 0) {
                     print '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
-                    print '<link rel="stylesheet" type="text/css" href="/style/section-basic.css"'.$tag_end;
+                    print '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
                 }
                 else if($index == $body_index) {
                     virtual("/common/heading-doc.html");
