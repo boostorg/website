@@ -6,103 +6,142 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.42.0</title><pubDate>Tue 2 Feb 2010 14:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
-      New Libraries: Uuid. Updated Libraries: Asio, Circular Buffer, Fusion, Graph,
-      Integer, Iostreams, Program.Options, PropertyMap, Proto, Regex, Spirit, Unordered,
-      Xpressive.
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.42.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
+  <item><title>Version 1.43.0</title><pubDate>Thu 6 May 2010 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+      New Libraries: Functional/Factory, Functional/Forward. Major Update: Range.
+      Updated Libraries: Accumulators, Array, Asio, Fusion, Iostreams, Multi-index
+      Containers, Proto, Random, Spirit, Thread, Unordered, Uuid, Wave, Xpressive.
+      Also, updates to the build system and quickbook.
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sourceforge.net/projects/boost/files/boost/1.43.0/</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
   
   
   
-  &lt;div id=&quot;version_1_42_0.new_libraries&quot;&gt;
+  &lt;div id=&quot;version_1_43_0.new_libraries&quot;&gt;
     &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
     &lt;ul&gt;
       &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/uuid/index.html&quot;&gt;Uuid&lt;/a&gt;:&lt;/span&gt;
-  A universally unique
-        identifier, from Andy Tompkins.
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/functional/factory/index.html&quot;&gt;Functional/factory&lt;/a&gt;:&lt;/span&gt;
+  Function
+        objects for dynamic and by-value construction, from Tobias Schwinger.
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/functional/forward/index.html&quot;&gt;Functional/forward&lt;/a&gt;:&lt;/span&gt;
+  Function
+        object adapters to address the forwarding problem, from Tobias Schwinger.
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/div&gt;
-  &lt;div id=&quot;version_1_42_0.updated_libraries&quot;&gt;
+  &lt;div id=&quot;version_1_43_0.major_updates&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Major Updates&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/range/index.html&quot;&gt;Range&lt;/a&gt;:&lt;/span&gt;
+  Boost.Range has
+        undergone extensive updates that it include all of the features from the
+        recently reviewed Boost.RangeEx, from Neil Groves.
+        &lt;ul&gt;
+          &lt;li&gt;
+            Range-based version of the full STL iterator based algorithms.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Range adaptors which can be combined with range-based algorithms for
+            unpresedented expressiveness and efficiency.
+          &lt;/li&gt;
+          &lt;li&gt;
+            New functions: irange, istream_range, join, combine.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_43_0.updated_libraries&quot;&gt;
     &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
     &lt;ul&gt;
       &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/accumulators/index.html&quot;&gt;Accumulators&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
-            Added a new HTTP Server 4 example illustrating the use of stackless coroutines
-            with Asio.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Changed handler allocation and invocation to use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;addressof&lt;/span&gt;&lt;/code&gt;
-            to get the address of handler objects, rather than applying &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;operator&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;amp;&lt;/span&gt;&lt;/code&gt;
-            directly (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2977&quot;&gt;#2977&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Restricted MSVC buffer debugging workaround to 2008, as it causes a crash
-            with 2010 beta 2 (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3796&quot;&gt;#3796&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3822&quot;&gt;#3822&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Fixed a problem with the lifetime of handler memory, where Windows needs
-            the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;OVERLAPPED&lt;/span&gt;&lt;/code&gt; structure
-            to be valid until both the initiating function call has returned and
-            the completion packet has been delivered.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Don't block signals while performing system calls, but instead restart
-            the calls if they are interrupted.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Documented the guarantee made by strand objects with respect to order
-            of handler invocation.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Changed strands to use a pool of implementations, to make copying of
-            strands cheaper.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Ensured that kqueue support is enabled for BSD platforms (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3626&quot;&gt;#3626&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Added a &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost_&lt;/span&gt;&lt;/code&gt; prefix
-            to the &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;extern&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&amp;quot;C&amp;quot;&lt;/span&gt;&lt;/code&gt;
-            thread entry point function (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3809&quot;&gt;#3809&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            In &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;getaddrinfo&lt;/span&gt;&lt;/code&gt; emulation,
-            only check the socket type (&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;SOCK_STREAM&lt;/span&gt;&lt;/code&gt;
-            or &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;SOCK_DGRAM&lt;/span&gt;&lt;/code&gt;) if a service
-            name has been specified. This should allow the emulation to work with
-            raw sockets.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Added a workaround for some broken Windows firewalls that make a socket
-            appear bound to 0.0.0.0 when it is in fact bound to 127.0.0.1.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Applied a fix for reported excessive CPU usage under Solaris (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3670&quot;&gt;#3670&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Added some support for platforms that use older compilers such as g++
-            2.95 (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3743&quot;&gt;#3743&lt;/a&gt;).
+            Avoid premature template evaluation in operator overload return types.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
       &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/circular_buffer/index.html&quot;&gt;Circular Buffer&lt;/a&gt;:&lt;/span&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/array/index.html&quot;&gt;Array&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
-            Added methods erase_begin(size_type) and erase_end(size_type) with constant
-            complexity for such types of stored elements which do not need an explicit
-            destruction e.g. int or double.
+            Added support for SunCC compiler.
           &lt;/li&gt;
           &lt;li&gt;
-            Similarly changed implementation of the clear() method and the destructor
-            so their complexity is now constant for such types of stored elements
-            which do not require an explicit destruction (the complexity for other
-            types remains linear).
+            Added 'fill' member function.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed exception code to use boost::throw_exception.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Improved performance.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Reduced compile times.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Reduced the size of generated code.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Extended the guarantee that background threads don't call user code to
+            all asynchronous operations (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3923&quot;&gt;#3923&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed to use edge-triggered epoll on Linux.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed to use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;timerfd&lt;/span&gt;&lt;/code&gt;
+            for dispatching timers on Linux, when available.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed to use one-shot notifications with kqueue on Mac OS X and BSD
+            platforms.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added a bitmask type &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;resolver_query_base&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;flags&lt;/span&gt;&lt;/code&gt;
+            as per the TR2 proposal. This type prevents implicit conversion from
+            &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt;&lt;/code&gt; to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;flags&lt;/span&gt;&lt;/code&gt;,
+            allowing the compiler to catch cases where users incorrectly pass a numeric
+            port number as the service name.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added &lt;code&gt;&lt;span class=&quot;preprocessor&quot;&gt;#define&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;NOMINMAX&lt;/span&gt;&lt;/code&gt;
+            for all Windows compilers. Users can define &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_ASIO_NO_NOMINMAX&lt;/span&gt;&lt;/code&gt;
+            to suppress this definition (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3901&quot;&gt;#3901&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed a bug where 0-byte asynchronous reads were incorrectly passing
+            an &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;eof&lt;/span&gt;&lt;/code&gt; result to the completion handler
+            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/4023&quot;&gt;#4023&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_control&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; member functions to always call &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ioctl&lt;/span&gt;&lt;/code&gt; on the underlying descriptor
+            when modifying blocking mode (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3307&quot;&gt;#3307&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Changed the resolver implementation to longer require the typedefs &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;InternetProtocol&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;resolver_query&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;InternetProtocol&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;resolver_iterator&lt;/span&gt;&lt;/code&gt;,
+            as neither typedef is part of the documented &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;InternetProtocol&lt;/span&gt;&lt;/code&gt;
+            requirements. The corresponding typedefs in the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;tcp&lt;/span&gt;&lt;/code&gt;,
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;udp&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;icmp&lt;/span&gt;&lt;/code&gt;
+            classes have been deprecated.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed out-of-band handling for reactors not based on &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added new &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_ASIO_DISABLE_THREADS&lt;/span&gt;&lt;/code&gt;
+            macro that allows Asio's threading support to be independently disabled.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Minor documentation improvements.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -110,48 +149,8 @@
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/fusion/index.html&quot;&gt;Fusion&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
-            The accumulator is the first argument to the functor of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;fusion&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;fold&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;fusion&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;accumulate&lt;/span&gt;&lt;/code&gt;
-            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2355&quot;&gt;#2355&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Added support for associative iterators and views (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3473&quot;&gt;#3473&lt;/a&gt;).
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/graph/index.html&quot;&gt;Graph&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            Removed old interface to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;compressed_sparse_row_graph&lt;/span&gt;&lt;/code&gt;,
-            making new interface the default.
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/integer/index.html&quot;&gt;Integer&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            Reverted Trunk to release branch state (i.e. a &amp;quot;known good state&amp;quot;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Fixed issues: &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/653&quot;&gt;653&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3084&quot;&gt;3084&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3177&quot;&gt;3177&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3180&quot;&gt;3180&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3548&quot;&gt;3568&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3657&quot;&gt;3657&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2134&quot;&gt;2134&lt;/a&gt;.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Added long long support to &lt;tt&gt;boost::static_log2&lt;/tt&gt;, &lt;tt&gt;boost::static_signed_min&lt;/tt&gt;,
-            &lt;tt&gt;boost::static_signed_max&lt;/tt&gt;, &lt;tt&gt;boost::static_unsigned_min&lt;/tt&gt;&lt;tt&gt;boost::static_unsigned_max&lt;/tt&gt;,
-            when available.
-          &lt;/li&gt;
-          &lt;li&gt;
-            The argument type and the result type of &lt;tt&gt;boost::static_signed_min&lt;/tt&gt;
-            etc are now typedef'd. Formerly, they were hardcoded as &lt;tt&gt;unsigned
-            long&lt;/tt&gt; and &lt;tt&gt;int&lt;/tt&gt; respectively. Please, use the
-            provided typedefs in new code (and update old code as soon as possible).
+            Added new macros for adapting or defining custom types. See the &lt;a href=&quot;/libs/fusion/doc/html/fusion/change_log.html&quot;&gt;Changelog&lt;/a&gt;
+            for details.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -159,73 +158,26 @@
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/iostreams/index.html&quot;&gt;Iostreams&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
-            Fixed many outstanding issues. Thanks to Richard Smith for his work on
-            this. (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3612&quot;&gt;#3612&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3311&quot;&gt;#3311&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2094&quot;&gt;#2094&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3010&quot;&gt;#3010&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2894&quot;&gt;#2894&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3011&quot;&gt;#3011&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3352&quot;&gt;#3352&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3505&quot;&gt;#3505&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            For more information see the &lt;a href=&quot;/libs/iostreams/doc/release_notes.html&quot;&gt;library
-            release notes&lt;/a&gt;.
+            Minor fixes (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2505&quot;&gt;#2505&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3839&quot;&gt;#3839&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3953&quot;&gt;#3953&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3723&quot;&gt;#3723&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3969&quot;&gt;#3969&lt;/a&gt;,
+            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/4135&quot;&gt;#4135&lt;/a&gt;).
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
       &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/program_options/index.html&quot;&gt;Program.Options&lt;/a&gt;:&lt;/span&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/multi_index/doc/index.html&quot;&gt;Multi-index Containers&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
-            Information about option name added to a few exception classes and various
-            clean ups in exception classes (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3423&quot;&gt;#3423&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Description wordwrapping in presense of default parameters fixed (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2613&quot;&gt;#2613&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Empty value in configuration file is now permitted (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/1537&quot;&gt;#1537&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Quotes are no longer stripped from string values (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/850&quot;&gt;#850&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Fix endless loop in case of long default arguments (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/689&quot;&gt;#689&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Fix compile warning caused by usage of boost::any (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2562&quot;&gt;#2562&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Fix memory bug in example/response_file.cpp (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3525&quot;&gt;#3525&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Most compilation warnings were fixed (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3608&quot;&gt;#3608&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Make column width for description text configurable. (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3703&quot;&gt;#3703&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Add general split function: split_unix() (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2561&quot;&gt;#2561&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Enable open config files from given file name (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3264&quot;&gt;#3264&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Additional flag for required options (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2982&quot;&gt;#2982&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Enable case insensitive style for command line (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3498&quot;&gt;#3498&lt;/a&gt;).
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/property_map/index.html&quot;&gt;PropertyMap&lt;/a&gt;:&lt;/span&gt;
-        &lt;ul&gt;
-          &lt;li&gt;
-            Removed old header files (directly in the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;/code&gt; directory); they were deprecated since
-            1.40, replaced by headers in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;property_map&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;/code&gt;.
+            &lt;a href=&quot;/libs/serialization/doc/serialization.html#constructors&quot;&gt;Serialization
+            of non default constructible values&lt;/a&gt; is now properly supported
+            through user-provided facilities &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;save_construct_data&lt;/span&gt;&lt;/code&gt;
+            and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;load_construct_data&lt;/span&gt;&lt;/code&gt;.
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;multi_index_container&lt;/span&gt;&lt;/code&gt;
+            serialization &lt;a href=&quot;/libs/serialization/doc/tutorial.html#versioning&quot;&gt;class
+            version&lt;/a&gt; has been bumped from 1 to 2.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -233,102 +185,164 @@
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/proto/index.html&quot;&gt;Proto&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
-            Fix const correctness issues with &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;proto&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;flatten&lt;/span&gt;&lt;/code&gt;
-            and friends (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3364&quot;&gt;#3364&lt;/a&gt;).
+            Minor change in behavior: non-const expression self-assignment creates
+            an assign node. See Proto's &lt;a href=&quot;/doc/html/proto/appendices.html#boost_proto.appendices.release_notes.boost_1_43&quot;&gt;Release
+            Notes&lt;/a&gt; for details.
           &lt;/li&gt;
           &lt;li&gt;
-            Accomodate recent change to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;fusion&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;fold&lt;/span&gt;&lt;/code&gt;,
-            remove old support for Doxygen and pre-1.35 Fusion (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3553&quot;&gt;#3553&lt;/a&gt;).
+            Minor change to recommended expression extension mechanism: use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_PROTO_EXTENDS_USING_ASSIGN&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;.
+            See Proto's &lt;a href=&quot;/doc/html/proto/appendices.html#boost_proto.appendices.release_notes.boost_1_43&quot;&gt;Release
+            Notes&lt;/a&gt; for details.
           &lt;/li&gt;
           &lt;li&gt;
-            In binary operations, when one operand has a user-specified domain and
-            the other has the default domain, the user-specified domain trumps.
+            Fix error in invocation of callable monomorphic function objects in Proto
+            transforms.
           &lt;/li&gt;
           &lt;li&gt;
-            Fix &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_PROTO_EXTENDS&lt;/span&gt;&lt;/code&gt;
-            to work with elaborated types.
+            Fix misc const correctness issues, work around fusion bug.
           &lt;/li&gt;
           &lt;li&gt;
-            Work around EDG compiler bug with function types and cv-qualification.
+            Add non-const function call overloads to proto terminals.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Add a default constructor to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;proto&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;literal&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Do not use deprecated config macros.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Add &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;proto&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;assert_matches&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+            function and friends to &lt;tt&gt;&amp;lt;boost/proto/debug.hpp&amp;gt;&lt;/tt&gt;.
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;functional&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;make_expr&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
+            and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;functional&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;unpack_expr&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
+            return const-qualified rvalues.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Add documentation for Expr and Domain concepts.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
       &lt;li&gt;
-        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/regex/index.html&quot;&gt;Regex&lt;/a&gt;:&lt;/span&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/random/index.html&quot;&gt;Random&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
-            Added support for Functors rather than strings as format expressions.
+            Put the implementation of random_device in a compiled lib, and added
+            Windows support.
           &lt;/li&gt;
           &lt;li&gt;
-            Improved error reporting when throwing exceptions to include better more
-            relevant information.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Improved performance and reduced stack usage of recursive expressions.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Fixed tickets &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/2802&quot;&gt;#2802&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3425&quot;&gt;#3425&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3507&quot;&gt;#3507&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3546&quot;&gt;#3546&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3631&quot;&gt;#3631&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3632&quot;&gt;#3632&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3715&quot;&gt;#3715&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3718&quot;&gt;#3718&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3763&quot;&gt;#3763&lt;/a&gt;,
-            &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3764&quot;&gt;#3764&lt;/a&gt;
+            Rewrote the documentation using Quickbook/Doxygen/Boostbook and brought
+            it up to date.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
       &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/spirit/index.html&quot;&gt;Spirit&lt;/a&gt;:&lt;/span&gt;
-  Spirit V2.2, see
-        the '&lt;a href=&quot;/doc/libs/1_42_0/libs/spirit/doc/html/spirit/what_s_new.html&quot;&gt;What's
+  Spirit V2.3, see
+        the '&lt;a href=&quot;/doc/libs/1_43_0/libs/spirit/doc/html/spirit/what_s_new/spirit_2_3.html&quot;&gt;What's
         New&lt;/a&gt;' section for details.
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/thread/index.html&quot;&gt;Thread&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Uses &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;throw_exception&lt;/span&gt;&lt;/code&gt; for all exceptions
+            except &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;thread_interrupted&lt;/span&gt;&lt;/code&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            Added fix for issue 2742
+          &lt;/li&gt;
+          &lt;li&gt;
+            Optimizations to mutex locks and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;call_once&lt;/span&gt;&lt;/code&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
       &lt;/li&gt;
       &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/unordered/index.html&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
-            Support instantiating the containers with incomplete value types.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Add &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;erase_return_void&lt;/span&gt;&lt;/code&gt;
-            as a temporary workaround for the current &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;erase&lt;/span&gt;&lt;/code&gt;
-            which can be inefficient because it has to find the next element to return
-            an iterator (&lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/3693&quot;&gt;#3693&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Add templated find overload for compatible keys.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Improved codegear compatibility.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Other minor changes, full details in &lt;a href=&quot;/doc/html/unordered/changes.html#unordered.changes.boost_1_42_0&quot;&gt;the
-            changelog&lt;/a&gt;.
+            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;erase_return_void&lt;/span&gt;&lt;/code&gt; is
+            now &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;quick_erase&lt;/span&gt;&lt;/code&gt; (&lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/3966&quot;&gt;#3966&lt;/a&gt;).
           &lt;/li&gt;
         &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/uuid/index.html&quot;&gt;Uuid&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Split generators into separate files.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Fixed bug in basic_random_generator (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3971&quot;&gt;#3971&lt;/a&gt;).
+          &lt;/li&gt;
+          &lt;li&gt;
+            Updated documentation.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/wave/index.html&quot;&gt;Wave&lt;/a&gt;:&lt;/span&gt;
+  See the &lt;a href=&quot;/libs/wave/ChangeLog&quot;&gt;Changelog&lt;/a&gt;
+        for details.
       &lt;/li&gt;
       &lt;li&gt;
         &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/xpressive/index.html&quot;&gt;Xpressive&lt;/a&gt;:&lt;/span&gt;
         &lt;ul&gt;
           &lt;li&gt;
-            &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;match_results&lt;/span&gt;&lt;/code&gt; no longer
-            relies on undefined behavior in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;list&lt;/span&gt;&lt;/code&gt;
-            (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3278&quot;&gt;#3278&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Do NOT copy singular iterators (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3538&quot;&gt;#3538&lt;/a&gt;).
-          &lt;/li&gt;
-          &lt;li&gt;
-            Eliminate gcc and darwin warnings (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3734&quot;&gt;#3734&lt;/a&gt;).
+            Add missing include to &lt;tt&gt;&amp;lt;boost/xpressive/regex_error.hpp&amp;gt;&lt;/tt&gt;.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/div&gt;
-  &lt;div id=&quot;version_1_42_0.compilers_tested&quot;&gt;
+  &lt;div id=&quot;version_1_43_0.build_system&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Build System&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        When cross-compiling to GNU targets, static libraries are properly created.
+        Previously, using such libraries resulted in &lt;tt&gt;Archive has no index&lt;/tt&gt;
+        error.
+      &lt;/li&gt;
+      &lt;li&gt;
+        The naming of DLL and import libraries with gcc compiler on Windows, both
+        mingw and cygwin, now matches default conventions of those environments.
+        Previously, the naming scheme was the same as for other Windows compilers.
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_43_0.updated_tools&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Tools&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/tools/quickbook/index.html&quot;&gt;Quickbook&lt;/a&gt;:&lt;/span&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            Unicode escape characters.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Support the UTF-8 byte order mark.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Disallow &lt;code&gt;&lt;span class=&quot;special&quot;&gt;[&lt;/span&gt;&lt;/code&gt; in simple markup.
+            Fixes some errors with mismatched punctuation.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Add a command line flag (&lt;code&gt;&lt;span class=&quot;special&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;D&lt;/span&gt;&lt;/code&gt;) to define macros at the command
+            line.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Improved post-processor output.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Check that &lt;code&gt;&lt;span class=&quot;special&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;section&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;]&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;special&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;endsect&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;]&lt;/span&gt;&lt;/code&gt;
+            tags are balanced in templates.
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_43_0.compilers_tested&quot;&gt;
     &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Compilers Tested&lt;/span&gt;&lt;/h3&gt;
     &lt;p&gt;
       Boost's primary test compilers are:
@@ -340,9 +354,6 @@
           &lt;li&gt;
             GCC 4.0.1 on Intel Leopard.
           &lt;/li&gt;
-          &lt;li&gt;
-            GCC 4.0.1 on PowerPC Tiger.
-          &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
       &lt;li&gt;
@@ -352,7 +363,7 @@
             GCC 4.4.1 on Ubuntu Linux.
           &lt;/li&gt;
           &lt;li&gt;
-            GCC 4.4 on Debian.
+            GCC 4.4 on 64-bit Suse.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -360,10 +371,7 @@
         Windows:
         &lt;ul&gt;
           &lt;li&gt;
-            Visual C++ 7.1 SP1, 8.0 SP1 and 9.0 SP1 on Windows XP.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Visual C++ 9.0 on Windows 2008, 64 bit.
+            Visual C++ 8.0 SP1 and 9.0 SP1 on Windows XP.
           &lt;/li&gt;
           &lt;li&gt;
             GCC 4.3.3, using Mingw
@@ -387,37 +395,16 @@
         Linux:
         &lt;ul&gt;
           &lt;li&gt;
-            Intel 10.1 on Red Hat Enterprise Linux.
+            Intel 10.1, 11.1 on 32 bit Red Hat Enterprise Linux.
           &lt;/li&gt;
           &lt;li&gt;
-            Intel 10.1 on 64 bit Red Hat Enterprise Linux.
+            Intel 10.1, 11.0, 11.1 on 64 bit Red Hat Enterprise Linux.
           &lt;/li&gt;
           &lt;li&gt;
-            Intel 11.0 on 32 bit Red Hat Enterprise Linux.
+            GCC 3.4.6, 4.2.4, 4.3.4, 4.4.3 on Red Hat Enterprise Linux.
           &lt;/li&gt;
           &lt;li&gt;
-            Intel 11.0 on 64 bit Red Hat Enterprise Linux.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Intel 11.1 on 64 bit Red Hat Enterprise Linux.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Intel 11.1 on 64 bit Linux Redhat 5.1 Server.
-          &lt;/li&gt;
-          &lt;li&gt;
-            Intel 11.1 on Suse Linux 64 bit.
-          &lt;/li&gt;
-          &lt;li&gt;
-            GCC 3.4.6, GCC 4.2.4, GCC 4.3.4 and GCC 4.4.2 on Red Hat Enterprise Linux.
-          &lt;/li&gt;
-          &lt;li&gt;
-            GCC 4.3.4 and GCC 4.4.2 with C++0x extensions on Red Hat Enterprise Linux.
-          &lt;/li&gt;
-          &lt;li&gt;
-            GCC 4.4.1 on 64 bit Linux.
-          &lt;/li&gt;
-          &lt;li&gt;
-            GCC 4.4.3 on Debian unstable.
+            GCC 4.3.4, 4.4.3 with C++0x extensions on Red Hat Enterprise Linux.
           &lt;/li&gt;
           &lt;li&gt;
             QLogic PathScale(TM) Compiler Suite: Version 3.2 on Red Hat Enterprise
@@ -435,7 +422,7 @@
             GCC 4.0.1 on Intel Leopard.
           &lt;/li&gt;
           &lt;li&gt;
-            GCC 4.0.1 on PowerPC Tiger.
+            Clang from subversion.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -443,16 +430,16 @@
         Windows:
         &lt;ul&gt;
           &lt;li&gt;
-            Visual C++ 7.1, 8,0, 9,0 on XP.
+            Visual C++ 8,0, 9,0 on 32-bit XP.
           &lt;/li&gt;
           &lt;li&gt;
             Visual C++ 9.0 using STLport 5.2 on XP and Windows Mobile 5.0.
           &lt;/li&gt;
           &lt;li&gt;
-            Visual C++ 10.0 beta 2.
+            Visual C++ 10.0 on XP.
           &lt;/li&gt;
           &lt;li&gt;
-            Visual C++ 10.0 on 32-bit Vista.
+            Visual C++ 10.0 on 64-bit Windows 7.
           &lt;/li&gt;
           &lt;li&gt;
             Borland/Codegear C++ 5.9.3, 6.1.3 (2009), 6.2.1 (2010).
@@ -461,7 +448,13 @@
             Intel C++ 11.1, with a Visual C++ 9.0 backend, on Vista 32-bit.
           &lt;/li&gt;
           &lt;li&gt;
-            GCC 4.4.1 on Mingw, with and without C++0x extensions.
+            GCC 4.3.3 on Mingw.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.4.3 on Mingw, with and without C++0x extensions.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.5 on Mingw.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -469,7 +462,7 @@
         AIX:
         &lt;ul&gt;
           &lt;li&gt;
-            IBM XL C/C++ Enterprise Edition for AIX, V10.1.0.0, on AIX Version 5.3.0.40.
+            IBM XL C/C++ Enterprise Edition, V10.1.0.0, on AIX Version 5.3.0.40.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -477,7 +470,10 @@
         FreeBSD:
         &lt;ul&gt;
           &lt;li&gt;
-            GCC 4.2.1 on FreeBSD 7.0, 32 bit and 64 bit.
+            GCC 4.2.1 on FreeBSD 7.2, 64 bit.
+          &lt;/li&gt;
+          &lt;li&gt;
+            GCC 4.2.1 on FreeBSD 8.0, 32 bit.
           &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
@@ -491,7 +487,7 @@
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/div&gt;
-  &lt;div id=&quot;version_1_42_0.acknowledgements&quot;&gt;
+  &lt;div id=&quot;version_1_43_0.acknowledgements&quot;&gt;
     &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Acknowledgements&lt;/span&gt;&lt;/h3&gt;
     &lt;p&gt;
       &lt;a href=&quot;/users/people/beman_dawes.html&quot;&gt;Beman Dawes&lt;/a&gt;, Eric Niebler,
@@ -625,21 +621,6 @@
     &lt;li&gt;Implement ISFILE built-in. -- &lt;em&gt;Vladimir
     P.&lt;/em&gt; &lt;/li&gt;
 &lt;/ul&gt;
-  &lt;/p&gt;
-&lt;/div&gt;</description></item><item><title>Version 1.40.0.cmake2 (Boost + CMake)</title><pubDate>Sat, 29 Nov 2008 04:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
-      Latest patch release of Boost.CMake
-    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><boostbook:download>http://sodium.resophonic.com/boost-cmake/1.40.0.cmake2</boostbook:download><description>&lt;div class=&quot;description&quot;&gt;
-  
-  
-  
-  &lt;p&gt;
-    This is the most recent separately-distributed patch release of cmakeable boost
-    version 1.40.0.cmake2. Support for the upcoming cmake version 2.8.0 is in, as
-    well as a slew of tweaks for various platforms and compilers.
-  &lt;/p&gt;
-  &lt;p&gt;
-    See the &lt;a href=&quot;http://svn.boost.org/trac/boost/wiki/CMake&quot;&gt;Boost.CMake wiki
-    page&lt;/a&gt; for more information.
   &lt;/p&gt;
 &lt;/div&gt;</description></item></channel>
 </rss>

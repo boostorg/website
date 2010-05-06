@@ -1,47 +1,159 @@
 [article Version 1.43.0
     [quickbook 1.4]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: ]
+    [purpose New Libraries: Functional/Factory, Functional/Forward.
+        Major Update: Range.
+        Updated Libraries: Accumulators, Array, Asio, Fusion, Iostreams,
+        Multi-index Containers, Proto, Random, Spirit, Thread, Unordered,
+        Uuid, Wave, Xpressive.
+        Also, updates to the build system and quickbook.]
     [authors [Dawes, Beman]]
-    [last-revision ]
+    [last-revision Thu 6 May 2010 12:00:00 GMT]
 ]
 
 [include ext.qbk]
 
-[/ TODO: Check download link on release.]
 [download http://sourceforge.net/projects/boost/files/boost/1.43.0/]
-
-[/
-    When adding libraries:
-
-    1. Libraries are listed in alphabetical order.
-    2. Besides the dedicated entry, the lib name should be added to the
-       [purpose] section at the beginning of the page.
-
-    Example new libraries message:
-
-* [phrase library..[@/libs/accumulators/index.html Accumulators]:] Framework for
-  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
-
-    Example update message:
-
-* [phrase library..[@/libs/interprocess/index.html Interprocess]:]
-  * Added anonymous shared memory for UNIX systems.
-  * Fixed missing move semantics on managed memory classes.
-  * Added copy_on_write and open_read_only options for shared memory
-    and mapped file managed classes.
-  * `shared_ptr` is movable and supports aliasing.
-]
 
 [section New Libraries]
 
-* /TODO/
+* [phrase library..[@/libs/functional/factory/index.html Functional/factory]:]
+  Function objects for dynamic and by-value construction,
+  from Tobias Schwinger.
+
+* [phrase library..[@/libs/functional/forward/index.html Functional/forward]:]
+  Function object adapters to address the forwarding problem,
+  from Tobias Schwinger.
+
+[endsect]
+
+[section Major Updates]
+
+* [phrase library..[@/libs/range/index.html Range]:]
+  Boost.Range has undergone extensive updates that it include all of the
+  features from the recently reviewed Boost.RangeEx, from Neil Groves.
+  * Range-based version of the full STL iterator based algorithms.
+  * Range adaptors which can be combined with range-based algorithms for
+    unpresedented expressiveness and efficiency.
+  * New functions: irange, istream_range, join, combine.
 
 [endsect]
 
 [section Updated Libraries]
 
-* /TODO/
+* [phrase library..[@/libs/accumulators/index.html Accumulators]:]
+  * Avoid premature template evaluation in operator overload return types.
+
+* [phrase library..[@/libs/array/index.html Array]:]
+  * Added support for SunCC compiler.
+  * Added 'fill' member function.
+  * Changed exception code to use boost::throw_exception.
+
+* [phrase library..[@/libs/asio/index.html Asio]:]
+  * Improved performance.
+  * Reduced compile times.
+  * Reduced the size of generated code.
+  * Extended the guarantee that background threads don't call user code to all
+    asynchronous operations
+    ([@https://svn.boost.org/trac/boost/ticket/3923 #3923]).
+  * Changed to use edge-triggered epoll on Linux.
+  * Changed to use `timerfd` for dispatching timers on Linux, when available.
+  * Changed to use one-shot notifications with kqueue on Mac OS X and BSD
+    platforms.
+  * Added a bitmask type `ip::resolver_query_base::flags` as per the TR2 proposal.
+    This type prevents implicit conversion from `int` to `flags`, allowing the
+    compiler to catch cases where users incorrectly pass a numeric port number as
+    the service name.
+  * Added `#define NOMINMAX` for all Windows compilers. Users can define
+    `BOOST_ASIO_NO_NOMINMAX` to suppress this definition
+    ([@https://svn.boost.org/trac/boost/ticket/3901 #3901]).
+  * Fixed a bug where 0-byte asynchronous reads were incorrectly passing an
+    `error::eof` result to the completion handler
+    ([@https://svn.boost.org/trac/boost/ticket/4023 #4023]).
+  * Changed the `io_control()` member functions to always call `ioctl` on the
+    underlying descriptor when modifying blocking mode
+    ([@https://svn.boost.org/trac/boost/ticket/3307 #3307]).
+  * Changed the resolver implementation to longer require the typedefs
+    `InternetProtocol::resolver_query` and `InternetProtocol::resolver_iterator`,
+    as neither typedef is part of the documented `InternetProtocol` requirements.
+    The corresponding typedefs in the `ip::tcp`, `ip::udp` and `ip::icmp` classes
+    have been deprecated.
+  * Fixed out-of-band handling for reactors not based on `select()`.
+  * Added new `BOOST_ASIO_DISABLE_THREADS` macro that allows Asio's threading
+    support to be independently disabled.
+  * Minor documentation improvements.
+
+* [phrase library..[@/libs/fusion/index.html Fusion]:]
+  * Added new macros for adapting or defining custom types. See the
+    [@/libs/fusion/doc/html/fusion/change_log.html Changelog] for details.
+  
+* [phrase library..[@/libs/iostreams/index.html Iostreams]:]
+  * Minor fixes
+    ([@https://svn.boost.org/trac/boost/ticket/2505 #2505],
+    [@https://svn.boost.org/trac/boost/ticket/3839 #3839],
+    [@https://svn.boost.org/trac/boost/ticket/3953 #3953],
+    [@https://svn.boost.org/trac/boost/ticket/3723 #3723],
+    [@https://svn.boost.org/trac/boost/ticket/3969 #3969],
+    [@https://svn.boost.org/trac/boost/ticket/4135 #4135]).
+
+* [phrase library..[@/libs/multi_index/doc/index.html Multi-index Containers]:]
+  * [@/libs/serialization/doc/serialization.html#constructors Serialization
+    of non default constructible values] is now properly
+    supported through user-provided facilities `save_construct_data`
+    and `load_construct_data`. `multi_index_container` serialization
+    [@/libs/serialization/doc/tutorial.html#versioning class version]
+    has been bumped from 1 to 2. 
+
+* [phrase library..[@/libs/proto/index.html Proto]:]
+  * Minor change in behavior: non-const expression self-assignment creates
+    an assign node. See Proto's
+    [@/doc/html/proto/appendices.html#boost_proto.appendices.release_notes.boost_1_43 Release Notes]
+    for details.
+  * Minor change to recommended expression extension mechanism: use
+    `BOOST_PROTO_EXTENDS_USING_ASSIGN()`. See Proto's
+    [@/doc/html/proto/appendices.html#boost_proto.appendices.release_notes.boost_1_43 Release Notes]
+    for details.
+  * Fix error in invocation of callable monomorphic function objects in Proto transforms.
+  * Fix misc const correctness issues, work around fusion bug.
+  * Add non-const function call overloads to proto terminals.
+  * Add a default constructor to `proto::literal<>`.
+  * Do not use deprecated config macros.
+  * Add `proto::assert_matches()` function and friends to [^<boost/proto/debug.hpp>].
+  * `functional::make_expr<>` and `functional::unpack_expr<>` return const-qualified
+    rvalues.
+  * Add documentation for Expr and Domain concepts.
+
+* [phrase library..[@/libs/random/index.html Random]:]
+  * Put the implementation of random_device in a compiled lib,
+    and added Windows support.
+  * Rewrote the documentation using Quickbook/Doxygen/Boostbook
+    and brought it up to date.
+
+* [phrase library..[@/libs/spirit/index.html Spirit]:]
+  Spirit V2.3, see the
+  '[@/doc/libs/1_43_0/libs/spirit/doc/html/spirit/what_s_new/spirit_2_3.html What's New]'
+  section for details.
+
+* [phrase library..[@/libs/thread/index.html Thread]:]
+  * Uses `boost::throw_exception` for all exceptions except `thread_interrupted`
+  * Added fix for issue 2742
+  * Optimizations to mutex locks and `call_once`
+
+* [phrase library..[@/libs/unordered/index.html Unordered]:]
+  * `erase_return_void` is now `quick_erase`
+    ([@http://svn.boost.org/trac/boost/ticket/3966 #3966]).
+
+* [phrase library..[@/libs/uuid/index.html Uuid]:]
+  * Split generators into separate files.
+  * Fixed bug in basic_random_generator
+    ([@https://svn.boost.org/trac/boost/ticket/3971 #3971]).
+  * Updated documentation.
+
+* [phrase library..[@/libs/wave/index.html Wave]:]
+  See the [@/libs/wave/ChangeLog Changelog] for details.
+
+* [phrase library..[@/libs/xpressive/index.html Xpressive]:]
+  * Add missing include to [^<boost/xpressive/regex_error.hpp>].
 
 [endsect]
 
@@ -55,22 +167,71 @@
   
 [endsect]
 
+[section Updated Tools]
+
+* [phrase library..[@/tools/quickbook/index.html Quickbook]:]
+  * Unicode escape characters.
+  * Support the UTF-8 byte order mark.
+  * Disallow `[` in simple markup. Fixes some errors with mismatched punctuation.
+  * Add a command line flag (`-D`) to define macros at the command line.
+  * Improved post-processor output.
+  * Check that `[section]` and `[endsect]` tags are balanced in templates.
+
+[endsect]
 
 [section Compilers Tested]
 
 Boost's primary test compilers are:
 
-* /TODO/
+* OS X:
+  * GCC 4.0.1 on Intel Leopard.
+* Linux:
+  * GCC 4.4.1 on Ubuntu Linux.
+  * GCC 4.4 on 64-bit Suse.
+* Windows:
+  * Visual C++ 8.0 SP1 and 9.0 SP1 on Windows XP.
+  * GCC 4.3.3, using Mingw
+* FreeBSD:
+  * GCC 4.2.1, 32 and 64 bit.
 
 Boost's additional test compilers include:
 
-* /TODO/
+* Linux:
+  * Intel 10.1, 11.1 on 32 bit Red Hat Enterprise Linux.
+  * Intel 10.1, 11.0, 11.1 on 64 bit Red Hat Enterprise Linux.
+  * GCC 3.4.6, 4.2.4, 4.3.4, 4.4.3 on Red Hat Enterprise Linux.
+  * GCC 4.3.4, 4.4.3 with C++0x extensions on Red Hat Enterprise Linux.
+  * QLogic PathScale(TM) Compiler Suite: Version 3.2 on Red Hat Enterprise Linux.
+* OS X:
+  * Intel C++ Compiler 10.1, 11.0, 11.1 on Leopard.
+  * GCC 4.0.1 on Intel Leopard.
+  * Clang from subversion.
+* Windows:
+  * Visual C++ 8,0, 9,0 on 32-bit XP.
+  * Visual C++ 9.0 using STLport 5.2 on XP and Windows Mobile 5.0.
+  * Visual C++ 10.0 on XP.
+  * Visual C++ 10.0 on 64-bit Windows 7.
+  * Borland/Codegear C++ 5.9.3, 6.1.3 (2009), 6.2.1 (2010).
+  * Intel C++ 11.1, with a Visual C++ 9.0 backend, on Vista 32-bit.
+  * GCC 4.3.3 on Mingw.
+  * GCC 4.4.3 on Mingw, with and without C++0x extensions.
+  * GCC 4.5 on Mingw.
+* AIX:
+  * IBM XL C/C++ Enterprise Edition, V10.1.0.0, on AIX Version 5.3.0.40.
+* FreeBSD:
+  * GCC 4.2.1 on FreeBSD 7.2, 64 bit.
+  * GCC 4.2.1 on FreeBSD 8.0, 32 bit.
+* Solaris:
+  * Sun C++ 5.10 on Solaris 5.10.
 
 [endsect]
 
 [section Acknowledgements]
 
-/TODO/
+[@/users/people/beman_dawes.html Beman Dawes],
+Eric Niebler,
+[@/users/people/rene_rivera.html Rene Rivera],
+Daniel James and Vladimir Prus managed this release.
 
 [endsect]
 
