@@ -16,8 +16,8 @@ if(!isset($_downloads->db[$_guid])) {
   <title><?php print $_downloads->db[$_guid]['title']; ?></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
-  <link rel="stylesheet" type="text/css" href="/style/section-boost.css" />
-  <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style/csshover3.htc); } </style> <![endif]-->
+  <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
+  <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
 </head>
 
 <body>
