@@ -25,7 +25,7 @@ display_from_archive(
   get_archive_location(
     '@^[/]([^/]+)[/](.*)$@',
     $_SERVER["PATH_INFO"],
-    ,false,false
+    false,false
   ),
   array(
   //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type[,preprocess hook]),
