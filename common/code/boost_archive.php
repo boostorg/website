@@ -41,9 +41,72 @@ function get_archive_location(
 function display_from_archive(
     $archive_location_details,
     $content_map = array(),
-    $extractor = null)
+    $override_extractor = null)
 {
-    $_file = new boost_archive($archive_location_details, $content_map, $extractor);
+    $info_map = array_merge($content_map, array(
+        array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh|xml|qbk)$@i','text','text/plain'),
+        array('@.*@','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
+        array('@.*@','@[.]png$@i','raw','image/png'),
+        array('@.*@','@[.]gif$@i','raw','image/gif'),
+        array('@.*@','@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
+        array('@.*@','@[.]css$@i','raw','text/css'),
+        array('@.*@','@[.]js$@i','raw','application/x-javascript'),
+        array('@.*@','@[.]pdf$@i','raw','application/pdf'),
+        array('@.*@','@[.](html|htm)$@i','raw','text/html'),
+        array('@.*@','@[^.](Jamroot|Jamfile|ChangeLog)$@i','text','text/plain'),
+        array('@.*@','@[.]dtd$@i','raw','application/xml-dtd'),
+        ));
+
+    $preprocess = null;
+    $extractor = null;
+    $type = null;
+
+    foreach ($info_map as $i)
+    {
+        if (preg_match($i[1],$archive_location_details['key']))
+        {
+            $extractor = $i[2];
+            $type = $i[3];
+            $preprocess = isset($i[4]) ? $i[4] : NULL;
+            break;
+        }
+    }
+    
+    if ($override_extractor) $extractor = $override_extractor;
+
+    if (!$extractor) {
+        file_not_found($archive_location_details['file']);
+        return;
+    }
+
+    $unzip =
+      UNZIP
+      .' -p '.escapeshellarg($archive_location_details['archive'])
+      .' '.escapeshellarg($archive_location_details['file']);
+
+    if($extractor == 'raw') {
+        display_raw_file($unzip, $type);
+        return;
+    }
+
+    $extractor_name = $extractor.'_filter';
+
+    $archive = new boost_archive();
+    $archive->extractor_instance_ = new $extractor_name;
+    $archive->key_ = $archive_location_details['key'];
+
+    // Note: this sets $archive->content_ with either the content or an error
+    // message:
+    if(!extract_file($unzip, $archive->content_)) {
+        file_not_found($archive_location_details['file'], $archive->content_);
+        return;
+    }
+
+    if ($preprocess) {
+        $archive->content_ = call_user_func($preprocess, $archive->content_);
+    }
+    
+    $archive->extractor_instance_->render($archive);
 }
 
 class boost_archive
@@ -53,75 +116,6 @@ class boost_archive
     var $title_ = NULL;
     var $charset_ = NULL;
     var $content_ = NULL;
-    
-    function boost_archive(
-        $archive_location_details,
-        $content_map = array(),
-        $override_extractor = null)
-    {
-        $info_map = array_merge($content_map, array(
-            array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh|xml|qbk)$@i','text','text/plain'),
-            array('@.*@','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
-            array('@.*@','@[.]png$@i','raw','image/png'),
-            array('@.*@','@[.]gif$@i','raw','image/gif'),
-            array('@.*@','@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
-            array('@.*@','@[.]css$@i','raw','text/css'),
-            array('@.*@','@[.]js$@i','raw','application/x-javascript'),
-            array('@.*@','@[.]pdf$@i','raw','application/pdf'),
-            array('@.*@','@[.](html|htm)$@i','raw','text/html'),
-            array('@.*@','@[^.](Jamroot|Jamfile|ChangeLog)$@i','text','text/plain'),
-            array('@.*@','@[.]dtd$@i','raw','application/xml-dtd'),
-            ));
-
-        $preprocess = null;
-        $extractor = null;
-        $type = null;
-
-        foreach ($info_map as $i)
-        {
-            if (preg_match($i[1],$archive_location_details['key']))
-            {
-                $extractor = $i[2];
-                $type = $i[3];
-                $preprocess = isset($i[4]) ? $i[4] : NULL;
-                break;
-            }
-        }
-        
-        if ($override_extractor) $extractor = $override_extractor;
-
-        if (!$extractor) {
-            file_not_found($archive_location_details['file']);
-            return;
-        }
-
-        $unzip =
-          UNZIP
-          .' -p '.escapeshellarg($archive_location_details['archive'])
-          .' '.escapeshellarg($archive_location_details['file']);
-
-        if($extractor == 'raw') {
-            display_raw_file($unzip, $type);
-            return;
-        }
-
-        $extractor_name = $extractor.'_filter';
-        $this->extractor_instance_ = new $extractor_name;
-        $this->key_ = $archive_location_details['key'];
-
-        // Note: this sets $this->content_ with either the content or an error
-        // message:
-        if(!extract_file($unzip, $this->content_)) {
-            file_not_found($archive_location_details['file'], $this->content_);
-            return;
-        }
-
-        if ($preprocess) {
-            $this->content_ = call_user_func($preprocess, $this->content_);
-        }
-        
-        $this->extractor_instance_->render($this);
-    }
 }
 
 class boost_archive_render_callbacks {
