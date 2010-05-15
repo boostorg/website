@@ -114,8 +114,9 @@ class boost_archive
         $extractor_name = $this->extractor_.'_filter';
         $this->extractor_instance_ = new $extractor_name;
 
-        // Note: this sets $this->content_:
-        if(!$this->extractor_instance_->extract($this, $unzip)) {
+        // Note: this sets $this->content_ with either the content or an error
+        // message:
+        if(!extract_file($unzip, $this->content_)) {
             file_not_found($this->file_, $this->content_);
             return;
         }
@@ -156,14 +157,6 @@ HTML;
     }
 }
 
-class filter_base
-{
-    function extract($archive, $unzip) {}
-    function init($archive) {}
-    function content($archive) {}
-    function render($archive) {}
-};
-
 function display_raw_file($archive, $unzip) {
     header('Content-type: '.$archive->type_);
     ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
@@ -178,28 +171,25 @@ function display_raw_file($archive, $unzip) {
         echo 'Error extracting file: '.unzip_error($exit_status);
 };
 
-class extract_filter_base extends filter_base
-{
-    function extract($archive, $unzip) {
-        $file_handle = popen($unzip,'r');
-        $text = '';
-        while ($file_handle && !feof($file_handle)) {
-            $text .= fread($file_handle,8*1024);
-        }
-        $exit_status = pclose($file_handle);
-
-        if($exit_status == 0) {
-            $archive->content_ = $text;
-            return true;
-        }
-        else {
-            $archive->content_ = strstr($_SERVER['HTTP_HOST'], 'beta') ? unzip_error($exit_status) : null;
-            return false;
-        }
+function extract_file($unzip, &$content) {
+    $file_handle = popen($unzip,'r');
+    $text = '';
+    while ($file_handle && !feof($file_handle)) {
+        $text .= fread($file_handle,8*1024);
     }
-};
+    $exit_status = pclose($file_handle);
 
-class text_filter extends extract_filter_base
+    if($exit_status == 0) {
+        $content = $text;
+        return true;
+    }
+    else {
+        $content = strstr($_SERVER['HTTP_HOST'], 'beta') ? unzip_error($exit_status) : null;
+        return false;
+    }
+}
+
+class text_filter
 {
     function init($archive)
     {
@@ -219,7 +209,7 @@ class text_filter extends extract_filter_base
     }
 }
 
-class cpp_filter extends extract_filter_base
+class cpp_filter
 {
     function init($archive)
     {
@@ -250,7 +240,7 @@ class cpp_filter extends extract_filter_base
     }
 }
 
-class html_base_filter extends extract_filter_base
+class html_base_filter
 {
     function init($archive)
     {
