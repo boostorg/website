@@ -96,7 +96,8 @@ function libref($lib)
     }
     else
     {
-      $docref = '/doc/libs/1_43_0/'.$lib['documentation'];
+      global $boost_current_version;
+      $docref = '/doc/libs/'.implode('_', $boost_current_version).'/'.$lib['documentation'];
     }
     print '<a href="'.$docref.'">'.($lib['name'] ? $lib['name'] : $lib['key']).'</a>';
   }

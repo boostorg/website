@@ -1,5 +1,6 @@
 <?php
 require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
+require_once(dirname(__FILE__) . '/../common/code/boost_version.php');
 
 function add_spirit_analytics($content) {
     if(stripos($content, '_uacct = "UA-11715441-2"') !== FALSE)
@@ -32,8 +33,18 @@ EOS;
     return str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
+$location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"]);
+
+if (boost_future_version($location['version'])) {
+    file_not_found($location['file'],
+        "Documentation for this version has not been uploaded yet. ".
+        "Documentation is only uploaded when it's fully released, ".
+        "you can see the documentation for a beta version or snapshot in the download.");
+    return;
+}
+
 display_from_archive(
-  get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"]),
+  $location,
   array(
   //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type[,preprocess hook]),
   //~ this handles most of the simple cases of index.htm(l) redirect files

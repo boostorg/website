@@ -69,7 +69,7 @@ class boost_archive
         $this->key_ = $archive_location_details['key'];
         $this->file_ = $archive_location_details['file'];
         $this->archive_ = $archive_location_details['archive'];
-    
+
         $info_map = array_merge($content_map, array(
             array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh|xml|qbk)$@i','text','text/plain'),
             array('@.*@','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
@@ -96,6 +96,7 @@ class boost_archive
         }
         
         if ($extractor) $this->extractor_ = $extractor;
+
         if (!$this->extractor_) {
             file_not_found($this->file_);
             return;
