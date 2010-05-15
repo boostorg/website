@@ -19,7 +19,11 @@ RewriteRule ^libs/([0-9_]+)/([^.]*[^./])/?$ libs/$1/$2/index.html [R]
 
 # Rewrite specific versions to the dynamic handlers.
 RewriteRule ^libs/([0-9_]+)/?$ libraries.php/$1 [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^libs/([0-9_]+)/(.+)$ display_libs.php/boost_$1/$2 [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^libs/?(.*)$ libraries.php$1 [L]
 
 # Handling of tool documentation.
