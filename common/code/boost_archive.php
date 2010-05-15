@@ -89,10 +89,7 @@ function display_from_archive(
         return;
     }
 
-    $extractor_name = $extractor.'_filter';
-
     $archive = new boost_archive();
-    $archive->extractor_instance_ = new $extractor_name;
     $archive->key_ = $archive_location_details['key'];
 
     // Note: this sets $archive->content_ with either the content or an error
@@ -106,22 +103,24 @@ function display_from_archive(
         $archive->content_ = call_user_func($preprocess, $archive->content_);
     }
     
-    $archive->extractor_instance_->render($archive);
+    $extractor_name = $extractor.'_filter';
+    $extractor_instance = new $extractor_name;
+    $extractor_instance->render($archive);
 }
 
 class boost_archive
 {
     var $key_ = NULL;
-    var $extractor_instance_ = NULL;
     var $title_ = NULL;
     var $charset_ = NULL;
     var $content_ = NULL;
 }
 
 class boost_archive_render_callbacks {
-    var $archive;
+    var $extractor, $archive;
     
-    function boost_archive_render_callbacks($archive) {
+    function boost_archive_render_callbacks($extractor, $archive) {
+        $this->extractor = $extractor;
         $this->archive = $archive;
     }
 
@@ -138,9 +137,9 @@ HTML;
     
     function content()
     {
-        if ($this->archive->extractor_instance_)
+        if ($this->extractor)
         {
-            $this->archive->extractor_instance_->content($this->archive);
+            $this->extractor->content($this->archive);
         }
     }
 }
@@ -190,7 +189,7 @@ class text_filter
     function render($archive) {
         $archive->title_ = htmlentities($archive->key_);
 
-        display_template(new boost_archive_render_callbacks($archive));
+        display_template(new boost_archive_render_callbacks($this, $archive));
     }
 }
 
@@ -218,7 +217,7 @@ class cpp_filter
     function render($archive) {
         $archive->title_ = htmlentities($archive->key_);
 
-        display_template(new boost_archive_render_callbacks($archive));
+        display_template(new boost_archive_render_callbacks($this, $archive));
     }
 }
 
@@ -269,7 +268,7 @@ class boost_book_html_filter extends html_base_filter
 
     function render($archive) {
         $this->html_init($archive);
-        display_template(new boost_archive_render_callbacks($archive));
+        display_template(new boost_archive_render_callbacks($this, $archive));
     }
 }
 
@@ -290,7 +289,7 @@ class boost_libs_filter extends html_base_filter
             $text = prepare_themed_html($text);
             $archive->content_ = $text;
             
-            display_template(new boost_archive_render_callbacks($archive));
+            display_template(new boost_archive_render_callbacks($this, $archive));
         }
         else {
             print $archive->content_;
@@ -324,7 +323,7 @@ class boost_frame1_filter extends html_base_filter
 
     function render($archive) {
         $this->html_init($archive);
-        display_template(new boost_archive_render_callbacks($archive));
+        display_template(new boost_archive_render_callbacks($this, $archive));
     }
 }
 
