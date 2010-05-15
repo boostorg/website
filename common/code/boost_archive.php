@@ -120,7 +120,6 @@ class boost_archive
             file_not_found($this->file_, $this->content_);
             return;
         }
-        $this->extractor_instance_->init($this);
 
         if ($this->preprocess_) {
             $this->content_ = call_user_func($this->preprocess_, $this->content_);
@@ -191,11 +190,6 @@ function extract_file($unzip, &$content) {
 
 class text_filter
 {
-    function init($archive)
-    {
-        $archive->title_ = htmlentities($archive->key_);
-    }
-    
     function content($archive)
     {
         print "<h3>".htmlentities($archive->key_)."</h3>\n";
@@ -205,17 +199,14 @@ class text_filter
     }
 
     function render($archive) {
+        $archive->title_ = htmlentities($archive->key_);
+
         display_template(new boost_archive_render_callbacks($archive));
     }
 }
 
 class cpp_filter
 {
-    function init($archive)
-    {
-        $archive->title_ = htmlentities($archive->key_);
-    }
-
     function content($archive)
     {
         $text = htmlentities($archive->content_);
@@ -236,13 +227,15 @@ class cpp_filter
     }
 
     function render($archive) {
+        $archive->title_ = htmlentities($archive->key_);
+
         display_template(new boost_archive_render_callbacks($archive));
     }
 }
 
 class html_base_filter
 {
-    function init($archive)
+    function html_init($archive)
     {
         preg_match('@text/html; charset=([^\s"\']+)@i',$archive->content_,$charset);
         if (isset($charset[1]))
@@ -260,11 +253,6 @@ class html_base_filter
 
 class boost_book_html_filter extends html_base_filter
 {
-    function init($archive)
-    {
-        parent::init($archive);
-    }
-
     function content($archive)
     {
         $text = prepare_html($archive->content_);
@@ -291,17 +279,13 @@ class boost_book_html_filter extends html_base_filter
     }
 
     function render($archive) {
+        $this->html_init($archive);
         display_template(new boost_archive_render_callbacks($archive));
     }
 }
 
 class boost_libs_filter extends html_base_filter
 {
-    function init($archive)
-    {
-        parent::init($archive);
-    }
-
     function content($archive)
     {
         return $archive->content_;
@@ -309,6 +293,7 @@ class boost_libs_filter extends html_base_filter
     
     function render($archive)
     {
+        $this->html_init($archive);
         $text = extract_html_body($archive->content_);
         if($text) {
             $text = prepare_html($text);
@@ -326,11 +311,6 @@ class boost_libs_filter extends html_base_filter
 
 class boost_frame1_filter extends html_base_filter
 {
-    function init($archive)
-    {
-        parent::init($archive);
-    }
-
     function content($archive)
     {
         $text = prepare_html($archive->content_);
@@ -354,34 +334,22 @@ class boost_frame1_filter extends html_base_filter
     }
 
     function render($archive) {
+        $this->html_init($archive);
         display_template(new boost_archive_render_callbacks($archive));
     }
 }
 
 class simple_filter extends html_base_filter
 {
-    function init($archive)
-    {
-    }
-
-    function content($archive)
-    {
-        print prepare_html($archive->content_);
-    }
-    
     function render($archive)
     {
-        $this->content($archive);
+        print prepare_html($archive->content_);
     }
 }
 
 class basic_filter extends html_base_filter
 {
-    function init($archive)
-    {
-    }
-
-    function content($archive)
+    function render($archive)
     {
         $text = prepare_html($archive->content_);
         $text = remove_html_banner($text);
@@ -418,11 +386,6 @@ class basic_filter extends html_base_filter
                 ++$index;
             }
         }
-    }
-    
-    function render($archive)
-    {
-        $this->content($archive);
     }
 }
 
