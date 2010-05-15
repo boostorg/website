@@ -104,8 +104,7 @@ function display_from_archive(
     }
     
     $extractor_name = $extractor.'_filter';
-    $extractor_instance = new $extractor_name;
-    $extractor_instance->render($archive);
+    call_user_func($extractor_name, $archive);
 }
 
 class boost_archive
@@ -117,10 +116,10 @@ class boost_archive
 }
 
 class boost_archive_render_callbacks {
-    var $extractor, $archive;
+    var $content_callback, $archive;
     
-    function boost_archive_render_callbacks($extractor, $archive) {
-        $this->extractor = $extractor;
+    function boost_archive_render_callbacks($content, $archive) {
+        $this->content_callback = $content;
         $this->archive = $archive;
     }
 
@@ -137,9 +136,9 @@ HTML;
     
     function content()
     {
-        if ($this->extractor)
+        if ($this->content_callback)
         {
-            $this->extractor->content($this->archive);
+            call_user_func($this->content_callback, $this->archive);
         }
     }
 }
@@ -176,203 +175,169 @@ function extract_file($unzip, &$content) {
     }
 }
 
-class text_filter
+//
+// Filters
+//
+
+function text_filter($archive)
 {
-    function content($archive)
-    {
-        print "<h3>".htmlentities($archive->key_)."</h3>\n";
-        print "<pre>\n";
-        print htmlentities($archive->content_);
-        print "</pre>\n";
-    }
+    $archive->title_ = htmlentities($archive->key_);
 
-    function render($archive) {
-        $archive->title_ = htmlentities($archive->key_);
-
-        display_template(new boost_archive_render_callbacks($this, $archive));
-    }
+    display_template(new boost_archive_render_callbacks('text_filter_content', $archive));
 }
 
-class cpp_filter
+function text_filter_content($archive)
 {
-    function content($archive)
-    {
-        $text = htmlentities($archive->content_);
-        
-        print "<h3>".htmlentities($archive->key_)."</h3>\n";
-        print "<pre>\n";
-        $root = dirname(preg_replace('@([^/]+/)@','../',$archive->key_));
-        $text = preg_replace(
-            '@(#[ ]*include[ ]+&lt;)(boost[^&]+)@Ssm',
-            '${1}<a href="'.$root.'/${2}">${2}</a>',
-            $text );
-        $text = preg_replace(
-            '@(#[ ]*include[ ]+&quot;)(boost[^&]+)@Ssm',
-            '${1}<a href="'.$root.'/${2}">${2}</a>',
-            $text );
-        print $text;
-        print "</pre>\n";
-    }
-
-    function render($archive) {
-        $archive->title_ = htmlentities($archive->key_);
-
-        display_template(new boost_archive_render_callbacks($this, $archive));
-    }
+    print "<h3>".htmlentities($archive->key_)."</h3>\n";
+    print "<pre>\n";
+    print htmlentities($archive->content_);
+    print "</pre>\n";
 }
 
-class html_base_filter
-{
-    function html_init($archive)
-    {
-        preg_match('@text/html; charset=([^\s"\']+)@i',$archive->content_,$charset);
-        if (isset($charset[1]))
-        {
-            $archive->charset_ = $charset[1];
-        }
-        
-        preg_match('@<title>([^<]+)</title>@i',$archive->content_,$title);
-        if (isset($title[1]))
-        {
-            $archive->title_ = $title[1];
-        }
-    }
+function cpp_filter($archive) {
+    $archive->title_ = htmlentities($archive->key_);
+
+    display_template(new boost_archive_render_callbacks('cpp_filter_content', $archive));
 }
 
-class boost_book_html_filter extends html_base_filter
+function cpp_filter_content($archive)
 {
-    function content($archive)
-    {
-        $text = prepare_html($archive->content_);
-        
-        $text = substr($text,strpos($text,'<div class="spirit-nav">'));
-        $text = substr($text,0,strpos($text,'</body>'));
-        $text = str_replace('<hr>','',$text);
-        $text = str_replace('<table width="100%">','<table class="footer-table">',$text);
-        $text = str_replace('<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%">','<table class="footer-table">',$text);
-        $text = preg_replace(
-            '@[\s]+(border|cellpadding|cellspacing|width|height|valign|frame|rules|naturalsizeflag|background)=[^\s>]+@i',
-            '',
-            $text );
-        /* */
-        for ($i = 0; $i < 8; $i++) {
-            $text = preg_replace(
-                '@<img src="[\./a-z]*images/(prev|up|home|next|tip|note|warning|important|caution|sidebar|hint|alert)\.png" alt="([^"]+)"([ /]*)>@Ssm',
-                '<img src="/gfx/space.png" alt="${2}" class="${1}_image" />',
-                $text );
-        }
-        /* */
-        
-        print $text;
-    }
-
-    function render($archive) {
-        $this->html_init($archive);
-        display_template(new boost_archive_render_callbacks($this, $archive));
-    }
-}
-
-class boost_libs_filter extends html_base_filter
-{
-    function content($archive)
-    {
-        return $archive->content_;
-    }
+    $text = htmlentities($archive->content_);
     
-    function render($archive)
-    {
-        $this->html_init($archive);
-        $text = extract_html_body($archive->content_);
-        if($text) {
-            $text = prepare_html($text);
-            $text = remove_html_banner($text);
-            $text = prepare_themed_html($text);
-            $archive->content_ = $text;
-            
-            display_template(new boost_archive_render_callbacks($this, $archive));
-        }
-        else {
-            print $archive->content_;
-        }
-    }
+    print "<h3>".htmlentities($archive->key_)."</h3>\n";
+    print "<pre>\n";
+    $root = dirname(preg_replace('@([^/]+/)@','../',$archive->key_));
+    $text = preg_replace(
+        '@(#[ ]*include[ ]+&lt;)(boost[^&]+)@Ssm',
+        '${1}<a href="'.$root.'/${2}">${2}</a>',
+        $text );
+    $text = preg_replace(
+        '@(#[ ]*include[ ]+&quot;)(boost[^&]+)@Ssm',
+        '${1}<a href="'.$root.'/${2}">${2}</a>',
+        $text );
+    print $text;
+    print "</pre>\n";
 }
 
-class boost_frame1_filter extends html_base_filter
+function boost_book_html_filter($archive) {
+    html_init($archive);
+    display_template(new boost_archive_render_callbacks(new boost_book_html_filter_content, $archive));
+}
+
+function boost_book_html_filter_content($archive)
 {
-    function content($archive)
-    {
-        $text = prepare_html($archive->content_);
-        
-        $text = substr($text,strpos($text,'<div class="spirit-nav">'));
-        $text = substr($text,0,strpos($text,'</body>'));
-        for ($i = 0; $i < 8; $i++) {
-            $text = preg_replace(
-                '@<img src="[\./]*images/(.*\.png)" alt="(.*)"([ ][/])?>@Ssm',
-                '<img src="/style-v2/css_0/${1}" alt="${2}" />',
-                $text );
-        }
-        $text = str_replace('<hr>','',$text);
-        $text = str_replace('<table width="100%">','<table class="footer-table">',$text);
+    $text = prepare_html($archive->content_);
+    
+    $text = substr($text,strpos($text,'<div class="spirit-nav">'));
+    $text = substr($text,0,strpos($text,'</body>'));
+    $text = str_replace('<hr>','',$text);
+    $text = str_replace('<table width="100%">','<table class="footer-table">',$text);
+    $text = str_replace('<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%">','<table class="footer-table">',$text);
+    $text = preg_replace(
+        '@[\s]+(border|cellpadding|cellspacing|width|height|valign|frame|rules|naturalsizeflag|background)=[^\s>]+@i',
+        '',
+        $text );
+    ##
+    for ($i = 0; $i < 8; $i++) {
         $text = preg_replace(
-            '@[\s]+(border|cellpadding|cellspacing|width|height|valign|frame|rules|naturalsizeflag|background)=[^\s>]+@i',
-            '',
+            '@<img src="[\./a-z]*images/(prev|up|home|next|tip|note|warning|important|caution|sidebar|hint|alert)\.png" alt="([^"]+)"([ /]*)>@Ssm',
+            '<img src="/gfx/space.png" alt="${2}" class="${1}_image" />',
             $text );
-        
-        print $text;
     }
-
-    function render($archive) {
-        $this->html_init($archive);
-        display_template(new boost_archive_render_callbacks($this, $archive));
-    }
+    ##
+    
+    print $text;
 }
 
-class simple_filter extends html_base_filter
+function boost_libs_filter($archive)
 {
-    function render($archive)
-    {
-        print prepare_html($archive->content_);
-    }
-}
-
-class basic_filter extends html_base_filter
-{
-    function render($archive)
-    {
-        $text = prepare_html($archive->content_);
+    html_init($archive);
+    $text = extract_html_body($archive->content_);
+    if($text) {
+        $text = prepare_html($text);
         $text = remove_html_banner($text);
-
-        $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $text);
-        $tag_end = $is_xhtml ? '/>' : '>';
+        $text = prepare_themed_html($text);
+        $archive->content_ = $text;
         
-        $sections = preg_split('@(</head>|<body[^>]*>)@i',$text,-1,PREG_SPLIT_DELIM_CAPTURE);
+        display_template(new boost_archive_render_callbacks('boost_libs_filter_content', $archive));
+    }
+    else {
+        print $archive->content_;
+    }
+}
 
-        $body_index = 0;
+function boost_libs_filter_content($archive)
+{
+    return $archive->content_;
+}
+
+function boost_frame1_filter($archive) {
+    html_init($archive);
+    display_template(new boost_archive_render_callbacks(new boost_frame1_filter_content, $archive));
+}
+
+function boost_frame1_filter_content($archive)
+{
+    $text = prepare_html($archive->content_);
+    
+    $text = substr($text,strpos($text,'<div class="spirit-nav">'));
+    $text = substr($text,0,strpos($text,'</body>'));
+    for ($i = 0; $i < 8; $i++) {
+        $text = preg_replace(
+            '@<img src="[\./]*images/(.*\.png)" alt="(.*)"([ ][/])?>@Ssm',
+            '<img src="/style-v2/css_0/${1}" alt="${2}" />',
+            $text );
+    }
+    $text = str_replace('<hr>','',$text);
+    $text = str_replace('<table width="100%">','<table class="footer-table">',$text);
+    $text = preg_replace(
+        '@[\s]+(border|cellpadding|cellspacing|width|height|valign|frame|rules|naturalsizeflag|background)=[^\s>]+@i',
+        '',
+        $text );
+    
+    print $text;
+}
+
+function simple_filter($archive)
+{
+    print prepare_html($archive->content_);
+}
+
+function basic_filter($archive)
+{
+    $text = prepare_html($archive->content_);
+    $text = remove_html_banner($text);
+
+    $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $text);
+    $tag_end = $is_xhtml ? '/>' : '>';
+    
+    $sections = preg_split('@(</head>|<body[^>]*>)@i',$text,-1,PREG_SPLIT_DELIM_CAPTURE);
+
+    $body_index = 0;
+    $index = 0;
+    foreach($sections as $section) {
+        if(stripos($section, '<body') === 0) {
+            $body_index = $index;
+            break;
+        }
+        ++$index;
+    }
+
+    if(!$body_index) {
+        print($text);
+    }
+    else {
         $index = 0;
         foreach($sections as $section) {
-            if(stripos($section, '<body') === 0) {
-                $body_index = $index;
-                break;
+            print($section);
+            if($index == 0) {
+                print '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
+                print '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
+            }
+            else if($index == $body_index) {
+                virtual("/common/heading-doc.html");
             }
             ++$index;
-        }
-
-        if(!$body_index) {
-            print($text);
-        }
-        else {
-            $index = 0;
-            foreach($sections as $section) {
-                print($section);
-                if($index == 0) {
-                    print '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
-                    print '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
-                }
-                else if($index == $body_index) {
-                    virtual("/common/heading-doc.html");
-                }
-                ++$index;
-            }
         }
     }
 }
@@ -408,6 +373,25 @@ HTML;
         if($this->message) {
             print '<p>Unzip error: '.htmlentities($this->message).'</p>';
         }
+    }
+}
+
+/*
+ * HTML processing functions
+ */
+
+function html_init($archive)
+{
+    preg_match('@text/html; charset=([^\s"\']+)@i',$archive->content_,$charset);
+    if (isset($charset[1]))
+    {
+        $archive->charset_ = $charset[1];
+    }
+    
+    preg_match('@<title>([^<]+)</title>@i',$archive->content_,$title);
+    if (isset($title[1]))
+    {
+        $archive->title_ = $title[1];
     }
 }
 
@@ -650,4 +634,5 @@ function unzip_error($exit_status) {
     default: return 'Unknown unzip error code: ' + $exit_status;
     }
 }
+
 ?>
