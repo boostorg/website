@@ -96,31 +96,50 @@ class boost_archive
         }
         
         if ($extractor) $this->extractor_ = $extractor;
-        if (!$this->extractor_) $this->extractor_ = 'h404';
-
-        $extractor_name = $this->extractor_.'_filter';
-        $this->extractor_instance_ = new $extractor_name;
+        if (!$this->extractor_) {
+            file_not_found($this->file_);
+            return;
+        }
 
         $unzip =
           UNZIP
           .' -p '.escapeshellarg($this->archive_)
           .' '.escapeshellarg($this->file_);
 
-        // Note: this can change $this->extractor_instance_:
-        $this->content_ = $this->extractor_instance_->extract($this, $unzip);
+        if($this->extractor_ == 'raw') {
+            display_raw_file($this, $unzip);
+            return;
+        }
+
+        $extractor_name = $this->extractor_.'_filter';
+        $this->extractor_instance_ = new $extractor_name;
+
+        // Note: this sets $this->content_:
+        if(!$this->extractor_instance_->extract($this, $unzip)) {
+            file_not_found($this->file_, $this->content_);
+            return;
+        }
         $this->extractor_instance_->init($this);
 
-        if ($this->extractor_ != 'h404' && $this->extractor_ != 'raw' && $this->preprocess_) {
+        if ($this->preprocess_) {
             $this->content_ = call_user_func($this->preprocess_, $this->content_);
         }
         
         $this->extractor_instance_->render($this);
     }
+}
+
+class boost_archive_render_callbacks {
+    var $archive;
     
+    function boost_archive_render_callbacks($archive) {
+        $this->archive = $archive;
+    }
+
     function content_head()
     {
-        $charset = $this->charset_ ? $this->charset_ : 'us-ascii';
-        $title = $this->title_ ? 'Boost C++ Libraries - '.$this->title_ : 'Boost C++ Libraries';
+        $charset = $this->archive->charset_ ? $this->archive->charset_ : 'us-ascii';
+        $title = $this->archive->title_ ? 'Boost C++ Libraries - '.$this->archive->title_ : 'Boost C++ Libraries';
 
         print <<<HTML
   <meta http-equiv="Content-Type" content="text/html; charset=${charset}" />
@@ -130,15 +149,10 @@ HTML;
     
     function content()
     {
-        if ($this->extractor_instance_)
+        if ($this->archive->extractor_instance_)
         {
-            $this->extractor_instance_->content($this);
+            $this->archive->extractor_instance_->content($this->archive);
         }
-    }
-    
-    function display_template() {
-        $_file = $this;
-        include(dirname(__FILE__)."/template.php");
     }
 }
 
@@ -150,21 +164,18 @@ class filter_base
     function render($archive) {}
 };
 
-class raw_filter extends filter_base
-{    
-    function extract($archive, $unzip) {
-        header('Content-type: '.$archive->type_);
-        ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
-        $file_handle = popen($unzip,'rb');
-        fpassthru($file_handle);
-        $exit_status = pclose($file_handle);
-        
-        // Don't display errors for a corrupt zip file, as we seemd to
-        // be getting them for legitimate files.
+function display_raw_file($archive, $unzip) {
+    header('Content-type: '.$archive->type_);
+    ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
+    $file_handle = popen($unzip,'rb');
+    fpassthru($file_handle);
+    $exit_status = pclose($file_handle);
+    
+    // Don't display errors for a corrupt zip file, as we seemd to
+    // be getting them for legitimate files.
 
-        if($exit_status > 3)
-            echo 'Error extracting file: '.unzip_error($exit_status);
-    }
+    if($exit_status > 3)
+        echo 'Error extracting file: '.unzip_error($exit_status);
 };
 
 class extract_filter_base extends filter_base
@@ -178,13 +189,12 @@ class extract_filter_base extends filter_base
         $exit_status = pclose($file_handle);
 
         if($exit_status == 0) {
-            return $text;
+            $archive->content_ = $text;
+            return true;
         }
         else {
-            $archive->extractor_ = 'h404';
-            $archive->extractor_instance_ = new h404_filter;
-            return strstr($_SERVER['HTTP_HOST'], 'beta')
-                ? unzip_error($exit_status) : '';
+            $archive->content_ = strstr($_SERVER['HTTP_HOST'], 'beta') ? unzip_error($exit_status) : null;
+            return false;
         }
     }
 };
@@ -205,7 +215,7 @@ class text_filter extends extract_filter_base
     }
 
     function render($archive) {
-        $archive->display_template();
+        display_template(new boost_archive_render_callbacks($archive));
     }
 }
 
@@ -236,7 +246,7 @@ class cpp_filter extends extract_filter_base
     }
 
     function render($archive) {
-        $archive->display_template();
+        display_template(new boost_archive_render_callbacks($archive));
     }
 }
 
@@ -291,7 +301,7 @@ class boost_book_html_filter extends html_base_filter
     }
 
     function render($archive) {
-        $archive->display_template();
+        display_template(new boost_archive_render_callbacks($archive));
     }
 }
 
@@ -316,7 +326,7 @@ class boost_libs_filter extends html_base_filter
             $text = prepare_themed_html($text);
             $archive->content_ = $text;
             
-            $archive->display_template();
+            display_template(new boost_archive_render_callbacks($archive));
         }
         else {
             print $archive->content_;
@@ -354,7 +364,7 @@ class boost_frame1_filter extends html_base_filter
     }
 
     function render($archive) {
-        $archive->display_template();
+        display_template(new boost_archive_render_callbacks($archive));
     }
 }
 
@@ -426,27 +436,37 @@ class basic_filter extends html_base_filter
     }
 }
 
-class h404_filter extends filter_base
+/* File Not Found */
+
+function file_not_found($file, $message = null)
 {
-    function init($archive)
-    {
-        header("HTTP/1.0 404 Not Found");
+    header("HTTP/1.0 404 Not Found");
+    display_template(new file_not_found_render_callbacks($file, $message));
+}
+
+class file_not_found_render_callbacks
+{
+    var $file, $message;
+    
+    function file_not_found_render_callbacks($file, $message) {
+        $this->file = $file;
+        $this->message = $message;
     }
 
-    function content($archive)
+    function content_head()
     {
-        # This might also be an error extracting the file, or because we don't
-        # know how to deal with the file. It would be good to give a better
-        # error in those cases.
-
-        print '<h1>404 Not Found</h1><p>File "' . $archive->file_ . '"not found.</p>';
-        if($archive->content_) {
-            print '<p>Unzip error: '.htmlentities($archive->content_).'</p>';
+        print <<<HTML
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+  <title>Boost C++ Libraries - 404 Not Found</title>
+HTML;
+    }
+    
+    function content()
+    {
+        print '<h1>404 Not Found</h1><p>File "' . $this->file . '" not found.</p>';
+        if($this->message) {
+            print '<p>Unzip error: '.htmlentities($this->message).'</p>';
         }
-    }
-
-    function render($archive) {
-        $archive->display_template();
     }
 }
 
@@ -657,6 +677,13 @@ function prepare_themed_html($text) {
         '${1} class="inline">',
         $text );
     return $text;
+}
+
+// Display the content in the standard boost template
+
+function display_template($callbacks) {
+    $_file = $callbacks;
+    include(dirname(__FILE__)."/template.php");
 }
 
 // Return a readable error message for unzip exit state.
