@@ -48,14 +48,8 @@ function display_from_archive(
 
 class boost_archive
 {
-    var $version_ = NULL;
     var $key_ = NULL;
-    var $file_ = NULL;
-    var $archive_ = NULL;
-    var $extractor_ = NULL;
     var $extractor_instance_ = NULL;
-    var $type_ = NULL;
-    var $preprocess_ = NULL;
     var $title_ = NULL;
     var $charset_ = NULL;
     var $content_ = NULL;
@@ -63,13 +57,8 @@ class boost_archive
     function boost_archive(
         $archive_location_details,
         $content_map = array(),
-        $extractor = null)
+        $override_extractor = null)
     {
-        $this->version_ = $archive_location_details['version'];
-        $this->key_ = $archive_location_details['key'];
-        $this->file_ = $archive_location_details['file'];
-        $this->archive_ = $archive_location_details['archive'];
-
         $info_map = array_merge($content_map, array(
             array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh|xml|qbk)$@i','text','text/plain'),
             array('@.*@','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
@@ -84,46 +73,51 @@ class boost_archive
             array('@.*@','@[.]dtd$@i','raw','application/xml-dtd'),
             ));
 
+        $preprocess = null;
+        $extractor = null;
+        $type = null;
+
         foreach ($info_map as $i)
         {
-            if (preg_match($i[1],$this->key_))
+            if (preg_match($i[1],$archive_location_details['key']))
             {
-                $this->extractor_ = $i[2];
-                $this->type_ = $i[3];
-                $this->preprocess_ = isset($i[4]) ? $i[4] : NULL;
+                $extractor = $i[2];
+                $type = $i[3];
+                $preprocess = isset($i[4]) ? $i[4] : NULL;
                 break;
             }
         }
         
-        if ($extractor) $this->extractor_ = $extractor;
+        if ($override_extractor) $extractor = $override_extractor;
 
-        if (!$this->extractor_) {
-            file_not_found($this->file_);
+        if (!$extractor) {
+            file_not_found($archive_location_details['file']);
             return;
         }
 
         $unzip =
           UNZIP
-          .' -p '.escapeshellarg($this->archive_)
-          .' '.escapeshellarg($this->file_);
+          .' -p '.escapeshellarg($archive_location_details['archive'])
+          .' '.escapeshellarg($archive_location_details['file']);
 
-        if($this->extractor_ == 'raw') {
-            display_raw_file($this, $unzip);
+        if($extractor == 'raw') {
+            display_raw_file($unzip, $type);
             return;
         }
 
-        $extractor_name = $this->extractor_.'_filter';
+        $extractor_name = $extractor.'_filter';
         $this->extractor_instance_ = new $extractor_name;
+        $this->key_ = $archive_location_details['key'];
 
         // Note: this sets $this->content_ with either the content or an error
         // message:
         if(!extract_file($unzip, $this->content_)) {
-            file_not_found($this->file_, $this->content_);
+            file_not_found($archive_location_details['file'], $this->content_);
             return;
         }
 
-        if ($this->preprocess_) {
-            $this->content_ = call_user_func($this->preprocess_, $this->content_);
+        if ($preprocess) {
+            $this->content_ = call_user_func($preprocess, $this->content_);
         }
         
         $this->extractor_instance_->render($this);
@@ -157,8 +151,8 @@ HTML;
     }
 }
 
-function display_raw_file($archive, $unzip) {
-    header('Content-type: '.$archive->type_);
+function display_raw_file($unzip, $type) {
+    header('Content-type: '.$type);
     ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
     $file_handle = popen($unzip,'rb');
     fpassthru($file_handle);
