@@ -53,7 +53,7 @@ display_from_archive(
       'multi_array','multi_index','numeric','numeric/conversion','numeric/interval/doc',
       'numeric/ublas','unmeric/ublas/doc','optional','parameter','pool','preprocessor',
       'program_options','program_options/doc','property_map','proto','ptr_container','python',
-      'python/doc/tutorial','python/doc/v2','regex','serialization','signals',
+      'python/doc/tutorial','python/doc/v2','range','regex','serialization','signals',
       'signals/doc','smart_ptr','statechart','static_assert','system','test',
       'thread','thread/doc','tr1','tuple','typeof',
       'type_traits','units','unordered','variant','xpressive'
