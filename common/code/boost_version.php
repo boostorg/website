@@ -6,6 +6,8 @@
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
+$boost_current_version = Array(1,43,0);
+
 function boost_title()
 {
     $vinfo = array();
@@ -44,4 +46,31 @@ function boost_version($v,$r,$p)
         return TRUE;
     }
 }
-?>
+
+function boost_future_version($version)
+{
+    if ($version)
+    {
+        $vinfo = array();
+        preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$version,$vinfo);
+        if (isset($vinfo[0]))
+        {
+            global $boost_current_version;
+            $v = $boost_current_version[0];
+            $r = $boost_current_version[1];
+            $p = $boost_current_version[2];
+            return
+              ($v < $vinfo[1]) ||
+              ($v == $vinfo[1] && $r < $vinfo[2]) ||
+              ($v == $vinfo[1] && $r == $vinfo[2] && $p < $vinfo[3]);
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+    else
+    {
+        return FALSE;
+    }
+}
