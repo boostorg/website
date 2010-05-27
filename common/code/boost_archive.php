@@ -79,19 +79,6 @@ function display_from_archive(
         return;
     }
 
-    // Check zipfile.
-
-    if (!is_file($archive_location_details['archive'])) {
-        file_not_found($archive_location_details['file'],
-            'Unable to find zipfile.');
-        return;        
-    }
-
-    header('last-modified:'. date(DATE_RFC2822,
-        filemtime($archive_location_details['archive'])));
-
-    // Extract the file from the zipfile
-
     $unzip =
       UNZIP
       .' -p '.escapeshellarg($archive_location_details['archive'])
