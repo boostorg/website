@@ -228,7 +228,7 @@ function cpp_filter_content($archive)
 
 function boost_book_html_filter($archive) {
     html_init($archive);
-    display_template(new boost_archive_render_callbacks(new boost_book_html_filter_content, $archive));
+    display_template(new boost_archive_render_callbacks('boost_book_html_filter_content', $archive));
 }
 
 function boost_book_html_filter_content($archive)
