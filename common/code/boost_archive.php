@@ -141,8 +141,8 @@ class boost_archive_render_callbacks {
         $title = $this->archive['title'] ? 'Boost C++ Libraries - '.$this->archive['title'] : 'Boost C++ Libraries';
 
         print <<<HTML
-  <meta http-equiv="Content-Type" content="text/html; charset=${charset}" />
-  <title>${title}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=${charset}" />
+<title>${title}</title>
 HTML;
     }
     
