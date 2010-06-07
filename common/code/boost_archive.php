@@ -75,15 +75,14 @@ function display_from_archive(
     if ($override_extractor) $extractor = $override_extractor;
 
     if (!$extractor) {
-        file_not_found($params['file']);
+        file_not_found($params);
         return;
     }
 
     // Check zipfile.
 
     if (!is_file($params['archive'])) {
-        file_not_found($params['file'],
-            'Unable to find zipfile.');
+        file_not_found($params, 'Unable to find zipfile.');
         return;        
     }
 
@@ -102,6 +101,7 @@ function display_from_archive(
         return;
     }
 
+    $params['template'] = dirname(__FILE__)."/template.php";
     $params['title'] = NULL;
     $params['charset'] = NULL;
     $params['content'] = NULL;
@@ -109,7 +109,7 @@ function display_from_archive(
     // Note: this sets $params['content'] with either the content or an error
     // message:
     if(!extract_file($unzip, $params['content'])) {
-        file_not_found($params['file'], $params['content']);
+        file_not_found($params, $params['content']);
         return;
     }
 
@@ -124,8 +124,7 @@ function display_from_archive(
         $params['content'] = call_user_func($preprocess, $params['content']);
     }
     
-    $extractor_name = $extractor.'_filter';
-    call_user_func($extractor_name, $params);
+    echo_filtered($extractor, $params);
 }
 
 class boost_archive_render_callbacks {
@@ -192,11 +191,17 @@ function extract_file($unzip, &$content) {
 // Filters
 //
 
+function echo_filtered($extractor, $params) {
+    $extractor_name = $extractor.'_filter';
+    call_user_func($extractor_name, $params);
+}
+
 function text_filter($params)
 {
     $params['title'] = htmlentities($params['key']);
 
-    display_template(new boost_archive_render_callbacks('text_filter_content', $params));
+    display_template($params['template'],
+        new boost_archive_render_callbacks('text_filter_content', $params));
 }
 
 function text_filter_content($params)
@@ -210,7 +215,8 @@ function text_filter_content($params)
 function cpp_filter($params) {
     $params['title'] = htmlentities($params['key']);
 
-    display_template(new boost_archive_render_callbacks('cpp_filter_content', $params));
+    display_template($params['template'],
+        new boost_archive_render_callbacks('cpp_filter_content', $params));
 }
 
 function cpp_filter_content($params)
@@ -234,7 +240,8 @@ function cpp_filter_content($params)
 
 function boost_book_html_filter($params) {
     html_init($params);
-    display_template(new boost_archive_render_callbacks('boost_book_html_filter_content', $params));
+    display_template($params['template'],
+        new boost_archive_render_callbacks('boost_book_html_filter_content', $params));
 }
 
 function boost_book_html_filter_content($params)
@@ -272,7 +279,8 @@ function boost_libs_filter($params)
         $text = prepare_themed_html($text);
         $params['content'] = $text;
         
-        display_template(new boost_archive_render_callbacks('boost_libs_filter_content', $params));
+        display_template($params['template'],
+            new boost_archive_render_callbacks('boost_libs_filter_content', $params));
     }
     else {
         print $params['content'];
@@ -286,7 +294,8 @@ function boost_libs_filter_content($params)
 
 function boost_frame1_filter($params) {
     html_init($params);
-    display_template(new boost_archive_render_callbacks(new boost_frame1_filter_content, $params));
+    display_template($params['template'],
+        new boost_archive_render_callbacks(new boost_frame1_filter_content, $params));
 }
 
 function boost_frame1_filter_content($params)
@@ -357,10 +366,11 @@ function basic_filter($params)
 
 /* File Not Found */
 
-function file_not_found($file, $message = null)
+function file_not_found($params, $message = null)
 {
     header("HTTP/1.0 404 Not Found");
-    display_template(new file_not_found_render_callbacks($file, $message));
+    display_template($params['template'],
+        new file_not_found_render_callbacks($params['file'], $message));
 }
 
 class file_not_found_render_callbacks
@@ -657,9 +667,9 @@ function prepare_themed_html($text) {
 
 // Display the content in the standard boost template
 
-function display_template($callbacks) {
+function display_template($template, $callbacks) {
     $_file = $callbacks;
-    include(dirname(__FILE__)."/template.php");
+    include($template);
 }
 
 // Return a readable error message for unzip exit state.
