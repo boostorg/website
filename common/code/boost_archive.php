@@ -39,7 +39,7 @@ function get_archive_location(
 }
 
 function display_from_archive(
-    $archive_location_details,
+    $params,
     $content_map = array(),
     $override_extractor = null)
 {
@@ -63,7 +63,7 @@ function display_from_archive(
 
     foreach ($info_map as $i)
     {
-        if (preg_match($i[1],$archive_location_details['key']))
+        if (preg_match($i[1],$params['key']))
         {
             $extractor = $i[2];
             $type = $i[3];
@@ -75,78 +75,71 @@ function display_from_archive(
     if ($override_extractor) $extractor = $override_extractor;
 
     if (!$extractor) {
-        file_not_found($archive_location_details['file']);
+        file_not_found($params['file']);
         return;
     }
 
     // Check zipfile.
 
-    if (!is_file($archive_location_details['archive'])) {
-        file_not_found($archive_location_details['file'],
+    if (!is_file($params['archive'])) {
+        file_not_found($params['file'],
             'Unable to find zipfile.');
         return;        
     }
 
     header('last-modified:'. date(DATE_RFC2822,
-        filemtime($archive_location_details['archive'])));
+        filemtime($params['archive'])));
 
     // Extract the file from the zipfile
 
     $unzip =
       UNZIP
-      .' -p '.escapeshellarg($archive_location_details['archive'])
-      .' '.escapeshellarg($archive_location_details['file']);
+      .' -p '.escapeshellarg($params['archive'])
+      .' '.escapeshellarg($params['file']);
 
     if($extractor == 'raw') {
         display_raw_file($unzip, $type);
         return;
     }
 
-    $archive = new boost_archive();
-    $archive->key_ = $archive_location_details['key'];
+    $params['title'] = NULL;
+    $params['charset'] = NULL;
+    $params['content'] = NULL;
 
-    // Note: this sets $archive->content_ with either the content or an error
+    // Note: this sets $params['content'] with either the content or an error
     // message:
-    if(!extract_file($unzip, $archive->content_)) {
-        file_not_found($archive_location_details['file'], $archive->content_);
+    if(!extract_file($unzip, $params['content'])) {
+        file_not_found($params['file'], $params['content']);
         return;
     }
 
     if($type == 'text/html') {
-        if(html_headers($archive->content_)) {
-            echo $archive->content_;
+        if(html_headers($params['content'])) {
+            echo $params['content'];
             exit(0);
         }
     }
 
     if ($preprocess) {
-        $archive->content_ = call_user_func($preprocess, $archive->content_);
+        $params['content'] = call_user_func($preprocess, $params['content']);
     }
     
     $extractor_name = $extractor.'_filter';
-    call_user_func($extractor_name, $archive);
-}
-
-class boost_archive
-{
-    var $key_ = NULL;
-    var $title_ = NULL;
-    var $charset_ = NULL;
-    var $content_ = NULL;
+    call_user_func($extractor_name, $params);
 }
 
 class boost_archive_render_callbacks {
-    var $content_callback, $archive;
+    var $content_callback, $params;
     
-    function boost_archive_render_callbacks($content, $archive) {
+    function boost_archive_render_callbacks($content, $params) {
         $this->content_callback = $content;
-        $this->archive = $archive;
+        $this->archive = $params;
     }
 
     function content_head()
     {
-        $charset = $this->archive->charset_ ? $this->archive->charset_ : 'us-ascii';
-        $title = $this->archive->title_ ? 'Boost C++ Libraries - '.$this->archive->title_ : 'Boost C++ Libraries';
+        $charset = $this->archive['charset'] ? $this->archive['charset'] : 'us-ascii';
+        $title = $this->archive['title'] ? 'Boost C++ Libraries - '.$this->archive['title'] : 'Boost C++ Libraries';
 
         print <<<HTML
   <meta http-equiv="Content-Type" content="text/html; charset=${charset}" />
@@ -199,34 +192,34 @@ function extract_file($unzip, &$content) {
 // Filters
 //
 
-function text_filter($archive)
+function text_filter($params)
 {
-    $archive->title_ = htmlentities($archive->key_);
+    $params['title'] = htmlentities($params['key']);
 
-    display_template(new boost_archive_render_callbacks('text_filter_content', $archive));
+    display_template(new boost_archive_render_callbacks('text_filter_content', $params));
 }
 
-function text_filter_content($archive)
+function text_filter_content($params)
 {
-    print "<h3>".htmlentities($archive->key_)."</h3>\n";
+    print "<h3>".htmlentities($params['key'])."</h3>\n";
     print "<pre>\n";
-    print htmlentities($archive->content_);
+    print htmlentities($params['content']);
     print "</pre>\n";
 }
 
-function cpp_filter($archive) {
-    $archive->title_ = htmlentities($archive->key_);
+function cpp_filter($params) {
+    $params['title'] = htmlentities($params['key']);
 
-    display_template(new boost_archive_render_callbacks('cpp_filter_content', $archive));
+    display_template(new boost_archive_render_callbacks('cpp_filter_content', $params));
 }
 
-function cpp_filter_content($archive)
+function cpp_filter_content($params)
 {
-    $text = htmlentities($archive->content_);
+    $text = htmlentities($params['content']);
     
-    print "<h3>".htmlentities($archive->key_)."</h3>\n";
+    print "<h3>".htmlentities($params['key'])."</h3>\n";
     print "<pre>\n";
-    $root = dirname(preg_replace('@([^/]+/)@','../',$archive->key_));
+    $root = dirname(preg_replace('@([^/]+/)@','../',$params['key']));
     $text = preg_replace(
         '@(#[ ]*include[ ]+&lt;)(boost[^&]+)@Ssm',
         '${1}<a href="'.$root.'/${2}">${2}</a>',
@@ -239,14 +232,14 @@ function cpp_filter_content($archive)
     print "</pre>\n";
 }
 
-function boost_book_html_filter($archive) {
-    html_init($archive);
-    display_template(new boost_archive_render_callbacks(new boost_book_html_filter_content, $archive));
+function boost_book_html_filter($params) {
+    html_init($params);
+    display_template(new boost_archive_render_callbacks('boost_book_html_filter_content', $params));
 }
 
-function boost_book_html_filter_content($archive)
+function boost_book_html_filter_content($params)
 {
-    $text = prepare_html($archive->content_);
+    $text = prepare_html($params['content']);
     
     $text = substr($text,strpos($text,'<div class="spirit-nav">'));
     $text = substr($text,0,strpos($text,'</body>'));
@@ -269,36 +262,36 @@ function boost_book_html_filter_content($archive)
     print $text;
 }
 
-function boost_libs_filter($archive)
+function boost_libs_filter($params)
 {
-    html_init($archive);
-    $text = extract_html_body($archive->content_);
+    html_init($params);
+    $text = extract_html_body($params['content']);
     if($text) {
         $text = prepare_html($text);
         $text = remove_html_banner($text);
         $text = prepare_themed_html($text);
-        $archive->content_ = $text;
+        $params['content'] = $text;
         
-        display_template(new boost_archive_render_callbacks('boost_libs_filter_content', $archive));
+        display_template(new boost_archive_render_callbacks('boost_libs_filter_content', $params));
     }
     else {
-        print $archive->content_;
+        print $params['content'];
     }
 }
 
-function boost_libs_filter_content($archive)
+function boost_libs_filter_content($params)
 {
-    return $archive->content_;
+    return $params['content'];
 }
 
-function boost_frame1_filter($archive) {
-    html_init($archive);
-    display_template(new boost_archive_render_callbacks(new boost_frame1_filter_content, $archive));
+function boost_frame1_filter($params) {
+    html_init($params);
+    display_template(new boost_archive_render_callbacks(new boost_frame1_filter_content, $params));
 }
 
-function boost_frame1_filter_content($archive)
+function boost_frame1_filter_content($params)
 {
-    $text = prepare_html($archive->content_);
+    $text = prepare_html($params['content']);
     
     $text = substr($text,strpos($text,'<div class="spirit-nav">'));
     $text = substr($text,0,strpos($text,'</body>'));
@@ -318,14 +311,14 @@ function boost_frame1_filter_content($archive)
     print $text;
 }
 
-function simple_filter($archive)
+function simple_filter($params)
 {
-    print prepare_html($archive->content_);
+    print prepare_html($params['content']);
 }
 
-function basic_filter($archive)
+function basic_filter($params)
 {
-    $text = prepare_html($archive->content_);
+    $text = prepare_html($params['content']);
     $text = remove_html_banner($text);
 
     $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $text);
@@ -438,18 +431,18 @@ function resolve_url($url) {
     return $url['scheme'].'://'.$url['host'] . $url['path'];
 }
 
-function html_init($archive)
+function html_init($params)
 {
-    preg_match('@text/html; charset=([^\s"\']+)@i',$archive->content_,$charset);
+    preg_match('@text/html; charset=([^\s"\']+)@i',$params['content'],$charset);
     if (isset($charset[1]))
     {
-        $archive->charset_ = $charset[1];
+        $params['charset'] = $charset[1];
     }
     
-    preg_match('@<title>([^<]+)</title>@i',$archive->content_,$title);
+    preg_match('@<title>([^<]+)</title>@i',$params['content'],$title);
     if (isset($title[1]))
     {
-        $archive->title_ = $title[1];
+        $params['title'] = $title[1];
     }
 }
 
