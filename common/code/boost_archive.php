@@ -208,7 +208,7 @@ function text_filter_content($params)
 {
     print "<h3>".htmlentities($params['key'])."</h3>\n";
     print "<pre>\n";
-    print htmlentities($params['content']);
+    print_encoded_text($params, 'text');
     print "</pre>\n";
 }
 
@@ -221,20 +221,9 @@ function cpp_filter($params) {
 
 function cpp_filter_content($params)
 {
-    $text = htmlentities($params['content']);
-    
     print "<h3>".htmlentities($params['key'])."</h3>\n";
     print "<pre>\n";
-    $root = dirname(preg_replace('@([^/]+/)@','../',$params['key']));
-    $text = preg_replace(
-        '@(#[ ]*include[ ]+&lt;)(boost[^&]+)@Ssm',
-        '${1}<a href="'.$root.'/${2}">${2}</a>',
-        $text );
-    $text = preg_replace(
-        '@(#[ ]*include[ ]+&quot;)(boost[^&]+)@Ssm',
-        '${1}<a href="'.$root.'/${2}">${2}</a>',
-        $text );
-    print $text;
+    print_encoded_text($params, 'cpp');
     print "</pre>\n";
 }
 
@@ -663,6 +652,98 @@ function prepare_themed_html($text) {
         '${1} class="inline">',
         $text );
     return $text;
+}
+
+// This takes a plain text file and outputs encoded html with marked
+// up links.
+
+function print_encoded_text($params, $type) {
+    $root = dirname(preg_replace('@([^/]+/)@','../',$params['key']));
+
+    // John Gruber's regular expression for finding urls
+    // http://daringfireball.net/2009/11/liberal_regex_for_matching_urls
+    
+    foreach(preg_split(
+        '@\b((?:[\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|[^[:punct:]\s]|/))@',
+        $params['content'], -1, PREG_SPLIT_DELIM_CAPTURE)
+        as $index => $part)
+    {
+        if($index % 2 == 0) {
+            $html = htmlentities($part);
+        
+            if($type == 'cpp') {
+                $html = preg_replace(
+                    '@(#[ ]*include[ ]+&lt;)(boost[^&]+)@Ssm',
+                    '${1}<a href="'.$root.'/${2}">${2}</a>',
+                    $html );
+                $html = preg_replace(
+                    '@(#[ ]*include[ ]+&quot;)(boost[^&]+)@Ssm',
+                    '${1}<a href="'.$root.'/${2}">${2}</a>',
+                    $html );
+            }
+
+            print $html;
+        }
+        else {
+            $url = process_absolute_url($part, $root);
+            if($url) {
+                 print '<a href="'.htmlentities($url).'">'.htmlentities($part).'</a>';
+            }
+            else {
+                print htmlentities($part);
+            }
+       }
+    }
+}
+
+function process_absolute_url($url, $root = null) {
+    // Simplified version of the 'loose' regular expression from
+    // http://blog.stevenlevithan.com/archives/parseuri
+    //
+    // (c) Steven Levithan <stevenlevithan.com>
+    // MIT License
+
+    if(!preg_match(
+        '~^'.
+        // Protocol(1): (Could also remove the userinfo detection stuff?)
+        '(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?'.
+        '(?:\/\/)?'.
+        // Authority(2)
+        '('.
+            // User info
+            '(?:[^:@]*:?[^:@]*@)?'.
+            // Host(3)
+            '([^:\/?#]*)'.
+            // Port
+            '(?::\d*)?'.
+        ')'.
+        // Relative(4)
+        '(\/.*)'.
+        '~',
+        $url, $matches))
+    {
+        return;
+    }
+
+    $protocol = $matches[1];
+    $authority = $matches[2];
+    $host = $matches[3];
+    $relative = $matches[4];
+        
+    if(!$authority) return;
+
+    if($root &&
+        ($host == 'boost.org' || $host == 'www.boost.org') &&
+        (strpos($relative, '/lib') === 0))
+    {
+        $url = $root.$relative;
+    }
+    else
+    {
+        $url = ($protocol ? $protocol : 'http').'://'.$authority.$relative;
+    }
+    
+    return $url;
 }
 
 // Display the content in the standard boost template
