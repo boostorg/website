@@ -91,7 +91,7 @@ function display_from_archive(
         return;        
     }
 
-    $last_modified = max(strtotime("11 July 2010"),
+    $last_modified = max(strtotime("11 July 2010 18:45:00"),
         filemtime($params['archive']));
 
     if (!conditional_get($last_modified))
@@ -152,11 +152,11 @@ function conditional_get($last_modified) {
 
     if(isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
         $checked = true;
-        if(stripslashes($_SERVER['HTTP_IF_NONE_MATCH'] != $etag)
+        if(stripslashes($_SERVER['HTTP_IF_NONE_MATCH'] != $etag))
             return true;
     }
     
-    if(!$matched) return true;
+    if(!$checked) return true;
     
     header('HTTP/1.0 304 Not Modified');
     return false;
