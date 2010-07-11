@@ -91,8 +91,11 @@ function display_from_archive(
         return;        
     }
 
-    header('last-modified:'. date(DATE_RFC2822,
-        filemtime($params['archive'])));
+    $last_modified = max(strtotime("11 July 2010"),
+        filemtime($params['archive']));
+
+    if (!conditional_get($last_modified))
+        return;
 
     // Extract the file from the zipfile
 
@@ -112,19 +115,51 @@ function display_from_archive(
         file_not_found($params, $params['content']);
         return;
     }
-
+    
     if($type == 'text/html') {
         if(html_headers($params['content'])) {
-            echo $params['content'];
-            exit(0);
+            if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $params['content'];
+            return;
         }
     }
+
+    if($_SERVER['REQUEST_METHOD'] == 'HEAD') return;
 
     if ($preprocess) {
         $params['content'] = call_user_func($preprocess, $params['content']);
     }
     
     echo_filtered($extractor, $params);
+}
+
+function conditional_get($last_modified) {
+    if(!$last_modified) return true;
+
+    $last_modified_text = date(DATE_RFC2822, $last_modified);
+    $etag = '"'.md5($last_modified).'"';
+
+    header("Last-Modified: $last_modified_text");
+    header("ETag: $etag");
+
+    $checked = false;
+
+    if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+        $checked = true;
+        $if_modified_since = strtotime(stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']));
+        if(!$if_modified_since || $if_modified_since < $last_modified)
+            return true;
+    }
+
+    if(isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
+        $checked = true;
+        if(stripslashes($_SERVER['HTTP_IF_NONE_MATCH'] != $etag)
+            return true;
+    }
+    
+    if(!$matched) return true;
+    
+    header('HTTP/1.0 304 Not Modified');
+    return false;
 }
 
 class boost_archive_render_callbacks {
@@ -157,6 +192,11 @@ HTML;
 
 function display_raw_file($unzip, $type) {
     header('Content-type: '.$type);
+
+    // Since we're not returning a HTTP error for non-existant files,
+    // might as well not bother checking for the file
+    if($_SERVER['REQUEST_METHOD'] == 'HEAD') return;
+
     ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
     $file_handle = popen($unzip,'rb');
     fpassthru($file_handle);
