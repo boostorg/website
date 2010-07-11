@@ -43,6 +43,11 @@ function display_from_archive(
     $content_map = array(),
     $override_extractor = null)
 {
+    $params['template'] = dirname(__FILE__)."/template.php";
+    $params['title'] = NULL;
+    $params['charset'] = NULL;
+    $params['content'] = NULL;
+    
     $info_map = array_merge($content_map, array(
         array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh|xml|qbk)$@i','text','text/plain'),
         array('@.*@','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
@@ -100,11 +105,6 @@ function display_from_archive(
         display_raw_file($unzip, $type);
         return;
     }
-
-    $params['template'] = dirname(__FILE__)."/template.php";
-    $params['title'] = NULL;
-    $params['charset'] = NULL;
-    $params['content'] = NULL;
 
     // Note: this sets $params['content'] with either the content or an error
     // message:
@@ -357,6 +357,13 @@ function basic_filter($params)
 
 function file_not_found($params, $message = null)
 {
+    if(is_string($params)) {
+        $params = Array(
+            'file' => $params,
+            'template' => dirname(__FILE__)."/template.php"
+        );
+    }
+
     header("HTTP/1.0 404 Not Found");
     display_template($params['template'],
         new file_not_found_render_callbacks($params['file'], $message));
