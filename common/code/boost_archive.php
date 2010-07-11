@@ -193,6 +193,7 @@ HTML;
 
 function display_raw_file($unzip, $type) {
     header('Content-type: '.$type);
+    header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
 
     // Since we're not returning a HTTP error for non-existant files,
     // might as well not bother checking for the file
