@@ -11,28 +11,6 @@
 [/ TODO: Check download link on release.]
 [/download http://sourceforge.net/projects/boost/files/boost/1.44.0/]
 
-[/
-    When adding libraries:
-
-    1. Libraries are listed in alphabetical order.
-    2. Besides the dedicated entry, the lib name should be added to the
-       [purpose] section at the beginning of the page.
-
-    Example new libraries message:
-
-* [phrase library..[@/libs/accumulators/index.html Accumulators]:] Framework for
-  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
-
-    Example update message:
-
-* [phrase library..[@/libs/interprocess/index.html Interprocess]:]
-  * Added anonymous shared memory for UNIX systems.
-  * Fixed missing move semantics on managed memory classes.
-  * Added copy_on_write and open_read_only options for shared memory
-    and mapped file managed classes.
-  * `shared_ptr` is movable and supports aliasing.
-]
-
 [section New Libraries]
 
 * [phrase library..[@/libs/msm/index.html Meta State Machine]:]
@@ -45,14 +23,58 @@
 
 [section Updated Libraries]
 
-* [phrase library..[@/libs/numeric.ublas/index.html uBLAS]:]
+* [phrase library..[@/libs/functional/hash/index.html Hash]:]
+  * Prevent implicit conversions when calling `hash_value`. If this
+    breaks your code, you can enable the old behaviour by defining
+    `BOOST_HASH_ALLOW_IMPLICIT_CASTS`.
+
+* [phrase library..[@/libs/iostreams/index.html Iostreams]:]
+  * Several fixes for file descriptors class, including a breaking change to the
+    constructors and `open` methods for `file_descriptor`,
+    `file_descriptor_source` and `file_descriptor_sink`.
+    See [@classes/file_descriptor.html the documentation]
+    for details. The old methods are still available if you define
+    `BOOST_IOSTREAMS_USE_DEPRECATED`
+    ([@https://svn.boost.org/trac/boost/ticket/3323 #3323],
+    [@https://svn.boost.org/trac/boost/ticket/3517 #3517],
+    [@https://svn.boost.org/trac/boost/ticket/4335 #4335]).
+  * Fix several issues with compression and decompression
+    ([@https://svn.boost.org/trac/boost/ticket/2318 #2318],
+    [@https://svn.boost.org/trac/boost/ticket/4091 #4091],
+    [@https://svn.boost.org/trac/boost/ticket/3348 #3348],
+    [@https://svn.boost.org/trac/boost/ticket/2783 #2783],
+    [@https://svn.boost.org/trac/boost/ticket/1579 #1579],
+    [@https://svn.boost.org/trac/boost/ticket/3853 #3853]).
+  * And a load more miscellaneous fixes
+    ([@https://svn.boost.org/trac/boost/ticket/3851 #3851],
+    [@https://svn.boost.org/trac/boost/ticket/3279 #3279],
+    [@https://svn.boost.org/trac/boost/ticket/3689 #3689],
+    [@https://svn.boost.org/trac/boost/ticket/2356 #2356],
+    [@https://svn.boost.org/trac/boost/ticket/2996 #2996],
+    [@https://svn.boost.org/trac/boost/ticket/4102 #4102],
+    [@https://svn.boost.org/trac/boost/ticket/2998 #2998],
+    [@https://svn.boost.org/trac/boost/ticket/1612 #1612],
+    [@https://svn.boost.org/trac/boost/ticket/2325 #2325]).
+  * Almost all of this is thanks to Steven Watanabe.
+    For more detail see the [@/libs/iostreams/doc/release_notes.html].
+
+* [phrase library..[@/libs/numeric/ublas/index.html uBLAS]:]
   * New assignment operators to feed in vectors and matrices in many nice ways ([@http://svn.boost.org/trac/boost/ticket/4034 #4034]). Thank you Nasos
   * New doxygen-based [@/libs/numeric/ublas/doc/html/index.html documentation]
   * Enable arithmetic operators (+,-,*,/) to work between ublas containers of std::complex and integral types ([@http://svn/boost/org/trac/boost/ticket/3649 #3649]). Thank you Neal
   * Removed unused variables in functional.hpp ([@http://svn.boost.org/trac/boost/ticket/4377 #4377]). Thank you Marco
   * New matrix_indirect and vector_indirect views to access elements with a matrix or vector of indices
 
-/TODO/
+[endsect]
+
+[section Updated tools]
+
+* [phrase library..[@/tools/quickbook/index.html Quickbook]:]
+  * Use the cygwin 1.7 API for better path handling.
+  * Improved boostbook generation.
+  * Tweak the grammar to clean up some edge cases.
+  * For more detail see the
+    [@/doc/libs/1_44_0/doc/html/quickbook/change_log.html#quickbook.change_log.version_1_5_2___boost_1_44_0 change log].
 
 [endsect]
 
