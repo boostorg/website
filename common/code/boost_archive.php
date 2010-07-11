@@ -92,7 +92,7 @@ function display_from_archive(
     }
 
     $last_modified = max(
-        filemtime(strtotime("Sun, 11 Jul 2010 18:55:24 +0100"),
+        strtotime("Sun, 11 Jul 2010 18:55:24 +0100"),
         filemtime($params['archive']));
 
     if (!conditional_get($last_modified))
