@@ -184,8 +184,13 @@ class BoostBook2RSS:
             *self.x_children(node))
     
     def x_listitem(self,node):
-        return self.new_node('li',
-            *self.x_children(node))
+        simpara = self.get_child(node,tag='simpara')
+        if simpara:
+            return self.new_node('li',
+                *self.x_children(simpara))
+        else:
+            return self.new_node('li',
+                *self.x_children(node))
     
     def x_phrase(self,node):
         return self.new_node('span',
