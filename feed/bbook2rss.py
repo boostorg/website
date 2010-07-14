@@ -77,7 +77,7 @@ class RssUpdateCheck:
 
     # This is very dodgy....
     def hash_qbk_file(self, xml_file):
-        qbk_file = xml_file.replace('.xml', '.qbk')
+        qbk_file = os.path.normpath(xml_file.replace('.xml', '.qbk')).replace('\\', '/')
         if(not os.path.isfile(qbk_file)):
             return (None, None)
         with open(qbk_file) as file:
