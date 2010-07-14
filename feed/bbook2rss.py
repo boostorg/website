@@ -7,7 +7,7 @@ import re
 import optparse
 import time
 import xml.dom.minidom
-from xml.sax.saxutils import unescape, escape
+import codecs
 
 class BoostBook2RSS:
 
@@ -79,7 +79,8 @@ class BoostBook2RSS:
         else:
             out = sys.stdout
         if out:
-            self.rss.writexml(out,encoding='utf-8')
+            writer = codecs.lookup('utf-8')[3](out)
+            self.rss.writexml(writer, encoding='utf-8')
     
     #~ Turns the internal XML tree into an output UTF-8 string.
     def tostring(self):
@@ -148,9 +149,9 @@ class BoostBook2RSS:
             'item',
             title_xhtml,
             self.new_text('pubDate',node.getAttribute('last-revision')),
-            self.new_text('boostbook:purpose',brief_xhtml.toxml('utf-8')),
+            self.new_text('boostbook:purpose',brief_xhtml.toxml()),
             download_item,
-            self.new_text('description',description_xhtml.toxml('utf-8'))
+            self.new_text('description',description_xhtml.toxml())
             )
     
     def x__text(self,node):
