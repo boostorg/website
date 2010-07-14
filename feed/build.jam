@@ -15,6 +15,7 @@ feature.feature title : : free ;
 feature.feature uri : : free ;
 feature.feature count : : free ;
 feature.feature cwd : : free ;
+feature.feature update-file : : free ;
 
 rule get ( property : properties * )
 {
@@ -36,11 +37,13 @@ rule rss ( targets * : sources * : properties * )
         = % ;
     PYTHON on $(targets)
         = [ property.select <python.interpreter> : $(properties) ] ;
+    UPDATE_FILE on $(targets)
+        = [ get <update-file> : $(properties) ] ;
 }
 
 actions rss
 {
-    "$(PYTHON:G=:E=python)" "$(BB2RSS)" "--channel-title=$(TITLE)" "--channel-link=$(LINK)" "--count=$(COUNT)" "--output=$(<)" "$(>)"
+    "$(PYTHON:G=:E=python)" "$(BB2RSS)" "--channel-title=$(TITLE)" "--channel-link=$(LINK)" "--count=$(COUNT)" "--update-file=$(UPDATE_FILE)" "--output=$(<)" "$(>)"
 }
 
 rule glob-rss ( p + )
@@ -65,6 +68,7 @@ make downloads.rss : [ glob-rss history/boost_1_43_0 downloads/* ]
     <count>5
     <location>$(CWD)
     <cwd>$(CWD)
+    <update-file>downloads-hashes.txt
     ;
 
 make history.rss : [ glob-rss history/* ]
@@ -73,6 +77,7 @@ make history.rss : [ glob-rss history/* ]
     <uri>"http://www.boost.org/feed/history.rss"
     <location>$(CWD)
     <cwd>$(CWD)
+    <update-file>history-hashes.txt
     ;
 
 make news.rss
@@ -87,4 +92,5 @@ make news.rss
     <count>5
     <location>$(CWD)
     <cwd>$(CWD)
+    <update-file>news-hashes.txt
     ;

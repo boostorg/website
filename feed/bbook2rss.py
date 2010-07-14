@@ -7,7 +7,81 @@ import re
 import optparse
 import time
 import xml.dom.minidom
+import sys
+import os.path
+import hashlib
 import codecs
+
+class RssUpdateCheck:
+    """ Tracks which items in an rss feed have been updated.
+
+    Stores in a csv file the quickbook file, the quickbook file's signature,
+    the generated rss item's signature. If the quickbook hasn't changed and an
+    item in the rss feed matches the stored signature it uses that instead of
+    the newly generated xml.
+    
+    This is pretty dodgy since it's in the wrong stage of building - this should
+    be done before the quickbook files are compiled. In order to work it has to
+    guess the name of the quickbook file. With the current build setup it always
+    guesses correctly.
+    
+    Overall a bit poor, but it works. More or less.
+    """
+    def __init__(self, hash_file = None):
+        # Map of quickbook filename to (quickbook hash, rss hash)
+        self.qbk_hashes = {}
+        # Map of rss item hash to rss item
+        self.rss_items = {}
+        
+        if(hash_file and os.path.isfile(hash_file)):
+            self.load_hashes(hash_file)
+        
+    # You might be wondering why I didn't just save the rss items - would
+    # be able to save all the items not just the ones in the feed.
+    # I mostly wanted to minimise the amount of stuff that was checked in
+    # to subversion with each change.
+    def load_rss(self, rss_file):
+        if(os.path.isfile(rss_file)):
+            rss = xml.dom.minidom.parse(rss_file)
+            for item in rss.getElementsByTagName('item'):
+                self.rss_items[self.hash_node(item)] = item
+
+    def load_hashes(self, hash_file):
+        if(hash_file and os.path.isfile(hash_file)):
+            with open(hash_file) as file:
+                for line in file:
+                    (qbk_file, qbk_hash, rss_hash) = line.strip().split(',')
+                    self.qbk_hashes[qbk_file] = (qbk_hash, rss_hash)
+
+    def save_hashes(self, hash_file):
+        with open(hash_file, "w") as file:
+            for qbk_file in sorted(self.qbk_hashes.keys()):
+                file.write(qbk_file + "," + ",".join(self.qbk_hashes[qbk_file]) + "\n")
+
+    def check_file(self, xml_file):
+        (qbk_file, new_qbk_hash) = self.hash_qbk_file(xml_file)
+        if(qbk_file not in self.qbk_hashes):
+            return
+        (old_qbk_hash, rss_hash) = self.qbk_hashes[qbk_file]
+        if(old_qbk_hash != new_qbk_hash or rss_hash not in self.rss_items):
+            return
+        return self.rss_items[rss_hash]
+
+    def add_file(self, xml_file, item):
+        (qbk_file, qbk_hash) = self.hash_qbk_file(xml_file)
+        if(qbk_file):
+            self.qbk_hashes[qbk_file] = (qbk_hash, self.hash_node(item))
+
+    def hash_node(self, node):
+        return hashlib.sha256(node.toxml('utf-8')).hexdigest()
+
+    # This is very dodgy....
+    def hash_qbk_file(self, xml_file):
+        qbk_file = xml_file.replace('.xml', '.qbk')
+        if(not os.path.isfile(qbk_file)):
+            return (None, None)
+        with open(qbk_file) as file:
+            return (qbk_file, hashlib.sha256(file.read()).hexdigest())
 
 class BoostBook2RSS:
 
@@ -16,6 +90,7 @@ class BoostBook2RSS:
             usage="%prog [options] input+")
         opt.add_option( '--output',
             help="output RSS file" )
+        opt.add_option( '--update-file' )
         opt.add_option( '--channel-title' )
         opt.add_option( '--channel-link' )
         opt.add_option( '--channel-language' )
@@ -49,29 +124,50 @@ class BoostBook2RSS:
             'language' : self.channel_language,
             'copyright' : self.channel_copyright
             } )
+
+        if self.update_file:
+            self.rss_update_check = RssUpdateCheck(self.update_file)
+
+            if self.output:
+                self.rss_update_check.load_rss(self.output)
         
         self.add_articles()
         self.gen_output()
+        if self.update_file and self.new_hashes:
+            self.new_hashes.save_hashes(self.update_file)
     
     def add_articles(self):
         channel = self.get_child(self.rss.documentElement,tag='channel')
         items = []
         for bb in self.input:
-            article = xml.dom.minidom.parse(bb)
-            item = self.x(article.documentElement)
+            article = None
+            item = None
+            if(self.rss_update_check):
+                item = self.rss_update_check.check_file(bb)
+            if(not item):
+                article = xml.dom.minidom.parse(bb)
+                item = self.x(article.documentElement)
+
             if item:
                 try:
+                    last_modified = item.getElementsByTagName('pubDate')[0]
+                    last_modified = " ".join(
+                        t.nodeValue for t in last_modified.childNodes
+                        if t.nodeType == t.TEXT_NODE)
                     items.append([
-                        time.mktime(time.strptime(
-                            article.documentElement.getAttribute('last-revision'),
+                        time.mktime(time.strptime(last_modified,
                             '%a, %d %b %Y %H:%M:%S %Z')),
-                        item
+                        item,
+                        bb
                         ])
                 except:
-                    items.append([time.time(),item])
+                    items.append([time.time(),item,bb])
+                
+        self.new_hashes = RssUpdateCheck()
         items.sort(lambda x,y: -cmp(x[0],y[0]))
         for item in items[0:self.count]:
             channel.appendChild(item[1])
+            self.new_hashes.add_file(item[2], item[1])
     
     def gen_output(self):
         if self.output:
@@ -145,6 +241,7 @@ class BoostBook2RSS:
                     else:
                         description_xhtml.appendChild(item)
             body_item = body_item.nextSibling
+            
         return self.new_node(
             'item',
             title_xhtml,
