@@ -154,9 +154,10 @@ class BoostBook2RSS:
                     last_modified = " ".join(
                         t.nodeValue for t in last_modified.childNodes
                         if t.nodeType == t.TEXT_NODE)
+                    last_modified = last_modified.replace(',', ' ')
                     items.append([
                         time.mktime(time.strptime(last_modified,
-                            '%a, %d %b %Y %H:%M:%S %Z')),
+                            '%a %d %b %Y %H:%M:%S %Z')),
                         item,
                         bb
                         ])
