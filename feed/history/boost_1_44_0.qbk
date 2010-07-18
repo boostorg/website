@@ -1,7 +1,11 @@
 [article Version 1.44.0
     [quickbook 1.5]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: ]
+    [purpose
+        New Libraries: Meta State Machine, Polygon.
+        Updated Libraries: Config, Hash, Iostreams, Math, Regex,
+        Thread, TR1, Type Traits, uBLAS, Utility.
+        Updates for Quickbook and Boostbook.]
     [authors [Dawes, Beman]]
     [last-revision ]
 ]
@@ -39,6 +43,12 @@
   [@https://svn.boost.org/trac/boost/ticket/4041 #4041],
   [@https://svn.boost.org/trac/boost/ticket/4012 #4012].
 
+* [phrase library..[@/libs/functional/hash/index.html Hash]:]
+  * Option to prevent implicit casts when calling the hash function by
+    defining the macro `BOOST_HASH_NO_IMPLICIT_CASTS`, which can avoid
+    some subtle problems. This might be activated by default in a future
+    version.
+
 * [phrase library..[@/libs/iostreams/index.html Iostreams]:]
   * Several fixes for file descriptors class, including a breaking change to the
     constructors and `open` methods for `file_descriptor`,
@@ -66,7 +76,7 @@
     [@https://svn.boost.org/trac/boost/ticket/2998 #2998],
     [@https://svn.boost.org/trac/boost/ticket/1612 #1612],
     [@https://svn.boost.org/trac/boost/ticket/2325 #2325]).
-  * Almost all of this is by Steven Watanabe.
+  * Thanks to Steven Watanabe for almost all these fixes.
     For more detail see the
     [@/libs/iostreams/doc/release_notes.html release notes].
 
@@ -144,6 +154,10 @@
 
 [section Updated tools]
 
+* [phrase library..[@/tools/boostbook/index.html Boostbook]:]
+  * Significantly faster.
+  * Improved syntax highlighter.
+
 * [phrase library..[@/tools/quickbook/index.html Quickbook]:]
   * Use the cygwin 1.7 API for better path handling.
   * Improved boostbook generation.
@@ -157,17 +171,60 @@
 
 Boost's primary test compilers are:
 
-* /TODO/
+* OS X:
+  * GCC 4.0.1 on Intel Leopard.
+* Linux:
+  * GCC 4.4 on 64-bit Suse.
+* Windows:
+  * Visual C++ 7.1 SP1, 8.0 SP1, 9.0 SP1 and 10.0.
+  * GCC 4.3.3, using Mingw.
+* FreeBSD:
+  * GCC 4.2.1, 32 and 64 bit.
 
 Boost's additional test compilers include:
 
-* /TODO/
+* Linux:
+  * Intel 10.1 on 32 bit Red Hat Enterprise Linux.
+  * Intel 10.1, 11.0, 11.1 on 64 bit Red Hat Enterprise Linux.
+  * GCC 3.4.6, 4.2.4, 4.3.4, 4.4.3, 4.5 on Red Hat Enterprise Linux.
+  * GCC, with C++0x extensions, 4.3.4, 4.4.3, 4.5 on Red Hat Enterprise Linux.
+  * GCC 4.4 on 64 bit Suse.
+  * QLogic PathScale(TM) Compiler Suite: Version 3.2 on Red Hat Enterprise Linux.
+  * Clang from subversion (will be released with LLVM 2.8).
+* OS X:
+  * Intel C++ Compiler 10.1, 11.0, 11.1 on Leopard.
+  * GCC 4.0.1, 4.2.1 (Apple build).
+  * GCC 4.4
+  * GCC, with C++0x extensions, 4.4
+  * Clang from subversion (will be released with LLVM 2.8).
+* Windows:
+  * Visual C++ 7.1 SP, 8.0, 9.0 on 32-bit XP.
+  * Visual C++ 9.0 using STLport 5.2 on XP and Windows Mobile 5.0.
+  * Visual C++ 10.0 on XP.
+  * Visual C++ 10.0 on 64-bit Windows 7.
+  * Borland/Codegear C++ 5.9.3, 6.1.3 (2009), 6.2.1 (2010).
+  * Intel C++ 11.1, with a Visual C++ 9.0 backend, on Vista 32-bit.
+  * GCC 4.3.3, 4.5 on Mingw.
+  * GCC, with C++0x extensions, 4.5 on Mingw.
+* AIX:
+  * IBM XL C/C++ Enterprise Edition, V11.1.0.0, on AIX Version 5.3.0.40.
+* FreeBSD:
+  * GCC 4.2.1 on FreeBSD 7.2, 64 bit.
+  * GCC 4.2.1 on FreeBSD 8.0, 32 bit.
+* Solaris:
+  * Sun C++ 5.10 on Solaris 5.10.
 
 [endsect]
 
 [section Acknowledgements]
 
-/TODO/
+[@/users/people/beman_dawes.html Beman Dawes],
+Eric Niebler,
+[@/users/people/rene_rivera.html Rene Rivera],
+Daniel James and Vladimir Prus managed this release.
+
+Thanks to Marshall Clow for organizing the bug sprint and to
+everyone who took part.
 
 [endsect]
 
