@@ -258,6 +258,10 @@ class BoostBook2RSS:
     def x_para(self,node):
         return self.new_node('p',
             *self.x_children(node))
+
+    def x_simpara(self,node):
+        return self.new_node('div',
+            *self.x_children(node))
         
     def x_ulink(self,node):
         return self.new_node('a',
@@ -283,13 +287,8 @@ class BoostBook2RSS:
             *self.x_children(node))
     
     def x_listitem(self,node):
-        simpara = self.get_child(node,tag='simpara')
-        if simpara:
-            return self.new_node('li',
-                *self.x_children(simpara))
-        else:
-            return self.new_node('li',
-                *self.x_children(node))
+        return self.new_node('li',
+            *self.x_children(node))
     
     def x_phrase(self,node):
         return self.new_node('span',
