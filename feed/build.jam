@@ -39,6 +39,7 @@ rule rss ( targets * : sources * : properties * )
         = [ property.select <python.interpreter> : $(properties) ] ;
     UPDATE_FILE on $(targets)
         = [ get <update-file> : $(properties) ] ;
+    DEPENDS $(targets) : [ get <update-file> : $(properties) ] ;
 }
 
 actions rss
