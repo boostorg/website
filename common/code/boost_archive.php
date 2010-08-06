@@ -10,6 +10,7 @@ function get_archive_location(
     $pattern,
     $vpath,
     $archive_subdir = true,
+    $zipfile = true,
     $archive_dir = ARCHIVE_DIR,
     $archive_file_prefix = ARCHIVE_FILE_PREFIX)
 {
@@ -19,22 +20,25 @@ function get_archive_location(
     $version = $path_parts[1];
     $key = $path_parts[2];
 
+    $file = ($zipfile ? '' : $archive_dir . '/');
+
     if ($archive_subdir)
     {
-        $file = $archive_file_prefix . $version . '/' . $key;
+        $file = $file . $archive_file_prefix . $version . '/' . $key;
     }
     else
     {
-        $file = $archive_file_prefix . $key;
+        $file = $file . $archive_file_prefix . $key;
     }
 
-    $archive = str_replace('\\','/', $archive_dir . '/' . $version . '.zip');
+    $archive = $zipfile ? str_replace('\\','/', $archive_dir . '/' . $version . '.zip') : Null;
     
     return array(
         'version' => $version,
         'key' => $key,
         'file' => $file,
-        'archive' => $archive
+        'archive' => $archive,
+        'zipfile' => $zipfile
     );
 }
 
@@ -86,35 +90,57 @@ function display_from_archive(
 
     // Check zipfile.
 
-    if (!is_file($params['archive'])) {
-        file_not_found($params, 'Unable to find zipfile.');
+    $check_file = $params['zipfile'] ? $params['archive'] : $params['file'];
+
+    if (!is_file($check_file)) {
+        file_not_found($params,
+            $params['zipfile'] ?
+                'Unable to find zipfile.' :
+                'Unable to find file.');
         return;        
     }
 
     $last_modified = max(
         strtotime("Sun, 11 Jul 2010 18:55:24 +0100"),
-        filemtime($params['archive']));
+        filemtime($check_file));
 
     if (!conditional_get($last_modified))
         return;
 
     // Extract the file from the zipfile
 
-    $unzip =
-      UNZIP
-      .' -p '.escapeshellarg($params['archive'])
-      .' '.escapeshellarg($params['file']);
+    if ($params['zipfile'])
+    {
+        $unzip =
+          UNZIP
+          .' -p '.escapeshellarg($params['archive'])
+          .' '.escapeshellarg($params['file']);
 
-    if($extractor == 'raw') {
-        display_raw_file($unzip, $type);
-        return;
+        if($extractor == 'raw') {
+            display_raw_file($unzip, $type);
+            return;
+        }
+
+        // Note: this sets $params['content'] with either the content or an error
+        // message:
+        if(!extract_file($unzip, $params['content'])) {
+            file_not_found($params, $params['content']);
+            return;
+        }
     }
+    else
+    {
+        if($extractor == 'raw') {
+            display_unzipped_file($params['file'], $type);
+            return;
+        }
 
-    // Note: this sets $params['content'] with either the content or an error
-    // message:
-    if(!extract_file($unzip, $params['content'])) {
-        file_not_found($params, $params['content']);
-        return;
+        // Note: this sets $params['content'] with either the content or an error
+        // message:
+        if(!extract_unzipped_file($params['file'], $params['content'])) {
+            file_not_found($params, $params['content']);
+            return;
+        }
     }
     
     if($type == 'text/html') {
@@ -159,7 +185,7 @@ function conditional_get($last_modified) {
     
     if(!$checked) return true;
     
-    header('HTTP/1.0 304 Not Modified');
+    header($_SERVER["SERVER_PROTOCOL"].' 304 Not Modified');
     return false;
 }
 
@@ -221,6 +247,34 @@ function display_raw_file($unzip, $type) {
         echo 'Error extracting file: '.unzip_error($exit_status);
 };
 
+function display_unzipped_file($file, $type) {
+    header('Content-type: '.$type);
+    switch($type) {
+        case 'image/png':
+        case 'image/gif':
+        case 'image/jpeg':
+        case 'text/css':
+        case 'application/x-javascript':
+        case 'application/pdf':
+        case 'application/xml-dtd':
+            header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
+            header('Cache-Control: max-age=31556926'); // A year, give or take a day.
+    }
+
+    // Since we're not returning a HTTP error for non-existant files,
+    // might as well not bother checking for the file
+    if($_SERVER['REQUEST_METHOD'] == 'HEAD') return;
+
+    ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
+    $file_handle = fopen($file,'rb');
+    // TODO: Check $file_handle (should be okay, because already checked for file).
+    fpassthru($file_handle);
+    $exit_status = fclose($file_handle);
+    
+    // TODO: What if !$exit_status?
+};
+
+
 function extract_file($unzip, &$content) {
     $file_handle = popen($unzip,'r');
     $text = '';
@@ -238,6 +292,31 @@ function extract_file($unzip, &$content) {
         return false;
     }
 }
+
+function extract_unzipped_file($file, &$content) {
+    $file_handle = fopen($file,'r');
+
+    if($file_handle === FALSE) {
+        $content = null;
+        return false;
+    }
+
+    $text = '';
+    while ($file_handle && !feof($file_handle)) {
+        $text .= fread($file_handle,8*1024);
+    }
+    $exit_status = fclose($file_handle);
+
+    if($exit_status) {
+        $content = $text;
+        return true;
+    }
+    else {
+        $content = null;
+        return false;
+    }
+}
+
 
 //
 // Filters
@@ -416,9 +495,10 @@ function file_not_found($params, $message = null)
         );
     }
 
-    header("HTTP/1.0 404 Not Found");
+    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
     display_template($params['template'],
-        new file_not_found_render_callbacks($params['file'], $message));
+        new file_not_found_render_callbacks($params['file'],
+            $params['zipfile'] ? "Unzip error: $message" : $message));
 }
 
 class file_not_found_render_callbacks
@@ -442,7 +522,7 @@ HTML;
     {
         print '<h1>404 Not Found</h1><p>File "' . $this->file . '" not found.</p>';
         if($this->message) {
-            print '<p>Unzip error: '.htmlentities($this->message).'</p>';
+            print '<p>'.htmlentities($this->message).'</p>';
         }
     }
 }

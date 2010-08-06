@@ -33,7 +33,7 @@ EOS;
     return str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
-$location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"]);
+$location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],true,false);
 
 if (boost_future_version($location['version'])) {
     file_not_found($location['file'],
