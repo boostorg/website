@@ -2,11 +2,15 @@ RewriteEngine On
 RewriteBase /doc
 
 # Redirect to the canonical URL.
+# TODO: I think this is wrong.
 
-RewriteCond %{HTTP_HOST} ^boost\.org [NC]
-RewriteRule ^.*$ http://www\.boost\.org%{REQUEST_URI} [R=301]
+# RewriteCond %{HTTP_HOST} ^boost\.org [NC]
+# RewriteRule ^.*$ http://www\.boost\.org%{REQUEST_URI} [R=301]
 
 RewriteRule ^html(/.*)?$ libs/release/doc/html$1 [R]
+
+# Always serve up the latest css files.
+RewriteRule ^libs/[^/]*/doc/(?:html|src)/(.*\.css)$ libs/common/doc/src/$1 [L]
 
 # Redirect from symbolic names to current versions.
 RewriteRule ^libs/release(/.*)?$ libs/1_43_0$1 [R]

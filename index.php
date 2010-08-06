@@ -69,7 +69,7 @@ http://www.boost.org/development/website_updating.html
                   <p class="note"><span class="note-body">Boost works on
                   almost any modern operating system, including UNIX and
                   Windows variants. Follow the <a href=
-                  "http://boost-sandbox.sourceforge.net/boost_1_43_0/more/getting_started/index.html">Getting
+                  "/doc/libs/release/more/getting_started/index.html">Getting
                   Started Guide</a> to download and install Boost. Popular
                   Linux and Unix distributions such as <a href=
                   "http://fedoraproject.org/" class="external">Fedora</a>,

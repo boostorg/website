@@ -33,7 +33,7 @@ EOS;
     return str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
-$location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"]);
+$location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],true,false);
 
 if (boost_future_version($location['version'])) {
     file_not_found($location['file'],
@@ -61,6 +61,7 @@ display_from_archive(
   array('@.*@','@^libs/system/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/numeric/conversion/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/optional/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@.*@','@^libs/polygon/doc/.*(html|htm)$@i','simple','text/html'),
   //~ default to processed output for libs and tools
   array('@.*@','@^libs/[^/]+/doc/html/.*(html|htm)$@i','basic','text/html'),
   array('@.*@','@^libs/[^/]+/doc/[^/]+/html/.*(html|htm)$@i','basic','text/html'),

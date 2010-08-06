@@ -5,6 +5,7 @@ display_from_archive(
   get_archive_location(
     '/^[\/]([^\/]+)[\/](.*)$/',$_SERVER["PATH_INFO"],
     false, // the result zips don't have the tag subdir
+    true, // stored as a zipfile
     RESULTS_DIR
   ),
   array(
