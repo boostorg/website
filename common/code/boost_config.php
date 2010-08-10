@@ -22,7 +22,7 @@ ARCHIVE_FILE_PREFIX
   Prefix for the root directory in the Boost ZIP archives.
 */
 
-switch ($_SERVER['HTTP_HOST'])
+switch (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '')
 {
   case 'boost.org':
   case 'www.boost.org':
@@ -42,5 +42,12 @@ switch ($_SERVER['HTTP_HOST'])
 define('ARCHIVE_FILE_PREFIX', '');
 
 require_once(BOOST_CONFIG_FILE);
+
+if(!function_exists('virtual'))
+{
+    function virtual($location) {
+        echo '<!--#include virtual="', $location, '" -->';
+    }
+}
 
 ?>
