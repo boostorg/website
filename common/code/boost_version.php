@@ -6,7 +6,7 @@
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
-$boost_current_version = Array(1,43,0);
+$boost_current_version = Array(1,44,0);
 
 function boost_title()
 {
