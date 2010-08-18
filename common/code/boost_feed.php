@@ -104,7 +104,7 @@ class boost_feed
     
     function echo_download_table($guid)
     {
-        if($this->db[$guid]['boostbook:download']) {
+        if(isset($this->db[$guid]['boostbook:download']) && $this->db[$guid]['boostbook:download']) {
             $link = $this->db[$guid]['boostbook:download'];
             if(preg_match('@/boost/(\d+)\.(\d+)\.(\d+)/$@', $link, $matches)) {
                 $base_name = 'boost_'.$matches[1].'_'.$matches[2].'_'.$matches[3];
