@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>Version 1.37.0</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="icon" href="/favicon.ico" type="image/ico" />
+  <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  #content .news-description ul {
+    list-style: none;
+  }
+  #content .news-description ul ul {
+    list-style: circle;
+  }
+  /*]]>*/
+  </style>
+  <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
+</head>
+
+<body>
+  <div id="heading">
+    <!--#include virtual="/common/heading.html" -->  </div>
+
+  <div id="body">
+    <div id="body-inner">
+      <div id="content">
+        <div class="section" id="intro">
+          <div class="section-0">
+            <div class="section-title">
+              <h1>Version 1.37.0</h1>
+            </div>
+
+            <div class="section-body">
+              <h2><span class=
+              "news-title">Version 1.37.0</span></h2>
+
+              <p><span class=
+              "news-date">November 3rd, 2008 12:00 GMT</span></p>
+
+              <table class="download-table"><caption>Downloads</caption><tr><th scope="col">Platform</th><th scope="col">File</th></tr>
+<tr><th scope="row" rowspan="2">unix</th><td><a href="http://sourceforge.net/projects/boost/files/boost/1.37.0/boost_1_37_0.tar.bz2/download">boost_1_37_0.tar.bz2</a></td></tr><tr><td><a href="http://sourceforge.net/projects/boost/files/boost/1.37.0/boost_1_37_0.tar.gz/download">boost_1_37_0.tar.gz</a></td></tr>
+<tr><th scope="row" rowspan="2">windows</th><td><a href="http://sourceforge.net/projects/boost/files/boost/1.37.0/boost_1_37_0.7z/download">boost_1_37_0.7z</a></td></tr><tr><td><a href="http://sourceforge.net/projects/boost/files/boost/1.37.0/boost_1_37_0.zip/download">boost_1_37_0.zip</a></td></tr></table>
+              <div class="news-description">
+                <div class="description">
+  
+  
+  
+  <div id="version_1_37_0.new_libraries">
+    <h3><span class="link">New Libraries</span></h3>
+    <ul>
+      <li>
+        <span class="library"><a href="/libs/proto/index.html">Proto</a>:</span>
+        <ul>
+          <li>
+            Expression template library and compiler construction toolkit for domain-specific
+            embedded languages, from Eric Niebler.
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div id="version_1_37_0.updated_libraries">
+    <h3><span class="link">Updated Libraries</span></h3>
+    <ul>
+      <li>
+        <span class="library"><a href="/libs/asio/index.html">Asio</a>:</span>
+        <ul>
+          <li>
+            Enhanced CompletionCondition concept with the signature <code><span class="identifier">size_t</span> <span class="identifier">CompletionCondition</span><span class="special">(</span><span class="identifier">error_code</span>
+            <span class="identifier">ec</span><span class="special">,</span>
+            <span class="identifier">size_t</span> <span class="identifier">total</span><span class="special">)</span></code>, where the return value indicates the
+            maximum number of bytes to be transferred on the next read or write operation.
+            (The old CompletionCondition signature is still supported for backwards
+            compatibility).
+          </li>
+          <li>
+            New windows::overlapped_ptr class to allow arbitrary overlapped I/O functions
+            (such as TransmitFile) to be used with Asio.
+          </li>
+          <li>
+            On recent versions of Linux, an eventfd descriptor is now used (rather
+            than a pipe) to interrupt a blocked select/epoll reactor.
+          </li>
+          <li>
+            Added const overloads of lowest_layer().
+          </li>
+          <li>
+            Synchronous read, write, accept and connect operations are now thread
+            safe (meaning that it is now permitted to perform concurrent synchronous
+            operations on an individual socket, if supported by the OS).
+          </li>
+          <li>
+            Reactor-based io_service implementations now use lazy initialisation
+            to reduce the memory usage of an io_service object used only as a message
+            queue.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="library"><a href="/libs/circular_buffer/index.html">Circular Buffer</a>:</span>
+        <ul>
+          <li>
+            Added new methods <code><span class="identifier">is_linearized</span><span class="special">()</span></code> and <code><span class="identifier">rotate</span><span class="special">(</span><span class="identifier">const_iterator</span><span class="special">)</span></code>.
+          </li>
+          <li>
+            Minor bug fixes and documentation updates.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="library"><a href="/libs/dynamic_bitset/">Dynamic Bitset</a>:</span>
+        <ul>
+          <li>
+            Constructor &quot;do the right thing&quot; dispatch, a la standard sequence
+            containers (follows the proposed resolution of <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#438">library
+            issue 438</a>, currently in the <tt>C++0x</tt> working
+            paper).
+          </li>
+          <li>
+            Improvements to documentation, code examples and implementation.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="library"><a href="/libs/exception/index.html">Exception</a>:</span>
+        <ul>
+          <li>
+            Support for non-RTTI builds.
+          </li>
+          <li>
+            Optimizations.
+          </li>
+          <li>
+            A new macro <code><span class="identifier">BOOST_THROW_EXCEPTION</span></code>
+            which can be used instead of <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">throw_exception</span></code>
+            when throwing, to automatically record information about the location
+            of the throw in the exception object.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="library"><a href="/libs/functional/hash/index.html">Hash</a>:</span>
+        <ul>
+          <li>
+            Minor bug fix (<a href="http://svn.boost.org/trac/boost/ticket/2264">ticket
+            2264</a>).
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="library"><a href="/libs/interprocess/index.html">Interprocess</a>:</span>
+        <ul>
+          <li>
+            Added placement insertion (<code><span class="identifier">emplace</span><span class="special">()</span></code>, <code><span class="identifier">emplace_back</span><span class="special">()</span></code>...) methods to containers.
+          </li>
+          <li>
+            Containers can be used now in recursive types.
+          </li>
+          <li>
+            Minor bug fixes.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="library"><a href="/libs/intrusive/index.html">Intrusive</a>:</span>
+        <ul>
+          <li>
+            Intrusive now takes advantage of compilers with variadic templates.
+          </li>
+          <li>
+            <code><span class="identifier">clone_from</span></code> functions
+            now copy predicates and hash functions of associative containers.
+          </li>
+          <li>
+            Added incremental hashing to unordered containers via <code><span class="identifier">incremental</span><span class="special">&lt;&gt;</span></code> option.
+          </li>
+          <li>
+            Minor bug fixes.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="library"><a href="/libs/math/doc/sf_and_dist/html/index.html">Math.Special
+        Functions</a>:</span>
+   Improved accuracy and testing of the inverse hypergeometric
+        functions.
+      </li>
+      <li>
+        <span class="library"><a href="/libs/type_traits/index.html">Type Traits</a>:</span>
+   Added
+        better support for the Codegear compiler.
+      </li>
+      <li>
+        <span class="library"><a href="/libs/unordered/index.html">Unordered</a>:</span>
+        <ul>
+          <li>
+            Rename overload of <code><span class="identifier">emplace</span></code>
+            with hint, to <code><span class="identifier">emplace_hint</span></code>
+            as specified in <a href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2008/n2691.pdf">n2691</a>.
+          </li>
+          <li>
+            Provide forwarding headers at <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">unordered</span><span class="special">/</span><span class="identifier">unordered_map_fwd</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+            and <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">unordered</span><span class="special">/</span><span class="identifier">unordered_set_fwd</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>.
+          </li>
+          <li>
+            Move all of the implementation inside the <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">unordered</span></code>
+            directory.
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div id="version_1_37_0.compilers_tested">
+    <h3><span class="link">Compilers Tested</span></h3>
+    <p>
+      Boost's primary test compilers are:
+    </p>
+    <ul>
+      <li>
+        GCC 4.01 on Mac OS X 10.4.10 with both Intel and Power PC
+      </li>
+      <li>
+        GCC 4.2.4 on Ubuntu Linux 8.10
+      </li>
+      <li>
+        GCC 4.3.2 on Debian Sid
+      </li>
+      <li>
+        GCC 4.2.1 on HP-UX Integrity
+      </li>
+      <li>
+        HP C/aC++ B3910B A.06.17 on HP-UX 64-bit
+      </li>
+      <li>
+        Visual C++ 9.0 SP1, 8.0, and 7.1 SP1, all on Windows XP
+      </li>
+    </ul>
+    <p>
+      Boost's additional test compilers include:
+    </p>
+    <ul>
+      <li>
+        GCC 4.1.2 on NetBSD
+      </li>
+      <li>
+        HP aCC on OS: HP-UX B.11.31 U ia64 and HP-UX B.11.31 9000/800 RISC
+      </li>
+      <li>
+        IBM XL C/C++ Enterprise Edition for AIX, V10.1.0.0, on AIX Version 5.3.0.40
+      </li>
+      <li>
+        Intel 9.1, 10.0, and 10.1, on Mac OS X 10.4.10
+      </li>
+      <li>
+        Compaq C++ V7.1-006 for Compaq Tru64 Unix on an OSF1 V5.1 platform.
+      </li>
+      <li>
+        Sun C++ 5.7, 5.8, 5.9 and GCC 3.4.6 on Sun Solaris 5.10.
+      </li>
+      <li>
+        On Linux:
+        <ul>
+          <li>
+            GCC 3.4.3, 4.0.1, 4.2.1, 4.2.4, 4.3.2.
+          </li>
+          <li>
+            GCC 4.3.2 with C++0x extensions.
+          </li>
+          <li>
+            GCC 4.1.1, 4.2.1 on 64 bit linux.
+          </li>
+          <li>
+            Intel C++ 8.1, 9.0, 9.1 and 10.0
+          </li>
+          <li>
+            QLogic PathScale(TM) Compiler Suite: Version 3.1
+          </li>
+          <li>
+            Sun Compiler 5.9, 5.10 with stdcxx
+          </li>
+        </ul>
+      </li>
+      <li>
+        On Windows:
+        <ul>
+          <li>
+            Several testers using Visual C++ 7.1, 8.0, 9.0 and 10.0
+          </li>
+          <li>
+            Visual C++ 7.1 with Apache C++ Standard Library 4.2.x branch.
+          </li>
+          <li>
+            Visual C++ 8.0 with STLport 5.1
+          </li>
+          <li>
+            Visual C++ 8.0 with STLport 5.1 cross-compiling for Windows Mobile 5.0
+            Pocket PC SDK (ARMV4I).
+          </li>
+          <li>
+            Intel 10.1, with Visual C++ 9 backend.
+          </li>
+          <li>
+            Borland 5.9.3 and 6.10.0
+          </li>
+          <li>
+            64 bit Intel 10.1, with Visual C++ 9 backend.
+          </li>
+          <li>
+            64 bit Visual C++ 9.0.
+          </li>
+          <li>
+            64-bit Visual C++ 9.0 with Apache C++ Standard Library 4.2.x branch.
+          </li>
+          <li>
+            Comeau C++ 4.3.10.1 beta 2, with Visual C++ 9 backend.
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div id="version_1_37_0.acknowledgements">
+    <h3><span class="link">Acknowledgements</span></h3>
+    <p>
+      <a href="/users/people/beman_dawes.html">Beman Dawes</a>, Eric Niebler,
+      <a href="/users/people/rene_rivera.html">Rene Rivera</a>, and Daniel
+      James managed this release.
+    </p>
+  </div>
+</div>              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sidebar">
+        <!--#include virtual="/common/sidebar-common.html" --><!--#include virtual="/common/sidebar-boost.html" -->      </div>
+
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <div id="footer-left">
+      <div id="revised">
+        <p>Revised $Date$</p>
+      </div>
+
+      <div id="copyright">
+        <p>Copyright Rene Rivera 2006-2007.</p>
+      </div><!--#include virtual="/common/footer-license.html" -->    </div>
+
+    <div id="footer-right">
+      <!--#include virtual="/common/footer-banners.html" -->    </div>
+
+    <div class="clear"></div>
+  </div>
+</body>
+</html>
