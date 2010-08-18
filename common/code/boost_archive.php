@@ -229,6 +229,9 @@ function display_raw_file($unzip, $type) {
         case 'application/xml-dtd':
             header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
             header('Cache-Control: max-age=31556926'); // A year, give or take a day.
+        default:
+            header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
+            header('Cache-Control: max-age=2592000'); // 30 days
     }
 
     // Since we're not returning a HTTP error for non-existant files,
@@ -276,6 +279,9 @@ function display_unzipped_file($file, $type) {
 
 
 function extract_file($unzip, &$content) {
+    header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
+    header('Cache-Control: max-age=2592000'); // 30 days
+
     $file_handle = popen($unzip,'r');
     $text = '';
     while ($file_handle && !feof($file_handle)) {
@@ -294,6 +300,9 @@ function extract_file($unzip, &$content) {
 }
 
 function extract_unzipped_file($file, &$content) {
+    header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
+    header('Cache-Control: max-age=2592000'); // 30 days
+
     $file_handle = fopen($file,'r');
 
     if($file_handle === FALSE) {
