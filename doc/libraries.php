@@ -3,7 +3,8 @@
 require_once(dirname(__FILE__) . '/../common/code/boost_version.php');
 require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
 
-$libs = new boost_libraries(dirname(__FILE__) . '/libraries.xml');
+//$libs = new boost_libraries(dirname(__FILE__) . '/libraries.xml');
+$libs = unserialize(file_get_contents(dirname(__FILE__) . '/libraries.txt'));
 
 // Display types:
 
