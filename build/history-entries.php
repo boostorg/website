@@ -1,17 +1,34 @@
 <?php
-require_once(dirname(__FILE__) . '/../../common/code/boost_feed.php');
-$_history = new boost_feed(dirname(__FILE__) . '/../../feed/history.rss', '/users/history');
-$_history->sort_by('pubdate');
+
+echo "History entries\n";
+echo "===============\n";
+
+require_once(dirname(__FILE__) . '/../common/code/boost_feed.php');
+$_history = new boost_feed(dirname(__FILE__) . '/../feed/history.rss', '/users/history');
+foreach($_history->db as $_guid => $_value) {
+    echo "Building $_guid\n";
+
+    ob_start();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Boost Version History</title>
+  <title><?php print $_history->db[$_guid]['title']; ?></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  #content .news-description ul {
+    list-style: none;
+  }
+  #content .news-description ul ul {
+    list-style: circle;
+  }
+  /*]]>*/
+  </style>
   <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
 </head>
 
@@ -26,29 +43,21 @@ $_history->sort_by('pubdate');
         <div class="section" id="intro">
           <div class="section-0">
             <div class="section-title">
-              <h1>Boost Version History</h1>
+              <h1><?php print $_history->db[$_guid]['title']; ?></h1>
             </div>
 
             <div class="section-body">
-              <?php foreach ( $_history->db as $_guid => $_item ) { ?>
+              <h2><span class=
+              "news-title"><?php print $_history->db[$_guid]['title']; ?></span></h2>
 
-              <h2 class="news-title">
-              <?php print '<a name="i'.$_item['guid'].'" id="i'.$_item['guid'].'"></a><a href="'.$_item['link'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?></h2>
+              <p><span class=
+              "news-date"><?php print $_history->db[$_guid]['date']; ?></span></p>
 
-              <p class="news-date"><?php print $_item['date']; ?></p>
+              <?php $_history->echo_download_table($_guid); ?>
 
               <div class="news-description">
-                <?php print $_item['boostbook:purpose']; ?>
+                <?php print $_history->db[$_guid]['description']; ?>
               </div>
-
-              <ul class="menu">
-                <li>
-                <?php print '<a href="'.htmlentities($_item['link']).'">Details</a>'; ?></li>
-
-                <?php if(isset($_item['boostbook:download'])) : ?>
-                <li><?php print '<a href="'.htmlentities($_item['boostbook:download']).'">Download</a>'; ?></li>
-                <?php endif; ?>
-              </ul><?php } ?>
             </div>
           </div>
         </div>
@@ -81,3 +90,13 @@ $_history->sort_by('pubdate');
   </div>
 </body>
 </html>
+<?php
+    $_page = ob_get_contents();
+    ob_end_clean();
+    
+    file_put_contents(dirname(__FILE__) . "/../users/history/$_guid.html", $_page);
+}
+
+echo "\n";
+
+?>
