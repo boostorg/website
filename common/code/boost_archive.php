@@ -391,7 +391,7 @@ function resolve_url($url) {
     $url['scheme'] = 'http'; # Detect other schemes?
 
     if(!isset($url['host'])) {
-        $url['host'] = $_SERVER['SERVER_NAME'];
+        $url['host'] = $_SERVER['HTTP_HOST'];
         
         if($url['path'][0] != '/') {
             $path = explode('/', $_SERVER['REQUEST_URI']);
