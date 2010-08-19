@@ -121,6 +121,9 @@ function display_from_archive(
             return;
         }
 
+        header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
+        header('Cache-Control: max-age=2592000'); // 30 days
+
         // Note: this sets $params['content'] with either the content or an error
         // message:
         if(!extract_file($unzip, $params['content'])) {
@@ -135,12 +138,10 @@ function display_from_archive(
             return;
         }
 
-        // Note: this sets $params['content'] with either the content or an error
-        // message:
-        if(!extract_unzipped_file($params['file'], $params['content'])) {
-            file_not_found($params, $params['content']);
-            return;
-        }
+        header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
+        header('Cache-Control: max-age=2592000'); // 30 days
+
+        $params['content'] = file_get_contents($params['file']);
     }
     
     if($type == 'text/html') {
@@ -298,34 +299,6 @@ function extract_file($unzip, &$content) {
         return false;
     }
 }
-
-function extract_unzipped_file($file, &$content) {
-    header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
-    header('Cache-Control: max-age=2592000'); // 30 days
-
-    $file_handle = fopen($file,'r');
-
-    if($file_handle === FALSE) {
-        $content = null;
-        return false;
-    }
-
-    $text = '';
-    while ($file_handle && !feof($file_handle)) {
-        $text .= fread($file_handle,8*1024);
-    }
-    $exit_status = fclose($file_handle);
-
-    if($exit_status) {
-        $content = $text;
-        return true;
-    }
-    else {
-        $content = null;
-        return false;
-    }
-}
-
 
 //
 // Filters
