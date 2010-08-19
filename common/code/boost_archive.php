@@ -101,7 +101,7 @@ function display_from_archive(
     }
 
     $last_modified = max(
-        strtotime("Thu, 19 Aug 2010 08:54:00 +0100"),
+        strtotime("Thu, 19 Aug 2010 09:06:00 +0100"),
         filemtime($check_file));
 
     if (!conditional_get($last_modified))
