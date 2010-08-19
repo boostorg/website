@@ -45,7 +45,8 @@ function get_archive_location(
 function display_from_archive(
     $params,
     $content_map = array(),
-    $override_extractor = null)
+    $override_extractor = null,
+    $expires = null)
 {
     $params['template'] = dirname(__FILE__)."/template.php";
     $params['title'] = NULL;
@@ -117,12 +118,14 @@ function display_from_archive(
           .' '.escapeshellarg($params['file']);
 
         if($extractor == 'raw') {
-            display_raw_file($unzip, $type);
+            display_raw_file($unzip, $type, $expires);
             return;
         }
 
-        header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
-        header('Cache-Control: max-age=2592000'); // 30 days
+        if ($expires) {
+            header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
+            header('Cache-Control: '.strtotime($expires, 0)); // 30 days
+        }
 
         // Note: this sets $params['content'] with either the content or an error
         // message:
@@ -134,12 +137,14 @@ function display_from_archive(
     else
     {
         if($extractor == 'raw') {
-            display_unzipped_file($params['file'], $type);
+            display_unzipped_file($params['file'], $type, $expires);
             return;
         }
 
-        header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
-        header('Cache-Control: max-age=2592000'); // 30 days
+        if ($expires) {
+            header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
+            header('Cache-Control: '.strtotime($expires, 0)); // 30 days
+        }
 
         $params['content'] = file_get_contents($params['file']);
     }
@@ -218,7 +223,8 @@ HTML;
     }
 }
 
-function display_raw_file($unzip, $type) {
+function display_raw_file($unzip, $type, $expires = null)
+ {
     header('Content-type: '.$type);
     switch($type) {
         case 'image/png':
@@ -231,8 +237,10 @@ function display_raw_file($unzip, $type) {
             header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
             header('Cache-Control: max-age=31556926'); // A year, give or take a day.
         default:
-            header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
-            header('Cache-Control: max-age=2592000'); // 30 days
+            if($expires) {
+                header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
+                header('Cache-Control: '.strtotime($expires, 0));
+            }
     }
 
     // Since we're not returning a HTTP error for non-existant files,
@@ -251,7 +259,7 @@ function display_raw_file($unzip, $type) {
         echo 'Error extracting file: '.unzip_error($exit_status);
 };
 
-function display_unzipped_file($file, $type) {
+function display_unzipped_file($file, $type, $expires = null) {
     header('Content-type: '.$type);
     switch($type) {
         case 'image/png':
@@ -263,6 +271,11 @@ function display_unzipped_file($file, $type) {
         case 'application/xml-dtd':
             header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
             header('Cache-Control: max-age=31556926'); // A year, give or take a day.
+        default:
+            if($expires) {
+                header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
+                header('Cache-Control: '.strtotime($expires, 0));
+            }
     }
 
     // Since we're not returning a HTTP error for non-existant files,
