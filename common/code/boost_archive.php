@@ -124,7 +124,7 @@ function display_from_archive(
 
         if ($expires) {
             header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
-            header('Cache-Control: '.strtotime($expires, 0)); // 30 days
+            header('Cache-Control: max-age='.strtotime($expires, 0)); // 30 days
         }
 
         // Note: this sets $params['content'] with either the content or an error
@@ -143,7 +143,7 @@ function display_from_archive(
 
         if ($expires) {
             header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
-            header('Cache-Control: '.strtotime($expires, 0)); // 30 days
+            header('Cache-Control: max-age='.strtotime($expires, 0)); // 30 days
         }
 
         $params['content'] = file_get_contents($params['file']);
@@ -239,7 +239,7 @@ function display_raw_file($unzip, $type, $expires = null)
         default:
             if($expires) {
                 header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
-                header('Cache-Control: '.strtotime($expires, 0));
+                header('Cache-Control: max-age='.strtotime($expires, 0));
             }
     }
 
@@ -274,7 +274,7 @@ function display_unzipped_file($file, $type, $expires = null) {
         default:
             if($expires) {
                 header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
-                header('Cache-Control: '.strtotime($expires, 0));
+                header('Cache-Control: max-age='.strtotime($expires, 0));
             }
     }
 
