@@ -45,7 +45,8 @@ function get_archive_location(
 function display_from_archive(
     $params,
     $content_map = array(),
-    $override_extractor = null)
+    $override_extractor = null,
+    $expires = null)
 {
     $params['template'] = dirname(__FILE__)."/template.php";
     $params['title'] = NULL;
@@ -117,8 +118,13 @@ function display_from_archive(
           .' '.escapeshellarg($params['file']);
 
         if($extractor == 'raw') {
-            display_raw_file($unzip, $type);
+            display_raw_file($unzip, $type, $expires);
             return;
+        }
+
+        if ($expires) {
+            header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
+            header('Cache-Control: max-age='.strtotime($expires, 0)); // 30 days
         }
 
         // Note: this sets $params['content'] with either the content or an error
@@ -131,16 +137,16 @@ function display_from_archive(
     else
     {
         if($extractor == 'raw') {
-            display_unzipped_file($params['file'], $type);
+            display_unzipped_file($params['file'], $type, $expires);
             return;
         }
 
-        // Note: this sets $params['content'] with either the content or an error
-        // message:
-        if(!extract_unzipped_file($params['file'], $params['content'])) {
-            file_not_found($params, $params['content']);
-            return;
+        if ($expires) {
+            header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
+            header('Cache-Control: max-age='.strtotime($expires, 0)); // 30 days
         }
+
+        $params['content'] = file_get_contents($params['file']);
     }
     
     if($type == 'text/html') {
@@ -217,7 +223,8 @@ HTML;
     }
 }
 
-function display_raw_file($unzip, $type) {
+function display_raw_file($unzip, $type, $expires = null)
+ {
     header('Content-type: '.$type);
     switch($type) {
         case 'image/png':
@@ -230,8 +237,10 @@ function display_raw_file($unzip, $type) {
             header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
             header('Cache-Control: max-age=31556926'); // A year, give or take a day.
         default:
-            header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
-            header('Cache-Control: max-age=2592000'); // 30 days
+            if($expires) {
+                header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
+                header('Cache-Control: max-age='.strtotime($expires, 0));
+            }
     }
 
     // Since we're not returning a HTTP error for non-existant files,
@@ -250,7 +259,7 @@ function display_raw_file($unzip, $type) {
         echo 'Error extracting file: '.unzip_error($exit_status);
 };
 
-function display_unzipped_file($file, $type) {
+function display_unzipped_file($file, $type, $expires = null) {
     header('Content-type: '.$type);
     switch($type) {
         case 'image/png':
@@ -262,6 +271,11 @@ function display_unzipped_file($file, $type) {
         case 'application/xml-dtd':
             header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
             header('Cache-Control: max-age=31556926'); // A year, give or take a day.
+        default:
+            if($expires) {
+                header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
+                header('Cache-Control: max-age='.strtotime($expires, 0));
+            }
     }
 
     // Since we're not returning a HTTP error for non-existant files,
@@ -298,34 +312,6 @@ function extract_file($unzip, &$content) {
         return false;
     }
 }
-
-function extract_unzipped_file($file, &$content) {
-    header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
-    header('Cache-Control: max-age=2592000'); // 30 days
-
-    $file_handle = fopen($file,'r');
-
-    if($file_handle === FALSE) {
-        $content = null;
-        return false;
-    }
-
-    $text = '';
-    while ($file_handle && !feof($file_handle)) {
-        $text .= fread($file_handle,8*1024);
-    }
-    $exit_status = fclose($file_handle);
-
-    if($exit_status) {
-        $content = $text;
-        return true;
-    }
-    else {
-        $content = null;
-        return false;
-    }
-}
-
 
 //
 // Filters
@@ -561,7 +547,7 @@ function resolve_url($url) {
     $url['scheme'] = 'http'; # Detect other schemes?
 
     if(!isset($url['host'])) {
-        $url['host'] = $_SERVER['SERVER_NAME'];
+        $url['host'] = $_SERVER['HTTP_HOST'];
         
         if($url['path'][0] != '/') {
             $path = explode('/', $_SERVER['REQUEST_URI']);

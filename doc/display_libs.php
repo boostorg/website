@@ -1,6 +1,33 @@
 <?php
 require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
-require_once(dirname(__FILE__) . '/../common/code/boost_version.php');
+
+function boost_future_version($version)
+{
+    if ($version)
+    {
+        $vinfo = array();
+        preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$version,$vinfo);
+        if (isset($vinfo[0]))
+        {
+            global $boost_current_version;
+            $v = $boost_current_version[0];
+            $r = $boost_current_version[1];
+            $p = $boost_current_version[2];
+            return
+              ($v < $vinfo[1]) ||
+              ($v == $vinfo[1] && $r < $vinfo[2]) ||
+              ($v == $vinfo[1] && $r == $vinfo[2] && $p < $vinfo[3]);
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+    else
+    {
+        return FALSE;
+    }
+}
 
 function add_spirit_analytics($content) {
     if(stripos($content, '_uacct = "UA-11715441-2"') !== FALSE)
@@ -72,4 +99,6 @@ display_from_archive(
   array('@.*@','@^more/.*html$@i','basic','text/html'),
   //~ the headers are text files displayed in an embeded page
   array('@.*@','@^boost/.*$@i','cpp','text/plain')
-));
+  ),
+  null, "+1 year"
+);
