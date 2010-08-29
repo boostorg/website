@@ -593,37 +593,32 @@ function prepare_html($text, $full = false) {
 }
 
 function remove_html_banner($text) {
+    $match = null;
 
-    # nasty code, because (?!fubar) causes an ICE...
-    preg_match('@<table[^<>]*>?@i',$text,$table_begin,PREG_OFFSET_CAPTURE);
-    preg_match('@</table>@i',$text,$table_end,PREG_OFFSET_CAPTURE);
-    if (isset($table_begin[0]) && isset($table_end[0])) {
-        $table_contents_start = $table_begin[0][1] + strlen($table_begin[0][0]);
-        $table_contents = substr($text, $table_contents_start,
-            $table_end[0][1] - $table_contents_start);
-
-        if(strpos($table_contents, 'boost.png') !== FALSE) {
-            preg_match('@<td[^<>]*>?([^<]*<(h[12]|p).*?)</td>@is', $table_contents,
-                $table_contents_header, PREG_OFFSET_CAPTURE);
+    if(preg_match('@(<table[^<>]*>?)(.*?)(</table>(?:\s*<hr\s*/?>\s*)?)@si',$text,$match,PREG_OFFSET_CAPTURE)
+         && strpos($match[2][0], 'boost.png') !== FALSE
+    ) {
+        $header = preg_match('@<td[^<>]*>?([^<]*<(h[12]|p).*?)</td>@is', $match[2][2], $table_contents_header);
             
-            $head = substr($text, 0, $table_begin[0][1]);
-            $header = isset($table_contents_header[1]) ? $table_contents_header[1][0] : '';
-            $tail = substr($text, $table_end[0][1] + strlen($table_end[0][0]));
-            $tail = preg_replace('@^\s*<hr\s*/?>\s*@', '', $tail);
-                
-            $text = $head.$header.$tail;
-            return $text;
-        }
+        $head = substr($text, 0, $match[0][1]);
+        $header = $header ? $table_contents_header[1] : '';
+        $tail = substr($text, $match[0][1] + strlen($match[0][0]));              
+        return $head.$header.$tail;
     }
+    else if(preg_match('@<(?:p|blockquote)@', $text, $match, PREG_OFFSET_CAPTURE)) {
+        $pos = $match[0][1];
+        $header = substr($text, 0, $pos);
+        $tail = substr($text, $pos);
 
-    $parts = preg_split('@(?=<(p|blockquote))@', $text, 2);
-    $header = $parts[0];
-    $content = $parts[1];
-    
-    $header = preg_replace('@(<h\d>\s*)<img[^>]*src="(\.\.\/)*boost\.png"[^>]*>@', '$1', $header);    
-    $header = preg_replace('@<img[^>]*src="(\.\.\/)*boost\.png"[^>]*>\s*<[hb]r.*?>@', '', $header);
+        $header = preg_replace('@(<h\d>\s*)<img[^>]*src="(\.\.\/)*boost\.png"[^>]*>@', '$1', $header);    
+        $header = preg_replace('@<img[^>]*src="(\.\.\/)*boost\.png"[^>]*>\s*<[hb]r.*?>@', '', $header);
 
-    return $header.$content;
+        return $header.$tail;
+    }
+    else {
+        // Shouldn't really get here....
+        return $text;
+    }
 }
 
 function prepare_themed_html($text) {
