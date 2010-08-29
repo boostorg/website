@@ -436,40 +436,24 @@ function simple_filter($params)
 
 function basic_filter($params)
 {
-    $text = prepare_html($params['content']);
-    $text = remove_html_banner($text);
+    $text = remove_html_banner($params['content']);
 
     $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $text);
     $tag_end = $is_xhtml ? '/>' : '>';
     
-    $sections = preg_split('@(</head>|<body[^>]*>)@i',$text,-1,PREG_SPLIT_DELIM_CAPTURE);
-
-    $body_index = 0;
-    $index = 0;
-    foreach($sections as $section) {
-        if(stripos($section, '<body') === 0) {
-            $body_index = $index;
-            break;
-        }
-        ++$index;
-    }
-
-    if(!$body_index) {
-        print($text);
+    $match = null;
+    
+    if(preg_match('@(?:</head>\s*)?<body[^>]*>@is', $text, $match, PREG_OFFSET_CAPTURE)) {
+        echo substr($text, 0, $match[0][1]);
+        echo '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
+        echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
+        echo $match[0][0];
+        virtual("/common/heading-doc.html");
+        echo prepare_html(substr($text, 0, $match[0][1] + strlen($match[0][0])));
+        
     }
     else {
-        $index = 0;
-        foreach($sections as $section) {
-            print($section);
-            if($index == 0) {
-                print '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
-                print '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
-            }
-            else if($index == $body_index) {
-                virtual("/common/heading-doc.html");
-            }
-            ++$index;
-        }
+        echo $text;
     }
 }
 
