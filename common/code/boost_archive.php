@@ -282,13 +282,7 @@ function display_unzipped_file($file, $type, $expires = null) {
     // might as well not bother checking for the file
     if($_SERVER['REQUEST_METHOD'] == 'HEAD') return;
 
-    ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
-    $file_handle = fopen($file,'rb');
-    // TODO: Check $file_handle (should be okay, because already checked for file).
-    fpassthru($file_handle);
-    $exit_status = fclose($file_handle);
-    
-    // TODO: What if !$exit_status?
+    readfile($file);
 };
 
 
