@@ -118,7 +118,8 @@ function display_from_archive(
           .' '.escapeshellarg($params['file']);
 
         if($extractor == 'raw') {
-            display_raw_file($unzip, $type, $expires);
+            raw_headers($type, $expires);
+            if($_SERVER['REQUEST_METHOD'] != 'HEAD') display_raw_file($unzip, $type);
             return;
         }
 
@@ -137,7 +138,8 @@ function display_from_archive(
     else
     {
         if($extractor == 'raw') {
-            display_unzipped_file($params['file'], $type, $expires);
+            raw_headers($type, $expires);
+            if($_SERVER['REQUEST_METHOD'] != 'HEAD') readfile($params['file']);
             return;
         }
 
@@ -223,8 +225,8 @@ HTML;
     }
 }
 
-function display_raw_file($unzip, $type, $expires = null)
- {
+function raw_headers($type, $expires = null)
+{
     header('Content-type: '.$type);
     switch($type) {
         case 'image/png':
@@ -242,11 +244,10 @@ function display_raw_file($unzip, $type, $expires = null)
                 header('Cache-Control: max-age='.strtotime($expires, 0));
             }
     }
+}
 
-    // Since we're not returning a HTTP error for non-existant files,
-    // might as well not bother checking for the file
-    if($_SERVER['REQUEST_METHOD'] == 'HEAD') return;
-
+function display_raw_file($unzip, $type)
+{
     ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
     $file_handle = popen($unzip,'rb');
     fpassthru($file_handle);
@@ -258,39 +259,6 @@ function display_raw_file($unzip, $type, $expires = null)
     if($exit_status > 3)
         echo 'Error extracting file: '.unzip_error($exit_status);
 };
-
-function display_unzipped_file($file, $type, $expires = null) {
-    header('Content-type: '.$type);
-    switch($type) {
-        case 'image/png':
-        case 'image/gif':
-        case 'image/jpeg':
-        case 'text/css':
-        case 'application/x-javascript':
-        case 'application/pdf':
-        case 'application/xml-dtd':
-            header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
-            header('Cache-Control: max-age=31556926'); // A year, give or take a day.
-        default:
-            if($expires) {
-                header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
-                header('Cache-Control: max-age='.strtotime($expires, 0));
-            }
-    }
-
-    // Since we're not returning a HTTP error for non-existant files,
-    // might as well not bother checking for the file
-    if($_SERVER['REQUEST_METHOD'] == 'HEAD') return;
-
-    ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
-    $file_handle = fopen($file,'rb');
-    // TODO: Check $file_handle (should be okay, because already checked for file).
-    fpassthru($file_handle);
-    $exit_status = fclose($file_handle);
-    
-    // TODO: What if !$exit_status?
-};
-
 
 function extract_file($unzip, &$content) {
     header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
@@ -361,7 +329,7 @@ function boost_book_html_filter($params) {
 
 function boost_book_html_filter_content($params)
 {
-    $text = prepare_html($params['content']);
+    $text = prepare_html($params['content'], true);
     
     $text = substr($text,strpos($text,'<div class="spirit-nav">'));
     $text = substr($text,0,strpos($text,'</body>'));
@@ -389,7 +357,7 @@ function boost_libs_filter($params)
     html_init($params);
     $text = extract_html_body($params['content']);
     if($text) {
-        $text = prepare_html($text);
+        $text = prepare_html($text, true);
         $text = remove_html_banner($text);
         $text = prepare_themed_html($text);
         $params['content'] = $text;
@@ -415,7 +383,7 @@ function boost_frame1_filter($params) {
 
 function boost_frame1_filter_content($params)
 {
-    $text = prepare_html($params['content']);
+    $text = prepare_html($params['content'], true);
     
     $text = substr($text,strpos($text,'<div class="spirit-nav">'));
     $text = substr($text,0,strpos($text,'</body>'));
@@ -442,40 +410,24 @@ function simple_filter($params)
 
 function basic_filter($params)
 {
-    $text = prepare_html($params['content']);
-    $text = remove_html_banner($text);
+    $text = remove_html_banner($params['content']);
 
     $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $text);
     $tag_end = $is_xhtml ? '/>' : '>';
     
-    $sections = preg_split('@(</head>|<body[^>]*>)@i',$text,-1,PREG_SPLIT_DELIM_CAPTURE);
-
-    $body_index = 0;
-    $index = 0;
-    foreach($sections as $section) {
-        if(stripos($section, '<body') === 0) {
-            $body_index = $index;
-            break;
-        }
-        ++$index;
-    }
-
-    if(!$body_index) {
-        print($text);
+    $match = null;
+    
+    if(preg_match('@(?:</head>\s*)?<body[^>]*>@is', $text, $match, PREG_OFFSET_CAPTURE)) {
+        echo substr($text, 0, $match[0][1]);
+        echo '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
+        echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
+        echo $match[0][0];
+        virtual("/common/heading-doc.html");
+        echo prepare_html(substr($text, $match[0][1] + strlen($match[0][0])));
+        
     }
     else {
-        $index = 0;
-        foreach($sections as $section) {
-            print($section);
-            if($index == 0) {
-                print '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
-                print '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
-            }
-            else if($index == $body_index) {
-                virtual("/common/heading-doc.html");
-            }
-            ++$index;
-        }
+        echo $text;
     }
 }
 
@@ -528,6 +480,10 @@ HTML;
 
 function html_headers($content)
 {
+    // This function is expensive for large files, but large files are never
+    // redirects, so bail out quickly.
+    if(strlen($content) > 2000) return;
+
     if(preg_match(
         '@<meta\s+http-equiv\s*=\s*["\']?refresh["\']?\s+content\s*=\s*["\']0;\s*URL=([^"\']*)["\']\s*/?>@i',
         $content,
@@ -616,63 +572,57 @@ function extract_html_body($text) {
     return $text;
 }
 
-function prepare_html($text) {
+function prepare_html($text, $full = false) {
     $text = preg_replace(
-        '@href="?http://www.boost.org/?([^"\s]*)"?@i',
+        '@href="?http://(?:www.)?boost.org/?([^"\s]*)"?@i',
         'href="/${1}"',
         $text );
-    $text = preg_replace(
-        '@href="?http://boost.org/?([^"\s]*)"?@i',
-        'href="/${1}"',
-        $text );
-    $text = preg_replace(
-        '@href="?(?:\.\./)+people/(.*\.htm)"?@i',
-        'href="/users/people/${1}l"',
-        $text );
-    $text = preg_replace(
-        '@href="?(?:\.\./)+(LICENSE_[^"\s]*\.txt)"?@i',
-        'href="/${1}"',
-        $text );
-    $text = preg_replace(
-        '@<a\s+(class="[^"]+")?\s*href="?(http|mailto)(:[^"\s]*)"?@i',
-        '<a class="external" href="${2}${3}"',
-        $text );
-    
+
+    if($full) {
+        $text = preg_replace(
+            '@href="?(?:\.\./)+people/(.*\.htm)"?@i',
+            'href="/users/people/${1}l"',
+            $text );
+        $text = preg_replace(
+            '@href="?(?:\.\./)+(LICENSE_[^"\s]*\.txt)"?@i',
+            'href="/${1}"',
+            $text );
+        $text = preg_replace(
+            '@<a\s+(class="[^"]+")?\s*href="?(http|mailto)(:[^"\s]*)"?@i',
+            '<a class="external" href="${2}${3}"',
+            $text );
+    }
+
     return $text;
 }
 
 function remove_html_banner($text) {
+    $match = null;
 
-    # nasty code, because (?!fubar) causes an ICE...
-    preg_match('@<table[^<>]*>?@i',$text,$table_begin,PREG_OFFSET_CAPTURE);
-    preg_match('@</table>@i',$text,$table_end,PREG_OFFSET_CAPTURE);
-    if (isset($table_begin[0]) && isset($table_end[0])) {
-        $table_contents_start = $table_begin[0][1] + strlen($table_begin[0][0]);
-        $table_contents = substr($text, $table_contents_start,
-            $table_end[0][1] - $table_contents_start);
-
-        if(strpos($table_contents, 'boost.png') !== FALSE) {
-            preg_match('@<td[^<>]*>?([^<]*<(h[12]|p).*?)</td>@is', $table_contents,
-                $table_contents_header, PREG_OFFSET_CAPTURE);
+    if(preg_match('@(<table[^<>]*>?)(.*?)(</table>(?:\s*<hr\s*/?>\s*)?)@si',$text,$match,PREG_OFFSET_CAPTURE)
+         && strpos($match[2][0], 'boost.png') !== FALSE
+    ) {
+        $header = preg_match('@<td[^<>]*>?([^<]*<(h[12]|p).*?)</td>@is', $match[2][2], $table_contents_header);
             
-            $head = substr($text, 0, $table_begin[0][1]);
-            $header = isset($table_contents_header[1]) ? $table_contents_header[1][0] : '';
-            $tail = substr($text, $table_end[0][1] + strlen($table_end[0][0]));
-            $tail = preg_replace('@^\s*<hr\s*/?>\s*@', '', $tail);
-                
-            $text = $head.$header.$tail;
-            return $text;
-        }
+        $head = substr($text, 0, $match[0][1]);
+        $header = $header ? $table_contents_header[1] : '';
+        $tail = substr($text, $match[0][1] + strlen($match[0][0]));              
+        return $head.$header.$tail;
     }
+    else if(preg_match('@<(?:p|blockquote)@', $text, $match, PREG_OFFSET_CAPTURE)) {
+        $pos = $match[0][1];
+        $header = substr($text, 0, $pos);
+        $tail = substr($text, $pos);
 
-    $parts = preg_split('@(?=<(p|blockquote))@', $text, 2);
-    $header = $parts[0];
-    $content = $parts[1];
-    
-    $header = preg_replace('@(<h\d>\s*)<img[^>]*src="(\.\.\/)*boost\.png"[^>]*>@', '$1', $header);    
-    $header = preg_replace('@<img[^>]*src="(\.\.\/)*boost\.png"[^>]*>\s*<[hb]r.*?>@', '', $header);
+        $header = preg_replace('@(<h\d>\s*)<img[^>]*src="(\.\.\/)*boost\.png"[^>]*>@', '$1', $header);    
+        $header = preg_replace('@<img[^>]*src="(\.\.\/)*boost\.png"[^>]*>\s*<[hb]r.*?>@', '', $header);
 
-    return $header.$content;
+        return $header.$tail;
+    }
+    else {
+        // Shouldn't really get here....
+        return $text;
+    }
 }
 
 function prepare_themed_html($text) {
