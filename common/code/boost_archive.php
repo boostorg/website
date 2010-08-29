@@ -118,7 +118,8 @@ function display_from_archive(
           .' '.escapeshellarg($params['file']);
 
         if($extractor == 'raw') {
-            display_raw_file($unzip, $type, $expires);
+            raw_headers($type, $expires);
+            if($_SERVER['REQUEST_METHOD'] != 'HEAD') display_raw_file($unzip, $type);
             return;
         }
 
@@ -137,7 +138,8 @@ function display_from_archive(
     else
     {
         if($extractor == 'raw') {
-            display_unzipped_file($params['file'], $type, $expires);
+            raw_headers($type, $expires);
+            if($_SERVER['REQUEST_METHOD'] != 'HEAD') readfile($params['file']);
             return;
         }
 
@@ -223,8 +225,8 @@ HTML;
     }
 }
 
-function display_raw_file($unzip, $type, $expires = null)
- {
+function raw_headers($type, $expires = null)
+{
     header('Content-type: '.$type);
     switch($type) {
         case 'image/png':
@@ -242,11 +244,10 @@ function display_raw_file($unzip, $type, $expires = null)
                 header('Cache-Control: max-age='.strtotime($expires, 0));
             }
     }
+}
 
-    // Since we're not returning a HTTP error for non-existant files,
-    // might as well not bother checking for the file
-    if($_SERVER['REQUEST_METHOD'] == 'HEAD') return;
-
+function display_raw_file($unzip, $type)
+{
     ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
     $file_handle = popen($unzip,'rb');
     fpassthru($file_handle);
@@ -258,33 +259,6 @@ function display_raw_file($unzip, $type, $expires = null)
     if($exit_status > 3)
         echo 'Error extracting file: '.unzip_error($exit_status);
 };
-
-function display_unzipped_file($file, $type, $expires = null) {
-    header('Content-type: '.$type);
-    switch($type) {
-        case 'image/png':
-        case 'image/gif':
-        case 'image/jpeg':
-        case 'text/css':
-        case 'application/x-javascript':
-        case 'application/pdf':
-        case 'application/xml-dtd':
-            header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
-            header('Cache-Control: max-age=31556926'); // A year, give or take a day.
-        default:
-            if($expires) {
-                header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
-                header('Cache-Control: max-age='.strtotime($expires, 0));
-            }
-    }
-
-    // Since we're not returning a HTTP error for non-existant files,
-    // might as well not bother checking for the file
-    if($_SERVER['REQUEST_METHOD'] == 'HEAD') return;
-
-    readfile($file);
-};
-
 
 function extract_file($unzip, &$content) {
     header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
