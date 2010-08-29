@@ -480,6 +480,10 @@ HTML;
 
 function html_headers($content)
 {
+    // This function is expensive for large files, but large files are never
+    // redirects, so bail out quickly.
+    if(strlen($content) > 2000) return;
+
     if(preg_match(
         '@<meta\s+http-equiv\s*=\s*["\']?refresh["\']?\s+content\s*=\s*["\']0;\s*URL=([^"\']*)["\']\s*/?>@i',
         $content,
