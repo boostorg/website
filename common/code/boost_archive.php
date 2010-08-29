@@ -355,7 +355,7 @@ function boost_book_html_filter($params) {
 
 function boost_book_html_filter_content($params)
 {
-    $text = prepare_html($params['content']);
+    $text = prepare_html($params['content'], true);
     
     $text = substr($text,strpos($text,'<div class="spirit-nav">'));
     $text = substr($text,0,strpos($text,'</body>'));
@@ -383,7 +383,7 @@ function boost_libs_filter($params)
     html_init($params);
     $text = extract_html_body($params['content']);
     if($text) {
-        $text = prepare_html($text);
+        $text = prepare_html($text, true);
         $text = remove_html_banner($text);
         $text = prepare_themed_html($text);
         $params['content'] = $text;
@@ -409,7 +409,7 @@ function boost_frame1_filter($params) {
 
 function boost_frame1_filter_content($params)
 {
-    $text = prepare_html($params['content']);
+    $text = prepare_html($params['content'], true);
     
     $text = substr($text,strpos($text,'<div class="spirit-nav">'));
     $text = substr($text,0,strpos($text,'</body>'));
@@ -610,28 +610,27 @@ function extract_html_body($text) {
     return $text;
 }
 
-function prepare_html($text) {
+function prepare_html($text, $full = false) {
     $text = preg_replace(
-        '@href="?http://www.boost.org/?([^"\s]*)"?@i',
+        '@href="?http://(?:www.)?boost.org/?([^"\s]*)"?@i',
         'href="/${1}"',
         $text );
-    $text = preg_replace(
-        '@href="?http://boost.org/?([^"\s]*)"?@i',
-        'href="/${1}"',
-        $text );
-    $text = preg_replace(
-        '@href="?(?:\.\./)+people/(.*\.htm)"?@i',
-        'href="/users/people/${1}l"',
-        $text );
-    $text = preg_replace(
-        '@href="?(?:\.\./)+(LICENSE_[^"\s]*\.txt)"?@i',
-        'href="/${1}"',
-        $text );
-    $text = preg_replace(
-        '@<a\s+(class="[^"]+")?\s*href="?(http|mailto)(:[^"\s]*)"?@i',
-        '<a class="external" href="${2}${3}"',
-        $text );
-    
+
+    if($full) {
+        $text = preg_replace(
+            '@href="?(?:\.\./)+people/(.*\.htm)"?@i',
+            'href="/users/people/${1}l"',
+            $text );
+        $text = preg_replace(
+            '@href="?(?:\.\./)+(LICENSE_[^"\s]*\.txt)"?@i',
+            'href="/${1}"',
+            $text );
+        $text = preg_replace(
+            '@<a\s+(class="[^"]+")?\s*href="?(http|mailto)(:[^"\s]*)"?@i',
+            '<a class="external" href="${2}${3}"',
+            $text );
+    }
+
     return $text;
 }
 
