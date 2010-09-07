@@ -6,6 +6,8 @@
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
+define('BOOST_DOCS_MODIFIED_DATE', 'Tue, 7 Sep 2010 23:30:00 +0100');
+
 function get_archive_location(
     $pattern,
     $vpath,
@@ -89,7 +91,7 @@ function display_from_archive(
         return;
     }
 
-    // Check zipfile.
+    // Check file exists.
 
     $check_file = $params['zipfile'] ? $params['archive'] : $params['file'];
 
@@ -101,73 +103,76 @@ function display_from_archive(
         return;        
     }
 
-    $last_modified = max(
-        strtotime("Thu, 19 Aug 2010 09:06:00 +0100"),
-        filemtime($check_file));
+    // Handle ETags and Last-Modified HTTP headers.
 
-    if (!conditional_get($last_modified))
+    if (!http_headers($type, filemtime($check_file), $expires))
         return;
 
-    // Extract the file from the zipfile
+    // Output raw files.
 
-    if ($params['zipfile'])
-    {
-        $unzip =
-          UNZIP
-          .' -p '.escapeshellarg($params['archive'])
-          .' '.escapeshellarg($params['file']);
-
-        if($extractor == 'raw') {
-            raw_headers($type, $expires);
-            if($_SERVER['REQUEST_METHOD'] != 'HEAD') display_raw_file($unzip, $type);
-            return;
-        }
-
-        if ($expires) {
-            header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
-            header('Cache-Control: max-age='.strtotime($expires, 0)); // 30 days
-        }
-
+    if($extractor == 'raw') {
+        if($_SERVER['REQUEST_METHOD'] != 'HEAD')
+            display_raw_file($params, $type);
+    }
+    else {
+        // Read file from hard drive or zipfile
+    
         // Note: this sets $params['content'] with either the content or an error
         // message:
-        if(!extract_file($unzip, $params['content'])) {
+        if(!extract_file($params, $params['content'])) {
             file_not_found($params, $params['content']);
             return;
         }
-    }
-    else
-    {
-        if($extractor == 'raw') {
-            raw_headers($type, $expires);
-            if($_SERVER['REQUEST_METHOD'] != 'HEAD') readfile($params['file']);
-            return;
-        }
-
-        if ($expires) {
-            header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
-            header('Cache-Control: max-age='.strtotime($expires, 0)); // 30 days
-        }
-
-        $params['content'] = file_get_contents($params['file']);
-    }
     
-    if($type == 'text/html') {
-        if(html_headers($params['content'])) {
-            if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $params['content'];
-            return;
-        }
-    }
-
-    if($_SERVER['REQUEST_METHOD'] == 'HEAD') return;
-
-    if ($preprocess) {
-        $params['content'] = call_user_func($preprocess, $params['content']);
-    }
+        // Check if the file contains a redirect.
     
-    echo_filtered($extractor, $params);
+        if($type == 'text/html') {
+            if($redirect = detect_redirect($params['content'])) {
+                header("Location: $redirect", TRUE, 301);
+                if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $params['content'];
+                return;
+            }
+        }
+    
+        // Finally process the file and display it.
+    
+        if($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+            if ($preprocess) {
+                $params['content'] = call_user_func($preprocess, $params['content']);
+            }
+    
+            echo_filtered($extractor, $params);
+        }
+   }
 }
 
-function conditional_get($last_modified) {
+// HTTP head handling
+
+function http_headers($type, $last_modified, $expires = null)
+{
+    header('Content-type: '.$type);
+    switch($type) {
+        case 'image/png':
+        case 'image/gif':
+        case 'image/jpeg':
+        case 'text/css':
+        case 'application/x-javascript':
+        case 'application/pdf':
+        case 'application/xml-dtd':
+            header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
+            header('Cache-Control: max-age=31556926'); // A year, give or take a day.
+        default:
+            if($expires) {
+                header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
+                header('Cache-Control: max-age='.strtotime($expires, 0));
+            }
+    }
+    
+    return conditional_get(max(strtotime(BOOST_DOCS_MODIFIED_DATE), $last_modified));
+}
+
+function conditional_get($last_modified)
+{
     if(!$last_modified) return true;
 
     $last_modified_text = date(DATE_RFC2822, $last_modified);
@@ -197,6 +202,8 @@ function conditional_get($last_modified) {
     return false;
 }
 
+// General purpose render callbacks.
+
 class boost_archive_render_callbacks {
     var $content_callback, $params;
     
@@ -225,60 +232,54 @@ HTML;
     }
 }
 
-function raw_headers($type, $expires = null)
+function display_raw_file($params, $type)
 {
-    header('Content-type: '.$type);
-    switch($type) {
-        case 'image/png':
-        case 'image/gif':
-        case 'image/jpeg':
-        case 'text/css':
-        case 'application/x-javascript':
-        case 'application/pdf':
-        case 'application/xml-dtd':
-            header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
-            header('Cache-Control: max-age=31556926'); // A year, give or take a day.
-        default:
-            if($expires) {
-                header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
-                header('Cache-Control: max-age='.strtotime($expires, 0));
-            }
+    ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
+    if($params['zipfile']) {
+        $file_handle = popen(unzip_command($params), 'rb');
+        fpassthru($file_handle);
+        $exit_status = pclose($file_handle);
+    
+        // Don't display errors for a corrupt zip file, as we seemd to
+        // be getting them for legitimate files.
+
+        if($exit_status > 3)
+            echo 'Error extracting file: '.unzip_error($exit_status);
+    }
+    else {
+        readfile($params['file']);
     }
 }
 
-function display_raw_file($unzip, $type)
-{
-    ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
-    $file_handle = popen($unzip,'rb');
-    fpassthru($file_handle);
-    $exit_status = pclose($file_handle);
-    
-    // Don't display errors for a corrupt zip file, as we seemd to
-    // be getting them for legitimate files.
+function extract_file($params, &$content) {
+    if($params['zipfile']) {
+        $file_handle = popen(unzip_command($params),'r');
+        $text = '';
+        while ($file_handle && !feof($file_handle)) {
+            $text .= fread($file_handle,8*1024);
+        }
+        $exit_status = pclose($file_handle);
 
-    if($exit_status > 3)
-        echo 'Error extracting file: '.unzip_error($exit_status);
-};
-
-function extract_file($unzip, &$content) {
-    header('Expires: '.date(DATE_RFC2822, strtotime("+1 month")));
-    header('Cache-Control: max-age=2592000'); // 30 days
-
-    $file_handle = popen($unzip,'r');
-    $text = '';
-    while ($file_handle && !feof($file_handle)) {
-        $text .= fread($file_handle,8*1024);
-    }
-    $exit_status = pclose($file_handle);
-
-    if($exit_status == 0) {
-        $content = $text;
-        return true;
+        if($exit_status == 0) {
+            $content = $text;
+            return true;
+        }
+        else {
+            $content = strstr($_SERVER['HTTP_HOST'], 'beta') ? unzip_error($exit_status) : null;
+            return false;
+        }
     }
     else {
-        $content = strstr($_SERVER['HTTP_HOST'], 'beta') ? unzip_error($exit_status) : null;
-        return false;
+        $content = file_get_contents($params['file']);
+        return true;
     }
+}
+
+function unzip_command($params) {
+    return
+      UNZIP
+      .' -p '.escapeshellarg($params['archive'])
+      .' '.escapeshellarg($params['file']);
 }
 
 //
@@ -338,20 +339,19 @@ HTML;
  * HTML processing functions
  */
 
-function html_headers($content)
+function detect_redirect($content)
 {
-    // This function is expensive for large files, but large files are never
-    // redirects, so bail out quickly.
-    if(strlen($content) > 2000) return;
-
-    if(preg_match(
-        '@<meta\s+http-equiv\s*=\s*["\']?refresh["\']?\s+content\s*=\s*["\']0;\s*URL=([^"\']*)["\']\s*/?>@i',
-        $content,
-        $redirect))
+    // Only check small files, since larger files are never redirects, and are
+    // expensive to search.
+    if(strlen($content) <= 2000 &&
+        preg_match(
+            '@<meta\s+http-equiv\s*=\s*["\']?refresh["\']?\s+content\s*=\s*["\']0;\s*URL=([^"\']*)["\']\s*/?>@i',
+            $content, $redirect))
     {
-        header('Location: '.resolve_url($redirect[1]), TRUE, 301);
-        return true;
+        return resolve_url($redirect[1]);
     }
+
+    return false;
 }
 
 // Not a full implementation. Just good enough for redirecting.
