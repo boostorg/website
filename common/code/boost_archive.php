@@ -161,11 +161,13 @@ function http_headers($type, $last_modified, $expires = null)
         case 'application/xml-dtd':
             header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
             header('Cache-Control: max-age=31556926'); // A year, give or take a day.
+            break;
         default:
             if($expires) {
                 header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
                 header('Cache-Control: max-age='.strtotime($expires, 0));
             }
+            break;
     }
     
     return conditional_get(max(strtotime(BOOST_DOCS_MODIFIED_DATE), $last_modified));
