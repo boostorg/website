@@ -91,7 +91,7 @@ function remove_html_banner($text) {
     if(preg_match('@(<table[^<>]*>?)(.*?)(</table>(?:\s*<hr\s*/?>\s*)?)@si',$text,$match,PREG_OFFSET_CAPTURE)
          && strpos($match[2][0], 'boost.png') !== FALSE
     ) {
-        $header = preg_match('@<td[^<>]*>?([^<]*<(h[12]|p).*?)</td>@is', $match[2][2], $table_contents_header);
+        $header = preg_match('@<td[^<>]*>?([^<]*<(h[12]|p).*?)</td>@is', $match[2][0], $table_contents_header);
             
         $head = substr($text, 0, $match[0][1]);
         $header = $header ? $table_contents_header[1] : '';
