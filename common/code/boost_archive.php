@@ -55,6 +55,20 @@ function display_from_archive(
     $params['charset'] = NULL;
     $params['content'] = NULL;
     
+    // Check file exists.
+
+    $check_file = $params['zipfile'] ? $params['archive'] : $params['file'];
+
+    if (!is_file($check_file)) {
+        file_not_found($params,
+            $params['zipfile'] ?
+                'Unable to find zipfile.' :
+                'Unable to find file.');
+        return;        
+    }
+
+    // Choose filter to use
+
     $info_map = array_merge($content_map, array(
         array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh|xml|qbk)$@i','text','text/plain'),
         array('@.*@','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
@@ -89,18 +103,6 @@ function display_from_archive(
     if (!$extractor) {
         file_not_found($params);
         return;
-    }
-
-    // Check file exists.
-
-    $check_file = $params['zipfile'] ? $params['archive'] : $params['file'];
-
-    if (!is_file($check_file)) {
-        file_not_found($params,
-            $params['zipfile'] ?
-                'Unable to find zipfile.' :
-                'Unable to find file.');
-        return;        
     }
 
     // Handle ETags and Last-Modified HTTP headers.
