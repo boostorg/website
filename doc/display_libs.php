@@ -84,7 +84,7 @@ display_from_archive(
   //~ special cases that can't be embeded in the standard frame
   array('@.*@','@^libs/iostreams/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/serialization/doc/.*(html|htm)$@i','simple','text/html'),
-  array('@.*@','@^libs/filesystem/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@.*@','@^libs/filesystem/(v\d/)?doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/system/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/numeric/conversion/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/optional/doc/.*(html|htm)$@i','simple','text/html'),
@@ -95,7 +95,7 @@ display_from_archive(
   array('@.*@','@^libs/[^/]+/doc/[^/]+/doc/html/.*(html|htm)$@i','basic','text/html'),
   array('@.*@','@^libs.*(html|htm)$@i','basic','text/html'),
   array('@.*@','@^tools.*(html|htm)$@i','basic','text/html'),
-  array('@.*@','@^doc/html/.*html$@i','basic','text/html'),
+  array('@.*@','@^doc/html/.*html$@i','boost_book_basic','text/html'),
   array('@.*@','@^more/.*html$@i','basic','text/html'),
   //~ the headers are text files displayed in an embeded page
   array('@.*@','@^boost/.*$@i','cpp','text/plain')
