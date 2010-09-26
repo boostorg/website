@@ -15,19 +15,13 @@ function boost_libs_filter($params)
         $text = prepare_html($text, true);
         $text = remove_html_banner($text);
         $text = prepare_themed_html($text);
-        $params['content'] = $text;
         
         display_template($params['template'],
-            new boost_archive_render_callbacks('boost_libs_filter_content', $params));
+            boost_archive_render_callbacks($text, $params));
     }
     else {
         print $params['content'];
     }
-}
-
-function boost_libs_filter_content($params)
-{
-    return $params['content'];
 }
 
 function prepare_themed_html($text) {

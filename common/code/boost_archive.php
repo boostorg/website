@@ -6,7 +6,7 @@
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
-define('BOOST_DOCS_MODIFIED_DATE', 'Tue, 7 Sep 2010 23:30:00 +0100');
+define('BOOST_DOCS_MODIFIED_DATE', 'Tue, 21 Sep 2010 22:19:30 +0100');
 
 function get_archive_location(
     $pattern,
@@ -209,32 +209,19 @@ function conditional_get($last_modified)
 
 // General purpose render callbacks.
 
-class boost_archive_render_callbacks {
-    var $content_callback, $params;
-    
-    function boost_archive_render_callbacks($content, $params) {
-        $this->content_callback = $content;
-        $this->archive = $params;
-    }
+function boost_archive_render_callbacks($content, $params) {
+    $charset = $params['charset'] ? $params['charset'] : 'us-ascii';
+    $title = $params['title'] ? 'Boost C++ Libraries - '.$params['title'] : 'Boost C++ Libraries';
 
-    function content_head()
-    {
-        $charset = $this->archive['charset'] ? $this->archive['charset'] : 'us-ascii';
-        $title = $this->archive['title'] ? 'Boost C++ Libraries - '.$this->archive['title'] : 'Boost C++ Libraries';
-
-        print <<<HTML
+    $head = <<<HTML
 <meta http-equiv="Content-Type" content="text/html; charset=${charset}" />
 <title>${title}</title>
 HTML;
-    }
-    
-    function content()
-    {
-        if ($this->content_callback)
-        {
-            call_user_func($this->content_callback, $this->archive);
-        }
-    }
+
+    return Array(
+        'head' => $head,
+        'content' => $content
+    );
 }
 
 function display_raw_file($params, $type)
@@ -309,35 +296,18 @@ function file_not_found($params, $message = null)
     }
 
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-    display_template($params['template'],
-        new file_not_found_render_callbacks($params['file'],
-            $params['zipfile'] ? "Unzip error: $message" : $message));
-}
 
-class file_not_found_render_callbacks
-{
-    var $file, $message;
-    
-    function file_not_found_render_callbacks($file, $message) {
-        $this->file = $file;
-        $this->message = $message;
-    }
-
-    function content_head()
-    {
-        print <<<HTML
+    $head = <<<HTML
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
   <title>Boost C++ Libraries - 404 Not Found</title>
 HTML;
-    }
-    
-    function content()
-    {
-        print '<h1>404 Not Found</h1><p>File "' . $this->file . '" not found.</p>';
-        if($this->message) {
-            print '<p>'.htmlentities($this->message).'</p>';
-        }
-    }
+
+    $content = '<h1>404 Not Found</h1><p>File "' . $params['file'] . '" not found.</p><p>';
+    if($params['zipfile']) $content .= "Unzip error: ";
+    $content .= htmlentities($message);
+    $content .= '</p>';
+
+    display_template($params['template'], Array('head' => $head, 'content' => $content));
 }
 
 /*
@@ -387,8 +357,7 @@ function resolve_url($url) {
 
 // Display the content in the standard boost template
 
-function display_template($template, $callbacks) {
-    $_file = $callbacks;
+function display_template($template, $_file) {
     include($template);
 }
 

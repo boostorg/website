@@ -10,7 +10,7 @@ require_once(dirname(__FILE__).'/boost_filters.php');
 function boost_frame1_filter($params) {
     html_init($params);
     display_template($params['template'],
-        new boost_archive_render_callbacks(new boost_frame1_filter_content, $params));
+        boost_archive_render_callbacks(boost_frame1_filter_content($params), $params));
 }
 
 function boost_frame1_filter_content($params)
@@ -32,5 +32,5 @@ function boost_frame1_filter_content($params)
         '',
         $text );
     
-    print $text;
+    return $text;
 }

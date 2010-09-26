@@ -11,13 +11,14 @@ function cpp_filter($params) {
     $params['title'] = htmlentities($params['key']);
 
     display_template($params['template'],
-        new boost_archive_render_callbacks('cpp_filter_content', $params));
+        boost_archive_render_callbacks(cpp_filter_content($params), $params));
 }
 
 function cpp_filter_content($params)
 {
-    print "<h3>".htmlentities($params['key'])."</h3>\n";
-    print "<pre>\n";
-    print_encoded_text($params, 'cpp');
-    print "</pre>\n";
+    return
+        "<h3>".htmlentities($params['key'])."</h3>\n".
+        "<pre>\n".
+        encoded_text($params, 'cpp').
+        "</pre>\n";
 }

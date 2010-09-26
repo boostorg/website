@@ -10,21 +10,24 @@ function text_filter($params)
     $params['title'] = htmlentities($params['key']);
 
     display_template($params['template'],
-        new boost_archive_render_callbacks('text_filter_content', $params));
+        boost_archive_render_callbacks(text_filter_content($params), $params));
 }
 
 function text_filter_content($params)
 {
-    print "<h3>".htmlentities($params['key'])."</h3>\n";
-    print "<pre>\n";
-    print_encoded_text($params, 'text');
-    print "</pre>\n";
+    return
+        "<h3>".htmlentities($params['key'])."</h3>\n".
+        "<pre>\n".
+        encoded_text($params, 'text').
+        "</pre>\n";
 }
 
 // This takes a plain text file and outputs encoded html with marked
 // up links.
 
-function print_encoded_text($params, $type) {
+function encoded_text($params, $type) {
+    $text = '';
+
     $root = dirname(preg_replace('@([^/]+/)@','../',$params['key']));
 
     // John Gruber's regular expression for finding urls
@@ -49,18 +52,20 @@ function print_encoded_text($params, $type) {
                     $html );
             }
 
-            print $html;
+            $text .= $html;
         }
         else {
             $url = process_absolute_url($part, $root);
             if($url) {
-                 print '<a href="'.htmlentities($url).'">'.htmlentities($part).'</a>';
+                 $text .= '<a href="'.htmlentities($url).'">'.htmlentities($part).'</a>';
             }
             else {
-                print htmlentities($part);
+                $text .= htmlentities($part);
             }
        }
     }
+    
+    return $text;
 }
 
 function process_absolute_url($url, $root = null) {

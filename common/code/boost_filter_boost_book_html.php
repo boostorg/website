@@ -10,7 +10,7 @@ require_once(dirname(__FILE__).'/boost_filters.php');
 function boost_book_html_filter($params) {
     html_init($params);
     display_template($params['template'],
-        new boost_archive_render_callbacks('boost_book_html_filter_content', $params));
+        boost_archive_render_callbacks(boost_book_html_filter_content($params), $params));
 }
 
 function boost_book_html_filter_content($params)
@@ -35,5 +35,5 @@ function boost_book_html_filter_content($params)
     }
     ##
     
-    print $text;
+    return $text;
 }
