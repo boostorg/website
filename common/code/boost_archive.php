@@ -105,16 +105,19 @@ function display_from_archive(
 
     // Handle ETags and Last-Modified HTTP headers.
 
-    if (!http_headers($type, filemtime($check_file), $expires))
-        return;
-
     // Output raw files.
 
     if($extractor == 'raw') {
+        if (!http_headers($type, filemtime($check_file), $expires))
+            return;
+
         if($_SERVER['REQUEST_METHOD'] != 'HEAD')
             display_raw_file($params, $type);
     }
     else {
+        if (!http_headers('text/html', filemtime($check_file), $expires))
+            return;
+
         // Read file from hard drive or zipfile
     
         // Note: this sets $params['content'] with either the content or an error
@@ -146,7 +149,7 @@ function display_from_archive(
    }
 }
 
-// HTTP head handling
+// HTTP header handling
 
 function http_headers($type, $last_modified, $expires = null)
 {
