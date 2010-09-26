@@ -1,3 +1,9 @@
+# Override cache headers for files which get updated by site build script.
+<FilesMatch "^index\.(html|php)$|^users/(history|download|news)/(index.html)?$">
+Header unset Cache-Control
+Header unset Expires
+</FilesMatch>
+
 AddType text/html .shtml
 AddOutputFilter INCLUDES .shtml
 AddOutputFilter INCLUDES .html
@@ -5,11 +11,6 @@ AddOutputFilter INCLUDES .html
 AddType text/x-component .htc
 
 DirectoryIndex index.php index.shtml index.html
-
-<IfModule mod_expires.c>
-  ExpiresActive On
-  ExpiresByType text/html A3600
-</IfModule>
 
 RewriteEngine On
 RewriteBase /
