@@ -84,7 +84,7 @@ display_from_archive(
   //~ special cases that can't be embeded in the standard frame
   array('@.*@','@^libs/iostreams/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/serialization/doc/.*(html|htm)$@i','simple','text/html'),
-  array('@.*@','@^libs/filesystem/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@.*@','@^libs/filesystem/(v\d/)?doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/system/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/numeric/conversion/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/optional/doc/.*(html|htm)$@i','simple','text/html'),
