@@ -48,15 +48,21 @@ class RssUpdateCheck:
 
     def load_hashes(self, hash_file):
         if(hash_file and os.path.isfile(hash_file)):
-            with open(hash_file) as file:
+            file = open(hash_file)
+            try:
                 for line in file:
                     (qbk_file, qbk_hash, rss_hash) = line.strip().split(',')
                     self.qbk_hashes[qbk_file] = (qbk_hash, rss_hash)
+            finally:
+                file.close()
 
     def save_hashes(self, hash_file):
-        with open(hash_file, "w") as file:
+        file = open(hash_file, "w")
+        try:
             for qbk_file in sorted(self.qbk_hashes.keys()):
                 file.write(qbk_file + "," + ",".join(self.qbk_hashes[qbk_file]) + "\n")
+        finally:
+            file.close()
 
     def check_file(self, xml_file):
         (qbk_file, new_qbk_hash) = self.hash_qbk_file(xml_file)
@@ -80,8 +86,11 @@ class RssUpdateCheck:
         qbk_file = os.path.normpath(xml_file.replace('.xml', '.qbk')).replace('\\', '/')
         if(not os.path.isfile(qbk_file)):
             return (None, None)
-        with open(qbk_file) as file:
+        file = open(qbk_file)
+        try:
             return (qbk_file, hashlib.sha256(file.read()).hexdigest())
+        finally:
+            file.close()
 
 class BoostBook2RSS:
 
@@ -105,6 +114,8 @@ class BoostBook2RSS:
         self.channel_description = ''
         self.count = None
         self.input = []
+        self.update_file = None
+        self.rss_update_check = None
         ( _opt_, self.input ) = opt.parse_args(None,self)
         self.rss = xml.dom.minidom.parseString('''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
