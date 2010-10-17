@@ -70,7 +70,7 @@ function display_from_archive(
     // Choose filter to use
 
     $info_map = array_merge($content_map, array(
-        array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh|xml|qbk)$@i','text','text/plain'),
+        array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh|xml|toyxml|qbk)$@i','text','text/plain'),
         array('@.*@','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
         array('@.*@','@[.]png$@i','raw','image/png'),
         array('@.*@','@[.]gif$@i','raw','image/gif'),
