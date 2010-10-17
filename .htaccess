@@ -6,10 +6,12 @@ AddType text/x-component .htc
 
 DirectoryIndex index.php index.shtml index.html
 
-<IfModule mod_expires.c>
-  ExpiresActive On
-  ExpiresByType text/html A3600
-</IfModule>
+# Override cache headers for the index files are updated more regularly than
+# other html files.
+<FilesMatch "index\.html|index\.php">
+Header unset Cache-Control
+Header unset Expires
+</FilesMatch>
 
 RewriteEngine On
 RewriteBase /
