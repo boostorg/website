@@ -52,8 +52,9 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../feed/downloads.rss', '/use
                 <li>
                 <?php print '<a href="'.htmlentities($_item['link']).'">Release Notes</a>'; ?></li>
 
-                <li>
+                <?php if(!empty($_item['boostbook:download'])) : ?><li>
                 <?php print '<a href="'.htmlentities($_item['boostbook:download']).'">Download</a>'; ?></li>
+                <?php endif ?>
               </ul><?php } ?>
 
               <h2><a name="history" id="history"></a>Old Boost Releases</h2>
