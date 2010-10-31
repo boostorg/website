@@ -22,6 +22,7 @@ function boost_book_basic_filter($params)
     echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"/>';
     echo substr($text, $pos1, $pos3 - $pos1);
     virtual("/common/heading-doc.html");
-    echo substr($text, $pos4);
-    //echo prepare_html(substr($text, $pos4));
+    
+    $text = preg_replace('@(<div[^>]* )title="[^"]*"([^>]*>)@', '$1$2', substr($text, $pos4));
+    echo prepare_html($text);
 }
