@@ -357,13 +357,23 @@ http://www.boost.org/development/website_updating.html
                 </li>
               </ul>
 
+              <p><strong>Assertions:</strong> If you want to add runtime
+              assertions to your code (you should!), avoid C's
+              <code>assert</code> macro and use Boost's
+              <code>BOOST_ASSERT</code> macro (in
+              <code>boost/assert.hpp</code>) instead. It is more configurable.
+              Use <code>BOOST_ASSERT</code> in public headers and in library
+              source code (for separately compiled libraries). Use of C's
+              <code>assert</code> macro is ok in examples and in documentation.
+              </p>
+
               <p>Make sure your code compiles in the presence of the
               <code>min()</code> and <code>max()</code> macros. Some platform
               headers define <code>min()</code> and <code>max()</code> macros
               which cause some common C++ constructs to fail to compile. Some
               simple tricks can protect your code from inappropriate macro
               substitution:</p>
-
+              
               <ul>
                 <li>If you want to call <code>std::min()</code> or
                 <code>std::max()</code>:
