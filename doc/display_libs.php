@@ -61,9 +61,13 @@ EOS;
 }
 
 $location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],true,false);
-$is_beta = strpos($location['version'], 'beta') !== FALSE &&
-    strpos($_SERVER['HTTP_HOST'], 'beta') !== FALSE;
-if (!$is_beta && boost_future_version($location['version'])) {
+$beta_site = strpos($_SERVER['HTTP_HOST'], 'beta') !== FALSE;
+$beta_docs = strpos($location['version'], 'beta') !== FALSE;
+if (!$beta_site && $beta_docs) {
+    file_not_found($location['file']);
+    return;
+}
+if (!$beta_docs && boost_future_version($location['version'])) {
     file_not_found($location['file'],
         "Documentation for this version has not been uploaded yet. ".
         "Documentation is only uploaded when it's fully released, ".
