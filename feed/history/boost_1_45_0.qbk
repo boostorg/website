@@ -1,65 +1,288 @@
 [article Version 1.45.0
     [quickbook 1.5]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: ]
+    [purpose Updated Libraries:
+    Asio, Config, Flyweight, Foreach, Fusion, Graph, Interprocess, Math,
+    Meta State Machine, MultiArray, Proto, Spirit, TypeTraits, uBLAS,
+    Unordered, Wave, Xpressive.
+    Updated tools: Boostbook, Quickbook
+    ]
     [authors [Dawes, Beman]]
-    [last-revision ]
+    [last-revision Fri, 19 Nov 2010 11:00:00 EST]
 ]
 
 [include ext.qbk]
 
-[/ TODO: Check download link on release.]
 [download http://sourceforge.net/projects/boost/files/boost/1.45.0/]
-
-[/
-    When adding libraries:
-
-    1. Libraries are listed in alphabetical order.
-    2. Besides the dedicated entry, the lib name should be added to the
-       [purpose] section at the beginning of the page.
-
-    Example new libraries message:
-
-* [phrase library..[@/libs/accumulators/index.html Accumulators]:] Framework for
-  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
-
-    Example update message:
-
-* [phrase library..[@/libs/interprocess/index.html Interprocess]:]
-  * Added anonymous shared memory for UNIX systems.
-  * Fixed missing move semantics on managed memory classes.
-  * Added copy_on_write and open_read_only options for shared memory
-    and mapped file managed classes.
-  * `shared_ptr` is movable and supports aliasing.
-]
-
-[section New Libraries]
-
-* /TODO/
-
-[endsect]
 
 [section Updated Libraries]
 
-* /TODO/
+* [phrase library..[@/libs/asio/index.html Asio]:]
+  * Fixed a problem on kqueue-based platforms where a `deadline_timer` may
+    never fire if the `io_service` is running in a background thread
+    ([@https://svn.boost.org/trac/boost/ticket/4568 #4568]).
+  * Fixed a const-correctness issue that prevented valid uses of
+    `has_service<>` from compiling
+    ([@https://svn.boost.org/trac/boost/ticket/4638 #4638]).
+  * Fixed MinGW cross-compilation
+    ([@https://svn.boost.org/trac/boost/ticket/4491 #4491]).
+  * Removed dependency on deprecated Boost.System functions
+    ([@https://svn.boost.org/trac/boost/ticket/4672 #4672]).
+  * Ensured `close()`\/`closesocket()` failures are correctly propagated
+    ([@https://svn.boost.org/trac/boost/ticket/4573 #4573]).
+  * Added a check for errors returned by `InitializeCriticalSectionAndSpinCount`
+    ([@https://svn.boost.org/trac/boost/ticket/4574 #4574]).
+  * Added support for hardware flow control on QNX
+    ([@https://svn.boost.org/trac/boost/ticket/4625 #4625]).
+  * Always use `pselect()` on HP-UX, if it is available
+    ([@https://svn.boost.org/trac/boost/ticket/4578 #4578]).
+  * Ensured handler arguments are passed as lvalues
+    ([@https://svn.boost.org/trac/boost/ticket/4744 #4744]).
+  * Fixed Windows build when thread support is disabled
+    ([@https://svn.boost.org/trac/boost/ticket/4680 #4680]).
+  * Fixed a Windows-specific problem where `deadline_timer` objects with expiry
+    times set more than 5 minutes in the future may never expire
+    ([@https://svn.boost.org/trac/boost/ticket/4745 #4745]).
+  * Fixed the `resolver` backend on BSD platforms so that an empty service name
+    resolves to port number `0`, as per the documentation
+    ([@https://svn.boost.org/trac/boost/ticket/4690 #4690]).
+  * Fixed read operations so that they do not accept buffer sequences of type
+    `const_buffers_1` ([@https://svn.boost.org/trac/boost/ticket/4746 #4746]).
+  * Redefined `Protocol` and `id` to avoid clashing with Objective-C++ keywords
+    ([@https://svn.boost.org/trac/boost/ticket/4191 #4191]).
+  * Fixed a `vector` reallocation performance issue that can occur when there are
+    many active `deadline_timer` objects
+    ([@https://svn.boost.org/trac/boost/ticket/4780 #4780]).
+  * Fixed the kqueue backend so that it compiles on NetBSD
+    ([@https://svn.boost.org/trac/boost/ticket/4662 #4662]).
+  * Fixed the socket `io_control()` implementation on 64-bit Mac OS X and BSD
+    platforms ([@https://svn.boost.org/trac/boost/ticket/4782 #4782]).
+  * Fixed a Windows-specific problem where failures from `accept()` are
+    incorrectly treated as successes
+    ([@https://svn.boost.org/trac/boost/ticket/4859 #4859]).
+  * Deprecated the separate compilation header `<boost/asio/impl/src.cpp>` in
+    favour of `<boost/asio/impl/src.hpp>`
+    ([@https://svn.boost.org/trac/boost/ticket/4560 #4560]).
+
+* [phrase library..[@/libs/config/index.html Config]:]
+  * Added new defect macros, `BOOST_NO_VARIADIC_MACROS` and `BOOST_NO_NUMERIC_LIMITS_LOWEST`.
+  * Minor fixes
+    ([@https://svn.boost.org/trac/boost/ticket/4670 #4670], 
+    [@https://svn.boost.org/trac/boost/ticket/4563 #4563],
+    [@https://svn.boost.org/trac/boost/ticket/4474 #4474],
+    [@https://svn.boost.org/trac/boost/ticket/4508 #4508]).
+
+* [phrase library..[@/libs/flyweight/index.html Flyweight]:]
+  * Fixed a hanging problem with
+    [@/libs/flyweight/doc/tutorial/configuration.html#intermodule_holder `intermodule_holder`]
+    in Win32 platforms related to a Boost.Interprocess issue described at
+    ticket [@https://svn.boost.org/trac/boost/ticket/4606 #4606].
+  * Removed an internal assertion incompatible with program termination via
+    `std::exit`. 
+
+* [phrase library..[@/libs/foreach/index.html Foreach]:]
+  * Fix ambiguitiy by making `auto_any` constructor explicit.
+
+* [phrase library..[@/libs/fusion/index.html Fusion]:]
+  * Added `BOOST_FUSION_ADAPT_ADT`, `BOOST_FUSION_ADAPT_TPL_ADT`,
+    `BOOST_FUSION_ADAPT_ASSOC_ADT` and `BOOST_FUSION_ADAPT_ASSOC_TPL_ADT`.
+
+* [phrase library..[@/libs/graph/index.html Graph]:]
+  * Added Stoer-Wagner min-cut algorithm contributed by Daniel Trebbien.
+  * Added implicit graph (implicit_graph) and A* (astar_maze) examples
+    contributed by W. P. McNeill.
+  * Added bundled property support for graph properties.
+  * Fixed bugs
+    [@https://svn.boost.org/trac/boost/ticket/4556 #4556],
+    [@https://svn.boost.org/trac/boost/ticket/4622 #4622],
+    [@https://svn.boost.org/trac/boost/ticket/4631 #4631],
+    [@https://svn.boost.org/trac/boost/ticket/4715 #4715],
+    [@https://svn.boost.org/trac/boost/ticket/4753 #4753],
+    [@https://svn.boost.org/trac/boost/ticket/4758 #4758] and
+    [@https://svn.boost.org/trac/boost/ticket/4793 #4793]
+    plus others not in Trac.
+  * Fixed documentation bugs
+    [@https://svn.boost.org/trac/boost/ticket/4731 #4731] and
+    [@https://svn.boost.org/trac/boost/ticket/4737 #4737].
+
+* [phrase library..[@/libs/interprocess/index.html Interprocess]:]
+  * Fixed bugs
+    [@https://svn.boost.org/trac/boost/ticket/1080 #1080],
+    [@https://svn.boost.org/trac/boost/ticket/3284 #3284],
+    [@https://svn.boost.org/trac/boost/ticket/3439 #3439],
+    [@https://svn.boost.org/trac/boost/ticket/3448 #3448],
+    [@https://svn.boost.org/trac/boost/ticket/3582 #3582],
+    [@https://svn.boost.org/trac/boost/ticket/3682 #3682],
+    [@https://svn.boost.org/trac/boost/ticket/3829 #3829],
+    [@https://svn.boost.org/trac/boost/ticket/3846 #3846],
+    [@https://svn.boost.org/trac/boost/ticket/3914 #3914],
+    [@https://svn.boost.org/trac/boost/ticket/3947 #3947],
+    [@https://svn.boost.org/trac/boost/ticket/3950 #3950],
+    [@https://svn.boost.org/trac/boost/ticket/3951 #3951],
+    [@https://svn.boost.org/trac/boost/ticket/3985 #3985],
+    [@https://svn.boost.org/trac/boost/ticket/4010 #4010],
+    [@https://svn.boost.org/trac/boost/ticket/4417 #4417],
+    [@https://svn.boost.org/trac/boost/ticket/4019 #4019],
+    [@https://svn.boost.org/trac/boost/ticket/4039 #4039],
+    [@https://svn.boost.org/trac/boost/ticket/4218 #4218],
+    [@https://svn.boost.org/trac/boost/ticket/4230 #4230],
+    [@https://svn.boost.org/trac/boost/ticket/4250 #4250],
+    [@https://svn.boost.org/trac/boost/ticket/4297 #4297],
+    [@https://svn.boost.org/trac/boost/ticket/4350 #4350],
+    [@https://svn.boost.org/trac/boost/ticket/4352 #4352],
+    [@https://svn.boost.org/trac/boost/ticket/4426 #4426],
+    [@https://svn.boost.org/trac/boost/ticket/4516 #4516],
+    [@https://svn.boost.org/trac/boost/ticket/4524 #4524],
+    [@https://svn.boost.org/trac/boost/ticket/4557 #4557],
+    [@https://svn.boost.org/trac/boost/ticket/4606 #4606],
+    [@https://svn.boost.org/trac/boost/ticket/4685 #4685],
+    [@https://svn.boost.org/trac/boost/ticket/4694 #4694].
+  * Added support for standard rvalue reference move semantics
+    (tested on GCC 4.5 and VC10).
+  * Permissions can be detailed for interprocess named resources.
+  * `mapped_region::flush` initiates disk flushing but does not guarantee it's completed
+     when returns, since it is not portable.
+  * FreeBSD and MacOS now use posix semaphores to implement named semaphores and mutex.
+
+* [phrase library..[@/libs/math/index.html Math]:]
+  * Added inverse gamma distribution and inverse chi_square and scaled inverse chi_square.
+  * Added warnings about potential ambiguity with std random library in distribution and function names.
+  * Editorial revision of documentation, and added FAQ.
+
+* [phrase library..[@/libs/msm/index.html Meta State Machine]:]
+  * [@/doc/libs/1_45_0/libs/msm/doc/HTML/ch08.html#d0e2995 Support for serialization].
+  * [@/doc/libs/1_45_0/libs/msm/doc/HTML/ch03s04.html#eUML-reuse-functor
+	Possibility to use normal] functors (from functor front-end) in eUML.
+  * [@/doc/libs/1_45_0/libs/msm/doc/HTML/ch03s05.html#backend-fsm-constructor-args
+    New constructors where substates / submachines can be taken as
+    arguments]. This allows passing arguments to the constructor of a
+    submachine.
+  * Bugfixes (anonymous transitions)
+
+* [phrase library..[@/libs/multi_array/index.html MultiArray]:]
+  * Fixes for bugs
+    [@https://svn.boost.org/trac/boost/ticket/3581 #3581],
+    [@https://svn.boost.org/trac/boost/ticket/3820 #3820],
+    [@https://svn.boost.org/trac/boost/ticket/3989 #3989],
+    [@https://svn.boost.org/trac/boost/ticket/4032 #4032],
+    plus other bugs not in Trac.
+  * Added new examples and test cases.
+
+* [phrase library..[@/libs/proto/index.html Proto]:]
+  * Knock down value of `proto::N`, fixes bug
+    [@https://svn.boost.org/trac/boost/ticket/4602 #4602],
+  * Support non-rtti compilers
+  * Fix bug with `proto::matches`, array types and the wildcard pattern.
+  * Make Proto work on MSVC with the /clr option
+  * Add const-qualified overloads of `proto::eval`
+
+* [phrase library..[@/libs/spirit/index.html Spirit]:]
+  Spirit V2.4.1, see the
+  '[@/doc/libs/1_45_0/libs/spirit/doc/html/spirit/what_s_new/spirit_2_4_1.html What's New]'
+  section for details.
+
+* [phrase library..[@/libs/type_traits/index.html TypeTraits]:]
+  * Added new traits add_rvalue_reference, add_lvalue_reference and common_type.
+  * Minor fixes to is_signed, is_unsigned and is_virtual_base_of.
+
+* [phrase library..[@/libs/numeric/ublas/index.html uBLAS]:]
+  * Tickets closed:
+    * [@https://svn.boost.org/trac/boost/ticket/4410 #4410],
+    * [@https://svn.boost.org/trac/boost/ticket/3397 #3397],
+    * [@https://svn.boost.org/trac/boost/ticket/795 #795],
+    * [@https://svn.boost.org/trac/boost/ticket/3514 #3514],
+  * Mixed types operation are possible and new tests added (like matrix<complex>+matrix<double>),
+  * New features:
+    * a new size<> operator is available. For example size<1>(A+B) give the number of rows of the sum of matrices A and B,
+
+* [phrase library..[@/libs/unordered/index.html Unordered]:]
+  * Fix inserting from iterators which return by copy from `operator*`
+    in `boost::unordered_map` and `boost::unordered_set`.
+
+* [phrase library..[@/libs/wave/index.html Wave]:]
+  * See the [@/libs/wave/ChangeLog Changelog] for details.
+
+* [phrase library..[@/libs/xpressive/index.html Xpressive]:]
+  * `xpressive::as` handles wide-char `sub_match` objects, fixes bug
+    [@https://svn.boost.org/trac/boost/ticket/4496 #4496]
 
 [endsect]
+
+[section Updated Tools]
+
+* [phrase library..[@/tools/boostbook/index.html Boostbook]:]
+  * Fix syntax highlighter for comments at the end of code blocks.
+
+* [phrase library..[@/tools/quickbook/index.html Quickbook]:]
+  * Fix command line macros.
+  * Nested code snippets.
+  * Nested documentation info comments.
+  * Revert xml escaping document info, it broke some documentation files
+    (will now be in 1.6).
+  * Some other small tweaks. See
+    [@/doc/html/quickbook/change_log.html#quickbook.change_log.releases.version_1_5_3___boost_1_45_0
+    the change log] for more info.
+
+[endsect]
+
 
 [section Compilers Tested]
 
 Boost's primary test compilers are:
 
-* /TODO/
+* Linux:
+  * GCC: 3.4.6, 4.2.4, 4.3.4, 4.4.3, 4.4.5, 4.5.1.
+  * GCC, C++0x mode: 4.3.4, 4.4.3, 4.5.0.
+  * Intel: 10.1, 11.0, 11.1
+  * Pathscale: 3.2.
+* OS X:
+  * GCC: 4.0.1, 4.2.1, 4.4
+  * GCC, C++0x mode: 4.4.
+  * Intel: 11.1
+* Windows:
+  * Visual C++: 7.1, 8.0, 9.0 and 10.0.
+  * GCC, mingw: 4.3.3.
+* FreeBSD:
+  * GCC: 4.2.1, 32 bit.
+  * GCC: 4.2.1, 64 bit.
 
 Boost's additional test compilers include:
 
-* /TODO/
+* Linux:
+  * GCC: 3.4.6, 4.2.4, 4.3.4, 4.4.3, 4.4.5, 4.5.0, 4.6.0 (dev version).
+  * GCC, C++0x mode: 4.3.4, 4.4.3, 4.5.0.
+  * Intel: 10.1, 11.0, 11.1.
+  * pgCC 10.1.
+  * PathScale: 3.2.
+  * Clang from subversion.
+* OS X:
+  * Intel C++ Compiler: 10.1, 11.0, 11.1.
+  * GCC: 4.0.1, 4.2.1, 4.4.4
+  * GCC, C++0x mode: 4.4.4
+  * Clang from subversion.
+* Windows:
+  * Borland: 5.9.3, 6.1.3 (2009), 6.2.1 (2010), 6.3.0
+  * GCC, mingw: 4.3.3, 4.4.5, 4.5.1
+  * GCC, mingw, C++0x mode: 4.5.1
+  * Visual C++: 7.1, 8.0, 9.0, 10.0
+* AIX:
+  * IBM XL C/C++ Enterprise Edition, V11.1.0.0.
+* FreeBSD:
+  * GCC 4.2.1, 64 bit.
+* Solaris:
+  * Sun C++: 5.10.
 
 [endsect]
 
 [section Acknowledgements]
 
-/TODO/
+[@/users/people/beman_dawes.html Beman Dawes],
+Eric Niebler,
+[@/users/people/rene_rivera.html Rene Rivera],
+Daniel James and Vladimir Prus managed this release.
 
 [endsect]
+
+
+
 

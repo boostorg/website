@@ -45,7 +45,7 @@ $_history->sort_by('pubdate');
                 <li>
                 <?php print '<a href="'.htmlentities($_item['link']).'">Details</a>'; ?></li>
 
-                <?php if(isset($_item['boostbook:download'])) : ?>
+                <?php if(!empty($_item['boostbook:download'])) : ?>
                 <li><?php print '<a href="'.htmlentities($_item['boostbook:download']).'">Download</a>'; ?></li>
                 <?php endif; ?>
               </ul><?php } ?>
