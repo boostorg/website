@@ -70,7 +70,7 @@ $_news->sort_by('pubdate');
   <div id="footer">
     <div id="footer-left">
       <div id="revised">
-        <p>Revised $<?php ?>Date$</p>
+        <p>Revised $Date$</p>
       </div>
 
       <div id="copyright">
