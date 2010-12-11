@@ -147,7 +147,7 @@ svn co <a href=
   <div id="footer">
     <div id="footer-left">
       <div id="revised">
-        <p>Revised $Date$</p>
+        <p>Revised $<?php ?>Date$</p>
       </div>
 
       <div id="copyright">

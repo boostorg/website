@@ -64,7 +64,7 @@ foreach($_downloads->db as $_guid => $_value) {
   <div id="footer">
     <div id="footer-left">
       <div id="revised">
-        <p>Revised $Date$</p>
+        <p>Revised $<?php ?>Date$</p>
       </div>
 
       <div id="copyright">
