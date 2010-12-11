@@ -10,6 +10,11 @@ class boost_libraries
 {
     var $categories = array();
     var $db = array();
+    var $build_values = array(
+    	'header-only' => 'Header only',
+    	'autolink' => 'Automatic linking',
+    	'autolink-dependency' => 'Automatic linking due to dependency'
+    );
     
     function boost_libraries($xml_file)
     {
@@ -61,8 +66,6 @@ class boost_libraries
                     break;
                     case 'std-proposal':
                     case 'std-tr1':
-                    case 'header-only':
-                    case 'autolink':
                     {
                         $value = isset($val['value']) ? trim($val['value']) : false;
                         if($value && $value != 'true' && $value != 'false') {
@@ -73,6 +76,16 @@ class boost_libraries
                         $lib[$val['tag']] = ($value == 'true');
                     }
                     break;
+                    case 'build':
+                    {
+                    	$value = isset($val['value']) ? trim($val['value']) : '';
+                    	if(!isset($this->build_values[$value])) {
+                    		echo 'Invalid value for build: ', htmlentities($value);
+                    		exit(0);
+                    	}
+                    	$lib['build'] = $value;
+                    }
+                    break;
                     case 'category':
                     {
                         if(isset($val['value'])) {
@@ -81,6 +94,9 @@ class boost_libraries
                         }
                     }
                     break;
+                    default:
+                    	echo 'Invalid tag: ', htmlentities($val['tag']);
+                    	exit(0);
                 }
             }
             else if ($val['tag'] == 'library' && $val['type'] == 'close' && $lib)

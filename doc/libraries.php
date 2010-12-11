@@ -1,5 +1,8 @@
 <?php
 
+// Change this when developing.
+define('USE_SERIALIZED_INFO', true);
+
 require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
 
 function boost_title()
@@ -41,8 +44,9 @@ function boost_version($v,$r,$p)
     }
 }
 
-//$libs = new boost_libraries(dirname(__FILE__) . '/libraries.xml');
-$libs = unserialize(file_get_contents(dirname(__FILE__) . '/libraries.txt'));
+$libs = USE_SERIALIZED_INFO ?
+	unserialize(file_get_contents(dirname(__FILE__) . '/libraries.txt')) :
+	new boost_libraries(dirname(__FILE__) . '/libraries.xml');
 
 // Display types:
 
@@ -160,12 +164,12 @@ function libstandard($lib)
   if ($lib['std-tr1']) { $p[] = 'TR1'; }
   print ($p ? implode(', ',$p) : '&nbsp;');
 }
-function libbuildlink($lib)
+function libbuildlink($lib, $build_values)
 {
-  $p = array();
-  if ($lib['header-only']) { $p[] = 'Header only'; }
-  if ($lib['autolink']) { $p[] = 'Automatic linking'; }
-  print ($p ? implode(', ',$p) : '&nbsp;');
+  if (!empty($lib['build']))
+    print $build_values[$lib['build']];
+  else
+    print '&nbsp;';
 }
 function libcategories($lib, $categories)
 {
@@ -297,7 +301,7 @@ function category_link($name, $category) {
 
                     <dt>Build&nbsp;&amp;&nbsp;Link</dt>
 
-                    <dd><?php libbuildlink($lib); ?></dd>
+                    <dd><?php libbuildlink($lib, $libs->build_values); ?></dd>
 
                     <dt>Categories</dt>
 
@@ -336,7 +340,7 @@ function category_link($name, $category) {
   <div id="footer">
     <div id="footer-left">
       <div id="revised">
-        <p>Revised $Date$</p>
+        <p>Revised $Date: 2010-08-19 08:52:42 +0100 (Thu, 19 Aug 2010) $</p>
       </div>
 
       <div id="copyright">
