@@ -11,6 +11,7 @@ import sys
 import os.path
 import hashlib
 import codecs
+from email.utils import parsedate_tz
 
 class RssUpdateCheck:
     """ Tracks which items in an rss feed have been updated.
@@ -160,20 +161,19 @@ class BoostBook2RSS:
                 item = self.x(article.documentElement)
 
             if item:
-                try:
-                    last_modified = item.getElementsByTagName('pubDate')[0]
-                    last_modified = " ".join(
-                        t.nodeValue for t in last_modified.childNodes
-                        if t.nodeType == t.TEXT_NODE)
-                    last_modified = last_modified.replace(',', ' ')
-                    items.append([
-                        time.mktime(time.strptime(last_modified,
-                            '%a %d %b %Y %H:%M:%S %Z')),
-                        item,
-                        bb
-                        ])
-                except:
-                    items.append([time.time(),item,bb])
+                last_modified = item.getElementsByTagName('pubDate')[0]
+                last_modified = " ".join(
+                    t.nodeValue for t in last_modified.childNodes
+                    if t.nodeType == t.TEXT_NODE)
+                last_modified = last_modified.replace(',', ' ').strip()
+
+                if not last_modified or last_modified[0] == '$':
+                    last_modified_time = time.time()
+                else:
+                    last_modified_time = parsedate_tz(last_modified)
+                    last_modified_time = time.mktime(last_modified_time[:-1]) - last_modified_time[-1]
+
+                items.append([last_modified_time, item, bb])
                 
         self.new_hashes = RssUpdateCheck()
         items.sort(lambda x,y: -cmp(x[0],y[0]))
