@@ -184,7 +184,7 @@ class Page:
         if self.pub_date == 'In Progress':
             return self.pub_date
         else:
-            return time.strftime('%B %d, %Y %H:%M GMT', time.gmtime(self.last_modified))
+            return time.strftime('%B %e, %Y %H:%M GMT', time.gmtime(self.last_modified))
 
     def download_table(self):
         if(not self.download_item):
