@@ -10,14 +10,12 @@
     Updated Tools: Boostbook, Inspect, Quickbook.
     ]
     [authors [Dawes, Beman]]
-    [last-revision ]
+    [last-revision Mon, 21 Feb 2011 15:36:13 -0500]
 ]
 
 [include ext.qbk]
 
-[/ TODO: Check download link on release.
 [download http://sourceforge.net/projects/boost/files/boost/1.46.0/]
-]
 
 [section New Libraries]
 
@@ -50,6 +48,27 @@
 * [phrase library..[@/libs/concept_check/index.html Concept Check]:]
   * fixed warnings with self-assignment
     ([@https://svn.boost.org/trac/boost/ticket/4918 #4918])
+
+* [phrase library..[@/libs/filesystem/index.html Filesystem]:]
+    * Version 3 of the library is now the default.
+    * IBM vacpp: Workaround for compiler bug affecting `iterator_facade`.
+      ([@https://svn.boost.org/trac/boost/ticket/4912 #4912])
+    * Verify, clarify, document that `<boost/config/user.hpp>` can be
+      used to specify `BOOST_FILESYSTEM_VERSION`.
+      ([@https://svn.boost.org/trac/boost/ticket/4891 #4891])
+    * Replaced C-style `assert` with `BOOST_ASSERT`.
+    * Undeprecated `unique_path()`. Instead, add a note mentioning the
+      workaround for lack of thread safety and possible change to cwd.
+      `unique_path()` is just too convenient to deprecate!
+    * Cleared several GCC warnings.
+    * Changed V2 code to use `BOOST_THROW_EXCEPTION`.
+    * Windows: Fix `status()` to report non-symlink reparse point correctly.
+    * Add `symlink_option` to `recursive_directory_iterator`, allowing control
+      over recursion into directory symlinks. Note that the default is changed
+      to not recurse into directory symlinks.
+    * Reference documentation cleanup, including fixing missing and broken
+      links, and adding missing functions.
+    * Miscellaneous implementation code cleanup.
 
 * [phrase library..[@/libs/fusion/index.html Fusion]:]
   * vector copy constructor now copies sequence members in the same
