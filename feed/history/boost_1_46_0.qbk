@@ -1,0 +1,273 @@
+[article Version 1.46.0
+    [quickbook 1.5]
+    [source-mode c++]
+    [purpose
+    New Libraries: Icl.
+    Updated Libraries: Array, Asio, Bind, Concept Check,
+    Filesystem, Fusion, Hash,
+    Iterator, Math, Meta State Machine, Optional, Pool,
+    Program Options, Proto, Signals, Spirit, Tokenizer, Unordered,
+    Wave.
+    Updated Tools: Boostbook, Inspect, Quickbook.
+    ]
+    [authors [Dawes, Beman]]
+    [last-revision Mon, 21 Feb 2011 15:36:13 -0500]
+]
+
+[include ext.qbk]
+
+[download http://sourceforge.net/projects/boost/files/boost/1.46.0/]
+
+[section New Libraries]
+
+* [phrase library..[@/libs/icl/index.html Icl]:]
+  Interval Container Library, interval sets and maps and aggregation 
+  of associated values, from Joachim Faulhaber.
+
+[endsect]
+
+[section Updated Libraries]
+
+* [phrase library..[@/libs/array/index.html Array]:]
+  * Added support for cbegin/cend
+    ([@https://svn.boost.org/trac/boost/ticket/4761 #4761])
+  * Fixed a problem with the Sun compiler
+    ([@https://svn.boost.org/trac/boost/ticket/4757 #4757])
+
+* [phrase library..[@/libs/asio/index.html Asio]:]
+  * Fixed an integer overflow problem that occurs when `ip::address_v4::broadcast()`
+    is used on 64-bit platforms.
+  * Fixed a problem on older Linux kernels (where epoll is used without timerfd
+    support) that prevents timely delivery of deadline_timer handlers, after the
+    program has been running for some time
+    ([@https://svn.boost.org/trac/boost/ticket/5045 #5045]).
+
+* [phrase library..[@/libs/bind/index.html Bind]:]
+  * `make_adaptable` now documented
+    ([@https://svn.boost.org/trac/boost/ticket/4532 #4532])
+
+* [phrase library..[@/libs/concept_check/index.html Concept Check]:]
+  * fixed warnings with self-assignment
+    ([@https://svn.boost.org/trac/boost/ticket/4918 #4918])
+
+* [phrase library..[@/libs/filesystem/index.html Filesystem]:]
+    * Version 3 of the library is now the default.
+    * IBM vacpp: Workaround for compiler bug affecting `iterator_facade`.
+      ([@https://svn.boost.org/trac/boost/ticket/4912 #4912])
+    * Verify, clarify, document that `<boost/config/user.hpp>` can be
+      used to specify `BOOST_FILESYSTEM_VERSION`.
+      ([@https://svn.boost.org/trac/boost/ticket/4891 #4891])
+    * Replaced C-style `assert` with `BOOST_ASSERT`.
+    * Undeprecated `unique_path()`. Instead, add a note mentioning the
+      workaround for lack of thread safety and possible change to cwd.
+      `unique_path()` is just too convenient to deprecate!
+    * Cleared several GCC warnings.
+    * Changed V2 code to use `BOOST_THROW_EXCEPTION`.
+    * Windows: Fix `status()` to report non-symlink reparse point correctly.
+    * Add `symlink_option` to `recursive_directory_iterator`, allowing control
+      over recursion into directory symlinks. Note that the default is changed
+      to not recurse into directory symlinks.
+    * Reference documentation cleanup, including fixing missing and broken
+      links, and adding missing functions.
+    * Miscellaneous implementation code cleanup.
+
+* [phrase library..[@/libs/fusion/index.html Fusion]:]
+  * vector copy constructor now copies sequence members in the same
+    order on different platforms
+    ([@https://svn.boost.org/trac/boost/ticket/2823 #2823])
+
+* [phrase library..[@/libs/graph/index.html Graph]:]
+  * Fixed Graphviz output to work on Visual C++ 7.1.
+  * Replaced assert with `BOOST_ASSERT`.
+  * Changed to Boost.Filesystem v3.
+  * Fixed the following bugs from Trac:
+    [@https://svn.boost.org/trac/boost/ticket/1021 #1021],
+    [@https://svn.boost.org/trac/boost/ticket/4556 #4556],
+    [@https://svn.boost.org/trac/boost/ticket/4631 #4631],
+    [@https://svn.boost.org/trac/boost/ticket/4642 #4642],
+    [@https://svn.boost.org/trac/boost/ticket/4715 #4715],
+    [@https://svn.boost.org/trac/boost/ticket/4731 #4731],
+    [@https://svn.boost.org/trac/boost/ticket/4737 #4737],
+    [@https://svn.boost.org/trac/boost/ticket/4753 #4753],
+    [@https://svn.boost.org/trac/boost/ticket/4758 #4758],
+    [@https://svn.boost.org/trac/boost/ticket/4793 #4793],
+    [@https://svn.boost.org/trac/boost/ticket/4843 #4843],
+    [@https://svn.boost.org/trac/boost/ticket/4851 #4851],
+    [@https://svn.boost.org/trac/boost/ticket/4852 #4852],
+    [@https://svn.boost.org/trac/boost/ticket/4887 #4887],
+    [@https://svn.boost.org/trac/boost/ticket/4914 #4914],
+    [@https://svn.boost.org/trac/boost/ticket/4966 #4966].
+  * Fixed various bugs not in Trac.
+
+* [phrase library..[@/libs/functional/hash/index.html Hash]:]
+  * Support for `std::type_index`
+    ([@https://svn.boost.org/trac/boost/ticket/4756 #4756]).
+  * Avoid `-Wconversion` warnings.
+
+* [phrase library..[@/libs/iterator/index.html Iterator]:]
+  * fixed problem with `implicit_cast`
+    ([@https://svn.boost.org/trac/boost/ticket/3645 #3645])
+
+* [phrase library..[@/libs/math/doc/sf_and_dist/html/index.html Math]:]
+   * Added Wald, Inverse Gaussian and geometric distributions.
+   * Added information about configuration macros. 
+   * Added support for mpreal as a real-numered type.
+
+* [phrase library..[@/libs/msm/index.html Meta State Machine]:]
+  * [@/doc/libs/1_46_0/libs/msm/doc/HTML/ch03s05.html#backend-compile-time-analysis
+    Compile-time state machine analysis].
+  * [@/doc/libs/1_46_0/libs/msm/doc/HTML/ch03s05.html#backend-boost-parameter
+    Boost.Parameter interface definition for `msm::back::state_machine<>` template arguments].
+  * [@/doc/libs/1_46_0/libs/msm/doc/HTML/ch03s05.html#backend-queues
+    Possibility to provide a container for the event and deferred event
+    queues]. A policy implementation based on a more efficient
+    Boost.CircularBuffer is provided.
+  * `msm::back::state_machine<>::is_flag_active` method made const.
+  * [@/doc/libs/1_46_0/libs/msm/doc/HTML/ch03s05.html#backend-enqueueing
+    Added possibility to enqueue events for delayed processing].
+  * Bugfixes
+    * [@https://svn.boost.org/trac/boost/ticket/4926 #4926].
+    * stack overflow using the Defer functor
+    * anonymous transition of a submachine not called for the initial state
+
+* [phrase library..[@/libs/optional/index.html Optional]:]
+  * Updated test results with information about expected failures
+    ([@https://svn.boost.org/trac/boost/ticket/2294 #2294])
+
+* [phrase library..[@/libs/pool/index.html Pool]:]
+  * Now can set a max_size for pool
+    ([@https://svn.boost.org/trac/boost/ticket/2696 #2696])
+  * `boost/pool/pool.hpp` uses `reinterpret_cast` instead of `static_cast`
+    ([@https://svn.boost.org/trac/boost/ticket/2941 #2941])
+  * `boost::pool_allocator` now works with vector of vectors
+    ([@https://svn.boost.org/trac/boost/ticket/386 #386])
+  * Boost pool is now compatible with Microsoft memory leak detection
+    ([@https://svn.boost.org/trac/boost/ticket/4346 #4346])
+
+* [phrase library..[@/libs/program_options/index.html Program Options]:]
+  * Fixed errors in examples in docs
+    ([@https://svn.boost.org/trac/boost/ticket/3992 #3992],
+     [@https://svn.boost.org/trac/boost/ticket/4858 #4858])
+  * Now takes `argv` as const
+    ([@https://svn.boost.org/trac/boost/ticket/3909 #3909])
+
+* [phrase library..[@/libs/proto/index.html Proto]:]
+  * *Breaking change*: `boost/proto/core.hpp` no longer defines
+    `functional::pop_front` and `functional::reverse`, which have
+    moved to their own headers under `boost/proto/functional`
+  * Add callable wrappers for more Fusion algorithms (including
+    `fusion::at`); and callable wrappers for some std utilities
+    like `make_pair`, `first` and `second`, all under the new 
+    `boost/proto/functional` directory
+  * Allow transforms to be specified separately from a grammar
+  * `proto::matches` preserves domain-specific expression wrappers
+  * Fix ADL issue with `operator,` in `proto::and_` transform
+  * Fix handling of grammar checking in expressions involving
+    multiple domains
+    ([@https://svn.boost.org/trac/boost/ticket/4675 #4675])
+  * Fix ambiguous `operator<<` in `proto::display_expr`
+    ([@https://svn.boost.org/trac/boost/ticket/4910 #4910])
+  * `fusion::is_sequence` answers true for Proto expressions
+    ([@https://svn.boost.org/trac/boost/ticket/5006 #5006])
+  * Eliminate `-Wundef` GCC warning in `boost/proto/fusion.hpp`
+    ([@https://svn.boost.org/trac/boost/ticket/5075 #5075])
+
+* [phrase library..[@/libs/signals/index.html Signals]:]
+  * gcc warning cleanup
+    ([@https://svn.boost.org/trac/boost/ticket/4365 #4365])
+
+* [phrase library..[@/libs/spirit/index.html Spirit]:]
+  * Spirit V2.4.2, see the
+    '[@/doc/libs/1_46_0/libs/spirit/doc/html/spirit/what_s_new/spirit_2_4_2.html What's New]'
+    section for details.
+
+* [phrase library..[@/libs/tokenizer/index.html Tokenizer]:]
+  * `isspace`/`ispunct` was called with wrong character type
+    ([@https://svn.boost.org/trac/boost/ticket/4791 #4791])
+
+* [phrase library..[@/libs/unordered/index.html Unordered]:]
+  * Avoid using `operator&` with the value type.
+  * Avoid `-Wconversion` warnings.
+
+* [phrase library..[@/libs/wave/index.html Wave]:]
+  * See the [@/libs/wave/ChangeLog Changelog] for details.
+
+[endsect]
+
+[section Updated Tools]
+
+* [phrase library..[@/tools/boostbook/index.html Boostbook]:]
+  * Better support for attributes on root elements - including `lang`.
+
+* [phrase library..[@/tools/inspect/index.html Inspect]:]
+  * Check that Boost headers do not use C's `assert` macro.
+
+* [phrase library..[@/tools/quickbook/index.html Quickbook]:]
+  * Add support for `lang` attribute in documentation info.
+  * Improved anchors.
+  * Support `import`, `include` and `xinclude` in conditional phrases.
+  * Uses Filesystem 3.
+
+[endsect]
+
+[section Compilers Tested]
+
+Boost's primary test compilers are:
+
+* Linux:
+  * GCC: 3.4.6, 4.2.4, 4.3.4, 4.4.3, 4.4.5, 4.5.2,
+  * GCC, C++0x mode: 4.3.4, 4.4.3, 4.5.0, 4.5.2
+  * Intel: 10.1, 11.0, 11.1
+  * Clang: 2.8
+  * Pathscale: 3.2.
+* OS X:
+  * GCC: 4.0.1, 4.2.1, 4.4
+  * GCC, C++0x mode: 4.4.
+  * Intel: 11.1
+* Windows:
+  * Visual C++: 7.1, 8.0, 9.0 and 10.0.
+  * GCC, mingw: 4.4.0.
+* FreeBSD:
+  * GCC: 4.2.1, 64 bit.
+
+Boost's additional test compilers include:
+
+* Linux:
+  * GCC: 3.4.6, 4.2.4, 4.3.4, 4.3.5, 4.4.3, 4.4.5, 4.5.0, 4.5.2
+  * GCC, C++0x mode: 4.3.4, 4.4.3, 4.5.0, 4.5.2
+  * pgCC [/ 10.1,] 11.1
+  * Intel: 10.1, 11.0, 11.1
+  * PathScale: 3.2, 4.0
+  * Visual Age C++ 10.1
+  * Clang from subversion
+* OS X:
+  * Intel C++ Compiler: 10.1, 11.0, 11.1
+  * GCC: 4.0.1, 4.2.1, 4.4.4
+  * GCC, C++0x mode: 4.4.4
+  * Clang from subversion
+* Windows:
+  * Visual C++: 7.1, 8.0, 9.0, 10.0
+  * Visual C++ with STLport: 9.0
+  * Visual C++, Windows Mobile 5, with STLport: 9.0
+  * GCC, mingw: 4.4.0, 4.5.1, 4.6.0
+  * GCC, mingw, C++0x mode: 4.5.1
+  * Borland: 6.1.3 (2009), 6.2.1 (2010)
+* AIX:
+  * IBM XL C/C++ Enterprise Edition, V11.1.0.0
+* FreeBSD:
+  * GCC 4.2.1, 64 bit
+* Solaris:
+  * Sun C++: 5.10
+
+[endsect]
+
+[section Acknowledgements]
+
+[@/users/people/beman_dawes.html Beman Dawes],
+Eric Niebler,
+[@/users/people/rene_rivera.html Rene Rivera],
+Daniel James and Vladimir Prus managed this release.
+
+
+[endsect]
+
