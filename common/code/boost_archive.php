@@ -57,14 +57,46 @@ function display_from_archive(
     
     // Check file exists.
 
-    $check_file = $params['zipfile'] ? $params['archive'] : $params['file'];
+    if ($params['zipfile'])
+    {
+        $check_file = $params['archive'];
 
-    if (!is_file($check_file)) {
-        file_not_found($params,
-            $params['zipfile'] ?
-                'Unable to find zipfile.' :
-                'Unable to find file.');
-        return;        
+        if (!is_file($check_file)) {
+            file_not_found($params, 'Unable to find zipfile.');
+            return;        
+        }
+    }
+    else
+    {
+        $check_file = $params['file'];
+        
+        if (is_dir($check_file))
+        {
+            if(substr($check_file, -1) != '/') {
+                $redirect = resolve_url(basename($check_file).'/');
+                header("Location: $redirect", TRUE, 301);
+                return;
+            }
+
+            $found_file = NULL;
+            if (is_file("$check_file/index.html")) $found_file = 'index.html';
+            else if (is_file("$check_file/index.htm")) $found_file = 'index.htm';
+
+            if ($found_file) {
+                $params['file'] = $check_file = $check_file.$found_file;
+                $params['key'] = $params['key'].$found_file;
+            }
+            else {
+                if (!http_headers('text/html', filemtime($check_file), $expires))
+                    return;
+
+                return display_dir($params, $check_file);
+            }
+        }
+        else if (!is_file($check_file)) {
+            file_not_found($params, 'Unable to find file.');
+            return;        
+        }
     }
 
     // Choose filter to use
@@ -224,6 +256,31 @@ HTML;
         'head' => $head,
         'content' => $content
     );
+}
+
+function display_dir($params, $dir)
+{
+    $handle = opendir($dir);
+    
+    $title = htmlentities("Index listing for $params[key]");
+
+    $params['title'] = $title;
+    
+    $content = "<h3>$title</h3>\n<ul>\n";
+
+    while (($file = readdir($handle)) !== false)
+    {
+        if (substr($file, 0, 1) != '.') {
+            $file_html = htmlentities($file);
+            $content .= "<li><a href='$file'>$file</a></li>\n";
+        }
+    }
+
+    $content .= "</ul>\n";
+    
+    $params['content'] = $content;
+
+    display_template($params['template'], boost_archive_render_callbacks($content, $params));
 }
 
 function display_raw_file($params, $type)
