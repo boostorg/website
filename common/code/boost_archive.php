@@ -270,10 +270,10 @@ function display_dir($params, $dir)
 
     while (($file = readdir($handle)) !== false)
     {
-        if (substr($file, 0, 1) != '.') {
-            $file_html = htmlentities($file);
-            $content .= "<li><a href='$file'>$file</a></li>\n";
-        }
+        if (substr($file, 0, 1) == '.') continue;
+        if (is_dir("$dir$file")) $file .= '/';
+        $file = htmlentities($file);
+        $content .= "<li><a href='$file'>$file</a></li>\n";
     }
 
     $content .= "</ul>\n";
