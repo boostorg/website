@@ -111,7 +111,7 @@ function display_from_archive(
         array('@.*@','@[.]js$@i','raw','application/x-javascript'),
         array('@.*@','@[.]pdf$@i','raw','application/pdf'),
         array('@.*@','@[.](html|htm)$@i','raw','text/html'),
-        array('@.*@','@[^.](Jamroot|Jamfile|ChangeLog)$@i','text','text/plain'),
+        array('@.*@','@/(Jamroot|Jamfile|ChangeLog|configure)$@i','text','text/plain'),
         array('@.*@','@[.]dtd$@i','raw','application/xml-dtd'),
         ));
 
