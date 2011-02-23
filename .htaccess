@@ -16,6 +16,11 @@ Header unset Expires
 RewriteEngine On
 RewriteBase /
 
+########## Block Morfeus scanning
+
+RewriteCond %{HTTP_USER_AGENT} ^Morfeus
+RewriteRule ^.*$ - [F]
+
 ########## Redirect to the canonical URL.
 
 RewriteCond %{HTTP_HOST} ^boost\.org [NC]
