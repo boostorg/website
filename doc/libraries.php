@@ -340,7 +340,7 @@ function category_link($name, $category) {
   <div id="footer">
     <div id="footer-left">
       <div id="revised">
-        <p>Revised $Date: 2010-08-19 08:52:42 +0100 (Thu, 19 Aug 2010) $</p>
+        <p>Revised $Date$</p>
       </div>
 
       <div id="copyright">

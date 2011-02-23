@@ -62,7 +62,11 @@ rule glob-rss ( p + )
 
 path-constant CWD : . ;
 
-make downloads.rss : [ glob-rss history/boost_1_45_0 downloads/* ]
+make downloads.rss
+    : [ set.difference
+        [ glob-rss history/boost_1_46_0 downloads/* ] :
+        [ glob-rss downloads/bjam* ]
+      ]
     : @rss :
     <title>"Boost Downloads"
     <uri>"http://www.boost.org/feed/downloads.rss"
