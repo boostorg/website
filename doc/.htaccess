@@ -26,11 +26,6 @@ RewriteRule ^tools/build/(.*\.(?:png|gif|jpg|jpeg|jpe|css|js|pdf|dtd))$ archives
 RewriteRule ^libs/release(/.*)?$ libs/1_46_0$1 [R]
 RewriteRule ^libs/development(/.*)?$ libs/1_46_0$1 [R]
 
-#~  # In case we don't get a file looking URI we send it to the index.html file.
-#~  # - With some exceptions.
-RewriteCond %{REQUEST_URI} !/(Jamroot|Jamfile|ChangeLog)$
-RewriteRule ^libs/([0-9_]+(?:beta[0-9]*)?)/([^.]*[^./])/?$ libs/$1/$2/index.html [R]
-
 # Rewrite specific versions to the dynamic handlers.
 RewriteRule ^libs/([0-9_]+(?:beta[0-9]*)?)/?$ libraries.php/$1 [L]
 
@@ -40,9 +35,12 @@ RewriteRule ^libs/([0-9_]+(?:beta[0-9]*)?)/(.+)$ display_libs.php/boost_$1/$2 [L
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^libs/?(.*)$ libraries.php$1 [L]
 
-# Handling of tool documentation.
-RewriteRule ^tools(\.html)?/jam/?$ tools/jam/index.html [R]
-RewriteRule ^tools(\.html)?/jam/(.*) display_jam.php/boost-jam-3.1.18/$2 [L]
-RewriteRule ^tools(\.html)?/build/?$ tools/build/index.html [R]
-RewriteRule ^tools(\.html)?/build/(.*) display_build.php/boost-build/boost-build/$2 [L]
+# Redirect boost build/bjam documentation to new boost build location.
+RewriteRule ^tools(?:\.html)?/jam/jam/(language|miscellaneous|history).html$ /boost-build2/doc/html/jam/$1.html [R=301]
+RewriteRule ^tools(?:\.html)?/jam(/|$) /boost-build2/doc/html/bbv2/jam.html [R=301]
+RewriteRule ^tools(?:\.html)?/build$ /boost-build2/ [R=301]
+RewriteRule ^tools(?:\.html)?/build/(.*) /boost-build2/$1 [R=301]
+
+# Other tools
 RewriteRule ^tools(\.html)?/(.*) libs/release/tools/$2 [R]
+
