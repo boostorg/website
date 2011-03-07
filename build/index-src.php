@@ -17,6 +17,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../feed/downloads.rss', '/use
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-welcome.css" />
   <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
+  <meta name="google-site-verification" content="mpr2HgFpodnbF_8fv4qXd9roIClVwtX3C-Kd3F6r61w" />
 </head>
 
 <!--
