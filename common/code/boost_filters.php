@@ -63,7 +63,7 @@ function extract_html_body($text) {
 
 function prepare_html($text, $full = false) {
     $text = preg_replace(
-        '@href="?http://(?:www.)?boost.org/?([^"\s]*)"?@i',
+        '@href="?http://(?:www.)?boost.org/?([^"\s>]*)"?@i',
         'href="/${1}"',
         $text );
 
