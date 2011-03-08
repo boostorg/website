@@ -16,7 +16,7 @@ function alter_title($params, $text)
     		preg_replace('@(?<=\d)_(?=\d)@', '.',
     			ucwords($params['version'])));
 
-	return str_replace('</title>',
+	return str_ireplace('</title>',
 		" - $version_title</title>", $text);
 }
 
