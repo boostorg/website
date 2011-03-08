@@ -17,7 +17,7 @@ function basic_filter($params)
         $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $match[0][0]);
         $tag_end = $is_xhtml ? '/>' : '>';
 
-        echo substr($text, 0, $match[0][1]);
+        echo alter_title($params, substr($text, 0, $match[0][1]));
         echo '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
         echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
         echo $match[0][0];

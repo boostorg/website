@@ -9,6 +9,17 @@
  * HTML processing functions
  */
 
+function alter_title($params, $text)
+{
+    $version_title =
+    	str_replace('_', ' ',
+    		preg_replace('@(?<=\d)_(?=\d)@', '.',
+    			ucwords($params['version'])));
+
+	return str_replace('</title>',
+		" - $version_title</title>", $text);
+}
+
 function html_init(&$params)
 {
     preg_match('@text/html; charset=([^\s"\']+)@i',$params['content'],$charset);
