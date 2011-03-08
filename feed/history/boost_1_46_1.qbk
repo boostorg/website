@@ -16,6 +16,22 @@
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/asio/ Asio]:]
+  * `EV_ONESHOT` seems to cause problems on some versions of Mac OS X, with the
+    `io_service` destructor getting stuck inside the `close()` system call.
+    Changed the kqueue backend to use `EV_CLEAR` instead
+    ([@https://svn.boost.org/trac/boost/ticket/5021 #5021]).
+  * Fixed compile failures with some versions of [^g++] due to the use of
+    anonymous enums ([@https://svn.boost.org/trac/boost/ticket/4883 #4883]).
+  * Fixed a bug on kqueue-based platforms, where some system calls that
+    repeatedly fail with `EWOULDBLOCK` are not correctly re-registered with
+    kqueue.
+  * Changed `asio::streambuf` to ensure that its internal pointers are updated
+    correctly after the data has been modified using `std::streambuf` member
+    functions.
+  * Fixed a bug that prevented the linger socket option from working on platforms
+    other than Windows.
+
 * [phrase library..[@/libs/fusion/ Fusion]:]
   * Fix `disable_if` for Visual C++ 7.1/8.0
 
