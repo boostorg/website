@@ -9,7 +9,7 @@
  * HTML processing functions
  */
 
-function html_init($params)
+function html_init(&$params)
 {
     preg_match('@text/html; charset=([^\s"\']+)@i',$params['content'],$charset);
     if (isset($charset[1]))
