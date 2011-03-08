@@ -50,6 +50,49 @@
     <ul>
       <li>
         <div>
+          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              <code><span class="identifier">EV_ONESHOT</span></code> seems to
+              cause problems on some versions of Mac OS X, with the <code><span class="identifier">io_service</span></code> destructor getting stuck
+              inside the <code><span class="identifier">close</span><span class="special">()</span></code>
+              system call. Changed the kqueue backend to use <code><span class="identifier">EV_CLEAR</span></code>
+              instead (<a href="https://svn.boost.org/trac/boost/ticket/5021">#5021</a>).
+            </div>
+          </li>
+          <li>
+            <div>
+              Fixed compile failures with some versions of <tt>g++</tt>
+              due to the use of anonymous enums (<a href="https://svn.boost.org/trac/boost/ticket/4883">#4883</a>).
+            </div>
+          </li>
+          <li>
+            <div>
+              Fixed a bug on kqueue-based platforms, where some system calls that
+              repeatedly fail with <code><span class="identifier">EWOULDBLOCK</span></code>
+              are not correctly re-registered with kqueue.
+            </div>
+          </li>
+          <li>
+            <div>
+              Changed <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">streambuf</span></code> to ensure that its internal
+              pointers are updated correctly after the data has been modified using
+              <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">streambuf</span></code> member functions.
+            </div>
+          </li>
+          <li>
+            <div>
+              Fixed a bug that prevented the linger socket option from working on
+              platforms other than Windows.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/libs/fusion/">Fusion</a>:</span>
 
         </div>
@@ -65,6 +108,7 @@
       <li>
         <div>
           <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
+
         </div>
         <ul>
           <li>
@@ -159,6 +203,19 @@
           <li>
             <div>
               Fix const correctness problem in <code><span class="identifier">pass_through</span></code>.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/property_tree/">Property Tree</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              Fix compile error in JSON parser.
             </div>
           </li>
         </ul>

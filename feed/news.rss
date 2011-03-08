@@ -16,6 +16,49 @@
     &lt;ul&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;EV_ONESHOT&lt;/span&gt;&lt;/code&gt; seems to
+              cause problems on some versions of Mac OS X, with the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_service&lt;/span&gt;&lt;/code&gt; destructor getting stuck
+              inside the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+              system call. Changed the kqueue backend to use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;EV_CLEAR&lt;/span&gt;&lt;/code&gt;
+              instead (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5021&quot;&gt;#5021&lt;/a&gt;).
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fixed compile failures with some versions of &lt;tt&gt;g++&lt;/tt&gt;
+              due to the use of anonymous enums (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/4883&quot;&gt;#4883&lt;/a&gt;).
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fixed a bug on kqueue-based platforms, where some system calls that
+              repeatedly fail with &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;EWOULDBLOCK&lt;/span&gt;&lt;/code&gt;
+              are not correctly re-registered with kqueue.
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Changed &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;asio&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;streambuf&lt;/span&gt;&lt;/code&gt; to ensure that its internal
+              pointers are updated correctly after the data has been modified using
+              &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;streambuf&lt;/span&gt;&lt;/code&gt; member functions.
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fixed a bug that prevented the linger socket option from working on
+              platforms other than Windows.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/fusion/&quot;&gt;Fusion&lt;/a&gt;:&lt;/span&gt;
 
         &lt;/div&gt;
@@ -126,6 +169,19 @@
           &lt;li&gt;
             &lt;div&gt;
               Fix const correctness problem in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;pass_through&lt;/span&gt;&lt;/code&gt;.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/property_tree/&quot;&gt;Property Tree&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fix compile error in JSON parser.
             &lt;/div&gt;
           &lt;/li&gt;
         &lt;/ul&gt;
