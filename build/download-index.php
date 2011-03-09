@@ -38,7 +38,9 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../feed/downloads.rss', '/use
               </ul>
 
               <h2><a name="releases" id="releases"></a>Packaged
-              Releases</h2><?php foreach ( $_downloads->db as $_guid => $_item ) { ?>
+              Releases</h2><?php $count = 0; foreach ( $_downloads->db as $_guid => $_item ) {
+              if (++$count > 1) break;
+              ?>
 
               <h3><span class=
               "news-title"><?php print $_item['title']; ?></span></h3>

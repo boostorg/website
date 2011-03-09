@@ -1,0 +1,539 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>Version 1.46.1</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="icon" href="/favicon.ico" type="image/ico" />
+  <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
+  <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
+</head>
+
+<body>
+  <div id="heading">
+    <!--#include virtual="/common/heading.html" -->  </div>
+
+  <div id="body">
+    <div id="body-inner">
+      <div id="content">
+        <div class="section" id="intro">
+          <div class="section-0">
+            <div class="section-title">
+              <h1>Version 1.46.1</h1>
+            </div>
+
+            <div class="section-body">
+              <h2><span class=
+              "news-title">Version 1.46.1</span></h2>
+
+              <p><span class=
+              "news-date">In Progress</span></p>
+
+              
+              <div class="news-description">
+                <div class="description">
+  
+  
+  <div id="version_1_46_1.updated_libraries">
+    <h3><span class="link">Updated Libraries</span></h3>
+    <ul>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              <code><span class="identifier">EV_ONESHOT</span></code> seems to
+              cause problems on some versions of Mac OS X, with the <code><span class="identifier">io_service</span></code> destructor getting stuck
+              inside the <code><span class="identifier">close</span><span class="special">()</span></code>
+              system call. Changed the kqueue backend to use <code><span class="identifier">EV_CLEAR</span></code>
+              instead (<a href="https://svn.boost.org/trac/boost/ticket/5021">#5021</a>).
+            </div>
+          </li>
+          <li>
+            <div>
+              Fixed compile failures with some versions of <tt>g++</tt>
+              due to the use of anonymous enums (<a href="https://svn.boost.org/trac/boost/ticket/4883">#4883</a>).
+            </div>
+          </li>
+          <li>
+            <div>
+              Fixed a bug on kqueue-based platforms, where some system calls that
+              repeatedly fail with <code><span class="identifier">EWOULDBLOCK</span></code>
+              are not correctly re-registered with kqueue.
+            </div>
+          </li>
+          <li>
+            <div>
+              Changed <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">streambuf</span></code> to ensure that its internal
+              pointers are updated correctly after the data has been modified using
+              <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">streambuf</span></code> member functions.
+            </div>
+          </li>
+          <li>
+            <div>
+              Fixed a bug that prevented the linger socket option from working on
+              platforms other than Windows.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/fusion/">Fusion</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              Fix <code><span class="identifier">disable_if</span></code> for
+              Visual C++ 7.1/8.0
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              Fix for STLPort (<a href="https://svn.boost.org/trac/boost/ticket/5217">#5217</a>).
+            </div>
+          </li>
+          <li>
+            <div>
+              PGI large file support
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/graph/">Graph</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              Bug fixes, including fixes for: <a href="https://svn.boost.org/trac/boost/ticket/5181">#5181</a>,
+              <a href="https://svn.boost.org/trac/boost/ticket/5180">#5180</a>,
+              <a href="https://svn.boost.org/trac/boost/ticket/5199">#5199</a>
+              and <a href="https://svn.boost.org/trac/boost/ticket/5175">#5175</a>.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/icl/">Icl</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              Intersects for interval_maps and segment_type/element_type (<a href="https://svn.boost.org/trac/boost/ticket/5207">#5207</a>).
+            </div>
+          </li>
+          <li>
+            <div>
+              Fixed some ambiguous calls to functions in boost and std namespaces.
+            </div>
+          </li>
+          <li>
+            <div>
+              Other bug fixes, and documentation fixes.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/math/">Math</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              Several minor bug fixes.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/polygon/">Polygon</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              Disabled 45-degree booleans optimization.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/proto/">Proto</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              Make <code><span class="identifier">display_expr</span></code> copyable
+              (<a href="https://svn.boost.org/trac/boost/ticket/5096">#5096</a>).
+            </div>
+          </li>
+          <li>
+            <div>
+              Fix const correctness problem in <code><span class="identifier">pass_through</span></code>.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/property_tree/">Property Tree</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              Fix compile error in JSON parser.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/signals2/">Signals2</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              Fix unused parameter warning.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/tr1/">TR1</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              Allow specialization of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">hash</span></code>.
+            </div>
+          </li>
+          <li>
+            <div>
+              Improved support for Pathscale and Sun compilers.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/unordered/">Unordered</a>:</span>
+
+        </div>
+        <ul>
+          <li>
+            <div>
+              Add missing copy constructors and assignment operators when using rvalue
+              references (<a href="https://svn.boost.org/trac/boost/ticket/5119">#5119</a>).
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div id="version_1_46_1.other_changes">
+    <h3><span class="link">Other changes</span></h3>
+    <ul>
+      <li>
+        <div>
+          Update getting started guide to reflect changes to boost build.
+        </div>
+      </li>
+      <li>
+        <div>
+          In quickbook, workaround optimization bug in g++ 4.4.
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="version_1_46_1.compilers_tested">
+    <h3><span class="link">Compilers Tested</span></h3>
+    <p>
+      Boost's primary test compilers are:
+    </p>
+    <ul>
+      <li>
+        <div>
+          Linux:
+        </div>
+        <ul>
+          <li>
+            <div>
+              GCC: 3.4.6, 4.2.4, 4.3.4, 4.4.1, 4.4.3, 4.4.5, 4.5.2
+            </div>
+          </li>
+          <li>
+            <div>
+              GCC, C++0x mode: 4.3.4, 4.4.3, 4.5.2
+            </div>
+          </li>
+          <li>
+            <div>
+              Intel: 10.1, 11.0, 11.1
+            </div>
+          </li>
+          <li>
+            <div>
+              Clang: 2.8
+            </div>
+          </li>
+          <li>
+            <div>
+              Pathscale: 3.2
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          OS X:
+        </div>
+        <ul>
+          <li>
+            <div>
+              GCC: 4.0.1, 4.2.1, 4.4
+            </div>
+          </li>
+          <li>
+            <div>
+              GCC, C++0x mode: 4.4.
+            </div>
+          </li>
+          <li>
+            <div>
+              Intel: 11.1
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          Windows:
+        </div>
+        <ul>
+          <li>
+            <div>
+              Visual C++: 7.1, 8.0, 9.0 and 10.0.
+            </div>
+          </li>
+          <li>
+            <div>
+              GCC, mingw: 4.4.0.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          FreeBSD:
+        </div>
+        <ul>
+          <li>
+            <div>
+              GCC: 4.2.1, 64 bit.
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p>
+      Boost's additional test compilers include:
+    </p>
+    <ul>
+      <li>
+        <div>
+          Linux:
+        </div>
+        <ul>
+          <li>
+            <div>
+              GCC: 3.4.6, 4.2.4, 4.3.4, 4.4.3, 4.4.4, 4.4.5, 4.5.2
+            </div>
+          </li>
+          <li>
+            <div>
+              GCC, C++0x mode: 4.3.4, 4.4.3, 4.5.2
+            </div>
+          </li>
+          <li>
+            <div>
+              pgCC: 11.2
+            </div>
+          </li>
+          <li>
+            <div>
+              Intel: 10.1, 11.0, 11.1
+            </div>
+          </li>
+          <li>
+            <div>
+              PathScale: 3.2, 4.0.8
+            </div>
+          </li>
+          <li>
+            <div>
+              Visual Age C++: 10.1
+            </div>
+          </li>
+          <li>
+            <div>
+              Clang from subversion
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          OS X:
+        </div>
+        <ul>
+          <li>
+            <div>
+              Intel C++ Compiler: 10.1, 11.0, 11.1
+            </div>
+          </li>
+          <li>
+            <div>
+              GCC: 4.0.1, 4.2.1, 4.4.4
+            </div>
+          </li>
+          <li>
+            <div>
+              GCC, C++0x mode: 4.4.4
+            </div>
+          </li>
+          <li>
+            <div>
+              Clang from subversion, with GNU libstdc++, libc++ and libc++ in C++0x
+              mode.
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          Windows:
+        </div>
+        <ul>
+          <li>
+            <div>
+              Visual C++: 7.1, 9.0, 10.0
+            </div>
+          </li>
+          <li>
+            <div>
+              Visual C++ with STLport: 9.0
+            </div>
+          </li>
+          <li>
+            <div>
+              Visual C++, Windows Mobile 5, with STLport: 9.0
+            </div>
+          </li>
+          <li>
+            <div>
+              GCC, mingw: 4.5.1
+            </div>
+          </li>
+          <li>
+            <div>
+              GCC, mingw, C++0x mode: 4.5.1
+            </div>
+          </li>
+          <li>
+            <div>
+              Borland: 6.1.3 (2009), 6.2.1 (2010)
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          AIX:
+        </div>
+        <ul>
+          <li>
+            <div>
+              IBM XL C/C++ Enterprise Edition, V11.1.0.0
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div>
+          Solaris:
+        </div>
+        <ul>
+          <li>
+            <div>
+              Sun C++: 5.10
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div id="version_1_46_1.acknowledgements">
+    <h3><span class="link">Acknowledgements</span></h3>
+    <p>
+      <a href="/users/people/beman_dawes.html">Beman Dawes</a>, Eric Niebler,
+      <a href="/users/people/rene_rivera.html">Rene Rivera</a>, Daniel James
+      and Vladimir Prus managed this release.
+    </p>
+  </div>
+</div>              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sidebar">
+        <!--#include virtual="/common/sidebar-common.html" --><!--#include virtual="/common/sidebar-boost.html" -->      </div>
+
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <div id="footer-left">
+      <div id="revised">
+        <p>Revised $Date: 2010-12-11 14:59:32 +0000 (Sat, 11 Dec 2010) $</p>
+      </div>
+
+      <div id="copyright">
+        <p>Copyright Rene Rivera 2006-2007.</p>
+      </div><!--#include virtual="/common/footer-license.html" -->    </div>
+
+    <div id="footer-right">
+      <!--#include virtual="/common/footer-banners.html" -->    </div>
+
+    <div class="clear"></div>
+  </div>
+</body>
+</html>

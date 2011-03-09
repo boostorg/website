@@ -6,7 +6,485 @@
     <description/>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)</copyright>
-  <item><title>Version 1.46.0</title><pubDate>Mon, 21 Feb 2011 15:36:13 -0500</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+  <item><title>Version 1.46.1</title><pubDate>$Date$</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
+      Bug fixes: Asio, Fusion, Graph, Icl, Math, Polygon, Proto, Property Tree, Signals2,
+      TR1, Unordered.
+    &lt;/span&gt;&lt;/span&gt;</boostbook:purpose><description>&lt;div class=&quot;description&quot;&gt;
+  
+  
+  &lt;div id=&quot;version_1_46_1.updated_libraries&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/asio/&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;EV_ONESHOT&lt;/span&gt;&lt;/code&gt; seems to
+              cause problems on some versions of Mac OS X, with the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_service&lt;/span&gt;&lt;/code&gt; destructor getting stuck
+              inside the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+              system call. Changed the kqueue backend to use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;EV_CLEAR&lt;/span&gt;&lt;/code&gt;
+              instead (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5021&quot;&gt;#5021&lt;/a&gt;).
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fixed compile failures with some versions of &lt;tt&gt;g++&lt;/tt&gt;
+              due to the use of anonymous enums (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/4883&quot;&gt;#4883&lt;/a&gt;).
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fixed a bug on kqueue-based platforms, where some system calls that
+              repeatedly fail with &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;EWOULDBLOCK&lt;/span&gt;&lt;/code&gt;
+              are not correctly re-registered with kqueue.
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Changed &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;asio&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;streambuf&lt;/span&gt;&lt;/code&gt; to ensure that its internal
+              pointers are updated correctly after the data has been modified using
+              &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;streambuf&lt;/span&gt;&lt;/code&gt; member functions.
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fixed a bug that prevented the linger socket option from working on
+              platforms other than Windows.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/fusion/&quot;&gt;Fusion&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fix &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;disable_if&lt;/span&gt;&lt;/code&gt; for
+              Visual C++ 7.1/8.0
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/filesystem/&quot;&gt;Filesystem&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fix for STLPort (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5217&quot;&gt;#5217&lt;/a&gt;).
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              PGI large file support
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/graph/&quot;&gt;Graph&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Bug fixes, including fixes for: &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5181&quot;&gt;#5181&lt;/a&gt;,
+              &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5180&quot;&gt;#5180&lt;/a&gt;,
+              &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5199&quot;&gt;#5199&lt;/a&gt;
+              and &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5175&quot;&gt;#5175&lt;/a&gt;.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/icl/&quot;&gt;Icl&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Intersects for interval_maps and segment_type/element_type (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5207&quot;&gt;#5207&lt;/a&gt;).
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fixed some ambiguous calls to functions in boost and std namespaces.
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Other bug fixes, and documentation fixes.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/math/&quot;&gt;Math&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Several minor bug fixes.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/polygon/&quot;&gt;Polygon&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Disabled 45-degree booleans optimization.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/proto/&quot;&gt;Proto&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Make &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;display_expr&lt;/span&gt;&lt;/code&gt; copyable
+              (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5096&quot;&gt;#5096&lt;/a&gt;).
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fix const correctness problem in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;pass_through&lt;/span&gt;&lt;/code&gt;.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/property_tree/&quot;&gt;Property Tree&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fix compile error in JSON parser.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/signals2/&quot;&gt;Signals2&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Fix unused parameter warning.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/tr1/&quot;&gt;TR1&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Allow specialization of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;tr1&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hash&lt;/span&gt;&lt;/code&gt;.
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Improved support for Pathscale and Sun compilers.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;/libs/unordered/&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
+
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Add missing copy constructors and assignment operators when using rvalue
+              references (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5119&quot;&gt;#5119&lt;/a&gt;).
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_46_1.other_changes&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Other changes&lt;/span&gt;&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          Update getting started guide to reflect changes to boost build.
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          In quickbook, workaround optimization bug in g++ 4.4.
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_46_1.compilers_tested&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Compilers Tested&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      Boost's primary test compilers are:
+    &lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          Linux:
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              GCC: 3.4.6, 4.2.4, 4.3.4, 4.4.1, 4.4.3, 4.4.5, 4.5.2
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              GCC, C++0x mode: 4.3.4, 4.4.3, 4.5.2
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Intel: 10.1, 11.0, 11.1
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Clang: 2.8
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Pathscale: 3.2
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          OS X:
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              GCC: 4.0.1, 4.2.1, 4.4
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              GCC, C++0x mode: 4.4.
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Intel: 11.1
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          Windows:
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Visual C++: 7.1, 8.0, 9.0 and 10.0.
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              GCC, mingw: 4.4.0.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          FreeBSD:
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              GCC: 4.2.1, 64 bit.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;p&gt;
+      Boost's additional test compilers include:
+    &lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          Linux:
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              GCC: 3.4.6, 4.2.4, 4.3.4, 4.4.3, 4.4.4, 4.4.5, 4.5.2
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              GCC, C++0x mode: 4.3.4, 4.4.3, 4.5.2
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              pgCC: 11.2
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Intel: 10.1, 11.0, 11.1
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              PathScale: 3.2, 4.0.8
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Visual Age C++: 10.1
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Clang from subversion
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          OS X:
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Intel C++ Compiler: 10.1, 11.0, 11.1
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              GCC: 4.0.1, 4.2.1, 4.4.4
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              GCC, C++0x mode: 4.4.4
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Clang from subversion, with GNU libstdc++, libc++ and libc++ in C++0x
+              mode.
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          Windows:
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Visual C++: 7.1, 9.0, 10.0
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Visual C++ with STLport: 9.0
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Visual C++, Windows Mobile 5, with STLport: 9.0
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              GCC, mingw: 4.5.1
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              GCC, mingw, C++0x mode: 4.5.1
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Borland: 6.1.3 (2009), 6.2.1 (2010)
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          AIX:
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              IBM XL C/C++ Enterprise Edition, V11.1.0.0
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          Solaris:
+        &lt;/div&gt;
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              Sun C++: 5.10
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;version_1_46_1.acknowledgements&quot;&gt;
+    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Acknowledgements&lt;/span&gt;&lt;/h3&gt;
+    &lt;p&gt;
+      &lt;a href=&quot;/users/people/beman_dawes.html&quot;&gt;Beman Dawes&lt;/a&gt;, Eric Niebler,
+      &lt;a href=&quot;/users/people/rene_rivera.html&quot;&gt;Rene Rivera&lt;/a&gt;, Daniel James
+      and Vladimir Prus managed this release.
+    &lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Version 1.46.0</title><pubDate>Mon, 21 Feb 2011 15:36:13 -0500</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
       New Libraries: Icl. Updated Libraries: Array, Asio, Bind, Concept Check, Filesystem,
       Fusion, Hash, Iterator, Math, Meta State Machine, Optional, Pool, Program Options,
       Proto, Signals, Spirit, Tokenizer, Unordered, Wave. Updated Tools: Boostbook,

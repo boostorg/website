@@ -104,7 +104,7 @@ http://www.boost.org/development/website_updating.html
                   <h2>Downloads</h2>
 
                   <ul id="downloads">
-                    <?php $_count = 0; foreach ( $_downloads->db as $_guid => $_item ) { $_count += 1; if ($_count > 5) { break; } ?>
+                    <?php $_count = 0; foreach ( $_downloads->db as $_guid => $_item ) { $_count += 1; if ($_count > 1) { break; } ?>
 
                     <li><span class=
                     "news-title"><?php print '<a href="'.$_item['boostbook:download'].'">'; ?><?php print $_item['title']; ?><?php print '</a>'; ?>
