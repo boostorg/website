@@ -111,7 +111,7 @@ function display_from_archive(
         array('@.*@','@[.]js$@i','raw','application/x-javascript'),
         array('@.*@','@[.]pdf$@i','raw','application/pdf'),
         array('@.*@','@[.](html|htm)$@i','raw','text/html'),
-        array('@.*@','@/(Jamroot|Jamfile|ChangeLog|configure)$@i','text','text/plain'),
+        array('@.*@','@(/|^)(Jamroot|Jamfile|ChangeLog|configure)$@i','text','text/plain'),
         array('@.*@','@[.]dtd$@i','raw','application/xml-dtd'),
         ));
 
@@ -244,8 +244,14 @@ function conditional_get($last_modified)
 // General purpose render callbacks.
 
 function boost_archive_render_callbacks($content, $params) {
+    $version_title =
+    	str_replace('_', ' ',
+    		preg_replace('@(?<=\d)_(?=\d)@', '.',
+    			ucwords($params['version'])));
+
     $charset = $params['charset'] ? $params['charset'] : 'us-ascii';
-    $title = $params['title'] ? 'Boost C++ Libraries - '.$params['title'] : 'Boost C++ Libraries';
+    $title = $params['title'] ? "$params[title] - $version_title" : 'Boost C++ Libraries';
+
 
     $head = <<<HTML
 <meta http-equiv="Content-Type" content="text/html; charset=${charset}" />

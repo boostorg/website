@@ -17,7 +17,7 @@ function boost_book_basic_filter($params)
     $pos2 = strpos($text, '<body', $pos1);
     $pos3 = strpos($text, '>', $pos2) + 1;
     $pos4 = strpos($text, '<div class="spirit-nav">', $pos3);
-    echo substr($text, 0, $pos1);
+    echo alter_title($params, substr($text, 0, $pos1));
     echo '<link rel="icon" href="/favicon.ico" type="image/ico"/>';
     echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"/>';
     echo substr($text, $pos1, $pos3 - $pos1);
