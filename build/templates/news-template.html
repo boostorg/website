@@ -1,0 +1,81 @@
+${
+title = 'Boost News'
+entries = pages.match_pages(['feed/news/*.qbk', 'feed/history/*.qbk'], 5)
+}$<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>${ emit(title) }$</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="icon" href="/favicon.ico" type="image/ico" />
+  <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
+  <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
+</head>
+
+<body>
+  <div id="heading">
+    <!--#include virtual="/common/heading.html" -->  </div>
+
+  <div id="body">
+    <div id="body-inner">
+      <div id="content">
+        <div class="section" id="intro">
+          <div class="section-0">
+            <div class="section-title">
+              <h1>${ emit(title) }$</h1>
+            </div>
+
+            <div class="section-body">
+              ${
+emit('<ul class="toc">\n')
+emit('                ')
+for entry in entries:
+    emit('\n')
+    emit('                <li><span class=\n                "news-title"><a href="#i%s">%s</a></span></li>' % (entry.id, entry.title_xml))
+emit('              </ul>')
+for entry in entries:
+    emit('\n')
+    emit('              <h2 class="news-title">\n')
+    emit('              <a name="i%s" id="i%s"></a><a href="/%s">%s</a>' % (entry.id, entry.id, entry.location, entry.title_xml))
+    emit('</h2>\n\n')
+    emit('              <p class="news-date">%s</p>\n\n' % (entry.web_date()))
+    emit('              <div class="news-description">\n')
+    emit('                <span class="brief"><span class="purpose">%s</span></span>' % (entry.purpose_xml))
+    emit('              </div>\n\n')
+    emit('              <ul class="menu">\n')
+    emit('                <li>\n')
+    emit('                <a href="/%s">Details</a></li>' % entry.location)
+    if(entry.download_item):
+        emit('\n\n')
+        emit('                                <li><a href="%s">Download</a></li>' % entry.download_item)
+    emit('\n                              </ul>')
+}$            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sidebar">
+        <!--#include virtual="/common/sidebar-common.html" --><!--#include virtual="/common/sidebar-boost.html" -->      </div>
+
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <div id="footer-left">
+      <div id="revised">
+        <p>Revised $Date$</p>
+      </div>
+
+      <div id="copyright">
+        <p>Copyright Rene Rivera 2006.</p>
+      </div><!--#include virtual="/common/footer-license.html" -->    </div>
+
+    <div id="footer-right">
+      <!--#include virtual="/common/footer-banners.html" -->    </div>
+
+    <div class="clear"></div>
+  </div>
+</body>
+</html>

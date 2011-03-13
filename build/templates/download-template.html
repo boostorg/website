@@ -1,13 +1,12 @@
-<?php
-require_once(dirname(__FILE__) . '/../common/code/boost_feed.php');
-$_downloads = new boost_feed(dirname(__FILE__) . '/../feed/downloads.rss', '/users/download');
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+${
+title = 'Boost Downloads'
+entries = pages.match_pages(['feed/history/boost_1_46_1.qbk'], 1)
+}$<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Boost Downloads</title>
+  <title>${ emit(title) }$</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
@@ -16,8 +15,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../feed/downloads.rss', '/use
 
 <body>
   <div id="heading">
-    <?php virtual("/common/heading.html"); ?>
-  </div>
+    <!--#include virtual="/common/heading.html" -->  </div>
 
   <div id="body">
     <div id="body-inner">
@@ -25,7 +23,7 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../feed/downloads.rss', '/use
         <div class="section" id="intro">
           <div class="section-0">
             <div class="section-title">
-              <h1>Boost Downloads</h1>
+              <h1>${ emit(title) }$</h1>
             </div>
 
             <div class="section-body">
@@ -38,27 +36,24 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../feed/downloads.rss', '/use
               </ul>
 
               <h2><a name="releases" id="releases"></a>Packaged
-              Releases</h2><?php $count = 0; foreach ( $_downloads->db as $_guid => $_item ) {
-              if (++$count > 1) break;
-              ?>
-
-              <h3><span class=
-              "news-title"><?php print $_item['title']; ?></span></h3>
-
-              <p class="news-date"><?php print $_item['date']; ?></p>
-
-              <p class="news-description">
-              <?php print $_item['boostbook:purpose']; ?></p>
-
-              <ul class="menu">
-                <li>
-                <?php print '<a href="'.htmlentities($_item['link']).'">Release Notes</a>'; ?></li>
-
-                <?php if(!empty($_item['boostbook:download'])) : ?><li>
-                <?php print '<a href="'.htmlentities($_item['boostbook:download']).'">Download</a>'; ?></li>
-                <?php endif ?>
-              </ul><?php } ?>
-
+              Releases</h2>${
+for entry in entries:
+    emit('\n')
+    emit('              <h3><span class=\n              "news-title">%s</span></h3>\n\n' % entry.title_xml)
+    emit('              <p class="news-date">%s</p>\n\n' % entry.web_date())
+    emit('              <p class="news-description">\n')
+    emit('              <span class="brief"><span class="purpose">%s</span></span></p>\n\n' % entry.purpose_xml)
+    emit('              <ul class="menu">\n')
+    emit('                <li>\n')
+    emit('                <a href="/%s">Details</a>' % entry.location)
+    emit('</li>\n')
+    if(entry.download_item):
+        emit('\n')
+        emit('                <li>\n')
+        emit('                <a href="%s">Download</a></li>' % entry.download_item)
+    emit('\n')
+    emit('              </ul>')
+}$
               <h2><a name="history" id="history"></a>Old Boost Releases</h2>
 
               <p>Old versions of boost can be found on the <a href=
@@ -139,8 +134,7 @@ svn co <a href=
       </div>
 
       <div id="sidebar">
-        <?php virtual("/common/sidebar-common.html"); ?><?php virtual("/common/sidebar-boost.html"); ?>
-      </div>
+        <!--#include virtual="/common/sidebar-common.html" --><!--#include virtual="/common/sidebar-boost.html" -->      </div>
 
       <div class="clear"></div>
     </div>
@@ -154,12 +148,10 @@ svn co <a href=
 
       <div id="copyright">
         <p>Copyright Rene Rivera 2006-2007.</p>
-      </div><?php virtual("/common/footer-license.html"); ?>
-    </div>
+      </div><!--#include virtual="/common/footer-license.html" -->    </div>
 
     <div id="footer-right">
-      <?php virtual("/common/footer-banners.html"); ?>
-    </div>
+      <!--#include virtual="/common/footer-banners.html" -->    </div>
 
     <div class="clear"></div>
   </div>
