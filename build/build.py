@@ -57,7 +57,7 @@ settings = {
         'feed/downloads.rss' : {
             'title': 'Boost Downloads',
             'matches': ['feed/history/*.qbk', 'feed/downloads/*.qbk'],
-            'count': 5
+            'count': 3
         },
         'feed/history.rss' : {
             'title': 'Boost History',
