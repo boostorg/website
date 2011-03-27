@@ -184,7 +184,11 @@ class Page:
         if self.pub_date == 'In Progress':
             return self.pub_date
         else:
-            return time.strftime('%B %e, %Y %H:%M GMT', time.gmtime(self.last_modified))
+            release_time = time.gmtime(self.last_modified)
+            return time.strftime(
+                    '%B %e' +
+                    number_suffix(release_time.tm_mday) +
+                    ', %Y %H:%M GMT', release_time)
 
     def download_table(self):
         if(not self.download_item):
@@ -243,3 +247,10 @@ class Page:
             return '<p><span class="news-download"><a href="' + \
                 boost_site.util.htmlencode(self.download_item) + \
                 '">Download this release.</a></span></p>';
+
+def number_suffix(x):
+    x = x % 100
+    if x / 10 == 1:
+        return "th"
+    else:
+        return ["th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"][x % 10]
