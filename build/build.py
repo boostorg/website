@@ -235,6 +235,9 @@ def generate_rss_item(rss_feed, qbk_file, page):
     title = xml.dom.minidom.parseString('<title>%s</title>' % page.title_xml)
     item.appendChild(rss_feed.importNode(title.documentElement, True))
 
+    title = xml.dom.minidom.parseString('<link>http://www.boost.org/%s</link>' % page.location)
+    item.appendChild(rss_feed.importNode(title.documentElement, True))
+
     # TODO: Convert date format?
     node = rss_feed.createElement('pubDate')
     node.appendChild(rss_feed.createTextNode(page.pub_date))
