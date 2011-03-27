@@ -6,8 +6,6 @@
 
 """Usage: python build.py [command]
 
-If command is omitted then 'update' is used.
-
 Commands:
 
 update      Update the html pages and rss feeds for new or updated
@@ -75,14 +73,11 @@ settings = {
 def main(argv):
     os.chdir(os.path.join(os.path.dirname(sys.argv[0]), "../"))
 
-    if len(argv) > 1:
+    if len(argv) != 1:
         print __doc__
         return
 
-    if len(argv) == 1 and argv[0]:
-        command = argv[0]
-    else:
-        command = 'update'
+    command = argv[0]
 
     if command == 'docs':
         return update_php_docs()
