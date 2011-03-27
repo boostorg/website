@@ -30,6 +30,9 @@ import boost_site.templite, boost_site.pages, boost_site.boostbook_parser, boost
 ################################################################################
 
 settings = {
+    'downloads' : [
+        'feed/history/boost_1_46_1.qbk'
+    ],
     'pages': {
         'users/history/': {
             'src_files' : ['feed/history/*.qbk'],
@@ -158,11 +161,16 @@ def update_quickbook(refresh):
 
     # Generate 'Index' pages
 
+    index_page_variables = {
+        'pages' : pages,
+        'downloads' : pages.match_pages(settings['downloads'], sort = False)
+    }
+
     for index_page in settings['index-pages']:
         boost_site.templite.write_template(
             index_page,
             settings['index-pages'][index_page],
-            { 'pages' : pages })
+            index_page_variables)
 
     # Generate RSS feeds
 

@@ -111,14 +111,14 @@ class Pages:
                     'build/templates/entry-template.html',
                     { 'page': page_data })
 
-
-    def match_pages(self, patterns, count = None):
+    def match_pages(self, patterns, count = None, sort = True):
         filtered = set()
         for pattern in patterns:
             filtered = filtered | set(fnmatch.filter(self.pages.keys(), pattern))
 
         entries = [self.pages[x] for x in filtered if self.pages[x].page_state != 'new']
-        entries = sorted(entries, key = lambda x: x.last_modified, reverse=True)
+        if sort:
+            entries = sorted(entries, key = lambda x: x.last_modified, reverse=True)
         if count:
             entries = entries[:count]
         return entries
