@@ -95,7 +95,7 @@ def main(argv):
 
 def update_php_docs():
     try:
-        subprocess.check_call(['php', 'build/build.php'])
+        subprocess.check_call(['php', 'build/php/build.php'])
     except:
         print "PHP documentation serialization failed."
 
