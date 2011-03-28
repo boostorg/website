@@ -108,7 +108,7 @@ class Pages:
                     os.unlink(xml_filename)
     
                 boost_site.templite.write_template(page_data.location,
-                    'build/templates/entry-template.html',
+                    'site-tools/templates/entry-template.html',
                     { 'page': page_data })
 
     def match_pages(self, patterns, count = None, sort = True):

@@ -4,7 +4,7 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-"""Usage: python site-gen.py [command]
+"""Usage: python site-tools.py [command]
 
 Commands:
 
@@ -36,22 +36,22 @@ settings = {
     'pages': {
         'users/history/': {
             'src_files' : ['feed/history/*.qbk'],
-            'template' : 'build/templates/entry-template.html'
+            'template' : 'site-tools/templates/entry-template.html'
         },
         'users/news/': {
             'src_files' : ['feed/news/*.qbk'],
-            'template' : 'build/templates/entry-template.html'
+            'template' : 'site-tools/templates/entry-template.html'
         },
         'users/download/': {
             'src_files' : ['feed/downloads/*.qbk'],
-            'template' : 'build/templates/entry-template.html'
+            'template' : 'site-tools/templates/entry-template.html'
         }
     },
     'index-pages' : {
-        'users/download/index.html' : 'build/templates/download-template.html',
-        'users/history/index.html' : 'build/templates/history-template.html',
-        'users/news/index.html' : 'build/templates/news-template.html',
-        'index.html' : 'build/templates/index-src.html'
+        'users/download/index.html' : 'site-tools/templates/download-template.html',
+        'users/history/index.html' : 'site-tools/templates/history-template.html',
+        'users/news/index.html' : 'site-tools/templates/news-template.html',
+        'index.html' : 'site-tools/templates/index-src.html'
     },
     'feeds' : {
         'feed/downloads.rss' : {
@@ -98,7 +98,7 @@ def main(argv):
 
 def update_php_docs():
     try:
-        subprocess.check_call(['php', 'build/php/build.php'])
+        subprocess.check_call(['php', 'site-tools/php/update-doc-list.php'])
     except:
         print "PHP documentation serialization failed."
 
@@ -126,7 +126,7 @@ def convert_hash_files():
                     state = hashes[qbk_file]
                     state['dir_location'] = location
 
-    boost_site.state.save(hashes, 'build/state/feed-pages.txt')
+    boost_site.state.save(hashes, 'site-tools/state/feed-pages.txt')
     return 0
 
 def load_hashes(hash_file):
@@ -144,7 +144,7 @@ def load_hashes(hash_file):
 def update_quickbook(refresh):
     # Now check quickbook files.
     
-    pages = boost_site.pages.Pages('build/state/feed-pages.txt')
+    pages = boost_site.pages.Pages('site-tools/state/feed-pages.txt')
 
     if not refresh:
         for location in settings['pages']:

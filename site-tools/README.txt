@@ -5,7 +5,7 @@ A script to generate several of the pages on the Boost website,
 including the release notes, the home page and the downlaod page,
 as well as some other data for the site.
 
-Usage: python site-gen.py [command]
+Usage: python site-tools.py [command]
 
 Commands:
 
