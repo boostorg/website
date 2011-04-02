@@ -19,9 +19,6 @@ refresh     Reconvert all the quickbook files and regenerate the html
 docs        Update the documentation list from doc/libraries.xml.
             Requires php to be on the path and the site to be configured.
 
-start       Setup the state file and regenerate html files from the old
-            hashes files.
-
 """
 
 import os, sys, subprocess, glob, re, time, xml.dom.minidom, codecs
@@ -88,10 +85,6 @@ def main(argv):
         return update_quickbook(False)
     elif command == 'refresh':
         return update_quickbook(True)
-    elif command == 'start':
-        status = convert_hash_files()
-        if(status != 0): return status
-        return update_quickbook(True)
     else:
         print __doc__
         return
@@ -101,33 +94,6 @@ def update_php_docs():
         subprocess.check_call(['php', 'site-tools/php/update-doc-list.php'])
     except:
         print "PHP documentation serialization failed."
-
-def convert_hash_files():
-    hashes = {}
-
-    for hash_file in glob.glob('feed/*-hashes.txt'):
-        new_hashes = load_hashes(hash_file)
-
-        for qbk_file in new_hashes:
-            full_path = 'feed/%s' % qbk_file
-            if(full_path in hashes and hashes[full_path] != new_hashes[qbk_file]):
-                print "Contradiction for %s" % qbk_file
-                return -1
-            else:
-                hashes[full_path] = new_hashes[qbk_file]
-
-    state = {}
-
-    for location in settings['pages']:
-        pages_data = settings['pages'][location]
-        for src_file_pattern in pages_data['src_files']:
-            for qbk_file in glob.glob(src_file_pattern):
-                if qbk_file in hashes:
-                    state = hashes[qbk_file]
-                    state['dir_location'] = location
-
-    boost_site.state.save(hashes, 'site-tools/state/feed-pages.txt')
-    return 0
 
 def load_hashes(hash_file):
     qbk_hashes = {}
