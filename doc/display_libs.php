@@ -61,8 +61,11 @@ EOS;
 }
 
 $location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],true,false);
-$beta_site = strpos($_SERVER['HTTP_HOST'], 'beta') !== FALSE;
-$beta_docs = strpos($location['version'], 'beta') !== FALSE;
+$beta_site = strpos($_SERVER['HTTP_HOST'], 'beta') !== FALSE ||
+	strpos($_SERVER['HTTP_HOST'], 'localhost') !== FALSE;
+$beta_docs = strpos($location['version'], 'beta') !== FALSE ||
+	strpos($location['version'], 'snapshot') !== FALSE;
+
 if (!$beta_site && $beta_docs) {
     file_not_found($location['file']);
     return;
