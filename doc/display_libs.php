@@ -30,6 +30,12 @@ function boost_future_version($version)
 }
 
 function add_spirit_analytics($content) {
+	$server = $_SERVER['HTTP_HOST'];
+	
+	// Always serving for testing, will disable soon.
+	//if ($server != 'www.boost.org' && $server != 'live.boost.org')
+	//	return $content;
+
     if(stripos($content, '_uacct = "UA-11715441-2"') !== FALSE)
         return $content;
 
@@ -39,7 +45,7 @@ function add_spirit_analytics($content) {
   _gaq.push(
     ['_setAccount', 'UA-11715441-2'],
     ['_trackPageview'],
-    ['_setDomainName', 'none'],
+    ['_setDomainName', '$server'],
     ['_setAllowLinker', true]
     );
 
