@@ -1,4 +1,4 @@
-[article Version 1.47.0
+﻿[article Version 1.47.0
     [quickbook 1.5]
     [source-mode c++]
     [purpose
@@ -182,6 +182,103 @@
       8 to 10.
   * Better integration of `proto::basic_expr` to avoid accidental needless
     instantiations of `proto::expr`.
+
+* [phrase library..[@/libs/random/index.html Random]:]
+  * Synchronized with the new standard.
+    * Many new distributions added:
+      `chi_squared_distribution`, `negative_binomial_distribution`,
+      `fisher_f_distribution`, `student_t_distribution`,
+      `weibull_distribution`, `extreme_value_distribution`,
+      `discrete_distribution`, `piecewise_constant_distribution`,
+      `piecewise_liear_distribution`
+    * Renamed `uniform_int` and `uniform_real` to
+      `uniform_int_distribution` and `uniform_real_distribution`.
+    * Added members to all distributions:
+      `param_type`, `param`, stream operators,
+      comparison operators, `min` and `max`.
+    * Allow distributions to be used directly with
+      generators without use of `variate_generator`.
+    * Changed the meaning of the parameters of
+      `geometric_distribution` and `lognormal_distribution`.
+    * Added a second parameter to `gamma_distribution`.
+    * Added `seed_seq` and added the corresponding
+      constructors and `seed` overloads the generators.
+    * Added `generate_canonical`.
+    * Renamed the engine tempates.  e.g. `mersenne_twister`
+      becomes `mersenne_twister_engine`.
+    * New engine adapter `independent_bits_engine`.
+    * Added new predefined engine typedefs:
+      `mt19937_64`, `ranlux[24|48][_base]`, `knuth_b`.
+    * Updated seeding algorithms.
+    * Added `discard`
+    * Use unsigned types instead of signed types in all
+      the predefined engines.
+  * Bug fixes:
+    * `linear_congruential_engine` could assert because
+      the modular arithmetic was not implemented in all
+      cases.  `shuffle_output`, now called `shuffle_order_engine`,
+      could cause integer overflow.  These cases were
+      not triggered by any predefined engines.
+    * `uniform_small_int` now actually behaves as documented.
+  * New efficient algorithms for `binomial_distribution`
+    and `poisson_distribution`.
+  * Moved all features into `namespace boost::random`
+  * Backwards compatibility issues:
+    * The seeding algorithms have changed.
+      This was unavoidable for compatibility
+      with the standard.  Not to mention
+      that some of the existing algorithms
+      were weird and inconsistent.
+      * Seeding with an integer:
+        The behaviour should be unchanged for
+        most generators except `lagged_fibonacci` and
+        `subtract_with_carry` (and thus `ranlux`).
+      * Seeding a generator with another generator:
+        This has been enabled by making all
+        all generators models of `SeedSeq`.  Therefore,
+        if you seed a Boost.Random generator with
+        a non Boost.Random generator, your code
+        will no longer compile.  The algorithm
+        has changed, so code using this seeding
+        method will yield different values.
+      * Seeding a generator from a pair of iterators:
+        This implicitly assumed that the elements
+        were 32-bit integers in some places, but
+        not everywhere.  I've added this requirement
+        everywhere and updated the algorithms
+        accordingly.  The behaviour of generators
+        with a `value_type` no more than 32 bits should
+        be unchanged.
+    * Renaming:
+      * Whenever a class was renamed, there is a wrapper
+        with the old name.  There are also using declarations
+        in namespace boost for everything that was moved.
+      * The names of a few accessors in the distributions
+        changed.  Both the old and the new names are allowed.
+    * `geometric_distribution` and `lognormal_distribution`:
+      The behaviour is different at runtime.
+      `boost::geometric_distribution` and `boost::lognormal_distribution`
+      provide the old behaviour, `boost::random::geometric_distribution`
+      and `boost::random::lognormal_distribution` provide
+      the new behaviour.
+    * Streaming:
+      gamma_distribution has a new parameter, thus
+      text saved with the old version will not readable
+      by the new version.
+    * `variate_generator` is now a simple pass through wrapper.
+      Code that assumes that it will adjust the generator's
+      result type to match the distribution will no longer
+      work.  This is not an issue with any of the distributions
+      provided by Boost.Random.
+    * Return types:
+      The `result_types` of some generators have changed
+      slightly.  Some signed types have changed to unsigned
+      to match the standard.
+    * `has_fixed_range`:
+      This is now always false, as it doesn't appear to be very
+      useful and is excessively cumbersome.  Anything that
+      was accessing `const_min` and `const_max` without first
+      checking `has_fixed_range` was incorrect to begin with. 
 
 * [phrase library..[@/libs/range/index.html Range]:]
   * Fixed the end position `irange` when step size is greater than 1
