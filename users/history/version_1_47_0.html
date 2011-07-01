@@ -520,6 +520,255 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/libs/random/index.html">Random</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Synchronized with the new standard.
+                <ul>
+                  <li>
+                    <div>
+                      Many new distributions added: <code><span class="identifier">chi_squared_distribution</span></code>,
+                      <code><span class="identifier">negative_binomial_distribution</span></code>,
+                      <code><span class="identifier">fisher_f_distribution</span></code>,
+                      <code><span class="identifier">student_t_distribution</span></code>,
+                      <code><span class="identifier">weibull_distribution</span></code>,
+                      <code><span class="identifier">extreme_value_distribution</span></code>,
+                      <code><span class="identifier">discrete_distribution</span></code>,
+                      <code><span class="identifier">piecewise_constant_distribution</span></code>,
+                      <code><span class="identifier">piecewise_liear_distribution</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Renamed <code><span class="identifier">uniform_int</span></code>
+                      and <code><span class="identifier">uniform_real</span></code>
+                      to <code><span class="identifier">uniform_int_distribution</span></code>
+                      and <code><span class="identifier">uniform_real_distribution</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added members to all distributions: <code><span class="identifier">param_type</span></code>,
+                      <code><span class="identifier">param</span></code>, stream
+                      operators, comparison operators, <code><span class="identifier">min</span></code>
+                      and <code><span class="identifier">max</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Allow distributions to be used directly with generators without
+                      use of <code><span class="identifier">variate_generator</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Changed the meaning of the parameters of <code><span class="identifier">geometric_distribution</span></code>
+                      and <code><span class="identifier">lognormal_distribution</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added a second parameter to <code><span class="identifier">gamma_distribution</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added <code><span class="identifier">seed_seq</span></code>
+                      and added the corresponding constructors and <code><span class="identifier">seed</span></code> overloads the generators.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added <code><span class="identifier">generate_canonical</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Renamed the engine tempates. e.g. <code><span class="identifier">mersenne_twister</span></code>
+                      becomes <code><span class="identifier">mersenne_twister_engine</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      New engine adapter <code><span class="identifier">independent_bits_engine</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added new predefined engine typedefs: <code><span class="identifier">mt19937_64</span></code>,
+                      <code><span class="identifier">ranlux</span><span class="special">[</span><span class="number">24</span><span class="special">|</span><span class="number">48</span><span class="special">][</span><span class="identifier">_base</span><span class="special">]</span></code>,
+                      <code><span class="identifier">knuth_b</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Updated seeding algorithms.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added <code><span class="identifier">discard</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Use unsigned types instead of signed types in all the predefined
+                      engines.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Bug fixes:
+                <ul>
+                  <li>
+                    <div>
+                      <code><span class="identifier">linear_congruential_engine</span></code>
+                      could assert because the modular arithmetic was not implemented
+                      in all cases. <code><span class="identifier">shuffle_output</span></code>,
+                      now called <code><span class="identifier">shuffle_order_engine</span></code>,
+                      could cause integer overflow. These cases were not triggered
+                      by any predefined engines.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">uniform_small_int</span></code>
+                      now actually behaves as documented.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                New efficient algorithms for <code><span class="identifier">binomial_distribution</span></code>
+                and <code><span class="identifier">poisson_distribution</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Moved all features into <code><span class="keyword">namespace</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">random</span></code>
+              </div>
+            </li>
+            <li>
+              <div>
+                Backwards compatibility issues:
+                <ul>
+                  <li>
+                    <div>
+                      The seeding algorithms have changed. This was unavoidable for
+                      compatibility with the standard. Not to mention that some of
+                      the existing algorithms were weird and inconsistent.
+                      <ul>
+                        <li>
+                          <div>
+                            Seeding with an integer: The behaviour should be unchanged
+                            for most generators except <code><span class="identifier">lagged_fibonacci</span></code>
+                            and <code><span class="identifier">subtract_with_carry</span></code>
+                            (and thus <code><span class="identifier">ranlux</span></code>).
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            Seeding a generator with another generator: This has
+                            been enabled by making all all generators models of
+                            <code><span class="identifier">SeedSeq</span></code>.
+                            Therefore, if you seed a Boost.Random generator with
+                            a non Boost.Random generator, your code will no longer
+                            compile. The algorithm has changed, so code using this
+                            seeding method will yield different values.
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            Seeding a generator from a pair of iterators: This implicitly
+                            assumed that the elements were 32-bit integers in some
+                            places, but not everywhere. I've added this requirement
+                            everywhere and updated the algorithms accordingly. The
+                            behaviour of generators with a <code><span class="identifier">value_type</span></code>
+                            no more than 32 bits should be unchanged.
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Renaming:
+                      <ul>
+                        <li>
+                          <div>
+                            Whenever a class was renamed, there is a wrapper with
+                            the old name. There are also using declarations in namespace
+                            boost for everything that was moved.
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            The names of a few accessors in the distributions changed.
+                            Both the old and the new names are allowed.
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">geometric_distribution</span></code>
+                      and <code><span class="identifier">lognormal_distribution</span></code>:
+                      The behaviour is different at runtime. <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">geometric_distribution</span></code>
+                      and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">lognormal_distribution</span></code> provide
+                      the old behaviour, <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">random</span><span class="special">::</span><span class="identifier">geometric_distribution</span></code>
+                      and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">random</span><span class="special">::</span><span class="identifier">lognormal_distribution</span></code> provide
+                      the new behaviour.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Streaming: gamma_distribution has a new parameter, thus text
+                      saved with the old version will not readable by the new version.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">variate_generator</span></code>
+                      is now a simple pass through wrapper. Code that assumes that
+                      it will adjust the generator's result type to match the distribution
+                      will no longer work. This is not an issue with any of the distributions
+                      provided by Boost.Random.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Return types: The <code><span class="identifier">result_types</span></code>
+                      of some generators have changed slightly. Some signed types
+                      have changed to unsigned to match the standard.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">has_fixed_range</span></code>:
+                      This is now always false, as it doesn't appear to be very useful
+                      and is excessively cumbersome. Anything that was accessing
+                      <code><span class="identifier">const_min</span></code> and
+                      <code><span class="identifier">const_max</span></code> without
+                      first checking <code><span class="identifier">has_fixed_range</span></code>
+                      was incorrect to begin with.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/libs/range/index.html">Range</a>:</span>
           <ul>
             <li>
