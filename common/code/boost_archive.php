@@ -61,7 +61,7 @@ function display_from_archive(
     {
         $check_file = $params['archive'];
 
-        if (!is_file($check_file)) {
+        if (!is_readable($check_file)) {
             file_not_found($params, 'Unable to find zipfile.');
             return;        
         }
@@ -79,8 +79,8 @@ function display_from_archive(
             }
 
             $found_file = NULL;
-            if (is_file("$check_file/index.html")) $found_file = 'index.html';
-            else if (is_file("$check_file/index.htm")) $found_file = 'index.htm';
+            if (is_readable("$check_file/index.html")) $found_file = 'index.html';
+            else if (is_readable("$check_file/index.htm")) $found_file = 'index.htm';
 
             if ($found_file) {
                 $params['file'] = $check_file = $check_file.$found_file;
@@ -93,7 +93,7 @@ function display_from_archive(
                 return display_dir($params, $check_file);
             }
         }
-        else if (!is_file($check_file)) {
+        else if (!is_readable($check_file)) {
             file_not_found($params, 'Unable to find file.');
             return;        
         }
