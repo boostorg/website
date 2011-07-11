@@ -28,7 +28,7 @@ import boost_site.templite, boost_site.pages, boost_site.boostbook_parser, boost
 
 settings = {
     'downloads' : [
-        'feed/history/boost_1_46_1.qbk'
+        'feed/history/boost_1_47_0.qbk'
     ],
     'pages': {
         'users/history/': {
