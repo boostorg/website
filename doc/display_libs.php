@@ -30,11 +30,10 @@ function boost_future_version($version)
 }
 
 function add_spirit_analytics($content) {
-	$server = $_SERVER['HTTP_HOST'];
-	
-	// Always serving for testing, will disable soon.
-	//if ($server != 'www.boost.org' && $server != 'live.boost.org')
-	//	return $content;
+    $server = $_SERVER['HTTP_HOST'];
+    
+    if ($server != 'www.boost.org' && $server != 'live.boost.org')
+        return $content;
 
     if(stripos($content, '_uacct = "UA-11715441-2"') !== FALSE)
         return $content;
@@ -68,9 +67,9 @@ EOS;
 
 $location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],true,false);
 $beta_site = strpos($_SERVER['HTTP_HOST'], 'beta') !== FALSE ||
-	strpos($_SERVER['HTTP_HOST'], 'localhost') !== FALSE;
+    strpos($_SERVER['HTTP_HOST'], 'localhost') !== FALSE;
 $beta_docs = strpos($location['version'], 'beta') !== FALSE ||
-	strpos($location['version'], 'snapshot') !== FALSE;
+    strpos($location['version'], 'snapshot') !== FALSE;
 
 if (!$beta_site && $beta_docs) {
     file_not_found($location['file']);
