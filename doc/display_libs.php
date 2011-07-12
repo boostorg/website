@@ -30,6 +30,11 @@ function boost_future_version($version)
 }
 
 function add_spirit_analytics($content) {
+    $server = $_SERVER['HTTP_HOST'];
+    
+    if ($server != 'www.boost.org' && $server != 'live.boost.org')
+        return $content;
+
     if(stripos($content, '_uacct = "UA-11715441-2"') !== FALSE)
         return $content;
 
@@ -39,7 +44,7 @@ function add_spirit_analytics($content) {
   _gaq.push(
     ['_setAccount', 'UA-11715441-2'],
     ['_trackPageview'],
-    ['_setDomainName', 'none'],
+    ['_setDomainName', '$server'],
     ['_setAllowLinker', true]
     );
 
@@ -61,8 +66,11 @@ EOS;
 }
 
 $location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],true,false);
-$beta_site = strpos($_SERVER['HTTP_HOST'], 'beta') !== FALSE;
-$beta_docs = strpos($location['version'], 'beta') !== FALSE;
+$beta_site = strpos($_SERVER['HTTP_HOST'], 'beta') !== FALSE ||
+    strpos($_SERVER['HTTP_HOST'], 'localhost') !== FALSE;
+$beta_docs = strpos($location['version'], 'beta') !== FALSE ||
+    strpos($location['version'], 'snapshot') !== FALSE;
+
 if (!$beta_site && $beta_docs) {
     file_not_found($location['file']);
     return;
@@ -82,6 +90,7 @@ display_from_archive(
   array('@.*@','@^libs/gil/doc/.*(html|htm)$@i','raw','text/html'),
   array('@.*@','@^libs/preprocessor/doc/.*(html|htm)$@i','raw','text/html'),
   array('@.*@','@^libs/test/doc/components/test_tools/reference/.*(html|htm)$@i','raw','text/html'),
+  array('@.*@','@^libs/test/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/spirit/.*(html|htm)$@i','simple','text/html', 'add_spirit_analytics'),
   array('@.*@','@^libs/fusion/.*(html|htm)$@i','basic','text/html', 'add_spirit_analytics'),
   array('@.*@','@^libs/wave/.*(html|htm)$@i','raw','text/html'),

@@ -70,7 +70,7 @@ class boost_libraries
                         $value = isset($val['value']) ? trim($val['value']) : false;
                         if($value && $value != 'true' && $value != 'false') {
                             echo 'Invalid value for ',htmlentities($val['tag']),
-                                ': ', $value;
+                                ': ', $value, "\n";
                             exit(0);
                         }
                         $lib[$val['tag']] = ($value == 'true');
@@ -80,7 +80,7 @@ class boost_libraries
                     {
                     	$value = isset($val['value']) ? trim($val['value']) : '';
                     	if(!isset($this->build_values[$value])) {
-                    		echo 'Invalid value for build: ', htmlentities($value);
+                    		echo 'Invalid value for build: ', htmlentities($value), "\n";
                     		exit(0);
                     	}
                     	$lib['build'] = $value;
@@ -95,7 +95,7 @@ class boost_libraries
                     }
                     break;
                     default:
-                    	echo 'Invalid tag: ', htmlentities($val['tag']);
+                    	echo 'Invalid tag: ', htmlentities($val['tag']), "\n";
                     	exit(0);
                 }
             }
@@ -129,7 +129,7 @@ class boost_libraries
         foreach($libs as $key => &$library) {
             foreach($library['category'] as $category) {
                 if(!isset($this->categories[$category])) {
-                    echo 'Unknown category: '.$category;
+                    echo 'Unknown category: ', htmlentities($category), "\n";
                     exit(0);
                 }
                 $categories[$category]['libraries'][] = &$library;

@@ -20,9 +20,6 @@ refresh     Reconvert all the quickbook files and regenerate the html
 docs        Update the documentation list from doc/libraries.xml.
             Requires php to be on the path and the site to be configured.
 
-start       Setup the state file and regenerate html files from the old
-            hashes files.
-
 ----------------------------------------------------------------------
 
 Copyright 2011 Daniel James
