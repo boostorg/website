@@ -84,6 +84,14 @@ class boost_libraries
                     		exit(0);
                     	}
                     	$lib['build'] = $value;
+                    	
+                    	// Also set the old style fields for the filters.
+                    	if ($value == 'autolink-dependency') {
+                    		$lib['autolink'] = true;
+                    	}
+                    	else {
+                    		$lib[$value] = true;
+                    	}
                     }
                     break;
                     case 'category':
