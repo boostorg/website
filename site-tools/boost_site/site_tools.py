@@ -129,15 +129,6 @@ def generate_rss_item(rss_feed, qbk_file, page):
     node.appendChild(rss_feed.createTextNode(page.pub_date))
     item.appendChild(node)
     
-    node = rss_feed.createElement('boostbook:purpose')
-    node.appendChild(rss_feed.createTextNode(page.purpose_xml))
-    item.appendChild(node)
-
-    if page.download_item:
-        node = rss_feed.createElement('boostbook:downlaod')
-        node.appendChild(rss_feed.createTextNode(page.download_item))
-        item.appendChild(node)
-
     node = rss_feed.createElement('description')
     node.appendChild(rss_feed.createTextNode(page.description_xml))
     item.appendChild(node)
