@@ -1,6 +1,12 @@
 Boost website generator
 =======================
 
+This site contains several scripts for maintaining the Boost website.
+These are:
+
+site-tools.py
+-------------
+
 A script to generate several of the pages on the Boost website,
 including the release notes, the home page and the downlaod page,
 as well as some other data for the site.
@@ -17,8 +23,11 @@ refresh     Reconvert all the quickbook files and regenerate the html
             Useful for when quickbook, the scripts or the templates have
             been updated.
 
-docs        Update the documentation list from doc/libraries.xml.
-            Requires php to be on the path and the site to be configured.
+update-doc-list.php
+-------------------
+
+Updates the documentation list from `doc/libraries.xml`.
+Requires php the site to be configured.
 
 ----------------------------------------------------------------------
 

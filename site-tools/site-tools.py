@@ -16,9 +16,6 @@ refresh     Reconvert all the quickbook files and regenerate the html
             Useful for when quickbook, the scripts or the templates have
             been updated.
 
-docs        Update the documentation list from doc/libraries.xml.
-            Requires php to be on the path and the site to be configured.
-
 """
 
 import os, sys, subprocess, glob, re, time, xml.dom.minidom, codecs
@@ -79,21 +76,13 @@ def main(argv):
 
     command = argv[0]
 
-    if command == 'docs':
-        return update_php_docs()
-    elif command == 'update':
+    if command == 'update':
         return update_quickbook(False)
     elif command == 'refresh':
         return update_quickbook(True)
     else:
         print __doc__
         return
-
-def update_php_docs():
-    try:
-        subprocess.check_call(['php', 'site-tools/php/update-doc-list.php'])
-    except:
-        print "PHP documentation serialization failed."
 
 def load_hashes(hash_file):
     qbk_hashes = {}
