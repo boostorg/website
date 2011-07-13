@@ -1,88 +1,16 @@
-#!/usr/bin/env python
 # Copyright 2007 Rene Rivera
 # Copyright 2011 Daniel James
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-"""Usage: python site-tools.py [command]
-
-Commands:
-
-update      Update the html pages and rss feeds for new or updated
-            quickbook files.
-
-refresh     Reconvert all the quickbook files and regenerate the html
-            pages. Does not update the rss feeds or add new pages.
-            Useful for when quickbook, the scripts or the templates have
-            been updated.
-
-"""
-
 import os, sys, subprocess, glob, re, time, xml.dom.minidom, codecs
 import boost_site.templite, boost_site.pages, boost_site.boostbook_parser, boost_site.util
+from boost_site.settings import settings
 
 ################################################################################
 
-settings = {
-    'downloads' : [
-        'feed/history/boost_1_47_0.qbk'
-    ],
-    'pages': {
-        'users/history/': {
-            'src_files' : ['feed/history/*.qbk'],
-            'template' : 'site-tools/templates/entry-template.html'
-        },
-        'users/news/': {
-            'src_files' : ['feed/news/*.qbk'],
-            'template' : 'site-tools/templates/entry-template.html'
-        },
-        'users/download/': {
-            'src_files' : ['feed/downloads/*.qbk'],
-            'template' : 'site-tools/templates/entry-template.html'
-        }
-    },
-    'index-pages' : {
-        'users/download/index.html' : 'site-tools/templates/download-template.html',
-        'users/history/index.html' : 'site-tools/templates/history-template.html',
-        'users/news/index.html' : 'site-tools/templates/news-template.html',
-        'index.html' : 'site-tools/templates/index-src.html'
-    },
-    'feeds' : {
-        'feed/downloads.rss' : {
-            'title': 'Boost Downloads',
-            'matches': ['feed/history/*.qbk', 'feed/downloads/*.qbk'],
-            'count': 3
-        },
-        'feed/history.rss' : {
-            'title': 'Boost History',
-            'matches': ['feed/history/*.qbk']
-        },
-        'feed/news.rss' : {
-            'title': 'Boost News',
-            'matches': ['feed/news/*.qbk', 'feed/history/*.qbk'],
-            'count': 5
-        }
-    }
-}
-
-################################################################################
-
-def main(argv):
+def init():
     os.chdir(os.path.join(os.path.dirname(sys.argv[0]), "../"))
-
-    if len(argv) != 1:
-        print __doc__
-        return
-
-    command = argv[0]
-
-    if command == 'update':
-        return update_quickbook(False)
-    elif command == 'refresh':
-        return update_quickbook(True)
-    else:
-        print __doc__
-        return
 
 def load_hashes(hash_file):
     qbk_hashes = {}
@@ -94,9 +22,12 @@ def load_hashes(hash_file):
             qbk_hashes[qbk_file] = {'qbk_hash': qbk_hash, 'rss_hash': rss_hash}
         return qbk_hashes
     finally:
-        file.close()        
+        file.close()
 
-def update_quickbook(refresh):
+def refresh_quickbook():
+    update_quickbook(True)
+
+def update_quickbook(refresh = False):
     # Now check quickbook files.
     
     pages = boost_site.pages.Pages('site-tools/state/feed-pages.txt')
@@ -218,6 +149,3 @@ def generate_rss_item(rss_feed, qbk_file, page):
     })
 
 ################################################################################
-
-if __name__ == "__main__":
-    main(sys.argv[1:])
