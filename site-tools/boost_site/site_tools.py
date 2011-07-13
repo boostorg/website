@@ -120,11 +120,14 @@ def generate_rss_item(rss_feed, qbk_file, page):
 
     item = rss_feed.createElement('item')
 
-    title = xml.dom.minidom.parseString('<title>%s</title>' % page.title_xml)
-    item.appendChild(rss_feed.importNode(title.documentElement, True))
+    node = xml.dom.minidom.parseString('<title>%s</title>' % page.title_xml)
+    item.appendChild(rss_feed.importNode(node.documentElement, True))
 
-    title = xml.dom.minidom.parseString('<link>%s</link>' % page_link)
-    item.appendChild(rss_feed.importNode(title.documentElement, True))
+    node = xml.dom.minidom.parseString('<link>%s</link>' % page_link)
+    item.appendChild(rss_feed.importNode(node.documentElement, True))
+
+    node = xml.dom.minidom.parseString('<guid>%s</guid>' % page_link)
+    item.appendChild(rss_feed.importNode(node.documentElement, True))
 
     # TODO: Convert date format?
     node = rss_feed.createElement('pubDate')
