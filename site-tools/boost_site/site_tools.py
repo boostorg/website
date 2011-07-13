@@ -3,7 +3,7 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-import os, sys, subprocess, glob, re, time, xml.dom.minidom, codecs
+import os, sys, subprocess, glob, re, time, xml.dom.minidom, codecs, urlparse
 import boost_site.templite, boost_site.pages, boost_site.boostbook_parser, boost_site.util
 from boost_site.settings import settings
 
@@ -116,21 +116,27 @@ def generate_rss_feed(feed_file, details):
 def generate_rss_item(rss_feed, qbk_file, page):
     assert page.loaded
 
+    page_link = 'http://www.boost.org/%s' % page.location
+
     item = rss_feed.createElement('item')
 
     title = xml.dom.minidom.parseString('<title>%s</title>' % page.title_xml)
     item.appendChild(rss_feed.importNode(title.documentElement, True))
 
-    title = xml.dom.minidom.parseString('<link>http://www.boost.org/%s</link>' % page.location)
+    title = xml.dom.minidom.parseString('<link>%s</link>' % page_link)
     item.appendChild(rss_feed.importNode(title.documentElement, True))
 
     # TODO: Convert date format?
     node = rss_feed.createElement('pubDate')
     node.appendChild(rss_feed.createTextNode(page.pub_date))
     item.appendChild(node)
-    
+
     node = rss_feed.createElement('description')
-    node.appendChild(rss_feed.createTextNode(page.description_xml))
+    # Placing the description in a root element to make it well formed xml.
+    description = xml.dom.minidom.parseString('<x>%s</x>' % page.description_xml)
+    base_links(description, page_link)
+    node.appendChild(rss_feed.createTextNode(
+        boost_site.util.fragment_to_string(description)))
     item.appendChild(node)
 
     return({
@@ -139,4 +145,18 @@ def generate_rss_item(rss_feed, qbk_file, page):
         'last_modified': page.last_modified
     })
 
+def base_links(node, base_link):
+    base_element_links(node, base_link, 'a', 'href')
+    base_element_links(node, base_link, 'img', 'src')
+
+def base_element_links(node, base_link, tag_name, attribute):
+    if node.nodeType == node.ELEMENT_NODE or \
+            node.nodeType == node.DOCUMENT_NODE:
+        for x in node.getElementsByTagName(tag_name):
+            x.setAttribute(attribute,
+                    urlparse.urljoin(base_link, x.getAttribute(attribute)))
+    elif node.nodeType == node.DOCUMENT_FRAGMENT_NODE:
+        for x in node.childNodes:
+            base_element_links(x, base_link, tag_name, attribute)
+ 
 ################################################################################
