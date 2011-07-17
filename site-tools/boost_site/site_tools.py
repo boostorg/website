@@ -55,11 +55,15 @@ def update_quickbook(refresh = False):
     # Generate RSS feeds
 
     if not refresh:
+        old_rss_items_doc = xml.dom.minidom.parseString('''<items></items>''')
+        old_rss_items = {}
+        for feed_file in settings['feeds']:
+            old_rss_items.update(pages.load_rss(feed_file, old_rss_items_doc))
+    
         for feed_file in settings['feeds']:
             feed_data = settings['feeds'][feed_file]
             rss_feed = generate_rss_feed(feed_file, feed_data)
             rss_channel = rss_feed.getElementsByTagName('channel')[0]
-            old_rss_items = pages.load_rss(feed_file, rss_feed)
             
             feed_pages = pages.match_pages(feed_data['matches'])
             if 'count' in feed_data:
@@ -71,7 +75,9 @@ def update_quickbook(refresh = False):
                     pages.add_rss_item(item)
                     rss_channel.appendChild(item['item'])
                 elif qbk_page.qbk_file in old_rss_items:
-                    rss_channel.appendChild(old_rss_items[qbk_page.qbk_file]['item'])
+                    rss_channel.appendChild(
+                        rss_feed.importNode(
+                            old_rss_items[qbk_page.qbk_file]['item'], True))
                 else:
                     print "Missing entry for %s" % qbk_page.qbk_file
                     
