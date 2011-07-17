@@ -12,13 +12,19 @@ from boost_site.settings import settings
 def init():
     os.chdir(os.path.join(os.path.dirname(sys.argv[0]), "../"))
 
+    import boost_site.upgrade
+    boost_site.upgrade.upgrade()
+
+def load_pages():
+    return boost_site.pages.Pages('site-tools/state/feed-pages.txt')
+
 def refresh_quickbook():
     update_quickbook(True)
 
 def update_quickbook(refresh = False):
     # Now check quickbook files.
     
-    pages = boost_site.pages.Pages('site-tools/state/feed-pages.txt')
+    pages = load_pages()
 
     if not refresh:
         for location in settings['pages']:

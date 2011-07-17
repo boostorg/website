@@ -133,6 +133,11 @@ class Page:
         if not attrs: attrs = { 'page_state' : 'new' }
 
         self.page_state = attrs.get('page_state', None)
+        self.flags = attrs.get('flags', '')
+        if self.flags:
+        	self.flags = set(self.flags.split(','))
+        else:
+        	self.flags = set()
         self.dir_location = attrs.get('dir_location', None)
         self.location = attrs.get('location', None)
         self.id = attrs.get('id', None)
@@ -149,6 +154,7 @@ class Page:
     def state(self):
         return {
             'page_state': self.page_state,
+            'flags': ','.join(self.flags),
             'dir_location': self.dir_location,
             'location': self.location,
             'id' : self.id,
