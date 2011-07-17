@@ -27,13 +27,7 @@ def update_quickbook(refresh = False):
     pages = load_pages()
 
     if not refresh:
-        for location in settings['pages']:
-            pages_data = settings['pages'][location]
-            for src_file_pattern in pages_data['src_files']:
-                for qbk_file in glob.glob(src_file_pattern):
-                    pages.add_qbk_file(qbk_file, location)
-
-        pages.save()
+        scan_for_new_quickbook_pages(pages)
     
     # Translate new and changed pages
 
@@ -88,6 +82,16 @@ def update_quickbook(refresh = False):
                 output_file.close()
 
     pages.save()
+
+def scan_for_new_quickbook_pages(pages):
+    for location in settings['pages']:
+        pages_data = settings['pages'][location]
+        for src_file_pattern in pages_data['src_files']:
+            for qbk_file in glob.glob(src_file_pattern):
+                pages.add_qbk_file(qbk_file, location)
+
+    pages.save()
+
 
 ################################################################################
 

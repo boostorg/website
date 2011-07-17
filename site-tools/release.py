@@ -34,12 +34,10 @@ if not release_notes.startswith(cwd):
 
 release_notes = release_notes[len(cwd):].lstrip('/')
 
-# Update all the pages first so that the state file is up to date.
-# TODO: Might be enough just to scan for new pages?
-boost_site.site_tools.update_quickbook()
+pages = boost_site.site_tools.load_pages()
+boost_site.site_tools.scan_for_new_quickbook_pages(pages)
 
 # Flag the released page
-pages = boost_site.site_tools.load_pages()
 if release_notes not in pages.pages:
     print "Unable to find page:", release_notes
     exit(1)
