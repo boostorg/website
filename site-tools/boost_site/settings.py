@@ -26,19 +26,27 @@ settings = {
         'users/news/index.html' : 'site-tools/templates/news-template.html',
         'index.html' : 'site-tools/templates/index-src.html'
     },
+    # See boost_site.pages for matches pattern syntax.
+    #
+    # glob [ '|' flag ]
     'feeds' : {
         'feed/downloads.rss' : {
             'title': 'Boost Downloads',
-            'matches': ['feed/history/*.qbk', 'feed/downloads/*.qbk'],
+            'matches': ['feed/history/*.qbk|released', 'feed/downloads/*.qbk'],
             'count': 3
         },
         'feed/history.rss' : {
             'title': 'Boost History',
-            'matches': ['feed/history/*.qbk']
+            'matches': ['feed/history/*.qbk|released']
         },
         'feed/news.rss' : {
             'title': 'Boost News',
-            'matches': ['feed/news/*.qbk', 'feed/history/*.qbk'],
+            'matches': ['feed/news/*.qbk', 'feed/history/*.qbk|released'],
+            'count': 5
+        },
+        'feed/dev.rss' : {
+            'title': 'Boost Development',
+            'matches': ['feed/history/*.qbk'],
             'count': 5
         }
     }

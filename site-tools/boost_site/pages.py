@@ -112,11 +112,21 @@ class Pages:
                     { 'page': page_data })
 
     def match_pages(self, patterns, count = None, sort = True):
+        """
+            patterns is a list of strings, containing a glob followed
+            by required flags, separated by '|'. The syntax will probably
+            change in the future.
+        """
         filtered = set()
         for pattern in patterns:
-            filtered = filtered | set(fnmatch.filter(self.pages.keys(), pattern))
+            pattern_parts = pattern.split('|')
+            matches = [x for x in
+                fnmatch.filter(self.pages.keys(), pattern_parts[0])
+                if self.pages[x].is_published(pattern_parts[1:])]
+            filtered = filtered | set(matches)
 
-        entries = [self.pages[x] for x in filtered if self.pages[x].page_state != 'new']
+        entries = [self.pages[x] for x in filtered]
+
         if sort:
             entries = sorted(entries, key = lambda x: x.last_modified, reverse=True)
         if count:
@@ -253,6 +263,14 @@ class Page:
             return '<p><span class="news-download"><a href="' + \
                 boost_site.util.htmlencode(self.download_item) + \
                 '">Download this release.</a></span></p>';
+
+    def is_published(self, flags):
+        if self.page_state == 'new':
+            return False
+        for flag in flags:
+            if flag not in self.flags:
+                return False
+        return True
 
 def number_suffix(x):
     x = x % 100
