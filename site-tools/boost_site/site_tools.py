@@ -12,18 +12,6 @@ from boost_site.settings import settings
 def init():
     os.chdir(os.path.join(os.path.dirname(sys.argv[0]), "../"))
 
-def load_hashes(hash_file):
-    qbk_hashes = {}
-
-    file = open(hash_file)
-    try:
-        for line in file:
-            (qbk_file, qbk_hash, rss_hash) = line.strip().split(',')
-            qbk_hashes[qbk_file] = {'qbk_hash': qbk_hash, 'rss_hash': rss_hash}
-        return qbk_hashes
-    finally:
-        file.close()
-
 def refresh_quickbook():
     update_quickbook(True)
 
