@@ -108,7 +108,7 @@ def generate_rss_feed(feed_file, details):
   </channel>
 </rss>
 ''' % {
-    'title' : details['title'],
+    'title' : details['title'].encode('utf-8'),
     'link' : "http://www.boost.org/" + feed_file,
     'description' : '',
     'language' : 'en-us',
@@ -124,13 +124,16 @@ def generate_rss_item(rss_feed, qbk_file, page):
 
     item = rss_feed.createElement('item')
 
-    node = xml.dom.minidom.parseString('<title>%s</title>' % page.title_xml)
+    node = xml.dom.minidom.parseString('<title>%s</title>'
+        % page.title_xml.encode('utf-8'))
     item.appendChild(rss_feed.importNode(node.documentElement, True))
 
-    node = xml.dom.minidom.parseString('<link>%s</link>' % page_link)
+    node = xml.dom.minidom.parseString('<link>%s</link>'
+        % page_link.encode('utf-8'))
     item.appendChild(rss_feed.importNode(node.documentElement, True))
 
-    node = xml.dom.minidom.parseString('<guid>%s</guid>' % page_link)
+    node = xml.dom.minidom.parseString('<guid>%s</guid>'
+        % page_link.encode('utf-8'))
     item.appendChild(rss_feed.importNode(node.documentElement, True))
 
     # TODO: Convert date format?
@@ -140,7 +143,8 @@ def generate_rss_item(rss_feed, qbk_file, page):
 
     node = rss_feed.createElement('description')
     # Placing the description in a root element to make it well formed xml.
-    description = xml.dom.minidom.parseString('<x>%s</x>' % page.description_xml)
+    description = xml.dom.minidom.parseString(
+        '<x>%s</x>' % page.description_xml.encode('utf-8'))
     base_links(description, page_link)
     node.appendChild(rss_feed.createTextNode(
         boost_site.util.fragment_to_string(description)))
