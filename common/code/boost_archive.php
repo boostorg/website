@@ -255,7 +255,7 @@ function boost_archive_render_callbacks($content, $params) {
 
     $head = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
 
-    if (!empty($params['noindex'])
+    if (!empty($params['noindex']))
         $head .= "<meta name=\"robots\" content=\"noindex\">\n";
 
     $head .= "<title>${title}</title>";
