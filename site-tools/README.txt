@@ -1,24 +1,26 @@
 Boost website generator
 =======================
 
-A script to generate several of the pages on the Boost website,
-including the release notes, the home page and the downlaod page,
-as well as some other data for the site.
+This site contains several scripts for maintaining the Boost website.
+Most users will just call `update.py` after updating any quickbook files.
 
-Usage: python site-tools.py [command]
+update.py
+---------
 
-Commands:
+Update the html pages and rss feeds for new or updated quickbook files.
 
-update      Update the html pages and rss feeds for new or updated
-            quickbook files.
+refresh.py
+----------
 
-refresh     Reconvert all the quickbook files and regenerate the html
-            pages. Does not update the rss feeds or add new pages.
-            Useful for when quickbook, the scripts or the templates have
-            been updated.
+Reconvert all the quickbook files and regenerate the html pages. Does
+not update the rss feeds or add new pages. Useful for when quickbook,
+the scripts or the templates have been updated.
 
-docs        Update the documentation list from doc/libraries.xml.
-            Requires php to be on the path and the site to be configured.
+update-doc-list.php
+-------------------
+
+Updates the documentation list from `doc/libraries.xml`.
+Requires php the site to be configured.
 
 ----------------------------------------------------------------------
 
