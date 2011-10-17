@@ -11,9 +11,10 @@ class boost_libraries
     var $categories = array();
     var $db = array();
     var $build_values = array(
-    	'header-only' => 'Header only',
-    	'autolink' => 'Automatic linking',
-    	'autolink-dependency' => 'Automatic linking due to dependency'
+        'header-only' => 'Header only',
+        'autolink' => 'Automatic linking',
+        'autolink-dependency' => 'Automatic linking due to dependency',
+        'build' => 'Separately built'
     );
     
     function boost_libraries($xml_file)
@@ -78,20 +79,20 @@ class boost_libraries
                     break;
                     case 'build':
                     {
-                    	$value = isset($val['value']) ? trim($val['value']) : '';
-                    	if(!isset($this->build_values[$value])) {
-                    		echo 'Invalid value for build: ', htmlentities($value), "\n";
-                    		exit(0);
-                    	}
-                    	$lib['build'] = $value;
-                    	
-                    	// Also set the old style fields for the filters.
-                    	if ($value == 'autolink-dependency') {
-                    		$lib['autolink'] = true;
-                    	}
-                    	else {
-                    		$lib[$value] = true;
-                    	}
+                        $value = isset($val['value']) ? trim($val['value']) : '';
+                        if(!isset($this->build_values[$value])) {
+                            echo 'Invalid value for build: ', htmlentities($value), "\n";
+                            exit(0);
+                        }
+                        $lib['build'] = $value;
+
+                        // Also set the old style fields for the filters.
+                        if ($value == 'autolink-dependency') {
+                            $lib['autolink'] = true;
+                        }
+                        else {
+                            $lib[$value] = true;
+                        }
                     }
                     break;
                     case 'category':
@@ -103,8 +104,8 @@ class boost_libraries
                     }
                     break;
                     default:
-                    	echo 'Invalid tag: ', htmlentities($val['tag']), "\n";
-                    	exit(0);
+                        echo 'Invalid tag: ', htmlentities($val['tag']), "\n";
+                        exit(0);
                 }
             }
             else if ($val['tag'] == 'library' && $val['type'] == 'close' && $lib)
