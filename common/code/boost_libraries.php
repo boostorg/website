@@ -90,7 +90,7 @@ class boost_libraries
                         if ($value == 'autolink-dependency') {
                             $lib['autolink'] = true;
                         }
-                        else {
+                        else if ($value != 'build') {
                             $lib[$value] = true;
                         }
                     }
