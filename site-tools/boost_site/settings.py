@@ -45,7 +45,7 @@ settings = {
             'count': 5
         },
         'feed/dev.rss' : {
-            'title': 'Boost Development',
+            'title': 'Release notes for work in progress boost',
             'matches': ['feed/history/*.qbk'],
             'count': 5
         }
