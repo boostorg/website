@@ -105,6 +105,7 @@ display_from_archive(
   array('@.*@','@^libs/wave/.*(html|htm)$@i','raw','text/html'),
   array('@.*@','@^libs/range/doc/.*(html|htm)$@i','raw','text/html'),
   //~ special cases that can't be embeded in the standard frame
+  array('@.*@','@^libs/locale/doc/.*(html|htm)$@i','raw','text/html'),
   array('@.*@','@^libs/iostreams/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/serialization/doc/.*(html|htm)$@i','simple','text/html'),
   array('@.*@','@^libs/filesystem/(v\d/)?doc/.*(html|htm)$@i','simple','text/html'),
