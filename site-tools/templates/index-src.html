@@ -98,20 +98,23 @@ ${
                 <div class="directory-item" id="important-downloads">
                   <h2>Downloads</h2>
 
-                  <ul id="downloads">
-                    ${
-for entry in downloads[:5]:
-    emit('\n')
-    emit('                    <li><span class=\n                    "news-title">')
-    if entry.download_item:
-        emit('<a href="%s">' % entry.download_item)
-    emit(entry.title_xml)
-    if entry.download_item:
-        emit('</a>')
-    emit('                    (<a href="/%s">release notes</a>)\n                    </span>\n' % (entry.location))
-    emit('                    <span class=\n                    "news-date">%s</span></li>' % (entry.web_date()))
+${
+for x in downloads:
+    label = x['label']
+    entries = x['entries']
+    emit('<h3>%s</h3>\n' % label)
+    emit('<ul id="downloads">\n')
+    for entry in entries:
+        emit('<li><span class="news-title">')
+        if entry.download_item:
+            emit('<a href="%s">' % entry.download_item)
+        emit(entry.title_xml)
+        if entry.download_item:
+            emit('</a>')
+        emit(' (<a href="/%s">release notes</a>)</span>' % (entry.location))
+        emit('<span class="news-date">%s</span></li>\n' % (entry.web_date()))
+    emit('</ul>')
 }$
-                  </ul>
 
                   <p><a href="/users/download/">More Downloads...</a>
                   (<a href="feed/downloads.rss">RSS</a>)</p>

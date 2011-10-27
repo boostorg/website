@@ -35,9 +35,20 @@ def update_quickbook(refresh = False):
 
     # Generate 'Index' pages
 
+    downloads = []
+    for x in settings['downloads']:
+        entries = pages.match_pages(x['patterns'], sort = False)
+        if entries:
+            y = { 'anchor': x['anchor'], 'entries' : entries }
+            if len(entries) == 1:
+                y['label'] = x['single']
+            else:
+                y['label'] = x['plural']
+            downloads.append(y)
+
     index_page_variables = {
         'pages' : pages,
-        'downloads' : pages.match_pages(settings['downloads'], sort = False)
+        'downloads' : downloads
     }
 
     for index_page in settings['index-pages']:

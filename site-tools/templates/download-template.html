@@ -1,6 +1,5 @@
 ${
 title = 'Boost Downloads'
-entries = downloads
 }$<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -32,32 +31,35 @@ ${
 
             <div class="section-body">
               <ul class="toc">
-                <li><a href="#releases">Packaged Releases</a></li>
-
+${
+for x in downloads:
+    emit('<li><a href="#%s">%s</li>\n' % (x['anchor'], x['label']))
+}$
                 <li><a href="#history">Old Boost Releases</a></li>
 
                 <li><a href="#repository">Subversion Repository</a></li>
               </ul>
-
-              <h2><a name="releases" id="releases"></a>Packaged
-              Releases</h2>${
-for entry in entries:
-    emit('\n')
-    emit('              <h3><span class=\n              "news-title">%s</span></h3>\n\n' % entry.title_xml)
-    emit('              <p class="news-date">%s</p>\n\n' % entry.web_date())
-    emit('              <p class="news-description">\n')
-    emit('              <span class="brief"><span class="purpose">%s</span></span></p>\n\n' % entry.purpose_xml)
-    emit('              <ul class="menu">\n')
-    emit('                <li>\n')
-    emit('                <a href="/%s">Details</a>' % entry.location)
-    emit('</li>\n')
-    if(entry.download_item):
+${
+for x in downloads:
+    emit('<h2 id="%s">%s</h2>' % (x['anchor'], x['label']))
+    for entry in x['entries']:
         emit('\n')
+        emit('              <h3><span class=\n              "news-title">%s</span></h3>\n\n' % entry.title_xml)
+        emit('              <p class="news-date">%s</p>\n\n' % entry.web_date())
+        emit('              <p class="news-description">\n')
+        emit('              <span class="brief"><span class="purpose">%s</span></span></p>\n\n' % entry.purpose_xml)
+        emit('              <ul class="menu">\n')
         emit('                <li>\n')
-        emit('                <a href="%s">Download</a></li>' % entry.download_item)
-    emit('\n')
-    emit('              </ul>')
+        emit('                <a href="/%s">Details</a>' % entry.location)
+        emit('</li>\n')
+        if(entry.download_item):
+            emit('\n')
+            emit('                <li>\n')
+            emit('                <a href="%s">Download</a></li>' % entry.download_item)
+        emit('\n')
+        emit('              </ul>')
 }$
+
               <h2><a name="history" id="history"></a>Old Boost Releases</h2>
 
               <p>Old versions of boost can be found on the <a href=

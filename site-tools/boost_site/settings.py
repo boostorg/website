@@ -4,7 +4,18 @@
 
 settings = {
     'downloads' : [
-        'feed/history/boost_1_47_0.qbk'
+        {
+            'anchor': 'live',
+            'single': 'Current Release',
+            'plural': 'Current Releases',
+            'patterns': ['feed/history/boost_1_47_0.qbk']
+        },
+        {
+            'anchor': 'beta',
+            'single': 'Beta Release',
+            'plural': 'Beta Releases',
+            'patterns': ['feed/history/boost_1_48_0.qbk']
+        }
     ],
     'pages': {
         'users/history/': {
