@@ -460,6 +460,78 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/libs/msm/">MSM</a>:</span>
+          <ul>
+            <li>
+              <div>
+                eUML: added easier event reprocessing: process(event_) and reprocess()
+              </div>
+            </li>
+            <li>
+              <div>
+                Rewrite of internal transition tables. There were a few bugs (failing
+                recursivity in internal transition tables of sub-sub machines) and
+                a missing feature (unused internal transition table of the main state
+                machine).
+              </div>
+            </li>
+            <li>
+              <div>
+                Bugfixes
+                <ul>
+                  <li>
+                    <div>
+                      Reverted favor_compile_time policy to Boost 1.46 state
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      none event now is convertible from any other event
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      eUML and pseudo exit states
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed not working Flag_AND
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed rare bugs causing multiple processing of the same event
+                      in a submachine whose transition table contains this event
+                      and a base event of it.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      gcc warnings about unused variables
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Breaking change: the new internal transition table feature causes
+                a minor breaking change. In a submachine, the &quot;Fsm&quot; template
+                parameter for guards / actions of an internal table declared using
+                internal_transition_table now is the submachine, not the higher-level
+                state machine. Internal transitions declared using internal rows
+                in the higher-level state machine keep their behavior (the &quot;Fsm&quot;
+                parameter is the higher-level state machine). To sum up, the internal
+                transition &quot;Fsm&quot; parameter is the closest state machine
+                containing this transition.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/libs/numeric/conversion/index.html">Numeric.Conversion</a>:</span>
           <ul>
             <li>
