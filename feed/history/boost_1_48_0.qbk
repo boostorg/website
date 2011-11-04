@@ -41,6 +41,14 @@
  * Fixed some bugs.
  * See the [@/libs/chrono/appendices/history.html History] for more details.
 
+* [phrase library..[@/libs/config/index.html Config]:]
+  * Add `BOOST_NO_DECLTYPE_N3276` config macro. (See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2011/n3276.pdf N3276].)
+
+* [phrase library..[@/libs/fusion/index.html Fusion]:]
+  * Make `single_view` a random access fusion sequence.
+  * Remove bogus compile-time asserts from `fusion::distance`.
+  * Cleaner implementation of segmented Fusion.
+
 * [phrase library..[@/libs/geometry Geometry]:]
   * Bugfixes:
     * Robustness issue, in some circumstances the union failed to output. Fixed.
@@ -180,6 +188,17 @@
 
 * [phrase library..[@/libs/numeric/conversion/index.html Numeric.Conversion]:]
   * Added numeric_cast_traits; see '[@/doc/libs/1_48_0/libs/numeric/conversion/doc/html/boost_numericconversion/type_requirements_and_user_defined_types_support.html#boost_numericconversion.type_requirements_and_user_defined_types_support.udts_with_numeric_cast numeric_cast_traits]' for details.
+
+* [phrase library..[@/libs/proto/index.html Proto]:]
+  * *Breaking Change:* Reduce numbers of operator overloads by using rvalue references
+    on compilers that support them. Any user code that defines additional operator
+    overloads on Proto expressions could potentially be rendered ambiguous by this
+    change. The solution is to use a grammar to disable Proto's operators that are
+    made ambiguous by any user-defined operators.
+  * Move definitions of Proto tag types into an ADL-blocking namespace.
+  * Add second template parameter to `proto::siwtch_` to control dispatching to cases.
+  * Allow dependent domains to be specified with `BOOST_PROTO_EXTENDS` and
+    `BOOST_PROTO_BASIC_EXTENDS`.
 
 * [phrase library..[@/libs/regex/ Regex]:]
   * Fixed issues:
