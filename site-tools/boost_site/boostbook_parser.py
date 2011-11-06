@@ -35,6 +35,11 @@ class BoostBookParser:
         if download_node:
             download_item = self.get_child(download_node[0]).data
 
+        status_item = None
+        status_node = article_node.getElementsByTagName('status')
+        if status_node:
+            status_item = self.get_child(status_node[0]).data
+
         pub_date = article_node.getAttribute('last-revision').strip()
 
         if not pub_date or pub_date[0] == '$':
@@ -51,7 +56,8 @@ class BoostBookParser:
             'description_fragment' : description_xhtml,
             'pub_date' : pub_date,
             'last_modified' : last_modified,
-            'download_item' : download_item
+            'download_item' : download_item,
+            'status_item' : status_item
         }
 
     def x(self, node):

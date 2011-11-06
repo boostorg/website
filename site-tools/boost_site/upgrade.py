@@ -18,8 +18,20 @@ def upgrade1():
             page.flags.add('released')
     pages.save()
 
+def upgrade2():
+    pages = boost_site.site_tools.load_pages()
+    for qbk_file in pages.pages:
+        page = pages.pages[qbk_file]
+        if re.match('users/(download|history)', page.location) and \
+                page.pub_date != 'In Progress':
+            page.type = 'release'
+        else:
+            page.type = 'page'
+    pages.save()
+
 versions = [
-        upgrade1
+        upgrade1,
+        upgrade2
         ]
 
 #

@@ -35,7 +35,7 @@ class Pages:
             save_hashes[x] = self.pages[x].state()
         boost_site.state.save(save_hashes, self.hash_file)
 
-    def add_qbk_file(self, qbk_file, location):
+    def add_qbk_file(self, qbk_file, location, page_data):
         file = open(qbk_file)
         try:
             qbk_hash = hashlib.sha256(file.read()).hexdigest()
@@ -58,6 +58,12 @@ class Pages:
 
         record.qbk_hash = qbk_hash
         record.dir_location = location
+        if 'type' in page_data:
+            record.type = page_data['type']
+        else:
+            record.type = 'page'
+        if record.type not in ['release', 'page']:
+            throw ("Unknown record type: " + record.type)
 
     # You might be wondering why I didn't just save the rss items - would
     # be able to save all the items not just the ones in the feed.
@@ -142,6 +148,7 @@ class Page:
 
         if not attrs: attrs = { 'page_state' : 'new' }
 
+        self.type = attrs.get('type', None)
         self.page_state = attrs.get('page_state', None)
         self.flags = attrs.get('flags', '')
         if self.flags:
@@ -163,6 +170,7 @@ class Page:
 
     def state(self):
         return {
+            'type': self.type,
             'page_state': self.page_state,
             'flags': ','.join(self.flags),
             'dir_location': self.dir_location,
@@ -193,7 +201,21 @@ class Page:
             self.location = self.dir_location + self.id + '.html'
             self.dir_location = None
             self.page_state = None
-        
+
+        self.flags = set()
+
+        if self.type == 'release':
+            status = values['status_item']
+            if status == 'release':
+                status = 'released'
+            if not status and self.pub_date != 'In Progress':
+                status = 'released'
+            if status and status not in ['released', 'beta']:
+                print "Error: Unknown status: " + status
+                status = None
+            if status:
+                self.flags.add(status)
+
         self.loaded = True
 
     def web_date(self):
