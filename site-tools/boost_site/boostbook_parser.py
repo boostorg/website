@@ -5,7 +5,7 @@
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
 import xml.dom.minidom, time
-from email.utils import parsedate_tz
+from email.utils import mktime_tz, parsedate_tz
 
 class BoostBookParser:
     def __init__(self, document = None):
@@ -41,8 +41,7 @@ class BoostBookParser:
             pub_date = 'In Progress'
             last_modified = time.time()
         else:
-            last_modified = parsedate_tz(pub_date)
-            last_modified = time.mktime(last_modified[:-1]) - last_modified[-1]
+            last_modified = mktime_tz(parsedate_tz(pub_date))
 
         description_xhtml = self.x(article_node)
         
