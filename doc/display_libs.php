@@ -80,10 +80,6 @@ $beta_site = strpos($_SERVER['HTTP_HOST'], 'beta') !== FALSE ||
 $beta_docs = strpos($location['version'], 'beta') !== FALSE ||
     strpos($location['version'], 'snapshot') !== FALSE;
 
-if (!$beta_site && $beta_docs) {
-    file_not_found($location['file']);
-    return;
-}
 if (!$beta_docs && boost_future_version($location['version'])) {
     file_not_found($location['file'],
         "Documentation for this version has not been uploaded yet. ".
