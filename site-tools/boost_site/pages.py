@@ -152,9 +152,9 @@ class Page:
         self.page_state = attrs.get('page_state', None)
         self.flags = attrs.get('flags', '')
         if self.flags:
-        	self.flags = set(self.flags.split(','))
+            self.flags = set(self.flags.split(','))
         else:
-        	self.flags = set()
+            self.flags = set()
         self.dir_location = attrs.get('dir_location', None)
         self.location = attrs.get('location', None)
         self.id = attrs.get('id', None)
@@ -231,6 +231,8 @@ class Page:
     def download_table(self):
         if(not self.download_item):
             return ''
+        if self.type == 'release' and ('beta' not in self.flags and 'released' not in self.flags):
+            return ''
     
         match = re.match('.*/boost/(\d+)\.(\d+)\.(\d+)/', self.download_item)
         if(match):
@@ -260,7 +262,10 @@ class Page:
             
             output = ''
             output = output + '<table class="download-table">'
-            output = output + '<caption>Downloads</caption>'
+            if 'beta' in self.flags:
+                output = output + '<caption>Beta Downloads</caption>'
+            else:
+                output = output + '<caption>Downloads</caption>'
             output = output + '<tr><th scope="col">Platform</th><th scope="col">File</th></tr>'
     
             for platform in ['unix', 'windows']:
@@ -282,9 +287,18 @@ class Page:
             # If the link didn't match the normal version number pattern
             # then just use the old fashioned link to sourceforge. */
     
-            return '<p><span class="news-download"><a href="' + \
+            output = '<p><span class="news-download"><a href="' + \
                 boost_site.util.htmlencode(self.download_item) + \
-                '">Download this release.</a></span></p>';
+                '">'
+
+            if 'beta' in self.flags:
+                output = output + 'Download this beta release.'
+            else:
+                output = output + 'Download this release.'
+
+            output = output + '</a></span></p>'
+
+            return output
 
     def is_published(self, flags):
         if self.page_state == 'new':
