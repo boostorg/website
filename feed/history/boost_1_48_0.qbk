@@ -3,7 +3,7 @@
     [source-mode c++]
     [purpose
     New Libraries: Container, Locale, Move.
-    Updated Libraries: Chrono, Config, Fusion, Geometry, Graph, Interprocess,
+    Updated Libraries: Asio, Chrono, Config, Fusion, Geometry, Graph, Interprocess,
     Intrusive, Lexical cast, Math, MSM, Numeric Conversion, Proto, Regex,
     Spirit, TypeTraits, Unordered, Wave
     ]
@@ -33,6 +33,47 @@
 [endsect]
 
 [section Updated Libraries]
+
+* [phrase library..[@/libs/asio/index.html Asio]:]
+  * Implemented various performance improvements, including:
+    * Using thread-local operation queues in single-threaded use cases (i.e. when
+      `concurrency_hint` is 1) to eliminate a lock/unlock pair. 
+    * Allowing some `epoll_reactor` speculative operations to be performed
+      without holding the lock. 
+    * Improving locality of reference by performing an `epoll_reactor`'s I/O
+      operation immediately before the corresponding handler is called. Also
+      improves scalability across CPUs.
+    * Specialising asynchronous read and write operations for buffer sequences
+      that are arrays (`boost::array` or `std::array`) of exactly two buffers.
+  * Fixed compile error in regex overload of `async_read_until`
+    ([@https://svn.boost.org/trac/boost/ticket/5688 #5688]).
+  * Fixed Windows-specific compile error by explicitly specifying the
+    `signal()` function from the global namespace
+    ([@https://svn.boost.org/trac/boost/ticket/5722 #5722]).
+  * Changed `deadline_timer` implementation to not read clock unless the timer
+    heap is non-empty.
+  * Changed SSL buffer sizes to be large enough to hold a complete TLS record
+    ([@https://svn.boost.org/trac/boost/ticket/5854 #5854]).
+  * Fixed synchronous `null_buffers` operations so that they
+    obey the user's non-blocking setting
+    ([@https://svn.boost.org/trac/boost/ticket/5756 #5756]).
+  * Changed to set `fd_set` size at runtime when using Windows.
+  * Disabled MSVC warning due to const qualifier being applied to function type.
+  * Fixed crash that occurs when using Intel C++ compiler
+    ([@https://svn.boost.org/trac/boost/ticket/5763 #5763]).
+  * Changed OpenSSL initialisation to support all available algorithms.
+  * Fixed SSL error mapping when session is gracefully shut down.
+  * Added some latency test programs.
+  * Clarified that a read operation ends when the buffer is full
+    ([@https://svn.boost.org/trac/boost/ticket/5999 #5999]).
+  * Fixed exception safety issue in `epoll_reactor` initialisation
+    ([@https://svn.boost.org/trac/boost/ticket/6006 #6006]).
+  * Made number of strand implementations configurable via
+    `BOOST_ASIO_STRAND_IMPLEMENTATIONS` macro.
+  * Added support for `BOOST_ASIO_ENABLE_SEQUENTIAL_STRAND_ALLOCATION` flag
+    which switches strand allocation to use a round-robin approach rather than hashing.
+  * Fixed potential strand starvation issue that can occur when `strand.post()`
+    is used.
 
 * [phrase library..[@/libs/chrono/index.html Chrono]:]
  * [@http://svn.boost.org/trac/boost/ticket/5979 #5979] Added chrono rounding utilities as defined by Howard Hinnant [@http://home.roadrunner.com/~hinnant/duration_io/chrono_util.html here].
