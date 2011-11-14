@@ -79,6 +79,141 @@
     <ul>
       <li>
         <div>
+          <span class="library"><a href="/libs/asio/index.html">Asio</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Implemented various performance improvements, including:
+                <ul>
+                  <li>
+                    <div>
+                      Using thread-local operation queues in single-threaded use
+                      cases (i.e. when <code><span class="identifier">concurrency_hint</span></code>
+                      is 1) to eliminate a lock/unlock pair.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Allowing some <code><span class="identifier">epoll_reactor</span></code>
+                      speculative operations to be performed without holding the
+                      lock.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Improving locality of reference by performing an <code><span class="identifier">epoll_reactor</span></code>'s I/O operation
+                      immediately before the corresponding handler is called. Also
+                      improves scalability across CPUs.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Specialising asynchronous read and write operations for buffer
+                      sequences that are arrays (<code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span></code>
+                      or <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">array</span></code>) of exactly two buffers.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed compile error in regex overload of <code><span class="identifier">async_read_until</span></code>
+                (<a href="https://svn.boost.org/trac/boost/ticket/5688">#5688</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed Windows-specific compile error by explicitly specifying the
+                <code><span class="identifier">signal</span><span class="special">()</span></code>
+                function from the global namespace (<a href="https://svn.boost.org/trac/boost/ticket/5722">#5722</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed <code><span class="identifier">deadline_timer</span></code>
+                implementation to not read clock unless the timer heap is non-empty.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed SSL buffer sizes to be large enough to hold a complete TLS
+                record (<a href="https://svn.boost.org/trac/boost/ticket/5854">#5854</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed synchronous <code><span class="identifier">null_buffers</span></code>
+                operations so that they obey the user's non-blocking setting (<a href="https://svn.boost.org/trac/boost/ticket/5756">#5756</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed to set <code><span class="identifier">fd_set</span></code>
+                size at runtime when using Windows.
+              </div>
+            </li>
+            <li>
+              <div>
+                Disabled MSVC warning due to const qualifier being applied to function
+                type.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed crash that occurs when using Intel C++ compiler (<a href="https://svn.boost.org/trac/boost/ticket/5763">#5763</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed OpenSSL initialisation to support all available algorithms.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed SSL error mapping when session is gracefully shut down.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added some latency test programs.
+              </div>
+            </li>
+            <li>
+              <div>
+                Clarified that a read operation ends when the buffer is full (<a href="https://svn.boost.org/trac/boost/ticket/5999">#5999</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed exception safety issue in <code><span class="identifier">epoll_reactor</span></code>
+                initialisation (<a href="https://svn.boost.org/trac/boost/ticket/6006">#6006</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Made number of strand implementations configurable via <code><span class="identifier">BOOST_ASIO_STRAND_IMPLEMENTATIONS</span></code>
+                macro.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added support for <code><span class="identifier">BOOST_ASIO_ENABLE_SEQUENTIAL_STRAND_ALLOCATION</span></code>
+                flag which switches strand allocation to use a round-robin approach
+                rather than hashing.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed potential strand starvation issue that can occur when <code><span class="identifier">strand</span><span class="special">.</span><span class="identifier">post</span><span class="special">()</span></code>
+                is used.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/libs/chrono/index.html">Chrono</a>:</span>
           <ul>
             <li>

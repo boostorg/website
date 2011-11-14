@@ -41,6 +41,141 @@
     &lt;ul&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/asio/index.html&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Implemented various performance improvements, including:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Using thread-local operation queues in single-threaded use
+                      cases (i.e. when &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;concurrency_hint&lt;/span&gt;&lt;/code&gt;
+                      is 1) to eliminate a lock/unlock pair.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Allowing some &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;epoll_reactor&lt;/span&gt;&lt;/code&gt;
+                      speculative operations to be performed without holding the
+                      lock.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Improving locality of reference by performing an &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;epoll_reactor&lt;/span&gt;&lt;/code&gt;'s I/O operation
+                      immediately before the corresponding handler is called. Also
+                      improves scalability across CPUs.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Specialising asynchronous read and write operations for buffer
+                      sequences that are arrays (&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;array&lt;/span&gt;&lt;/code&gt;
+                      or &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;array&lt;/span&gt;&lt;/code&gt;) of exactly two buffers.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed compile error in regex overload of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;async_read_until&lt;/span&gt;&lt;/code&gt;
+                (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5688&quot;&gt;#5688&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed Windows-specific compile error by explicitly specifying the
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;signal&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+                function from the global namespace (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5722&quot;&gt;#5722&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;deadline_timer&lt;/span&gt;&lt;/code&gt;
+                implementation to not read clock unless the timer heap is non-empty.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed SSL buffer sizes to be large enough to hold a complete TLS
+                record (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5854&quot;&gt;#5854&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed synchronous &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;null_buffers&lt;/span&gt;&lt;/code&gt;
+                operations so that they obey the user's non-blocking setting (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5756&quot;&gt;#5756&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed to set &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;fd_set&lt;/span&gt;&lt;/code&gt;
+                size at runtime when using Windows.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Disabled MSVC warning due to const qualifier being applied to function
+                type.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed crash that occurs when using Intel C++ compiler (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5763&quot;&gt;#5763&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed OpenSSL initialisation to support all available algorithms.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed SSL error mapping when session is gracefully shut down.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added some latency test programs.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clarified that a read operation ends when the buffer is full (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5999&quot;&gt;#5999&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed exception safety issue in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;epoll_reactor&lt;/span&gt;&lt;/code&gt;
+                initialisation (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6006&quot;&gt;#6006&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Made number of strand implementations configurable via &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_ASIO_STRAND_IMPLEMENTATIONS&lt;/span&gt;&lt;/code&gt;
+                macro.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_ASIO_ENABLE_SEQUENTIAL_STRAND_ALLOCATION&lt;/span&gt;&lt;/code&gt;
+                flag which switches strand allocation to use a round-robin approach
+                rather than hashing.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed potential strand starvation issue that can occur when &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;strand&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+                is used.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/chrono/index.html&quot;&gt;Chrono&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
