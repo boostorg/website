@@ -14,4 +14,4 @@ the scripts or the templates have been updated.
 import boost_site.site_tools
 
 boost_site.site_tools.init()
-boost_site.site_tools.update_quickbook()
+boost_site.site_tools.update_quickbook(True)

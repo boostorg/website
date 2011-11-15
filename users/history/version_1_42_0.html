@@ -41,7 +41,7 @@
 
               <p><span class=
               "news-date">February  2nd, 2010 14:00 GMT</span></p>
-
+<p><a href="/doc/libs/1_42_0/">Documentation</a>
               <table class="download-table"><caption>Downloads</caption><tr><th scope="col">Platform</th><th scope="col">File</th></tr>
 <tr><th scope="row" rowspan="2">unix</th><td><a href="http://sourceforge.net/projects/boost/files/boost/1.42.0/boost_1_42_0.tar.bz2/download">boost_1_42_0.tar.bz2</a></td></tr><tr><td><a href="http://sourceforge.net/projects/boost/files/boost/1.42.0/boost_1_42_0.tar.gz/download">boost_1_42_0.tar.gz</a></td></tr>
 <tr><th scope="row" rowspan="2">windows</th><td><a href="http://sourceforge.net/projects/boost/files/boost/1.42.0/boost_1_42_0.7z/download">boost_1_42_0.7z</a></td></tr><tr><td><a href="http://sourceforge.net/projects/boost/files/boost/1.42.0/boost_1_42_0.zip/download">boost_1_42_0.zip</a></td></tr></table>
@@ -68,380 +68,372 @@
       <li>
         <div>
           <span class="library"><a href="/libs/asio/index.html">Asio</a>:</span>
-
+          <ul>
+            <li>
+              <div>
+                Added a new HTTP Server 4 example illustrating the use of stackless
+                coroutines with Asio.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed handler allocation and invocation to use <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">addressof</span></code>
+                to get the address of handler objects, rather than applying <code><span class="keyword">operator</span><span class="special">&amp;</span></code>
+                directly (<a href="https://svn.boost.org/trac/boost/ticket/2977">#2977</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Restricted MSVC buffer debugging workaround to 2008, as it causes
+                a crash with 2010 beta 2 (<a href="https://svn.boost.org/trac/boost/ticket/3796">#3796</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3822">#3822</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a problem with the lifetime of handler memory, where Windows
+                needs the <code><span class="identifier">OVERLAPPED</span></code>
+                structure to be valid until both the initiating function call has
+                returned and the completion packet has been delivered.
+              </div>
+            </li>
+            <li>
+              <div>
+                Don't block signals while performing system calls, but instead restart
+                the calls if they are interrupted.
+              </div>
+            </li>
+            <li>
+              <div>
+                Documented the guarantee made by strand objects with respect to order
+                of handler invocation.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed strands to use a pool of implementations, to make copying
+                of strands cheaper.
+              </div>
+            </li>
+            <li>
+              <div>
+                Ensured that kqueue support is enabled for BSD platforms (<a href="https://svn.boost.org/trac/boost/ticket/3626">#3626</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a <code><span class="identifier">boost_</span></code> prefix
+                to the <code><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span></code>
+                thread entry point function (<a href="https://svn.boost.org/trac/boost/ticket/3809">#3809</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                In <code><span class="identifier">getaddrinfo</span></code> emulation,
+                only check the socket type (<code><span class="identifier">SOCK_STREAM</span></code>
+                or <code><span class="identifier">SOCK_DGRAM</span></code>) if
+                a service name has been specified. This should allow the emulation
+                to work with raw sockets.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a workaround for some broken Windows firewalls that make a
+                socket appear bound to 0.0.0.0 when it is in fact bound to 127.0.0.1.
+              </div>
+            </li>
+            <li>
+              <div>
+                Applied a fix for reported excessive CPU usage under Solaris (<a href="https://svn.boost.org/trac/boost/ticket/3670">#3670</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Added some support for platforms that use older compilers such as
+                g++ 2.95 (<a href="https://svn.boost.org/trac/boost/ticket/3743">#3743</a>).
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Added a new HTTP Server 4 example illustrating the use of stackless
-              coroutines with Asio.
-            </div>
-          </li>
-          <li>
-            <div>
-              Changed handler allocation and invocation to use <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">addressof</span></code>
-              to get the address of handler objects, rather than applying <code><span class="keyword">operator</span><span class="special">&amp;</span></code>
-              directly (<a href="https://svn.boost.org/trac/boost/ticket/2977">#2977</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Restricted MSVC buffer debugging workaround to 2008, as it causes a
-              crash with 2010 beta 2 (<a href="https://svn.boost.org/trac/boost/ticket/3796">#3796</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3822">#3822</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Fixed a problem with the lifetime of handler memory, where Windows
-              needs the <code><span class="identifier">OVERLAPPED</span></code>
-              structure to be valid until both the initiating function call has returned
-              and the completion packet has been delivered.
-            </div>
-          </li>
-          <li>
-            <div>
-              Don't block signals while performing system calls, but instead restart
-              the calls if they are interrupted.
-            </div>
-          </li>
-          <li>
-            <div>
-              Documented the guarantee made by strand objects with respect to order
-              of handler invocation.
-            </div>
-          </li>
-          <li>
-            <div>
-              Changed strands to use a pool of implementations, to make copying of
-              strands cheaper.
-            </div>
-          </li>
-          <li>
-            <div>
-              Ensured that kqueue support is enabled for BSD platforms (<a href="https://svn.boost.org/trac/boost/ticket/3626">#3626</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Added a <code><span class="identifier">boost_</span></code> prefix
-              to the <code><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span></code>
-              thread entry point function (<a href="https://svn.boost.org/trac/boost/ticket/3809">#3809</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              In <code><span class="identifier">getaddrinfo</span></code> emulation,
-              only check the socket type (<code><span class="identifier">SOCK_STREAM</span></code>
-              or <code><span class="identifier">SOCK_DGRAM</span></code>) if a
-              service name has been specified. This should allow the emulation to
-              work with raw sockets.
-            </div>
-          </li>
-          <li>
-            <div>
-              Added a workaround for some broken Windows firewalls that make a socket
-              appear bound to 0.0.0.0 when it is in fact bound to 127.0.0.1.
-            </div>
-          </li>
-          <li>
-            <div>
-              Applied a fix for reported excessive CPU usage under Solaris (<a href="https://svn.boost.org/trac/boost/ticket/3670">#3670</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Added some support for platforms that use older compilers such as g++
-              2.95 (<a href="https://svn.boost.org/trac/boost/ticket/3743">#3743</a>).
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           <span class="library"><a href="/libs/circular_buffer/index.html">Circular Buffer</a>:</span>
-
+          <ul>
+            <li>
+              <div>
+                Added methods erase_begin(size_type) and erase_end(size_type) with
+                constant complexity for such types of stored elements which do not
+                need an explicit destruction e.g. int or double.
+              </div>
+            </li>
+            <li>
+              <div>
+                Similarly changed implementation of the clear() method and the destructor
+                so their complexity is now constant for such types of stored elements
+                which do not require an explicit destruction (the complexity for
+                other types remains linear).
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Added methods erase_begin(size_type) and erase_end(size_type) with
-              constant complexity for such types of stored elements which do not
-              need an explicit destruction e.g. int or double.
-            </div>
-          </li>
-          <li>
-            <div>
-              Similarly changed implementation of the clear() method and the destructor
-              so their complexity is now constant for such types of stored elements
-              which do not require an explicit destruction (the complexity for other
-              types remains linear).
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           <span class="library"><a href="/libs/fusion/index.html">Fusion</a>:</span>
-
+          <ul>
+            <li>
+              <div>
+                The accumulator is the first argument to the functor of <code><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">fold</span></code> and <code><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">accumulate</span></code>
+                (<a href="https://svn.boost.org/trac/boost/ticket/2355">#2355</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Added support for associative iterators and views (<a href="https://svn.boost.org/trac/boost/ticket/3473">#3473</a>).
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              The accumulator is the first argument to the functor of <code><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">fold</span></code> and <code><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">accumulate</span></code>
-              (<a href="https://svn.boost.org/trac/boost/ticket/2355">#2355</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Added support for associative iterators and views (<a href="https://svn.boost.org/trac/boost/ticket/3473">#3473</a>).
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           <span class="library"><a href="/libs/graph/index.html">Graph</a>:</span>
-
+          <ul>
+            <li>
+              <div>
+                Removed old interface to <code><span class="identifier">compressed_sparse_row_graph</span></code>,
+                making new interface the default.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Removed old interface to <code><span class="identifier">compressed_sparse_row_graph</span></code>,
-              making new interface the default.
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           <span class="library"><a href="/libs/integer/index.html">Integer</a>:</span>
-
+          <ul>
+            <li>
+              <div>
+                Reverted Trunk to release branch state (i.e. a &quot;known good state&quot;).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed issues: <a href="https://svn.boost.org/trac/boost/ticket/653">653</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3084">3084</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3177">3177</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3180">3180</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3548">3568</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3657">3657</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/2134">2134</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added long long support to <tt>boost::static_log2</tt>,
+                <tt>boost::static_signed_min</tt>, <tt>boost::static_signed_max</tt>,
+                <tt>boost::static_unsigned_min</tt><tt>boost::static_unsigned_max</tt>,
+                when available.
+              </div>
+            </li>
+            <li>
+              <div>
+                The argument type and the result type of <tt>boost::static_signed_min</tt>
+                etc are now typedef'd. Formerly, they were hardcoded as <tt>unsigned
+                long</tt> and <tt>int</tt> respectively. Please, use
+                the provided typedefs in new code (and update old code as soon as
+                possible).
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Reverted Trunk to release branch state (i.e. a &quot;known good state&quot;).
-            </div>
-          </li>
-          <li>
-            <div>
-              Fixed issues: <a href="https://svn.boost.org/trac/boost/ticket/653">653</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3084">3084</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3177">3177</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3180">3180</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3548">3568</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3657">3657</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/2134">2134</a>.
-            </div>
-          </li>
-          <li>
-            <div>
-              Added long long support to <tt>boost::static_log2</tt>,
-              <tt>boost::static_signed_min</tt>, <tt>boost::static_signed_max</tt>,
-              <tt>boost::static_unsigned_min</tt><tt>boost::static_unsigned_max</tt>,
-              when available.
-            </div>
-          </li>
-          <li>
-            <div>
-              The argument type and the result type of <tt>boost::static_signed_min</tt>
-              etc are now typedef'd. Formerly, they were hardcoded as <tt>unsigned
-              long</tt> and <tt>int</tt> respectively. Please, use
-              the provided typedefs in new code (and update old code as soon as possible).
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           <span class="library"><a href="/libs/iostreams/index.html">Iostreams</a>:</span>
-
+          <ul>
+            <li>
+              <div>
+                Fixed many outstanding issues. Thanks to Richard Smith for his work
+                on this. (<a href="https://svn.boost.org/trac/boost/ticket/3612">#3612</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3311">#3311</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/2094">#2094</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3010">#3010</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/2894">#2894</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3011">#3011</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3352">#3352</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3505">#3505</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                For more information see the <a href="/libs/iostreams/doc/release_notes.html">library
+                release notes</a>.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Fixed many outstanding issues. Thanks to Richard Smith for his work
-              on this. (<a href="https://svn.boost.org/trac/boost/ticket/3612">#3612</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3311">#3311</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/2094">#2094</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3010">#3010</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/2894">#2894</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3011">#3011</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3352">#3352</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3505">#3505</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              For more information see the <a href="/libs/iostreams/doc/release_notes.html">library
-              release notes</a>.
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           <span class="library"><a href="/libs/program_options/index.html">Program.Options</a>:</span>
-
+          <ul>
+            <li>
+              <div>
+                Information about option name added to a few exception classes and
+                various clean ups in exception classes (<a href="https://svn.boost.org/trac/boost/ticket/3423">#3423</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Description wordwrapping in presense of default parameters fixed
+                (<a href="https://svn.boost.org/trac/boost/ticket/2613">#2613</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Empty value in configuration file is now permitted (<a href="https://svn.boost.org/trac/boost/ticket/1537">#1537</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Quotes are no longer stripped from string values (<a href="https://svn.boost.org/trac/boost/ticket/850">#850</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix endless loop in case of long default arguments (<a href="https://svn.boost.org/trac/boost/ticket/689">#689</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix compile warning caused by usage of boost::any (<a href="https://svn.boost.org/trac/boost/ticket/2562">#2562</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix memory bug in example/response_file.cpp (<a href="https://svn.boost.org/trac/boost/ticket/3525">#3525</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Most compilation warnings were fixed (<a href="https://svn.boost.org/trac/boost/ticket/3608">#3608</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Make column width for description text configurable. (<a href="https://svn.boost.org/trac/boost/ticket/3703">#3703</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Add general split function: split_unix() (<a href="https://svn.boost.org/trac/boost/ticket/2561">#2561</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Enable open config files from given file name (<a href="https://svn.boost.org/trac/boost/ticket/3264">#3264</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Additional flag for required options (<a href="https://svn.boost.org/trac/boost/ticket/2982">#2982</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Enable case insensitive style for command line (<a href="https://svn.boost.org/trac/boost/ticket/3498">#3498</a>).
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Information about option name added to a few exception classes and
-              various clean ups in exception classes (<a href="https://svn.boost.org/trac/boost/ticket/3423">#3423</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Description wordwrapping in presense of default parameters fixed (<a href="https://svn.boost.org/trac/boost/ticket/2613">#2613</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Empty value in configuration file is now permitted (<a href="https://svn.boost.org/trac/boost/ticket/1537">#1537</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Quotes are no longer stripped from string values (<a href="https://svn.boost.org/trac/boost/ticket/850">#850</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Fix endless loop in case of long default arguments (<a href="https://svn.boost.org/trac/boost/ticket/689">#689</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Fix compile warning caused by usage of boost::any (<a href="https://svn.boost.org/trac/boost/ticket/2562">#2562</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Fix memory bug in example/response_file.cpp (<a href="https://svn.boost.org/trac/boost/ticket/3525">#3525</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Most compilation warnings were fixed (<a href="https://svn.boost.org/trac/boost/ticket/3608">#3608</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Make column width for description text configurable. (<a href="https://svn.boost.org/trac/boost/ticket/3703">#3703</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Add general split function: split_unix() (<a href="https://svn.boost.org/trac/boost/ticket/2561">#2561</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Enable open config files from given file name (<a href="https://svn.boost.org/trac/boost/ticket/3264">#3264</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Additional flag for required options (<a href="https://svn.boost.org/trac/boost/ticket/2982">#2982</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Enable case insensitive style for command line (<a href="https://svn.boost.org/trac/boost/ticket/3498">#3498</a>).
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           <span class="library"><a href="/libs/property_map/index.html">PropertyMap</a>:</span>
-
+          <ul>
+            <li>
+              <div>
+                Removed old header files (directly in the <code><span class="identifier">boost</span><span class="special">/</span></code> directory); they were deprecated
+                since 1.40, replaced by headers in <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">property_map</span><span class="special">/</span></code>.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Removed old header files (directly in the <code><span class="identifier">boost</span><span class="special">/</span></code> directory); they were deprecated since
-              1.40, replaced by headers in <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">property_map</span><span class="special">/</span></code>.
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           <span class="library"><a href="/libs/proto/index.html">Proto</a>:</span>
-
+          <ul>
+            <li>
+              <div>
+                Fix const correctness issues with <code><span class="identifier">proto</span><span class="special">::</span><span class="identifier">flatten</span></code>
+                and friends (<a href="https://svn.boost.org/trac/boost/ticket/3364">#3364</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Accomodate recent change to <code><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">fold</span></code>,
+                remove old support for Doxygen and pre-1.35 Fusion (<a href="https://svn.boost.org/trac/boost/ticket/3553">#3553</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                In binary operations, when one operand has a user-specified domain
+                and the other has the default domain, the user-specified domain trumps.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <code><span class="identifier">BOOST_PROTO_EXTENDS</span></code>
+                to work with elaborated types.
+              </div>
+            </li>
+            <li>
+              <div>
+                Work around EDG compiler bug with function types and cv-qualification.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Fix const correctness issues with <code><span class="identifier">proto</span><span class="special">::</span><span class="identifier">flatten</span></code>
-              and friends (<a href="https://svn.boost.org/trac/boost/ticket/3364">#3364</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Accomodate recent change to <code><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">fold</span></code>,
-              remove old support for Doxygen and pre-1.35 Fusion (<a href="https://svn.boost.org/trac/boost/ticket/3553">#3553</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              In binary operations, when one operand has a user-specified domain
-              and the other has the default domain, the user-specified domain trumps.
-            </div>
-          </li>
-          <li>
-            <div>
-              Fix <code><span class="identifier">BOOST_PROTO_EXTENDS</span></code>
-              to work with elaborated types.
-            </div>
-          </li>
-          <li>
-            <div>
-              Work around EDG compiler bug with function types and cv-qualification.
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           <span class="library"><a href="/libs/regex/index.html">Regex</a>:</span>
-
+          <ul>
+            <li>
+              <div>
+                Added support for Functors rather than strings as format expressions.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improved error reporting when throwing exceptions to include better
+                more relevant information.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improved performance and reduced stack usage of recursive expressions.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed tickets <a href="https://svn.boost.org/trac/boost/ticket/2802">#2802</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3425">#3425</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3507">#3507</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3546">#3546</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3631">#3631</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3632">#3632</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3715">#3715</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3718">#3718</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3763">#3763</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/3764">#3764</a>
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Added support for Functors rather than strings as format expressions.
-            </div>
-          </li>
-          <li>
-            <div>
-              Improved error reporting when throwing exceptions to include better
-              more relevant information.
-            </div>
-          </li>
-          <li>
-            <div>
-              Improved performance and reduced stack usage of recursive expressions.
-            </div>
-          </li>
-          <li>
-            <div>
-              Fixed tickets <a href="https://svn.boost.org/trac/boost/ticket/2802">#2802</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3425">#3425</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3507">#3507</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3546">#3546</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3631">#3631</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3632">#3632</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3715">#3715</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3718">#3718</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3763">#3763</a>,
-              <a href="https://svn.boost.org/trac/boost/ticket/3764">#3764</a>
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
@@ -454,64 +446,62 @@
       <li>
         <div>
           <span class="library"><a href="/libs/unordered/index.html">Unordered</a>:</span>
-
+          <ul>
+            <li>
+              <div>
+                Support instantiating the containers with incomplete value types.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add <code><span class="identifier">erase_return_void</span></code>
+                as a temporary workaround for the current <code><span class="identifier">erase</span></code>
+                which can be inefficient because it has to find the next element
+                to return an iterator (<a href="http://svn.boost.org/trac/boost/ticket/3693">#3693</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Add templated find overload for compatible keys.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improved codegear compatibility.
+              </div>
+            </li>
+            <li>
+              <div>
+                Other minor changes, full details in <a href="/doc/html/unordered/changes.html#unordered.changes.boost_1_42_0">the
+                changelog</a>.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Support instantiating the containers with incomplete value types.
-            </div>
-          </li>
-          <li>
-            <div>
-              Add <code><span class="identifier">erase_return_void</span></code>
-              as a temporary workaround for the current <code><span class="identifier">erase</span></code>
-              which can be inefficient because it has to find the next element to
-              return an iterator (<a href="http://svn.boost.org/trac/boost/ticket/3693">#3693</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Add templated find overload for compatible keys.
-            </div>
-          </li>
-          <li>
-            <div>
-              Improved codegear compatibility.
-            </div>
-          </li>
-          <li>
-            <div>
-              Other minor changes, full details in <a href="/doc/html/unordered/changes.html#unordered.changes.boost_1_42_0">the
-              changelog</a>.
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           <span class="library"><a href="/libs/xpressive/index.html">Xpressive</a>:</span>
-
+          <ul>
+            <li>
+              <div>
+                <code><span class="identifier">match_results</span></code> no
+                longer relies on undefined behavior in <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span></code>
+                (<a href="https://svn.boost.org/trac/boost/ticket/3278">#3278</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Do NOT copy singular iterators (<a href="https://svn.boost.org/trac/boost/ticket/3538">#3538</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Eliminate gcc and darwin warnings (<a href="https://svn.boost.org/trac/boost/ticket/3734">#3734</a>).
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              <code><span class="identifier">match_results</span></code> no longer
-              relies on undefined behavior in <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span></code>
-              (<a href="https://svn.boost.org/trac/boost/ticket/3278">#3278</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Do NOT copy singular iterators (<a href="https://svn.boost.org/trac/boost/ticket/3538">#3538</a>).
-            </div>
-          </li>
-          <li>
-            <div>
-              Eliminate gcc and darwin warnings (<a href="https://svn.boost.org/trac/boost/ticket/3734">#3734</a>).
-            </div>
-          </li>
-        </ul>
       </li>
     </ul>
   </div>
@@ -524,70 +514,70 @@
       <li>
         <div>
           OS X:
+          <ul>
+            <li>
+              <div>
+                GCC 4.0.1 on Intel Leopard.
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC 4.0.1 on PowerPC Tiger.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              GCC 4.0.1 on Intel Leopard.
-            </div>
-          </li>
-          <li>
-            <div>
-              GCC 4.0.1 on PowerPC Tiger.
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           Linux:
+          <ul>
+            <li>
+              <div>
+                GCC 4.4.1 on Ubuntu Linux.
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC 4.4 on Debian.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              GCC 4.4.1 on Ubuntu Linux.
-            </div>
-          </li>
-          <li>
-            <div>
-              GCC 4.4 on Debian.
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           Windows:
+          <ul>
+            <li>
+              <div>
+                Visual C++ 7.1 SP1, 8.0 SP1 and 9.0 SP1 on Windows XP.
+              </div>
+            </li>
+            <li>
+              <div>
+                Visual C++ 9.0 on Windows 2008, 64 bit.
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC 4.3.3, using Mingw
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Visual C++ 7.1 SP1, 8.0 SP1 and 9.0 SP1 on Windows XP.
-            </div>
-          </li>
-          <li>
-            <div>
-              Visual C++ 9.0 on Windows 2008, 64 bit.
-            </div>
-          </li>
-          <li>
-            <div>
-              GCC 4.3.3, using Mingw
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           FreeBSD:
+          <ul>
+            <li>
+              <div>
+                GCC 4.2.1, 32 and 64 bit.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              GCC 4.2.1, 32 and 64 bit.
-            </div>
-          </li>
-        </ul>
       </li>
     </ul>
     <p>
@@ -597,173 +587,173 @@
       <li>
         <div>
           Linux:
+          <ul>
+            <li>
+              <div>
+                Intel 10.1 on Red Hat Enterprise Linux.
+              </div>
+            </li>
+            <li>
+              <div>
+                Intel 10.1 on 64 bit Red Hat Enterprise Linux.
+              </div>
+            </li>
+            <li>
+              <div>
+                Intel 11.0 on 32 bit Red Hat Enterprise Linux.
+              </div>
+            </li>
+            <li>
+              <div>
+                Intel 11.0 on 64 bit Red Hat Enterprise Linux.
+              </div>
+            </li>
+            <li>
+              <div>
+                Intel 11.1 on 64 bit Red Hat Enterprise Linux.
+              </div>
+            </li>
+            <li>
+              <div>
+                Intel 11.1 on 64 bit Linux Redhat 5.1 Server.
+              </div>
+            </li>
+            <li>
+              <div>
+                Intel 11.1 on Suse Linux 64 bit.
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC 3.4.6, GCC 4.2.4, GCC 4.3.4 and GCC 4.4.2 on Red Hat Enterprise
+                Linux.
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC 4.3.4 and GCC 4.4.2 with C++0x extensions on Red Hat Enterprise
+                Linux.
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC 4.4.1 on 64 bit Linux.
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC 4.4.3 on Debian unstable.
+              </div>
+            </li>
+            <li>
+              <div>
+                QLogic PathScale(TM) Compiler Suite: Version 3.2 on Red Hat Enterprise
+                Linux.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Intel 10.1 on Red Hat Enterprise Linux.
-            </div>
-          </li>
-          <li>
-            <div>
-              Intel 10.1 on 64 bit Red Hat Enterprise Linux.
-            </div>
-          </li>
-          <li>
-            <div>
-              Intel 11.0 on 32 bit Red Hat Enterprise Linux.
-            </div>
-          </li>
-          <li>
-            <div>
-              Intel 11.0 on 64 bit Red Hat Enterprise Linux.
-            </div>
-          </li>
-          <li>
-            <div>
-              Intel 11.1 on 64 bit Red Hat Enterprise Linux.
-            </div>
-          </li>
-          <li>
-            <div>
-              Intel 11.1 on 64 bit Linux Redhat 5.1 Server.
-            </div>
-          </li>
-          <li>
-            <div>
-              Intel 11.1 on Suse Linux 64 bit.
-            </div>
-          </li>
-          <li>
-            <div>
-              GCC 3.4.6, GCC 4.2.4, GCC 4.3.4 and GCC 4.4.2 on Red Hat Enterprise
-              Linux.
-            </div>
-          </li>
-          <li>
-            <div>
-              GCC 4.3.4 and GCC 4.4.2 with C++0x extensions on Red Hat Enterprise
-              Linux.
-            </div>
-          </li>
-          <li>
-            <div>
-              GCC 4.4.1 on 64 bit Linux.
-            </div>
-          </li>
-          <li>
-            <div>
-              GCC 4.4.3 on Debian unstable.
-            </div>
-          </li>
-          <li>
-            <div>
-              QLogic PathScale(TM) Compiler Suite: Version 3.2 on Red Hat Enterprise
-              Linux.
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           OS X:
+          <ul>
+            <li>
+              <div>
+                Intel C++ Compiler 10.1, 11.0, 11.1 on Leopard.
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC 4.0.1 on Intel Leopard.
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC 4.0.1 on PowerPC Tiger.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Intel C++ Compiler 10.1, 11.0, 11.1 on Leopard.
-            </div>
-          </li>
-          <li>
-            <div>
-              GCC 4.0.1 on Intel Leopard.
-            </div>
-          </li>
-          <li>
-            <div>
-              GCC 4.0.1 on PowerPC Tiger.
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           Windows:
+          <ul>
+            <li>
+              <div>
+                Visual C++ 7.1, 8,0, 9,0 on XP.
+              </div>
+            </li>
+            <li>
+              <div>
+                Visual C++ 9.0 using STLport 5.2 on XP and Windows Mobile 5.0.
+              </div>
+            </li>
+            <li>
+              <div>
+                Visual C++ 10.0 beta 2.
+              </div>
+            </li>
+            <li>
+              <div>
+                Visual C++ 10.0 on 32-bit Vista.
+              </div>
+            </li>
+            <li>
+              <div>
+                Borland/Codegear C++ 5.9.3, 6.1.3 (2009), 6.2.1 (2010).
+              </div>
+            </li>
+            <li>
+              <div>
+                Intel C++ 11.1, with a Visual C++ 9.0 backend, on Vista 32-bit.
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC 4.4.1 on Mingw, with and without C++0x extensions.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Visual C++ 7.1, 8,0, 9,0 on XP.
-            </div>
-          </li>
-          <li>
-            <div>
-              Visual C++ 9.0 using STLport 5.2 on XP and Windows Mobile 5.0.
-            </div>
-          </li>
-          <li>
-            <div>
-              Visual C++ 10.0 beta 2.
-            </div>
-          </li>
-          <li>
-            <div>
-              Visual C++ 10.0 on 32-bit Vista.
-            </div>
-          </li>
-          <li>
-            <div>
-              Borland/Codegear C++ 5.9.3, 6.1.3 (2009), 6.2.1 (2010).
-            </div>
-          </li>
-          <li>
-            <div>
-              Intel C++ 11.1, with a Visual C++ 9.0 backend, on Vista 32-bit.
-            </div>
-          </li>
-          <li>
-            <div>
-              GCC 4.4.1 on Mingw, with and without C++0x extensions.
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           AIX:
+          <ul>
+            <li>
+              <div>
+                IBM XL C/C++ Enterprise Edition for AIX, V10.1.0.0, on AIX Version
+                5.3.0.40.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              IBM XL C/C++ Enterprise Edition for AIX, V10.1.0.0, on AIX Version
-              5.3.0.40.
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           FreeBSD:
+          <ul>
+            <li>
+              <div>
+                GCC 4.2.1 on FreeBSD 7.0, 32 bit and 64 bit.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              GCC 4.2.1 on FreeBSD 7.0, 32 bit and 64 bit.
-            </div>
-          </li>
-        </ul>
       </li>
       <li>
         <div>
           Solaris:
+          <ul>
+            <li>
+              <div>
+                Sun C++ 5.10 on Solaris 5.10.
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li>
-            <div>
-              Sun C++ 5.10 on Solaris 5.10.
-            </div>
-          </li>
-        </ul>
       </li>
     </ul>
   </div>

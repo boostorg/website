@@ -35,7 +35,7 @@ class Pages:
             save_hashes[x] = self.pages[x].state()
         boost_site.state.save(save_hashes, self.hash_file)
 
-    def add_qbk_file(self, qbk_file, location):
+    def add_qbk_file(self, qbk_file, location, page_data):
         file = open(qbk_file)
         try:
             qbk_hash = hashlib.sha256(file.read()).hexdigest()
@@ -58,6 +58,12 @@ class Pages:
 
         record.qbk_hash = qbk_hash
         record.dir_location = location
+        if 'type' in page_data:
+            record.type = page_data['type']
+        else:
+            record.type = 'page'
+        if record.type not in ['release', 'page']:
+            throw ("Unknown record type: " + record.type)
 
     # You might be wondering why I didn't just save the rss items - would
     # be able to save all the items not just the ones in the feed.
@@ -142,12 +148,13 @@ class Page:
 
         if not attrs: attrs = { 'page_state' : 'new' }
 
+        self.type = attrs.get('type', None)
         self.page_state = attrs.get('page_state', None)
         self.flags = attrs.get('flags', '')
         if self.flags:
-        	self.flags = set(self.flags.split(','))
+            self.flags = set(self.flags.split(','))
         else:
-        	self.flags = set()
+            self.flags = set()
         self.dir_location = attrs.get('dir_location', None)
         self.location = attrs.get('location', None)
         self.id = attrs.get('id', None)
@@ -156,6 +163,7 @@ class Page:
         self.last_modified = attrs.get('last_modified')
         self.pub_date = attrs.get('pub_date')
         self.download_item = attrs.get('download')
+        self.documentation = attrs.get('documentation')
         self.qbk_hash = attrs.get('qbk_hash')
         self.rss_hash = attrs.get('rss_hash')
 
@@ -163,6 +171,7 @@ class Page:
 
     def state(self):
         return {
+            'type': self.type,
             'page_state': self.page_state,
             'flags': ','.join(self.flags),
             'dir_location': self.dir_location,
@@ -173,6 +182,7 @@ class Page:
             'last_modified': self.last_modified,
             'pub_date': self.pub_date,
             'download': self.download_item,
+            'documentation': self.documentation,
             'qbk_hash': self.qbk_hash,
             'rss_hash': self.rss_hash
         }
@@ -188,12 +198,27 @@ class Page:
         self.pub_date = values['pub_date']
         self.last_modified = values['last_modified']
         self.download_item = values['download_item']
+        self.documentation = values['documentation']
         self.id = re.sub('[\W]', '_', self.title_xml).lower()
         if self.dir_location:
             self.location = self.dir_location + self.id + '.html'
             self.dir_location = None
             self.page_state = None
-        
+
+        self.flags = set()
+
+        if self.type == 'release':
+            status = values['status_item']
+            if status == 'release':
+                status = 'released'
+            if not status and self.pub_date != 'In Progress':
+                status = 'released'
+            if status and status not in ['released', 'beta']:
+                print "Error: Unknown status: " + status
+                status = None
+            if status:
+                self.flags.add(status)
+
         self.loaded = True
 
     def web_date(self):
@@ -208,6 +233,8 @@ class Page:
 
     def download_table(self):
         if(not self.download_item):
+            return ''
+        if self.type == 'release' and ('beta' not in self.flags and 'released' not in self.flags):
             return ''
     
         match = re.match('.*/boost/(\d+)\.(\d+)\.(\d+)/', self.download_item)
@@ -238,7 +265,10 @@ class Page:
             
             output = ''
             output = output + '<table class="download-table">'
-            output = output + '<caption>Downloads</caption>'
+            if 'beta' in self.flags:
+                output = output + '<caption>Beta Downloads</caption>'
+            else:
+                output = output + '<caption>Downloads</caption>'
             output = output + '<tr><th scope="col">Platform</th><th scope="col">File</th></tr>'
     
             for platform in ['unix', 'windows']:
@@ -260,9 +290,18 @@ class Page:
             # If the link didn't match the normal version number pattern
             # then just use the old fashioned link to sourceforge. */
     
-            return '<p><span class="news-download"><a href="' + \
+            output = '<p><span class="news-download"><a href="' + \
                 boost_site.util.htmlencode(self.download_item) + \
-                '">Download this release.</a></span></p>';
+                '">'
+
+            if 'beta' in self.flags:
+                output = output + 'Download this beta release.'
+            else:
+                output = output + 'Download this release.'
+
+            output = output + '</a></span></p>'
+
+            return output
 
     def is_published(self, flags):
         if self.page_state == 'new':

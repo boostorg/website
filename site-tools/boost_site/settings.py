@@ -4,20 +4,34 @@
 
 settings = {
     'downloads' : [
-        'feed/history/boost_1_47_0.qbk'
+        {
+            'anchor': 'live',
+            'single': 'Current Release',
+            'plural': 'Current Releases',
+            'matches': ['feed/history/*.qbk|released'],
+            'count': 1
+        },
+        {
+            'anchor': 'beta',
+            'single': 'Beta Release',
+            'plural': 'Beta Releases',
+            'matches': ['feed/history/*.qbk|beta']
+        }
     ],
     'pages': {
         'users/history/': {
             'src_files' : ['feed/history/*.qbk'],
-            'template' : 'site-tools/templates/entry-template.html'
+            'template'  : 'site-tools/templates/entry-template.html',
+            'type'      : 'release'
         },
         'users/news/': {
             'src_files' : ['feed/news/*.qbk'],
-            'template' : 'site-tools/templates/entry-template.html'
+            'template'  : 'site-tools/templates/entry-template.html'
         },
         'users/download/': {
             'src_files' : ['feed/downloads/*.qbk'],
-            'template' : 'site-tools/templates/entry-template.html'
+            'template'  : 'site-tools/templates/entry-template.html',
+            'type'      : 'release'
         }
     },
     'index-pages' : {
@@ -45,7 +59,7 @@ settings = {
             'count': 5
         },
         'feed/dev.rss' : {
-            'title': 'Boost Development',
+            'title': 'Release notes for work in progress boost',
             'matches': ['feed/history/*.qbk'],
             'count': 5
         }

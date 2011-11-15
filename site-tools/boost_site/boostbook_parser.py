@@ -5,7 +5,7 @@
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
 import xml.dom.minidom, time
-from email.utils import parsedate_tz
+from email.utils import mktime_tz, parsedate_tz
 
 class BoostBookParser:
     def __init__(self, document = None):
@@ -35,14 +35,23 @@ class BoostBookParser:
         if download_node:
             download_item = self.get_child(download_node[0]).data
 
+        documentation = None
+        documentation_node = article_node.getElementsByTagName('documentation')
+        if documentation_node:
+            documentation = self.get_child(documentation_node[0]).data
+
+        status_item = None
+        status_node = article_node.getElementsByTagName('status')
+        if status_node:
+            status_item = self.get_child(status_node[0]).data
+
         pub_date = article_node.getAttribute('last-revision').strip()
 
         if not pub_date or pub_date[0] == '$':
             pub_date = 'In Progress'
             last_modified = time.time()
         else:
-            last_modified = parsedate_tz(pub_date)
-            last_modified = time.mktime(last_modified[:-1]) - last_modified[-1]
+            last_modified = mktime_tz(parsedate_tz(pub_date))
 
         description_xhtml = self.x(article_node)
         
@@ -52,7 +61,9 @@ class BoostBookParser:
             'description_fragment' : description_xhtml,
             'pub_date' : pub_date,
             'last_modified' : last_modified,
-            'download_item' : download_item
+            'download_item' : download_item,
+            'documentation' : documentation,
+            'status_item' : status_item
         }
 
     def x(self, node):
