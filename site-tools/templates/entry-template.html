@@ -56,7 +56,10 @@ if page.type == 'release' and 'released' not in page.flags and 'beta' not in pag
 
               <p><span class=
               "news-date">${ emit(page.web_date()) }$</span></p>
-
+${
+# TODO: Should encode this link. Although not a real problem.
+if (page.documentation): emit('<p><a href="' + page.documentation + '">Documentation</a>')
+}$
               ${ emit(page.download_table()) }$
               <div class="news-description">
                 <div class="description">${ emit(page.description_xml) }$</div>              </div>

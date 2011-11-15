@@ -35,6 +35,11 @@ class BoostBookParser:
         if download_node:
             download_item = self.get_child(download_node[0]).data
 
+        documentation = None
+        documentation_node = article_node.getElementsByTagName('documentation')
+        if documentation_node:
+            documentation = self.get_child(documentation_node[0]).data
+
         status_item = None
         status_node = article_node.getElementsByTagName('status')
         if status_node:
@@ -57,6 +62,7 @@ class BoostBookParser:
             'pub_date' : pub_date,
             'last_modified' : last_modified,
             'download_item' : download_item,
+            'documentation' : documentation,
             'status_item' : status_item
         }
 

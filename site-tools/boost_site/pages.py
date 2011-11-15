@@ -163,6 +163,7 @@ class Page:
         self.last_modified = attrs.get('last_modified')
         self.pub_date = attrs.get('pub_date')
         self.download_item = attrs.get('download')
+        self.documentation = attrs.get('documentation')
         self.qbk_hash = attrs.get('qbk_hash')
         self.rss_hash = attrs.get('rss_hash')
 
@@ -181,6 +182,7 @@ class Page:
             'last_modified': self.last_modified,
             'pub_date': self.pub_date,
             'download': self.download_item,
+            'documentation': self.documentation,
             'qbk_hash': self.qbk_hash,
             'rss_hash': self.rss_hash
         }
@@ -196,6 +198,7 @@ class Page:
         self.pub_date = values['pub_date']
         self.last_modified = values['last_modified']
         self.download_item = values['download_item']
+        self.documentation = values['documentation']
         self.id = re.sub('[\W]', '_', self.title_xml).lower()
         if self.dir_location:
             self.location = self.dir_location + self.id + '.html'
