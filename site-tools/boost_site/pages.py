@@ -150,11 +150,7 @@ class Page:
 
         self.type = attrs.get('type', None)
         self.page_state = attrs.get('page_state', None)
-        self.flags = attrs.get('flags', '')
-        if self.flags:
-            self.flags = set(self.flags.split(','))
-        else:
-            self.flags = set()
+        self.release_status = attrs.get('release_status', None)
         self.dir_location = attrs.get('dir_location', None)
         self.location = attrs.get('location', None)
         self.id = attrs.get('id', None)
@@ -169,11 +165,26 @@ class Page:
 
         self.loaded = False
 
+        self.initialise()
+
+    def initialise(self):
+        self.flags = set()
+
+        if self.type == 'release':
+            if not self.release_status and self.pub_date != 'In Progress':
+                self.release_status = 'released'
+            if self.release_status and self.release_status not in ['released', 'beta']:
+                print "Error: Unknown release status: " + self.release_status
+                self.release_status = None
+            if self.release_status:
+                self.flags.add(self.release_status)
+        
+
     def state(self):
         return {
             'type': self.type,
             'page_state': self.page_state,
-            'flags': ','.join(self.flags),
+            'release_status': self.release_status,
             'dir_location': self.dir_location,
             'location': self.location,
             'id' : self.id,
@@ -204,22 +215,11 @@ class Page:
             self.location = self.dir_location + self.id + '.html'
             self.dir_location = None
             self.page_state = None
-
-        self.flags = set()
-
-        if self.type == 'release':
-            status = values['status_item']
-            if status == 'release':
-                status = 'released'
-            if not status and self.pub_date != 'In Progress':
-                status = 'released'
-            if status and status not in ['released', 'beta']:
-                print "Error: Unknown status: " + status
-                status = None
-            if status:
-                self.flags.add(status)
+        self.release_status = values['status_item']
 
         self.loaded = True
+
+        self.initialise()
 
     def web_date(self):
         if self.pub_date == 'In Progress':
