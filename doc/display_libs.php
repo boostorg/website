@@ -8,6 +8,14 @@ if (strpos($_SERVER['REQUEST_URI'], '//') !== FALSE)
 	exit(0);
 }
 
+if (strncmp($_SERVER['REQUEST_URI'], '/doc/libs/1_', 12) == 0  &&
+        is_dir("$_SERVER[DOCUMENT_ROOT]/$_SERVER[REQUEST_URI]") &&
+        is_readable("$_SERVER[DOCUMENT_ROOT]/$_SERVER[REQUEST_URI]index.html"))
+{
+    readfile("$_SERVER[DOCUMENT_ROOT]/$_SERVER[REQUEST_URI]/index.html");
+    exit(0);
+}
+
 require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
 function boost_future_version($version)
