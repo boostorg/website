@@ -29,9 +29,33 @@ def upgrade2():
             page.type = 'page'
     pages.save()
 
+def upgrade3():
+    pages_raw = boost_site.state.load('site-tools/state/feed-pages.txt')
+    for page in pages_raw:
+        page_details = pages_raw[page]
+        flags = page_details['flags']
+        flags = set(page_details['flags'].split(','))
+        if '' in flags:
+            flags.remove('')
+        type = page_details['type']
+        if type == 'release':
+            if 'released' in flags:
+                page_details['release_status'] = 'released'
+                flags.remove('released')
+            elif 'beta' in flags:
+                page_details['release_status'] = 'beta'
+                flags.remove('beta')
+            else:
+                page_details['release_status'] = None
+        if len(flags) != 0:
+            raise Exception("Unexpected flags: " + str(flags))
+        del page_details['flags']
+    boost_site.state.save(pages_raw, 'site-tools/state/feed-pages.txt')
+
 versions = [
         upgrade1,
-        upgrade2
+        upgrade2,
+        upgrade3
         ]
 
 #
