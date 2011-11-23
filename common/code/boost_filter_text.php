@@ -106,7 +106,8 @@ function process_absolute_url($url, $root = null) {
 
     if($root &&
         ($host == 'boost.org' || $host == 'www.boost.org') &&
-        (strpos($relative, '/lib') === 0))
+        strpos($relative, '/lib') === 0 &&
+        strpos($relative, '.') === 0)
     {
         $url = $root.$relative;
     }
