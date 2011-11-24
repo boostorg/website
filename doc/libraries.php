@@ -142,7 +142,8 @@ function libref($lib)
       global $boost_current_version;
       $docref = '/doc/libs/release/'.$lib['documentation'];
     }
-    print '<a href="'.$docref.'">'.($lib['name'] ? $lib['name'] : $lib['key']).'</a>';
+    $title = $lib['name'] ? $lib['name'] : $lib['key'];
+    print '<a href="'.$docref.'" title="Boost.'.$title.'">'.$title.'</a>';
   }
   else
   {
