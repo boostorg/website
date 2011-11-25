@@ -6,7 +6,7 @@ RewriteBase /doc
 RewriteCond %{HTTP_HOST} ^boost\.org [NC]
 RewriteRule ^.*$ http://www\.boost\.org%{REQUEST_URI} [R=301]
 
-RewriteRule ^html(/.*)?$ libs/release/doc/html$1 [R]
+RewriteRule ^html(/.*)?$ libs/release/doc/html$1 [R=301]
 
 # Always serve up the latest css/image files in doc/html and doc/src.
 RewriteRule ^libs/[^/]*/doc/(?:html|src)/(.*\.css)$ libs/common/doc/src/$1 [L]
@@ -21,6 +21,11 @@ RewriteRule ^libs/([0-9_]+(?:beta[0-9]*|snapshot)?/.*\.(?:png|gif|jpg|jpeg|jpe|c
 
 RewriteCond %{DOCUMENT_ROOT}/doc/archives/boost-build/$1 -f
 RewriteRule ^tools/build/(.*\.(?:png|gif|jpg|jpeg|jpe|css|js|pdf|dtd))$ archives/boost-build/$1 [L,NC]
+
+# Redirect library directories before redirecting to the current version.
+# Trying to establish a standard location.
+RewriteRule ^libs/release/libs/([^./]*)$ libs/release/libs/$1/ [R=301]
+RewriteRule ^libs/development/libs/([^./]*)$ libs/development/libs/$1/ [R=301]
 
 # Redirect from symbolic names to current versions.
 RewriteRule ^libs/release(/.*)?$ libs/1_48_0$1 [R]
