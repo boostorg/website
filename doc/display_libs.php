@@ -18,27 +18,25 @@ if (strncmp($_SERVER['REQUEST_URI'], '/doc/libs/1_', 12) == 0  &&
 
 require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
-function boost_future_version($version)
+function boost_compare_version($version)
 {
-    if ($version)
+    if ($version && preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$version,$vinfo))
     {
-        $vinfo = array();
-        preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$version,$vinfo);
-        if (isset($vinfo[0]))
-        {
-            global $boost_current_version;
-            $v = $boost_current_version[0];
-            $r = $boost_current_version[1];
-            $p = $boost_current_version[2];
-            return
-              ($v < $vinfo[1]) ||
-              ($v == $vinfo[1] && $r < $vinfo[2]) ||
-              ($v == $vinfo[1] && $r == $vinfo[2] && $p < $vinfo[3]);
-        }
-        else
-        {
-            return FALSE;
-        }
+        array_shift($vinfo);
+
+        global $boost_current_version;
+        $v = $boost_current_version[0];
+        $r = $boost_current_version[1];
+        $p = $boost_current_version[2];
+
+        return
+          $v < $vinfo[0] ? 1 :
+          ($v > $vinfo[0] ? -1 :
+          ($r < $vinfo[1] ? 1 :
+          ($r > $vinfo[1] ? -1 :
+          ($p < $vinfo[2] ? 1 :
+          ($p > $vinfo[2] ? -1
+            : 0)))));
     }
     else
     {
@@ -88,7 +86,9 @@ $beta_site = strpos($_SERVER['HTTP_HOST'], 'beta') !== FALSE ||
 $beta_docs = strpos($location['version'], 'beta') !== FALSE ||
     strpos($location['version'], 'snapshot') !== FALSE;
 
-if (!$beta_docs && boost_future_version($location['version'])) {
+$compare_version = boost_compare_version($location['version']);
+
+if (!$beta_docs && $compare_version === 1) {
     file_not_found($location['file'],
         "Documentation for this version has not been uploaded yet. ".
         "Documentation is only uploaded when it's fully released, ".
@@ -128,5 +128,7 @@ display_from_archive(
   //~ the headers are text files displayed in an embeded page
   array('@.*@','@^boost/.*$@i','cpp','text/plain')
   ),
-  null, "+1 year"
+  null,
+  $compare_version === -1 ? "+1 year" :
+    ($compare_version === 0 ? "+1 week" : "+1 day")
 );

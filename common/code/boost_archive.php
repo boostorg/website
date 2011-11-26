@@ -150,9 +150,6 @@ function display_from_archive(
             display_raw_file($params, $type);
     }
     else {
-        if (!http_headers('text/html', filemtime($check_file), $expires))
-            return;
-
         // Read file from hard drive or zipfile
     
         // Note: this sets $params['content'] with either the content or an error
@@ -166,12 +163,16 @@ function display_from_archive(
     
         if($type == 'text/html') {
             if($redirect = detect_redirect($params['content'])) {
+                http_headers('text/html', null, "+1 day");
                 header("Location: $redirect", TRUE, 301);
                 if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $params['content'];
                 return;
             }
         }
     
+        if (!http_headers('text/html', filemtime($check_file), $expires))
+            return;
+
         // Finally process the file and display it.
     
         if($_SERVER['REQUEST_METHOD'] != 'HEAD') {
@@ -371,7 +372,7 @@ function file_not_found($params, $message = null)
 HTML;
 
     $content = '<h1>404 Not Found</h1><p>File "' . $params['file'] . '" not found.</p><p>';
-    if($params['zipfile']) $content .= "Unzip error: ";
+    if(!empty($params['zipfile'])) $content .= "Unzip error: ";
     $content .= htmlentities($message);
     $content .= '</p>';
 
