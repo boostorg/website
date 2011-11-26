@@ -372,7 +372,7 @@ function file_not_found($params, $message = null)
 HTML;
 
     $content = '<h1>404 Not Found</h1><p>File "' . $params['file'] . '" not found.</p><p>';
-    if($params['zipfile']) $content .= "Unzip error: ";
+    if(!empty($params['zipfile'])) $content .= "Unzip error: ";
     $content .= htmlentities($message);
     $content .= '</p>';
 
