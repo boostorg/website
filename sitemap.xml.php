@@ -26,6 +26,7 @@ foreach ($libs->get() as $lib) {
 <url>
 <loc>$base_url/$loc_xml</loc>
 <priority>1.0</priority>
+<changefreq>daily</changefreq>
 </url>
 
 EOL;
