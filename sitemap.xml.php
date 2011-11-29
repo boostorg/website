@@ -5,6 +5,7 @@
     require_once(dirname(__FILE__) . '/common/code/boost_libraries.php');
 ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
 <?php
 
 function xmlentities($text) {
@@ -14,22 +15,31 @@ function xmlentities($text) {
         $text);
 }
 
+function echo_sitemap_url($loc, $priority, $freq) {
+    $loc_xml = xmlentities("http://$_SERVER[HTTP_HOST]/$loc");
+
+    echo <<<EOL
+<url>
+<loc>$loc_xml</loc>
+<priority>$priority</priority>
+<changefreq>$freq</changefreq>
+</url>
+
+EOL;
+}
+
+// Library list
+
+echo_sitemap_url("doc/libs/", '1.0', 'daily');
+
+// Library 'home pages'
+
 $libs = USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/doc/libraries.txt')) :
 	new boost_libraries(dirname(__FILE__) . '/doc/libraries.xml');
 
-$base_url = "http://$_SERVER[HTTP_HOST]/doc/libs/release";
-
 foreach ($libs->get() as $lib) {
-    $loc_xml = xmlentities($lib['documentation']);
-    echo <<<EOL
-<url>
-<loc>$base_url/$loc_xml</loc>
-<priority>1.0</priority>
-<changefreq>daily</changefreq>
-</url>
-
-EOL;
+    echo_sitemap_url("doc/libs/release/$lib[documentation]", '1.0', 'daily');
 }
 
 ?>
