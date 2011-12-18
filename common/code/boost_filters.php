@@ -124,3 +124,16 @@ function remove_html_banner($text) {
         return $text;
     }
 }
+
+function latest_link($params)
+{
+    global $boost_current_version;
+    $latest = 'boost_'.implode('_', $boost_current_version);
+
+    if ($latest != $params['version'] && is_file(ARCHIVE_DIR."/$latest/$params[key]"))
+    {
+        echo 'This is the documentation for an old version of boost, click '.
+            '<a href="/doc/libs/release/'.$params['key'].'">'.
+            'here for the latest version</a>';
+    }
+}

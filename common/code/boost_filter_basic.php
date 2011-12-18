@@ -22,6 +22,8 @@ function basic_filter($params)
         echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
         echo $match[0][0];
         virtual("/common/heading-doc.html");
+        echo latest_link($params);
+
         echo prepare_html(remove_html_banner(substr($text, $match[0][1] + strlen($match[0][0]))));
     }
     else {
