@@ -63,6 +63,29 @@ Release status:
   *  Added `allocator_traits` support for both C++11 and C++03
    compilers through an internal `allocator_traits` clone.
 
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * Fixed bugs
+    bugfix: distance for multi-geometries ignored specified distance strategy. Fixed
+    bugfix in difference for polygon/multi_polygon (reported 2011/10/24 on GGL-list)
+    bugfix: raise exception for calculation of distances of multi-geometrie(s) where one of them is empty
+    bugfix: multi DSV did not correctly use settings, fixed
+    bugfix: self-intersections could sometimes be missed (introduced in 1.48), fixed
+    bugfix: convex hull crashed on empty range (e.g. empty multi point), fixed
+  * Solved tickets
+    [@https://svn.boost.org/trac/boost/ticket/6028 6028] Documentation: closure, fixed.
+    [@https://svn.boost.org/trac/boost/ticket/6178 6178] Missing headerfile, fixed.
+    [@https://svn.boost.org/trac/boost/ticket/6021 6021] convex hull of multipoint, fixed.
+  * Additional functionality
+    support for line/polygon intersections and differences
+    support for convert of segment/box of different point types
+    support for append for multi point
+    scalar functions (distance, area, length, perimeter) now throw an empty_input_exception on empty input
+  * Documentation
+    updated support status
+  * Internal changes
+    updates in specializations/not_implemented for distance/convert/assign/area
+    move of wkt/dsv to io folder, making domains redundant
+    strategy concepts assigned to zero to avoid clang warnings (patched by Vishnu)
 
 * [phrase library..[@/libs/graph/ Graph]:]
   * Fixed bugs
