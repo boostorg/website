@@ -127,6 +127,9 @@ function remove_html_banner($text) {
 
 function latest_link($params)
 {
+    if (strpos($params['version'], 'beta') !== FALSE)
+        return;
+
     global $boost_current_version;
     $latest = 'boost_'.implode('_', $boost_current_version);
 
