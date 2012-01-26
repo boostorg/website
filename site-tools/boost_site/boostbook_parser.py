@@ -94,6 +94,8 @@ class BoostBookParser:
                 continue
             if self.get_child(body_item, tag = 'download'):
                 continue
+            if self.get_child(body_item, tag = 'status'):
+                continue
             description_xhtml.appendChild(self.x(body_item))
 
         return description_xhtml
