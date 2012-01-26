@@ -30,7 +30,7 @@ def upgrade2():
     pages.save()
 
 def upgrade3():
-    pages_raw = boost_site.state.load('site-tools/state/feed-pages.txt')
+    pages_raw = boost_site.state.load('generated/state/feed-pages.txt')
     for page in pages_raw:
         page_details = pages_raw[page]
         flags = page_details['flags']
@@ -50,7 +50,7 @@ def upgrade3():
         if len(flags) != 0:
             raise Exception("Unexpected flags: " + str(flags))
         del page_details['flags']
-    boost_site.state.save(pages_raw, 'site-tools/state/feed-pages.txt')
+    boost_site.state.save(pages_raw, 'generated/state/feed-pages.txt')
 
 versions = [
         upgrade1,
@@ -76,7 +76,7 @@ def upgrade():
 
 class Version:
     def __init__(self):
-        self.filename = 'site-tools/state/version.txt'
+        self.filename = 'generated/state/version.txt'
         self.load()
 
     def load(self):

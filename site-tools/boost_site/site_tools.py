@@ -16,7 +16,7 @@ def init():
     boost_site.upgrade.upgrade()
 
 def load_pages():
-    return boost_site.pages.Pages('site-tools/state/feed-pages.txt')
+    return boost_site.pages.Pages('generated/state/feed-pages.txt')
 
 def refresh_quickbook():
     update_quickbook(True)
