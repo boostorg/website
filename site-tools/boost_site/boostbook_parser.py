@@ -22,6 +22,10 @@ class BoostBookParser:
             print "Boostbook file not article:", filename
             return
 
+        id = ''
+        if article_node.hasAttribute('id'):
+            id = article_node.getAttribute('id')
+
         brief_xhtml = self.new_fragment(
             *self.x_children(article_node.getElementsByTagName('articlepurpose')[0])
         )
@@ -56,6 +60,7 @@ class BoostBookParser:
         description_xhtml = self.x(article_node)
         
         return {
+            'id' : id,
             'title_fragment' : title_xhtml,
             'purpose_fragment' : brief_xhtml,
             'description_fragment' : description_xhtml,

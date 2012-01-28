@@ -169,16 +169,21 @@ class Page:
 
     def initialise(self):
         self.flags = set()
+        self.full_title_xml = self.title_xml
 
         if self.type == 'release':
             if not self.release_status and self.pub_date != 'In Progress':
                 self.release_status = 'released'
-            if self.release_status and self.release_status not in ['released', 'beta']:
+            status_parts = self.release_status.split(' ', 2)
+            if status_parts[0] not in ['released', 'beta']:
                 print "Error: Unknown release status: " + self.release_status
                 self.release_status = None
             if self.release_status:
-                self.flags.add(self.release_status)
-        
+                self.flags.add(status_parts[0])
+            if ('beta' in self.flags):
+                self.full_title_xml = self.full_title_xml + ' ' + self.release_status
+            elif ('released' not in self.flags):
+                self.full_title_xml = self.full_title_xml + ' - work in progress'
 
     def state(self):
         return {
@@ -204,13 +209,14 @@ class Page:
     
         self.title_xml = boost_site.util.fragment_to_string(values['title_fragment'])
         self.purpose_xml = boost_site.util.fragment_to_string(values['purpose_fragment'])
-        self.description_xml = boost_site.util.fragment_to_string(values['description_fragment'])
 
         self.pub_date = values['pub_date']
         self.last_modified = values['last_modified']
         self.download_item = values['download_item']
         self.documentation = values['documentation']
-        self.id = re.sub('[\W]', '_', self.title_xml).lower()
+        self.id = values['id']
+        if not self.id:
+            self.id = re.sub('[\W]', '_', self.title_xml).lower()
         if self.dir_location:
             self.location = self.dir_location + self.id + '.html'
             self.dir_location = None
@@ -220,6 +226,22 @@ class Page:
         self.loaded = True
 
         self.initialise()
+
+        if 'released' not in self.flags and self.documentation:
+            doc_matcher = re.compile('^/(?:libs/|doc/html/)')
+            doc_prefix = self.documentation.rstrip('/')
+
+
+            for child in values['description_fragment'].childNodes:
+                if child.__class__.__name__ == 'Element':
+                    for anchor in child.getElementsByTagName('a'):
+                        if anchor.hasAttribute('href') and doc_matcher.match(
+                                anchor.getAttribute('href')):
+                            anchor.setAttribute('href', doc_prefix +
+                                    anchor.getAttribute('href'))
+
+
+        self.description_xml = boost_site.util.fragment_to_string(values['description_fragment'])
 
     def web_date(self):
         if self.pub_date == 'In Progress':
