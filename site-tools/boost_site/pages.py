@@ -215,7 +215,9 @@ class Page:
         self.last_modified = values['last_modified']
         self.download_item = values['download_item']
         self.documentation = values['documentation']
-        self.id = re.sub('[\W]', '_', self.title_xml).lower()
+        self.id = values['id']
+        if not self.id:
+            self.id = re.sub('[\W]', '_', self.title_xml).lower()
         if self.dir_location:
             self.location = self.dir_location + self.id + '.html'
             self.dir_location = None
