@@ -169,16 +169,21 @@ class Page:
 
     def initialise(self):
         self.flags = set()
+        self.full_title_xml = self.title_xml
 
         if self.type == 'release':
             if not self.release_status and self.pub_date != 'In Progress':
                 self.release_status = 'released'
-            if self.release_status and self.release_status not in ['released', 'beta']:
+            status_parts = self.release_status.split(' ', 2)
+            if status_parts[0] not in ['released', 'beta']:
                 print "Error: Unknown release status: " + self.release_status
                 self.release_status = None
             if self.release_status:
-                self.flags.add(self.release_status)
-        
+                self.flags.add(status_parts[0])
+            if ('beta' in self.flags):
+                self.full_title_xml = self.full_title_xml + ' ' + self.release_status
+            elif ('released' not in self.flags):
+                self.full_title_xml = self.full_title_xml + ' - work in progress'
 
     def state(self):
         return {

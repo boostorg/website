@@ -15,9 +15,7 @@ for x in downloads:
         emit('<li><span class="news-title">')
         if entry.download_item:
             emit('<a href="%s">' % entry.download_item)
-        emit(entry.title_xml)
-        if ('beta' in entry.flags):
-            emit(' - beta release')
+        emit(entry.full_title_xml)
         if entry.download_item:
             emit('</a>')
         emit(' (<a href="/%s">release notes</a>)</span>' % (entry.location))
@@ -36,7 +34,7 @@ for x in downloads:
                     ${
 for entry in news:
     emit('\n')
-    emit('                    <li><span class=\n                    "news-title"><a href="/%s">%s</a></span>\n' % (entry.location, entry.title_xml))
+    emit('                    <li><span class=\n                    "news-title"><a href="/%s">%s</a></span>\n' % (entry.location, entry.full_title_xml))
     emit('                    <span class=\n                    "news-description"><span class="brief"><span class="purpose">%s</span></span></span>\n' % entry.purpose_xml)
     emit('                    <span class=\n                    "news-date">%s</span></li>' % (entry.web_date()))
 }$                  </ul>
