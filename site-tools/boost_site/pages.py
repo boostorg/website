@@ -209,7 +209,6 @@ class Page:
     
         self.title_xml = boost_site.util.fragment_to_string(values['title_fragment'])
         self.purpose_xml = boost_site.util.fragment_to_string(values['purpose_fragment'])
-        self.description_xml = boost_site.util.fragment_to_string(values['description_fragment'])
 
         self.pub_date = values['pub_date']
         self.last_modified = values['last_modified']
@@ -227,6 +226,22 @@ class Page:
         self.loaded = True
 
         self.initialise()
+
+        if 'released' not in self.flags and self.documentation:
+            doc_matcher = re.compile('^/(?:libs/|doc/html/)')
+            doc_prefix = self.documentation.rstrip('/')
+
+
+            for child in values['description_fragment'].childNodes:
+                if child.__class__.__name__ == 'Element':
+                    for anchor in child.getElementsByTagName('a'):
+                        if anchor.hasAttribute('href') and doc_matcher.match(
+                                anchor.getAttribute('href')):
+                            anchor.setAttribute('href', doc_prefix +
+                                    anchor.getAttribute('href'))
+
+
+        self.description_xml = boost_site.util.fragment_to_string(values['description_fragment'])
 
     def web_date(self):
         if self.pub_date == 'In Progress':
