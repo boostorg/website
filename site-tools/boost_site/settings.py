@@ -44,21 +44,21 @@ settings = {
     #
     # glob [ '|' flag ]
     'feeds' : {
-        'feed/downloads.rss' : {
+        'generated/downloads.rss' : {
             'title': 'Boost Downloads',
             'matches': ['feed/history/*.qbk|released', 'feed/downloads/*.qbk'],
             'count': 3
         },
-        'feed/history.rss' : {
+        'generated/history.rss' : {
             'title': 'Boost History',
             'matches': ['feed/history/*.qbk|released']
         },
-        'feed/news.rss' : {
+        'generated/news.rss' : {
             'title': 'Boost News',
             'matches': ['feed/news/*.qbk', 'feed/history/*.qbk|released'],
             'count': 5
         },
-        'feed/dev.rss' : {
+        'generated/dev.rss' : {
             'title': 'Release notes for work in progress boost',
             'matches': ['feed/history/*.qbk'],
             'count': 5
