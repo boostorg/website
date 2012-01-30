@@ -112,7 +112,7 @@ def generate_rss_feed(feed_file, details):
     rss = xml.dom.minidom.parseString('''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
   <channel>
-    <generator>BoostBook2RSS</generator>
+    <generator>Boost Website Site Tools</generator>
     <title>%(title)s</title>
     <link>%(link)s</link>
     <description>%(description)s</description>
@@ -122,7 +122,7 @@ def generate_rss_feed(feed_file, details):
 </rss>
 ''' % {
     'title' : details['title'].encode('utf-8'),
-    'link' : "http://www.boost.org/" + feed_file,
+    'link' : "http://www.boost.org/" + details['link'],
     'description' : '',
     'language' : 'en-us',
     'copyright' : 'Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)'

@@ -45,20 +45,24 @@ settings = {
     # glob [ '|' flag ]
     'feeds' : {
         'generated/downloads.rss' : {
+            'link' : 'users/download/',
             'title': 'Boost Downloads',
             'matches': ['feed/history/*.qbk|released', 'feed/downloads/*.qbk'],
             'count': 3
         },
         'generated/history.rss' : {
+            'link' : 'users/history/',
             'title': 'Boost History',
             'matches': ['feed/history/*.qbk|released']
         },
         'generated/news.rss' : {
+            'link' : 'users/news/',
             'title': 'Boost News',
             'matches': ['feed/news/*.qbk', 'feed/history/*.qbk|released'],
             'count': 5
         },
         'generated/dev.rss' : {
+            'link' : '',
             'title': 'Release notes for work in progress boost',
             'matches': ['feed/history/*.qbk'],
             'count': 5
