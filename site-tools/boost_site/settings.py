@@ -35,9 +35,9 @@ settings = {
         }
     },
     'index-pages' : {
-        'users/download/index.html' : 'site-tools/templates/download-template.html',
-        'users/history/index.html' : 'site-tools/templates/history-template.html',
-        'users/news/index.html' : 'site-tools/templates/news-template.html',
+        'generated/download-items.html' : 'site-tools/templates/download-template.html',
+        'generated/history-items.html' : 'site-tools/templates/history-template.html',
+        'generated/news-items.html' : 'site-tools/templates/news-template.html',
         'generated/home-items.html' : 'site-tools/templates/index-src.html'
     },
     # See boost_site.pages for matches pattern syntax.
