@@ -1,8 +1,10 @@
-            <div class="section-body">
+${
+from boost_site.util import htmlencode
+}$            <div class="section-body">
               <ul class="toc">
 ${
 for x in downloads:
-    emit('<li><a href="#%s">%s</li>\n' % (x['anchor'], x['label']))
+    emit('<li><a href="#%s">%s</a></li>\n' % (x['anchor'], x['label']))
 }$
                 <li><a href="#history">Old Boost Releases</a></li>
 
@@ -19,16 +21,16 @@ for x in downloads:
         emit('              <span class="brief"><span class="purpose">%s</span></span></p>\n\n' % entry.purpose_xml)
         emit('              <ul class="menu">\n')
         emit('                <li>\n')
-        emit('                <a href="/%s">Details</a>' % entry.location)
+        emit('                <a href="/%s">Details</a>' % htmlencode(entry.location))
         emit('</li>\n')
         if(entry.download_item):
             emit('\n')
             emit('                <li>\n')
-            emit('                <a href="%s">Download</a></li>' % entry.download_item)
+            emit('                <a href="%s">Download</a></li>' % htmlencode(entry.download_item))
         if(entry.documentation):
             emit('\n')
             emit('                <li>\n')
-            emit('                <a href="%s">Documentation</a></li>' % entry.documentation)
+            emit('                <a href="%s">Documentation</a></li>' % htmlencode(entry.documentation))
         emit('\n')
         emit('              </ul>')
 }$
