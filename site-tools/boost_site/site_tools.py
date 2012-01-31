@@ -160,7 +160,7 @@ def generate_rss_item(rss_feed, qbk_file, page):
         '<x>%s</x>' % page.description_xml.encode('utf-8'))
     base_links(description, page_link)
     node.appendChild(rss_feed.createTextNode(
-        boost_site.util.fragment_to_string(description)))
+        boost_site.util.fragment_to_string(description.firstChild)))
     item.appendChild(node)
 
     return({
