@@ -230,16 +230,9 @@ class Page:
         if 'released' not in self.flags and self.documentation:
             doc_matcher = re.compile('^/(?:libs/|doc/html/)')
             doc_prefix = self.documentation.rstrip('/')
-
-
-            for child in values['description_fragment'].childNodes:
-                if child.__class__.__name__ == 'Element':
-                    for anchor in child.getElementsByTagName('a'):
-                        if anchor.hasAttribute('href') and doc_matcher.match(
-                                anchor.getAttribute('href')):
-                            anchor.setAttribute('href', doc_prefix +
-                                    anchor.getAttribute('href'))
-
+            boost_site.util.transform_links(values['description_fragment'],
+                lambda x: doc_matcher.match(x) and \
+                    doc_prefix + x or x)
 
         self.description_xml = boost_site.util.fragment_to_string(values['description_fragment'])
 
