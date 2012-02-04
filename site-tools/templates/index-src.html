@@ -15,14 +15,21 @@ for x in downloads:
     emit('<h3>%s</h3>\n' % label)
     emit('<ul>\n')
     for entry in entries:
-        emit('<li><span class="news-title">')
+        emit('<li>')
+        emit('<div class="news-title">')
         if entry.download_item:
             emit('<a href="%s">' % htmlencode(entry.download_item))
         emit(entry.full_title_xml)
         if entry.download_item:
             emit('</a>')
-        emit(' (<a href="/%s">release notes</a>)</span>' % (htmlencode(entry.location)))
-        emit('<span class="news-date">%s</span></li>\n' % (entry.web_date()))
+        emit('</div>')
+        emit('<div class="news-date">')
+        emit('<a href="/%s">Release Notes</a>' % (htmlencode(entry.location)))
+        emit(' | ')
+        emit('<a href="%s">Documentation</a>' % (htmlencode(entry.documentation)))
+        emit('</div>')
+        emit('<div class="news-date">%s</div>' % (entry.web_date()))
+        emit('</li>\n')
     emit('</ul>')
 }$
                   </div>
