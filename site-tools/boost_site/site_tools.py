@@ -3,7 +3,7 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-import os, sys, subprocess, glob, re, time, xml.dom.minidom, codecs, urlparse
+import os, sys, subprocess, glob, re, time, xml.dom.minidom, codecs
 import boost_site.templite, boost_site.pages, boost_site.boostbook_parser, boost_site.util
 from boost_site.settings import settings
 
@@ -112,7 +112,7 @@ def generate_rss_feed(feed_file, details):
     rss = xml.dom.minidom.parseString('''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
   <channel>
-    <generator>BoostBook2RSS</generator>
+    <generator>Boost Website Site Tools</generator>
     <title>%(title)s</title>
     <link>%(link)s</link>
     <description>%(description)s</description>
@@ -122,7 +122,7 @@ def generate_rss_feed(feed_file, details):
 </rss>
 ''' % {
     'title' : details['title'].encode('utf-8'),
-    'link' : "http://www.boost.org/" + feed_file,
+    'link' : "http://www.boost.org/" + details['link'],
     'description' : '',
     'language' : 'en-us',
     'copyright' : 'Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)'
@@ -158,9 +158,9 @@ def generate_rss_item(rss_feed, qbk_file, page):
     # Placing the description in a root element to make it well formed xml.
     description = xml.dom.minidom.parseString(
         '<x>%s</x>' % page.description_xml.encode('utf-8'))
-    base_links(description, page_link)
+    boost_site.util.base_links(description, page_link)
     node.appendChild(rss_feed.createTextNode(
-        boost_site.util.fragment_to_string(description)))
+        boost_site.util.fragment_to_string(description.firstChild)))
     item.appendChild(node)
 
     return({
@@ -168,19 +168,5 @@ def generate_rss_item(rss_feed, qbk_file, page):
         'quickbook': qbk_file,
         'last_modified': page.last_modified
     })
-
-def base_links(node, base_link):
-    base_element_links(node, base_link, 'a', 'href')
-    base_element_links(node, base_link, 'img', 'src')
-
-def base_element_links(node, base_link, tag_name, attribute):
-    if node.nodeType == node.ELEMENT_NODE or \
-            node.nodeType == node.DOCUMENT_NODE:
-        for x in node.getElementsByTagName(tag_name):
-            x.setAttribute(attribute,
-                    urlparse.urljoin(base_link, x.getAttribute(attribute)))
-    elif node.nodeType == node.DOCUMENT_FRAGMENT_NODE:
-        for x in node.childNodes:
-            base_element_links(x, base_link, tag_name, attribute)
  
 ################################################################################

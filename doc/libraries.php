@@ -45,7 +45,7 @@ function boost_version($v,$r,$p)
 }
 
 $libs = USE_SERIALIZED_INFO ?
-	unserialize(file_get_contents(dirname(__FILE__) . '/libraries.txt')) :
+	unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt')) :
 	new boost_libraries(dirname(__FILE__) . '/libraries.xml');
 
 // Display types:

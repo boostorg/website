@@ -35,7 +35,7 @@ echo_sitemap_url("doc/libs/", '1.0', 'daily');
 // Library 'home pages'
 
 $libs = USE_SERIALIZED_INFO ?
-	unserialize(file_get_contents(dirname(__FILE__) . '/doc/libraries.txt')) :
+	unserialize(file_get_contents(dirname(__FILE__) . '/generated/libraries.txt')) :
 	new boost_libraries(dirname(__FILE__) . '/doc/libraries.xml');
 
 foreach ($libs->get() as $lib) {

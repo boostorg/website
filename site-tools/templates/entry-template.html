@@ -1,4 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+${
+from boost_site.util import htmlencode
+}$<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -50,8 +52,7 @@ if page.type == 'release' and 'released' not in page.flags:
               <p><span class=
               "news-date">${ emit(page.web_date()) }$</span></p>
 ${
-# TODO: Should encode this link. Although not a real problem.
-if (page.documentation): emit('<p><a href="' + page.documentation + '">Documentation</a>')
+if (page.documentation): emit('<p><a href="' + htmlencode(page.documentation) + '">Documentation</a>')
 }$
               ${ emit(page.download_table()) }$
               <div class="news-description">
