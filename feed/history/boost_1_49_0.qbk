@@ -73,8 +73,39 @@
    compilers through an internal `allocator_traits` clone.
 
 * [phrase library..[@/libs/filesystem/ Filesystem]:]
-  * See the
-    [@/libs/filesystem/v3/doc/release_history.html release history].
+  * Fix [@https://svn.boost.org/trac/boost/ticket/3714 #3714],
+    Added test cases and fixes for class path errors when
+    assignment or append used self or portion of self as source.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/4889 #4889],
+    [@https://svn.boost.org/trac/boost/ticket/6320 #6320],
+    Locale codecvt_facet not thread safe on Windows.
+    Move Windows, Mac OS X, locale and codecvt facet back to namespace
+    scope. POSIX except OS X uses local static initialization (IE lazy) to
+    ensure exceptions are catchable if environmental variables are
+    misconfigured and to avoid use of locale("") if not actually used.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/5652 #5652],
+    recursive_directory_iterator fails on cyclic symbolic
+    links. Thanks to Daniel Aarno for the patch.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/5653 #5653],
+    recursive_directory_iterator(error_code) can still throw
+    filesystem_error.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/5900 #5900],
+    directory_iterator access violation on Windows if error
+    is thrown. Thanks to Andreas Eckleder for the patch.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/5900 #5900]
+    comment 2, a bug in director_iterator construction with
+    error_code argument that caused increment to be called without the ec
+    argument being passed.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/5989 #5989]
+    by cleaning up test suite path_test.cpp code even though
+    the ticket itself was not a defect, and clarifying docs; iteration
+    over a path yields generic format.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/5592 #5592],
+    Change Windows codecvt processing from CP_THREAD_ACP to CP_ACP.
+  * Operations function fixes for PGI compiler, thanks to Noel Belcourt.
+  * Relax permissions test to reflect reality, particularly on the
+    Sandia test platforms.
+
 
 * [phrase library..[@/libs/geometry/ Geometry]:]
   * Fixed bugs

@@ -27,6 +27,75 @@
     &lt;ul&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_49_0_beta1/libs/asio&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added a new class template &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;basic_waitable_timer&lt;/span&gt;&lt;/code&gt;
+                based around the C++11 clock type requirements. It may be used with
+                the clocks from the C++11 &lt;code&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;chrono&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
+                library facility or, if those are not available, Boost.Chrono. The
+                typedefs &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;high_resolution_timer&lt;/span&gt;&lt;/code&gt;,
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;steady_timer&lt;/span&gt;&lt;/code&gt; and
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;system_timer&lt;/span&gt;&lt;/code&gt; may
+                be used to create timer objects for the standard clock types.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added a new &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;windows&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;object_handle&lt;/span&gt;&lt;/code&gt;
+                class for performing waits on Windows kernel objects. Thanks go to
+                Boris Schaeling for contributing substantially to the development
+                of this feature.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                On Linux, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; can return EAGAIN in certain circumstances.
+                Remapped this to another error so that it doesn't look like a non-blocking
+                operation (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6048&quot;&gt;#6048&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed a compile error on NetBSD (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6098&quot;&gt;#6098&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed deadlock on Mac OS X (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6275&quot;&gt;#6275&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed a regression in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;buffered_write_stream&lt;/span&gt;&lt;/code&gt;
+                (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6310&quot;&gt;#6310&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed a non-paged pool &amp;quot;leak&amp;quot; on Windows when an &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_service&lt;/span&gt;&lt;/code&gt; is repeatedly run without
+                anything to do (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6321&quot;&gt;#6321&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Reverted earlier change to allow some speculative operations to be
+                performed without holding the lock, as it introduced a race condition
+                in some multithreaded scenarios.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed a bug where the second buffer in an array of two buffers may
+                be ignored if the first buffer is empty.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_49_0_beta1/libs/chrono&quot;&gt;Chrono&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
@@ -100,8 +169,73 @@
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
-                See the &lt;a href=&quot;http://www.boost.org/doc/libs/1_49_0_beta1/libs/filesystem/v3/doc/release_history.html&quot;&gt;release
-                history&lt;/a&gt;.
+                Fix &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/3714&quot;&gt;#3714&lt;/a&gt;,
+                Added test cases and fixes for class path errors when assignment
+                or append used self or portion of self as source.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/4889&quot;&gt;#4889&lt;/a&gt;,
+                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6320&quot;&gt;#6320&lt;/a&gt;,
+                Locale codecvt_facet not thread safe on Windows. Move Windows, Mac
+                OS X, locale and codecvt facet back to namespace scope. POSIX except
+                OS X uses local static initialization (IE lazy) to ensure exceptions
+                are catchable if environmental variables are misconfigured and to
+                avoid use of locale(&amp;quot;&amp;quot;) if not actually used.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5652&quot;&gt;#5652&lt;/a&gt;,
+                recursive_directory_iterator fails on cyclic symbolic links. Thanks
+                to Daniel Aarno for the patch.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5653&quot;&gt;#5653&lt;/a&gt;,
+                recursive_directory_iterator(error_code) can still throw filesystem_error.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5900&quot;&gt;#5900&lt;/a&gt;,
+                directory_iterator access violation on Windows if error is thrown.
+                Thanks to Andreas Eckleder for the patch.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5900&quot;&gt;#5900&lt;/a&gt;
+                comment 2, a bug in director_iterator construction with error_code
+                argument that caused increment to be called without the ec argument
+                being passed.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5989&quot;&gt;#5989&lt;/a&gt;
+                by cleaning up test suite path_test.cpp code even though the ticket
+                itself was not a defect, and clarifying docs; iteration over a path
+                yields generic format.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5592&quot;&gt;#5592&lt;/a&gt;,
+                Change Windows codecvt processing from CP_THREAD_ACP to CP_ACP.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Operations function fixes for PGI compiler, thanks to Noel Belcourt.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Relax permissions test to reflect reality, particularly on the Sandia
+                test platforms.
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
@@ -299,8 +433,10 @@
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
-                Fixed bugs &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6412&quot;&gt;#6412&lt;/a&gt;,
+                Fixed bugs &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6531&quot;&gt;#6531&lt;/a&gt;,
+                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6412&quot;&gt;#6412&lt;/a&gt;,
                 &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6398&quot;&gt;#6398&lt;/a&gt;,
+                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6340&quot;&gt;#6340&lt;/a&gt;,
                 &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6319&quot;&gt;#6319&lt;/a&gt;,
                 &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6287&quot;&gt;#6287&lt;/a&gt;,
                 &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6265&quot;&gt;#6265&lt;/a&gt;,
