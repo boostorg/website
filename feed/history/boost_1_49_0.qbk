@@ -3,7 +3,7 @@
     [source-mode c++]
     [purpose
     New Library: Heap.
-    Updated Libraries: Chrono, Container, Filesystem, Geometry, Graph,
+    Updated Libraries: Asio, Chrono, Container, Filesystem, Geometry, Graph,
     Icl, Interprocess, Intrusive, Lexical Cast, Locale, Move,
     Property Tree, Spirit, Thread, Unordered, Uuid.
     ]
@@ -25,6 +25,33 @@
 [endsect]
 
 [section Updated Libraries]
+
+* [phrase library..[@/libs/asio Asio]:]
+  * Added a new class template `basic_waitable_timer` based around the C++11 clock
+    type requirements. It may be used with the clocks from the C++11 `<chrono>`
+    library facility or, if those are not available, Boost.Chrono. The typedefs
+    `high_resolution_timer`, `steady_timer` and `system_timer` may be used to
+    create timer objects for the standard clock types.
+  * Added a new `windows::object_handle` class for performing waits on Windows
+    kernel objects. Thanks go to Boris Schaeling for contributing substantially
+    to the development of this feature.
+  * On Linux, `connect()` can return EAGAIN in certain circumstances. Remapped
+    this to another error so that it doesn't look like a non-blocking operation
+    ([@https://svn.boost.org/trac/boost/ticket/6048 #6048]).
+  * Fixed a compile error on NetBSD
+    ([@https://svn.boost.org/trac/boost/ticket/6098 #6098]).
+  * Fixed deadlock on Mac OS X
+    ([@https://svn.boost.org/trac/boost/ticket/6275 #6275]).
+  * Fixed a regression in `buffered_write_stream`
+    ([@https://svn.boost.org/trac/boost/ticket/6310 #6310]).
+  * Fixed a non-paged pool "leak" on Windows when an `io_service` is repeatedly
+    run without anything to do
+    ([@https://svn.boost.org/trac/boost/ticket/6321 #6321]).
+  * Reverted earlier change to allow some speculative operations to be performed
+    without holding the lock, as it introduced a race condition in some
+    multithreaded scenarios.
+  * Fixed a bug where the second buffer in an array of two buffers may be ignored
+    if the first buffer is empty.
 
 * [phrase library..[@/libs/chrono Chrono]:]
   * Bug Fixes:
@@ -98,8 +125,10 @@
 
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
   * Fixed bugs
+  [@https://svn.boost.org/trac/boost/ticket/6531 #6531],
   [@https://svn.boost.org/trac/boost/ticket/6412 #6412],
   [@https://svn.boost.org/trac/boost/ticket/6398 #6398],
+  [@https://svn.boost.org/trac/boost/ticket/6340 #6340],
   [@https://svn.boost.org/trac/boost/ticket/6319 #6319],
   [@https://svn.boost.org/trac/boost/ticket/6287 #6287],
   [@https://svn.boost.org/trac/boost/ticket/6265 #6265],
