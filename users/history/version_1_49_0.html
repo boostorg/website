@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Version 1.49.0 beta 1</title>
+  <title>Version 1.49.0</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
@@ -34,27 +34,28 @@
             <div class="section-title">
               <h1>Version 1.49.0</h1>
             </div>
-<div class="section-note"><p>Note: This version is at an early stage in its release cycle. The information listed below is incomplete and some of the documentation links may not work yet.</p></div>
 
             <div class="section-body">
               <h2><span class=
-              "news-title">Version 1.49.0 beta 1</span></h2>
+              "news-title">Version 1.49.0</span></h2>
 
               <p><span class=
-              "news-date">In Progress</span></p>
-<p><a href="/doc/libs/1_49_0_beta1/">Documentation</a>
-              <p><span class="news-download"><a href="http://sourceforge.net/projects/boost/files/boost/1.49.0.beta.1/">Download this beta release.</a></span></p>
+              "news-date">February 24th, 2012 21:20 GMT</span></p>
+<p><a href="/doc/libs/1_49_0/">Documentation</a>
+              <table class="download-table"><caption>Downloads</caption><tr><th scope="col">Platform</th><th scope="col">File</th></tr>
+<tr><th scope="row" rowspan="2">unix</th><td><a href="http://sourceforge.net/projects/boost/files/boost/1.49.0/boost_1_49_0.tar.bz2/download">boost_1_49_0.tar.bz2</a></td></tr><tr><td><a href="http://sourceforge.net/projects/boost/files/boost/1.49.0/boost_1_49_0.tar.gz/download">boost_1_49_0.tar.gz</a></td></tr>
+<tr><th scope="row" rowspan="2">windows</th><td><a href="http://sourceforge.net/projects/boost/files/boost/1.49.0/boost_1_49_0.7z/download">boost_1_49_0.7z</a></td></tr><tr><td><a href="http://sourceforge.net/projects/boost/files/boost/1.49.0/boost_1_49_0.zip/download">boost_1_49_0.zip</a></td></tr></table>
               <div class="news-description">
                 <div class="description">
-  
-  
-  
+
+
+
   <div id="version_1_49_0.new_libraries">
     <h3><span class="link">New Libraries</span></h3>
     <ul>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/heap/index.html">Heap</a>:</span>
+          <span class="library"><a href="/libs/heap/index.html">Heap</a>:</span>
   Priority queue data
           structures, from Tim Blechmann.
         </div>
@@ -66,7 +67,76 @@
     <ul>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/chrono">Chrono</a>:</span>
+          <span class="library"><a href="/libs/asio">Asio</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added a new class template <code><span class="identifier">basic_waitable_timer</span></code>
+                based around the C++11 clock type requirements. It may be used with
+                the clocks from the C++11 <code><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">&gt;</span></code>
+                library facility or, if those are not available, Boost.Chrono. The
+                typedefs <code><span class="identifier">high_resolution_timer</span></code>,
+                <code><span class="identifier">steady_timer</span></code> and
+                <code><span class="identifier">system_timer</span></code> may
+                be used to create timer objects for the standard clock types.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a new <code><span class="identifier">windows</span><span class="special">::</span><span class="identifier">object_handle</span></code>
+                class for performing waits on Windows kernel objects. Thanks go to
+                Boris Schaeling for contributing substantially to the development
+                of this feature.
+              </div>
+            </li>
+            <li>
+              <div>
+                On Linux, <code><span class="identifier">connect</span><span class="special">()</span></code> can return EAGAIN in certain circumstances.
+                Remapped this to another error so that it doesn't look like a non-blocking
+                operation (<a href="https://svn.boost.org/trac/boost/ticket/6048">#6048</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a compile error on NetBSD (<a href="https://svn.boost.org/trac/boost/ticket/6098">#6098</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed deadlock on Mac OS X (<a href="https://svn.boost.org/trac/boost/ticket/6275">#6275</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a regression in <code><span class="identifier">buffered_write_stream</span></code>
+                (<a href="https://svn.boost.org/trac/boost/ticket/6310">#6310</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a non-paged pool &quot;leak&quot; on Windows when an <code><span class="identifier">io_service</span></code> is repeatedly run without
+                anything to do (<a href="https://svn.boost.org/trac/boost/ticket/6321">#6321</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Reverted earlier change to allow some speculative operations to be
+                performed without holding the lock, as it introduced a race condition
+                in some multithreaded scenarios.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a bug where the second buffer in an array of two buffers may
+                be ignored if the first buffer is empty.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/chrono">Chrono</a>:</span>
           <ul>
             <li>
               <div>
@@ -112,7 +182,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/container/">Container</a>:</span>
+          <span class="library"><a href="/libs/container/">Container</a>:</span>
           <ul>
             <li>
               <div>
@@ -135,12 +205,77 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/filesystem/">Filesystem</a>:</span>
+          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
           <ul>
             <li>
               <div>
-                See the <a href="/doc/libs/1_49_0_beta1/libs/filesystem/v3/doc/release_history.html">release
-                history</a>.
+                Fix <a href="https://svn.boost.org/trac/boost/ticket/3714">#3714</a>,
+                Added test cases and fixes for class path errors when assignment
+                or append used self or portion of self as source.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="https://svn.boost.org/trac/boost/ticket/4889">#4889</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/6320">#6320</a>,
+                Locale codecvt_facet not thread safe on Windows. Move Windows, Mac
+                OS X, locale and codecvt facet back to namespace scope. POSIX except
+                OS X uses local static initialization (IE lazy) to ensure exceptions
+                are catchable if environmental variables are misconfigured and to
+                avoid use of locale(&quot;&quot;) if not actually used.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="https://svn.boost.org/trac/boost/ticket/5652">#5652</a>,
+                recursive_directory_iterator fails on cyclic symbolic links. Thanks
+                to Daniel Aarno for the patch.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="https://svn.boost.org/trac/boost/ticket/5653">#5653</a>,
+                recursive_directory_iterator(error_code) can still throw filesystem_error.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="https://svn.boost.org/trac/boost/ticket/5900">#5900</a>,
+                directory_iterator access violation on Windows if error is thrown.
+                Thanks to Andreas Eckleder for the patch.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="https://svn.boost.org/trac/boost/ticket/5900">#5900</a>
+                comment 2, a bug in director_iterator construction with error_code
+                argument that caused increment to be called without the ec argument
+                being passed.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="https://svn.boost.org/trac/boost/ticket/5989">#5989</a>
+                by cleaning up test suite path_test.cpp code even though the ticket
+                itself was not a defect, and clarifying docs; iteration over a path
+                yields generic format.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="https://svn.boost.org/trac/boost/ticket/5592">#5592</a>,
+                Change Windows codecvt processing from CP_THREAD_ACP to CP_ACP.
+              </div>
+            </li>
+            <li>
+              <div>
+                Operations function fixes for PGI compiler, thanks to Noel Belcourt.
+              </div>
+            </li>
+            <li>
+              <div>
+                Relax permissions test to reflect reality, particularly on the Sandia
+                test platforms.
               </div>
             </li>
           </ul>
@@ -148,7 +283,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/geometry/">Geometry</a>:</span>
+          <span class="library"><a href="/libs/geometry/">Geometry</a>:</span>
           <ul>
             <li>
               <div>
@@ -283,7 +418,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/graph/">Graph</a>:</span>
+          <span class="library"><a href="/libs/graph/">Graph</a>:</span>
           <ul>
             <li>
               <div>
@@ -315,7 +450,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/icl/">Icl</a>:</span>
+          <span class="library"><a href="/libs/icl/">Icl</a>:</span>
           <ul>
             <li>
               <div>
@@ -334,12 +469,14 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/interprocess/">Interprocess</a>:</span>
+          <span class="library"><a href="/libs/interprocess/">Interprocess</a>:</span>
           <ul>
             <li>
               <div>
-                Fixed bugs <a href="https://svn.boost.org/trac/boost/ticket/6412">#6412</a>,
+                Fixed bugs <a href="https://svn.boost.org/trac/boost/ticket/6531">#6531</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/6412">#6412</a>,
                 <a href="https://svn.boost.org/trac/boost/ticket/6398">#6398</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/6340">#6340</a>,
                 <a href="https://svn.boost.org/trac/boost/ticket/6319">#6319</a>,
                 <a href="https://svn.boost.org/trac/boost/ticket/6287">#6287</a>,
                 <a href="https://svn.boost.org/trac/boost/ticket/6265">#6265</a>,
@@ -372,7 +509,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/intrusive/">Intrusive</a>:</span>
+          <span class="library"><a href="/libs/intrusive/">Intrusive</a>:</span>
           <ul>
             <li>
               <div>
@@ -386,7 +523,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/conversion/lexical_cast.htm">Lexical cast</a>:</span>
+          <span class="library"><a href="/libs/conversion/lexical_cast.htm">Lexical cast</a>:</span>
           <ul>
             <li>
               <div>
@@ -413,7 +550,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/locale/">Locale</a>:</span>
+          <span class="library"><a href="/libs/locale/">Locale</a>:</span>
           <ul>
             <li>
               <div>
@@ -426,7 +563,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/move/">Move</a>:</span>
+          <span class="library"><a href="/libs/move/">Move</a>:</span>
           <ul>
             <li>
               <div>
@@ -442,7 +579,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/property_tree">PropertyTree</a>:</span>
+          <span class="library"><a href="/libs/property_tree">PropertyTree</a>:</span>
           <ul>
             <li>
               <div>
@@ -460,7 +597,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/spirit/index.html">Spirit</a>:</span>
+          <span class="library"><a href="/libs/spirit/index.html">Spirit</a>:</span>
           <ul>
             <li>
               <div>
@@ -473,7 +610,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/thread">Thread</a>:</span>
+          <span class="library"><a href="/libs/thread">Thread</a>:</span>
           <ul>
             <li>
               <div>
@@ -648,7 +785,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/unordered">Unordered</a>:</span>
+          <span class="library"><a href="/libs/unordered">Unordered</a>:</span>
           <ul>
             <li>
               <div>
@@ -675,7 +812,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_49_0_beta1/libs/uuid/">Uuid</a>:</span>
+          <span class="library"><a href="/libs/uuid/">Uuid</a>:</span>
           <ul>
             <li>
               <div>
