@@ -174,8 +174,10 @@ class Page:
         if self.type == 'release':
             if not self.release_status and self.pub_date != 'In Progress':
                 self.release_status = 'released'
+            if not self.release_status:
+                self.release_status = 'dev'
             status_parts = self.release_status.split(' ', 2)
-            if status_parts[0] not in ['released', 'beta']:
+            if status_parts[0] not in ['released', 'beta', 'dev']:
                 print "Error: Unknown release status: " + self.release_status
                 self.release_status = None
             if self.release_status:
