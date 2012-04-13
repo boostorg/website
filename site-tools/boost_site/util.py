@@ -3,7 +3,7 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-import urlparse
+import urlparse, re
 
 def htmlencode(text):
     return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&rt;')
@@ -15,7 +15,9 @@ def fragment_to_string(fragment):
     Because 'toxml' doesn't work:
     http://bugs.python.org/issue9883
     """
-    return ''.join(x.toxml('utf-8').decode('utf-8') for x in fragment.childNodes)
+    x = ''.join(x.toxml('utf-8').decode('utf-8') for x in fragment.childNodes)
+    x = re.sub(r' +$', '', x, flags = re.M)
+    return x
 
 def base_links(node, base_link):
     transform_links(node, lambda x: urlparse.urljoin(base_link,x))
