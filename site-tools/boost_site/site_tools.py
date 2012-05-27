@@ -4,7 +4,7 @@
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
 import os, sys, subprocess, glob, re, time, xml.dom.minidom, codecs
-import boost_site.templite, boost_site.pages, boost_site.boostbook_parser, boost_site.util
+import boost_site.pages, boost_site.boostbook_parser, boost_site.util
 from boost_site.settings import settings
 
 ################################################################################
@@ -54,7 +54,7 @@ def update_quickbook(refresh = False):
     }
 
     for index_page in settings['index-pages']:
-        boost_site.templite.write_template(
+        boost_site.util.write_py_template(
             index_page,
             settings['index-pages'][index_page],
             index_page_variables)

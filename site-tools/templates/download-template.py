@@ -1,4 +1,3 @@
-${
 from boost_site.util import htmlencode
 emit('<ul class="toc">\n');
 
@@ -30,4 +29,3 @@ for x in downloads:
             emit('<a href="%s">Documentation</a>' % htmlencode(entry.documentation))
             emit('</li>\n')
         emit('</ul>\n')
-}$

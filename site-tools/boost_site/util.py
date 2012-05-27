@@ -42,3 +42,17 @@ def write_template(dst_path, template_path, data):
     output = re.sub(r' +$', '', output, flags = re.M)
     out = open(dst_path, "w")
     out.write(output.encode('utf-8'))
+
+def write_py_template(dst_path, template_path, data):
+    data['emit'] = Emitter()
+    exec(open(template_path).read(), {}, data)
+
+    out = open(dst_path, 'w')
+    out.write(data['emit'].output.encode('utf-8'))
+
+class Emitter:
+    def __init__(self):
+        self.output = ''
+
+    def __call__(self, x):
+        self.output += x

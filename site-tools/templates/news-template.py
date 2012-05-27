@@ -1,4 +1,3 @@
-${
 from boost_site.util import htmlencode
 
 entries = pages.match_pages(['feed/news/*.qbk', 'feed/history/*.qbk|released'], 5)
@@ -31,4 +30,3 @@ for entry in entries:
         emit('<a href="%s">Documentation</a>' % htmlencode(entry.documentation))
         emit('</li>\n')
     emit('</ul>')
-}$

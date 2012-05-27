@@ -1,4 +1,3 @@
-${
 from boost_site.util import htmlencode
 
 # TODO: This is duplicated from other places, should only be set once?
@@ -53,4 +52,3 @@ emit('<p><a href="/users/news/">More News...</a> (<a href=feed/news.rss">RSS</a>
 emit('</div>\n\n')
 
 emit('<div class="clear"></div>\n')
-}$

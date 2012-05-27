@@ -1,4 +1,3 @@
-${
 from boost_site.util import htmlencode
 
 title = 'Boost Version History'
@@ -24,4 +23,3 @@ for entry in entries:
         emit('<a href="%s">Documentation</a>' % htmlencode(entry.documentation))
         emit('</li>\n')
     emit('</ul>\n')
-}$
