@@ -112,10 +112,41 @@ class Pages:
                     page_data.load(bb_parser.parse(xml_filename), refresh)
                 finally:
                     os.unlink(xml_filename)
-    
-                boost_site.templite.write_template(page_data.location,
+
+                template_vars = {
+                    'history_style' : '',
+                    'full_title_xml' : page_data.full_title_xml,
+                    'title_xml' : page_data.title_xml,
+                    'note_xml' : '',
+                    'web_date' : page_data.web_date(),
+                    'documentation_para' : '',
+                    'download_table' : page_data.download_table(),
+                    'description_xml' : page_data.description_xml
+                }
+
+                if page_data.type == 'release' and 'released' not in page_data.flags:
+                    template_vars['note_xml'] = '<div class="section-note"><p>Note: This version is at an early stage in its release cycle. The information listed below is incomplete and some of the documentation links may not work yet.</p></div>'
+
+                if page_data.documentation:
+                    template_vars['documentation_para'] = '<p><a href="' + boost_site.util.htmlencode(page_data.documentation) + '">Documentation</a>'
+
+                if(page_data.location.startswith('users/history/')):
+                    template_vars['history_style'] = """
+  <style type="text/css">
+/*<![CDATA[*/
+  #content .news-description ul {
+    list-style: none;
+  }
+  #content .news-description ul ul {
+    list-style: circle;
+  }
+  /*]]>*/
+  </style>
+"""
+
+                boost_site.util.write_template(page_data.location,
                     'site-tools/templates/entry-template.html',
-                    { 'page': page_data })
+                    template_vars)
 
     def match_pages(self, patterns, count = None, sort = True):
         """

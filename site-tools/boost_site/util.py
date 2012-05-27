@@ -3,7 +3,7 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-import urlparse, re
+import urlparse, re, string
 
 def htmlencode(text):
     return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&rt;')
@@ -34,3 +34,11 @@ def transform_links_impl(node, tag_name, attribute, func):
     elif node.nodeType == node.DOCUMENT_FRAGMENT_NODE:
         for x in node.childNodes:
             transform_links_impl(x, tag_name, attribute, func)
+
+def write_template(dst_path, template_path, data):
+    file = open(template_path)
+    s = string.Template(file.read().decode('utf-8'))
+    output = s.substitute(data)
+    output = re.sub(r' +$', '', output, flags = re.M)
+    out = open(dst_path, "w")
+    out.write(output.encode('utf-8'))

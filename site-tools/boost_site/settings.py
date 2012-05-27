@@ -21,16 +21,13 @@ settings = {
     'pages': {
         'users/history/': {
             'src_files' : ['feed/history/*.qbk'],
-            'template'  : 'site-tools/templates/entry-template.html',
             'type'      : 'release'
         },
         'users/news/': {
             'src_files' : ['feed/news/*.qbk'],
-            'template'  : 'site-tools/templates/entry-template.html'
         },
         'users/download/': {
             'src_files' : ['feed/downloads/*.qbk'],
-            'template'  : 'site-tools/templates/entry-template.html',
             'type'      : 'release'
         }
     },
