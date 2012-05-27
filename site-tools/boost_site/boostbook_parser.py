@@ -19,7 +19,7 @@ class BoostBookParser:
 
         article_node = article.documentElement
         if article_node.nodeName != 'article':
-            print "Boostbook file not article:", filename
+            print("Boostbook file not article:", filename)
             return
 
         id = ''
@@ -207,7 +207,7 @@ class BoostBookParser:
     
     def new_node( self, tag, *child, **kwargs ):
         result = self.document.createElement(tag)
-        for k in kwargs.keys():
+        for k in list(kwargs.keys()):
             if kwargs[k] != '':
                 if k == 'id':
                     result.setAttribute('id',kwargs[k])

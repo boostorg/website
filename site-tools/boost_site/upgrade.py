@@ -66,10 +66,10 @@ def upgrade():
     version = Version()
 
     if(version.version < len(versions)):
-        print "Upgrading to new version."
+        print("Upgrading to new version.")
 
         for v in range(version.version, len(versions)):
-            print "Upgrade", v + 1
+            print("Upgrade " + (v + 1))
             versions[v]()
             version.version = v + 1
             version.save()

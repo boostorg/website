@@ -86,9 +86,9 @@ def update_quickbook(refresh = False):
                         rss_feed.importNode(
                             old_rss_items[qbk_page.qbk_file]['item'], True))
                 else:
-                    print "Missing entry for %s" % qbk_page.qbk_file
+                    print("Missing entry for %s" % qbk_page.qbk_file)
                     
-            output_file = open(feed_file, 'w')
+            output_file = open(feed_file, 'wb')
             try:
                 output_file.write(rss_feed.toxml('utf-8'))
             finally:
@@ -109,6 +109,12 @@ def scan_for_new_quickbook_pages(pages):
 ################################################################################
 
 def generate_rss_feed(feed_file, details):
+    title = details['title']
+    link = "http://www.boost.org/" + details['link']
+    if sys.version_info < (3, 0):
+        title = title.encode('utf-8')
+        link = link.encode('utf-8')
+
     rss = xml.dom.minidom.parseString('''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
   <channel>
@@ -121,8 +127,8 @@ def generate_rss_feed(feed_file, details):
   </channel>
 </rss>
 ''' % {
-    'title' : details['title'].encode('utf-8'),
-    'link' : "http://www.boost.org/" + details['link'],
+    'title' : title,
+    'link' : link,
     'description' : '',
     'language' : 'en-us',
     'copyright' : 'Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)'
