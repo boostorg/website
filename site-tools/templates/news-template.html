@@ -2,13 +2,12 @@ ${
 from boost_site.util import htmlencode
 
 entries = pages.match_pages(['feed/news/*.qbk', 'feed/history/*.qbk|released'], 5)
-}$            <div class="section-body">
-              ${
+
 emit('<ul class="toc">\n')
 emit('                ')
 for entry in entries:
     emit('\n')
-    emit('                <li><span class=\n                "news-title"><a href="#i%s">%s</a></span></li>' % (htmlencode(entry.id), entry.title_xml))
+    emit('                <li><span class=\n                "news-title"><a href="#i%s">%s</a></span></li>\n' % (htmlencode(entry.id), entry.title_xml))
 emit('              </ul>')
 for entry in entries:
     emit('\n')
@@ -17,7 +16,7 @@ for entry in entries:
     emit('</h2>\n\n')
     emit('              <p class="news-date">%s</p>\n\n' % (entry.web_date()))
     emit('              <div class="news-description">\n')
-    emit('                <span class="brief"><span class="purpose">%s</span></span>' % (entry.purpose_xml))
+    emit('                <span class="brief"><span class="purpose">%s</span></span>\n' % (entry.purpose_xml))
     emit('              </div>\n\n')
     emit('<ul class="menu">\n')
     emit('<li>')
@@ -31,5 +30,5 @@ for entry in entries:
         emit('<li>')
         emit('<a href="%s">Documentation</a>' % htmlencode(entry.documentation))
         emit('</li>\n')
-    emit('</ul>\n')
-}$            </div>
+    emit('</ul>')
+}$

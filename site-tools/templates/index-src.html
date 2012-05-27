@@ -3,12 +3,11 @@ from boost_site.util import htmlencode
 
 # TODO: This is duplicated from other places, should only be set once?
 news = pages.match_pages(['feed/news/*.qbk', 'feed/history/*.qbk|released'], 3)
-}$
-                <div class="directory-item" id="important-downloads">
-                  <h2>Downloads</h2>
-                  <div id="downloads">
 
-${
+emit('<div class="directory-item" id="important-downloads">\n');
+emit('<h2>Downloads</h2>\n');
+emit('<div id="downloads">\n');
+
 for x in downloads:
     label = x['label']
     entries = x['entries']
@@ -31,27 +30,27 @@ for x in downloads:
         emit('</div>')
         emit('<div class="news-date">%s</div>' % (entry.web_date()))
         emit('</li>\n')
-    emit('</ul>')
-}$
-                  </div>
-                  <p><a href="/users/download/">More Downloads...</a>
-                  (<a href="feed/downloads.rss">RSS</a>)</p>
-                </div>
+    emit('</ul>\n')
 
-                <div class="directory-item" id="important-news">
-                  <h2>News</h2>
+emit('</div>\n')
+emit('<p><a href="/users/download/">More Downloads...</a>')
+emit('(<a href="feed/downloads.rss">RSS</a>)</p>\n')
+emit('</div>\n\n')
 
-                  <ul id="news">
-                    ${
+emit('<div class="directory-item" id="important-news">\n')
+emit('<h2>News</h2>\n\n')
+
+emit('<ul id="news">\n')
+
 for entry in news:
     emit('\n')
     emit('                    <li><span class=\n                    "news-title"><a href="/%s">%s</a></span>\n' % (htmlencode(entry.location), entry.full_title_xml))
     emit('                    <span class=\n                    "news-description"><span class="brief"><span class="purpose">%s</span></span></span>\n' % entry.purpose_xml)
     emit('                    <span class=\n                    "news-date">%s</span></li>' % (entry.web_date()))
-}$                  </ul>
+emit('</ul>\n\n')
 
-                  <p><a href="/users/news/">More News...</a> (<a href=
-                  "feed/news.rss">RSS</a>)</p>
-                </div>
+emit('<p><a href="/users/news/">More News...</a> (<a href=feed/news.rss">RSS</a>)</p>\n')
+emit('</div>\n\n')
 
-                <div class="clear"></div>
+emit('<div class="clear"></div>\n')
+}$
