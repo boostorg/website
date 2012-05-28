@@ -109,12 +109,6 @@ def scan_for_new_quickbook_pages(pages):
 ################################################################################
 
 def generate_rss_feed(feed_file, details):
-    title = details['title']
-    link = "http://www.boost.org/" + details['link']
-    if sys.version_info < (3, 0):
-        title = title.encode('utf-8')
-        link = link.encode('utf-8')
-
     rss = xml.dom.minidom.parseString('''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
   <channel>
@@ -127,8 +121,8 @@ def generate_rss_feed(feed_file, details):
   </channel>
 </rss>
 ''' % {
-    'title' : title,
-    'link' : link,
+    'title' : encode_for_rss(details['title']),
+    'link' : encode_for_rss("http://www.boost.org/" + details['link']),
     'description' : '',
     'language' : 'en-us',
     'copyright' : 'Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)'
@@ -144,15 +138,15 @@ def generate_rss_item(rss_feed, qbk_file, page):
     item = rss_feed.createElement('item')
 
     node = xml.dom.minidom.parseString('<title>%s</title>'
-        % page.title_xml.encode('utf-8'))
+        % encode_for_rss(page.title_xml))
     item.appendChild(rss_feed.importNode(node.documentElement, True))
 
     node = xml.dom.minidom.parseString('<link>%s</link>'
-        % page_link.encode('utf-8'))
+        % encode_for_rss(page_link))
     item.appendChild(rss_feed.importNode(node.documentElement, True))
 
     node = xml.dom.minidom.parseString('<guid>%s</guid>'
-        % page_link.encode('utf-8'))
+        % encode_for_rss(page_link))
     item.appendChild(rss_feed.importNode(node.documentElement, True))
 
     # TODO: Convert date format?
@@ -163,7 +157,7 @@ def generate_rss_item(rss_feed, qbk_file, page):
     node = rss_feed.createElement('description')
     # Placing the description in a root element to make it well formed xml.
     description = xml.dom.minidom.parseString(
-        '<x>%s</x>' % page.description_xml.encode('utf-8'))
+        '<x>%s</x>' % encode_for_rss(page.description_xml))
     boost_site.util.base_links(description, page_link)
     node.appendChild(rss_feed.createTextNode(
         boost_site.util.fragment_to_string(description.firstChild)))
@@ -174,5 +168,11 @@ def generate_rss_item(rss_feed, qbk_file, page):
         'quickbook': qbk_file,
         'last_modified': page.last_modified
     })
+
+def encode_for_rss(x):
+    if sys.version_info < (3, 0):
+        return x.encode('utf-8')
+    else:
+        return x
  
 ################################################################################
