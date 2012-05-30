@@ -3,10 +3,10 @@
     [source-mode c++]
     [purpose New Libraries: Algorithm, Functional/OverloadedFunction,
     LocalFunction, Utility/IdentityType.
-    Updated Libraries: Accumulators, Chrono, Foreach, Graph,
-    Hash, Iostreams, MultiArray, Lexical cast, Locale, MSM,
-    Program Options, PropertyMap, Proto, Ratio, ScopeExit,
-    Thread, Unordered, xpressive]
+    Updated Libraries: Accumulators, Array, Bimap, Chrono, Concept Check, Foreach,
+    Graph, Geometry, Hash, Iostreams, Iterator, MultiArray, Lexical cast,
+    Locale, MSM, Program Options, PropertyMap, Proto, Ratio, ScopeExit, Thread,
+    Unordered, Wave, xpressive]
     [authors [Dawes, Beman]]
     [last-revision ]
 ]
@@ -39,7 +39,7 @@ Release status:
 [section New Libraries]
 
 * [phrase library..[@/libs/algorithm/ Algorithm]:]
-  A collection of useful generic algorithms, from Marshall Clow.
+  A collection of useful generic algorithms, from Marshall Clow. This includes several different searching algorithms, as well as most of the new algorithms from the C++11 standard library
 * [phrase library..[@/libs/functional/overloaded_function/ Functional/OverloadedFunction]:]
   Overload different functions into a single function object, from Lorenzo Caminiti.
 * [phrase library..[@/libs/local_function/ LocalFunction]:]
@@ -56,15 +56,42 @@ Release status:
   * work around for msvc which allows ctor templates to be copy ctors, fixes [@https://svn.boost.org/trac/boost/ticket/6535 #6535].
   * shorten filenames to meet boost guidelines, fixes [@https://svn.boost.org/trac/boost/ticket/6196 #6196].
 
+* [phrase library..[@/libs/array/ Array]:]
+  * add support for Boost.Hash [@https://svn.boost.org/trac/boost/ticket/6791 #6791].
+
+* [phrase library..[@/libs/bimap/ Bimap]:]
+  * Remove spurious dependency on Boost.Serialization, fixes [@https://svn.boost.org/trac/boost/ticket/3868 #3868].
+  * Solve unused constructor parameter warning, fixes [@https://svn.boost.org/trac/boost/ticket/5749 #5749].
+  * Add key_type and mapped_type (leaving data_type for backward compatibility) typedefs to map views, fixes [@https://svn.boost.org/trac/boost/ticket/6031 #6031].
+
 * [phrase library..[@/libs/chrono/ Chrono]:]
  * Fixed Bugs:
    * [@http://svn.boost.org/trac/boost/ticket/6361 #6361] integer overflow in boost::chrono::process_real_cpu_clock::now() under Windows 32bits.
    * [@http://svn.boost.org/trac/boost/ticket/6628 #6628] compiler warning in process_cpu_clocks.hpp.
    * [@http://svn.boost.org/trac/boost/ticket/6666 #6666] thread_clock.hpp needs pthread.h.
 
+* [phrase library..[@/libs/concept_check/ Concept Check]:]
+  * Fixed:
+    * [@https://svn.boost.org/trac/boost/ticket/6738 #6738] Shadowed variable warning.
+
 * [phrase library..[@/libs/foreach/ Foreach]:]
   * Revert fix for [@https://svn.boost.org/trac/boost/ticket/6131 #6131] which caused more harm than good.
 
+* [phrase library..[@/libs/geometry/ Geometry]:]
+ * Fixed Bugs:
+   * the return type of comparable projected point strategy for integer points was wrong (integer), fixed
+   * several robustness issues in intersection of segments and polygons, fixed
+   * invalid intersection output is filtered out
+   * disjoint for multi_polygon's might incorrectly return true, fixed
+ * Solved tickets
+   * [@http://svn.boost.org/trac/boost/ticket/6585 6585] patch for alternative syntax multipoint, applied
+   * [@http://svn.boost.org/trac/boost/ticket/6584 6584] patch for bug in distance, applied
+   * [@http://svn.boost.org/trac/boost/ticket/5730 5730] same issue as 6584, fixed
+   * [@http://svn.boost.org/trac/boost/ticket/6166 6166] patch for missing transformation, applied
+   * [@http://svn.boost.org/trac/boost/ticket/6696 6696] invalid intersection output, was (by chance) already fixed in Trunk before reported
+ * Additional functionality
+   * added algorithm "touches" (OGC SF compliant) for *polygon/*polygon
+  
 * [phrase library..[@/libs/graph/ Graph]:]
  * Fixed Bugs:
    * [@http://svn.boost.org/trac/boost/ticket/4622 #4622] clear_vertex on a vertex with a self-loop can cause a segmentation fault.
@@ -100,6 +127,11 @@ Release status:
     ([@https://svn.boost.org/trac/boost/ticket/6530 #6530],
     [@https://svn.boost.org/trac/boost/ticket/6650 #6650]).
 
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * Fixed:
+    * [@https://svn.boost.org/trac/boost/ticket/5127 #5127] Incorrect result_of usage in transform_iterator
+    * [@https://svn.boost.org/trac/boost/ticket/5697 #5697] iterator_facade::operator-> is broken for proxy references
+
 * [phrase library..[@/libs/multi_array/ MultiArray]:]
   * Concepts bug fix and Workaround for Visual Studio 2010
     ([@https://svn.boost.org/trac/boost/ticket/4874 #4874])
@@ -126,10 +158,12 @@ Release status:
   * Bugfix: no_transition was not called for submachines who send an event to themselves.
   * Fixed warnings with gcc.
 
-
 * [phrase library..[@/libs/program_options/ Program Options]:]
   * Improved error reporting
-    ([@ https://svn.boost.org/trac/boost/changeset/77827 Patch from Leo Goodstadt])
+    ([@ https://svn.boost.org/trac/boost/changeset/77827 Patch from Leo Goodstadt]).
+  * Support for customizing name of option's value in help messages
+    ([@https://svn.boost.org/trac/boost/ticket/4781 #4781])  
+  * Fixed compilation with gcc 4.7 ([@https://svn.boost.org/trac/boost/ticket/6790 #6790]).
 
 * [phrase library..[@/libs/property_map/ PropertyMap]:]
  * Fixed Bugs:
@@ -206,6 +240,9 @@ Release status:
   * See the
     [@/doc/html/unordered/changes.html#unordered.changes.boost_1_50_0
     change log] for full details.
+
+* [phrase library..[@/libs/wave/index.html Wave]:]
+  * Wave V2.3.2, see the [@/libs/wave/ChangeLog Changelog] for details.
 
 * [phrase library..[@/libs/xpressive/ xpressive]:]
   * Remove very ugly `lexical_cast` hack with a slightly less ugly one.
