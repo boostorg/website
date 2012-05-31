@@ -3,10 +3,10 @@
     [source-mode c++]
     [purpose New Libraries: Algorithm, Functional/OverloadedFunction,
     LocalFunction, Utility/IdentityType.
-    Updated Libraries: Accumulators, Array, Bimap, Chrono, Concept Check, Foreach,
-    Graph, Geometry, Hash, Iostreams, Iterator, MultiArray, Lexical cast,
-    Locale, MSM, Program Options, PropertyMap, Proto, Ratio, ScopeExit, Thread,
-    Unordered, Wave, xpressive]
+    Updated Libraries: Accumulators, Array, Asio, Bimap, Chrono, Concept Check,
+    Foreach, Graph, Geometry, Hash, Iostreams, Iterator, MultiArray,
+    Lexical cast, Locale, MSM, Program Options, PropertyMap, Proto, Ratio,
+    ScopeExit, Thread, Unordered, Wave, xpressive]
     [authors [Dawes, Beman]]
     [last-revision ]
 ]
@@ -58,6 +58,22 @@ Release status:
 
 * [phrase library..[@/libs/array/ Array]:]
   * add support for Boost.Hash [@https://svn.boost.org/trac/boost/ticket/6791 #6791].
+
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Changed the `epoll_reactor` backend to do lazy registration for `EPOLLOUT`
+    events.
+  * Fixed the `epoll_reactor` handling of out-of-band data, which was broken by
+    an incomplete fix in the last release.
+  * Changed Asio's SSL wrapper to respect OpenSSL's `OPENSSL_NO_ENGINE` feature
+    test `#define` ([@https://svn.boost.org/trac/boost/ticket/6432 #6432]).
+  * Fixed `windows::object_handle` so that it works with Windows compilers that
+    support C++11 move semantics (such as [^g++]).
+  * Improved the performance of strand rescheduling.
+  * Added support for [^g++] 4.7 when compiling in C++11 mode
+    ([@https://svn.boost.org/trac/boost/ticket/6620 #6620]).
+  * Fixed a problem where `signal_set` handlers were not being delivered when
+    the `io_service` was constructed with a `concurrency_hint` of 1
+    ([@https://svn.boost.org/trac/boost/ticket/6657 #6657]).
 
 * [phrase library..[@/libs/bimap/ Bimap]:]
   * Remove spurious dependency on Boost.Serialization, fixes [@https://svn.boost.org/trac/boost/ticket/3868 #3868].
