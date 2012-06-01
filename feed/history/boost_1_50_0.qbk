@@ -164,6 +164,20 @@ Release status:
   * Fixed build issues with STLPort library
   * Boost.System is now required depenency
   * Fixed bugs [@https://svn.boost.org/trac/boost/ticket/6635 #6635], [@https://svn.boost.org/trac/boost/ticket/6833 #6833]
+
+* [phrase library..[@/libs/math/ Math]:]
+  * Promoted math constants to be 1st class citizens,
+    including convenient access to the most widely used
+    built-in float, double, long double via three namespaces.
+  * Added the Owen's T function and Skew Normal distribution written by Benjamin Sobotta.
+  * Added Hankel functions.
+  * Corrected issue [@https://svn.boost.org/trac/boost/ticket/6627 #6627 nonfinite_num_put formatting of 0.0 is incorrect]
+    based on a patch submitted by K R Walker.
+  * Changed constant initialization mechanism so that it is thread safe even for user-defined types, also
+    so that user defined types get the full precision of the constant, even when `long double` does not.  
+    So for example 128-bit rational approximations will work with UDT's and do the right thing, even though
+    `long double` may be only 64 or 80 bits.
+  * Fixed issue in `bessel_jy` which causes Y[sub 8.5](4[pi]) to yield a NaN.
     
 * [phrase library..[@/libs/msm/ MSM]:]
   * eUML : better syntax for front-ends defined with eUML as transition table only. Caution: Breaking Change![@http://www.boost.org/doc/libs/1_50_0/libs/msm/doc/HTML/ch03s04.html#eUML-composite-table]
@@ -334,4 +348,5 @@ Daniel James, Vladimir Prus and Marshall Clow
 managed this release.
 
 [endsect]
+
 
