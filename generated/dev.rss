@@ -218,6 +218,109 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_50_0_beta1/libs/filesystem/&quot;&gt;Filesystem&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Remove Filesystem Version 2 from the distribution. Version 3 is now
+                the only distributed version. Those still using V2 are urged to migrate
+                to V3 as soon as possible.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Add constexpr value_type preferred_separator to class path.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/5118&quot;&gt;#5118&lt;/a&gt;,
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;replace_extension&lt;/span&gt;&lt;/code&gt;
+                doesn't work as specified in documentation. The documentation, implementation,
+                and test cases have all had fixes applied. The documentation had
+                failed to mention that any existing extension is removed. The behavior
+                for simple cases has been reverted to the Version 2 behavior, but
+                with corrections so that complex replacements now work. Two test
+                cases from &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/5118&quot;&gt;#5118&lt;/a&gt;
+                have been added.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/3737&quot;&gt;#3737&lt;/a&gt;,
+                Boost.Filesystem does not compile on Windows Mobile. On Windows,
+                &lt;code&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;sys&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;stat&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt; is no longer included.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/4065&quot;&gt;#4065&lt;/a&gt;,
+                Boost Filesystem lexicographic path comparison inconsistent. This
+                required multiple source code bug fixes and code cleanup, correcting
+                problems not related to lexicographical issues.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Add class path member function compare for consistency with std::string.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Tighten &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_FILESYSTEM_DYN_LINK&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_FILESYSTEM_STATIC_LINK&lt;/span&gt;&lt;/code&gt;
+                logic in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;filesystem&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;
+                so that one or the other is always defined, and both being defined
+                is a &lt;code&gt;&lt;span class=&quot;preprocessor&quot;&gt;#error&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/6690&quot;&gt;#6690&lt;/a&gt;
+                and &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/6737&quot;&gt;#6737&lt;/a&gt;,
+                resolving static linking related problems with VC++ 8 through 11.
+                Note that this fix may reintroduce codecvt thread safety problems
+                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/4889&quot;&gt;#4889&lt;/a&gt;,
+                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/6320&quot;&gt;#6320&lt;/a&gt;,
+                for these compilers if static linking is used.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Add &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;keyword&quot;&gt;operator&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;+=&lt;/span&gt;&lt;/code&gt;
+                and concat functions to tack on things like suffixes or numbers.
+                Suggested by Ed Smith-Rowland and others.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/6809&quot;&gt;#6809&lt;/a&gt;,
+                Implementation of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;filesystem&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;rename&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; method for MS Windows is wrong,
+                by adding &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;MOVEFILE_COPY_ALLOWED&lt;/span&gt;&lt;/code&gt;
+                to deal with renames across drives, volumes, file systems. Fix has
+                no effect on non-Windows systems.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/6819&quot;&gt;#6819&lt;/a&gt;,
+                A path operand with a source that was a one character array was treated
+                as empty, even if it wasn't empty. Such arrays can occur in unions
+                or in code using C variable length array idioms.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/6932&quot;&gt;#6932&lt;/a&gt;,
+                create_directories throws exception even if &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;error_code&lt;/span&gt;&lt;/code&gt;
+                is specified.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_50_0_beta1/libs/foreach/&quot;&gt;Foreach&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;

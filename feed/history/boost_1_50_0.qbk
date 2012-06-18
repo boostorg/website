@@ -4,7 +4,7 @@
     [purpose New Libraries: Algorithm, Functional/OverloadedFunction,
     LocalFunction, Utility/IdentityType.
     Updated Libraries: Accumulators, Array, Asio, Bimap, Chrono, Concept Check,
-    Foreach, Graph, Geometry, Hash, Iostreams, Iterator, MultiArray,
+    Filesystem, Foreach, Graph, Geometry, Hash, Iostreams, Iterator, MultiArray,
     Lexical cast, Locale, MSM, Program Options, PropertyMap, Proto, Ratio,
     ScopeExit, Thread, Unordered, Wave, xpressive]
     [authors [Dawes, Beman]]
@@ -88,6 +88,54 @@ Release status:
 * [phrase library..[@/libs/concept_check/ Concept Check]:]
   * Fixed:
     * [@https://svn.boost.org/trac/boost/ticket/6738 #6738] Shadowed variable warning.
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Remove Filesystem Version 2 from the distribution. Version 3 is now
+    the only distributed version. Those still using V2 are urged to
+    migrate to V3 as soon as possible.
+  * Add constexpr value_type preferred_separator to class path.
+  * Fix [@http://svn.boost.org/trac/boost/ticket/5118 #5118],
+    `replace_extension` doesn't work as specified in
+    documentation. The documentation, implementation, and test cases have
+    all had fixes applied. The documentation had failed to mention that
+    any existing extension is removed. The behavior for simple cases has
+    been reverted to the Version 2 behavior, but with corrections so that
+    complex replacements now work. Two test cases from
+    [@http://svn.boost.org/trac/boost/ticket/5118 #5118] have been added.
+  * Fix [@http://svn.boost.org/trac/boost/ticket/3737 #3737],
+    Boost.Filesystem does not compile on Windows Mobile.
+    On Windows, `<sys/stat.h>` is no longer included.
+  * Fix [@http://svn.boost.org/trac/boost/ticket/4065 #4065],
+    Boost Filesystem lexicographic path comparison
+    inconsistent. This required multiple source code bug fixes and code
+    cleanup, correcting problems not related to lexicographical issues.
+  * Add class path member function compare for consistency with std::string.
+  * Tighten `BOOST_FILESYSTEM_DYN_LINK` and
+    `BOOST_FILESYSTEM_STATIC_LINK` logic in `filesystem/config.hpp` so that
+    one or the other is always defined, and both being defined is a
+    `#error`.
+  * Fix [@http://svn.boost.org/trac/boost/ticket/6690 #6690] and
+    [@http://svn.boost.org/trac/boost/ticket/6737 #6737],
+    resolving static linking related problems
+    with VC++ 8 through 11. Note that this fix may reintroduce codecvt
+    thread safety problems
+    [@http://svn.boost.org/trac/boost/ticket/4889 #4889],
+    [@http://svn.boost.org/trac/boost/ticket/6320 #6320],
+    for these compilers if static linking is used.
+  * Add `path::operator+=` and concat functions to tack on things like
+    suffixes or numbers. Suggested by Ed Smith-Rowland and others.
+  * Fix [@http://svn.boost.org/trac/boost/ticket/6809 #6809],
+    Implementation of `filesystem::rename()` method for MS
+    Windows is wrong, by adding `MOVEFILE_COPY_ALLOWED` to deal with renames
+    across drives, volumes, file systems. Fix has no effect on non-Windows
+    systems.
+  * Fix [@http://svn.boost.org/trac/boost/ticket/6819 #6819],
+    A path operand with a source that was a one character
+    array was treated as empty, even if it wasn't empty. Such arrays can
+    occur in unions or in code using C variable length array idioms.
+  * Fix [@http://svn.boost.org/trac/boost/ticket/6932 #6932],
+    create_directories throws exception even if `error_code`
+    is specified.
 
 * [phrase library..[@/libs/foreach/ Foreach]:]
   * Revert fix for [@https://svn.boost.org/trac/boost/ticket/6131 #6131] which caused more harm than good.

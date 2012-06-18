@@ -257,6 +257,109 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/1_50_0_beta1/libs/filesystem/">Filesystem</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Remove Filesystem Version 2 from the distribution. Version 3 is now
+                the only distributed version. Those still using V2 are urged to migrate
+                to V3 as soon as possible.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add constexpr value_type preferred_separator to class path.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="http://svn.boost.org/trac/boost/ticket/5118">#5118</a>,
+                <code><span class="identifier">replace_extension</span></code>
+                doesn't work as specified in documentation. The documentation, implementation,
+                and test cases have all had fixes applied. The documentation had
+                failed to mention that any existing extension is removed. The behavior
+                for simple cases has been reverted to the Version 2 behavior, but
+                with corrections so that complex replacements now work. Two test
+                cases from <a href="http://svn.boost.org/trac/boost/ticket/5118">#5118</a>
+                have been added.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="http://svn.boost.org/trac/boost/ticket/3737">#3737</a>,
+                Boost.Filesystem does not compile on Windows Mobile. On Windows,
+                <code><span class="special">&lt;</span><span class="identifier">sys</span><span class="special">/</span><span class="identifier">stat</span><span class="special">.</span><span class="identifier">h</span><span class="special">&gt;</span></code> is no longer included.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="http://svn.boost.org/trac/boost/ticket/4065">#4065</a>,
+                Boost Filesystem lexicographic path comparison inconsistent. This
+                required multiple source code bug fixes and code cleanup, correcting
+                problems not related to lexicographical issues.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add class path member function compare for consistency with std::string.
+              </div>
+            </li>
+            <li>
+              <div>
+                Tighten <code><span class="identifier">BOOST_FILESYSTEM_DYN_LINK</span></code>
+                and <code><span class="identifier">BOOST_FILESYSTEM_STATIC_LINK</span></code>
+                logic in <code><span class="identifier">filesystem</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                so that one or the other is always defined, and both being defined
+                is a <code><span class="preprocessor">#error</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="http://svn.boost.org/trac/boost/ticket/6690">#6690</a>
+                and <a href="http://svn.boost.org/trac/boost/ticket/6737">#6737</a>,
+                resolving static linking related problems with VC++ 8 through 11.
+                Note that this fix may reintroduce codecvt thread safety problems
+                <a href="http://svn.boost.org/trac/boost/ticket/4889">#4889</a>,
+                <a href="http://svn.boost.org/trac/boost/ticket/6320">#6320</a>,
+                for these compilers if static linking is used.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add <code><span class="identifier">path</span><span class="special">::</span><span class="keyword">operator</span><span class="special">+=</span></code>
+                and concat functions to tack on things like suffixes or numbers.
+                Suggested by Ed Smith-Rowland and others.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="http://svn.boost.org/trac/boost/ticket/6809">#6809</a>,
+                Implementation of <code><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">rename</span><span class="special">()</span></code> method for MS Windows is wrong,
+                by adding <code><span class="identifier">MOVEFILE_COPY_ALLOWED</span></code>
+                to deal with renames across drives, volumes, file systems. Fix has
+                no effect on non-Windows systems.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="http://svn.boost.org/trac/boost/ticket/6819">#6819</a>,
+                A path operand with a source that was a one character array was treated
+                as empty, even if it wasn't empty. Such arrays can occur in unions
+                or in code using C variable length array idioms.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <a href="http://svn.boost.org/trac/boost/ticket/6932">#6932</a>,
+                create_directories throws exception even if <code><span class="identifier">error_code</span></code>
+                is specified.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/1_50_0_beta1/libs/foreach/">Foreach</a>:</span>
           <ul>
             <li>
