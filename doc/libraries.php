@@ -35,7 +35,13 @@ function boost_version($v,$r,$p)
         }
         else
         {
-            return FALSE;
+            return
+                ($v < $boost_current_version[0]) ||
+                ($v == $boost_current_version[0] &&
+                    $r < $boost_current_version[1]) || 
+                ($v == $boost_current_version[0] &&
+                    $r == $boost_current_version[1] &&
+                    $p <= $boost_current_version[2]);
         }
     }
     else
