@@ -24,6 +24,8 @@ function boost_version($v,$r,$p)
 {
     if (isset($_SERVER["PATH_INFO"]))
     {
+        // PATH_INFO is set for redirects from a versioned URL.
+
         $vinfo = array();
         preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$_SERVER["PATH_INFO"],$vinfo);
         if (isset($vinfo[0]))
@@ -40,7 +42,18 @@ function boost_version($v,$r,$p)
     }
     else
     {
-        return TRUE;
+        // PATH_INFO isn't set, so viewing the plain libraries
+        // page. Only display current libraries.
+
+        global $boost_current_version;
+        return
+            ($v < $boost_current_version[0]) ||
+            ($v == $boost_current_version[0] &&
+                $r < $boost_current_version[1]) || 
+            ($v == $boost_current_version[0] &&
+                $r == $boost_current_version[1] &&
+                $p <= $boost_current_version[2]);
+        return FALSE;
     }
 }
 
