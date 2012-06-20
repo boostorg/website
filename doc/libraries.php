@@ -34,6 +34,7 @@ function boost_version($v,$r,$p)
         }
         else
         {
+            global $boost_current_version;
             return
                 ($v < $boost_current_version[0]) ||
                 ($v == $boost_current_version[0] &&
