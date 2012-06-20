@@ -25,8 +25,7 @@ function boost_version($v,$r,$p)
     if (isset($_SERVER["PATH_INFO"]))
     {
         $vinfo = array();
-        preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$_SERVER["PATH_INFO"],$vinfo);
-        if (!empty($vinfo[0]))
+        if (preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$_SERVER["PATH_INFO"],$vinfo))
         {
             return
               ($v < $vinfo[1]) ||
