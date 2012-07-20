@@ -4,36 +4,18 @@
     [purpose New Libraries: Algorithm, Functional/OverloadedFunction,
     LocalFunction, Utility/IdentityType.
     Updated Libraries: Accumulators, Array, Asio, Bimap, Chrono, Concept Check,
-    Foreach, Graph, Geometry, Hash, Iostreams, Iterator, MultiArray,
+    Filesystem, Foreach, Graph, Geometry, Hash, Iostreams, Iterator, MultiArray,
     Lexical cast, Locale, MSM, Program Options, PropertyMap, Proto, Ratio,
     ScopeExit, Thread, Unordered, Wave, xpressive]
     [authors [Dawes, Beman]]
-    [last-revision ]
+    [last-revision Thu, 28 Jun 2012 08:48:57 -0400]
 ]
 
 [include ext.qbk]
 
-[status beta]
-[download http://sourceforge.net/projects/boost/files/boost/1.50.0.beta.1/]
-[documentation /doc/libs/1_50_0_beta1/]
-
-[/
-
-Beta status:
-
-Release status:
 [status released]
 [download http://sourceforge.net/projects/boost/files/boost/1.50.0/]
-
-]
-
-[/
-    When adding libraries:
-
-    1. Libraries are listed in alphabetical order.
-    2. Besides the dedicated entry, the lib name should be added to the
-       [purpose] section at the beginning of the page.
-]
+[documentation /doc/libs/1_50_0/]
 
 [section New Libraries]
 
@@ -81,13 +63,61 @@ Release status:
 
 * [phrase library..[@/libs/chrono/ Chrono]:]
  * Fixed Bugs:
-   * [@http://svn.boost.org/trac/boost/ticket/6361 #6361] integer overflow in boost::chrono::process_real_cpu_clock::now() under Windows 32bits.
-   * [@http://svn.boost.org/trac/boost/ticket/6628 #6628] compiler warning in process_cpu_clocks.hpp.
-   * [@http://svn.boost.org/trac/boost/ticket/6666 #6666] thread_clock.hpp needs pthread.h.
+   * [@https://svn.boost.org/trac/boost/ticket/6361 #6361] integer overflow in boost::chrono::process_real_cpu_clock::now() under Windows 32bits.
+   * [@https://svn.boost.org/trac/boost/ticket/6628 #6628] compiler warning in process_cpu_clocks.hpp.
+   * [@https://svn.boost.org/trac/boost/ticket/6666 #6666] thread_clock.hpp needs pthread.h.
 
 * [phrase library..[@/libs/concept_check/ Concept Check]:]
   * Fixed:
     * [@https://svn.boost.org/trac/boost/ticket/6738 #6738] Shadowed variable warning.
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Remove Filesystem Version 2 from the distribution. Version 3 is now
+    the only distributed version. Those still using V2 are urged to
+    migrate to V3 as soon as possible.
+  * Add constexpr value_type preferred_separator to class path.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/5118 #5118],
+    `replace_extension` doesn't work as specified in
+    documentation. The documentation, implementation, and test cases have
+    all had fixes applied. The documentation had failed to mention that
+    any existing extension is removed. The behavior for simple cases has
+    been reverted to the Version 2 behavior, but with corrections so that
+    complex replacements now work. Two test cases from
+    [@https://svn.boost.org/trac/boost/ticket/5118 #5118] have been added.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/3737 #3737],
+    Boost.Filesystem does not compile on Windows Mobile.
+    On Windows, `<sys/stat.h>` is no longer included.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/4065 #4065],
+    Boost Filesystem lexicographic path comparison
+    inconsistent. This required multiple source code bug fixes and code
+    cleanup, correcting problems not related to lexicographical issues.
+  * Add class path member function compare for consistency with std::string.
+  * Tighten `BOOST_FILESYSTEM_DYN_LINK` and
+    `BOOST_FILESYSTEM_STATIC_LINK` logic in `filesystem/config.hpp` so that
+    one or the other is always defined, and both being defined is a
+    `#error`.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/6690 #6690] and
+    [@https://svn.boost.org/trac/boost/ticket/6737 #6737],
+    resolving static linking related problems
+    with VC++ 8 through 11. Note that this fix may reintroduce codecvt
+    thread safety problems
+    [@https://svn.boost.org/trac/boost/ticket/4889 #4889],
+    [@https://svn.boost.org/trac/boost/ticket/6320 #6320],
+    for these compilers if static linking is used.
+  * Add `path::operator+=` and concat functions to tack on things like
+    suffixes or numbers. Suggested by Ed Smith-Rowland and others.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/6809 #6809],
+    Implementation of `filesystem::rename()` method for MS
+    Windows is wrong, by adding `MOVEFILE_COPY_ALLOWED` to deal with renames
+    across drives, volumes, file systems. Fix has no effect on non-Windows
+    systems.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/6819 #6819],
+    A path operand with a source that was a one character
+    array was treated as empty, even if it wasn't empty. Such arrays can
+    occur in unions or in code using C variable length array idioms.
+  * Fix [@https://svn.boost.org/trac/boost/ticket/6932 #6932],
+    create_directories throws exception even if `error_code`
+    is specified.
 
 * [phrase library..[@/libs/foreach/ Foreach]:]
   * Revert fix for [@https://svn.boost.org/trac/boost/ticket/6131 #6131] which caused more harm than good.
@@ -99,31 +129,31 @@ Release status:
    * invalid intersection output is filtered out
    * disjoint for multi_polygon's might incorrectly return true, fixed
  * Solved tickets
-   * [@http://svn.boost.org/trac/boost/ticket/6585 6585] patch for alternative syntax multipoint, applied
-   * [@http://svn.boost.org/trac/boost/ticket/6584 6584] patch for bug in distance, applied
-   * [@http://svn.boost.org/trac/boost/ticket/5730 5730] same issue as 6584, fixed
-   * [@http://svn.boost.org/trac/boost/ticket/6166 6166] patch for missing transformation, applied
-   * [@http://svn.boost.org/trac/boost/ticket/6696 6696] invalid intersection output, was (by chance) already fixed in Trunk before reported
+   * [@https://svn.boost.org/trac/boost/ticket/6585 6585] patch for alternative syntax multipoint, applied
+   * [@https://svn.boost.org/trac/boost/ticket/6584 6584] patch for bug in distance, applied
+   * [@https://svn.boost.org/trac/boost/ticket/5730 5730] same issue as 6584, fixed
+   * [@https://svn.boost.org/trac/boost/ticket/6166 6166] patch for missing transformation, applied
+   * [@https://svn.boost.org/trac/boost/ticket/6696 6696] invalid intersection output, was (by chance) already fixed in Trunk before reported
  * Additional functionality
    * added algorithm "touches" (OGC SF compliant) for *polygon/*polygon
   
 * [phrase library..[@/libs/graph/ Graph]:]
  * Fixed Bugs:
-   * [@http://svn.boost.org/trac/boost/ticket/4622 #4622] clear_vertex on a vertex with a self-loop can cause a segmentation fault.
-   * [@http://svn.boost.org/trac/boost/ticket/6033 #6033] Lowpoint map calculated by biconnected_components(...) is sometimes wrong.
-   * [@http://svn.boost.org/trac/boost/ticket/6242 #6242] isomorphism doesn't reset mapping.
-   * [@http://svn.boost.org/trac/boost/ticket/6435 #6435] cube_topology documentation should say 3D, not 2D.
-   * [@http://svn.boost.org/trac/boost/ticket/6520 #6520] small_world_1_70_6_0p02.png is broken in documentation of graph_parallel.
-   * [@http://svn.boost.org/trac/boost/ticket/6564 #6564] BGL copy constructor for subgraph does not track local vertices/edges.
-   * [@http://svn.boost.org/trac/boost/ticket/6573 #6573] BGL: boost::isomorphism routine fails with large graphs.
-   * [@http://svn.boost.org/trac/boost/ticket/6583 #6583] Dijkstra Visitor Concept docs probably show wrong type for variable.
-   * [@http://svn.boost.org/trac/boost/ticket/6647 #6647] BGL strong_components do not compile on MSVC 8.
-   * [@http://svn.boost.org/trac/boost/ticket/6656 #6656] Dependent type in subgraph used without typename.
-   * [@http://svn.boost.org/trac/boost/ticket/6707 #6707] is_straight_line_drawing.hpp missing #include <map>.
-   * [@http://svn.boost.org/trac/boost/ticket/6708 #6708] Make bool boost::intersects() in is_straight_line_drawing.hpp inline?
-   * [@http://svn.boost.org/trac/boost/ticket/6739 #6739] Cannot use write_graphviz_dp with a constified subgraph.
-   * [@http://svn.boost.org/trac/boost/ticket/6858 #6858] boost::get() calls wrongly resolved by g++.
-   * [@http://svn.boost.org/trac/boost/ticket/6892 #6892] VertexIndexGraph concept not required for bron_kerbosch_all_cliques().
+   * [@https://svn.boost.org/trac/boost/ticket/4622 #4622] clear_vertex on a vertex with a self-loop can cause a segmentation fault.
+   * [@https://svn.boost.org/trac/boost/ticket/6033 #6033] Lowpoint map calculated by biconnected_components(...) is sometimes wrong.
+   * [@https://svn.boost.org/trac/boost/ticket/6242 #6242] isomorphism doesn't reset mapping.
+   * [@https://svn.boost.org/trac/boost/ticket/6435 #6435] cube_topology documentation should say 3D, not 2D.
+   * [@https://svn.boost.org/trac/boost/ticket/6520 #6520] small_world_1_70_6_0p02.png is broken in documentation of graph_parallel.
+   * [@https://svn.boost.org/trac/boost/ticket/6564 #6564] BGL copy constructor for subgraph does not track local vertices/edges.
+   * [@https://svn.boost.org/trac/boost/ticket/6573 #6573] BGL: boost::isomorphism routine fails with large graphs.
+   * [@https://svn.boost.org/trac/boost/ticket/6583 #6583] Dijkstra Visitor Concept docs probably show wrong type for variable.
+   * [@https://svn.boost.org/trac/boost/ticket/6647 #6647] BGL strong_components do not compile on MSVC 8.
+   * [@https://svn.boost.org/trac/boost/ticket/6656 #6656] Dependent type in subgraph used without typename.
+   * [@https://svn.boost.org/trac/boost/ticket/6707 #6707] is_straight_line_drawing.hpp missing #include <map>.
+   * [@https://svn.boost.org/trac/boost/ticket/6708 #6708] Make bool boost::intersects() in is_straight_line_drawing.hpp inline?
+   * [@https://svn.boost.org/trac/boost/ticket/6739 #6739] Cannot use write_graphviz_dp with a constified subgraph.
+   * [@https://svn.boost.org/trac/boost/ticket/6858 #6858] boost::get() calls wrongly resolved by g++.
+   * [@https://svn.boost.org/trac/boost/ticket/6892 #6892] VertexIndexGraph concept not required for bron_kerbosch_all_cliques().
    * Other bugs and warnings not in Trac.
 
 * [phrase library..[@/libs/functional/hash/ Hash]:]
@@ -196,8 +226,8 @@ Release status:
 
 * [phrase library..[@/libs/property_map/ PropertyMap]:]
  * Fixed Bugs:
-   * [@http://svn.boost.org/trac/boost/ticket/6539 #6539] the return type of get() is not documented correctly.
-   * [@http://svn.boost.org/trac/boost/ticket/6721 #6721] property_map_traits documentation does not mention reference.
+   * [@https://svn.boost.org/trac/boost/ticket/6539 #6539] the return type of get() is not documented correctly.
+   * [@https://svn.boost.org/trac/boost/ticket/6721 #6721] property_map_traits documentation does not mention reference.
 
 * [phrase library..[@/libs/proto/ Proto]:]
   * Use `decltype`-based `result_of` if and only if the compiler implements N3276.
@@ -206,7 +236,7 @@ Release status:
 
 * [phrase library..[@/libs/ratio/ Ratio]:]
  * Fixed Bugs:
-   * [@http://svn.boost.org/trac/boost/ticket/6498 #6498] boost::ratio won't compile with default settings.
+   * [@https://svn.boost.org/trac/boost/ticket/6498 #6498] boost::ratio won't compile with default settings.
 
 * [phrase library..[@/libs/scope_exit/ ScopeExit]:]
  * New Features:
@@ -217,41 +247,41 @@ Release status:
 
 * [phrase library..[@/libs/thread/ Thread]:]
  * New Features:
-   * [@http://svn.boost.org/trac/boost/ticket/1850 #1850] Request for unlock_guard  to compliment lock_guard.
-   * [@http://svn.boost.org/trac/boost/ticket/2637 #2637] Request for shared_mutex duration timed_lock and timed_lock_shared.
-   * [@http://svn.boost.org/trac/boost/ticket/2741 #2741] Proposal to manage portable and non portable thread attributes.
-   * [@http://svn.boost.org/trac/boost/ticket/3567 #3567] Request for shared_lock_guard.
-   * [@http://svn.boost.org/trac/boost/ticket/6194 #6194] Adapt to Boost.Move.
-   * [@http://svn.boost.org/trac/boost/ticket/6195 #6195] c++11 compliance: Provide the standard time related interface using Boost.Chrono.
-   * [@http://svn.boost.org/trac/boost/ticket/6217 #6217] Enhance Boost.Thread shared mutex interface following Howard Hinnant proposal.
-   * [@http://svn.boost.org/trac/boost/ticket/6224 #6224] c++11 compliance: Add the use of standard noexcept on compilers supporting them.
-   * [@http://svn.boost.org/trac/boost/ticket/6226 #6226] c++11 compliance: Add explicit bool conversion from locks.
-   * [@http://svn.boost.org/trac/boost/ticket/6228 #6228] Add promise constructor with allocator following the standard c++11.
-   * [@http://svn.boost.org/trac/boost/ticket/6230 #6230] c++11 compliance: Follows the exception reporting mechanism as defined in the c++11.
-   * [@http://svn.boost.org/trac/boost/ticket/6266 #6266] Breaking change: thread destructor should call terminate if joinable.
-   * [@http://svn.boost.org/trac/boost/ticket/6269 #6269] Breaking change: thread move assignment should call terminate if joinable.
-   * [@http://svn.boost.org/trac/boost/ticket/6272 #6272] c++11 compliance: Add thread::id hash specialization.
-   * [@http://svn.boost.org/trac/boost/ticket/6273 #6273] c++11 compliance: Add cv_status enum class and use it on the conditions wait functions.
-   * [@http://svn.boost.org/trac/boost/ticket/6231 #6231] Add BasicLockable requirements in the documentation to follow c++11.
-   * [@http://svn.boost.org/trac/boost/ticket/6342 #6342] c++11 compliance: Adapt the one_flag to the c++11 interface.
-   * [@http://svn.boost.org/trac/boost/ticket/6671 #6671] upgrade_lock: missing mutex and release functions.
-   * [@http://svn.boost.org/trac/boost/ticket/6672 #6672] upgrade_lock:: missing constructors from time related types.
-   * [@http://svn.boost.org/trac/boost/ticket/6675 #6675] upgrade_lock:: missing non-member swap.
+   * [@https://svn.boost.org/trac/boost/ticket/1850 #1850] Request for unlock_guard  to compliment lock_guard.
+   * [@https://svn.boost.org/trac/boost/ticket/2637 #2637] Request for shared_mutex duration timed_lock and timed_lock_shared.
+   * [@https://svn.boost.org/trac/boost/ticket/2741 #2741] Proposal to manage portable and non portable thread attributes.
+   * [@https://svn.boost.org/trac/boost/ticket/3567 #3567] Request for shared_lock_guard.
+   * [@https://svn.boost.org/trac/boost/ticket/6194 #6194] Adapt to Boost.Move.
+   * [@https://svn.boost.org/trac/boost/ticket/6195 #6195] c++11 compliance: Provide the standard time related interface using Boost.Chrono.
+   * [@https://svn.boost.org/trac/boost/ticket/6217 #6217] Enhance Boost.Thread shared mutex interface following Howard Hinnant proposal.
+   * [@https://svn.boost.org/trac/boost/ticket/6224 #6224] c++11 compliance: Add the use of standard noexcept on compilers supporting them.
+   * [@https://svn.boost.org/trac/boost/ticket/6226 #6226] c++11 compliance: Add explicit bool conversion from locks.
+   * [@https://svn.boost.org/trac/boost/ticket/6228 #6228] Add promise constructor with allocator following the standard c++11.
+   * [@https://svn.boost.org/trac/boost/ticket/6230 #6230] c++11 compliance: Follows the exception reporting mechanism as defined in the c++11.
+   * [@https://svn.boost.org/trac/boost/ticket/6266 #6266] Breaking change: thread destructor should call terminate if joinable.
+   * [@https://svn.boost.org/trac/boost/ticket/6269 #6269] Breaking change: thread move assignment should call terminate if joinable.
+   * [@https://svn.boost.org/trac/boost/ticket/6272 #6272] c++11 compliance: Add thread::id hash specialization.
+   * [@https://svn.boost.org/trac/boost/ticket/6273 #6273] c++11 compliance: Add cv_status enum class and use it on the conditions wait functions.
+   * [@https://svn.boost.org/trac/boost/ticket/6231 #6231] Add BasicLockable requirements in the documentation to follow c++11.
+   * [@https://svn.boost.org/trac/boost/ticket/6342 #6342] c++11 compliance: Adapt the one_flag to the c++11 interface.
+   * [@https://svn.boost.org/trac/boost/ticket/6671 #6671] upgrade_lock: missing mutex and release functions.
+   * [@https://svn.boost.org/trac/boost/ticket/6672 #6672] upgrade_lock:: missing constructors from time related types.
+   * [@https://svn.boost.org/trac/boost/ticket/6675 #6675] upgrade_lock:: missing non-member swap.
    * Added missing packaged_task::result_type and packaged_task:: constructor with allocator.
    * Added packaged_task::reset()
  * Fixed Bugs:
-   * [@http://svn.boost.org/trac/boost/ticket/2575 #2575] Bug- Boost 1.36.0 on Itanium platform.
-   * [@http://svn.boost.org/trac/boost/ticket/4345 #4345] thread::id and joining problem with cascade of threads.
-   * [@http://svn.boost.org/trac/boost/ticket/4921 #4921] BOOST_THREAD_USE_DLL and BOOST_THREAD_USE_LIB are crucial and need to be documented.
-   * [@http://svn.boost.org/trac/boost/ticket/5013 #5013] documentation: boost::thread: pthreas_exit causes terminate().
-   * [@http://svn.boost.org/trac/boost/ticket/5173 #5173] boost::this_thread::get_id is very slow.
-   * [@http://svn.boost.org/trac/boost/ticket/5351 #5351] interrupt a future get boost::unknown_exception.
-   * [@http://svn.boost.org/trac/boost/ticket/5516 #5516] Upgrade lock is not acquired when previous upgrade lock releases if another read lock is present.
-   * [@http://svn.boost.org/trac/boost/ticket/5990 #5990] shared_future<T>::get() has wrong return type.
-   * [@http://svn.boost.org/trac/boost/ticket/6174 #6174] packaged_task doesn't correctly handle moving results.
-   * [@http://svn.boost.org/trac/boost/ticket/6222 #6222] Compile error with SunStudio: unique_future move.
-   * [@http://svn.boost.org/trac/boost/ticket/6673 #6673] shared_lock: move assign doesn't works with c++11.
-   * [@http://svn.boost.org/trac/boost/ticket/6674 #6674] shared_mutex: try_lock_upgrade_until doesn't works.
+   * [@https://svn.boost.org/trac/boost/ticket/2575 #2575] Bug- Boost 1.36.0 on Itanium platform.
+   * [@https://svn.boost.org/trac/boost/ticket/4345 #4345] thread::id and joining problem with cascade of threads.
+   * [@https://svn.boost.org/trac/boost/ticket/4921 #4921] BOOST_THREAD_USE_DLL and BOOST_THREAD_USE_LIB are crucial and need to be documented.
+   * [@https://svn.boost.org/trac/boost/ticket/5013 #5013] documentation: boost::thread: pthreas_exit causes terminate().
+   * [@https://svn.boost.org/trac/boost/ticket/5173 #5173] boost::this_thread::get_id is very slow.
+   * [@https://svn.boost.org/trac/boost/ticket/5351 #5351] interrupt a future get boost::unknown_exception.
+   * [@https://svn.boost.org/trac/boost/ticket/5516 #5516] Upgrade lock is not acquired when previous upgrade lock releases if another read lock is present.
+   * [@https://svn.boost.org/trac/boost/ticket/5990 #5990] shared_future<T>::get() has wrong return type.
+   * [@https://svn.boost.org/trac/boost/ticket/6174 #6174] packaged_task doesn't correctly handle moving results.
+   * [@https://svn.boost.org/trac/boost/ticket/6222 #6222] Compile error with SunStudio: unique_future move.
+   * [@https://svn.boost.org/trac/boost/ticket/6673 #6673] shared_lock: move assign doesn't works with c++11.
+   * [@https://svn.boost.org/trac/boost/ticket/6674 #6674] shared_mutex: try_lock_upgrade_until doesn't works.
    * Fix issue signaled on the ML with task_object(task_object const&) in presence of task_object(task_object&&)
 
 * [phrase library..[@/libs/unordered/ Unordered]:]
