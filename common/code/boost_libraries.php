@@ -6,6 +6,7 @@
 */
 
 require_once(dirname(__FILE__) . '/boost_utility.php');
+require_once(dirname(__FILE__) . '/boost_version.php');
 
 class boost_libraries
 {
@@ -63,6 +64,12 @@ class boost_libraries
                     case 'documentation':
                     {
                         if (isset($val['value'])) { $lib[$val['tag']] = trim($val['value']); }
+                        else { $lib[$val['tag']] = ''; }
+                    }
+                    break;
+                    case 'boost-version':
+                    {
+                        if (isset($val['value'])) { $lib[$val['tag']] = BoostVersion::from($val['value']); }
                         else { $lib[$val['tag']] = ''; }
                     }
                     break;

@@ -21,43 +21,6 @@ function boost_title()
     }
 }
 
-function boost_version($v,$r,$p)
-{
-    if (isset($_SERVER["PATH_INFO"]))
-    {
-        // PATH_INFO is set for redirects from a versioned URL.
-
-        $vinfo = array();
-        preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$_SERVER["PATH_INFO"],$vinfo);
-        if (isset($vinfo[0]))
-        {
-            return
-              ($v < $vinfo[1]) ||
-              ($v == $vinfo[1] && $r < $vinfo[2]) ||
-              ($v == $vinfo[1] && $r == $vinfo[2] && $p <= $vinfo[3]);
-        }
-        else
-        {
-            return FALSE;
-        }
-    }
-    else
-    {
-        // PATH_INFO isn't set, so viewing the plain libraries
-        // page. Only display current libraries.
-
-        global $boost_current_version;
-        return
-            ($v < $boost_current_version[0]) ||
-            ($v == $boost_current_version[0] &&
-                $r < $boost_current_version[1]) || 
-            ($v == $boost_current_version[0] &&
-                $r == $boost_current_version[1] &&
-                $p <= $boost_current_version[2]);
-        return FALSE;
-    }
-}
-
 $libs = USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt')) :
 	new boost_libraries(dirname(__FILE__) . '/libraries.xml');
@@ -132,9 +95,7 @@ if($category_value) $page_title.= ' - '. $libs->categories[$category_value]['tit
 function library_filter($lib) {
   global $filter_value, $category_value;
 
-  $libversion = explode('.',$lib['boost-version']);
-
-  return boost_version($libversion[0],$libversion[1],$libversion[2]) &&
+  return BoostVersion::page()->compare($lib['boost-version']) >= 0 &&
       (!$filter_value || ($lib[$filter_value] && $lib[$filter_value] !== 'false')) &&
       (!isset($_GET['filter']) || $lib[$_GET['filter']]) &&
       (!$category_value || $category_value === 'all' ||
@@ -153,7 +114,6 @@ function libref($lib)
     }
     else
     {
-      global $boost_current_version;
       $docref = '/doc/libs/release/'.$lib['documentation'];
     }
     print '<a href="'.$docref.'">'.($lib['name'] ? $lib['name'] : $lib['key']).'</a>';
@@ -169,7 +129,7 @@ function libauthors($lib)
 }
 function libavailable($lib)
 {
-  print ($lib['boost-version'] ? $lib['boost-version'] : '&nbsp;');
+  print ($lib['boost-version'] ? "{$lib['boost-version']}" : '&nbsp;');
 }
 function libstandard($lib)
 {

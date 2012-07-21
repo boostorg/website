@@ -246,13 +246,10 @@ function conditional_get($last_modified)
 // General purpose render callbacks.
 
 function boost_archive_render_callbacks($content, $params) {
-    $version_title =
-        str_replace('_', ' ',
-            preg_replace('@(?<=\d)_(?=\d)@', '.',
-                ucwords($params['version'])));
+    $version = BoostVersion::from($params['version']);
 
     $charset = $params['charset'] ? $params['charset'] : 'us-ascii';
-    $title = $params['title'] ? "$params[title] - $version_title" : 'Boost C++ Libraries';
+    $title = $params['title'] ? "$params[title] - $version" : 'Boost C++ Libraries';
 
     $head = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
 

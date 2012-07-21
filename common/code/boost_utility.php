@@ -29,11 +29,7 @@ function _field_cmp_autolink_($a,$b)
 
 function _field_cmp_boost_version_($a,$b)
 {
-    $i = explode('.',$a['boost-version']);
-    $j = explode('.',$b['boost-version']);
-    if ($i[0] == $j[0] && $i[1] == $j[1]) { return _field_cmp_($i[2]-$j[2],$a,$b); }
-    else if ($i[0] == $j[0]) { return _field_cmp_($i[1]-$j[1],$a,$b); }
-    else { return _field_cmp_($i[0]-$j[0],$a,$b); }
+    return $a['boost-version']->compare($b['boost-version']);
 }
 
 function _field_cmp_description_($a,$b)

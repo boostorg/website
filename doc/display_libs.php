@@ -18,32 +18,6 @@ if (strncmp($_SERVER['REQUEST_URI'], '/doc/libs/1_', 12) == 0  &&
 
 require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
-function boost_compare_version($version)
-{
-    if ($version && preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$version,$vinfo))
-    {
-        array_shift($vinfo);
-
-        global $boost_current_version;
-        $v = $boost_current_version[0];
-        $r = $boost_current_version[1];
-        $p = $boost_current_version[2];
-
-        return
-          $v < $vinfo[0] ? 1 :
-          ($v > $vinfo[0] ? -1 :
-          ($r < $vinfo[1] ? 1 :
-          ($r > $vinfo[1] ? -1 :
-          ($p < $vinfo[2] ? 1 :
-          ($p > $vinfo[2] ? -1
-            : 0)))));
-    }
-    else
-    {
-        return FALSE;
-    }
-}
-
 function add_spirit_analytics($content) {
     $server = $_SERVER['HTTP_HOST'];
     
@@ -81,7 +55,7 @@ EOS;
 }
 
 $location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],true,false);
-$compare_version = boost_compare_version($location['version']);
+$compare_version = BoostVersion::from($location['version'])->compare(BoostVersion::current());
 
 display_from_archive(
   $location,

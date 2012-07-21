@@ -12,8 +12,7 @@
 // Returns true if the library is part of the current release of boost.
 
 function current_version_filter($lib) {
-	global $boost_current_version;
-	return explode('.',$lib['boost-version']) <= $boost_current_version;
+    return BoostVersion::current()->compare($lib['boost-version']) >= 0;
 }
 
 function xmlentities($text) {
