@@ -102,59 +102,5 @@ class boost_feed
     {
         uasort($this->db, sort_by_field($field));
     }
-    
-    function echo_download_table($guid)
-    {
-        if(isset($this->db[$guid]['boostbook:download']) && $this->db[$guid]['boostbook:download']) {
-            $link = $this->db[$guid]['boostbook:download'];
-            if(preg_match('@/boost/(\d+)\.(\d+)\.(\d+)/$@', $link, $matches)) {
-                $base_name = 'boost_'.$matches[1].'_'.$matches[2].'_'.$matches[3];
-                
-                /* Pick which files are available by examining the version number.
-                   This could possibly be meta-data in the rss feed instead of being
-                   hardcoded here. */
-                
-                $downloads['unix'][] = $base_name.'.tar.bz2';
-                $downloads['unix'][] = $base_name.'.tar.gz';
-
-                if($matches[1] == 1 && $matches[2] >= 32 && $matches[2] <= 33) {
-                    $downloads['windows'][] = $base_name.'.exe';
-                }
-                else if($matches[1] > 1 || $matches[2] > 34 || ($matches[2] == 34 && $matches[3] == 1)) {
-                    $downloads['windows'][] = $base_name.'.7z';
-                }
-                $downloads['windows'][] = $base_name.'.zip';
-                
-                /* Print the download table. */
-                
-                echo '<table class="download-table">';
-                echo '<caption>Downloads</caption>';
-                echo '<tr><th scope="col">Platform</th><th scope="col">File</th></tr>';
-                foreach($downloads as $platform => $files) {
-                    echo "\n";
-                    echo '<tr><th scope="row"';
-                    if(count($files) > 1) {
-                        echo ' rowspan="'.count($files).'"';
-                    }
-                    echo '>'.htmlentities($platform).'</th>';
-                    foreach($files as $index => $file) {
-                        if($index > 0) echo '</tr><tr>';
-                        echo '<td><a href="'.htmlentities($link.$file.'/download').'">'.
-                            htmlentities($file).'</a></td>';
-                    }
-                    echo '</tr>';
-                }
-                echo '</table>';
-            }
-            else {
-                /* If the link didn't match the normal version number pattern
-                   then just use the old fashioned link to sourceforge. */
-
-                echo '<p><span class="news-download"><a href="'.
-                    htmlentities($link).
-                    '">Download this release.</a></span></p>';
-            }
-        }
-    }
 }
 ?>

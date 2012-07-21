@@ -81,21 +81,7 @@ EOS;
 }
 
 $location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],true,false);
-$beta_site = strpos($_SERVER['HTTP_HOST'], 'beta') !== FALSE ||
-    strpos($_SERVER['HTTP_HOST'], 'localhost') !== FALSE;
-$beta_docs = strpos($location['version'], 'beta') !== FALSE ||
-    strpos($location['version'], 'snapshot') !== FALSE;
-
 $compare_version = boost_compare_version($location['version']);
-/*
-if (!$beta_docs && $compare_version === 1) {
-    file_not_found($location['file'],
-        "Documentation for this version has not been uploaded yet. ".
-        "Documentation is only uploaded when it's fully released, ".
-        "you can see the documentation for a beta version or snapshot in the download.");
-    return;
-}
- */
 
 display_from_archive(
   $location,
