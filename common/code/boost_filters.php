@@ -122,16 +122,28 @@ function remove_html_banner($text) {
 
 function latest_link($params)
 {
-    if (strpos($params['version'], 'beta') !== FALSE)
-        return;
+    $version = BoostVersion::from($params['version']);
+    if ($version->is_beta()) return;
 
-    global $boost_current_version;
-    $latest = 'boost_'.implode('_', $boost_current_version);
-
-    if ($latest != $params['version'] && is_file(ARCHIVE_DIR."/$latest/$params[key]"))
+    $current = BoostVersion::current();
+    switch ($current->compare($version))
     {
-        echo 'This is the documentation for an old version of boost, click '.
-            '<a href="/doc/libs/release/'.$params['key'].'">'.
-            'here for the latest version</a>';
+    case 0:
+        break;
+    case 1:
+        if (is_file(ARCHIVE_DIR."/{$current->dir()}/$params[key]"))
+        {
+            echo 'This is the documentation for an old version of boost, click '.
+                '<a href="/doc/libs/release/'.$params['key'].'">'.
+                'here for the latest version</a>';
+        }
+        else
+        {
+            echo 'This is the documentation for an old version of boost.';
+        }
+        break;
+    case -1:
+        echo 'This is the documentation for an unreleased version of boost';
+        break;
     }
 }
