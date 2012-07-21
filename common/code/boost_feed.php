@@ -98,8 +98,7 @@ class boost_feed
     
     function sort_by($field)
     {
-        $f = '_field_cmp_'.strtolower(str_replace('-','_',$field)).'_';
-        uasort($this->db,$f);
+        uasort($this->db, sort_by_field($field));
     }
     
     function echo_download_table($guid)

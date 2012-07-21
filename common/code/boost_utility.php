@@ -6,6 +6,16 @@
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
+/**
+ * Return a callback to comparing the given field.
+ * @return callable
+ */
+
+function sort_by_field($field)
+{
+    return '_field_cmp_'.strtolower(str_replace('-','_',$field)).'_';
+}
+
 function _field_cmp_($r,$a,$b)
 {
     if ($r == 0) { return _field_cmp_name_($a,$b); }
