@@ -9,6 +9,13 @@
 
 <?php
 
+// Returns true if the library is part of the current release of boost.
+
+function current_version_filter($lib) {
+	global $boost_current_version;
+	return explode('.',$lib['boost-version']) <= $boost_current_version;
+}
+
 function xmlentities($text) {
     return str_replace(
         array('&', '<', '>', '"', "'"),
@@ -39,7 +46,7 @@ $libs = USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/generated/libraries.txt')) :
 	new boost_libraries(dirname(__FILE__) . '/doc/libraries.xml');
 
-foreach ($libs->get() as $lib) {
+foreach ($libs->get(null, 'current_version_filter') as $lib) {
     echo_sitemap_url("doc/libs/release/$lib[documentation]", '1.0', 'daily');
 }
 
