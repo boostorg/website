@@ -6,5 +6,4 @@
 */
 $boost_current_version = Array(1,50,0);
 require_once(dirname(__FILE__) . '/boost_config.php');
-require_once(dirname(__FILE__) . '/boost_utility.php');
 ?>

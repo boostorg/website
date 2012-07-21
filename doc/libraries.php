@@ -3,6 +3,7 @@
 // Change this when developing.
 define('USE_SERIALIZED_INFO', true);
 
+require_once(dirname(__FILE__) . '/../common/code/boost.php');
 require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
 
 function boost_title()
