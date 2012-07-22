@@ -22,13 +22,13 @@ EOS;
 }
 
 display_from_archive(
-  get_archive_location(
-    '@^[/]([^/]+)[/](.*)$@',
-    $_SERVER["PATH_INFO"],
-    false, false
-  ),
   array(
   //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type[,preprocess hook]),
   array('@.*@','@^boost-build/index[.]html$@i','simple','text/html', 'add_boost_build_analytics'),
   array('@.*@','@[.](html|htm)$@i','boost_book_html','text/html')
-));
+  ),
+  array(
+    'archive_subdir' => false,
+    'zipfile' => false,
+  )
+);

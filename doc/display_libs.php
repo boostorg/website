@@ -55,7 +55,6 @@ EOS;
 }
 
 display_from_archive(
-  get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],true,false),
   array(
   //~ special cases that can't be processed at all (some redirects)
   array('@.*@','@^libs/gil/doc/.*(html|htm)$@i','raw','text/html'),
@@ -86,6 +85,8 @@ display_from_archive(
   //~ the headers are text files displayed in an embeded page
   array('@.*@','@^boost/.*$@i','cpp','text/plain')
   ),
-  null,
-  array('use_http_expire_date' => true)
+  array(
+    'use_http_expire_date' => true,
+    'zipfile' => false,
+  )
 );

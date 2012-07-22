@@ -45,21 +45,42 @@ function get_archive_location(
 }
 
 function display_from_archive(
-    $params,
     $content_map = array(),
-    $override_extractor = null,
-    $extra_settings = array())
+    $params = array())
 {
-    $params['template'] = dirname(__FILE__)."/template.php";
-    $params['title'] = NULL;
-    $params['charset'] = NULL;
-    $params['content'] = NULL;
+    // Set default values
+
+    $params = array_merge(
+        array(
+            'pattern' => '@^[/]([^/]+)[/](.*)$@',
+            'vpath' => $_SERVER["PATH_INFO"],
+            'archive_subdir' => true,
+            'zipfile' => true,
+            'archive_dir' => ARCHIVE_DIR,
+            'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
+            'use_http_expire_date' => false,
+            'override_extractor' => null,
+            'template' => dirname(__FILE__)."/template.php",
+            'title' => NULL,
+            'charset' => NULL,
+            'content' => NULL,
+        ),
+        $params
+    );
+
+    $params = array_merge($params, get_archive_location(
+        $params['pattern'],
+        $params['vpath'],
+        $params['archive_subdir'],
+        $params['zipfile'],
+        $params['archive_dir'],
+        $params['archive_file_prefix']
+    ));
     
     // Calculate expiry date if requested.
 
     $expires = null;
-    if (isset($extra_settings['use_http_expire_date']) &&
-        $extra_settings['use_http_expire_date'])
+    if ($settings['use_http_expire_date'])
     {
         $compare_version = BoostVersion::from($params['version'])->
             compare(BoostVersion::current());
@@ -143,7 +164,8 @@ function display_from_archive(
         }
     }
     
-    if ($override_extractor) $extractor = $override_extractor;
+    if ($settings['override_extractor'])
+        $extractor = $settings['override_extractor'];
 
     if (!$extractor) {
         file_not_found($params);
