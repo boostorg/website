@@ -34,8 +34,8 @@ $view_fields = Array(
 $filter_fields = Array(
     'std-proposal' => 'Standard Proposals',
     'std-tr1' => 'TR1 libraries',
-    'header-only' => 'old',
-    'autolink' => 'old');
+    'header-only' => '[old]',
+    'autolink' => '[old]');
 $sort_fields =  Array(
     'name' => 'Name',
     'boost-version' => 'First Release',
@@ -60,7 +60,7 @@ if(strpos($view_value, 'filtered_') === 0) {
     if(!isset($filter_fields[$filter_value])) {
         echo 'Invalid filter field.'; exit(0);
     }
-    if ($filter_fields[$filter_value] == 'old') {
+    if ($filter_fields[$filter_value] == '[old]') {
         echo 'Filter field no longer supported.'; exit(0);
     }
 }
@@ -226,7 +226,9 @@ function category_link($name, $category) {
                       <li><?php option_link($description, 'view', $key); ?></li><?php
                     endforeach; ?>
                     <?php foreach($filter_fields as $key => $description) : ?>
+                      <?php if (!preg_match('@^\[.*\]$@', $description)) : ?>
                       <li><?php option_link($description, 'view', 'filtered_'.$key); ?></li>
+                      <?php endif; ?>
                     <?php endforeach; ?>
                     </ul>
                   </div>
