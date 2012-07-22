@@ -50,1470 +50,1488 @@
 
 
 
-  <div id="version_1_50_0.new_libraries">
-    <h3><span class="link">New Libraries</span></h3>
+  <div id="version_1_50_0.patches">
+    <h3><span class="link">Patches</span></h3>
     <ul>
       <li>
         <div>
-          <span class="library"><a href="/libs/algorithm/">Algorithm</a>:</span>
+          <a href="/patches/1_50_0/001-unordered.patch">Boost.Unordered patch</a>
+          - Fixes a bug when compiled using a C++11 compiler, but with a C++03 allocator.
+          When inserting elements, <code><span class="identifier">allocator_traits</span></code>
+          detects that the node can be constructed using an accidental implicit conversion
+          which causes several problems.
+        </div>
+      </li>
+    </ul>
+    <div id="version_1_50_0.patches.new_libraries">
+      <h3><span class="link">New Libraries</span></h3>
+      <ul>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/algorithm/">Algorithm</a>:</span>
   A collection of
-          useful generic algorithms, from Marshall Clow. This includes several different
-          searching algorithms, as well as most of the new algorithms from the C++11
-          standard library
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/functional/overloaded_function/">Functional/OverloadedFunction</a>:</span>
+            useful generic algorithms, from Marshall Clow. This includes several
+            different searching algorithms, as well as most of the new algorithms
+            from the C++11 standard library
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/functional/overloaded_function/">Functional/OverloadedFunction</a>:</span>
   Overload
-          different functions into a single function object, from Lorenzo Caminiti.
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/local_function/">LocalFunction</a>:</span>
+            different functions into a single function object, from Lorenzo Caminiti.
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/local_function/">LocalFunction</a>:</span>
   Program
-          functions locally, within other functions, directly within the scope where
-          they are needed, from Lorenzo Caminiti.
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/utility/identity_type/">Utility/IdentityType</a>:</span>
+            functions locally, within other functions, directly within the scope
+            where they are needed, from Lorenzo Caminiti.
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/utility/identity_type/">Utility/IdentityType</a>:</span>
   Wrap
-          types within round parenthesis so they can always be passed as macro parameters,
-          from Lorenzo Caminiti.
-        </div>
-      </li>
-    </ul>
-  </div>
-  <div id="version_1_50_0.updated_libraries">
-    <h3><span class="link">Updated Libraries</span></h3>
-    <ul>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/accumulators/">Accumulators</a>:</span>
-          <ul>
-            <li>
-              <div>
-                add missing <code><span class="preprocessor">#include</span>
-                <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">throw_exception</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>, fixes <a href="https://svn.boost.org/trac/boost/ticket/6702">#6702</a>.
-              </div>
-            </li>
-            <li>
-              <div>
-                work around for msvc which allows ctor templates to be copy ctors,
-                fixes <a href="https://svn.boost.org/trac/boost/ticket/6535">#6535</a>.
-              </div>
-            </li>
-            <li>
-              <div>
-                shorten filenames to meet boost guidelines, fixes <a href="https://svn.boost.org/trac/boost/ticket/6196">#6196</a>.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/array/">Array</a>:</span>
-          <ul>
-            <li>
-              <div>
-                add support for Boost.Hash <a href="https://svn.boost.org/trac/boost/ticket/6791">#6791</a>.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Changed the <code><span class="identifier">epoll_reactor</span></code>
-                backend to do lazy registration for <code><span class="identifier">EPOLLOUT</span></code>
-                events.
-              </div>
-            </li>
-            <li>
-              <div>
-                Fixed the <code><span class="identifier">epoll_reactor</span></code>
-                handling of out-of-band data, which was broken by an incomplete fix
-                in the last release.
-              </div>
-            </li>
-            <li>
-              <div>
-                Changed Asio's SSL wrapper to respect OpenSSL's <code><span class="identifier">OPENSSL_NO_ENGINE</span></code>
-                feature test <code><span class="preprocessor">#define</span></code>
-                (<a href="https://svn.boost.org/trac/boost/ticket/6432">#6432</a>).
-              </div>
-            </li>
-            <li>
-              <div>
-                Fixed <code><span class="identifier">windows</span><span class="special">::</span><span class="identifier">object_handle</span></code> so that it works
-                with Windows compilers that support C++11 move semantics (such as
-                <tt>g++</tt>).
-              </div>
-            </li>
-            <li>
-              <div>
-                Improved the performance of strand rescheduling.
-              </div>
-            </li>
-            <li>
-              <div>
-                Added support for <tt>g++</tt> 4.7 when compiling in C++11
-                mode (<a href="https://svn.boost.org/trac/boost/ticket/6620">#6620</a>).
-              </div>
-            </li>
-            <li>
-              <div>
-                Fixed a problem where <code><span class="identifier">signal_set</span></code>
-                handlers were not being delivered when the <code><span class="identifier">io_service</span></code>
-                was constructed with a <code><span class="identifier">concurrency_hint</span></code>
-                of 1 (<a href="https://svn.boost.org/trac/boost/ticket/6657">#6657</a>).
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/bimap/">Bimap</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Remove spurious dependency on Boost.Serialization, fixes <a href="https://svn.boost.org/trac/boost/ticket/3868">#3868</a>.
-              </div>
-            </li>
-            <li>
-              <div>
-                Solve unused constructor parameter warning, fixes <a href="https://svn.boost.org/trac/boost/ticket/5749">#5749</a>.
-              </div>
-            </li>
-            <li>
-              <div>
-                Add key_type and mapped_type (leaving data_type for backward compatibility)
-                typedefs to map views, fixes <a href="https://svn.boost.org/trac/boost/ticket/6031">#6031</a>.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/chrono/">Chrono</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Fixed Bugs:
-                <ul>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6361">#6361</a>
-                      integer overflow in boost::chrono::process_real_cpu_clock::now()
-                      under Windows 32bits.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6628">#6628</a>
-                      compiler warning in process_cpu_clocks.hpp.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6666">#6666</a>
-                      thread_clock.hpp needs pthread.h.
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/concept_check/">Concept Check</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Fixed:
-                <ul>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6738">#6738</a>
-                      Shadowed variable warning.
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Remove Filesystem Version 2 from the distribution. Version 3 is now
-                the only distributed version. Those still using V2 are urged to migrate
-                to V3 as soon as possible.
-              </div>
-            </li>
-            <li>
-              <div>
-                Add constexpr value_type preferred_separator to class path.
-              </div>
-            </li>
-            <li>
-              <div>
-                Fix <a href="https://svn.boost.org/trac/boost/ticket/5118">#5118</a>,
-                <code><span class="identifier">replace_extension</span></code>
-                doesn't work as specified in documentation. The documentation, implementation,
-                and test cases have all had fixes applied. The documentation had
-                failed to mention that any existing extension is removed. The behavior
-                for simple cases has been reverted to the Version 2 behavior, but
-                with corrections so that complex replacements now work. Two test
-                cases from <a href="https://svn.boost.org/trac/boost/ticket/5118">#5118</a>
-                have been added.
-              </div>
-            </li>
-            <li>
-              <div>
-                Fix <a href="https://svn.boost.org/trac/boost/ticket/3737">#3737</a>,
-                Boost.Filesystem does not compile on Windows Mobile. On Windows,
-                <code><span class="special">&lt;</span><span class="identifier">sys</span><span class="special">/</span><span class="identifier">stat</span><span class="special">.</span><span class="identifier">h</span><span class="special">&gt;</span></code> is no longer included.
-              </div>
-            </li>
-            <li>
-              <div>
-                Fix <a href="https://svn.boost.org/trac/boost/ticket/4065">#4065</a>,
-                Boost Filesystem lexicographic path comparison inconsistent. This
-                required multiple source code bug fixes and code cleanup, correcting
-                problems not related to lexicographical issues.
-              </div>
-            </li>
-            <li>
-              <div>
-                Add class path member function compare for consistency with std::string.
-              </div>
-            </li>
-            <li>
-              <div>
-                Tighten <code><span class="identifier">BOOST_FILESYSTEM_DYN_LINK</span></code>
-                and <code><span class="identifier">BOOST_FILESYSTEM_STATIC_LINK</span></code>
-                logic in <code><span class="identifier">filesystem</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span></code>
-                so that one or the other is always defined, and both being defined
-                is a <code><span class="preprocessor">#error</span></code>.
-              </div>
-            </li>
-            <li>
-              <div>
-                Fix <a href="https://svn.boost.org/trac/boost/ticket/6690">#6690</a>
-                and <a href="https://svn.boost.org/trac/boost/ticket/6737">#6737</a>,
-                resolving static linking related problems with VC++ 8 through 11.
-                Note that this fix may reintroduce codecvt thread safety problems
-                <a href="https://svn.boost.org/trac/boost/ticket/4889">#4889</a>,
-                <a href="https://svn.boost.org/trac/boost/ticket/6320">#6320</a>,
-                for these compilers if static linking is used.
-              </div>
-            </li>
-            <li>
-              <div>
-                Add <code><span class="identifier">path</span><span class="special">::</span><span class="keyword">operator</span><span class="special">+=</span></code>
-                and concat functions to tack on things like suffixes or numbers.
-                Suggested by Ed Smith-Rowland and others.
-              </div>
-            </li>
-            <li>
-              <div>
-                Fix <a href="https://svn.boost.org/trac/boost/ticket/6809">#6809</a>,
-                Implementation of <code><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">rename</span><span class="special">()</span></code> method for MS Windows is wrong,
-                by adding <code><span class="identifier">MOVEFILE_COPY_ALLOWED</span></code>
-                to deal with renames across drives, volumes, file systems. Fix has
-                no effect on non-Windows systems.
-              </div>
-            </li>
-            <li>
-              <div>
-                Fix <a href="https://svn.boost.org/trac/boost/ticket/6819">#6819</a>,
-                A path operand with a source that was a one character array was treated
-                as empty, even if it wasn't empty. Such arrays can occur in unions
-                or in code using C variable length array idioms.
-              </div>
-            </li>
-            <li>
-              <div>
-                Fix <a href="https://svn.boost.org/trac/boost/ticket/6932">#6932</a>,
-                create_directories throws exception even if <code><span class="identifier">error_code</span></code>
-                is specified.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/foreach/">Foreach</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Revert fix for <a href="https://svn.boost.org/trac/boost/ticket/6131">#6131</a>
-                which caused more harm than good.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/geometry/">Geometry</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Fixed Bugs:
-                <ul>
-                  <li>
-                    <div>
-                      the return type of comparable projected point strategy for
-                      integer points was wrong (integer), fixed
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      several robustness issues in intersection of segments and polygons,
-                      fixed
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      invalid intersection output is filtered out
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      disjoint for multi_polygon's might incorrectly return true,
-                      fixed
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li>
-              <div>
-                Solved tickets
-                <ul>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6585">6585</a>
-                      patch for alternative syntax multipoint, applied
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6584">6584</a>
-                      patch for bug in distance, applied
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/5730">5730</a>
-                      same issue as 6584, fixed
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6166">6166</a>
-                      patch for missing transformation, applied
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6696">6696</a>
-                      invalid intersection output, was (by chance) already fixed
-                      in Trunk before reported
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li>
-              <div>
-                Additional functionality
-                <ul>
-                  <li>
-                    <div>
-                      added algorithm &quot;touches&quot; (OGC SF compliant) for
-                      *polygon/*polygon
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/graph/">Graph</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Fixed Bugs:
-                <ul>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/4622">#4622</a>
-                      clear_vertex on a vertex with a self-loop can cause a segmentation
-                      fault.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6033">#6033</a>
-                      Lowpoint map calculated by biconnected_components(...) is sometimes
-                      wrong.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6242">#6242</a>
-                      isomorphism doesn't reset mapping.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6435">#6435</a>
-                      cube_topology documentation should say 3D, not 2D.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6520">#6520</a>
-                      small_world_1_70_6_0p02.png is broken in documentation of graph_parallel.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6564">#6564</a>
-                      BGL copy constructor for subgraph does not track local vertices/edges.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6573">#6573</a>
-                      BGL: boost::isomorphism routine fails with large graphs.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6583">#6583</a>
-                      Dijkstra Visitor Concept docs probably show wrong type for
-                      variable.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6647">#6647</a>
-                      BGL strong_components do not compile on MSVC 8.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6656">#6656</a>
-                      Dependent type in subgraph used without typename.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6707">#6707</a>
-                      is_straight_line_drawing.hpp missing #include &lt;map&gt;.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6708">#6708</a>
-                      Make bool boost::intersects() in is_straight_line_drawing.hpp
-                      inline?
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6739">#6739</a>
-                      Cannot use write_graphviz_dp with a constified subgraph.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6858">#6858</a>
-                      boost::get() calls wrongly resolved by g++.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6892">#6892</a>
-                      VertexIndexGraph concept not required for bron_kerbosch_all_cliques().
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      Other bugs and warnings not in Trac.
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/functional/hash/">Hash</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Support <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">array</span></code> and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">tuple</span></code>
-                when available (<a href="https://svn.boost.org/trac/boost/ticket/6806">#6806</a>).
-              </div>
-            </li>
-            <li>
-              <div>
-                Avoid gcc's <code><span class="special">-</span><span class="identifier">Wfloat</span><span class="special">-</span><span class="identifier">equal</span></code>
-                warning (<a href="https://svn.boost.org/trac/boost/ticket/6771">#6771</a>).
-              </div>
-            </li>
-            <li>
-              <div>
-                Add deprecation warning to the long deprecated <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">functional</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">container_fwd</span><span class="special">.</span><span class="identifier">hpp</span></code>.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/iostreams/">Iostreams</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Improved gzip support (<a href="https://svn.boost.org/trac/boost/ticket/5908">#5908</a>).
-              </div>
-            </li>
-            <li>
-              <div>
-                Update tests for latest Boost.Filesystem and Boost.Test.
-              </div>
-            </li>
-            <li>
-              <div>
-                Fix some documentation errors (<a href="https://svn.boost.org/trac/boost/ticket/6530">#6530</a>,
-                <a href="https://svn.boost.org/trac/boost/ticket/6650">#6650</a>).
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/iterator/">Iterator</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Fixed:
-                <ul>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/5127">#5127</a>
-                      Incorrect result_of usage in transform_iterator
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/5697">#5697</a>
-                      iterator_facade::operator-&gt; is broken for proxy references
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/multi_array/">MultiArray</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Concepts bug fix and Workaround for Visual Studio 2010 (<a href="https://svn.boost.org/trac/boost/ticket/4874">#4874</a>)
-              </div>
-            </li>
-            <li>
-              <div>
-                Fix to assert.cpp test case (<a href="https://svn.boost.org/trac/boost/changeset/78498">Patch</a>)
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/conversion/lexical_cast.htm">Lexical cast</a>:</span>
-          <ul>
-            <li>
-              <div>
-                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bad_lexical_cast</span></code> exception is now
-                globaly visible and can be catched even if code is compiled with
-                -fvisibility=hidden
-              </div>
-            </li>
-            <li>
-              <div>
-                Now it is possible to compile and use library with disabled exceptions
-                <a href="https://svn.boost.org/trac/boost/ticket/5800">#5800</a>
-              </div>
-            </li>
-            <li>
-              <div>
-                Better performance, less memory usage and bugfixes for <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">iterator_range</span><span class="special">&lt;</span><span class="identifier">character_type</span><span class="special">*&gt;</span></code>
-                conversions
-              </div>
-            </li>
-            <li>
-              <div>
-                Fixed bugs and warnings: <a href="https://svn.boost.org/trac/boost/ticket/6645">#6645</a>,
-                <a href="https://svn.boost.org/trac/boost/ticket/6562">#6562</a>,
-                <a href="https://svn.boost.org/trac/boost/ticket/6812">#6812</a>,
-                <a href="https://svn.boost.org/trac/boost/ticket/6852">#6852</a>,
-                <a href="https://svn.boost.org/trac/boost/ticket/6717">#6717</a>,
-                <a href="https://svn.boost.org/trac/boost/ticket/6670">#6770</a>,
-                <a href="https://svn.boost.org/trac/boost/ticket/6504">#6504</a>.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/locale/">Locale</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Fixed build issues with STLPort library
-              </div>
-            </li>
-            <li>
-              <div>
-                Boost.System is now required depenency
-              </div>
-            </li>
-            <li>
-              <div>
-                Fixed bugs <a href="https://svn.boost.org/trac/boost/ticket/6635">#6635</a>,
-                <a href="https://svn.boost.org/trac/boost/ticket/6833">#6833</a>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/math/">Math</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Promoted math constants to be 1st class citizens, including convenient
-                access to the most widely used built-in float, double, long double
-                via three namespaces.
-              </div>
-            </li>
-            <li>
-              <div>
-                Added the Owen's T function and Skew Normal distribution written
-                by Benjamin Sobotta.
-              </div>
-            </li>
-            <li>
-              <div>
-                Added Hankel functions.
-              </div>
-            </li>
-            <li>
-              <div>
-                Corrected issue <a href="https://svn.boost.org/trac/boost/ticket/6627">#6627
-                nonfinite_num_put formatting of 0.0 is incorrect</a> based on
-                a patch submitted by K R Walker.
-              </div>
-            </li>
-            <li>
-              <div>
-                Changed constant initialization mechanism so that it is thread safe
-                even for user-defined types, also so that user defined types get
-                the full precision of the constant, even when <code><span class="keyword">long</span>
-                <span class="keyword">double</span></code> does not. So for example
-                128-bit rational approximations will work with UDT's and do the right
-                thing, even though <code><span class="keyword">long</span> <span class="keyword">double</span></code> may be only 64 or 80 bits.
-              </div>
-            </li>
-            <li>
-              <div>
-                Fixed issue in <code><span class="identifier">bessel_jy</span></code>
-                which causes Y[sub 8.5](4[pi]) to yield a NaN.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/msm/">MSM</a>:</span>
-          <ul>
-            <li>
-              <div>
-                eUML : better syntax for front-ends defined with eUML as transition
-                table only. Caution: Breaking Change!<a href="http://www.boost.org/doc/libs/1_50_0/libs/msm/doc/HTML/ch03s04.html#eUML-composite-table">http://www.boost.org/doc/libs/1_50_0/libs/msm/doc/HTML/ch03s04.html#eUML-composite-table</a>
-              </div>
-            </li>
-            <li>
-              <div>
-                Bugfix: graph building was only working if initial_state defined
-                as a sequence.
-              </div>
-            </li>
-            <li>
-              <div>
-                Bugfix: flags defined for a Terminate or Interrupt state do not break
-                the blocking function of these states any more.
-              </div>
-            </li>
-            <li>
-              <div>
-                Bugfix: multiple deferred events from several regions were not working
-                in every case.
-              </div>
-            </li>
-            <li>
-              <div>
-                Bugfix: visitor was passed by value to submachines.
-              </div>
-            </li>
-            <li>
-              <div>
-                Bugfix: no_transition was not called for submachines who send an
-                event to themselves.
-              </div>
-            </li>
-            <li>
-              <div>
-                Fixed warnings with gcc.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/program_options/">Program Options</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Improved error reporting (<a href="https://svn.boost.org/trac/boost/changeset/77827">Patch
-                from Leo Goodstadt</a>).
-              </div>
-            </li>
-            <li>
-              <div>
-                Support for customizing name of option's value in help messages (<a href="https://svn.boost.org/trac/boost/ticket/4781">#4781</a>)
-              </div>
-            </li>
-            <li>
-              <div>
-                Fixed compilation with gcc 4.7 (<a href="https://svn.boost.org/trac/boost/ticket/6790">#6790</a>).
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/property_map/">PropertyMap</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Fixed Bugs:
-                <ul>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6539">#6539</a>
-                      the return type of get() is not documented correctly.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6721">#6721</a>
-                      property_map_traits documentation does not mention reference.
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/proto/">Proto</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Use <code><span class="identifier">decltype</span></code>-based
-                <code><span class="identifier">result_of</span></code> if and
-                only if the compiler implements N3276.
-              </div>
-            </li>
-            <li>
-              <div>
-                For C++11, force parameter to <code><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">eval_if_c</span></code>
-                and <code><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">if_c</span></code> to be <code><span class="keyword">bool</span></code>.
-              </div>
-            </li>
-            <li>
-              <div>
-                Disable <tt>'__forceinline not inlined'</tt> warning on
-                msvc.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/ratio/">Ratio</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Fixed Bugs:
-                <ul>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6498">#6498</a>
-                      boost::ratio won't compile with default settings.
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/scope_exit/">ScopeExit</a>:</span>
-          <ul>
-            <li>
-              <div>
-                New Features:
-                <ul>
-                  <li>
-                    <div>
-                      Use variadic macros to specify captures as commas-separated
-                      lists (but kept preprocessor sequence syntax for backward compatibility).
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      Capture the object in scope using <code><span class="identifier">this_</span></code>.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      Support empty captures using <code><span class="keyword">void</span></code>.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      Implicit lambda-like captures using <code><span class="identifier">BOOST_SCOPE_EXIT_ALL</span></code>
-                      on compilers that support C++11 lambda functions.
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/thread/">Thread</a>:</span>
-          <ul>
-            <li>
-              <div>
-                New Features:
-                <ul>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/1850">#1850</a>
-                      Request for unlock_guard to compliment lock_guard.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/2637">#2637</a>
-                      Request for shared_mutex duration timed_lock and timed_lock_shared.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/2741">#2741</a>
-                      Proposal to manage portable and non portable thread attributes.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/3567">#3567</a>
-                      Request for shared_lock_guard.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6194">#6194</a>
-                      Adapt to Boost.Move.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6195">#6195</a>
-                      c++11 compliance: Provide the standard time related interface
-                      using Boost.Chrono.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6217">#6217</a>
-                      Enhance Boost.Thread shared mutex interface following Howard
-                      Hinnant proposal.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6224">#6224</a>
-                      c++11 compliance: Add the use of standard noexcept on compilers
-                      supporting them.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6226">#6226</a>
-                      c++11 compliance: Add explicit bool conversion from locks.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6228">#6228</a>
-                      Add promise constructor with allocator following the standard
-                      c++11.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6230">#6230</a>
-                      c++11 compliance: Follows the exception reporting mechanism
-                      as defined in the c++11.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6266">#6266</a>
-                      Breaking change: thread destructor should call terminate if
-                      joinable.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6269">#6269</a>
-                      Breaking change: thread move assignment should call terminate
-                      if joinable.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6272">#6272</a>
-                      c++11 compliance: Add thread::id hash specialization.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6273">#6273</a>
-                      c++11 compliance: Add cv_status enum class and use it on the
-                      conditions wait functions.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6231">#6231</a>
-                      Add BasicLockable requirements in the documentation to follow
-                      c++11.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6342">#6342</a>
-                      c++11 compliance: Adapt the one_flag to the c++11 interface.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6671">#6671</a>
-                      upgrade_lock: missing mutex and release functions.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6672">#6672</a>
-                      upgrade_lock:: missing constructors from time related types.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6675">#6675</a>
-                      upgrade_lock:: missing non-member swap.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      Added missing packaged_task::result_type and packaged_task::
-                      constructor with allocator.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      Added packaged_task::reset()
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li>
-              <div>
-                Fixed Bugs:
-                <ul>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/2575">#2575</a>
-                      Bug- Boost 1.36.0 on Itanium platform.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/4345">#4345</a>
-                      thread::id and joining problem with cascade of threads.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/4921">#4921</a>
-                      BOOST_THREAD_USE_DLL and BOOST_THREAD_USE_LIB are crucial and
-                      need to be documented.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/5013">#5013</a>
-                      documentation: boost::thread: pthreas_exit causes terminate().
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/5173">#5173</a>
-                      boost::this_thread::get_id is very slow.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/5351">#5351</a>
-                      interrupt a future get boost::unknown_exception.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/5516">#5516</a>
-                      Upgrade lock is not acquired when previous upgrade lock releases
-                      if another read lock is present.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/5990">#5990</a>
-                      shared_future&lt;T&gt;::get() has wrong return type.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6174">#6174</a>
-                      packaged_task doesn't correctly handle moving results.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6222">#6222</a>
-                      Compile error with SunStudio: unique_future move.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6673">#6673</a>
-                      shared_lock: move assign doesn't works with c++11.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6674">#6674</a>
-                      shared_mutex: try_lock_upgrade_until doesn't works.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      Fix issue signaled on the ML with task_object(task_object const&amp;)
-                      in presence of task_object(task_object&amp;&amp;)
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/unordered/">Unordered</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Fix equality for <code><span class="identifier">unordered_multiset</span></code>
-                and <code><span class="identifier">unordered_multimap</span></code>.
-              </div>
-            </li>
-            <li>
-              <div>
-                Implement <code><span class="identifier">reserve</span></code>
-                (<a href="https://svn.boost.org/trac/boost/ticket/6857">#6857</a>).
-              </div>
-            </li>
-            <li>
-              <div>
-                Avoid gcc's <code><span class="special">-</span><span class="identifier">Wfloat</span><span class="special">-</span><span class="identifier">equal</span></code>
-                and <code><span class="special">-</span><span class="identifier">Wshadow</span></code>
-                warnings (<a href="https://svn.boost.org/trac/boost/ticket/6190">#6190</a>,
-                <a href="https://svn.boost.org/trac/boost/ticket/6771">#6771</a>).
-              </div>
-            </li>
-            <li>
-              <div>
-                Fix namespace issue with bcp (<a href="https://svn.boost.org/trac/boost/ticket/6905">#6905</a>).
-              </div>
-            </li>
-            <li>
-              <div>
-                Fix Sun workarounds (<a href="https://svn.boost.org/trac/boost/ticket/6784">#6784</a>).
-              </div>
-            </li>
-            <li>
-              <div>
-                Some internal changes to bucket allocation.
-              </div>
-            </li>
-            <li>
-              <div>
-                See the <a href="/doc/html/unordered/changes.html#unordered.changes.boost_1_50_0">change
-                log</a> for full details.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/wave/index.html">Wave</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Wave V2.3.2, see the <a href="/libs/wave/ChangeLog">Changelog</a>
-                for details.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/libs/xpressive/">xpressive</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Remove very ugly <code><span class="identifier">lexical_cast</span></code>
-                hack with a slightly less ugly one.
-              </div>
-            </li>
-            <li>
-              <div>
-                Replace MPL assert with static assert since it's problematic in C++11,
-                fixes <a href="https://svn.boost.org/trac/boost/ticket/6846">#6846</a>.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-    </ul>
-  </div>
-  <div id="version_1_50_0.compilers_tested">
-    <h3><span class="link">Compilers Tested</span></h3>
-    <p>
-      Boost's primary test compilers are:
-    </p>
-    <ul>
-      <li>
-        <div>
-          Linux:
-          <ul>
-            <li>
-              <div>
-                Intel: 11.1
-              </div>
-            </li>
-            <li>
-              <div>
-                LLVM Clang 2.8
-              </div>
-            </li>
-            <li>
-              <div>
-                GCC: 4.2.4, 4.3.4, 4.4.3, 4.5.3, 4.6.2
-              </div>
-            </li>
-            <li>
-              <div>
-                GCC, C++0x mode: 4.3.4, 4.4.3, 4.5.3, 4.6.2
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          OS X:
-          <ul>
-            <li>
-              <div>
-                Intel: 11.1
-              </div>
-            </li>
-            <li>
-              <div>
-                GCC: 4.4.4
-              </div>
-            </li>
-            <li>
-              <div>
-                GCC, C++0x mode: 4.4.4
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          Windows:
-          <ul>
-            <li>
-              <div>
-                Visual C++ 8.0, 9.0, 10.0
-              </div>
-            </li>
-            <li>
-              <div>
-                GCC, mingw: 4.4.0, 4.4.7, 4.5.4, 4.6.1, 4.7.0
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          FreeBSD:
-          <ul>
-            <li>
-              <div>
-                GCC 4.2.1, 32 and 64 bit
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          QNX:
-          <ul>
-            <li>
-              <div>
-                QCC, C++0x mode: 4.4.0, 4.4.7, 4.5.4, 4.6.3, 4.7.0
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-    </ul>
-    <p>
-      Boost's additional test compilers include:
-    </p>
-    <ul>
-      <li>
-        <div>
-          Linux:
-          <ul>
-            <li>
-              <div>
-                Clang from subversion
-              </div>
-            </li>
-            <li>
-              <div>
-                GCC: 4.2.4, 4.3.4, 4.4.4, 4.5.3, 4.6.2
-              </div>
-            </li>
-            <li>
-              <div>
-                GCC, C++0x mode: 4.3.4, 4.4.4, 4.5.3, 4.6.2
-              </div>
-            </li>
-            <li>
-              <div>
-                pgCC: 11.9
-              </div>
-            </li>
-            <li>
-              <div>
-                Intel: 10.1, 11.1, 12.0, 12.1
-              </div>
-            </li>
-            <li>
-              <div>
-                Visual Age 10.1
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          OS X:
-          <ul>
-            <li>
-              <div>
-                Clang from subversion
-              </div>
-            </li>
-            <li>
-              <div>
-                Intel 11.1, 12.0
-              </div>
-            </li>
-            <li>
-              <div>
-                GCC: 4.4.4
-              </div>
-            </li>
-            <li>
-              <div>
-                GCC, C++0x mode: 4.4.4
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          Windows:
-          <ul>
-            <li>
-              <div>
-                Visual C++ 8.0, 10.0
-              </div>
-            </li>
-            <li>
-              <div>
-                Visual C++ with STLport: 9.0
-              </div>
-            </li>
-            <li>
-              <div>
-                Visual C++, Windows Mobile 5, with STLport: 9.0
-              </div>
-            </li>
-            <li>
-              <div>
-                GCC, mingw: 4.4.0, 4.4.7, 4.5.2, 4.5.4, 4.6.4, 4.7.0
-              </div>
-            </li>
-            <li>
-              <div>
-                GCC, C++0x mode, mingw: 4.5.2
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          AIX:
-          <ul>
-            <li>
-              <div>
-                IBM XL C/C++ Enterprise Edition, V12.1.0.0
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          FreeBSD:
-          <ul>
-            <li>
-              <div>
-                GCC 4.2.1, 32 and 64 bit
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          Solaris:
-          <ul>
-            <li>
-              <div>
-                Sun 5.10
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-    </ul>
-  </div>
-  <div id="version_1_50_0.acknowledgements">
-    <h3><span class="link">Acknowledgements</span></h3>
-    <p>
-      <a href="/users/people/beman_dawes.html">Beman Dawes</a>, Eric Niebler,
-      <a href="/users/people/rene_rivera.html">Rene Rivera</a>, Daniel James,
-      Vladimir Prus and Marshall Clow managed this release.
-    </p>
+            types within round parenthesis so they can always be passed as macro
+            parameters, from Lorenzo Caminiti.
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div id="version_1_50_0.patches.updated_libraries">
+      <h3><span class="link">Updated Libraries</span></h3>
+      <ul>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/accumulators/">Accumulators</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  add missing <code><span class="preprocessor">#include</span>
+                  <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">throw_exception</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>, fixes <a href="https://svn.boost.org/trac/boost/ticket/6702">#6702</a>.
+                </div>
+              </li>
+              <li>
+                <div>
+                  work around for msvc which allows ctor templates to be copy ctors,
+                  fixes <a href="https://svn.boost.org/trac/boost/ticket/6535">#6535</a>.
+                </div>
+              </li>
+              <li>
+                <div>
+                  shorten filenames to meet boost guidelines, fixes <a href="https://svn.boost.org/trac/boost/ticket/6196">#6196</a>.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/array/">Array</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  add support for Boost.Hash <a href="https://svn.boost.org/trac/boost/ticket/6791">#6791</a>.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Changed the <code><span class="identifier">epoll_reactor</span></code>
+                  backend to do lazy registration for <code><span class="identifier">EPOLLOUT</span></code>
+                  events.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fixed the <code><span class="identifier">epoll_reactor</span></code>
+                  handling of out-of-band data, which was broken by an incomplete
+                  fix in the last release.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Changed Asio's SSL wrapper to respect OpenSSL's <code><span class="identifier">OPENSSL_NO_ENGINE</span></code>
+                  feature test <code><span class="preprocessor">#define</span></code>
+                  (<a href="https://svn.boost.org/trac/boost/ticket/6432">#6432</a>).
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fixed <code><span class="identifier">windows</span><span class="special">::</span><span class="identifier">object_handle</span></code> so that it works
+                  with Windows compilers that support C++11 move semantics (such
+                  as <tt>g++</tt>).
+                </div>
+              </li>
+              <li>
+                <div>
+                  Improved the performance of strand rescheduling.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Added support for <tt>g++</tt> 4.7 when compiling in
+                  C++11 mode (<a href="https://svn.boost.org/trac/boost/ticket/6620">#6620</a>).
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fixed a problem where <code><span class="identifier">signal_set</span></code>
+                  handlers were not being delivered when the <code><span class="identifier">io_service</span></code>
+                  was constructed with a <code><span class="identifier">concurrency_hint</span></code>
+                  of 1 (<a href="https://svn.boost.org/trac/boost/ticket/6657">#6657</a>).
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/bimap/">Bimap</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Remove spurious dependency on Boost.Serialization, fixes <a href="https://svn.boost.org/trac/boost/ticket/3868">#3868</a>.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Solve unused constructor parameter warning, fixes <a href="https://svn.boost.org/trac/boost/ticket/5749">#5749</a>.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Add key_type and mapped_type (leaving data_type for backward compatibility)
+                  typedefs to map views, fixes <a href="https://svn.boost.org/trac/boost/ticket/6031">#6031</a>.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/chrono/">Chrono</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Fixed Bugs:
+                  <ul>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6361">#6361</a>
+                        integer overflow in boost::chrono::process_real_cpu_clock::now()
+                        under Windows 32bits.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6628">#6628</a>
+                        compiler warning in process_cpu_clocks.hpp.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6666">#6666</a>
+                        thread_clock.hpp needs pthread.h.
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/concept_check/">Concept Check</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Fixed:
+                  <ul>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6738">#6738</a>
+                        Shadowed variable warning.
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Remove Filesystem Version 2 from the distribution. Version 3 is
+                  now the only distributed version. Those still using V2 are urged
+                  to migrate to V3 as soon as possible.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Add constexpr value_type preferred_separator to class path.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fix <a href="https://svn.boost.org/trac/boost/ticket/5118">#5118</a>,
+                  <code><span class="identifier">replace_extension</span></code>
+                  doesn't work as specified in documentation. The documentation,
+                  implementation, and test cases have all had fixes applied. The
+                  documentation had failed to mention that any existing extension
+                  is removed. The behavior for simple cases has been reverted to
+                  the Version 2 behavior, but with corrections so that complex replacements
+                  now work. Two test cases from <a href="https://svn.boost.org/trac/boost/ticket/5118">#5118</a>
+                  have been added.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fix <a href="https://svn.boost.org/trac/boost/ticket/3737">#3737</a>,
+                  Boost.Filesystem does not compile on Windows Mobile. On Windows,
+                  <code><span class="special">&lt;</span><span class="identifier">sys</span><span class="special">/</span><span class="identifier">stat</span><span class="special">.</span><span class="identifier">h</span><span class="special">&gt;</span></code> is no longer included.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fix <a href="https://svn.boost.org/trac/boost/ticket/4065">#4065</a>,
+                  Boost Filesystem lexicographic path comparison inconsistent. This
+                  required multiple source code bug fixes and code cleanup, correcting
+                  problems not related to lexicographical issues.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Add class path member function compare for consistency with std::string.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Tighten <code><span class="identifier">BOOST_FILESYSTEM_DYN_LINK</span></code>
+                  and <code><span class="identifier">BOOST_FILESYSTEM_STATIC_LINK</span></code>
+                  logic in <code><span class="identifier">filesystem</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                  so that one or the other is always defined, and both being defined
+                  is a <code><span class="preprocessor">#error</span></code>.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fix <a href="https://svn.boost.org/trac/boost/ticket/6690">#6690</a>
+                  and <a href="https://svn.boost.org/trac/boost/ticket/6737">#6737</a>,
+                  resolving static linking related problems with VC++ 8 through 11.
+                  Note that this fix may reintroduce codecvt thread safety problems
+                  <a href="https://svn.boost.org/trac/boost/ticket/4889">#4889</a>,
+                  <a href="https://svn.boost.org/trac/boost/ticket/6320">#6320</a>,
+                  for these compilers if static linking is used.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Add <code><span class="identifier">path</span><span class="special">::</span><span class="keyword">operator</span><span class="special">+=</span></code>
+                  and concat functions to tack on things like suffixes or numbers.
+                  Suggested by Ed Smith-Rowland and others.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fix <a href="https://svn.boost.org/trac/boost/ticket/6809">#6809</a>,
+                  Implementation of <code><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">rename</span><span class="special">()</span></code> method for MS Windows is wrong,
+                  by adding <code><span class="identifier">MOVEFILE_COPY_ALLOWED</span></code>
+                  to deal with renames across drives, volumes, file systems. Fix
+                  has no effect on non-Windows systems.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fix <a href="https://svn.boost.org/trac/boost/ticket/6819">#6819</a>,
+                  A path operand with a source that was a one character array was
+                  treated as empty, even if it wasn't empty. Such arrays can occur
+                  in unions or in code using C variable length array idioms.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fix <a href="https://svn.boost.org/trac/boost/ticket/6932">#6932</a>,
+                  create_directories throws exception even if <code><span class="identifier">error_code</span></code>
+                  is specified.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/foreach/">Foreach</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Revert fix for <a href="https://svn.boost.org/trac/boost/ticket/6131">#6131</a>
+                  which caused more harm than good.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/geometry/">Geometry</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Fixed Bugs:
+                  <ul>
+                    <li>
+                      <div>
+                        the return type of comparable projected point strategy for
+                        integer points was wrong (integer), fixed
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        several robustness issues in intersection of segments and
+                        polygons, fixed
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        invalid intersection output is filtered out
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        disjoint for multi_polygon's might incorrectly return true,
+                        fixed
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <div>
+                  Solved tickets
+                  <ul>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6585">6585</a>
+                        patch for alternative syntax multipoint, applied
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6584">6584</a>
+                        patch for bug in distance, applied
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/5730">5730</a>
+                        same issue as 6584, fixed
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6166">6166</a>
+                        patch for missing transformation, applied
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6696">6696</a>
+                        invalid intersection output, was (by chance) already fixed
+                        in Trunk before reported
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <div>
+                  Additional functionality
+                  <ul>
+                    <li>
+                      <div>
+                        added algorithm &quot;touches&quot; (OGC SF compliant) for
+                        *polygon/*polygon
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/graph/">Graph</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Fixed Bugs:
+                  <ul>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/4622">#4622</a>
+                        clear_vertex on a vertex with a self-loop can cause a segmentation
+                        fault.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6033">#6033</a>
+                        Lowpoint map calculated by biconnected_components(...) is
+                        sometimes wrong.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6242">#6242</a>
+                        isomorphism doesn't reset mapping.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6435">#6435</a>
+                        cube_topology documentation should say 3D, not 2D.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6520">#6520</a>
+                        small_world_1_70_6_0p02.png is broken in documentation of
+                        graph_parallel.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6564">#6564</a>
+                        BGL copy constructor for subgraph does not track local vertices/edges.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6573">#6573</a>
+                        BGL: boost::isomorphism routine fails with large graphs.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6583">#6583</a>
+                        Dijkstra Visitor Concept docs probably show wrong type for
+                        variable.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6647">#6647</a>
+                        BGL strong_components do not compile on MSVC 8.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6656">#6656</a>
+                        Dependent type in subgraph used without typename.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6707">#6707</a>
+                        is_straight_line_drawing.hpp missing #include &lt;map&gt;.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6708">#6708</a>
+                        Make bool boost::intersects() in is_straight_line_drawing.hpp
+                        inline?
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6739">#6739</a>
+                        Cannot use write_graphviz_dp with a constified subgraph.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6858">#6858</a>
+                        boost::get() calls wrongly resolved by g++.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6892">#6892</a>
+                        VertexIndexGraph concept not required for bron_kerbosch_all_cliques().
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        Other bugs and warnings not in Trac.
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/functional/hash/">Hash</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Support <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">array</span></code> and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">tuple</span></code>
+                  when available (<a href="https://svn.boost.org/trac/boost/ticket/6806">#6806</a>).
+                </div>
+              </li>
+              <li>
+                <div>
+                  Avoid gcc's <code><span class="special">-</span><span class="identifier">Wfloat</span><span class="special">-</span><span class="identifier">equal</span></code>
+                  warning (<a href="https://svn.boost.org/trac/boost/ticket/6771">#6771</a>).
+                </div>
+              </li>
+              <li>
+                <div>
+                  Add deprecation warning to the long deprecated <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">functional</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">container_fwd</span><span class="special">.</span><span class="identifier">hpp</span></code>.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/iostreams/">Iostreams</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Improved gzip support (<a href="https://svn.boost.org/trac/boost/ticket/5908">#5908</a>).
+                </div>
+              </li>
+              <li>
+                <div>
+                  Update tests for latest Boost.Filesystem and Boost.Test.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fix some documentation errors (<a href="https://svn.boost.org/trac/boost/ticket/6530">#6530</a>,
+                  <a href="https://svn.boost.org/trac/boost/ticket/6650">#6650</a>).
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/iterator/">Iterator</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Fixed:
+                  <ul>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/5127">#5127</a>
+                        Incorrect result_of usage in transform_iterator
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/5697">#5697</a>
+                        iterator_facade::operator-&gt; is broken for proxy references
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/multi_array/">MultiArray</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Concepts bug fix and Workaround for Visual Studio 2010 (<a href="https://svn.boost.org/trac/boost/ticket/4874">#4874</a>)
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fix to assert.cpp test case (<a href="https://svn.boost.org/trac/boost/changeset/78498">Patch</a>)
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/conversion/lexical_cast.htm">Lexical cast</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bad_lexical_cast</span></code> exception is
+                  now globaly visible and can be catched even if code is compiled
+                  with -fvisibility=hidden
+                </div>
+              </li>
+              <li>
+                <div>
+                  Now it is possible to compile and use library with disabled exceptions
+                  <a href="https://svn.boost.org/trac/boost/ticket/5800">#5800</a>
+                </div>
+              </li>
+              <li>
+                <div>
+                  Better performance, less memory usage and bugfixes for <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">iterator_range</span><span class="special">&lt;</span><span class="identifier">character_type</span><span class="special">*&gt;</span></code>
+                  conversions
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fixed bugs and warnings: <a href="https://svn.boost.org/trac/boost/ticket/6645">#6645</a>,
+                  <a href="https://svn.boost.org/trac/boost/ticket/6562">#6562</a>,
+                  <a href="https://svn.boost.org/trac/boost/ticket/6812">#6812</a>,
+                  <a href="https://svn.boost.org/trac/boost/ticket/6852">#6852</a>,
+                  <a href="https://svn.boost.org/trac/boost/ticket/6717">#6717</a>,
+                  <a href="https://svn.boost.org/trac/boost/ticket/6670">#6770</a>,
+                  <a href="https://svn.boost.org/trac/boost/ticket/6504">#6504</a>.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/locale/">Locale</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Fixed build issues with STLPort library
+                </div>
+              </li>
+              <li>
+                <div>
+                  Boost.System is now required depenency
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fixed bugs <a href="https://svn.boost.org/trac/boost/ticket/6635">#6635</a>,
+                  <a href="https://svn.boost.org/trac/boost/ticket/6833">#6833</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/math/">Math</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Promoted math constants to be 1st class citizens, including convenient
+                  access to the most widely used built-in float, double, long double
+                  via three namespaces.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Added the Owen's T function and Skew Normal distribution written
+                  by Benjamin Sobotta.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Added Hankel functions.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Corrected issue <a href="https://svn.boost.org/trac/boost/ticket/6627">#6627
+                  nonfinite_num_put formatting of 0.0 is incorrect</a> based
+                  on a patch submitted by K R Walker.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Changed constant initialization mechanism so that it is thread
+                  safe even for user-defined types, also so that user defined types
+                  get the full precision of the constant, even when <code><span class="keyword">long</span> <span class="keyword">double</span></code>
+                  does not. So for example 128-bit rational approximations will work
+                  with UDT's and do the right thing, even though <code><span class="keyword">long</span>
+                  <span class="keyword">double</span></code> may be only 64 or
+                  80 bits.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fixed issue in <code><span class="identifier">bessel_jy</span></code>
+                  which causes Y[sub 8.5](4[pi]) to yield a NaN.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/msm/">MSM</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  eUML : better syntax for front-ends defined with eUML as transition
+                  table only. Caution: Breaking Change!<a href="http://www.boost.org/doc/libs/1_50_0/libs/msm/doc/HTML/ch03s04.html#eUML-composite-table">http://www.boost.org/doc/libs/1_50_0/libs/msm/doc/HTML/ch03s04.html#eUML-composite-table</a>
+                </div>
+              </li>
+              <li>
+                <div>
+                  Bugfix: graph building was only working if initial_state defined
+                  as a sequence.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Bugfix: flags defined for a Terminate or Interrupt state do not
+                  break the blocking function of these states any more.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Bugfix: multiple deferred events from several regions were not
+                  working in every case.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Bugfix: visitor was passed by value to submachines.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Bugfix: no_transition was not called for submachines who send an
+                  event to themselves.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fixed warnings with gcc.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/program_options/">Program Options</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Improved error reporting (<a href="https://svn.boost.org/trac/boost/changeset/77827">Patch
+                  from Leo Goodstadt</a>).
+                </div>
+              </li>
+              <li>
+                <div>
+                  Support for customizing name of option's value in help messages
+                  (<a href="https://svn.boost.org/trac/boost/ticket/4781">#4781</a>)
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fixed compilation with gcc 4.7 (<a href="https://svn.boost.org/trac/boost/ticket/6790">#6790</a>).
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/property_map/">PropertyMap</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Fixed Bugs:
+                  <ul>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6539">#6539</a>
+                        the return type of get() is not documented correctly.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6721">#6721</a>
+                        property_map_traits documentation does not mention reference.
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/proto/">Proto</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Use <code><span class="identifier">decltype</span></code>-based
+                  <code><span class="identifier">result_of</span></code> if and
+                  only if the compiler implements N3276.
+                </div>
+              </li>
+              <li>
+                <div>
+                  For C++11, force parameter to <code><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">eval_if_c</span></code>
+                  and <code><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">if_c</span></code> to be <code><span class="keyword">bool</span></code>.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Disable <tt>'__forceinline not inlined'</tt> warning
+                  on msvc.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/ratio/">Ratio</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Fixed Bugs:
+                  <ul>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6498">#6498</a>
+                        boost::ratio won't compile with default settings.
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/scope_exit/">ScopeExit</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  New Features:
+                  <ul>
+                    <li>
+                      <div>
+                        Use variadic macros to specify captures as commas-separated
+                        lists (but kept preprocessor sequence syntax for backward
+                        compatibility).
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        Capture the object in scope using <code><span class="identifier">this_</span></code>.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        Support empty captures using <code><span class="keyword">void</span></code>.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        Implicit lambda-like captures using <code><span class="identifier">BOOST_SCOPE_EXIT_ALL</span></code>
+                        on compilers that support C++11 lambda functions.
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/thread/">Thread</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  New Features:
+                  <ul>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/1850">#1850</a>
+                        Request for unlock_guard to compliment lock_guard.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/2637">#2637</a>
+                        Request for shared_mutex duration timed_lock and timed_lock_shared.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/2741">#2741</a>
+                        Proposal to manage portable and non portable thread attributes.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/3567">#3567</a>
+                        Request for shared_lock_guard.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6194">#6194</a>
+                        Adapt to Boost.Move.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6195">#6195</a>
+                        c++11 compliance: Provide the standard time related interface
+                        using Boost.Chrono.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6217">#6217</a>
+                        Enhance Boost.Thread shared mutex interface following Howard
+                        Hinnant proposal.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6224">#6224</a>
+                        c++11 compliance: Add the use of standard noexcept on compilers
+                        supporting them.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6226">#6226</a>
+                        c++11 compliance: Add explicit bool conversion from locks.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6228">#6228</a>
+                        Add promise constructor with allocator following the standard
+                        c++11.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6230">#6230</a>
+                        c++11 compliance: Follows the exception reporting mechanism
+                        as defined in the c++11.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6266">#6266</a>
+                        Breaking change: thread destructor should call terminate
+                        if joinable.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6269">#6269</a>
+                        Breaking change: thread move assignment should call terminate
+                        if joinable.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6272">#6272</a>
+                        c++11 compliance: Add thread::id hash specialization.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6273">#6273</a>
+                        c++11 compliance: Add cv_status enum class and use it on
+                        the conditions wait functions.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6231">#6231</a>
+                        Add BasicLockable requirements in the documentation to follow
+                        c++11.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6342">#6342</a>
+                        c++11 compliance: Adapt the one_flag to the c++11 interface.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6671">#6671</a>
+                        upgrade_lock: missing mutex and release functions.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6672">#6672</a>
+                        upgrade_lock:: missing constructors from time related types.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6675">#6675</a>
+                        upgrade_lock:: missing non-member swap.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        Added missing packaged_task::result_type and packaged_task::
+                        constructor with allocator.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        Added packaged_task::reset()
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fixed Bugs:
+                  <ul>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/2575">#2575</a>
+                        Bug- Boost 1.36.0 on Itanium platform.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/4345">#4345</a>
+                        thread::id and joining problem with cascade of threads.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/4921">#4921</a>
+                        BOOST_THREAD_USE_DLL and BOOST_THREAD_USE_LIB are crucial
+                        and need to be documented.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/5013">#5013</a>
+                        documentation: boost::thread: pthreas_exit causes terminate().
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/5173">#5173</a>
+                        boost::this_thread::get_id is very slow.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/5351">#5351</a>
+                        interrupt a future get boost::unknown_exception.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/5516">#5516</a>
+                        Upgrade lock is not acquired when previous upgrade lock releases
+                        if another read lock is present.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/5990">#5990</a>
+                        shared_future&lt;T&gt;::get() has wrong return type.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6174">#6174</a>
+                        packaged_task doesn't correctly handle moving results.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6222">#6222</a>
+                        Compile error with SunStudio: unique_future move.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6673">#6673</a>
+                        shared_lock: move assign doesn't works with c++11.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <a href="https://svn.boost.org/trac/boost/ticket/6674">#6674</a>
+                        shared_mutex: try_lock_upgrade_until doesn't works.
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        Fix issue signaled on the ML with task_object(task_object
+                        const&amp;) in presence of task_object(task_object&amp;&amp;)
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/unordered/">Unordered</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Fix equality for <code><span class="identifier">unordered_multiset</span></code>
+                  and <code><span class="identifier">unordered_multimap</span></code>.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Implement <code><span class="identifier">reserve</span></code>
+                  (<a href="https://svn.boost.org/trac/boost/ticket/6857">#6857</a>).
+                </div>
+              </li>
+              <li>
+                <div>
+                  Avoid gcc's <code><span class="special">-</span><span class="identifier">Wfloat</span><span class="special">-</span><span class="identifier">equal</span></code>
+                  and <code><span class="special">-</span><span class="identifier">Wshadow</span></code>
+                  warnings (<a href="https://svn.boost.org/trac/boost/ticket/6190">#6190</a>,
+                  <a href="https://svn.boost.org/trac/boost/ticket/6771">#6771</a>).
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fix namespace issue with bcp (<a href="https://svn.boost.org/trac/boost/ticket/6905">#6905</a>).
+                </div>
+              </li>
+              <li>
+                <div>
+                  Fix Sun workarounds (<a href="https://svn.boost.org/trac/boost/ticket/6784">#6784</a>).
+                </div>
+              </li>
+              <li>
+                <div>
+                  Some internal changes to bucket allocation.
+                </div>
+              </li>
+              <li>
+                <div>
+                  See the <a href="/doc/html/unordered/changes.html#unordered.changes.boost_1_50_0">change
+                  log</a> for full details.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/wave/index.html">Wave</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Wave V2.3.2, see the <a href="/libs/wave/ChangeLog">Changelog</a>
+                  for details.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="library"><a href="/libs/xpressive/">xpressive</a>:</span>
+            <ul>
+              <li>
+                <div>
+                  Remove very ugly <code><span class="identifier">lexical_cast</span></code>
+                  hack with a slightly less ugly one.
+                </div>
+              </li>
+              <li>
+                <div>
+                  Replace MPL assert with static assert since it's problematic in
+                  C++11, fixes <a href="https://svn.boost.org/trac/boost/ticket/6846">#6846</a>.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div id="version_1_50_0.patches.compilers_tested">
+      <h3><span class="link">Compilers Tested</span></h3>
+      <p>
+        Boost's primary test compilers are:
+      </p>
+      <ul>
+        <li>
+          <div>
+            Linux:
+            <ul>
+              <li>
+                <div>
+                  Intel: 11.1
+                </div>
+              </li>
+              <li>
+                <div>
+                  LLVM Clang 2.8
+                </div>
+              </li>
+              <li>
+                <div>
+                  GCC: 4.2.4, 4.3.4, 4.4.3, 4.5.3, 4.6.2
+                </div>
+              </li>
+              <li>
+                <div>
+                  GCC, C++0x mode: 4.3.4, 4.4.3, 4.5.3, 4.6.2
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            OS X:
+            <ul>
+              <li>
+                <div>
+                  Intel: 11.1
+                </div>
+              </li>
+              <li>
+                <div>
+                  GCC: 4.4.4
+                </div>
+              </li>
+              <li>
+                <div>
+                  GCC, C++0x mode: 4.4.4
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            Windows:
+            <ul>
+              <li>
+                <div>
+                  Visual C++ 8.0, 9.0, 10.0
+                </div>
+              </li>
+              <li>
+                <div>
+                  GCC, mingw: 4.4.0, 4.4.7, 4.5.4, 4.6.1, 4.7.0
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            FreeBSD:
+            <ul>
+              <li>
+                <div>
+                  GCC 4.2.1, 32 and 64 bit
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            QNX:
+            <ul>
+              <li>
+                <div>
+                  QCC, C++0x mode: 4.4.0, 4.4.7, 4.5.4, 4.6.3, 4.7.0
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+      <p>
+        Boost's additional test compilers include:
+      </p>
+      <ul>
+        <li>
+          <div>
+            Linux:
+            <ul>
+              <li>
+                <div>
+                  Clang from subversion
+                </div>
+              </li>
+              <li>
+                <div>
+                  GCC: 4.2.4, 4.3.4, 4.4.4, 4.5.3, 4.6.2
+                </div>
+              </li>
+              <li>
+                <div>
+                  GCC, C++0x mode: 4.3.4, 4.4.4, 4.5.3, 4.6.2
+                </div>
+              </li>
+              <li>
+                <div>
+                  pgCC: 11.9
+                </div>
+              </li>
+              <li>
+                <div>
+                  Intel: 10.1, 11.1, 12.0, 12.1
+                </div>
+              </li>
+              <li>
+                <div>
+                  Visual Age 10.1
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            OS X:
+            <ul>
+              <li>
+                <div>
+                  Clang from subversion
+                </div>
+              </li>
+              <li>
+                <div>
+                  Intel 11.1, 12.0
+                </div>
+              </li>
+              <li>
+                <div>
+                  GCC: 4.4.4
+                </div>
+              </li>
+              <li>
+                <div>
+                  GCC, C++0x mode: 4.4.4
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            Windows:
+            <ul>
+              <li>
+                <div>
+                  Visual C++ 8.0, 10.0
+                </div>
+              </li>
+              <li>
+                <div>
+                  Visual C++ with STLport: 9.0
+                </div>
+              </li>
+              <li>
+                <div>
+                  Visual C++, Windows Mobile 5, with STLport: 9.0
+                </div>
+              </li>
+              <li>
+                <div>
+                  GCC, mingw: 4.4.0, 4.4.7, 4.5.2, 4.5.4, 4.6.4, 4.7.0
+                </div>
+              </li>
+              <li>
+                <div>
+                  GCC, C++0x mode, mingw: 4.5.2
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            AIX:
+            <ul>
+              <li>
+                <div>
+                  IBM XL C/C++ Enterprise Edition, V12.1.0.0
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            FreeBSD:
+            <ul>
+              <li>
+                <div>
+                  GCC 4.2.1, 32 and 64 bit
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div>
+            Solaris:
+            <ul>
+              <li>
+                <div>
+                  Sun 5.10
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div id="version_1_50_0.patches.acknowledgements">
+      <h3><span class="link">Acknowledgements</span></h3>
+      <p>
+        <a href="/users/people/beman_dawes.html">Beman Dawes</a>, Eric Niebler,
+        <a href="/users/people/rene_rivera.html">Rene Rivera</a>, Daniel James,
+        Vladimir Prus and Marshall Clow managed this release.
+      </p>
+    </div>
   </div>
 </div>              </div>
             </div>
