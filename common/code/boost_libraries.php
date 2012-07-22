@@ -12,12 +12,6 @@ class boost_libraries
 {
     var $categories = array();
     var $db = array();
-    var $build_values = array(
-        'header-only' => 'Header only',
-        'autolink' => 'Automatic linking',
-        'autolink-dependency' => 'Automatic linking due to dependency',
-        'build' => 'Separately built'
-    );
     
     function boost_libraries($xml_file)
     {
@@ -83,24 +77,6 @@ class boost_libraries
                             exit(0);
                         }
                         $lib[$val['tag']] = ($value == 'true');
-                    }
-                    break;
-                    case 'build':
-                    {
-                        $value = isset($val['value']) ? trim($val['value']) : '';
-                        if(!isset($this->build_values[$value])) {
-                            echo 'Invalid value for build: ', htmlentities($value), "\n";
-                            exit(0);
-                        }
-                        $lib['build'] = $value;
-
-                        // Also set the old style fields for the filters.
-                        if ($value == 'autolink-dependency') {
-                            $lib['autolink'] = true;
-                        }
-                        else if ($value != 'build') {
-                            $lib[$value] = true;
-                        }
                     }
                     break;
                     case 'category':

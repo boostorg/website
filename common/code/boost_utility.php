@@ -24,9 +24,6 @@ function _field_cmp_($r,$a,$b)
 function _field_cmp_authors_($a,$b)
 { return _field_cmp_(strcmp($a['authors'],$b['authors']),$a,$b); }
 
-function _field_cmp_autolink_($a,$b)
-{ return _field_cmp_(_field_cmp_less_($a['autolink'],$b['autolink']),$a,$b); }
-
 function _field_cmp_boost_version_($a,$b)
 {
     return $a['boost-version']->compare($b['boost-version']);
@@ -40,9 +37,6 @@ function _field_cmp_documentation_($a,$b)
 
 function _field_cmp_guid_($a,$b)
 { return strcmp($a['guid'],$b['guid']); }
-
-function _field_cmp_header_only_($a,$b)
-{ return _field_cmp_(_field_cmp_less_($a['header-only'],$b['header-only']),$a,$b); }
 
 function _field_cmp_key_($a,$b)
 { return strcmp($a['key'],$b['key']); }

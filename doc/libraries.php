@@ -34,15 +34,13 @@ $view_fields = Array(
 $filter_fields = Array(
     'std-proposal' => 'Standard Proposals',
     'std-tr1' => 'TR1 libraries',
-    'header-only' => 'Header Only Libraries',
-    'autolink' => 'Automatic Linking');
+    'header-only' => 'old',
+    'autolink' => 'old');
 $sort_fields =  Array(
     'name' => 'Name',
     'boost-version' => 'First Release',
     'std-proposal' => 'STD Proposal',
     'std-tr1' => 'STD::TR1',
-    'header-only' => 'Header Only Use',
-    'autolink' => 'Automatic Linking',
     'key' => 'Key'
 );
 $display_sort_fields = Array(
@@ -61,6 +59,9 @@ if(strpos($view_value, 'filtered_') === 0) {
     $filter_value = substr($view_value, strlen('filtered_'));
     if(!isset($filter_fields[$filter_value])) {
         echo 'Invalid filter field.'; exit(0);
+    }
+    if ($filter_fields[$filter_value] == 'old') {
+        echo 'Filter field no longer supported.'; exit(0);
     }
 }
 else if(strpos($view_value, 'category_') === 0) {
@@ -137,13 +138,6 @@ function libstandard($lib)
   if ($lib['std-proposal']) { $p[] = 'Proposed'; }
   if ($lib['std-tr1']) { $p[] = 'TR1'; }
   print ($p ? implode(', ',$p) : '&nbsp;');
-}
-function libbuildlink($lib, $build_values)
-{
-  if (!empty($lib['build']))
-    print $build_values[$lib['build']];
-  else
-    print '&nbsp;';
 }
 function libcategories($lib, $categories)
 {
@@ -272,10 +266,6 @@ function category_link($name, $category) {
                     <dt>Standard</dt>
 
                     <dd><?php libstandard($lib); ?></dd>
-
-                    <dt>Build&nbsp;&amp;&nbsp;Link</dt>
-
-                    <dd><?php libbuildlink($lib, $libs->build_values); ?></dd>
 
                     <dt>Categories</dt>
 
