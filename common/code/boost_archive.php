@@ -135,18 +135,18 @@ function display_from_archive(
     // Choose filter to use
 
     $info_map = array_merge($content_map, array(
-        array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh|xml|toyxml)$@i','text','text/plain'),
-        array('@.*@','@[.](qbk|quickbook)$@i','qbk','text/plain'),
-        array('@.*@','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
-        array('@.*@','@[.]png$@i','raw','image/png'),
-        array('@.*@','@[.]gif$@i','raw','image/gif'),
-        array('@.*@','@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
-        array('@.*@','@[.]css$@i','raw','text/css'),
-        array('@.*@','@[.]js$@i','raw','application/x-javascript'),
-        array('@.*@','@[.]pdf$@i','raw','application/pdf'),
-        array('@.*@','@[.](html|htm)$@i','raw','text/html'),
-        array('@.*@','@(/|^)(Jamroot|Jamfile|ChangeLog|configure)$@i','text','text/plain'),
-        array('@.*@','@[.]dtd$@i','raw','application/xml-dtd'),
+        array('@[.](txt|py|rst|jam|v2|bat|sh|xml|toyxml)$@i','text','text/plain'),
+        array('@[.](qbk|quickbook)$@i','qbk','text/plain'),
+        array('@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
+        array('@[.]png$@i','raw','image/png'),
+        array('@[.]gif$@i','raw','image/gif'),
+        array('@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
+        array('@[.]css$@i','raw','text/css'),
+        array('@[.]js$@i','raw','application/x-javascript'),
+        array('@[.]pdf$@i','raw','application/pdf'),
+        array('@[.](html|htm)$@i','raw','text/html'),
+        array('@(/|^)(Jamroot|Jamfile|ChangeLog|configure)$@i','text','text/plain'),
+        array('@[.]dtd$@i','raw','application/xml-dtd'),
         ));
 
     $preprocess = null;
@@ -155,11 +155,11 @@ function display_from_archive(
 
     foreach ($info_map as $i)
     {
-        if (preg_match($i[1],$params['key']))
+        if (preg_match($i[0],$params['key']))
         {
-            $extractor = $i[2];
-            $type = $i[3];
-            $preprocess = isset($i[4]) ? $i[4] : NULL;
+            $extractor = $i[1];
+            $type = $i[2];
+            $preprocess = isset($i[3]) ? $i[3] : NULL;
             break;
         }
     }

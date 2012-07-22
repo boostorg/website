@@ -3,7 +3,7 @@ require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
 display_from_archive(
   array(
-  //~ array(version-regex,path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type),
+  //~ array(path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type),
   ),
   array(
     'pattern' => '/^[\/]([^\/]+)[\/](.*)$/',
