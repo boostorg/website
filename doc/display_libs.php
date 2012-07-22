@@ -54,11 +54,8 @@ EOS;
     return str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
-$location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],true,false);
-$compare_version = BoostVersion::from($location['version'])->compare(BoostVersion::current());
-
 display_from_archive(
-  $location,
+  get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],true,false),
   array(
   //~ special cases that can't be processed at all (some redirects)
   array('@.*@','@^libs/gil/doc/.*(html|htm)$@i','raw','text/html'),
@@ -90,6 +87,5 @@ display_from_archive(
   array('@.*@','@^boost/.*$@i','cpp','text/plain')
   ),
   null,
-  $compare_version === -1 ? "+1 year" :
-    ($compare_version === 0 ? "+1 week" : "+1 day")
+  array('use_http_expire_date' => true)
 );

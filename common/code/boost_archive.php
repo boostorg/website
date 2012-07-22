@@ -48,13 +48,25 @@ function display_from_archive(
     $params,
     $content_map = array(),
     $override_extractor = null,
-    $expires = null)
+    $extra_settings = array())
 {
     $params['template'] = dirname(__FILE__)."/template.php";
     $params['title'] = NULL;
     $params['charset'] = NULL;
     $params['content'] = NULL;
     
+    // Calculate expiry date if requested.
+
+    $expires = null;
+    if (isset($extra_settings['use_http_expire_date']) &&
+        $extra_settings['use_http_expire_date'])
+    {
+        $compare_version = BoostVersion::from($params['version'])->
+            compare(BoostVersion::current());
+        $expires = $compare_version === -1 ? "+1 year" :
+            ($compare_version === 0 ? "+1 week" : "+1 day");
+    }
+
     // Check file exists.
 
     if ($params['zipfile'])
