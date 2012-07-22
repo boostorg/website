@@ -33,7 +33,7 @@ for x in downloads:
 
 emit('</div>\n')
 emit('<p><a href="/users/download/">More Downloads...</a>')
-emit('(<a href="feed/downloads.rss">RSS</a>)</p>\n')
+emit(' (<a href="feed/downloads.rss">RSS</a>)</p>\n')
 emit('</div>\n\n')
 
 emit('<div class="directory-item" id="important-news">\n')
