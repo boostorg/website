@@ -50,6 +50,28 @@ Release status:
   * Added range support for the rest of the search algorithms.
   * `unhex` now uses Boost.Exception to signal bad input.
 
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Fixed an incompatibility between `ip::tcp::iostream` and C++11
+    ([@https://svn.boost.org/trac/boost/ticket/7162 #7162]).
+  * Decorated GCC attribute names with underscores to prevent interaction
+    with user-defined macros
+    ([@https://svn.boost.org/trac/boost/ticket/6415 #6415]).
+  * Added missing `#include <cctype>`, needed for some versions of MinGW.
+  * Changed to use [^gcc]'s atomic builtins on ARM CPUs, when available
+    ([@https://svn.boost.org/trac/boost/ticket/7140 #7140]).
+  * Changed strand destruction to be a no-op, to allow strand objects to be
+    destroyed after their associated `io_service` has been destroyed.
+  * Added support for some newer versions of glibc which provide the
+    `epoll_create1()` function but always fail with `ENOSYS`
+    ([@https://svn.boost.org/trac/boost/ticket/7012 #7012]).
+  * Changed the SSL implementation to throw an exception if SSL engine
+    initialisation fails
+    ([@https://svn.boost.org/trac/boost/ticket/6303 #6303]).
+  * Fixed another regression in `buffered_write_stream`
+    ([@https://svn.boost.org/trac/boost/ticket/6310 #6310]).
+  * Implemented various minor performance improvements, primarily targeted at
+    Linux x86 and x86-64 platforms.
+
 * [phrase library..[@/libs/config/ Config]:]
   * Deprecated a whole bunch of macros that were c++11 specific, but not
     named to show that they were c++11 specific. Made new macros with
