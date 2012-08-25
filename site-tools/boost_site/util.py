@@ -16,7 +16,7 @@ def fragment_to_string(fragment):
     http://bugs.python.org/issue9883
     """
     x = ''.join(x.toxml('utf-8').decode('utf-8') for x in fragment.childNodes)
-    x = re.sub(r' +$', '', x, flags = re.M)
+    x = re.compile(r' +$', flags = re.M).sub('', x)
     return x
 
 def base_links(node, base_link):
