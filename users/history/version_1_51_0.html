@@ -227,6 +227,42 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/libs/geometry/">Geometry</a>:</span>
+          <ul>
+            <li>
+              <div>
+                points accessed through a pointer (e.g. in a linestring) should now
+                be specialized without the pointer. In previous versions a type
+                <code><span class="identifier">my_point</span></code> used like
+                <code><span class="identifier">linestring</span><span class="special">&lt;</span><span class="identifier">my_point</span><span class="special">*&gt;</span></code>
+                had to be specalized like: <code><span class="keyword">template</span><span class="special">&lt;&gt;</span> <span class="keyword">struct</span>
+                <span class="identifier">tag</span><span class="special">&lt;</span><span class="identifier">my_point</span><span class="special">*&gt;</span></code>.
+                Now the library itself removes the pointer before calling the traits
+                class, so now it should be like: <code><span class="keyword">template</span><span class="special">&lt;&gt;</span> <span class="keyword">struct</span>
+                <span class="identifier">tag</span><span class="special">&lt;</span><span class="identifier">my_point</span><span class="special">&gt;</span></code>
+              </div>
+            </li>
+            <li>
+              <div>
+                intersection was sometimes wrong for integer points, fixed
+              </div>
+            </li>
+            <li>
+              <div>
+                documentation, order of parameters in simplify was wrong, fixed
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/7030">7030</a>
+                spherical distance, fixed (by patch of Karsten Ahnert)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/libs/graph/">Graph</a>:</span>
           <ul>
             <li>

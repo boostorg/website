@@ -2,7 +2,7 @@
     [quickbook 1.5]
     [source-mode c++]
     [purpose New Libraries: Context.
-    Updated Libraries: Algorithm, Asio, Config, Chrono, Graph, Hash,
+    Updated Libraries: Algorithm, Asio, Config, Chrono, Geometry, Graph, Hash,
     Lexical Cast, Math, MSM, Proto, Ratio, Regex, Thread, Unordered,
     Wave]
     [authors [Clow, Marshall]]
@@ -75,6 +75,18 @@
     clock_string<thread_clock>.
   * [@https://svn.boost.org/trac/boost/ticket/7081 #7081] WinError.h
     capitalization in boost/detail/win/basic_types.hpp.
+
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * points accessed through a pointer (e.g. in a linestring) should now be
+    specialized without the pointer. In previous versions a type `my_point`
+    used like `linestring<my_point*>` had to be specalized like:
+    `template<> struct tag<my_point*>`.
+    Now the library itself removes the pointer before calling the traits class,
+    so now it should be like: `template<> struct tag<my_point>`
+  * intersection was sometimes wrong for integer points, fixed
+  * documentation, order of parameters in simplify was wrong, fixed
+  * [@https://svn.boost.org/trac/boost/ticket/7030 7030] spherical distance,
+    fixed (by patch of Karsten Ahnert)
 
 * [phrase library..[@/libs/graph/ Graph]:]
   * Refactored support for internal and bundled properties in
