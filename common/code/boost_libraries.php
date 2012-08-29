@@ -4,18 +4,14 @@
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
-require_once(dirname(__FILE__) . '/boost.php');
+
+require_once(dirname(__FILE__) . '/boost_utility.php');
+require_once(dirname(__FILE__) . '/boost_version.php');
 
 class boost_libraries
 {
     var $categories = array();
     var $db = array();
-    var $build_values = array(
-        'header-only' => 'Header only',
-        'autolink' => 'Automatic linking',
-        'autolink-dependency' => 'Automatic linking due to dependency',
-        'build' => 'Separately built'
-    );
     
     function boost_libraries($xml_file)
     {
@@ -65,6 +61,12 @@ class boost_libraries
                         else { $lib[$val['tag']] = ''; }
                     }
                     break;
+                    case 'boost-version':
+                    {
+                        if (isset($val['value'])) { $lib[$val['tag']] = BoostVersion::from($val['value']); }
+                        else { $lib[$val['tag']] = ''; }
+                    }
+                    break;
                     case 'std-proposal':
                     case 'std-tr1':
                     {
@@ -75,24 +77,6 @@ class boost_libraries
                             exit(0);
                         }
                         $lib[$val['tag']] = ($value == 'true');
-                    }
-                    break;
-                    case 'build':
-                    {
-                        $value = isset($val['value']) ? trim($val['value']) : '';
-                        if(!isset($this->build_values[$value])) {
-                            echo 'Invalid value for build: ', htmlentities($value), "\n";
-                            exit(0);
-                        }
-                        $lib['build'] = $value;
-
-                        // Also set the old style fields for the filters.
-                        if ($value == 'autolink-dependency') {
-                            $lib['autolink'] = true;
-                        }
-                        else if ($value != 'build') {
-                            $lib[$value] = true;
-                        }
                     }
                     break;
                     case 'category':
@@ -118,15 +102,13 @@ class boost_libraries
     
     function sort_by($field)
     {
-        $f = '_field_cmp_'.strtolower(str_replace('-','_',$field)).'_';
-        uasort($this->db, $f);
+        uasort($this->db, sort_by_field($field));
     }
 
     function get($sort = null, $filter = null) {
         $libs = $filter ? array_filter($this->db, $filter) : $this->db;
         if($sort) {
-            $f = '_field_cmp_'.strtolower(str_replace('-','_',$sort)).'_';
-            uasort($libs, $f);
+            uasort($libs, sort_by_field($sort));
         }
         return $libs;
     }

@@ -18,32 +18,6 @@ if (strncmp($_SERVER['REQUEST_URI'], '/doc/libs/1_', 12) == 0  &&
 
 require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
 
-function boost_compare_version($version)
-{
-    if ($version && preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$version,$vinfo))
-    {
-        array_shift($vinfo);
-
-        global $boost_current_version;
-        $v = $boost_current_version[0];
-        $r = $boost_current_version[1];
-        $p = $boost_current_version[2];
-
-        return
-          $v < $vinfo[0] ? 1 :
-          ($v > $vinfo[0] ? -1 :
-          ($r < $vinfo[1] ? 1 :
-          ($r > $vinfo[1] ? -1 :
-          ($p < $vinfo[2] ? 1 :
-          ($p > $vinfo[2] ? -1
-            : 0)))));
-    }
-    else
-    {
-        return FALSE;
-    }
-}
-
 function add_spirit_analytics($content) {
     $server = $_SERVER['HTTP_HOST'];
     
@@ -80,56 +54,39 @@ EOS;
     return str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
-$location = get_archive_location('@^[/]([^/]+)[/](.*)$@',$_SERVER["PATH_INFO"],true,false);
-$beta_site = strpos($_SERVER['HTTP_HOST'], 'beta') !== FALSE ||
-    strpos($_SERVER['HTTP_HOST'], 'localhost') !== FALSE;
-$beta_docs = strpos($location['version'], 'beta') !== FALSE ||
-    strpos($location['version'], 'snapshot') !== FALSE;
-
-$compare_version = boost_compare_version($location['version']);
-/*
-if (!$beta_docs && $compare_version === 1) {
-    file_not_found($location['file'],
-        "Documentation for this version has not been uploaded yet. ".
-        "Documentation is only uploaded when it's fully released, ".
-        "you can see the documentation for a beta version or snapshot in the download.");
-    return;
-}
- */
-
 display_from_archive(
-  $location,
   array(
   //~ special cases that can't be processed at all (some redirects)
-  array('@.*@','@^libs/gil/doc/.*(html|htm)$@i','raw','text/html'),
-  array('@.*@','@^libs/preprocessor/doc/.*(html|htm)$@i','raw','text/html'),
-  array('@.*@','@^libs/test/doc/components/test_tools/reference/.*(html|htm)$@i','raw','text/html'),
-  array('@.*@','@^libs/test/.*(html|htm)$@i','simple','text/html'),
-  array('@.*@','@^libs/spirit/.*(html|htm)$@i','simple','text/html', 'add_spirit_analytics'),
-  array('@.*@','@^libs/fusion/.*(html|htm)$@i','basic','text/html', 'add_spirit_analytics'),
-  array('@.*@','@^libs/wave/.*(html|htm)$@i','raw','text/html'),
-  array('@.*@','@^libs/range/doc/.*(html|htm)$@i','raw','text/html'),
+  array('@^libs/gil/doc/.*(html|htm)$@i','raw','text/html'),
+  array('@^libs/preprocessor/doc/.*(html|htm)$@i','raw','text/html'),
+  array('@^libs/test/doc/components/test_tools/reference/.*(html|htm)$@i','raw','text/html'),
+  array('@^libs/test/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/spirit/.*(html|htm)$@i','simple','text/html', 'add_spirit_analytics'),
+  array('@^libs/fusion/.*(html|htm)$@i','basic','text/html', 'add_spirit_analytics'),
+  array('@^libs/wave/.*(html|htm)$@i','raw','text/html'),
+  array('@^libs/range/doc/.*(html|htm)$@i','raw','text/html'),
   //~ special cases that can't be embeded in the standard frame
-  array('@.*@','@^libs/locale/doc/.*(html|htm)$@i','raw','text/html'),
-  array('@.*@','@^libs/iostreams/doc/.*(html|htm)$@i','simple','text/html'),
-  array('@.*@','@^libs/serialization/doc/.*(html|htm)$@i','simple','text/html'),
-  array('@.*@','@^libs/filesystem/(v\d/)?doc/.*(html|htm)$@i','simple','text/html'),
-  array('@.*@','@^libs/system/doc/.*(html|htm)$@i','simple','text/html'),
-  array('@.*@','@^libs/numeric/conversion/doc/.*(html|htm)$@i','simple','text/html'),
-  array('@.*@','@^libs/optional/doc/.*(html|htm)$@i','simple','text/html'),
-  array('@.*@','@^libs/polygon/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/locale/doc/.*(html|htm)$@i','raw','text/html'),
+  array('@^libs/iostreams/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/serialization/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/filesystem/(v\d/)?doc/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/system/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/numeric/conversion/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/optional/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/polygon/doc/.*(html|htm)$@i','simple','text/html'),
   //~ default to processed output for libs and tools
-  array('@.*@','@^libs/[^/]+/doc/html/.*(html|htm)$@i','basic','text/html'),
-  array('@.*@','@^libs/[^/]+/doc/[^/]+/html/.*(html|htm)$@i','basic','text/html'),
-  array('@.*@','@^libs/[^/]+/doc/[^/]+/doc/html/.*(html|htm)$@i','basic','text/html'),
-  array('@.*@','@^libs.*(html|htm)$@i','basic','text/html'),
-  array('@.*@','@^tools.*(html|htm)$@i','basic','text/html'),
-  array('@.*@','@^doc/html/.*html$@i','boost_book_basic','text/html'),
-  array('@.*@','@^more/.*html$@i','basic','text/html'),
+  array('@^libs/[^/]+/doc/html/.*(html|htm)$@i','basic','text/html'),
+  array('@^libs/[^/]+/doc/[^/]+/html/.*(html|htm)$@i','basic','text/html'),
+  array('@^libs/[^/]+/doc/[^/]+/doc/html/.*(html|htm)$@i','basic','text/html'),
+  array('@^libs.*(html|htm)$@i','basic','text/html'),
+  array('@^tools.*(html|htm)$@i','basic','text/html'),
+  array('@^doc/html/.*html$@i','boost_book_basic','text/html'),
+  array('@^more/.*html$@i','basic','text/html'),
   //~ the headers are text files displayed in an embeded page
-  array('@.*@','@^boost/.*$@i','cpp','text/plain')
+  array('@^boost/.*$@i','cpp','text/plain')
   ),
-  null,
-  $compare_version === -1 ? "+1 year" :
-    ($compare_version === 0 ? "+1 week" : "+1 day")
+  array(
+    'use_http_expire_date' => true,
+    'zipfile' => false,
+  )
 );

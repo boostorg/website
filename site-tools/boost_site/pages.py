@@ -4,7 +4,7 @@
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
 import boost_site.state, boost_site.util
-import os, hashlib, xml.dom.minidom, re, fnmatch, subprocess, tempfile, time
+import os, sys, hashlib, xml.dom.minidom, re, fnmatch, subprocess, tempfile, time
 
 class Pages:
     """ Tracks which items in an rss feed have been updated.
@@ -36,10 +36,13 @@ class Pages:
         boost_site.state.save(save_hashes, self.hash_file)
 
     def add_qbk_file(self, qbk_file, location, page_data):
-        file = open(qbk_file)
-        try:
+        if sys.version_info < (3,0):
+            file = open(qbk_file, 'r')
             qbk_hash = hashlib.sha256(file.read()).hexdigest()
-        finally:
+            file.close()
+        else:
+            file = open(qbk_file, 'rb')
+            qbk_hash = hashlib.sha256(file.read().replace(bytes([13,10]), bytes([10]))).hexdigest()
             file.close()
 
         record = None
@@ -83,8 +86,8 @@ class Pages:
                         'last_modified': self.pages[self.rss_hashes[hashed]].last_modified
                     }
                 else:
-                    print "Unable to find quickbook file for rss item:"
-                    print hashed
+                    print("Unable to find quickbook file for rss item:")
+                    print(hashed)
 
         return rss_items
 
@@ -95,7 +98,7 @@ class Pages:
         try:
             subprocess.check_call(['quickbook', '--version'])
         except:
-            print "Problem running quickbook, will not convert quickbook articles."
+            print("Problem running quickbook, will not convert quickbook articles.")
             return
         
         bb_parser = boost_site.boostbook_parser.BoostBookParser()
@@ -107,15 +110,46 @@ class Pages:
                 os.close(xml_file[0])
                 xml_filename = xml_file[1]
                 try:
-                    print "Converting " + page + ":"
+                    print("Converting " + page + ":")
                     subprocess.check_call(['quickbook', '--output-file', xml_filename, '-I', 'feed', page])
                     page_data.load(bb_parser.parse(xml_filename), refresh)
                 finally:
                     os.unlink(xml_filename)
-    
-                boost_site.templite.write_template(page_data.location,
+
+                template_vars = {
+                    'history_style' : '',
+                    'full_title_xml' : page_data.full_title_xml,
+                    'title_xml' : page_data.title_xml,
+                    'note_xml' : '',
+                    'web_date' : page_data.web_date(),
+                    'documentation_para' : '',
+                    'download_table' : page_data.download_table(),
+                    'description_xml' : page_data.description_xml
+                }
+
+                if page_data.type == 'release' and 'released' not in page_data.flags:
+                    template_vars['note_xml'] = '<div class="section-note"><p>Note: This version is at an early stage in its release cycle. The information listed below is incomplete and some of the documentation links may not work yet.</p></div>'
+
+                if page_data.documentation:
+                    template_vars['documentation_para'] = '<p><a href="' + boost_site.util.htmlencode(page_data.documentation) + '">Documentation</a>'
+
+                if(page_data.location.startswith('users/history/')):
+                    template_vars['history_style'] = """
+  <style type="text/css">
+/*<![CDATA[*/
+  #content .news-description ul {
+    list-style: none;
+  }
+  #content .news-description ul ul {
+    list-style: circle;
+  }
+  /*]]>*/
+  </style>
+"""
+
+                boost_site.util.write_template(page_data.location,
                     'site-tools/templates/entry-template.html',
-                    { 'page': page_data })
+                    template_vars)
 
     def match_pages(self, patterns, count = None, sort = True):
         """
@@ -127,7 +161,7 @@ class Pages:
         for pattern in patterns:
             pattern_parts = pattern.split('|')
             matches = [x for x in
-                fnmatch.filter(self.pages.keys(), pattern_parts[0])
+                fnmatch.filter(list(self.pages.keys()), pattern_parts[0])
                 if self.pages[x].is_published(pattern_parts[1:])]
             filtered = filtered | set(matches)
 
@@ -178,7 +212,7 @@ class Page:
                 self.release_status = 'dev'
             status_parts = self.release_status.split(' ', 2)
             if status_parts[0] not in ['released', 'beta', 'dev']:
-                print "Error: Unknown release status: " + self.release_status
+                print("Error: Unknown release status: " + self.release_status)
                 self.release_status = None
             if self.release_status:
                 self.flags.add(status_parts[0])
@@ -330,7 +364,7 @@ class Page:
 
 def number_suffix(x):
     x = x % 100
-    if x / 10 == 1:
+    if x // 10 == 1:
         return "th"
     else:
         return ["th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"][x % 10]

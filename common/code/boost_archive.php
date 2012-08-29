@@ -45,16 +45,49 @@ function get_archive_location(
 }
 
 function display_from_archive(
-    $params,
     $content_map = array(),
-    $override_extractor = null,
-    $expires = null)
+    $params = array())
 {
-    $params['template'] = dirname(__FILE__)."/template.php";
-    $params['title'] = NULL;
-    $params['charset'] = NULL;
-    $params['content'] = NULL;
+    // Set default values
+
+    $params = array_merge(
+        array(
+            'pattern' => '@^[/]([^/]+)[/](.*)$@',
+            'vpath' => $_SERVER["PATH_INFO"],
+            'archive_subdir' => true,
+            'zipfile' => true,
+            'archive_dir' => ARCHIVE_DIR,
+            'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
+            'use_http_expire_date' => false,
+            'override_extractor' => null,
+            'template' => dirname(__FILE__)."/template.php",
+            'title' => NULL,
+            'charset' => NULL,
+            'content' => NULL,
+        ),
+        $params
+    );
+
+    $params = array_merge($params, get_archive_location(
+        $params['pattern'],
+        $params['vpath'],
+        $params['archive_subdir'],
+        $params['zipfile'],
+        $params['archive_dir'],
+        $params['archive_file_prefix']
+    ));
     
+    // Calculate expiry date if requested.
+
+    $expires = null;
+    if ($settings['use_http_expire_date'])
+    {
+        $compare_version = BoostVersion::from($params['version'])->
+            compare(BoostVersion::current());
+        $expires = $compare_version === -1 ? "+1 year" :
+            ($compare_version === 0 ? "+1 week" : "+1 day");
+    }
+
     // Check file exists.
 
     if ($params['zipfile'])
@@ -102,18 +135,18 @@ function display_from_archive(
     // Choose filter to use
 
     $info_map = array_merge($content_map, array(
-        array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh|xml|toyxml)$@i','text','text/plain'),
-        array('@.*@','@[.](qbk|quickbook)$@i','qbk','text/plain'),
-        array('@.*@','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
-        array('@.*@','@[.]png$@i','raw','image/png'),
-        array('@.*@','@[.]gif$@i','raw','image/gif'),
-        array('@.*@','@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
-        array('@.*@','@[.]css$@i','raw','text/css'),
-        array('@.*@','@[.]js$@i','raw','application/x-javascript'),
-        array('@.*@','@[.]pdf$@i','raw','application/pdf'),
-        array('@.*@','@[.](html|htm)$@i','raw','text/html'),
-        array('@.*@','@(/|^)(Jamroot|Jamfile|ChangeLog|configure)$@i','text','text/plain'),
-        array('@.*@','@[.]dtd$@i','raw','application/xml-dtd'),
+        array('@[.](txt|py|rst|jam|v2|bat|sh|xml|toyxml)$@i','text','text/plain'),
+        array('@[.](qbk|quickbook)$@i','qbk','text/plain'),
+        array('@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
+        array('@[.]png$@i','raw','image/png'),
+        array('@[.]gif$@i','raw','image/gif'),
+        array('@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
+        array('@[.]css$@i','raw','text/css'),
+        array('@[.]js$@i','raw','application/x-javascript'),
+        array('@[.]pdf$@i','raw','application/pdf'),
+        array('@[.](html|htm)$@i','raw','text/html'),
+        array('@(/|^)(Jamroot|Jamfile|ChangeLog|configure)$@i','text','text/plain'),
+        array('@[.]dtd$@i','raw','application/xml-dtd'),
         ));
 
     $preprocess = null;
@@ -122,16 +155,17 @@ function display_from_archive(
 
     foreach ($info_map as $i)
     {
-        if (preg_match($i[1],$params['key']))
+        if (preg_match($i[0],$params['key']))
         {
-            $extractor = $i[2];
-            $type = $i[3];
-            $preprocess = isset($i[4]) ? $i[4] : NULL;
+            $extractor = $i[1];
+            $type = $i[2];
+            $preprocess = isset($i[3]) ? $i[3] : NULL;
             break;
         }
     }
     
-    if ($override_extractor) $extractor = $override_extractor;
+    if ($settings['override_extractor'])
+        $extractor = $settings['override_extractor'];
 
     if (!$extractor) {
         file_not_found($params);
@@ -246,13 +280,10 @@ function conditional_get($last_modified)
 // General purpose render callbacks.
 
 function boost_archive_render_callbacks($content, $params) {
-    $version_title =
-        str_replace('_', ' ',
-            preg_replace('@(?<=\d)_(?=\d)@', '.',
-                ucwords($params['version'])));
+    $version = BoostVersion::from($params['version']);
 
     $charset = $params['charset'] ? $params['charset'] : 'us-ascii';
-    $title = $params['title'] ? "$params[title] - $version_title" : 'Boost C++ Libraries';
+    $title = $params['title'] ? "$params[title] - $version" : 'Boost C++ Libraries';
 
     $head = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
 

@@ -21,24 +21,21 @@ settings = {
     'pages': {
         'users/history/': {
             'src_files' : ['feed/history/*.qbk'],
-            'template'  : 'site-tools/templates/entry-template.html',
             'type'      : 'release'
         },
         'users/news/': {
             'src_files' : ['feed/news/*.qbk'],
-            'template'  : 'site-tools/templates/entry-template.html'
         },
         'users/download/': {
             'src_files' : ['feed/downloads/*.qbk'],
-            'template'  : 'site-tools/templates/entry-template.html',
             'type'      : 'release'
         }
     },
     'index-pages' : {
-        'generated/download-items.html' : 'site-tools/templates/download-template.html',
-        'generated/history-items.html' : 'site-tools/templates/history-template.html',
-        'generated/news-items.html' : 'site-tools/templates/news-template.html',
-        'generated/home-items.html' : 'site-tools/templates/index-src.html'
+        'generated/download-items.html' : 'site-tools/templates/download-template.py',
+        'generated/history-items.html' : 'site-tools/templates/history-template.py',
+        'generated/news-items.html' : 'site-tools/templates/news-template.py',
+        'generated/home-items.html' : 'site-tools/templates/index-template.py'
     },
     # See boost_site.pages for matches pattern syntax.
     #

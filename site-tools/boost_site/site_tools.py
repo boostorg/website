@@ -4,7 +4,7 @@
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
 import os, sys, subprocess, glob, re, time, xml.dom.minidom, codecs
-import boost_site.templite, boost_site.pages, boost_site.boostbook_parser, boost_site.util
+import boost_site.pages, boost_site.boostbook_parser, boost_site.util
 from boost_site.settings import settings
 
 ################################################################################
@@ -54,7 +54,7 @@ def update_quickbook(refresh = False):
     }
 
     for index_page in settings['index-pages']:
-        boost_site.templite.write_template(
+        boost_site.util.write_py_template(
             index_page,
             settings['index-pages'][index_page],
             index_page_variables)
@@ -86,9 +86,9 @@ def update_quickbook(refresh = False):
                         rss_feed.importNode(
                             old_rss_items[qbk_page.qbk_file]['item'], True))
                 else:
-                    print "Missing entry for %s" % qbk_page.qbk_file
+                    print("Missing entry for %s" % qbk_page.qbk_file)
                     
-            output_file = open(feed_file, 'w')
+            output_file = open(feed_file, 'wb')
             try:
                 output_file.write(rss_feed.toxml('utf-8'))
             finally:
@@ -121,8 +121,8 @@ def generate_rss_feed(feed_file, details):
   </channel>
 </rss>
 ''' % {
-    'title' : details['title'].encode('utf-8'),
-    'link' : "http://www.boost.org/" + details['link'],
+    'title' : encode_for_rss(details['title']),
+    'link' : encode_for_rss("http://www.boost.org/" + details['link']),
     'description' : '',
     'language' : 'en-us',
     'copyright' : 'Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)'
@@ -138,15 +138,15 @@ def generate_rss_item(rss_feed, qbk_file, page):
     item = rss_feed.createElement('item')
 
     node = xml.dom.minidom.parseString('<title>%s</title>'
-        % page.title_xml.encode('utf-8'))
+        % encode_for_rss(page.title_xml))
     item.appendChild(rss_feed.importNode(node.documentElement, True))
 
     node = xml.dom.minidom.parseString('<link>%s</link>'
-        % page_link.encode('utf-8'))
+        % encode_for_rss(page_link))
     item.appendChild(rss_feed.importNode(node.documentElement, True))
 
     node = xml.dom.minidom.parseString('<guid>%s</guid>'
-        % page_link.encode('utf-8'))
+        % encode_for_rss(page_link))
     item.appendChild(rss_feed.importNode(node.documentElement, True))
 
     # TODO: Convert date format?
@@ -157,7 +157,7 @@ def generate_rss_item(rss_feed, qbk_file, page):
     node = rss_feed.createElement('description')
     # Placing the description in a root element to make it well formed xml.
     description = xml.dom.minidom.parseString(
-        '<x>%s</x>' % page.description_xml.encode('utf-8'))
+        '<x>%s</x>' % encode_for_rss(page.description_xml))
     boost_site.util.base_links(description, page_link)
     node.appendChild(rss_feed.createTextNode(
         boost_site.util.fragment_to_string(description.firstChild)))
@@ -168,5 +168,11 @@ def generate_rss_item(rss_feed, qbk_file, page):
         'quickbook': qbk_file,
         'last_modified': page.last_modified
     })
+
+def encode_for_rss(x):
+    if sys.version_info < (3, 0):
+        return x.encode('utf-8')
+    else:
+        return x
  
 ################################################################################

@@ -11,13 +11,8 @@
 
 function alter_title($params, $text)
 {
-    $version_title =
-    	str_replace('_', ' ',
-    		preg_replace('@(?<=\d)_(?=\d)@', '.',
-    			ucwords($params['version'])));
-
-	return str_ireplace('</title>',
-		" - $version_title</title>", $text);
+    $version = BoostVersion::from($params['version']);
+    return str_ireplace('</title>', " - $version</title>", $text);
 }
 
 function html_init(&$params)

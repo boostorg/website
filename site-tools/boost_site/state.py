@@ -3,9 +3,9 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-import os
+import os, sys
 
-class StateParseError:
+class StateParseError(BaseException):
     None
 
 def load(file_path):
@@ -64,9 +64,15 @@ def load(file_path):
                         if(not key): raise StateParseError()
                         if(type == 'None'):
                             type = 'String'
-                            value = file.readline().decode('utf-8')
+                            if sys.version_info < (3, 0):
+                                value = file.readline().decode('utf-8')
+                            else:
+                                value = file.readline()
                         elif(type == 'String'):
-                            value = value + file.readline().decode('utf-8')
+                            if sys.version_info < (3, 0):
+                                value = value + file.readline().decode('utf-8')
+                            else:
+                                value = value + file.readline()
                         else:
                             raise StateParseError()
                     else:
@@ -78,36 +84,41 @@ def load(file_path):
     return state
 
 def save(state, file_path):
-    file = open(file_path, "w")
+    file = open(file_path, "wb")
     try:
         for record_key in sorted(state.keys()):
             record = state[record_key]
 
-            file.write("(")
-            file.write(record_key)
-            file.write("\n")
+            write(file, "(")
+            write(file, record_key)
+            write(file, "\n")
 
             for key in sorted(record.keys()):            
-                file.write("-")
-                file.write(key)
-                file.write("\n")
+                write(file, "-")
+                write(file, key)
+                write(file, "\n")
 
                 if record[key] is not None:
-                    if isinstance(record[key], basestring):
-                        file.write('"')
-                        file.write(record[key].replace("\n", "\n\"").encode('utf-8'))
-                        file.write("\n")
+                    if isinstance(record[key], str) or \
+                            (sys.version_info < (3,0) and isinstance(record[key], unicode)):
+                        write(file, '"')
+                        write(file, record[key].replace("\n", "\n\""))
+                        write(file, "\n")
                     elif isinstance(record[key], bool):
-                        file.write('!')
-                        file.write(str(record[key]))
-                        file.write("\n")
+                        write(file, '!')
+                        write(file, str(record[key]))
+                        write(file, "\n")
                     elif isinstance(record[key], (int, float)):
-                        file.write('.')
-                        file.write(str(record[key]))
-                        file.write("\n")
+                        write(file, '.')
+                        write(file, str(record[key]))
+                        write(file, "\n")
                     else:
+                        print(type(record[key]))
                         assert False
 
-            file.write(")\n")
+            write(file, ")\n")
     finally:
         file.close()
+
+def write(file, str):
+    file.write(str.encode('utf-8'))

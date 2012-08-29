@@ -3,6 +3,7 @@
 // Change this when developing.
 define('USE_SERIALIZED_INFO', true);
 
+require_once(dirname(__FILE__) . '/../common/code/boost.php');
 require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
 
 function boost_title()
@@ -20,43 +21,6 @@ function boost_title()
     }
 }
 
-function boost_version($v,$r,$p)
-{
-    if (isset($_SERVER["PATH_INFO"]))
-    {
-        // PATH_INFO is set for redirects from a versioned URL.
-
-        $vinfo = array();
-        preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$_SERVER["PATH_INFO"],$vinfo);
-        if (isset($vinfo[0]))
-        {
-            return
-              ($v < $vinfo[1]) ||
-              ($v == $vinfo[1] && $r < $vinfo[2]) ||
-              ($v == $vinfo[1] && $r == $vinfo[2] && $p <= $vinfo[3]);
-        }
-        else
-        {
-            return FALSE;
-        }
-    }
-    else
-    {
-        // PATH_INFO isn't set, so viewing the plain libraries
-        // page. Only display current libraries.
-
-        global $boost_current_version;
-        return
-            ($v < $boost_current_version[0]) ||
-            ($v == $boost_current_version[0] &&
-                $r < $boost_current_version[1]) || 
-            ($v == $boost_current_version[0] &&
-                $r == $boost_current_version[1] &&
-                $p <= $boost_current_version[2]);
-        return FALSE;
-    }
-}
-
 $libs = USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt')) :
 	new boost_libraries(dirname(__FILE__) . '/libraries.xml');
@@ -70,15 +34,13 @@ $view_fields = Array(
 $filter_fields = Array(
     'std-proposal' => 'Standard Proposals',
     'std-tr1' => 'TR1 libraries',
-    'header-only' => 'Header Only Libraries',
-    'autolink' => 'Automatic Linking');
+    'header-only' => '[old]',
+    'autolink' => '[old]');
 $sort_fields =  Array(
     'name' => 'Name',
     'boost-version' => 'First Release',
     'std-proposal' => 'STD Proposal',
     'std-tr1' => 'STD::TR1',
-    'header-only' => 'Header Only Use',
-    'autolink' => 'Automatic Linking',
     'key' => 'Key'
 );
 $display_sort_fields = Array(
@@ -97,6 +59,9 @@ if(strpos($view_value, 'filtered_') === 0) {
     $filter_value = substr($view_value, strlen('filtered_'));
     if(!isset($filter_fields[$filter_value])) {
         echo 'Invalid filter field.'; exit(0);
+    }
+    if ($filter_fields[$filter_value] == '[old]') {
+        echo 'Filter field no longer supported.'; exit(0);
     }
 }
 else if(strpos($view_value, 'category_') === 0) {
@@ -131,9 +96,7 @@ if($category_value) $page_title.= ' - '. $libs->categories[$category_value]['tit
 function library_filter($lib) {
   global $filter_value, $category_value;
 
-  $libversion = explode('.',$lib['boost-version']);
-
-  return boost_version($libversion[0],$libversion[1],$libversion[2]) &&
+  return BoostVersion::page()->compare($lib['boost-version']) >= 0 &&
       (!$filter_value || ($lib[$filter_value] && $lib[$filter_value] !== 'false')) &&
       (!isset($_GET['filter']) || $lib[$_GET['filter']]) &&
       (!$category_value || $category_value === 'all' ||
@@ -152,7 +115,6 @@ function libref($lib)
     }
     else
     {
-      global $boost_current_version;
       $docref = '/doc/libs/release/'.$lib['documentation'];
     }
     print '<a href="'.$docref.'">'.($lib['name'] ? $lib['name'] : $lib['key']).'</a>';
@@ -168,7 +130,7 @@ function libauthors($lib)
 }
 function libavailable($lib)
 {
-  print ($lib['boost-version'] ? $lib['boost-version'] : '&nbsp;');
+  print ($lib['boost-version'] ? "{$lib['boost-version']}" : '&nbsp;');
 }
 function libstandard($lib)
 {
@@ -176,13 +138,6 @@ function libstandard($lib)
   if ($lib['std-proposal']) { $p[] = 'Proposed'; }
   if ($lib['std-tr1']) { $p[] = 'TR1'; }
   print ($p ? implode(', ',$p) : '&nbsp;');
-}
-function libbuildlink($lib, $build_values)
-{
-  if (!empty($lib['build']))
-    print $build_values[$lib['build']];
-  else
-    print '&nbsp;';
 }
 function libcategories($lib, $categories)
 {
@@ -271,7 +226,9 @@ function category_link($name, $category) {
                       <li><?php option_link($description, 'view', $key); ?></li><?php
                     endforeach; ?>
                     <?php foreach($filter_fields as $key => $description) : ?>
+                      <?php if (!preg_match('@^\[.*\]$@', $description)) : ?>
                       <li><?php option_link($description, 'view', 'filtered_'.$key); ?></li>
+                      <?php endif; ?>
                     <?php endforeach; ?>
                     </ul>
                   </div>
@@ -311,10 +268,6 @@ function category_link($name, $category) {
                     <dt>Standard</dt>
 
                     <dd><?php libstandard($lib); ?></dd>
-
-                    <dt>Build&nbsp;&amp;&nbsp;Link</dt>
-
-                    <dd><?php libbuildlink($lib, $libs->build_values); ?></dd>
 
                     <dt>Categories</dt>
 

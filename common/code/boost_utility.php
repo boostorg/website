@@ -4,37 +4,16 @@
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
-require_once(dirname(__FILE__) . '/boost.php');
 
+/**
+ * Return a callback to comparing the given field.
+ * @return callable
+ */
 
-function _preg_replace_bounds($front_regex,$back_regex,$front_replace,$back_replace,$text)
+function sort_by_field($field)
 {
-    $offset = 0;
-    $result = '';
-    while (TRUE)
-    {
-        $subject = substr($text,$offset);
-        if (preg_match($front_regex,$subject,$begin,PREG_OFFSET_CAPTURE) == 0 ||
-            preg_match($back_regex,$subject,$end,PREG_OFFSET_CAPTURE,
-                $begin[0][1]+strlen($begin[0][0])) == 0
-            )
-        { break; }
-        else
-        {
-            $result .= substr($subject,0,$begin[0][1]);
-            $result .= preg_replace($front_regex,$front_replace,$begin[0][0]);
-            $result .= substr(
-                $subject,
-                $begin[0][1]+strlen($begin[0][0]),
-                $end[0][1]-($begin[0][1]+strlen($begin[0][0])) );
-            $result .= preg_replace($back_regex,$back_replace,$end[0][0]);
-            $offset += $end[0][1]+strlen($end[0][0]);
-        }
-    }
-    if ($result === '') { return $text; }
-    else { return $result . substr($text,$offset); }
+    return '_field_cmp_'.strtolower(str_replace('-','_',$field)).'_';
 }
-
 
 function _field_cmp_($r,$a,$b)
 {
@@ -45,16 +24,9 @@ function _field_cmp_($r,$a,$b)
 function _field_cmp_authors_($a,$b)
 { return _field_cmp_(strcmp($a['authors'],$b['authors']),$a,$b); }
 
-function _field_cmp_autolink_($a,$b)
-{ return _field_cmp_(_field_cmp_less_($a['autolink'],$b['autolink']),$a,$b); }
-
 function _field_cmp_boost_version_($a,$b)
 {
-    $i = explode('.',$a['boost-version']);
-    $j = explode('.',$b['boost-version']);
-    if ($i[0] == $j[0] && $i[1] == $j[1]) { return _field_cmp_($i[2]-$j[2],$a,$b); }
-    else if ($i[0] == $j[0]) { return _field_cmp_($i[1]-$j[1],$a,$b); }
-    else { return _field_cmp_($i[0]-$j[0],$a,$b); }
+    return $a['boost-version']->compare($b['boost-version']);
 }
 
 function _field_cmp_description_($a,$b)
@@ -65,9 +37,6 @@ function _field_cmp_documentation_($a,$b)
 
 function _field_cmp_guid_($a,$b)
 { return strcmp($a['guid'],$b['guid']); }
-
-function _field_cmp_header_only_($a,$b)
-{ return _field_cmp_(_field_cmp_less_($a['header-only'],$b['header-only']),$a,$b); }
 
 function _field_cmp_key_($a,$b)
 { return strcmp($a['key'],$b['key']); }
