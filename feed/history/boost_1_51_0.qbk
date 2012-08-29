@@ -1,71 +1,178 @@
 [article Version 1.51.0
     [quickbook 1.5]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: ]
-    [authors [Dawes, Beman]]
-    [last-revision ]
+    [purpose New Libraries: Context.
+    Updated Libraries: Algorithm, Asio, Config, Chrono, Geometry, Graph, Hash,
+    Lexical Cast, Math, MSM, Proto, Ratio, Regex, Thread, Unordered,
+    Wave, xpressive]
+    [authors [Clow, Marshall]]
+    [last-revision Mon, 20 Aug 2012 16:00:21 -0700]
 ]
 
 [include ext.qbk]
 
-[/
-
-As the release progresses add the 'status' and 'download' elements to
-indicate the release status:
-
-Beta status:
-[status beta]
-[download http://sourceforge.net/projects/boost/files/boost/1.xx.x_beta.x/]
-
-Release status:
 [status released]
-[download http://sourceforge.net/projects/boost/files/boost/1.xx.x/]
-
-]
-
-[/
-    When adding libraries:
-
-    1. Libraries are listed in alphabetical order.
-    2. Besides the dedicated entry, the lib name should be added to the
-       [purpose] section at the beginning of the page.
-
-    Example new libraries message:
-
-* [phrase library..[@/libs/accumulators/ Accumulators]:] Framework for
-  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
-
-    Example update message:
-
-* [phrase library..[@/libs/interprocess/ Interprocess]:]
-  * Added anonymous shared memory for UNIX systems.
-  * Fixed missing move semantics on managed memory classes.
-  * Added copy_on_write and open_read_only options for shared memory
-    and mapped file managed classes.
-  * `shared_ptr` is movable and supports aliasing.
-]
+[documentation /doc/libs/1_51_0/]
+[download http://sourceforge.net/projects/boost/files/boost/1.51.0/]
 
 [section New Libraries]
 
-* /TODO/
+* [phrase library..[@/libs/context/ Context]:]
+  Context switching library, from Oliver Kowalke.
 
 [endsect]
 
 [section Updated Libraries]
 
-* /TODO/
+* [phrase library..[@/libs/algorithm/ Algorithm]:]
+  * Fixed `is_sorted_until` ; now matches the c++11 standard behavior on
+    ranges with duplicate values.
+  * Added range support for the rest of the search algorithms.
+  * `unhex` now uses Boost.Exception to signal bad input.
 
-[/
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Fixed an incompatibility between `ip::tcp::iostream` and C++11
+    ([@https://svn.boost.org/trac/boost/ticket/7162 #7162]).
+  * Decorated GCC attribute names with underscores to prevent interaction
+    with user-defined macros
+    ([@https://svn.boost.org/trac/boost/ticket/6415 #6415]).
+  * Added missing `#include <cctype>`, needed for some versions of MinGW.
+  * Changed to use [^gcc]'s atomic builtins on ARM CPUs, when available
+    ([@https://svn.boost.org/trac/boost/ticket/7140 #7140]).
+  * Changed strand destruction to be a no-op, to allow strand objects to be
+    destroyed after their associated `io_service` has been destroyed.
+  * Added support for some newer versions of glibc which provide the
+    `epoll_create1()` function but always fail with `ENOSYS`
+    ([@https://svn.boost.org/trac/boost/ticket/7012 #7012]).
+  * Changed the SSL implementation to throw an exception if SSL engine
+    initialisation fails
+    ([@https://svn.boost.org/trac/boost/ticket/6303 #6303]).
+  * Fixed another regression in `buffered_write_stream`
+    ([@https://svn.boost.org/trac/boost/ticket/6310 #6310]).
+  * Implemented various minor performance improvements, primarily targeted at
+    Linux x86 and x86-64 platforms.
 
-* /TODO/: [phrase library..[@/libs/spirit/ Spirit]:]
-  * Spirit Vx.x, see the
-    '[@/doc/libs/1_xx_x/libs/spirit/doc/html/spirit/what_s_new/spirit_x_x.html What's New]'
-    section for details.
+* [phrase library..[@/libs/config/ Config]:]
+  * Deprecated a whole bunch of macros that were c++11 specific, but not
+    named to show that they were c++11 specific. Made new macros with
+    better names, and paired the old macros with the new ones. Updated
+    the documentation to list the deprecated macros.
 
-* /TODO/: [phrase library..[@/libs/wave/ Wave]:]
+* [phrase library..[@/libs/chrono/ Chrono]:]
+  * [@https://svn.boost.org/trac/boost/ticket/6918 #6918] Boost Chrono
+    compilation failure on HP uX due to undefined pthread_getcpuclockid.
+  * [@https://svn.boost.org/trac/boost/ticket/6241 #6241] boost::chrono
+    compilation problems without std::wstring support.
+  * [@https://svn.boost.org/trac/boost/ticket/6987 #6987] Documentation &
+    C++11.
+  * [@https://svn.boost.org/trac/boost/ticket/7041 #7041] time_point.hpp
+    depends on Boost.System.
+  * [@https://svn.boost.org/trac/boost/ticket/7042 #7042] Avoiding time_point
+    and duration dependency on time.h and CLOCK_REALTIME.
+  * [@https://svn.boost.org/trac/boost/ticket/7058 #7058] Make it work when
+    BOOST_NO_EXCEPTIONS is defined.
+  * [@https://svn.boost.org/trac/boost/ticket/7069 #7069] Misspellings in
+    clock_string<thread_clock>.
+  * [@https://svn.boost.org/trac/boost/ticket/7081 #7081] WinError.h
+    capitalization in boost/detail/win/basic_types.hpp.
+
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * points accessed through a pointer (e.g. in a linestring) should now be
+    specialized without the pointer. In previous versions a type `my_point`
+    used like `linestring<my_point*>` had to be specalized like:
+    `template<> struct tag<my_point*>`.
+    Now the library itself removes the pointer before calling the traits class,
+    so now it should be like: `template<> struct tag<my_point>`
+  * intersection was sometimes wrong for integer points, fixed
+  * documentation, order of parameters in simplify was wrong, fixed
+  * [@https://svn.boost.org/trac/boost/ticket/7030 7030] spherical distance,
+    fixed (by patch of Karsten Ahnert)
+
+* [phrase library..[@/libs/graph/ Graph]:]
+  * Refactored support for internal and bundled properties in
+    Boost.Graph-provided graph types, and cleaned up named parameter
+    functionality:
+    * Enabled old-style (non-bundled) internal properties in
+      `compressed_sparse_row_graph`.
+    * Bundled properties should work correctly for all graph types and
+      adaptors.
+  * Bugs fixed:
+    * [ticket 6993]: Typo Bundled Properties document
+    * [ticket 7002]: Problem with initialization of CSR bidirectional graph
+    * [ticket 7023]: Enclose internal type graphml_reader in anonymous
+      namespace
+    * Other bugs and warnings not in Trac
+
+* [phrase library..[@/libs/functional/hash/ Hash]:]
+  * Support the standard smart pointers.
+  * `hash_value` now implemented using SFINAE to avoid implicit casts to built
+    in types when calling it.
+  * Updated to use the new config macros.
+
+* [phrase library..[@/libs/conversion/lexical_cast.htm Lexical cast]:]
+  * Better performance, less memory usage for `boost::array<character_type, N>` 
+    and `std::array<character_type, N>` conversions.
+  * Fixed bug with volatile input parameter [@https://svn.boost.org/trac/boost/ticket/7157 #7157].
+
+* [phrase library..[@/libs/math/ Math]:]
+  * Updated to use the new config macros.
+
+* [phrase library..[@/libs/msm/ MSM]:]
+  * Support for boost::any [@http://www.boost.org/doc/libs/1_51_0/libs/msm/doc/HTML/ch03s03.html#any-event] or kleene [@http://www.boost.org/doc/libs/1_51_0/libs/msm/doc/HTML/ch03s04.html#kleene-event] as acceptable events
+  * Bugfix: compiler error with fsm internal table and none (compound) event.
+  * Bugfix: euml::defer_ leading to stack overflow.
+
+* [phrase library..[@/libs/proto/ Proto]:]
+  * Proto transforms get pseudo-parameter pack expansion support for unpacking
+    expressions. See the 
+    [@/doc/html/proto/appendices.html#boost_proto.appendices.release_notes.boost_1_51 Release Notes]
+    for more information.
+
+* [phrase library..[@/libs/ratio/ Ratio]:]
+  * [@https://svn.boost.org/trac/boost/ticket/7075 #7075] Workaround for
+    error: the type of partial specialization template parameter constant "n1"
+    depends on another template parameter.
+
+* [phrase library..[@/libs/regex/ Regex]:]
+  * Updated to use the new config macros.
+
+* [phrase library..[@/libs/thread/ Thread]:]
+  * [@https://svn.boost.org/trac/boost/ticket/4258 #4258] Linking with boost
+    thread does not work on mingw/gcc 4.5.
+  * [@https://svn.boost.org/trac/boost/ticket/4885 #4885] Access violation in
+    set_tss_data at process exit due to invalid assumption about TlsAlloc.
+  * [@https://svn.boost.org/trac/boost/ticket/6931 #6931] mutex waits
+    forwever with Intel Compiler and /debug:parallel
+  * [@https://svn.boost.org/trac/boost/ticket/7044 #7044] boost 1.50.0 header
+    missing.
+  * [@https://svn.boost.org/trac/boost/ticket/7052 #7052] Thread:
+    BOOST_THREAD_PROVIDES_DEPRECATED_FEATURES_SINCE_V3_0_0 only masks
+    thread::operator==, thread::operator!= forward declarations, not
+    definitions.
+  * [@https://svn.boost.org/trac/boost/ticket/7066 #7066] An attempt to fix
+    current_thread_tls_key static initialization order.
+  * [@https://svn.boost.org/trac/boost/ticket/7074 #7074] Multiply defined
+    symbol boost::allocator_arg.
+  * [@https://svn.boost.org/trac/boost/ticket/7078 #7078] Trivial 64-bit
+    warning fix on Windows for thread attribute stack size
+  * [@https://svn.boost.org/trac/boost/ticket/7089 #7089]
+    BOOST_THREAD_WAIT_BUG limits functionality without solving anything
+
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * Fix construction/destruction issue when using a C++11 compiler with a
+    C++03 allocator ([ticket 7100]).
+  * Remove a `try..catch` to support compiling without exceptions.
+  * Adjust SFINAE use to try to supprt g++ 3.4 ([ticket 7175]).
+  * Updated to use the new config macros.
+
+* [phrase library..[@/libs/wave/ Wave]:]
   * See the [@/libs/wave/ChangeLog Changelog] for details.
 
-]
+* [phrase library..[@/libs/xpressive/ xpressive]:]
+  * Work around buggy wide ctype facet on cygwin and mingw.
+  * Work around absence of __isctype on some glibc implementations.
+  * `op::as` shouldn't assume `string::iterator` != `char*`.
+  * Fix assertion in `cpp_regex_traits` on libc++, thanks to John Fletcher.
 
 [endsect]
 
@@ -73,17 +180,56 @@ Release status:
 
 Boost's primary test compilers are:
 
-* /TODO/
+* Linux:
+  * GCC: 4.2.4, 4.3.4, 4.4.3, 4.5.3, 4.6.2, 4.7
+  * GCC, C++11 mode: 4.3.4, 4.4.3, 4.5.3, 4.6.2
+  * Intel: 11.1, 12.0, 12.1
+  * LLVM Clang 2.8
+* OS X:
+  * GCC: 4.4
+  * GCC, C++11 mode: 4.4
+  * Intel: 11.1, 12.0
+* Windows:
+  * GCC, mingw: 4.4.0, 4.4.7, 4.5.4, 4.6.3
+  * Visual C++: 8.0, 9.0, 10.0
+* FreeBSD:
+  * GCC: 4.2.1, 32 and 64 bit
 
 Boost's additional test compilers include:
 
-* /TODO/
+* Linux:
+  * Clang: from subversion
+  * LLVM Clang: 3.0
+  * GCC: 4.2.4, 4.3.4, 4.4.4, 4.4.7, 4.5.3, 4.6.2, 4.6.3, 4.7.0, 4.7.1
+  * GCC, C++11 mode: 4.3.4, 4.4.4, 4.5.3, 4.6.3
+  * pgCC: 11.9
+  * Intel: 10.1, 11.1, 12.0, 12.1
+  * Visual Age: 10.1
+* OS X:
+  * Clang: from subversion
+  * Clang, C++11 mode: from subversion
+  * Intel: 11.1, 12.0
+  * GCC: 4.4
+  * GCC, C++11 mode: 4.4
+* Windows:
+  * Visual C++: 8.0, 9.0, 10.0
+  * GCC, mingw: 4.4.0, 4.6.3, 4.7.0
+* AIX:
+  * IBM XL C/C++ Enterprise Edition: V12.1.0.0
+* FreeBSD:
+  * GCC: 4.2.1, 32 and 64 bit
+* Solaris:
+  * Sun: 5.10
 
 [endsect]
 
 [section Acknowledgements]
 
-/TODO/
+[@/users/people/beman_dawes.html Beman Dawes],
+Eric Niebler,
+[@/users/people/rene_rivera.html Rene Rivera],
+Daniel James, Vladimir Prus and Marshall Clow
+managed this release.
 
 [endsect]
 
