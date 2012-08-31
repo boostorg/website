@@ -80,12 +80,17 @@ function display_from_archive(
     // Calculate expiry date if requested.
 
     $expires = null;
-    if ($settings['use_http_expire_date'])
+    if ($params['use_http_expire_date'])
     {
-        $compare_version = BoostVersion::from($params['version'])->
-            compare(BoostVersion::current());
-        $expires = $compare_version === -1 ? "+1 year" :
-            ($compare_version === 0 ? "+1 week" : "+1 day");
+        if ($params['version'] == 'boost-build') {
+            $expires = "+1 week";
+        }
+        else {
+            $compare_version = BoostVersion::from($params['version'])->
+                compare(BoostVersion::current());
+            $expires = $compare_version === -1 ? "+1 year" :
+                ($compare_version === 0 ? "+1 week" : "+1 day");
+        }
     }
 
     // Check file exists.
@@ -164,8 +169,8 @@ function display_from_archive(
         }
     }
     
-    if ($settings['override_extractor'])
-        $extractor = $settings['override_extractor'];
+    if ($params['override_extractor'])
+        $extractor = $params['override_extractor'];
 
     if (!$extractor) {
         file_not_found($params);
@@ -280,10 +285,12 @@ function conditional_get($last_modified)
 // General purpose render callbacks.
 
 function boost_archive_render_callbacks($content, $params) {
-    $version = BoostVersion::from($params['version']);
-
     $charset = $params['charset'] ? $params['charset'] : 'us-ascii';
-    $title = $params['title'] ? "$params[title] - $version" : 'Boost C++ Libraries';
+    $title = $params['title'] ? "$params[title]" : 'Boost C++ Libraries';
+
+    if ($params['version'] != 'boost-build') {
+        $title = "$params[title] - " . BoostVersion::from($params['version']);
+    }
 
     $head = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
 
