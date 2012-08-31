@@ -6,7 +6,7 @@
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
-define('BOOST_DOCS_MODIFIED_DATE', 'Tue, 29 Nov 2011 10:09:34 +0000');
+define('BOOST_DOCS_MODIFIED_DATE', 'Fri, 31 Aug 2012 22:33:48 +0000');
 
 function get_archive_location(
     $pattern,
