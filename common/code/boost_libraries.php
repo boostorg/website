@@ -51,7 +51,6 @@ class boost_libraries
                 switch ($val['tag'])
                 {
                     case 'key':
-                    case 'boost-version':
                     case 'name':
                     case 'authors':
                     case 'description':
