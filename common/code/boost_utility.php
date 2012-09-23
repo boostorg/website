@@ -26,7 +26,8 @@ function _field_cmp_authors_($a,$b)
 
 function _field_cmp_boost_version_($a,$b)
 {
-    return $a['boost-version']->compare($b['boost-version']);
+    return BoostVersion::from($a['boost-version'])
+        ->compare($b['boost-version']);
 }
 
 function _field_cmp_description_($a,$b)
