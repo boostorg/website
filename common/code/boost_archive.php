@@ -13,6 +13,7 @@ function get_archive_location(
     $vpath,
     $archive_subdir = true,
     $zipfile = true,
+    $fix_dir = false,
     $archive_dir = ARCHIVE_DIR,
     $archive_file_prefix = ARCHIVE_FILE_PREFIX)
 {
@@ -22,15 +23,30 @@ function get_archive_location(
     $version = $path_parts[1];
     $key = $path_parts[2];
 
-    $file = ($zipfile ? '' : $archive_dir . '/');
+    $file = false;
 
-    if ($archive_subdir)
-    {
-        $file = $file . $archive_file_prefix . $version . '/' . $key;
+    if ($fix_dir) {
+        $fix_path = "{$fix_dir}{$vpath}";
+
+        if (is_file($fix_path) ||
+            (is_dir($fix_path) && is_file("{$fix_path}/index.html")))
+        {
+            $zipfile = false;
+            $file = "{$fix_dir}{$vpath}";
+        }
     }
-    else
-    {
-        $file = $file . $archive_file_prefix . $key;
+
+    if (!$file) {
+        $file = ($zipfile ? '' : $archive_dir . '/');
+
+        if ($archive_subdir)
+        {
+            $file = $file . $archive_file_prefix . $version . '/' . $key;
+        }
+        else
+        {
+            $file = $file . $archive_file_prefix . $key;
+        }
     }
 
     $archive = $zipfile ? str_replace('\\','/', $archive_dir . '/' . $version . '.zip') : Null;
@@ -56,6 +72,7 @@ function display_from_archive(
             'vpath' => $_SERVER["PATH_INFO"],
             'archive_subdir' => true,
             'zipfile' => true,
+            'fix_dir' => false,
             'archive_dir' => ARCHIVE_DIR,
             'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
             'use_http_expire_date' => false,
@@ -73,6 +90,7 @@ function display_from_archive(
         $params['vpath'],
         $params['archive_subdir'],
         $params['zipfile'],
+        $params['fix_dir'],
         $params['archive_dir'],
         $params['archive_file_prefix']
     ));

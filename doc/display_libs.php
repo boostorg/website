@@ -87,6 +87,7 @@ display_from_archive(
   array('@^boost/.*$@i','cpp','text/plain')
   ),
   array(
+    'fix_dir' => dirname(__FILE__).'/fixes',
     'use_http_expire_date' => true,
     'zipfile' => false,
   )
