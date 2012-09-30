@@ -1,7 +1,7 @@
 [article Version 1.52.0
     [quickbook 1.5]
     [source-mode c++]
-    [purpose Updated Libraries: Graph]
+    [purpose Updated Libraries: Graph, Iterator]
     [authors [Dawes, Beman]]
     [last-revision ]
 ]
@@ -64,6 +64,19 @@ Release status:
   * New floating point hasher - will hash the binary representation on more
     platforms, which should be faster.
 
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * Fixed:
+    * [ticket 5825] constructing function_input_iterator without consuming an
+      item
+    * [ticket 7194] Error in documentation of make_function_input_iterator
+  * [*Breaking changes:]
+    * Due to the fix for [ticket 5825], a function_input_iterator will no longer
+      make unnecessary invokations to the wrapped nullary function. For example,
+      constructing an end iterator will now not trigger an invokation; and
+      dereferencing-and-incrementing an iterator N times will trigger N
+      invokations, not N+1 as before. User code that relied on the old behavior
+      will need to be adjusted.
+    
 * [phrase library..[@/libs/polygon/ Polygon]:]
   * Included Voronoi diagram extensions.
   * Introduced new Segment concept.
