@@ -33,6 +33,21 @@ Release status:
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/chrono/ Chrono]:]
+  * [*New Features:]
+    * [ticket 5980] Enhance chrono I/O with H. Hinnant proposal [@http://home.roadrunner.com/~hinnant/bloomington/chrono_io.html proposal] which has the advantage to provide I/O for system clocks using the Gregorian Calendar.
+    * [ticket 5981] Add i/o state savers for duration and time_point formatting state.
+    * [ticket 7059] Add low level i/o facilities.
+  * [*Deprecated features:]
+    * The chrono i/o version included in Boost.Chrono 1.2.x has been completly refactored in version 2.0.0
+    * chrono I/O: The manipulators `__duration_short`, `__duration_long` are depreceated. You should use the parameterized form `__duration_fmt` or the renamed manipulators `__duration_symbol` and `__duration_prefix`  instead.
+    * chrono I/O: The `__duration_punct<>` facet is deprecated. You should use the `__get_duration_style` free function to get the informations and use the `__duration_units` facet for localization purposes.
+    * When `BOOST_CHRONO_VERSION==2` the preceding deprecated functions are not available.
+  * [*Fixes:]
+    * [ticket 7381] C++11 compliance: unresolved symbol when assigning a constexpr duration to a non-const local variable.
+  * [*Would not fix:]
+    * [ticket 6871] chrono_io.hpp: `operator<<(ostream& os, ...)` modifies the state of os. The neww io interface provided in version 2 solves this issue. You should move to the new version.
+
 * [phrase library..[@/libs/date_time/ DateTime]:]
   * Document `BOOST_DATE_TIME_NO_LIB` ([ticket 6077]).
   * Fix `nth_as_str` ([ticket 7022]).
@@ -53,7 +68,38 @@ Release status:
   * Included Voronoi diagram extensions.
   * Introduced new Segment concept.
   * Fixed compilation issues.
-    
+
+* [phrase library..[@/libs/thread/index.html Thread]:]
+  [*Deprecated Features]: Deprecated features since boost 1.50 available only until boost 1.55. These deprecated features will be provided by default up to boost 1.52. If you don't want to include the deprecated features you could define BOOST_THREAD_DONT_PROVIDE_DEPRECATED_FEATURES_SINCE_V3_0_0. Since 1.53 these features will not be included any more by default. Since this version, if you want to include the deprecated features yet you could define BOOST_THREAD_PROVIDE_DEPRECATED_FEATURES_SINCE_V3_0_0. These deprecated features will be only available until boost 1.55, that is you have yet 1 year to move to the new features.
+    * Time related functions don't using the Boost.Chrono library, use the chrono overloads instead.
+  * Breaking changes when `BOOST_THREAD_VERSION==3` (Default value since Boost 1.53):
+    There are some new features which share the same interface but with different behavior. These breaking features are provided by default when BOOST_THREAD_VERSION is 3, but the user can however choose the version 2 behavior by defining the corresponding macro. As for the deprecated features, these broken features will be only available until boost 1.55.
+    * [ticket 6229] C++11 compliance & Breaking change: Rename the unique_future to future following the c++11.
+    * [ticket 6266] C++11 compliance & Breaking change: thread destructor should call terminate if joinable.
+    * [ticket 6269] C++11 compliance & Breaking change: thread move assignment should call terminate if joinable.
+  * [*New Features:]
+    * [ticket 4710] C++11 compliance: Missing `async()`.   
+    * [ticket 7283] C++11 compliance: Add `notify_all_at_thread_exit`.
+    * [ticket 7345] C++11 compliance: Add `noexcept` to recursive mutex `try_lock`.
+  * [*Fixed Bugs:]
+    * [ticket 2361] `thread_specific_ptr`: document nature of the key, complexity and rationale.
+    * [ticket 2797] Two problems with `thread_specific_ptr`.
+    * [ticket 5274] failed to compile `future.hpp` with stlport 5.1.5 under msvc8.1, because of undefined class.
+    * [ticket 5431] compile error in Windows CE 6.0(interlocked).
+    * [ticket 5752] `boost::call_once()` is unreliable on some platforms.
+    * [ticket 7045] Thread library does not automatically compile date_time.     
+    * [ticket 7173] wrong function name `interrupt_point()`.
+    * [ticket 7200] Unable to build boost.thread modularized.
+    * [ticket 7220] gcc 4.6.2 warns about inline+dllimport functions.
+    * [ticket 7238] `this_thread::sleep_for()` does not respond to interrupt().
+    * [ticket 7245] Minor typos on documentation related to version 3.
+    * [ticket 7272] `win32/thread_primitives.hpp`: (Unneccessary) Warning.
+    * [ticket 7284] Clarify that there is no access priority between lock and shared_lock on shared mutex.
+    * [ticket 7329] `boost/thread/future.hpp` does not compile on HPUX.
+    * [ticket 7336] `BOOST_THREAD_DONT_USE_SYSTEM` doesn't work.
+    * [ticket 7349] `packaged_task` holds reference to temporary.
+    * [ticket 7350] `allocator_destructor` does not destroy object
+
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * In assignment, reuse existing nodes where possible.
   * Some work on the implementation.
