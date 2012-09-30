@@ -61,6 +61,7 @@ display_from_archive(
   array('@^libs/preprocessor/doc/.*(html|htm)$@i','raw','text/html'),
   array('@^libs/test/doc/components/test_tools/reference/.*(html|htm)$@i','raw','text/html'),
   array('@^libs/test/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/spirit/(.*/)?doc/html/.*(html|htm)$@i','basic','text/html', 'add_spirit_analytics'),
   array('@^libs/spirit/.*(html|htm)$@i','simple','text/html', 'add_spirit_analytics'),
   array('@^libs/fusion/.*(html|htm)$@i','basic','text/html', 'add_spirit_analytics'),
   array('@^libs/wave/.*(html|htm)$@i','raw','text/html'),
@@ -86,6 +87,7 @@ display_from_archive(
   array('@^boost/.*$@i','cpp','text/plain')
   ),
   array(
+    'fix_dir' => dirname(__FILE__).'/fixes',
     'use_http_expire_date' => true,
     'zipfile' => false,
   )

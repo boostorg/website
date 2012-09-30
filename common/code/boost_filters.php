@@ -119,3 +119,37 @@ function remove_html_banner($text) {
         return $text;
     }
 }
+
+function latest_link($params)
+{
+    $version = BoostVersion::from($params['version']);
+    if ($version->is_beta()) return;
+
+    $current = BoostVersion::current();
+    switch ($current->compare($version))
+    {
+    case 0:
+        break;
+    case 1:
+        echo '<div class="boost-common-header-notice">';
+        if (is_file(ARCHIVE_DIR."/{$current->dir()}/$params[key]"))
+        {
+            echo 'This is the documentation for an old version of boost, click '.
+                '<a href="/doc/libs/release/'.$params['key'].'">'.
+                'here for the current version of this page</a>';
+        }
+        else
+        {
+            echo 'This is the documentation for an old version of boost, ';
+            echo '<a href="/doc/libs/">click here for the current boost ';
+            echo 'documentation</a>.';
+        }
+        echo '</div>', "\n";
+        break;
+    case -1:
+        echo '<div class="boost-common-header-notice">';
+        echo 'This is the documentation for an unreleased version of boost';
+        echo '</div>', "\n";
+        break;
+    }
+}
