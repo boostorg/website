@@ -134,15 +134,16 @@ function latest_link($params)
         echo '<div class="boost-common-header-notice">';
         if (is_file(ARCHIVE_DIR."/{$current->dir()}/$params[key]"))
         {
-            echo 'This is the documentation for an old version of boost, click '.
-                '<a href="/doc/libs/release/'.$params['key'].'">'.
-                'here for the current version of this page</a>';
+            echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$params['key'],'">',
+                "Click here to view the latest version of this page.",
+                '</a>';
         }
         else
         {
-            echo 'This is the documentation for an old version of boost, ';
-            echo '<a href="/doc/libs/">click here for the current boost ';
-            echo 'documentation</a>.';
+            echo '<a class="boost-common-header-inner" href="/doc/libs/">',
+                "This is an old version of boost. ",
+                "Click here for the latest version's documentation home page.",
+                '</a>';
         }
         echo '</div>', "\n";
         break;
