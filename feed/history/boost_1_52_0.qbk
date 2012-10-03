@@ -33,6 +33,9 @@ Release status:
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/config/ Config]:]
+  * Define `BOOST_NO_SFINAE_EXPR` for gcc-4.4, since the support was found to be too buggy.
+
 * [phrase library..[@/libs/chrono/ Chrono]:]
   * [*New Features:]
     * [ticket 5980] Enhance chrono I/O with H. Hinnant proposal [@http://home.roadrunner.com/~hinnant/bloomington/chrono_io.html proposal] which has the advantage to provide I/O for system clocks using the Gregorian Calendar.
@@ -52,6 +55,9 @@ Release status:
   * Document `BOOST_DATE_TIME_NO_LIB` ([ticket 6077]).
   * Fix `nth_as_str` ([ticket 7022]).
   * Fix some warnings ([ticket 7234]).
+
+* [phrase library..[@/libs/foreach/ Foreach]:]
+  * Fix alignment warning on gcc.
 
 * [phrase library..[@/libs/function/ Function]:]
   * Move constructors and move assignment operators added (only for compilers with C++11 rvalue references support) [@https://svn.boost.org/trac/boost/ticket/7330 #7330].
@@ -101,11 +107,30 @@ Release status:
     [@https://svn.boost.org/trac/boost/ticket/2693 #2693],
     [@https://svn.boost.org/trac/boost/ticket/6937 #6937],
     [@https://svn.boost.org/trac/boost/ticket/7099 #7099].
-    
+
+* [phrase library..[@/libs/phoenix/ Phoenix]:]
+  * Make Phoenix work with `decltype`-based `boost::result_of`.
+
 * [phrase library..[@/libs/polygon/ Polygon]:]
   * Included Voronoi diagram extensions.
   * Introduced new Segment concept.
   * Fixed compilation issues.
+
+* [phrase library..[@/libs/proto/ Proto]:]
+  * The data parameter to primitive transforms can now optionally have slots indexed by key.
+  * Primitive transforms can now operatate on temporary expressions that are non-const qualified.
+  * Add callable function object types for the free functions in `<iterator>` and also for some
+    Boost.Range functions.
+  * Boost.MPL algorithms work on Proto expression nodes.
+  * `proto::pass_through` primitive transform now accepts an optional `Domain` template parameter
+    for specifying the target domain of the resulting expression.
+
+* [phrase library..[@/libs/utility/utility.htm#result_of Result_of]:]
+  * Switch `boost::result_of` to use `decltype` on compilers for which support is deemed "good enough".
+    That means if the compiler implements [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2011/n3276.pdf n3276].
+	(For now, that only includes very recent versions of clang.)
+  * `boost::result_of` is now "sfinae-friendly" when it uses `decltype`.
+    See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3436.html n3436].
 
 * [phrase library..[@/libs/thread/index.html Thread]:]
   * [*Deprecated Features]: Deprecated features since boost 1.50 available only until boost 1.55. These deprecated features will be provided by default up to boost 1.52. If you don't want to include the deprecated features you could define BOOST_THREAD_DONT_PROVIDE_DEPRECATED_FEATURES_SINCE_V3_0_0. Since 1.53 these features will not be included any more by default. Since this version, if you want to include the deprecated features yet you could define BOOST_THREAD_PROVIDE_DEPRECATED_FEATURES_SINCE_V3_0_0. These deprecated features will be only available until boost 1.55, that is you have yet 1 year to move to the new features.
@@ -148,6 +173,9 @@ Release status:
 
 * [phrase library..[@/libs/wave/ Wave]:]
   * See the [@/libs/wave/ChangeLog Changelog] for details.
+
+* [phrase library..[@/libs/xpressive/ xpressive]:]
+  * Make `sub_match` work with Boost.Range. Fixes [@https://svn.boost.org/trac/boost/ticket/7237 #7237].
 
 [endsect]
 
