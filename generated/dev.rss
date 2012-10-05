@@ -124,6 +124,46 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_52_0_beta1/libs/container/&quot;&gt;Container&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improved &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;stable_vector&lt;/span&gt;&lt;/code&gt;'s
+                template code bloat and type safety.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed typedefs and reordered functions of sequence containers to
+                improve doxygen documentation.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed bugs &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6615&quot;&gt;#6615&lt;/a&gt;,
+                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7139&quot;&gt;#7139&lt;/a&gt;,
+                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7215&quot;&gt;#7215&lt;/a&gt;,
+                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7232&quot;&gt;#7232&lt;/a&gt;,
+                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7269&quot;&gt;#7269&lt;/a&gt;,
+                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7439&quot;&gt;#7439&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Implemented LWG Issue #149 (range insertion now returns an iterator)
+                &amp;amp; cleaned up insertion code in most containers
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Corrected aliasing errors.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_52_0_beta1/libs/date_time/&quot;&gt;DateTime&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
@@ -198,6 +238,53 @@
               &lt;div&gt;
                 New floating point hasher - will hash the binary representation on
                 more platforms, which should be faster.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_52_0_beta1/libs/interprocess/&quot;&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;shrink_by&lt;/span&gt;&lt;/code&gt; and
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;advise&lt;/span&gt;&lt;/code&gt; functions
+                in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;mapped_region&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;em&gt;ABI breaking:&lt;/em&gt; Reimplemented &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;message_queue&lt;/span&gt;&lt;/code&gt; with a circular buffer
+                index (the old behavior used an ordered array, leading to excessive
+                copies). This should greatly increase performance but breaks ABI.
+                Old behaviour/ABI can be used undefining macro &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_INTERPROCESS_MSG_QUEUE_CIRCULAR_INDEX&lt;/span&gt;&lt;/code&gt;
+                in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;interprocess&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;detail&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;workaround&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improved &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;message_queue&lt;/span&gt;&lt;/code&gt;
+                insertion time avoiding priority search for common cases (both array
+                and circular buffer configurations).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Implemented &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;interproces_sharable_mutex&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;interproces_condition_any&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improved &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;offset_ptr&lt;/span&gt;&lt;/code&gt;
+                performance.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added integer overflow checks.
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
