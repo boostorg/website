@@ -46,6 +46,19 @@ Release status:
     * [ticket 7381] C++11 compliance: unresolved symbol when assigning a constexpr duration to a non-const local variable.
   * [*Would not fix:]
     * [ticket 6871] chrono_io.hpp: `operator<<(ostream& os, ...)` modifies the state of os. The neww io interface provided in version 2 solves this issue. You should move to the new version.
+	
+* [phrase library..[@/libs/container/ Container]:]
+  *  Improved `stable_vector`'s template code bloat and type safety.
+  *  Changed typedefs and reordered functions of sequence containers to improve doxygen documentation.
+  *  Fixed bugs
+  [@https://svn.boost.org/trac/boost/ticket/6615 #6615],
+  [@https://svn.boost.org/trac/boost/ticket/7139 #7139],
+  [@https://svn.boost.org/trac/boost/ticket/7215 #7215],
+  [@https://svn.boost.org/trac/boost/ticket/7232 #7232],
+  [@https://svn.boost.org/trac/boost/ticket/7269 #7269],
+  [@https://svn.boost.org/trac/boost/ticket/7439 #7439].
+  *  Implemented LWG Issue #149 (range insertion now returns an iterator) & cleaned up insertion code in most containers
+  *  Corrected aliasing errors.
 
 * [phrase library..[@/libs/date_time/ DateTime]:]
   * Document `BOOST_DATE_TIME_NO_LIB` ([ticket 6077]).
@@ -68,6 +81,18 @@ Release status:
     ([ticket 7437]).
   * New floating point hasher - will hash the binary representation on more
     platforms, which should be faster.
+
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  *  Added `shrink_by` and `advise` functions in `mapped_region`.
+  *  [*ABI breaking:] Reimplemented `message_queue` with a circular buffer index (the
+   old behavior used an ordered array, leading to excessive copies). This
+   should greatly increase performance but breaks ABI. Old behaviour/ABI can be used
+   undefining macro `BOOST_INTERPROCESS_MSG_QUEUE_CIRCULAR_INDEX` in `boost/interprocess/detail/workaround.hpp`
+  *  Improved `message_queue` insertion time avoiding priority search for common cases
+   (both array and circular buffer configurations).
+  *  Implemented `interproces_sharable_mutex` and `interproces_condition_any`.
+  *  Improved `offset_ptr` performance.
+  *  Added integer overflow checks.
 
 * [phrase library..[@/libs/iterator/ Iterator]:]
   * Fixed:
