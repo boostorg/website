@@ -106,7 +106,8 @@ Release status:
   * Fixed bug [@https://svn.boost.org/trac/boost/ticket/7228 #7228].
 
 * [phrase library..[@/libs/math/ Math]:]
-  * Corrected moments for small degrees of freedom
+  * Added Airy functions and Jacobi Elliptic functions.
+  * In several distributions (particulary the Students T) corrected moments for small degrees of freedom
     [@https://svn.boost.org/trac/boost/ticket/7177 #7177] (reported by Thomas Mang).
   * Corrected failure to detect bad parameters in many distributions
     [@https://svn.boost.org/trac/boost/ticket/6934 #6934] (reported by Florian Schoppmann)
@@ -115,7 +116,16 @@ Release status:
     and these have been rectified.
   * Fixed issue in Hankel functions that causes incorrect values to be returned for ['x < 0] and ['\u03BD]
     odd, see [@https://svn.boost.org/trac/boost/ticket/7135 #7135].
-  * Fixed issues [@https://svn.boost.org/trac/boost/ticket/6517 #6517],
+  * In non-central T permitted infinite degrees of freedom [@https://svn.boost.org/trac/boost/ticket/7259 #7259] 
+    implemented using the normal distribution (requested by Thomas Mang). 
+    Also much enhanced accuracy for large degrees of freedom and/or large non-centrality parameters by switching to use 
+    the Students t distribution (or Normal distribution for infinite degrees of freedom) 
+    centered at delta, when delta / (4 * v) < epsilon for the floating-point type in use. 
+    See [@https://svn.boost.org/trac/boost/ticket/7259 #7259]. 
+    It was also found that the incomplete beta was suffering from serious cancellation errors when degrees of 
+    freedom was very large. (That has now been fixed in our code, but any code based on Didonato and Morris's original papers 
+    (probably every implementation out there actually) will have the same issue). 
+  * Fixed minor issues [@https://svn.boost.org/trac/boost/ticket/6517 #6517],
     [@https://svn.boost.org/trac/boost/ticket/6362 #6362],
     [@https://svn.boost.org/trac/boost/ticket/7053 #7053],
     [@https://svn.boost.org/trac/boost/ticket/2693 #2693],
@@ -291,3 +301,4 @@ Daniel James, Vladimir Prus and Marshall Clow
 managed this release.
 
 [endsect]
+
