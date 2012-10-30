@@ -400,7 +400,13 @@
           <ul>
             <li>
               <div>
-                Corrected moments for small degrees of freedom <a href="https://svn.boost.org/trac/boost/ticket/7177">#7177</a>
+                Added Airy functions and Jacobi Elliptic functions.
+              </div>
+            </li>
+            <li>
+              <div>
+                In several distributions (particulary the Students T) corrected moments
+                for small degrees of freedom <a href="https://svn.boost.org/trac/boost/ticket/7177">#7177</a>
                 (reported by Thomas Mang).
               </div>
             </li>
@@ -423,7 +429,23 @@
             </li>
             <li>
               <div>
-                Fixed issues <a href="https://svn.boost.org/trac/boost/ticket/6517">#6517</a>,
+                In non-central T permitted infinite degrees of freedom <a href="https://svn.boost.org/trac/boost/ticket/7259">#7259</a>
+                implemented using the normal distribution (requested by Thomas Mang).
+                Also much enhanced accuracy for large degrees of freedom and/or large
+                non-centrality parameters by switching to use the Students t distribution
+                (or Normal distribution for infinite degrees of freedom) centered
+                at delta, when delta / (4 * v) &lt; epsilon for the floating-point
+                type in use. See <a href="https://svn.boost.org/trac/boost/ticket/7259">#7259</a>.
+                It was also found that the incomplete beta was suffering from serious
+                cancellation errors when degrees of freedom was very large. (That
+                has now been fixed in our code, but any code based on Didonato and
+                Morris's original papers (probably every implementation out there
+                actually) will have the same issue).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed minor issues <a href="https://svn.boost.org/trac/boost/ticket/6517">#6517</a>,
                 <a href="https://svn.boost.org/trac/boost/ticket/6362">#6362</a>,
                 <a href="https://svn.boost.org/trac/boost/ticket/7053">#7053</a>,
                 <a href="https://svn.boost.org/trac/boost/ticket/2693">#2693</a>,
