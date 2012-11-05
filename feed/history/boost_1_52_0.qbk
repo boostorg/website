@@ -1,7 +1,7 @@
 [article Version 1.52.0
     [quickbook 1.5]
     [source-mode c++]
-    [purpose Updated Libraries: Config, Chrono, Container, DateTime, Foreach, Graph,
+    [purpose Updated Libraries: Accumulators, Config, Chrono, Container, DateTime, Foreach, Graph,
         Graph, Hash, Interprocess, Iterator, Lexical Cast, Math, Phoenix, Polygon,
         Proto, Ratio, Result_of, Thread, uBLAS, Unordered, Uuid, Wave, xpressive.]
     [authors [Dawes, Beman]]
@@ -12,7 +12,7 @@
 
 [status beta]
 [download http://sourceforge.net/projects/boost/files/boost/1.52.0.beta.1/]
-[documentation /doc/libs/1_52_0_beta1/]
+[documentation /doc/libs/1_52_0/]
 
 [/
 Release status:
@@ -21,6 +21,9 @@ Release status:
 ]
 
 [section Updated Libraries]
+
+* [phrase library..[@/libs/accumulators/ Accumulators]:]
+  * Fix long-standing dependency tracking bug, [@https://svn.boost.org/trac/boost/ticket/7409 #7409]
 
 * [phrase library..[@/libs/config/ Config]:]
   * Define `BOOST_NO_SFINAE_EXPR` for gcc-4.4, since the support was found to be too buggy.
@@ -37,9 +40,12 @@ Release status:
     * When `BOOST_CHRONO_VERSION==2` the preceding deprecated functions are not available.
   * [*Fixes:]
     * [ticket 7381] C++11 compliance: unresolved symbol when assigning a constexpr duration to a non-const local variable.
+    * [@http://svn.boost.org/trac/boost/ticket/7479 #7479] Compile fails
+      with compilers supporting constexpr fails if the standard library
+      doesn't provides the constexpr interface
   * [*Would not fix:]
     * [ticket 6871] chrono_io.hpp: `operator<<(ostream& os, ...)` modifies the state of os. The neww io interface provided in version 2 solves this issue. You should move to the new version.
-	
+
 * [phrase library..[@/libs/container/ Container]:]
   *  Improved `stable_vector`'s template code bloat and type safety.
   *  Changed typedefs and reordered functions of sequence containers to improve doxygen documentation.
@@ -156,6 +162,10 @@ Release status:
     * The `ratio_string<>::short_name` and `ratio_string<>::long_name` are
       deprecated. Use `ratio_string<>::symbol` and `ratio_string<>::prefix`
       respectively. These functions be removed in 1.55.
+  * [*Fixes:]
+    * [@http://svn.boost.org/trac/boost/ticket/7478 #7478] Compiles
+      fails with compilers supporting char16_t and char32_t fails if the
+      library doesn't provides std::u16string and std::u32string.
 
 * [phrase library..[@/libs/utility/utility.htm#result_of Result_of]:]
   * Switch `boost::result_of` to use `decltype` on compilers for which support is deemed "good enough".
@@ -201,44 +211,19 @@ Release status:
 
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * In assignment, reuse existing nodes where possible.
+  * Fix bugs when erasing ranges ([ticket 7471]).
   * Some work on the implementation.
 
 * [phrase library..[@/libs/uuid/ Uuid]:]
   * Fixes [ticket 6118], [ticket 6788], [ticket 7375].
+  * [ticket 7128] - fixed bug in `sha1.hpp` for messages longer than
+    536,870,912 bytes.
 
 * [phrase library..[@/libs/wave/ Wave]:]
   * See the [@/libs/wave/ChangeLog Changelog] for details.
 
 * [phrase library..[@/libs/xpressive/ xpressive]:]
   * Make `sub_match` work with Boost.Range. Fixes [@https://svn.boost.org/trac/boost/ticket/7237 #7237].
-
-[endsect]
-
-[section Post-Beta Fixes]
-
-These changes have been made since the beta was released, so they'll be included
-in the next beta if there is one, or the final release.
-
-* [phrase library..[@/libs/accumulators/ Accumulators]:]
-  * Fix long-standing dependency tracking bug, [@https://svn.boost.org/trac/boost/ticket/7409 #7409]
-
-* [phrase library..[@/libs/chrono/ Chrono]:]
-  * [@http://svn.boost.org/trac/boost/ticket/7479 #7479] Compiles fails
-  with compilers supporting constexpr fails if the standard library
-  doesn't provides the constexpr interface
-
-* [phrase library..[@/libs/ratio/ Ratio]:]
-  * [*Fixes:]
-    * [@http://svn.boost.org/trac/boost/ticket/7478 #7478] Compiles
-    fails with compilers supporting char16_t and char32_t fails if the
-    library doesn't provides std::u16string and std::u32string.
-
-* [phrase library..[@/libs/unordered/ Unordered]:]
-  * Fix bugs when erasing ranges ([ticket 7471]).
-
-* [phrase library..[@/libs/uuid/ Uuid]:]
-  * ticket [ticket 7128] - fixed bug in `sha1.hpp` for messages longer than
-    536,870,912 bytes.
 
 [endsect]
 
