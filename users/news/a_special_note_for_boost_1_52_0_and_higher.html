@@ -36,30 +36,30 @@
 
 
   <p>
-    Starting in Boost 1.52.0, the <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">result_of</span></code>
-    component defaults to an implementation that uses the C++11 decltype keyword
-    to deduce the return type of callables on compilers with strong decltype support.
-    As <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">result_of</span></code> is a key piece of library infrastructure,
-    we at Boost have found this change to be moderately disruptive. You should be
-    aware of the issue when making the decision to upgrade from an older version
-    of Boost.
+    Starting with Boost 1.52.0, the <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">result_of</span></code>
+    component defaults to an implementation that uses the C++11 <code><span class="identifier">decltype</span></code>
+    keyword to deduce the return type of callables on compilers with strong <code><span class="identifier">decltype</span></code> support. As <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">result_of</span></code>
+    is a key piece of library infrastructure, we at Boost have found this change
+    to be moderately disruptive. You should be aware of the issue when making the
+    decision to upgrade from an older version of Boost.
   </p>
   <div id="a_special_note_for_boost_1_52_0_and_higher.why_the_change_was_made">
     <h3><span class="link">Why
     the Change Was Made</span></h3>
     <p>
-      In C++11, <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">result_of</span></code> is required to use decltype. Boost
-      has decided to change its implementation to minimize the differences between
-      boost::result_of and std::result_of. Also, the use of decltype should help
-      to improve compile times and increase the accuracy of the type computation.
+      <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">result_of</span></code> has been changed to use <code><span class="identifier">decltype</span></code> to make it more consistent with
+      <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">result_of</span></code> (when sufficient compiler support
+      is available). Also, the use of <code><span class="identifier">decltype</span></code>
+      should help to improve compile times and increase the accuracy of the type
+      computation.
     </p>
   </div>
   <div id="a_special_note_for_boost_1_52_0_and_higher.who_is_affected">
     <h3><span class="link">Who
     is Affected</span></h3>
     <p>
-      If you use a compiler with sufficiently bug-free decltype support (including
-      <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2011/n3276.pdf">N3276</a>),
+      If you use a compiler with sufficiently bug-free <code><span class="identifier">decltype</span></code>
+      support (including <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2011/n3276.pdf">N3276</a>),
       then you will get the new behavior. At the time of writing (Nov 4, 2012), the
       only compiler in that category is Clang 3.1, but as other compilers improve,
       this will change.
@@ -70,19 +70,20 @@
     Problems Can the Change Cause?</span></h3>
     <p>
       The use of <code><span class="identifier">decltype</span></code> in <code><span class="identifier">result_of</span></code> can result in a different type
-      being computed than if the now-obsolete TR1 result_of protocol. This will often
-      be the case for incorrectly written TR1-style function objects that misreport
-      their result types. This is unfortunately too common. But it can even happen
-      for some correctly written function objects.
+      being computed than with the now-obsolete TR1 <code><span class="identifier">result_of</span></code>
+      protocol. This will often be the case for incorrectly written TR1-style function
+      objects that misreport their result types. This is unfortunately too common.
+      But it can even happen for some correctly written function objects.
     </p>
   </div>
   <div id="a_special_note_for_boost_1_52_0_and_higher.where_can_i_learn_more_">
     <h3><span class="link">Where
     Can I Learn More?</span></h3>
     <p>
-      Please see the documentation for <a href="http://www.boost.org/doc/libs/1_52_0/libs/utility/utility.htm#result_of">boost::result_of</a>
-      to understand the differences between TR1 result_of and decltype result_of,
-      and to find out how you can write your code to accommodate both.
+      Please see the documentation for <a href="http://www.boost.org/doc/libs/1_52_0/libs/utility/utility.htm#result_of"><code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">result_of</span></code></a>
+      to understand the differences between TR1 <code><span class="identifier">result_of</span></code>
+      and <code><span class="identifier">decltype</span></code> <code><span class="identifier">result_of</span></code>, and to find out how you can write
+      your code to accommodate both.
     </p>
   </div>
 </div>
