@@ -1,54 +1,223 @@
 [article Version 1.52.0
     [quickbook 1.5]
     [source-mode c++]
-    [purpose Updated Libraries: Graph]
-    [authors [Dawes, Beman]]
-    [last-revision ]
+    [purpose Updated Libraries: Accumulators, Config, Chrono, Container, DateTime, Foreach, Function,
+        Graph, Hash, Interprocess, Iterator, Lexical Cast, Math, Phoenix, Polygon,
+        Proto, Ratio, Result_of, Thread, uBLAS, Unordered, Uuid, Wave, xpressive.]
+    [authors [Clow, Marshall]]
+    [last-revision Mon, 5 Nov 2012 08:05:58 -0800]
 ]
 
 [include ext.qbk]
 
-[/
-
-As the release progresses add the 'status' and 'download' elements to
-indicate the release status:
-
-Beta status:
-[status beta]
-[download http://sourceforge.net/projects/boost/files/boost/1.52.0_beta.1/]
-
-Release status:
 [status released]
 [download http://sourceforge.net/projects/boost/files/boost/1.52.0/]
-
-]
-
-[/
-    When adding libraries:
-
-    1. Libraries are listed in alphabetical order.
-    2. Besides the dedicated entry, the lib name should be added to the
-       [purpose] section at the beginning of the page.
-]
+[documentation /doc/libs/1_52_0/]
 
 [section Updated Libraries]
+
+* [phrase library..[@/libs/accumulators/ Accumulators]:]
+  * Fix long-standing dependency tracking bug, [@https://svn.boost.org/trac/boost/ticket/7409 #7409]
+
+* [phrase library..[@/libs/config/ Config]:]
+  * Define `BOOST_NO_SFINAE_EXPR` for gcc-4.4, since the support was found to be too buggy.
+
+* [phrase library..[@/libs/chrono/ Chrono]:]
+  * [*New Features:]
+    * [ticket 5980] Enhance chrono I/O with H. Hinnant proposal [@http://home.roadrunner.com/~hinnant/bloomington/chrono_io.html proposal] which has the advantage to provide I/O for system clocks using the Gregorian Calendar.
+    * [ticket 5981] Add i/o state savers for duration and time_point formatting state.
+    * [ticket 7059] Add low level i/o facilities.
+  * [*Deprecated features:]
+    * The chrono i/o version included in Boost.Chrono 1.2.x has been completly refactored in version 2.0.0
+    * chrono I/O: The manipulators `__duration_short`, `__duration_long` are depreceated. You should use the parameterized form `__duration_fmt` or the renamed manipulators `__duration_symbol` and `__duration_prefix`  instead.
+    * chrono I/O: The `__duration_punct<>` facet is deprecated. You should use the `__get_duration_style` free function to get the informations and use the `__duration_units` facet for localization purposes.
+    * When `BOOST_CHRONO_VERSION==2` the preceding deprecated functions are not available.
+  * [*Fixes:]
+    * [ticket 7381] C++11 compliance: unresolved symbol when assigning a constexpr duration to a non-const local variable.
+    * [@http://svn.boost.org/trac/boost/ticket/7479 #7479] Compile fails
+      with compilers supporting constexpr fails if the standard library
+      doesn't provides the constexpr interface
+  * [*Would not fix:]
+    * [ticket 6871] chrono_io.hpp: `operator<<(ostream& os, ...)` modifies the state of os. The neww io interface provided in version 2 solves this issue. You should move to the new version.
+
+* [phrase library..[@/libs/container/ Container]:]
+  *  Improved `stable_vector`'s template code bloat and type safety.
+  *  Changed typedefs and reordered functions of sequence containers to improve doxygen documentation.
+  *  Fixed bugs
+  [@https://svn.boost.org/trac/boost/ticket/6615 #6615],
+  [@https://svn.boost.org/trac/boost/ticket/7139 #7139],
+  [@https://svn.boost.org/trac/boost/ticket/7215 #7215],
+  [@https://svn.boost.org/trac/boost/ticket/7232 #7232],
+  [@https://svn.boost.org/trac/boost/ticket/7269 #7269],
+  [@https://svn.boost.org/trac/boost/ticket/7439 #7439].
+  *  Implemented LWG Issue #149 (range insertion now returns an iterator) & cleaned up insertion code in most containers
+  *  Corrected aliasing errors.
+
+* [phrase library..[@/libs/date_time/ DateTime]:]
+  * Document `BOOST_DATE_TIME_NO_LIB` ([ticket 6077]).
+  * Fix `nth_as_str` ([ticket 7022]).
+  * Fix some warnings ([ticket 7234]).
+
+* [phrase library..[@/libs/foreach/ Foreach]:]
+  * Fix alignment warning on gcc.
+
+* [phrase library..[@/libs/function/ Function]:]
+  * Move constructors and move assignment operators added (only for compilers with C++11 rvalue references support) [@https://svn.boost.org/trac/boost/ticket/7330 #7330].
 
 * [phrase library..[@/libs/graph/ Graph]:]
   * Fixed bugs [ticket 6950], [ticket 7226],[ticket 7308], [ticket 7327],
     [ticket 7338], [ticket 7341], [ticket 7378], [ticket 7380], [ticket 7398],
     and [ticket 7428], plus others not in Trac.
 
-[/
+* [phrase library..[@/libs/functional/hash/ Hash]:]
+  * Restore `enum` support, which was accidentally removed in the last version
+    ([ticket 7437]).
+  * New floating point hasher - will hash the binary representation on more
+    platforms, which should be faster.
 
-* /TODO/: [phrase library..[@/libs/spirit/ Spirit]:]
-  * Spirit Vx.x, see the
-    '[@/doc/libs/1_xx_x/libs/spirit/doc/html/spirit/what_s_new/spirit_x_x.html What's New]'
-    section for details.
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  *  Added `shrink_by` and `advise` functions in `mapped_region`.
+  *  [*ABI breaking:] Reimplemented `message_queue` with a circular buffer index (the
+   old behavior used an ordered array, leading to excessive copies). This
+   should greatly increase performance but breaks ABI. Old behaviour/ABI can be used
+   undefining macro `BOOST_INTERPROCESS_MSG_QUEUE_CIRCULAR_INDEX` in `boost/interprocess/detail/workaround.hpp`
+  *  Improved `message_queue` insertion time avoiding priority search for common cases
+   (both array and circular buffer configurations).
+  *  Implemented `interproces_sharable_mutex` and `interproces_condition_any`.
+  *  Improved `offset_ptr` performance.
+  *  Added integer overflow checks.
 
-* /TODO/: [phrase library..[@/libs/wave/ Wave]:]
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * Fixed:
+    * [ticket 5825] constructing function_input_iterator without consuming an
+      item
+    * [ticket 7194] Error in documentation of make_function_input_iterator
+  * [*Breaking changes:]
+    * Due to the fix for [ticket 5825], a function_input_iterator will no longer
+      make unnecessary invokations to the wrapped nullary function. For example,
+      constructing an end iterator will now not trigger an invokation; and
+      dereferencing-and-incrementing an iterator N times will trigger N
+      invokations, not N+1 as before. User code that relied on the old behavior
+      will need to be adjusted.
+
+* [phrase library..[@/libs/conversion/lexical_cast.htm Lexical cast]:]
+  * Restored compilation on MSVC-2003 (was broken in 1.51.0) [@https://svn.boost.org/trac/boost/ticket/7255 #7255].
+  * Added `lexical_cast(const CharType* chars, std::size_t count)` function overload. [@https://svn.boost.org/trac/boost/ticket/6663 #6663].
+  * Fixed bug [@https://svn.boost.org/trac/boost/ticket/7228 #7228].
+
+* [phrase library..[@/libs/math/ Math]:]
+  * Added Airy functions and Jacobi Elliptic functions.
+  * In several distributions (particulary the Students T) corrected moments for small degrees of freedom
+    [@https://svn.boost.org/trac/boost/ticket/7177 #7177] (reported by Thomas Mang).
+  * Corrected failure to detect bad parameters in many distributions
+    [@https://svn.boost.org/trac/boost/ticket/6934 #6934] (reported by Florian Schoppmann)
+    by adding a function `check_out_of_range` to test many possible bad parameters.
+    This test revealed several distributions where the checks for bad parameters were ineffective,
+    and these have been rectified.
+  * Fixed issue in Hankel functions that causes incorrect values to be returned for ['x < 0] and ['\u03BD]
+    odd, see [@https://svn.boost.org/trac/boost/ticket/7135 #7135].
+  * In non-central T permitted infinite degrees of freedom [@https://svn.boost.org/trac/boost/ticket/7259 #7259] 
+    implemented using the normal distribution (requested by Thomas Mang). 
+    Also much enhanced accuracy for large degrees of freedom and/or large non-centrality parameters by switching to use 
+    the Students t distribution (or Normal distribution for infinite degrees of freedom) 
+    centered at delta, when delta / (4 * v) < epsilon for the floating-point type in use. 
+    See [@https://svn.boost.org/trac/boost/ticket/7259 #7259]. 
+    It was also found that the incomplete beta was suffering from serious cancellation errors when degrees of 
+    freedom was very large. (That has now been fixed in our code, but any code based on Didonato and Morris's original papers 
+    (probably every implementation out there actually) will have the same issue). 
+  * Fixed minor issues [@https://svn.boost.org/trac/boost/ticket/6517 #6517],
+    [@https://svn.boost.org/trac/boost/ticket/6362 #6362],
+    [@https://svn.boost.org/trac/boost/ticket/7053 #7053],
+    [@https://svn.boost.org/trac/boost/ticket/2693 #2693],
+    [@https://svn.boost.org/trac/boost/ticket/6937 #6937],
+    [@https://svn.boost.org/trac/boost/ticket/7099 #7099].
+
+* [phrase library..[@/libs/phoenix/ Phoenix]:]
+  * Make Phoenix work with `decltype`-based `boost::result_of`.
+
+* [phrase library..[@/libs/polygon/ Polygon]:]
+  * Included Voronoi diagram extensions.
+  * Introduced new Segment concept.
+  * Fixed compilation issues.
+
+* [phrase library..[@/libs/proto/ Proto]:]
+  * The data parameter to primitive transforms can now optionally have slots indexed by key.
+  * Primitive transforms can now operatate on temporary expressions that are non-const qualified.
+  * Add callable function object types for the free functions in `<iterator>` and also for some
+    Boost.Range functions.
+  * Boost.MPL algorithms work on Proto expression nodes.
+  * `proto::pass_through` primitive transform now accepts an optional `Domain` template parameter
+    for specifying the target domain of the resulting expression.
+
+* [phrase library..[@/libs/ratio/ Ratio]:]
+  * [*Features:]
+    * Replace the `short_name` and `long_name` functions by symbol and prefix functions respectively.
+  * [*Deprecated:]
+    * The `ratio_string<>::short_name` and `ratio_string<>::long_name` are
+      deprecated. Use `ratio_string<>::symbol` and `ratio_string<>::prefix`
+      respectively. These functions be removed in 1.55.
+  * [*Fixes:]
+    * [@http://svn.boost.org/trac/boost/ticket/7478 #7478] Compiles
+      fails with compilers supporting char16_t and char32_t fails if the
+      library doesn't provides std::u16string and std::u32string.
+
+* [phrase library..[@/libs/utility/utility.htm#result_of Result_of]:]
+  * Switch `boost::result_of` to use `decltype` on compilers for which support is deemed "good enough".
+    That means if the compiler implements [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2011/n3276.pdf n3276].
+	(For now, that only includes very recent versions of clang.)
+  * `boost::result_of` is now "sfinae-friendly" when it uses `decltype`.
+    See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3436.html n3436].
+
+* [phrase library..[@/libs/thread/index.html Thread]:]
+  * [*Deprecated Features]: Deprecated features since boost 1.50 available only until boost 1.55. These deprecated features will be provided by default up to boost 1.52. If you don't want to include the deprecated features you could define BOOST_THREAD_DONT_PROVIDE_DEPRECATED_FEATURES_SINCE_V3_0_0. Since 1.53 these features will not be included any more by default. Since this version, if you want to include the deprecated features yet you could define BOOST_THREAD_PROVIDE_DEPRECATED_FEATURES_SINCE_V3_0_0. These deprecated features will be only available until boost 1.55, that is you have yet 1 year to move to the new features.
+    * Time related functions don't using the Boost.Chrono library, use the chrono overloads instead.
+  * Breaking changes when `BOOST_THREAD_VERSION==3` (Default value since Boost 1.53):
+    There are some new features which share the same interface but with different behavior. These breaking features are provided by default when BOOST_THREAD_VERSION is 3, but the user can however choose the version 2 behavior by defining the corresponding macro. As for the deprecated features, these broken features will be only available until boost 1.55.
+    * [ticket 6229] C++11 compliance & Breaking change: Rename the unique_future to future following the c++11.
+    * [ticket 6266] C++11 compliance & Breaking change: thread destructor should call terminate if joinable.
+    * [ticket 6269] C++11 compliance & Breaking change: thread move assignment should call terminate if joinable.
+  * [*New Features:]
+    * [ticket 4710] C++11 compliance: Missing `async()`.   
+    * [ticket 7283] C++11 compliance: Add `notify_all_at_thread_exit`.
+    * [ticket 7345] C++11 compliance: Add `noexcept` to recursive mutex `try_lock`.
+  * [*Fixed Bugs:]
+    * [ticket 2361] `thread_specific_ptr`: document nature of the key, complexity and rationale.
+    * [ticket 2797] Two problems with `thread_specific_ptr`.
+    * [ticket 5274] failed to compile `future.hpp` with stlport 5.1.5 under msvc8.1, because of undefined class.
+    * [ticket 5431] compile error in Windows CE 6.0(interlocked).
+    * [ticket 5752] `boost::call_once()` is unreliable on some platforms.
+    * [ticket 7045] Thread library does not automatically compile date_time.     
+    * [ticket 7173] wrong function name `interrupt_point()`.
+    * [ticket 7200] Unable to build boost.thread modularized.
+    * [ticket 7220] gcc 4.6.2 warns about inline+dllimport functions.
+    * [ticket 7238] `this_thread::sleep_for()` does not respond to interrupt().
+    * [ticket 7245] Minor typos on documentation related to version 3.
+    * [ticket 7272] `win32/thread_primitives.hpp`: (Unneccessary) Warning.
+    * [ticket 7284] Clarify that there is no access priority between lock and shared_lock on shared mutex.
+    * [ticket 7329] `boost/thread/future.hpp` does not compile on HPUX.
+    * [ticket 7336] `BOOST_THREAD_DONT_USE_SYSTEM` doesn't work.
+    * [ticket 7349] `packaged_task` holds reference to temporary.
+    * [ticket 7350] `allocator_destructor` does not destroy object
+
+* [phrase library..[@/libs/numeric/ublas/ uBLAS]:]
+  * improved performance of inplace_solve (issue [ticket 4024])
+  * fixed coordinate_matrix for use with gcc 4.7 (issue [ticket 7363])
+
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * In assignment, reuse existing nodes where possible.
+  * Fix bugs when erasing ranges ([ticket 7471]).
+  * Some work on the implementation.
+
+* [phrase library..[@/libs/uuid/ Uuid]:]
+  * Fixes [ticket 6118], [ticket 6788], [ticket 7375].
+  * [ticket 7128] - fixed bug in `sha1.hpp` for messages longer than
+    536,870,912 bytes.
+
+* [phrase library..[@/libs/wave/ Wave]:]
   * See the [@/libs/wave/ChangeLog Changelog] for details.
 
-]
+* [phrase library..[@/libs/xpressive/ xpressive]:]
+  * Make `sub_match` work with Boost.Range. Fixes [@https://svn.boost.org/trac/boost/ticket/7237 #7237].
 
 [endsect]
 
@@ -56,17 +225,59 @@ Release status:
 
 Boost's primary test compilers are:
 
-* /TODO/
+* Linux:
+  * GCC: 4.2.4, 4.3.4, 4.4.3, 4.5.3, 4.6.2, 4.7.2
+  * GCC, C++11 mode: 4.3.4, 4.4.3, 4.5.3, 4.6.2
+  * Intel: 11.1, 12.0, 12.1
+  * LLVM Clang: 2.8
+* OS X:
+  * GCC: 4.4.4
+  * GCC, C++11 mode: 4.4.4
+  * Intel: 11.1, 12.0
+* Windows:
+  * GCC, mingw: 4.4.0, 4.4.7, 4.5.4, 4.6.3, 4.7.0
+  * Visual C++: 8.0, 9.0, 10.0
+* FreeBSD:
+  * GCC: 4.2.1, 32 and 64 bit
 
 Boost's additional test compilers include:
 
-* /TODO/
+* Linux:
+  * Cray: 8.0
+  * Clang: from subversion
+  * LLVM Clang:
+  * GCC: 4.2.4, 4.3.4, 4.4.4, 4.5.3, 4.6.2, 4.6.3, 4.7.0, 4.7.1, 4.7.2
+  * GCC, C++11 mode: 4.3.4, 4.4.4, 4.5.3, 4.6.3, 4.7.1
+  * pgCC: 11.9
+  * Intel: 10.1, 11.1, 12.0, 12.1
+  * Visual Age: 10.1
+* OS X:
+  * Clang: from subversion
+  * Clang, C++11 mode: from subversion
+  * Intel: 11.1, 12.0
+  * GCC: 4.4.4
+  * GCC, C++11 mode: 4.4.4
+* Windows:
+  * Visual C++: 8.0, 9.0, 10.0, 11.0
+  * Visual C++ with STLport: 9.0
+  * Visual C++, Windows Mobile 5, with STLport: 9.0
+  * GCC, mingw: 4.4.0, 4.4.7, 4.5.4, 4.6.3, 4.7.0
+* AIX:
+  * IBM XL C/C++ Enterprise Edition: V12.1.0.0
+* FreeBSD:
+  * GCC: 4.2.1, 64 bit
+* Solaris:
+  * Sun: 5.10
 
 [endsect]
 
 [section Acknowledgements]
 
-/TODO/
+[@/users/people/beman_dawes.html Beman Dawes],
+Eric Niebler,
+[@/users/people/rene_rivera.html Rene Rivera],
+Daniel James, Vladimir Prus and Marshall Clow
+managed this release.
 
 [endsect]
 

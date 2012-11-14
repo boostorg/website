@@ -123,7 +123,6 @@ function remove_html_banner($text) {
 function latest_link($params)
 {
     $version = BoostVersion::from($params['version']);
-    if ($version->is_beta()) return;
 
     $current = BoostVersion::current();
     switch ($current->compare($version))
@@ -149,7 +148,9 @@ function latest_link($params)
         break;
     case -1:
         echo '<div class="boost-common-header-notice">';
-        echo 'This is the documentation for an unreleased version of boost';
+        echo '<span class="boost-common-header-inner">';
+        echo 'This is the documentation for a development version of boost';
+        echo '</span>';
         echo '</div>', "\n";
         break;
     }
