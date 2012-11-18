@@ -34,6 +34,13 @@ class BoostBookParser:
             *self.x_children(article_node.getElementsByTagName('title')[0])
         )
 
+        notice_xhtml = None
+        notice_url = None
+        notice_node = article_node.getElementsByTagName('notice')
+        if notice_node:
+            notice_xhtml = self.new_fragment(*self.x_children(notice_node[0]))
+            notice_url = notice_node[0].getAttribute('url')
+
         download_item = None
         download_node = article_node.getElementsByTagName('download')
         if download_node:
@@ -64,6 +71,8 @@ class BoostBookParser:
             'title_fragment' : title_xhtml,
             'purpose_fragment' : brief_xhtml,
             'description_fragment' : description_xhtml,
+            'notice_url' : notice_url,
+            'notice_fragment' : notice_xhtml,
             'pub_date' : pub_date,
             'last_modified' : last_modified,
             'download_item' : download_item,
@@ -100,6 +109,8 @@ class BoostBookParser:
             if self.get_child(body_item, tag = 'download'):
                 continue
             if self.get_child(body_item, tag = 'status'):
+                continue
+            if self.get_child(body_item, tag = 'notice'):
                 continue
             if self.get_child(body_item, tag = 'documentation'):
                 continue
