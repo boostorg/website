@@ -27,6 +27,12 @@ for x in downloads:
             emit(' | ')
             emit('<a href="%s">Documentation</a>' % (htmlencode(entry.documentation)))
         emit('</div>')
+        if entry.notice_xml:
+            if entry.notice_url:
+                emit('<div class="news-notice"><a class="news-notice-link" href="%s">%s</a></div>' %
+                    (htmlencode(entry.notice_url), entry.notice_xml))
+            else:
+                emit('<div class="news-notice">%s</div>' % entry.notice_xml)
         emit('<div class="news-date">%s</div>' % (entry.web_date()))
         emit('</li>\n')
     emit('</ul>\n')

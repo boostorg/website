@@ -190,6 +190,8 @@ class Page:
         self.id = attrs.get('id', None)
         self.title_xml = attrs.get('title', None)
         self.purpose_xml = attrs.get('purpose', None)
+        self.notice_xml = attrs.get('notice', None)
+        self.notice_url = attrs.get('notice_url', None)
         self.last_modified = attrs.get('last_modified')
         self.pub_date = attrs.get('pub_date')
         self.download_item = attrs.get('download')
@@ -231,6 +233,8 @@ class Page:
             'id' : self.id,
             'title': self.title_xml,
             'purpose': self.purpose_xml,
+            'notice': self.notice_xml,
+            'notice_url': self.notice_url,
             'last_modified': self.last_modified,
             'pub_date': self.pub_date,
             'download': self.download_item,
@@ -245,6 +249,9 @@ class Page:
     
         self.title_xml = boost_site.util.fragment_to_string(values['title_fragment'])
         self.purpose_xml = boost_site.util.fragment_to_string(values['purpose_fragment'])
+        self.notice_xml = boost_site.util.fragment_to_string(values['notice_fragment']) \
+            if values['notice_fragment'] else None
+        self.notice_url = values['notice_url']
 
         self.pub_date = values['pub_date']
         self.last_modified = values['last_modified']
