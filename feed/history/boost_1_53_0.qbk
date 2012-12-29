@@ -27,6 +27,12 @@
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/array/ Array]:]
+  * Added support for boost::get and std::get ([ticket 7652])
+
+* [phrase library..[@/libs/algorithm/ Algorithm]:]
+  * Fixed non-ASCII char in comment ([ticket 7781]).
+  * Updated the Knuth-Morris-Pratt docs ([ticket 7656]).
 
 * [phrase library..[@/libs/container/ Container]:]
   *  Fixed bug [@https://svn.boost.org/trac/boost/ticket/7650 #7650].
@@ -40,12 +46,16 @@
   * Support for iOS on ARM and MacOS X on x86 (32bit) added.
   * Support for SEH Overwrite Protection on Win32.
 
+* [phrase library..[@/libs/gil/ GIL]:]
+  * Fixed self-assignment warnings ([ticket 4919]).
+
 * [phrase library..[@/libs/graph/ Graph]:]
   * Fixed the following bugs from Trac: [ticket 3468], [ticket 4386],
     [ticket 5269], [ticket 7428], [ticket 7457], [ticket 7467],
     [ticket 7600], [ticket 7648], [ticket 7684], [ticket 7728],
     [ticket 7741], [ticket 7766], [ticket 7771], [ticket 7773],
-    [ticket 7780], [ticket 7787], plus other bugs not in Trac.
+    [ticket 7780], [ticket 7787], [ticket 7801]
+    plus other bugs not in Trac.
   * Added support for reading from GraphML files containing multiple
     graphs.
   * Added versions of A* search specifically for trees, removing the
@@ -76,7 +86,28 @@
   *  Added missing `explicit` keyword in several intrusive container constructors.
   *  Replaced deprecated BOOST_NO_XXXX with newer BOOST_NO_CXX11_XXX macros.
   *  Small documentation fixes.
-  
+
+* [phrase library..[@/libs/conversion/lexical_cast.htm Lexical cast]:]
+  * New character type detection algorithm for user defined types [ticket 6786].
+  * Documentation updates ([ticket 7582], [ticket 7831]).
+  * Fixed bugs with std::array [ticket 7799].
+
+* [phrase library..[@/libs/math/ Math]:]
+   * Fixed issues [@https://svn.boost.org/trac/boost/ticket/7325 #7325], [@https://svn.boost.org/trac/boost/ticket/7415 #7415],
+   [@https://svn.boost.org/trac/boost/ticket/7416 #7416], [@https://svn.boost.org/trac/boost/ticket/7183 #7183],
+   [@https://svn.boost.org/trac/boost/ticket/7649 #7649], [@https://svn.boost.org/trac/boost/ticket/7694 #7694],
+   [@https://svn.boost.org/trac/boost/ticket/4445 #4445] and [@https://svn.boost.org/trac/boost/ticket/7492 #7492].
+   * Fixed mistake in calculating pooled standard deviation in two-sample students t example
+   [@https://svn.boost.org/trac/boost/ticket/7402 #7402].
+   * Improve complex acos/asin/atan, see [@https://svn.boost.org/trac/boost/ticket/7290 #7290], 
+   [@https://svn.boost.org/trac/boost/ticket/7291 #7291].
+   * Improve accuracy in some corner cases of cyl_bessel_j and gamma_p/gamma_q thanks to suggestions from Rocco Romeo.
+   * Improve accuracy in Bessel J and Y with integer orders thanks to suggestions from Rocco Romeo.
+
+* [phrase library..[@/libs/minmax/ MinMax]:]
+  * Fixed a misuse of the comma operator ([ticket 7752]).
+  * Updated the docs to fix broken link ([ticket 7751]).
+
 * [phrase library..[@/libs/move/ Move]:]
   *  Better header segregation (bug
     [@https://svn.boost.org/trac/boost/ticket/6524 #6524]).
@@ -85,9 +116,46 @@
   *  Fixed [@https://svn.boost.org/trac/boost/ticket/7830 #7830],
            [@https://svn.boost.org/trac/boost/ticket/7832 #7832].
 
+* [phrase library..[@/libs/polygon/ Polygon]:]
+  * [*Fixes:]
+    * [ticket 6366] Bug in `boost::polygon::contains` for polygon_90 type.
+    * [ticket 7678] multiple definitions of `bool boost::polygon::belongs(...)`
+      by multiple `#include`.
+  * [*Internal changes:]
+    * refactored point/segment/interval data/concept/traits.
+    * added unit tests for point and interval data/concept/traits.
+    * simplified `transform.hpp` to operate only in 2D.
+    * removed point_3d data/concept/traits.
+
+* [phrase library..[@/libs/random/ Random]:]
+  * Now compiles with exceptions disabled ([ticket 5399]).
+
+* [phrase library..[@/libs/range/ Range]:]
+  * [*Fixes:]
+    * [@https://svn.boost.org/trac/boost/ticket/5603 #5603] the "range/any_range.hpp" header is not self-sufficient
+    * [@https://svn.boost.org/trac/boost/ticket/6103 #6103] boost::range_detail vs. boost::range::range_detail compiler error
+    * Documentation fixes
+
 * [phrase library..[@/libs/ratio/ Ratio]:]
   * [*Fixes:]
     * [@https://svn.boost.org/trac/boost/ticket/7616 #7616] br_mul::nan - warning C4293: '<<' : shift count negative or too big, undefined behavior`.
+
+* [phrase library..[@/libs/regex/ Regex]:]
+   Fixed Issues: [@https://svn.boost.org/trac/boost/ticket/7744 #7744], [@https://svn.boost.org/trac/boost/ticket/7644 #7644].
+
+* [phrase library..[@/libs/smart_ptr/ Smart Pointers]:]
+  * [*New Features:]
+    * Glen Fernandes provided implementations of make_shared and 
+      allocate_shared for arrays. They achieve a single allocation for an 
+      array that can be initialized with constructor arguments or 
+      initializer lists as well as overloads for default initialization and no 
+      value initialization. See the 
+      '[@/libs/smart_ptr/make_shared_array.html make_shared and allocate_shared for arrays]'
+      page for more information.
+    
+* [phrase library..[@/libs/algorithm/string StringAlgo]:]
+  * Fixed a bug where it wouldn't find overlapping patterns ([ticket 7784]).
+  * Disambiguated some calls to insert ([ticket 7346]).
 
 * [phrase library..[@/libs/thread/ Thread]:]
   * [*Breaking changes:]
@@ -136,8 +204,21 @@
   * More internal implementation changes, including a much simpler
     implementation of `erase`, and removed more deprecated config macros.
 
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Added rvalue constructors and rvalue assignment operators (for
+    C++11 compatible compilers only). Library now
+    can be used with move-only types ([ticket 7620], [ticket 7718]).
+
 * [phrase library..[@/libs/wave/ Wave]:]
   * See the [@/libs/wave/ChangeLog Changelog] for details.
+
+[endsect]
+
+[section Updated Tools]
+
+* [phrase library..[@/tools/build/index.html Boost Build System]:]
+  * Qt5 toolset
+  * improved rcc support ([@https://svn.boost.org/trac/boost/ticket/7576 #7576])
 
 [endsect]
 
