@@ -19,7 +19,7 @@ for x in downloads:
             entry.full_title_xml))
         emit('</div>')
         emit('<div class="news-date">')
-        emit('<a href="/%s">Details</a>' % (htmlencode(entry.location)))
+        emit('<a href="/%s">Release Notes</a>' % (htmlencode(entry.location)))
         if entry.download_item:
             emit(' | ')
             emit('<a href="%s">Download</a>' % (htmlencode(entry.download_item)))
