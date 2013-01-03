@@ -48,6 +48,20 @@
   * Support for iOS on ARM and MacOS X on x86 (32bit) added.
   * Support for SEH Overwrite Protection on Win32.
 
+* [phrase library..[@/libs/geometry Geometry]:]
+  * [*Bugfixes]
+    * avoid generating output polygons with interior rings below minimum size (e.g. one or two points)
+    * `geometry::disjoint` for degenerate segments (patched by Karsten Ahnert)
+    * problem in `geometry::difference` for missing handling tangency, reported by H2
+    * fixed `geometry::for_each` for use with Lambda's
+    * fixed `geometry::comparable_distance` point-linestring (and -range, -polygon)
+  * [*Additional functionality]
+    * combinations for `geometry::disjoint`: point/ring, point/polygon, point/multi_polygon
+    * combinations for `geometry::intersects`: point/ring, point/polygon, point/multi_polygon
+  * [*Internal changes]
+    * updates in specializations/not_implemented for various algorithms (as in an earlier version, these changes are still going on; they take care for simplified structs, better error reporting, and automatized documentation)
+    * fixes in unit tests
+
 * [phrase library..[@/libs/gil/ GIL]:]
   * Fixed self-assignment warnings ([ticket 4919]).
 
