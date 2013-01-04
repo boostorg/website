@@ -176,6 +176,14 @@
       value initialization. See the 
       '[@/libs/smart_ptr/make_shared_array.html make_shared and allocate_shared for arrays]'
       page for more information.
+    * `shared_ptr` can now be used to hold a pointer to a dynamically
+      allocated array. This is accomplished by using an array type
+      (`T[]` or `T[N]`) as the template parameter.
+    * Smart pointers now use `explicit operator bool` on C++11
+      compilers. This can break code that passes a smart pointer to a
+      function taking a `bool`, or that returns a smart pointer from a
+      function with a `bool` return type. Please use `p != 0` or `!!p`
+      in such cases.
     
 * [phrase library..[@/libs/algorithm/string StringAlgo]:]
   * Fixed a bug where it wouldn't find overlapping patterns ([ticket 7784]).
