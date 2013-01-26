@@ -3,7 +3,7 @@
     [source-mode c++]
     [purpose
     New Libraries: Atomic, Coroutine, Lockfree, Multiprecision, Odeint.
-    Updated Libraries: Algorithm, Array, Asio, Bimap, Container, Context,
+    Updated Libraries: Algorithm, Array, Asio, Bimap, Chrono, Container, Context,
         Geometry, GIL, Graph, Hash, Interprocess, Intrusive,
         Lexical Cast, Locale, Math, MinMax, Move, Polygon, Random,
         Range, Ratio, Regex, Smart Pointers, StringAlgo, Thread,
@@ -67,6 +67,17 @@
   * Fixed replace_(left/right/key/data) bug when using relations with info.
   * Fixed vector_of and list_of views `assign(size_type,value_type)` bug.
   * Fixed vector_of views `operator[](size_type)` and `at(size_type)` functions return value.
+
+* [phrase library..[@/libs/chrono/ Chrono]:]
+  * [*Deprecated:]
+    * The chrono i/o version included in Boost.Chrono 1.2.x has been completly refactored in version 2.0.0
+    * chrono I/O: The manipulators __duration_short, __duration_long are depreceated. You should use the parameterized form __duration_fmt or the renamed manipulators __duration_symbol and __duration_prefix  instead.
+    * chrono I/O: The __duration_punct<> facet is depreceated. You should use the __get_duration_style free function to get the informations and use the __duration_units facet for localization purposes.
+    * When BOOST_CHRONO_VERSION==2 the preceding deprecated functions are not available.
+  * [*Fixes:]
+    * [@https://svn.boost.org/trac/boost/ticket/7546 #7546] time_point<system_clock> output version 2 fails to compile
+    * [@https://svn.boost.org/trac/boost/ticket/7547 #7547] time_point<system_clock> input version 2 fails to compile
+    * [@https://svn.boost.org/trac/boost/ticket/7868 #7868] chrono_io parses time incorrectly (1.53 and 1.52)
 
 * [phrase library..[@/libs/container/ Container]:]
   *  Fixed bug [@https://svn.boost.org/trac/boost/ticket/7650 #7650].
@@ -187,10 +198,19 @@
   * Now compiles with exceptions disabled ([ticket 5399]).
 
 * [phrase library..[@/libs/range/ Range]:]
-  * [*Fixes:]
-    * [@https://svn.boost.org/trac/boost/ticket/5603 #5603] the "range/any_range.hpp" header is not self-sufficient
-    * [@https://svn.boost.org/trac/boost/ticket/6103 #6103] boost::range_detail vs. boost::range::range_detail compiler error
-    * Documentation fixes
+  * [*Bug fixes:]
+    * [ticket 5603] the "range/any_range.hpp" header is not self-sufficient
+    * [ticket 6103] boost::range_detail vs. boost::range::range_detail compiler error
+  * [*Documentation fixes:]
+    * [ticket 5160]
+    * [ticket 5314]
+    * [ticket 5440]
+    * [ticket 5775]
+    * [ticket 6212]
+    * [ticket 7585]
+    * [ticket 7843]
+    * [ticket 7916]
+    * [ticket 7926]
 
 * [phrase library..[@/libs/ratio/ Ratio]:]
   * [*Fixes:]
@@ -250,14 +270,20 @@
     * [@https://svn.boost.org/trac/boost/ticket/7590 #7594] Threads: Allow to disable thread interruptions.
 
   * [*Fixed Bugs:]
+    * [@https://svn.boost.org/trac/boost/ticket/7464 #7464] BOOST_TEST(n_alive == 1); fails due to race condition in a regression test tool.
     * [@https://svn.boost.org/trac/boost/ticket/7657 #7657] Serious performance and memory consumption hit if condition_variable methods condition notify_one or notify_all is used repeatedly.
     * [@https://svn.boost.org/trac/boost/ticket/7665 #7665] this_thread::sleep_for no longer uses steady_clock in thread.
     * [@https://svn.boost.org/trac/boost/ticket/7668 #7668] thread_group::join_all() should check whether its threads are joinable.
     * [@https://svn.boost.org/trac/boost/ticket/7669 #7669] thread_group::join_all() should catch resource_deadlock_would_occur.
+    * [@https://svn.boost.org/trac/boost/ticket/7671 #7671] Error including boost/thread.hpp header on iOS.
     * [@https://svn.boost.org/trac/boost/ticket/7672 #7672] lockable_traits.hpp syntax error: "defined" token misspelled.
     * [@https://svn.boost.org/trac/boost/ticket/7798 #7798] boost::future set_wait_callback thread safety issues.
     * [@https://svn.boost.org/trac/boost/ticket/7808 #7808] Incorrect description of effects for this_thread::sleep_for and this_thread::sleep_until.
     * [@https://svn.boost.org/trac/boost/ticket/7812 #7812] Returns: cv_status::no_timeout if the call is returning because the time period specified by rel_time has elapsed, cv_status::timeout otherwise.
+    * [@https://svn.boost.org/trac/boost/ticket/7874 #7874] compile warning: thread.hpp:342: warning: type attributes are honored only at type definition.
+    * [@https://svn.boost.org/trac/boost/ticket/7875 #7875] BOOST_THREAD_THROW_IF_PRECONDITION_NOT_SATISFIED should not be enabled by default.
+    * [@https://svn.boost.org/trac/boost/ticket/7882 #7882] wrong exception text from condition_variable::wait(unique_lock<mutex>&).
+    * [@https://svn.boost.org/trac/boost/ticket/7890 #7890] thread::do_try_join_until() is missing a return type.
 
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * Remove support for the old pre-standard variadic pair constructors, and
