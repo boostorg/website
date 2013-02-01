@@ -1,0 +1,25 @@
+[article Boost.Locale security notice
+    [quickbook 1.5]
+    [purpose Security flaw in Boost.Locale]
+    [authors [Beilis, Artyom]]
+    [last-revision Fri, 1 Feb 2013 02:08:31 -0800]
+]
+
+[include ext.qbk]
+
+Boost.Locale library in Boost 1.48 to 1.52 including has a security flaw.
+
+`boost::locale::utf::utf_traits` accepted some invalid UTF-8 sequences.
+
+Applications that used these functions for UTF-8 input validation could
+expose themselves to security threats as invalid UTF-8 sequece would be
+considered as valid.
+
+This bug is fixed in upcoming Boost 1.53.
+
+For more details see: [ticket 7743]
+
+Users who can't upgrade to the latest versions may apply the following
+patch to fix the problem.
+
+[@http://cppcms.com/files/locale/boost_locale_utf.patch]
