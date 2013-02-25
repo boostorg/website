@@ -18,7 +18,7 @@ for x in downloads:
         emit('              <span class="brief"><span class="purpose">%s</span></span></p>\n\n' % entry.purpose_xml)
         emit('<ul class="menu">\n')
         emit('<li>')
-        emit('<a href="/%s">Details</a>' % htmlencode(entry.location))
+        emit('<a href="/%s">Release Notes</a>' % htmlencode(entry.location))
         emit('</li>\n')
         if(entry.download_item):
             emit('<li>')

@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Version 1.53.0 - work in progress</title>
+  <title>Version 1.53.0</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
@@ -34,16 +34,19 @@
             <div class="section-title">
               <h1>Version 1.53.0</h1>
             </div>
-            <div class="section-note"><p>Note: This version is at an early stage in its release cycle. The information listed below is incomplete and some of the documentation links may not work yet.</p></div>
+
             <div class="section-body">
               <h2><span class=
-              "news-title">Version 1.53.0 - work in progress</span></h2>
+              "news-title">Version 1.53.0</span></h2>
 
-              <p><span class=news-date">In Progress</span></p>
-
-
+              <p><span class=news-date">February  4th, 2013 18:29 GMT</span></p>
+              <p><a href="/doc/libs/1_53_0/">Documentation</a>
+              <table class="download-table"><caption>Downloads</caption><tr><th scope="col">Platform</th><th scope="col">File</th></tr>
+<tr><th scope="row" rowspan="2">unix</th><td><a href="https://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_53_0.tar.bz2/download">boost_1_53_0.tar.bz2</a></td></tr><tr><td><a href="https://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_53_0.tar.gz/download">boost_1_53_0.tar.gz</a></td></tr>
+<tr><th scope="row" rowspan="2">windows</th><td><a href="https://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_53_0.7z/download">boost_1_53_0.7z</a></td></tr><tr><td><a href="https://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_53_0.zip/download">boost_1_53_0.zip</a></td></tr></table>
               <div class="news-description">
                 <div class="description">
+
 
 
   <div id="version_1_53_0.new_libraries">
@@ -87,9 +90,34 @@
       </li>
     </ul>
   </div>
+  <div id="version_1_53_0.news">
+    <h3><span class="link">News</span></h3>
+    <p>
+      This release contains a fix for ticket <a href="https://svn.boost.org/trac/boost/ticket/7743">#7743</a>, in Boost.Locale. For more
+      details, see the <a href="/users/news/boost_locale_security_notice.html">security
+      notice</a>.
+    </p>
+  </div>
   <div id="version_1_53_0.updated_libraries">
     <h3><span class="link">Updated Libraries</span></h3>
     <ul>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/algorithm/">Algorithm</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed non-ASCII char in comment (<a href="https://svn.boost.org/trac/boost/ticket/7781">#7781</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Updated the Knuth-Morris-Pratt docs (<a href="https://svn.boost.org/trac/boost/ticket/7656">#7656</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
       <li>
         <div>
           <span class="library"><a href="/libs/array/">Array</a>:</span>
@@ -104,16 +132,155 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/libs/algorithm/">Algorithm</a>:</span>
+          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
           <ul>
             <li>
               <div>
-                Fixed non-ASCII char in comment (<a href="https://svn.boost.org/trac/boost/ticket/7781">#7781</a>).
+                Fixed some 64-to-32-bit conversion warnings (<a href="https://svn.boost.org/trac/boost/ticket/7459">#7459</a>).
               </div>
             </li>
             <li>
               <div>
-                Updated the Knuth-Morris-Pratt docs (<a href="https://svn.boost.org/trac/boost/ticket/7656">#7656</a>).
+                Fixed some small errors in documentation and comments (<a href="https://svn.boost.org/trac/boost/ticket/7761">#7761</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed an error in the example embedded in <code><span class="identifier">basic_socket</span><span class="special">::</span><span class="identifier">get_option</span></code>'s
+                documentation (<a href="https://svn.boost.org/trac/boost/ticket/7562">#7562</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed to use <code><span class="keyword">long</span></code>
+                rather than <code><span class="keyword">int</span></code> for
+                SSL_CTX options, to match OpenSSL (<a href="https://svn.boost.org/trac/boost/ticket/7209">#7209</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed to use <code><span class="identifier">_snwprintf</span></code>
+                to address a compile error due to the changed <code><span class="identifier">swprintf</span></code>
+                signature in recent versions of MinGW (<a href="https://svn.boost.org/trac/boost/ticket/7373">#7373</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a deadlock that can occur on Windows when shutting down a pool
+                of <code><span class="identifier">io_service</span></code> threads
+                due to running out of work (<a href="https://svn.boost.org/trac/boost/ticket/7552">#7552</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Enabled the <code><span class="identifier">noexcept</span></code>
+                qualifier for error categories (<a href="https://svn.boost.org/trac/boost/ticket/7797">#7797</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed UNIX domain socket example to treat errors from <code><span class="identifier">accept</span></code> as non-fatal (<a href="https://svn.boost.org/trac/boost/ticket/7488">#7488</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a small block recycling optimisation to improve default memory
+                allocation behaviour.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/bimap/">Bimap</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Refactor map_view_iterator to improve error messages.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed replace_(left/right/key/data) bug when using relations with
+                info.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed vector_of and list_of views <code><span class="identifier">assign</span><span class="special">(</span><span class="identifier">size_type</span><span class="special">,</span><span class="identifier">value_type</span><span class="special">)</span></code> bug.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed vector_of views <code><span class="keyword">operator</span><span class="special">[](</span><span class="identifier">size_type</span><span class="special">)</span></code> and <code><span class="identifier">at</span><span class="special">(</span><span class="identifier">size_type</span><span class="special">)</span></code> functions return value.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/chrono/">Chrono</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <em>Deprecated:</em>
+                <ul>
+                  <li>
+                    <div>
+                      The chrono i/o version included in Boost.Chrono 1.2.x has been
+                      completly refactored in version 2.0.0
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      chrono I/O: The manipulators __duration_short, __duration_long
+                      are depreceated. You should use the parameterized form __duration_fmt
+                      or the renamed manipulators __duration_symbol and __duration_prefix
+                      instead.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      chrono I/O: The __duration_punct&lt;&gt; facet is depreceated.
+                      You should use the __get_duration_style free function to get
+                      the informations and use the __duration_units facet for localization
+                      purposes.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      When BOOST_CHRONO_VERSION==2 the preceding deprecated functions
+                      are not available.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                <em>Fixes:</em>
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7546">#7546</a>
+                      time_point&lt;system_clock&gt; output version 2 fails to compile
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7547">#7547</a>
+                      time_point&lt;system_clock&gt; input version 2 fails to compile
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7868">#7868</a>
+                      chrono_io parses time incorrectly (1.53 and 1.52)
+                    </div>
+                  </li>
+                </ul>
               </div>
             </li>
           </ul>
@@ -171,6 +338,89 @@
             <li>
               <div>
                 Support for SEH Overwrite Protection on Win32.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/geometry">Geometry</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <em>Bugfixes</em>
+                <ul>
+                  <li>
+                    <div>
+                      avoid generating output polygons with interior rings below
+                      minimum size (e.g. one or two points)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">geometry</span><span class="special">::</span><span class="identifier">disjoint</span></code> for degenerate segments
+                      (patched by Karsten Ahnert)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      problem in <code><span class="identifier">geometry</span><span class="special">::</span><span class="identifier">difference</span></code>
+                      for missing handling tangency, reported by H2
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      fixed <code><span class="identifier">geometry</span><span class="special">::</span><span class="identifier">for_each</span></code>
+                      for use with Lambda's
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      fixed <code><span class="identifier">geometry</span><span class="special">::</span><span class="identifier">comparable_distance</span></code>
+                      point-linestring (and -range, -polygon)
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                <em>Additional functionality</em>
+                <ul>
+                  <li>
+                    <div>
+                      combinations for <code><span class="identifier">geometry</span><span class="special">::</span><span class="identifier">disjoint</span></code>:
+                      point/ring, point/polygon, point/multi_polygon
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      combinations for <code><span class="identifier">geometry</span><span class="special">::</span><span class="identifier">intersects</span></code>:
+                      point/ring, point/polygon, point/multi_polygon
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                <em>Internal changes</em>
+                <ul>
+                  <li>
+                    <div>
+                      updates in specializations/not_implemented for various algorithms
+                      (as in an earlier version, these changes are still going on;
+                      they take care for simplified structs, better error reporting,
+                      and automatized documentation)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      fixes in unit tests
+                    </div>
+                  </li>
+                </ul>
               </div>
             </li>
           </ul>
@@ -328,6 +578,46 @@
             <li>
               <div>
                 Fixed bugs with std::array <a href="https://svn.boost.org/trac/boost/ticket/7799">#7799</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed compilation with -ftrapv and numeric to numeric conversions
+                <a href="https://svn.boost.org/trac/boost/ticket/7814">#7814</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/locale/">Locale</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Security related bug fix, some invalid UTF-8 sequences where accepted
+                as valid <a href="https://svn.boost.org/trac/boost/ticket/7743">#7743</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                Invalid Windows codepage names used <a href="https://svn.boost.org/trac/boost/ticket/7386">#7386</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed missing documentation, caused by a error in Doxygen formatting
+                <a href="https://svn.boost.org/trac/boost/ticket/7734">#7734</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed missing std:: in some places <a href="https://svn.boost.org/trac/boost/ticket/7701">#7701</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                Spelling, grammar, typos fixes <a href="https://svn.boost.org/trac/boost/ticket/7368">#7368</a>, <a href="https://svn.boost.org/trac/boost/ticket/7762">#7762</a>
               </div>
             </li>
           </ul>
@@ -494,24 +784,70 @@
           <ul>
             <li>
               <div>
-                <em>Fixes:</em>
+                <em>Bug fixes:</em>
                 <ul>
                   <li>
                     <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/5603">#5603</a>
-                      the &quot;range/any_range.hpp&quot; header is not self-sufficient
+                      <a href="https://svn.boost.org/trac/boost/ticket/5603">#5603</a> the &quot;range/any_range.hpp&quot; header is not
+                      self-sufficient
                     </div>
                   </li>
                   <li>
                     <div>
-                      <a href="https://svn.boost.org/trac/boost/ticket/6103">#6103</a>
-                      boost::range_detail vs. boost::range::range_detail compiler
-                      error
+                      <a href="https://svn.boost.org/trac/boost/ticket/6103">#6103</a> boost::range_detail vs. boost::range::range_detail
+                      compiler error
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                <em>Documentation fixes:</em>
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/5160">#5160</a>
                     </div>
                   </li>
                   <li>
                     <div>
-                      Documentation fixes
+                      <a href="https://svn.boost.org/trac/boost/ticket/5314">#5314</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/5440">#5440</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/5775">#5775</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/6212">#6212</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7585">#7585</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7843">#7843</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7916">#7916</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7926">#7926</a>
                     </div>
                   </li>
                 </ul>
@@ -566,6 +902,26 @@
                       and allocate_shared for arrays</a>' page for more information.
                     </div>
                   </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">shared_ptr</span></code>
+                      can now be used to hold a pointer to a dynamically allocated
+                      array. This is accomplished by using an array type (<code><span class="identifier">T</span><span class="special">[]</span></code>
+                      or <code><span class="identifier">T</span><span class="special">[</span><span class="identifier">N</span><span class="special">]</span></code>)
+                      as the template parameter.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Smart pointers now use <code><span class="keyword">explicit</span>
+                      <span class="keyword">operator</span> <span class="keyword">bool</span></code>
+                      on C++11 compilers. This can break code that passes a smart
+                      pointer to a function taking a <code><span class="keyword">bool</span></code>,
+                      or that returns a smart pointer from a function with a <code><span class="keyword">bool</span></code> return type. Please use
+                      <code><span class="identifier">p</span> <span class="special">!=</span>
+                      <span class="number">0</span></code> or <code><span class="special">!!</span><span class="identifier">p</span></code> in such cases.
+                    </div>
+                  </li>
                 </ul>
               </div>
             </li>
@@ -593,21 +949,6 @@
         <div>
           <span class="library"><a href="/libs/thread/">Thread</a>:</span>
           <ul>
-            <li>
-              <div>
-                <em>Breaking changes:</em>
-                <ul>
-                  <li>
-                    <div>
-                      BOOST_THREAD_VERSION==3 by default since Boost 1.53. So that
-                      all the deprecated features since 1.50 are not included by
-                      default. You can change this by setting the appropriated define
-                      (see Configuration section).
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
             <li>
               <div>
                 <em>Deprecated features:</em>
@@ -772,6 +1113,13 @@
                 <ul>
                   <li>
                     <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7464">#7464</a>
+                      BOOST_TEST(n_alive == 1); fails due to race condition in a
+                      regression test tool.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
                       <a href="https://svn.boost.org/trac/boost/ticket/7657">#7657</a>
                       Serious performance and memory consumption hit if condition_variable
                       methods condition notify_one or notify_all is used repeatedly.
@@ -794,6 +1142,12 @@
                     <div>
                       <a href="https://svn.boost.org/trac/boost/ticket/7669">#7669</a>
                       thread_group::join_all() should catch resource_deadlock_would_occur.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7671">#7671</a>
+                      Error including boost/thread.hpp header on iOS.
                     </div>
                   </li>
                   <li>
@@ -822,6 +1176,32 @@
                       Returns: cv_status::no_timeout if the call is returning because
                       the time period specified by rel_time has elapsed, cv_status::timeout
                       otherwise.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7874">#7874</a>
+                      compile warning: thread.hpp:342: warning: type attributes are
+                      honored only at type definition.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7875">#7875</a>
+                      BOOST_THREAD_THROW_IF_PRECONDITION_NOT_SATISFIED should not
+                      be enabled by default.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7882">#7882</a>
+                      wrong exception text from condition_variable::wait(unique_lock&lt;mutex&gt;&amp;).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7890">#7890</a>
+                      thread::do_try_join_until() is missing a return type.
                     </div>
                   </li>
                 </ul>
@@ -853,6 +1233,19 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/libs/utility/">Utility</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added <a href="/libs/utility/doc/html/string_ref.html">string_ref</a>,
+                a non-owning reference to a contiguous sequence of characters.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/libs/variant/">Variant</a>:</span>
           <ul>
             <li>
@@ -872,6 +1265,18 @@
             <li>
               <div>
                 See the <a href="/libs/wave/ChangeLog">Changelog</a> for details.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/xpressive/">xpressive</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Accomodate recent smart pointer changes (<a href="https://svn.boost.org/trac/boost/ticket/7809">#7809</a>).
               </div>
             </li>
           </ul>
@@ -909,7 +1314,80 @@
     <ul>
       <li>
         <div>
-          <em>TODO</em>
+          Linux:
+          <ul>
+            <li>
+              <div>
+                GCC: 4.1.2, 4.2.4, 4.4.4, 4.5.3, 4.6.3, 4.7.2
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC, C++11 mode: 4.4.4, 4.5.3, 4.6.3, 4.7.2
+              </div>
+            </li>
+            <li>
+              <div>
+                Intel: 11.1, 12.1
+              </div>
+            </li>
+            <li>
+              <div>
+                LLVM Clang: 2.8
+              </div>
+            </li>
+            <li>
+              <div>
+                LLVM Clang, with libc++: 3.2
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          OS X:
+          <ul>
+            <li>
+              <div>
+                GCC: 4.4.7
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC, C++11 mode: 4.4.4
+              </div>
+            </li>
+            <li>
+              <div>
+                Intel: 11.1, 12.0
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          Windows:
+          <ul>
+            <li>
+              <div>
+                Visual C++: 9.0, 10.0
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          FreeBSD:
+          <ul>
+            <li>
+              <div>
+                GCC: 4.2.1, 32 and 64 bit
+              </div>
+            </li>
+          </ul>
         </div>
       </li>
     </ul>
@@ -919,7 +1397,120 @@
     <ul>
       <li>
         <div>
-          <em>TODO</em>
+          Linux:
+          <ul>
+            <li>
+              <div>
+                Cray: 4.6.1
+              </div>
+            </li>
+            <li>
+              <div>
+                Clang: from subversion
+              </div>
+            </li>
+            <li>
+              <div>
+                LLVM Clang, with libc++: 3.2
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC: 4.2.4, 4.4.4, 4.5.3, 4.6.3, 4.7.1
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC, C++11 mode: 4.4.4, 4.5.3, 4.6.3, 4.7.1, 4.7.2
+              </div>
+            </li>
+            <li>
+              <div>
+                pgCC: 11.9
+              </div>
+            </li>
+            <li>
+              <div>
+                Intel: 10.1, 11.1, 12.1
+              </div>
+            </li>
+            <li>
+              <div>
+                Intel, C++11 mode: 13.0.1
+              </div>
+            </li>
+            <li>
+              <div>
+                Visual Age:
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          OS X:
+          <ul>
+            <li>
+              <div>
+                Clang: from subversion
+              </div>
+            </li>
+            <li>
+              <div>
+                Clang, C++11 mode: from subversion
+              </div>
+            </li>
+            <li>
+              <div>
+                Intel: 11.1, 12.0
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC: 4.4.7
+              </div>
+            </li>
+            <li>
+              <div>
+                GCC, C++11 mode: 4.4.4
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          Windows:
+          <ul>
+            <li>
+              <div>
+                Visual C++: 10.0, 11.0
+              </div>
+            </li>
+            <li>
+              <div>
+                Visual C++ with STLport: 9.0
+              </div>
+            </li>
+            <li>
+              <div>
+                Visual C++, Windows Mobile 5, with STLport: 9.0
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          AIX:
+          <ul>
+            <li>
+              <div>
+                IBM XL C/C++ Enterprise Edition: V12.1.0.1
+              </div>
+            </li>
+          </ul>
         </div>
       </li>
     </ul>
@@ -927,7 +1518,9 @@
   <div id="version_1_53_0.acknowledgements">
     <h3><span class="link">Acknowledgements</span></h3>
     <p>
-      <em>TODO</em>
+      <a href="/users/people/beman_dawes.html">Beman Dawes</a>, Eric Niebler,
+      <a href="/users/people/rene_rivera.html">Rene Rivera</a>, Daniel James,
+      Vladimir Prus and Marshall Clow managed this release.
     </p>
   </div>
 </div>

@@ -1,12 +1,23 @@
 [article Version 1.53.0
     [quickbook 1.5]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: ]
-    [authors [Dawes, Beman]]
-    [last-revision ]
+    [purpose
+    New Libraries: Atomic, Coroutine, Lockfree, Multiprecision, Odeint.
+    Updated Libraries: Algorithm, Array, Asio, Bimap, Chrono, Container, Context,
+        Geometry, GIL, Graph, Hash, Interprocess, Intrusive,
+        Lexical Cast, Locale, Math, MinMax, Move, Polygon, Random,
+        Range, Ratio, Regex, Smart Pointers, StringAlgo, Thread,
+        Utility, Unordered, Variant, Wave and xpressive.
+    ]
+    [authors [Clow, Marshall]]
+    [last-revision Mon, 4 Feb 2013 10:29:19 -0800]
 ]
 
 [include ext.qbk]
+
+[status released]
+[download https://sourceforge.net/projects/boost/files/boost/1.53.0/]
+[documentation /doc/libs/1_53_0/]
 
 [section New Libraries]
 
@@ -25,14 +36,56 @@
 
 [endsect]
 
-[section Updated Libraries]
+[section News]
 
-* [phrase library..[@/libs/array/ Array]:]
-  * Added support for boost::get and std::get ([ticket 7652])
+This release contains a fix for ticket [ticket 7743], in Boost.Locale.
+For more details, see the [@/users/news/boost_locale_security_notice.html
+security notice].
+
+[endsect]
+
+[section Updated Libraries]
 
 * [phrase library..[@/libs/algorithm/ Algorithm]:]
   * Fixed non-ASCII char in comment ([ticket 7781]).
   * Updated the Knuth-Morris-Pratt docs ([ticket 7656]).
+
+* [phrase library..[@/libs/array/ Array]:]
+  * Added support for boost::get and std::get ([ticket 7652])
+
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Fixed some 64-to-32-bit conversion warnings ([ticket 7459]).
+  * Fixed some small errors in documentation and comments ([ticket 7761]).
+  * Fixed an error in the example embedded in `basic_socket::get_option`'s
+    documentation ([ticket 7562]).
+  * Changed to use `long` rather than `int` for SSL_CTX options, to match OpenSSL
+    ([ticket 7209]).
+  * Changed to use `_snwprintf` to address a compile error due to the changed
+    `swprintf` signature in recent versions of MinGW ([ticket 7373]).
+  * Fixed a deadlock that can occur on Windows when shutting down a pool of
+    `io_service` threads due to running out of work ([ticket 7552]).
+  * Enabled the `noexcept` qualifier for error categories ([ticket 7797]).
+  * Changed UNIX domain socket example to treat errors from `accept` as non-fatal
+    ([ticket 7488]).
+  * Added a small block recycling optimisation to improve default memory
+    allocation behaviour.
+
+* [phrase library..[@/libs/bimap/ Bimap]:] 
+  * Refactor map_view_iterator to improve error messages.
+  * Fixed replace_(left/right/key/data) bug when using relations with info.
+  * Fixed vector_of and list_of views `assign(size_type,value_type)` bug.
+  * Fixed vector_of views `operator[](size_type)` and `at(size_type)` functions return value.
+
+* [phrase library..[@/libs/chrono/ Chrono]:]
+  * [*Deprecated:]
+    * The chrono i/o version included in Boost.Chrono 1.2.x has been completly refactored in version 2.0.0
+    * chrono I/O: The manipulators __duration_short, __duration_long are depreceated. You should use the parameterized form __duration_fmt or the renamed manipulators __duration_symbol and __duration_prefix  instead.
+    * chrono I/O: The __duration_punct<> facet is depreceated. You should use the __get_duration_style free function to get the informations and use the __duration_units facet for localization purposes.
+    * When BOOST_CHRONO_VERSION==2 the preceding deprecated functions are not available.
+  * [*Fixes:]
+    * [@https://svn.boost.org/trac/boost/ticket/7546 #7546] time_point<system_clock> output version 2 fails to compile
+    * [@https://svn.boost.org/trac/boost/ticket/7547 #7547] time_point<system_clock> input version 2 fails to compile
+    * [@https://svn.boost.org/trac/boost/ticket/7868 #7868] chrono_io parses time incorrectly (1.53 and 1.52)
 
 * [phrase library..[@/libs/container/ Container]:]
   *  Fixed bug [@https://svn.boost.org/trac/boost/ticket/7650 #7650].
@@ -45,6 +98,20 @@
 * [phrase library..[@/libs/context/ Context]:]
   * Support for iOS on ARM and MacOS X on x86 (32bit) added.
   * Support for SEH Overwrite Protection on Win32.
+
+* [phrase library..[@/libs/geometry Geometry]:]
+  * [*Bugfixes]
+    * avoid generating output polygons with interior rings below minimum size (e.g. one or two points)
+    * `geometry::disjoint` for degenerate segments (patched by Karsten Ahnert)
+    * problem in `geometry::difference` for missing handling tangency, reported by H2
+    * fixed `geometry::for_each` for use with Lambda's
+    * fixed `geometry::comparable_distance` point-linestring (and -range, -polygon)
+  * [*Additional functionality]
+    * combinations for `geometry::disjoint`: point/ring, point/polygon, point/multi_polygon
+    * combinations for `geometry::intersects`: point/ring, point/polygon, point/multi_polygon
+  * [*Internal changes]
+    * updates in specializations/not_implemented for various algorithms (as in an earlier version, these changes are still going on; they take care for simplified structs, better error reporting, and automatized documentation)
+    * fixes in unit tests
 
 * [phrase library..[@/libs/gil/ GIL]:]
   * Fixed self-assignment warnings ([ticket 4919]).
@@ -91,6 +158,14 @@
   * New character type detection algorithm for user defined types [ticket 6786].
   * Documentation updates ([ticket 7582], [ticket 7831]).
   * Fixed bugs with std::array [ticket 7799].
+  * Fixed compilation with -ftrapv and numeric to numeric conversions [ticket 7814].
+
+* [phrase library..[@/libs/locale/ Locale]:]
+  * Security related bug fix, some invalid UTF-8 sequences where accepted as valid [ticket 7743]
+  * Invalid Windows codepage names used [ticket 7386]
+  * Fixed missing documentation, caused by a error in Doxygen formatting [ticket 7734]
+  * Fixed missing std:: in some places [ticket 7701]
+  * Spelling, grammar, typos fixes [ticket 7368], [ticket 7762]
 
 * [phrase library..[@/libs/math/ Math]:]
    * Fixed issues [@https://svn.boost.org/trac/boost/ticket/7325 #7325], [@https://svn.boost.org/trac/boost/ticket/7415 #7415],
@@ -131,10 +206,19 @@
   * Now compiles with exceptions disabled ([ticket 5399]).
 
 * [phrase library..[@/libs/range/ Range]:]
-  * [*Fixes:]
-    * [@https://svn.boost.org/trac/boost/ticket/5603 #5603] the "range/any_range.hpp" header is not self-sufficient
-    * [@https://svn.boost.org/trac/boost/ticket/6103 #6103] boost::range_detail vs. boost::range::range_detail compiler error
-    * Documentation fixes
+  * [*Bug fixes:]
+    * [ticket 5603] the "range/any_range.hpp" header is not self-sufficient
+    * [ticket 6103] boost::range_detail vs. boost::range::range_detail compiler error
+  * [*Documentation fixes:]
+    * [ticket 5160]
+    * [ticket 5314]
+    * [ticket 5440]
+    * [ticket 5775]
+    * [ticket 6212]
+    * [ticket 7585]
+    * [ticket 7843]
+    * [ticket 7916]
+    * [ticket 7926]
 
 * [phrase library..[@/libs/ratio/ Ratio]:]
   * [*Fixes:]
@@ -152,15 +236,20 @@
       value initialization. See the 
       '[@/libs/smart_ptr/make_shared_array.html make_shared and allocate_shared for arrays]'
       page for more information.
+    * `shared_ptr` can now be used to hold a pointer to a dynamically
+      allocated array. This is accomplished by using an array type
+      (`T[]` or `T[N]`) as the template parameter.
+    * Smart pointers now use `explicit operator bool` on C++11
+      compilers. This can break code that passes a smart pointer to a
+      function taking a `bool`, or that returns a smart pointer from a
+      function with a `bool` return type. Please use `p != 0` or `!!p`
+      in such cases.
     
 * [phrase library..[@/libs/algorithm/string StringAlgo]:]
   * Fixed a bug where it wouldn't find overlapping patterns ([ticket 7784]).
   * Disambiguated some calls to insert ([ticket 7346]).
 
 * [phrase library..[@/libs/thread/ Thread]:]
-  * [*Breaking changes:]
-    * BOOST_THREAD_VERSION==3 by default since Boost 1.53. So that all the deprecated features since 1.50 are not included by default. You can change this by setting the appropriated define (see Configuration section).
-
   * [*Deprecated features:]
     * Deprecated features since boost 1.53 will be available only until boost 1.58.
     * C++11 compliance: packaged_task<R> is deprecated, use instead packaged_task<R()>.
@@ -189,20 +278,29 @@
     * [@https://svn.boost.org/trac/boost/ticket/7590 #7594] Threads: Allow to disable thread interruptions.
 
   * [*Fixed Bugs:]
+    * [@https://svn.boost.org/trac/boost/ticket/7464 #7464] BOOST_TEST(n_alive == 1); fails due to race condition in a regression test tool.
     * [@https://svn.boost.org/trac/boost/ticket/7657 #7657] Serious performance and memory consumption hit if condition_variable methods condition notify_one or notify_all is used repeatedly.
     * [@https://svn.boost.org/trac/boost/ticket/7665 #7665] this_thread::sleep_for no longer uses steady_clock in thread.
     * [@https://svn.boost.org/trac/boost/ticket/7668 #7668] thread_group::join_all() should check whether its threads are joinable.
     * [@https://svn.boost.org/trac/boost/ticket/7669 #7669] thread_group::join_all() should catch resource_deadlock_would_occur.
+    * [@https://svn.boost.org/trac/boost/ticket/7671 #7671] Error including boost/thread.hpp header on iOS.
     * [@https://svn.boost.org/trac/boost/ticket/7672 #7672] lockable_traits.hpp syntax error: "defined" token misspelled.
     * [@https://svn.boost.org/trac/boost/ticket/7798 #7798] boost::future set_wait_callback thread safety issues.
     * [@https://svn.boost.org/trac/boost/ticket/7808 #7808] Incorrect description of effects for this_thread::sleep_for and this_thread::sleep_until.
     * [@https://svn.boost.org/trac/boost/ticket/7812 #7812] Returns: cv_status::no_timeout if the call is returning because the time period specified by rel_time has elapsed, cv_status::timeout otherwise.
+    * [@https://svn.boost.org/trac/boost/ticket/7874 #7874] compile warning: thread.hpp:342: warning: type attributes are honored only at type definition.
+    * [@https://svn.boost.org/trac/boost/ticket/7875 #7875] BOOST_THREAD_THROW_IF_PRECONDITION_NOT_SATISFIED should not be enabled by default.
+    * [@https://svn.boost.org/trac/boost/ticket/7882 #7882] wrong exception text from condition_variable::wait(unique_lock<mutex>&).
+    * [@https://svn.boost.org/trac/boost/ticket/7890 #7890] thread::do_try_join_until() is missing a return type.
 
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * Remove support for the old pre-standard variadic pair constructors, and
     equality implementation. Both have been deprecated since Boost 1.48.
   * More internal implementation changes, including a much simpler
     implementation of `erase`, and removed more deprecated config macros.
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * Added [@/libs/utility/doc/html/string_ref.html string_ref], a non-owning reference to a contiguous sequence of characters.
 
 * [phrase library..[@/libs/variant/ Variant]:]
   * Added rvalue constructors and rvalue assignment operators (for
@@ -211,6 +309,9 @@
 
 * [phrase library..[@/libs/wave/ Wave]:]
   * See the [@/libs/wave/ChangeLog Changelog] for details.
+
+* [phrase library..[@/libs/xpressive/ xpressive]:]
+  * Accomodate recent smart pointer changes ([ticket 7809]).
 
 [endsect]
 
@@ -226,17 +327,55 @@
 
 Boost's primary test compilers are:
 
-* /TODO/
+* Linux:
+  * GCC: 4.1.2, 4.2.4, 4.4.4, 4.5.3, 4.6.3, 4.7.2
+  * GCC, C++11 mode: 4.4.4, 4.5.3, 4.6.3, 4.7.2
+  * Intel: 11.1, 12.1
+  * LLVM Clang: 2.8
+  * LLVM Clang, with libc++: 3.2
+* OS X:
+  * GCC: 4.4.7
+  * GCC, C++11 mode: 4.4.4
+  * Intel: 11.1, 12.0
+* Windows:
+  * Visual C++: 9.0, 10.0
+* FreeBSD:
+  * GCC: 4.2.1, 32 and 64 bit
 
 Boost's additional test compilers include:
 
-* /TODO/
+* Linux:
+  * Cray: 4.6.1
+  * Clang: from subversion
+  * LLVM Clang, with libc++: 3.2
+  * GCC: 4.2.4, 4.4.4, 4.5.3, 4.6.3, 4.7.1
+  * GCC, C++11 mode: 4.4.4, 4.5.3, 4.6.3, 4.7.1, 4.7.2
+  * pgCC: 11.9
+  * Intel: 10.1, 11.1, 12.1
+  * Intel, C++11 mode: 13.0.1
+  * Visual Age:
+* OS X:
+  * Clang: from subversion
+  * Clang, C++11 mode: from subversion
+  * Intel: 11.1, 12.0
+  * GCC: 4.4.7
+  * GCC, C++11 mode: 4.4.4
+* Windows:
+  * Visual C++: 10.0, 11.0
+  * Visual C++ with STLport: 9.0
+  * Visual C++, Windows Mobile 5, with STLport: 9.0
+* AIX:
+  * IBM XL C/C++ Enterprise Edition: V12.1.0.1
 
 [endsect]
 
 [section Acknowledgements]
 
-/TODO/
+[@/users/people/beman_dawes.html Beman Dawes],
+Eric Niebler,
+[@/users/people/rene_rivera.html Rene Rivera],
+Daniel James, Vladimir Prus and Marshall Clow
+managed this release.
 
 [endsect]
 
