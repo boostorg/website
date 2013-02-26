@@ -4,7 +4,7 @@
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
 import os, sys, subprocess, glob, re, time, xml.dom.minidom, codecs
-import boost_site.pages, boost_site.boostbook_parser, boost_site.util
+import boost_site.pages, boost_site.boostbook_parser, boost_site.util, boost_site.state
 from boost_site.settings import settings
 
 ################################################################################
@@ -62,35 +62,38 @@ def update_quickbook(refresh = False):
     # Generate RSS feeds
 
     if not refresh:
-        old_rss_items_doc = xml.dom.minidom.parseString('''<items></items>''')
-        old_rss_items = {}
-        for feed_file in settings['feeds']:
-            old_rss_items.update(pages.load_rss(feed_file, old_rss_items_doc))
+        rss_items = boost_site.state.load('generated/state/rss-items.txt')
     
         for feed_file in settings['feeds']:
             feed_data = settings['feeds'][feed_file]
-            rss_feed = generate_rss_feed(feed_file, feed_data)
-            rss_channel = rss_feed.getElementsByTagName('channel')[0]
+            rss_feed = rss_prefix(feed_file, feed_data)
             
             feed_pages = pages.match_pages(feed_data['matches'])
             if 'count' in feed_data:
                 feed_pages = feed_pages[:feed_data['count']]
             
             for qbk_page in feed_pages:
+                item_xml = None
+
                 if qbk_page.loaded:
-                    item = generate_rss_item(rss_feed, qbk_page.qbk_file, qbk_page)
+                    item = generate_rss_item(qbk_page.qbk_file, qbk_page)
                     pages.add_rss_item(item)
-                    rss_channel.appendChild(item['item'])
-                elif qbk_page.qbk_file in old_rss_items:
-                    rss_channel.appendChild(
-                        rss_feed.importNode(
-                            old_rss_items[qbk_page.qbk_file]['item'], True))
+
+                    item['item'] = item['item'].toxml('utf-8').decode('utf-8')
+                    rss_items[qbk_page.qbk_file] = item
+                    boost_site.state.save(rss_items, 'generated/state/rss-items.txt')
+
+                    rss_feed += item['item']
+                elif qbk_page.qbk_file in rss_items:
+                    rss_feed += rss_items[qbk_page.qbk_file]['item']
                 else:
                     print("Missing entry for %s" % qbk_page.qbk_file)
-                    
+
+            rss_feed += rss_postfix(feed_file, feed_data)
+
             output_file = open(feed_file, 'wb')
             try:
-                output_file.write(rss_feed.toxml('utf-8'))
+                output_file.write(rss_feed.encode('utf-8'))
             finally:
                 output_file.close()
 
@@ -108,8 +111,8 @@ def scan_for_new_quickbook_pages(pages):
 
 ################################################################################
 
-def generate_rss_feed(feed_file, details):
-    rss = xml.dom.minidom.parseString('''<?xml version="1.0" encoding="UTF-8"?>
+def rss_prefix(feed_file, details):
+    return('''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
   <channel>
     <generator>Boost Website Site Tools</generator>
@@ -118,8 +121,6 @@ def generate_rss_feed(feed_file, details):
     <description>%(description)s</description>
     <language>%(language)s</language>
     <copyright>%(copyright)s</copyright>
-  </channel>
-</rss>
 ''' % {
     'title' : encode_for_rss(details['title']),
     'link' : encode_for_rss("http://www.boost.org/" + details['link']),
@@ -128,38 +129,46 @@ def generate_rss_feed(feed_file, details):
     'copyright' : 'Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)'
     } )
 
-    return rss
+def rss_postfix(feed_file, details):
+    return '''
+  </channel>
+</rss>
+'''
 
-def generate_rss_item(rss_feed, qbk_file, page):
+def generate_rss_item(qbk_file, page):
     assert page.loaded
+
+    rss_xml = xml.dom.minidom.parseString('''<?xml version="1.0" encoding="UTF-8"?>
+        <rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
+        </rss>''')
 
     page_link = 'http://www.boost.org/%s' % page.location
 
-    item = rss_feed.createElement('item')
+    item = rss_xml.createElement('item')
 
     node = xml.dom.minidom.parseString('<title>%s</title>'
         % encode_for_rss(page.title_xml))
-    item.appendChild(rss_feed.importNode(node.documentElement, True))
+    item.appendChild(rss_xml.importNode(node.documentElement, True))
 
     node = xml.dom.minidom.parseString('<link>%s</link>'
         % encode_for_rss(page_link))
-    item.appendChild(rss_feed.importNode(node.documentElement, True))
+    item.appendChild(rss_xml.importNode(node.documentElement, True))
 
     node = xml.dom.minidom.parseString('<guid>%s</guid>'
         % encode_for_rss(page_link))
-    item.appendChild(rss_feed.importNode(node.documentElement, True))
+    item.appendChild(rss_xml.importNode(node.documentElement, True))
 
     # TODO: Convert date format?
-    node = rss_feed.createElement('pubDate')
-    node.appendChild(rss_feed.createTextNode(page.pub_date))
+    node = rss_xml.createElement('pubDate')
+    node.appendChild(rss_xml.createTextNode(page.pub_date))
     item.appendChild(node)
 
-    node = rss_feed.createElement('description')
+    node = rss_xml.createElement('description')
     # Placing the description in a root element to make it well formed xml.
     description = xml.dom.minidom.parseString(
         '<x>%s</x>' % encode_for_rss(page.description_xml))
     boost_site.util.base_links(description, page_link)
-    node.appendChild(rss_feed.createTextNode(
+    node.appendChild(rss_xml.createTextNode(
         boost_site.util.fragment_to_string(description.firstChild)))
     item.appendChild(node)
 
