@@ -181,7 +181,7 @@ class BoostBookParser:
         }
 
         if role not in tags:
-            print "Warning: Unknown emphasis role: " + role
+            print("Warning: Unknown emphasis role: " + role)
             role = ''
 
         return self.new_node(tags[role],

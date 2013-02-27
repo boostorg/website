@@ -10,7 +10,7 @@ import boost_site.site_tools
 #
 
 def upgrade_old():
-    print "Old, unsupported data version."
+    print("Old, unsupported data version.")
     return False
 
 versions = [upgrade_old] * 4
