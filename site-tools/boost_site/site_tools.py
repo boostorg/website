@@ -77,7 +77,6 @@ def update_quickbook(refresh = False):
 
                 if qbk_page.loaded:
                     item = generate_rss_item(qbk_page.qbk_file, qbk_page)
-                    pages.add_rss_item(item)
 
                     item['item'] = item['item'].toxml('utf-8').decode('utf-8')
                     rss_items[qbk_page.qbk_file] = item

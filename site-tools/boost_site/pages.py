@@ -10,7 +10,7 @@ class Pages:
     """ Tracks which items in an rss feed have been updated.
 
     Stores meta data about the quickbook file, including the signature
-    of the quickbook file and the rss item.
+    of the quickbook file.
     """
     def __init__(self, hash_file):
         self.hash_file = hash_file
@@ -18,16 +18,11 @@ class Pages:
         # Map of quickbook filename to Page
         self.pages = {}
         
-        # Map of rss hash to quickbook filename
-        self.rss_hashes = {}
-
         if(os.path.isfile(hash_file)):
             hashes = boost_site.state.load(hash_file)
             for qbk_file in hashes:
                 record = hashes[qbk_file]
                 self.pages[qbk_file] = Page(qbk_file, record)
-                if(record.get('rss_hash')):
-                    self.rss_hashes[record['rss_hash']] = qbk_file
 
     def save(self):
         save_hashes = {}
@@ -67,32 +62,6 @@ class Pages:
             record.type = 'page'
         if record.type not in ['release', 'page']:
             throw ("Unknown record type: " + record.type)
-
-    # You might be wondering why I didn't just save the rss items - would
-    # be able to save all the items not just the ones in the feed.
-    # I mostly wanted to minimise the amount of stuff that was checked in
-    # to subversion with each change.
-    def load_rss(self, rss_file, xml_doc):
-        rss_items = {}
-    
-        if(os.path.isfile(rss_file)):
-            rss = xml.dom.minidom.parse(rss_file)
-            for item in rss.getElementsByTagName('item'):
-                hashed = hash_dom_node(item)
-                if hashed in self.rss_hashes:
-                    rss_items[self.rss_hashes[hashed]] = {
-                        'quickbook': self.rss_hashes[hashed],
-                        'item': xml_doc.importNode(item, True),
-                        'last_modified': self.pages[self.rss_hashes[hashed]].last_modified
-                    }
-                else:
-                    print("Unable to find quickbook file for rss item:")
-                    print(hashed)
-
-        return rss_items
-
-    def add_rss_item(self, item):
-        self.pages[item['quickbook']].rss_hash = hash_dom_node(item['item'])
 
     def convert_quickbook_pages(self, refresh = False):
         try:
@@ -197,7 +166,6 @@ class Page:
         self.download_item = attrs.get('download')
         self.documentation = attrs.get('documentation')
         self.qbk_hash = attrs.get('qbk_hash')
-        self.rss_hash = attrs.get('rss_hash')
 
         self.loaded = False
 
@@ -239,8 +207,7 @@ class Page:
             'pub_date': self.pub_date,
             'download': self.download_item,
             'documentation': self.documentation,
-            'qbk_hash': self.qbk_hash,
-            'rss_hash': self.rss_hash
+            'qbk_hash': self.qbk_hash
         }
 
     def load(self, values, refresh = False):
