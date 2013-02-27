@@ -170,7 +170,21 @@ class BoostBookParser:
             *self.x_children(node))
 
     def x_emphasis(self,node):
-        return self.new_node('em',
+        role = ''
+        if node.hasAttribute('role'):
+            role = node.getAttribute('role').lower()
+
+        tags = {
+            '' : 'em',
+            'bold' : 'strong',
+            'strong' : 'strong'
+        }
+
+        if role not in tags:
+            print "Warning: Unknown emphasis role: " + role
+            role = ''
+
+        return self.new_node(tags[role],
             *self.x_children(node))
 
     def x_inlinemediaobject(self,node):

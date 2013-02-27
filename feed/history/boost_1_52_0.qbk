@@ -33,21 +33,21 @@
   * Define `BOOST_NO_SFINAE_EXPR` for gcc-4.4, since the support was found to be too buggy.
 
 * [phrase library..[@/libs/chrono/ Chrono]:]
-  * [*New Features:]
+  * ['New Features:]
     * [ticket 5980] Enhance chrono I/O with H. Hinnant proposal [@http://home.roadrunner.com/~hinnant/bloomington/chrono_io.html proposal] which has the advantage to provide I/O for system clocks using the Gregorian Calendar.
     * [ticket 5981] Add i/o state savers for duration and time_point formatting state.
     * [ticket 7059] Add low level i/o facilities.
-  * [*Deprecated features:]
+  * ['Deprecated features:]
     * The chrono i/o version included in Boost.Chrono 1.2.x has been completly refactored in version 2.0.0
     * chrono I/O: The manipulators `__duration_short`, `__duration_long` are depreceated. You should use the parameterized form `__duration_fmt` or the renamed manipulators `__duration_symbol` and `__duration_prefix`  instead.
     * chrono I/O: The `__duration_punct<>` facet is deprecated. You should use the `__get_duration_style` free function to get the informations and use the `__duration_units` facet for localization purposes.
     * When `BOOST_CHRONO_VERSION==2` the preceding deprecated functions are not available.
-  * [*Fixes:]
+  * ['Fixes:]
     * [ticket 7381] C++11 compliance: unresolved symbol when assigning a constexpr duration to a non-const local variable.
     * [@http://svn.boost.org/trac/boost/ticket/7479 #7479] Compile fails
       with compilers supporting constexpr fails if the standard library
       doesn't provides the constexpr interface
-  * [*Would not fix:]
+  * ['Would not fix:]
     * [ticket 6871] chrono_io.hpp: `operator<<(ostream& os, ...)` modifies the state of os. The neww io interface provided in version 2 solves this issue. You should move to the new version.
 
 * [phrase library..[@/libs/container/ Container]:]
@@ -87,7 +87,7 @@
 
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
   *  Added `shrink_by` and `advise` functions in `mapped_region`.
-  *  [*ABI breaking:] Reimplemented `message_queue` with a circular buffer index (the
+  *  ['ABI breaking:] Reimplemented `message_queue` with a circular buffer index (the
    old behavior used an ordered array, leading to excessive copies). This
    should greatly increase performance but breaks ABI. Old behaviour/ABI can be used
    undefining macro `BOOST_INTERPROCESS_MSG_QUEUE_CIRCULAR_INDEX` in `boost/interprocess/detail/workaround.hpp`
@@ -102,7 +102,7 @@
     * [ticket 5825] constructing function_input_iterator without consuming an
       item
     * [ticket 7194] Error in documentation of make_function_input_iterator
-  * [*Breaking changes:]
+  * ['Breaking changes:]
     * Due to the fix for [ticket 5825], a function_input_iterator will no longer
       make unnecessary invokations to the wrapped nullary function. For example,
       constructing an end iterator will now not trigger an invokation; and
@@ -160,13 +160,13 @@
     for specifying the target domain of the resulting expression.
 
 * [phrase library..[@/libs/ratio/ Ratio]:]
-  * [*Features:]
+  * ['Features:]
     * Replace the `short_name` and `long_name` functions by symbol and prefix functions respectively.
-  * [*Deprecated:]
+  * ['Deprecated:]
     * The `ratio_string<>::short_name` and `ratio_string<>::long_name` are
       deprecated. Use `ratio_string<>::symbol` and `ratio_string<>::prefix`
       respectively. These functions be removed in 1.55.
-  * [*Fixes:]
+  * ['Fixes:]
     * [@http://svn.boost.org/trac/boost/ticket/7478 #7478] Compiles
       fails with compilers supporting char16_t and char32_t fails if the
       library doesn't provides std::u16string and std::u32string.
@@ -179,18 +179,18 @@
     See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3436.html n3436].
 
 * [phrase library..[@/libs/thread/index.html Thread]:]
-  * [*Deprecated Features]: Deprecated features since boost 1.50 available only until boost 1.55. These deprecated features will be provided by default up to boost 1.52. If you don't want to include the deprecated features you could define BOOST_THREAD_DONT_PROVIDE_DEPRECATED_FEATURES_SINCE_V3_0_0. Since 1.53 these features will not be included any more by default. Since this version, if you want to include the deprecated features yet you could define BOOST_THREAD_PROVIDE_DEPRECATED_FEATURES_SINCE_V3_0_0. These deprecated features will be only available until boost 1.55, that is you have yet 1 year to move to the new features.
+  * ['Deprecated Features]: Deprecated features since boost 1.50 available only until boost 1.55. These deprecated features will be provided by default up to boost 1.52. If you don't want to include the deprecated features you could define BOOST_THREAD_DONT_PROVIDE_DEPRECATED_FEATURES_SINCE_V3_0_0. Since 1.53 these features will not be included any more by default. Since this version, if you want to include the deprecated features yet you could define BOOST_THREAD_PROVIDE_DEPRECATED_FEATURES_SINCE_V3_0_0. These deprecated features will be only available until boost 1.55, that is you have yet 1 year to move to the new features.
     * Time related functions don't using the Boost.Chrono library, use the chrono overloads instead.
   * Breaking changes when `BOOST_THREAD_VERSION==3` (Default value since Boost 1.53):
     There are some new features which share the same interface but with different behavior. These breaking features are provided by default when BOOST_THREAD_VERSION is 3, but the user can however choose the version 2 behavior by defining the corresponding macro. As for the deprecated features, these broken features will be only available until boost 1.55.
     * [ticket 6229] C++11 compliance & Breaking change: Rename the unique_future to future following the c++11.
     * [ticket 6266] C++11 compliance & Breaking change: thread destructor should call terminate if joinable.
     * [ticket 6269] C++11 compliance & Breaking change: thread move assignment should call terminate if joinable.
-  * [*New Features:]
+  * ['New Features:]
     * [ticket 4710] C++11 compliance: Missing `async()`.   
     * [ticket 7283] C++11 compliance: Add `notify_all_at_thread_exit`.
     * [ticket 7345] C++11 compliance: Add `noexcept` to recursive mutex `try_lock`.
-  * [*Fixed Bugs:]
+  * ['Fixed Bugs:]
     * [ticket 2361] `thread_specific_ptr`: document nature of the key, complexity and rationale.
     * [ticket 2797] Two problems with `thread_specific_ptr`.
     * [ticket 5274] failed to compile `future.hpp` with stlport 5.1.5 under msvc8.1, because of undefined class.
