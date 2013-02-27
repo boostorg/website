@@ -17,6 +17,7 @@ def upgrade1():
                 page.pub_date != 'In Progress':
             page.flags.add('released')
     pages.save()
+    return True
 
 def upgrade2():
     pages = boost_site.site_tools.load_pages()
@@ -28,6 +29,7 @@ def upgrade2():
         else:
             page.type = 'page'
     pages.save()
+    return True
 
 def upgrade3():
     pages_raw = boost_site.state.load('generated/state/feed-pages.txt')
@@ -51,11 +53,37 @@ def upgrade3():
             raise Exception("Unexpected flags: " + str(flags))
         del page_details['flags']
     boost_site.state.save(pages_raw, 'generated/state/feed-pages.txt')
+    return True
+
+def upgrade4():
+    """
+        Save all the rss entries to a state file.
+        Will remove the rss hashes soon, which should improve some the
+        rss handling a bit.
+    """
+    import xml.dom.minidom
+    from boost_site.settings import settings
+
+    pages = boost_site.site_tools.load_pages()
+
+    # Load RSS items from feeds.
+    old_rss_items_doc = xml.dom.minidom.parseString('''<items></items>''')
+    old_rss_items = {}
+    for feed_file in settings['feeds']:
+        old_rss_items.update(pages.load_rss(feed_file, old_rss_items_doc))
+
+    # Convert items to text (TODO: Should I support XML in state files?)
+    for file in old_rss_items:
+        old_rss_items[file]['item'] = old_rss_items[file]['item'].toxml('utf-8').decode('utf-8')
+
+    boost_site.state.save(old_rss_items, 'generated/state/rss-items.txt')
+    return True
 
 versions = [
         upgrade1,
         upgrade2,
-        upgrade3
+        upgrade3,
+        upgrade4
         ]
 
 #
@@ -69,8 +97,9 @@ def upgrade():
         print("Upgrading to new version.")
 
         for v in range(version.version, len(versions)):
-            print("Upgrade " + (v + 1))
-            versions[v]()
+            print("Upgrade " + str(v + 1))
+            if not versions[v]():
+                raise Exception("Error upgrading to version v")
             version.version = v + 1
             version.save()
 

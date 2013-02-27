@@ -11,77 +11,72 @@ class StateParseError(BaseException):
 def load(file_path):
     state = {}
 
-    if(file_path and os.path.isfile(file_path)):
+    if file_path and os.path.isfile(file_path):
         file = open(file_path)
         try:
             while (True):
                 c = file.read(1)
-                if(not c):
+                if not c:
                     break
-                if(c == '#'):
+                if c == '#':
                     file.readline()
                     continue
-                if(c != '('):
+                elif c == '(':
+                    record_key = file.readline().rstrip()
+                    if not record_key: raise StateParseError()
+                    state[record_key] = read_record(file)
+                else:
                     raise StateParseError()
-                record_key = file.readline().rstrip()
-                if(not record_key): raise StateParseError()
-                record = {}
-                key = None
-                value = None
-                type = None
-                while (True):
-                    c = file.read(1)
-                    if((c == ')' or c == '-') and key):
-                        if(not key):
-                            raise StateParseError()
-
-                        if(type == 'String'):
-                            value = value[:-1]
-
-                        record[key] = value
-
-                    if(c == ')'):
-                        if(file.readline() != '\n'): raise StateParseError()
-                        break
-                    elif(c == '-'):
-                        key = file.readline().rstrip()
-                        if(not key): raise StateParseError()
-                        type = 'None'
-                        value = None
-                    elif(c == '.'):
-                        if(not key or type != 'None'): raise StateParseError()
-                        type = 'Float'
-                        value = float(file.readline())
-                    elif(c == '!'):
-                        if(not key or type != 'None'): raise StateParseError()
-                        type = 'Bool'
-                        value = bool(file.readline())
-                    elif(c == '='):
-                        if(not key or type != 'None'): raise StateParseError()
-                        type = 'Int'
-                        value = int(file.readline())
-                    elif(c == '"'):
-                        if(not key): raise StateParseError()
-                        if(type == 'None'):
-                            type = 'String'
-                            if sys.version_info < (3, 0):
-                                value = file.readline().decode('utf-8')
-                            else:
-                                value = file.readline()
-                        elif(type == 'String'):
-                            if sys.version_info < (3, 0):
-                                value = value + file.readline().decode('utf-8')
-                            else:
-                                value = value + file.readline()
-                        else:
-                            raise StateParseError()
-                    else:
-                        raise StateParseError()
-                state[record_key] = record
         finally:
             file.close()
 
     return state
+
+def read_record(file):
+    record = {}
+    
+    # This function sometimes needs to lookahead at the first character in a
+    # line, so always read it in advance.
+    c = file.read(1)
+
+    while (True):
+        if not c: raise StateParseError()
+
+        if c == ')':
+            if file.readline() != '\n': raise StateParseError()
+            return record
+
+        if c != '-': raise StateParseError()
+
+        key = file.readline().rstrip()
+        c = file.read(1)
+
+        if c == ')' or c == '-':
+            # The key has no value, so don't read anything. This 'c' will
+            # be dealt with in the next loop.
+            record[key] = None
+        elif c == '.':
+            record[key] = float(file.readline())
+            c = file.read(1)
+        elif c == '!':
+            record[key] = bool(file.readline())
+            c = file.read(1)
+        elif c == '=':
+            record[key] = int(file.readline())
+            c = file.read(1)
+        elif c == '"':
+            value = []
+            while c == '"':
+                if sys.version_info < (3, 0):
+                    value.append(file.readline().decode('utf-8'))
+                else:
+                    value.append(file.readline())
+
+                c = file.read(1)
+
+            record[key] = (''.join(value))[:-1]
+        else:
+            raise StateParseError()
 
 def save(state, file_path):
     file = open(file_path, "wb")
@@ -108,7 +103,11 @@ def save(state, file_path):
                         write(file, '!')
                         write(file, str(record[key]))
                         write(file, "\n")
-                    elif isinstance(record[key], (int, float)):
+                    elif isinstance(record[key], int):
+                        write(file, '=')
+                        write(file, str(record[key]))
+                        write(file, "\n")
+                    elif isinstance(record[key], float):
                         write(file, '.')
                         write(file, str(record[key]))
                         write(file, "\n")
