@@ -54,7 +54,7 @@ for entry in news:
     emit('                    <span class=\n                    "news-date">%s</span></li>' % (entry.web_date()))
 emit('</ul>\n\n')
 
-emit('<p><a href="/users/news/">More News...</a> (<a href=feed/news.rss">RSS</a>)</p>\n')
+emit('<p><a href="/users/news/">More News...</a> (<a href="feed/news.rss">RSS</a>)</p>\n')
 emit('</div>\n\n')
 
 emit('<div class="clear"></div>\n')

@@ -138,8 +138,8 @@ tidy --tidy-mark no -i -wrap 78 -m -asxhtml --merge-divs no --merge-spans no --d
 
                   <tr>
                     <td colspan="3">This is the experimetal version of the
-                    website. Development work should be done here first and then
-                    merged to the live website.</td>
+                    website. Development work should be done here first and
+                    then merged to the live website.</td>
                   </tr>
 
                   <tr>
@@ -324,10 +324,10 @@ tidy --tidy-mark no -i -wrap 78 -m -asxhtml --merge-divs no --merge-spans no --d
                 <li>Create a new file in the <tt>/feed/news</tt> directory,
                 say <tt>/feed/news/gui_review_ends.qbk</tt>.</li>
 
-                <li>In a shell, run the <tt>/site-tools/update.py</tt> script.
-                This will generate the page for the new news item, regenerate
-                the <tt>/feed/news.rss</tt> file to include it, update pages
-                which link to the new item and update the file
+                <li>In a shell, run the <tt>/site-tools/update.py</tt>
+                script. This will generate the page for the new news item,
+                regenerate the <tt>/feed/news.rss</tt> file to include it,
+                update pages which link to the new item and update the file
                 <tt>/site-tools/state/feed-pages.txt</tt> which tracks the
                 current state of generated files.</li>
 
@@ -396,6 +396,22 @@ define('UNZIP', 'unzip');
                   <tt>common/code/boost_config.php</tt> file.</p>
                 </li>
               </ol>
+
+              <h3>Ubuntu setup</h3>
+
+              <p>To setup the site on Ubuntu, I needed to do:</p>
+              <pre>
+sudo apt-get install apache2 libapache2-mod-php5
+sudo a2enmod headers
+sudo a2enmod rewrite
+sudo a2enmod include
+sudo a2dismod deflate
+sudo service apache2 restart
+              
+</pre>
+
+              <p>I had to disable <code>deflate</code> because it interacts
+              badly with php's <code>virtual</code> function.</p>
             </div>
           </div>
         </div>
