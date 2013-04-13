@@ -11,7 +11,7 @@ require_once(dirname(__FILE__) . '/boost_version.php');
 class boost_libraries
 {
     var $categories = array();
-    var $db = array();
+    private $db = array();
     
     function boost_libraries($xml_file)
     {
