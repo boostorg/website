@@ -99,11 +99,6 @@ class boost_libraries
         }
     }
     
-    function sort_by($field)
-    {
-        uasort($this->db, sort_by_field($field));
-    }
-
     function get($sort = null, $filter = null) {
         $libs = $filter ? array_filter($this->db, $filter) : $this->db;
         if($sort) {
