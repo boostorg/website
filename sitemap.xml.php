@@ -14,7 +14,7 @@
 function current_version_filter($lib) {
     return BoostVersion::current()->compare($lib['boost-version']) >= 0 &&
         (!isset($lib['boost-min-version']) ||
-            BoostVersion::current()->compare($lib['boost-min-version']) >= 0);
+            BoostVersion::current()->compare($lib['boost-min-version']) >= 0) &&
         (!isset($lib['boost-max-version']) ||
             BoostVersion::current()->compare($lib['boost-max-version']) <= 0);
 }
