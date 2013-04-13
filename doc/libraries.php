@@ -98,6 +98,10 @@ function library_filter($lib) {
   global $filter_value, $category_value;
 
   return BoostVersion::page()->compare($lib['boost-version']) >= 0 &&
+      (!isset($lib['boost-min-version']) ||
+        BoostVersion::page()->compare($lib['boost-min-version']) >= 0) &&
+      (!isset($lib['boost-max-version']) ||
+        BoostVersion::page()->compare($lib['boost-max-version']) <= 0) &&
       (!$filter_value || ($lib[$filter_value] && $lib[$filter_value] !== 'false')) &&
       (!isset($_GET['filter']) || $lib[$_GET['filter']]) &&
       (!$category_value || $category_value === 'all' ||
@@ -249,7 +253,7 @@ function category_link($name, $category) {
 
               <dl>
                 <?php
-                foreach ($libs->get($sort_value, 'library_filter') as $key => $lib) { ?>
+                foreach ($libs->get($sort_value, 'library_filter') as $lib) { ?>
 
                 <dt><?php libref($lib); ?></dt>
 
