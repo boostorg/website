@@ -24,6 +24,7 @@ function boost_title()
 $libs = USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt')) :
 	new boost_libraries(dirname(__FILE__) . '/libraries.xml');
+$categories = $libs->get_categories();
 
 // Display types:
 
@@ -66,7 +67,7 @@ if(strpos($view_value, 'filtered_') === 0) {
 }
 else if(strpos($view_value, 'category_') === 0) {
     $category_value = substr($view_value, strlen('category_'));
-    if(!isset($libs->categories[$category_value])) {
+    if(!isset($categories[$category_value])) {
         echo 'Invalid category: '.htmlentities($category_value); exit(0);
     }
 }
@@ -89,7 +90,7 @@ if(!isset($sort_fields[$sort_value])) {
 // Page title
 
 $page_title = boost_title().' Library Documentation';
-if($category_value) $page_title.= ' - '. $libs->categories[$category_value]['title'];
+if($category_value) $page_title.= ' - '. $categories[$category_value]['title'];
 
 // Functions
 
@@ -244,7 +245,7 @@ function category_link($name, $category) {
 
               <?php if($view_value != 'categorized') { ?>
 
-              <?php if($category_value) echo '<h2>', htmlentities($libs->categories[$category_value]['title']), '</h2>'; ?>
+              <?php if($category_value) echo '<h2>', htmlentities($categories[$category_value]['title']), '</h2>'; ?>
 
               <dl>
                 <?php
@@ -271,7 +272,7 @@ function category_link($name, $category) {
 
                     <dt>Categories</dt>
 
-                    <dd><?php libcategories($lib, $libs->categories); ?></dd>
+                    <dd><?php libcategories($lib, $categories); ?></dd>
                   </dl>
                 </dd><!-- --><?php } ?>
               </dl>
