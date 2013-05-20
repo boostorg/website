@@ -10,8 +10,8 @@ require_once(dirname(__FILE__) . '/boost_version.php');
 
 class boost_libraries
 {
-    var $categories = array();
-    var $db = array();
+    private $categories = array();
+    private $db = array();
     
     function boost_libraries($xml_file)
     {
@@ -61,6 +61,8 @@ class boost_libraries
                     }
                     break;
                     case 'boost-version':
+                    case 'boost-min-version':
+                    case 'boost-max-version':
                     {
                         if (isset($val['value'])) { $lib[$val['tag']] = BoostVersion::from($val['value']); }
                         else { $lib[$val['tag']] = ''; }
@@ -93,19 +95,21 @@ class boost_libraries
             }
             else if ($val['tag'] == 'library' && $val['type'] == 'close' && $lib)
             {
-                $this->db[$lib['key']] = $lib;
+                $key_base = $key = $lib['key'];
+                $count = 0;
+                while (isset($this->db[$key])) {
+                    $key = $key_base.(++$count);
+                }
+                $this->db[$key] = $lib;
                 $lib = NULL;
             }
         }
     }
     
-    function sort_by($field)
-    {
-        uasort($this->db, sort_by_field($field));
-    }
-
     function get($sort = null, $filter = null) {
         $libs = $filter ? array_filter($this->db, $filter) : $this->db;
+        // Strip out the array keys, as they shouldn't be used externally.
+        $libs = array_values($libs);
         if($sort) {
             uasort($libs, sort_by_field($sort));
         }
@@ -128,6 +132,10 @@ class boost_libraries
         }
 
         return $categories;
+    }
+
+    function get_categories() {
+        return $this->categories;
     }
 }
 ?>
