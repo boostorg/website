@@ -48,6 +48,14 @@ Release status:
   * The return types for copy_while and copy_until have been changed. This is an interface change. If you were using the return values from these functions, then you will have to modify your code. Instead of just returning the modified `OutputIterator`, these functions now return a `std::pair<InputIterator, OutputIterator>`. If this change affects your code, the simplest change is to add a `.second` to the end of the call, which will get you the same behavior that you had before.
   * Added C++14 versions of 'is_permutation', 'equal' and 'mismatch'.
 
+* [phrase library..[@/libs/chrono/ Chrono]:]
+  * ['Fixed Bugs:]
+    * [@http://svn.boost.org/trac/boost/ticket/8079 #8079] Chrono memory leak
+    * [@http://svn.boost.org/trac/boost/ticket/8318 #8318] BOOST_FORCEINLINE constructors of time_point and duration
+    * [@http://svn.boost.org/trac/boost/ticket/8367 #8367] chrono does not compile with clang from XCode 4.5.2 with -std=c++11 -stdlib=libc++ and -arch armv7
+    * [@http://svn.boost.org/trac/boost/ticket/8370 #8370] typo in chrono reference
+    * [@http://svn.boost.org/trac/boost/ticket/8435 #8435] Can't compile Chrono on HP-UX due to no CLOCK_REALTIME macro.
+
 * [phrase library..[@/libs/circular_buffer Circular Buffer]:]
   * Fixed warnings ([ticket 8032]).
 
@@ -59,8 +67,41 @@ Release status:
   * Fixes for [ticket 7805], [ticket 7899], [ticket 7972], [ticket 8023],
     [ticket 8024], [ticket 8101]
 
+* [phrase library..[@/libs/thread/ Thread]:]
+  * ['New Features:]
+    * [@http://svn.boost.org/trac/boost/ticket/7285 #7285] C++11 compliance: Allow to pass movable arguments for call_once.
+    * [@http://svn.boost.org/trac/boost/ticket/7445 #7445] Async: Add future<>.then
+    * [@http://svn.boost.org/trac/boost/ticket/7449 #7449] Synchro: Add a synchronized value class
+  * ['Fixed Bugs:]
+    * [@http://svn.boost.org/trac/boost/ticket/4878 #4878] MinGW 4.5.0 undefined reference to bool interruptible_wait(detail::win32::handle handle_to_wait_for,detail::t imeout target_time).
+    * [@http://svn.boost.org/trac/boost/ticket/4882 #4882] Win32 shared_mutex does not handle timeouts correctly.
+    * [@http://svn.boost.org/trac/boost/ticket/5752 #5752] boost::call_once() is unreliable on some platforms
+    * [@http://svn.boost.org/trac/boost/ticket/6652 #6652] Boost.Thread shared_mutex.hpp:50:99: warning: dereferencing type-punned pointer will break strict-aliasing rules \[-Wstrict-aliasing\]
+    * [@http://svn.boost.org/trac/boost/ticket/6843 #6843] \[Intel C++\] Compile Errors with '#include <atomic>'
+    * [@http://svn.boost.org/trac/boost/ticket/6966 #6966] future boost::future_category inconsistent dll linkage
+    * [@http://svn.boost.org/trac/boost/ticket/7720 #7720] exception lock_error while intensive locking/unlocking of mutex
+    * [@http://svn.boost.org/trac/boost/ticket/7755 #7755] Thread: deadlock with shared_mutex on Windows
+    * [@http://svn.boost.org/trac/boost/ticket/7980 #7980] Build error: msvc-11.0 and BOOST_THREAD_DONT_USE_DATETIME
+    * [@http://svn.boost.org/trac/boost/ticket/7982 #7982] pthread_delay_np() parm compile error on AIX
+    * [@http://svn.boost.org/trac/boost/ticket/8027 #8027] thread library fails to compile with Visual Studio 2003
+    * [@http://svn.boost.org/trac/boost/ticket/8070 #8070] prefer GetTickCount64 over GetTickCount
+    * [@http://svn.boost.org/trac/boost/ticket/8136 #8136] boost::this_thread::sleep_for() sleeps longer than it should in Windows
+    * [@http://svn.boost.org/trac/boost/ticket/8212 #8212] Boost thread compilation error on Solaris 10
+    * [@http://svn.boost.org/trac/boost/ticket/8237 #8237] fix documentation for 'thread_group'
+    * [@http://svn.boost.org/trac/boost/ticket/8239 #8239] barrier::wait() not marked as interruption_point
+    * [@http://svn.boost.org/trac/boost/ticket/8323 #8323] boost::thread::try_join_for/try_join_until may block indefinitely due to a combination of problems in Boost.Thread and Boost.Chrono
+    * [@http://svn.boost.org/trac/boost/ticket/8337 #8337] The internal representation of "std::string(this->code()->message())" escapes, but is destroyed when it exits scope.
+    * [@http://svn.boost.org/trac/boost/ticket/8371 #8371] C++11 once_flag enabled when constexpr is not available
+    * [@http://svn.boost.org/trac/boost/ticket/8443 #8443] Header file inclusion order may cause crashes
+    * [@http://svn.boost.org/trac/boost/ticket/8451 #8451] Missing documented function 'boost::scoped_thread::joinable'
+    * [@http://svn.boost.org/trac/boost/ticket/8451 #8530] \[Coverity\] Unused variable thread_handle, uninitialized variable cond_mutex in thread/pthread/thread_data.hpp
+
 * [phrase library..[@/libs/utility/ Utility]:]
   * Fix `basic_string_ref::find` ([ticket 8067]).
+  * Update noncopyable for C++11 ([ticket 6578]).
+  * Fix noncopyable compiler warning when used in DLL interface ([ticket 6935]).
+  * Fix using `boost::addressof` with `boost::function` on SolarisStudio
+    compiler ([ticket 7079]).
 
 [/
 
