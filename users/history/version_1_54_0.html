@@ -46,6 +46,80 @@
                 <div class="description">
 
 
+  <div id="version_1_54_0.news">
+    <h3><span class="link">News</span></h3>
+    <p>
+      Boost no longer supports the 80386 target CPU, the minimum x86 32-bit target
+      is i486. The 80386 target was not properly supported by <a href="/libs/smart_ptr/">Boost.SmartPtr</a>
+      and <a href="/libs/atomic/">Boost.Atomic</a> (as well as the libraries
+      that used them internally) even before this release. Some Boost libraries may
+      have higher requirements on the minimum target CPU (like <a href="/libs/log/">Boost.Log</a>
+      for example), see the respective library documentation for details.
+    </p>
+    <p>
+      Also by default, when building Boost for x86 32-bit targets it will compile
+      for i686 (Pentium Pro) and later CPUs. This can be changed by specifying the
+      <tt>instruction-set</tt> property in <tt>b2</tt> or <tt>bjam</tt>
+      command line, for example:
+    </p>
+<pre>b2 variant=release architecture=x86 instruction-set=i486 stage
+</pre>
+    <p>
+      Possible values for the <tt>instruction-set</tt> are:
+    </p>
+    <ul>
+      <li>
+        <div>
+          Target for the host CPU: <tt>native</tt>
+        </div>
+      </li>
+      <li>
+        <div>
+          Generic x86 CPUs: <tt>i486</tt>, <tt>i586</tt>, <tt>i686</tt>
+        </div>
+      </li>
+      <li>
+        <div>
+          Intel CPUs: <tt>pentium</tt>, <tt>pentium-mmx</tt>,
+          <tt>pentiumpro</tt>, <tt>pentium2</tt>, <tt>pentium3</tt>,
+          <tt>pentium3m</tt>, <tt>pentium-m</tt>, <tt>pentium4</tt>,
+          <tt>pentium4m</tt>, <tt>prescott</tt>, <tt>nocona</tt>,
+          <tt>core2</tt>, <tt>corei7</tt>, <tt>corei7-avx</tt>,
+          <tt>core-avx-i</tt>, <tt>conroe</tt>, <tt>conroe-xe</tt>,
+          <tt>conroe-l</tt>, <tt>allendale</tt>, <tt>merom</tt>,
+          <tt>merom-xe</tt>, <tt>kentsfield</tt>, <tt>kentsfield-xe</tt>,
+          <tt>penryn</tt>, <tt>wolfdale</tt>, <tt>yorksfield</tt>,
+          <tt>nehalem</tt>, <tt>sandy-bridge</tt>, <tt>ivy-bridge</tt>,
+          <tt>haswell</tt>, <tt>atom</tt>
+        </div>
+      </li>
+      <li>
+        <div>
+          AMD CPUs: <tt>k6</tt>, <tt>k6-2</tt>, <tt>k6-3</tt>,
+          <tt>athlon</tt>, <tt>athlon-tbird</tt>, <tt>athlon-4</tt>,
+          <tt>athlon-xp</tt>, <tt>athlon-mp</tt>, <tt>k8</tt>,
+          <tt>opteron</tt>, <tt>athlon64</tt>, <tt>athlon-fx</tt>,
+          <tt>k8-sse3</tt>, <tt>opteron-sse3</tt>, <tt>athlon64-sse3</tt>,
+          <tt>amdfam10</tt>, <tt>barcelona</tt>, <tt>bdver1</tt>,
+          <tt>bdver2</tt>, <tt>bdver3</tt>, <tt>btver1</tt>,
+          <tt>btver2</tt>
+        </div>
+      </li>
+      <li>
+        <div>
+          VIA CPUs: <tt>c3</tt>, <tt>c3-2</tt>
+        </div>
+      </li>
+      <li>
+        <div>
+          IDT CPUs: <tt>winchip-c6</tt>, <tt>winchip2</tt>
+        </div>
+      </li>
+    </ul>
+    <p>
+      Note that not all these values may be supported by a particular compiler.
+    </p>
+  </div>
   <div id="version_1_54_0.new_libraries">
     <h3><span class="link">New Libraries</span></h3>
     <ul>
@@ -254,6 +328,43 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/libs/graph">Graph</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Bugs fixed from Trac: <a href="https://svn.boost.org/trac/boost/ticket/6780">#6780</a>, <a href="https://svn.boost.org/trac/boost/ticket/7016">#7016</a>, <a href="https://svn.boost.org/trac/boost/ticket/7155">#7155</a>, <a href="https://svn.boost.org/trac/boost/ticket/7845">#7845</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/7863">#7863</a>, <a href="https://svn.boost.org/trac/boost/ticket/7877">#7877</a>, <a href="https://svn.boost.org/trac/boost/ticket/8166">#8166</a>, <a href="https://svn.boost.org/trac/boost/ticket/8192">#8192</a>, <a href="https://svn.boost.org/trac/boost/ticket/8398">#8398</a>, <a href="https://svn.boost.org/trac/boost/ticket/8411">#8411</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8427">#8427</a>, <a href="https://svn.boost.org/trac/boost/ticket/8428">#8428</a>, <a href="https://svn.boost.org/trac/boost/ticket/8434">#8434</a>, <a href="https://svn.boost.org/trac/boost/ticket/8490">#8490</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added updates to VF2 subgraph isomorphism from Jakob Lykke Andersen
+                and Flavio De Lorenzi.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added maximum adjacency search from Fernando Vilas.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added timeout support from Brammert Ottens to resource-constrained
+                shortest paths (r_c_shortest_paths) algorithm.
+              </div>
+            </li>
+            <li>
+              <div>
+                Various fixes to documentation and examples and removal of outdated
+                compiler workarounds.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/libs/conversion/lexical_cast.htm">Lexical cast</a>:</span>
           <ul>
             <li>
@@ -284,6 +395,164 @@
               <div>
                 Fixed warnings, internals and tests <a href="https://svn.boost.org/trac/boost/ticket/2558">#2558</a>, <a href="https://svn.boost.org/trac/boost/ticket/7949">#7949</a>, <a href="https://svn.boost.org/trac/boost/ticket/8162">#8162</a>,
                 <a href="https://svn.boost.org/trac/boost/ticket/8369">#8369</a>, <a href="https://svn.boost.org/trac/boost/ticket/8547">#8547</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/math/">Math</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Major reorganization to incorporate other Boost.Math like Integer
+                Utilities LCD, GCM, quaternions and octonions. Making new chapter
+                headings.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added many references to Boost.Multiprecision and <code><span class="identifier">cpp_dec_float_50</span></code>
+                as an example of a User-defined Type (UDT).
+              </div>
+            </li>
+            <li>
+              <div>
+                Added Clang to list of supported compilers.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed constants to use a thread-safe cache of computed values when
+                used at arbitrary precision.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added finding zeros of Bessel functions <code><span class="identifier">cyl_bessel_j_zero</span></code>,
+                <code><span class="identifier">cyl_neumann_zero</span></code>,
+                <code><span class="identifier">air_ai_zeros</span></code> and
+                <code><span class="identifier">air_bi_zeros</span></code>(by Christopher
+                Kormanyos).
+              </div>
+            </li>
+            <li>
+              <div>
+                More accuracy improvements to the Bessel J and Y functions from Rocco
+                Romeo.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed nasty cyclic dependency bug that caused some headers to not
+                compile <a href="https://svn.boost.org/trac/boost/ticket/7999">#7999</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed bug in __tgamma that caused spurious overflow for arguments
+                between 142.5 and 143.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed bug in raise_rounding_error that caused it to return an incorrect
+                result when throwing an exception is turned off <a href="https://svn.boost.org/trac/boost/ticket/7905">#7905</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added minimal __float128 support.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed bug in edge-cases of poisson quantile <a href="https://svn.boost.org/trac/boost/ticket/8308">#8308</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Adjusted heuristics used in Halley iteration to cope with inverting
+                the incomplete beta in tricky regions where the derivative is flatlining.
+                Example is computing the quantile of the Fisher F distribution for
+                probabilities smaller than machine epsilon. See ticket <a href="https://svn.boost.org/trac/boost/ticket/8314">#8314</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/multiprecision/">Multiprecision</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <strong>Breaking change</strong> renamed <code><span class="identifier">rational_adapter</span></code> to <code><span class="identifier">rational_adaptor</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add support for [mpfi].
+              </div>
+            </li>
+            <li>
+              <div>
+                Add logged_adaptor.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add support for 128-bit floats via GCC's <code><span class="identifier">__float128</span></code>
+                or Intel's <code><span class="identifier">_Quad</span></code>
+                data types.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add support for user-defined literals in cpp_int, improve <code><span class="identifier">constexpr</span></code> support.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed bug in integer division of <code><span class="identifier">cpp_int</span></code>
+                that results in incorrect sign of <code><span class="identifier">cpp_int</span></code>
+                when both arguments are small enough to fit in a <code><span class="identifier">double_limb_type</span></code>.
+                See <a href="https://svn.boost.org/trac/boost/ticket/8126">8126</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed bug in subtraction of a single limb in <code><span class="identifier">cpp_int</span></code>
+                that results in incorrect value when the result should have a 0 in
+                the last limb: <a href="https://svn.boost.org/trac/boost/ticket/8133">8133</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed bug in <code><span class="identifier">cpp_int</span></code>
+                where division of 0 by something doesn't get zero in the result:
+                <a href="https://svn.boost.org/trac/boost/ticket/8160">8160</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed bug in some transcendental functions that caused incorrect
+                return values when variables are reused, for example with <code><span class="identifier">a</span> <span class="special">=</span> <span class="identifier">pow</span><span class="special">(</span><span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">)</span></code>.
+                See <a href="https://svn.boost.org/trac/boost/ticket/8326">8326</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/property_map/">PropertyMap</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added <code><span class="identifier">compose_property_map</span></code>
+                from Guillaume Pinot.
               </div>
             </li>
           </ul>

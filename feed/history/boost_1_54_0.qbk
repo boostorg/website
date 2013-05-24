@@ -31,6 +31,44 @@ Release status:
        [purpose] section at the beginning of the page.
 ]
 
+[section News]
+
+Boost no longer supports the 80386 target CPU, the minimum x86 32-bit target is
+i486. The 80386 target was not properly supported by [@/libs/smart_ptr/
+Boost.SmartPtr] and [@/libs/atomic/ Boost.Atomic] (as well as the libraries
+that used them internally) even before this release. Some Boost libraries may
+have higher requirements on the minimum target CPU (like [@/libs/log/
+Boost.Log] for example), see the respective library documentation for details.
+
+Also by default, when building Boost for x86 32-bit targets it will compile for
+i686 (Pentium Pro) and later CPUs. This can be changed by specifying the
+[^instruction-set] property in [^b2] or [^bjam] command line, for example:
+
+[pre
+    b2 variant=release architecture=x86 instruction-set=i486 stage
+]
+
+Possible values for the [^instruction-set] are:
+
+* Target for the host CPU: [^native]
+* Generic x86 CPUs: [^i486], [^i586], [^i686]
+* Intel CPUs: [^pentium], [^pentium-mmx], [^pentiumpro], [^pentium2],
+  [^pentium3], [^pentium3m], [^pentium-m], [^pentium4], [^pentium4m],
+  [^prescott], [^nocona], [^core2], [^corei7], [^corei7-avx], [^core-avx-i],
+  [^conroe], [^conroe-xe], [^conroe-l], [^allendale], [^merom], [^merom-xe],
+  [^kentsfield], [^kentsfield-xe], [^penryn], [^wolfdale], [^yorksfield],
+  [^nehalem], [^sandy-bridge], [^ivy-bridge], [^haswell], [^atom]
+* AMD CPUs: [^k6], [^k6-2], [^k6-3], [^athlon], [^athlon-tbird], [^athlon-4],
+  [^athlon-xp], [^athlon-mp], [^k8], [^opteron], [^athlon64], [^athlon-fx],
+  [^k8-sse3], [^opteron-sse3], [^athlon64-sse3], [^amdfam10], [^barcelona],
+  [^bdver1], [^bdver2], [^bdver3], [^btver1], [^btver2]
+* VIA CPUs: [^c3], [^c3-2]
+* IDT CPUs: [^winchip-c6], [^winchip2]
+
+Note that not all these values may be supported by a particular compiler.
+
+[endsect]
+
 [section New Libraries]
 
 * [phrase library..[@/libs/log/ Log]:]
@@ -78,6 +116,13 @@ Release status:
   * [@http://svn.boost.org/trac/boost/ticket/8526 #8526] memory leak
   * [@http://svn.boost.org/trac/boost/ticket/8544 #8544] calling managed DLL
 
+* [phrase library..[@/libs/graph Graph]:]
+  * Bugs fixed from Trac: [ticket 6780], [ticket 7016], [ticket 7155], [ticket 7845], [ticket 7863], [ticket 7877], [ticket 8166], [ticket 8192], [ticket 8398], [ticket 8411], [ticket 8427], [ticket 8428], [ticket 8434], [ticket 8490].
+  * Added updates to VF2 subgraph isomorphism from Jakob Lykke Andersen and Flavio De Lorenzi.
+  * Added maximum adjacency search from Fernando Vilas.
+  * Added timeout support from Brammert Ottens to resource-constrained shortest paths (r_c_shortest_paths) algorithm.
+  * Various fixes to documentation and examples and removal of outdated compiler workarounds.
+
 * [phrase library..[@/libs/conversion/lexical_cast.htm Lexical cast]:]
   * Converting to character pointer now triggers compile time assert
     instead of runtime [ticket 8334].
@@ -89,6 +134,40 @@ Release status:
     broken in 1.53.0 [ticket 7421].
   * Fixed warnings, internals and tests [ticket 2558], [ticket 7949],
     [ticket 8162], [ticket 8369], [ticket 8547].
+
+* [phrase library..[@/libs/math/ Math]:]
+  * Major reorganization to incorporate other Boost.Math like Integer Utilities LCD, GCM, quaternions and octonions.
+    Making new chapter headings.
+  * Added many references to Boost.Multiprecision and `cpp_dec_float_50` as an example of a User-defined Type (UDT).
+  * Added Clang to list of supported compilers.
+  * Fixed constants to use a thread-safe cache of computed values when used at arbitrary precision.
+  * Added finding zeros of Bessel functions `cyl_bessel_j_zero`, `cyl_neumann_zero`, `air_ai_zeros` and `air_bi_zeros`(by Christopher Kormanyos).
+  * More accuracy improvements to the Bessel J and Y functions from Rocco Romeo.
+  * Fixed nasty cyclic dependency bug that caused some headers to not compile [@https://svn.boost.org/trac/boost/ticket/7999 #7999].
+  * Fixed bug in __tgamma that caused spurious overflow for arguments between 142.5 and 143.
+  * Fixed bug in raise_rounding_error that caused it to return an incorrect result when throwing an exception is turned off [@https://svn.boost.org/trac/boost/ticket/7905 #7905].
+  * Added minimal __float128 support.
+  * Fixed bug in edge-cases of poisson quantile [@https://svn.boost.org/trac/boost/ticket/8308 #8308].
+  * Adjusted heuristics used in Halley iteration to cope with inverting the incomplete beta in tricky regions
+    where the derivative is flatlining.  Example is computing the quantile of the Fisher F distribution for probabilities
+    smaller than machine epsilon.  See ticket [@https://svn.boost.org/trac/boost/ticket/8314 #8314].
+
+* [phrase library..[@/libs/multiprecision/ Multiprecision]:]
+  * [*Breaking change] renamed `rational_adapter` to `rational_adaptor`.
+  * Add support for [mpfi].
+  * Add logged_adaptor.
+  * Add support for 128-bit floats via GCC's `__float128` or Intel's `_Quad` data types.
+  * Add support for user-defined literals in cpp_int, improve `constexpr` support.
+  * Fixed bug in integer division of `cpp_int` that results in incorrect sign of `cpp_int` when both arguments are small enough
+    to fit in a `double_limb_type`.  See [@https://svn.boost.org/trac/boost/ticket/8126 8126].
+  * Fixed bug in subtraction of a single limb in `cpp_int` that results in incorrect value when the result should have a 0
+    in the last limb: [@https://svn.boost.org/trac/boost/ticket/8133 8133].
+  * Fixed bug in `cpp_int` where division of 0 by something doesn't get zero in the result: [@https://svn.boost.org/trac/boost/ticket/8160 8160].
+  * Fixed bug in some transcendental functions that caused incorrect return values when variables are reused, for example with
+    `a = pow(a, b)`.  See [@https://svn.boost.org/trac/boost/ticket/8326 8326].
+
+* [phrase library..[@/libs/property_map/ PropertyMap]:]
+  * Added `compose_property_map` from Guillaume Pinot.
 
 * [phrase library..[@/libs/thread/ Thread]:]
   * ['New Features:]
