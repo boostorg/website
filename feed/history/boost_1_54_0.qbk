@@ -48,6 +48,11 @@ Release status:
   * The return types for copy_while and copy_until have been changed. This is an interface change. If you were using the return values from these functions, then you will have to modify your code. Instead of just returning the modified `OutputIterator`, these functions now return a `std::pair<InputIterator, OutputIterator>`. If this change affects your code, the simplest change is to add a `.second` to the end of the call, which will get you the same behavior that you had before.
   * Added C++14 versions of 'is_permutation', 'equal' and 'mismatch'.
 
+* [phrase library..[@/libs/any/ Any]:]
+  * Added C++11 features support [ticket 6999]:
+    * Move assignment and move constructors.
+    * Added `noexcept` modifiers.
+
 * [phrase library..[@/libs/chrono/ Chrono]:]
   * ['Fixed Bugs:]
     * [@http://svn.boost.org/trac/boost/ticket/8079 #8079] Chrono memory leak
@@ -72,6 +77,18 @@ Release status:
   * [@http://svn.boost.org/trac/boost/ticket/8101 #8101] Postfix operator++ for iterator
   * [@http://svn.boost.org/trac/boost/ticket/8526 #8526] memory leak
   * [@http://svn.boost.org/trac/boost/ticket/8544 #8544] calling managed DLL
+
+* [phrase library..[@/libs/conversion/lexical_cast.htm Lexical cast]:]
+  * Converting to character pointer now triggers compile time assert
+    instead of runtime [ticket 8334].
+  * Lexical cast is now capable of converting `boost::int128_type` and
+    `boost::uint128_type` [ticket 7909].
+  * Changed internal stream buffer handling, now works with libc++
+    [ticket 8267], [ticket 7704].
+  * Restored getting address of `lexical_cast` function that was
+    broken in 1.53.0 [ticket 7421].
+  * Fixed warnings, internals and tests [ticket 2558], [ticket 7949],
+    [ticket 8162], [ticket 8369], [ticket 8547].
 
 * [phrase library..[@/libs/thread/ Thread]:]
   * ['New Features:]
@@ -102,12 +119,28 @@ Release status:
     * [@http://svn.boost.org/trac/boost/ticket/8451 #8451] Missing documented function 'boost::scoped_thread::joinable'
     * [@http://svn.boost.org/trac/boost/ticket/8451 #8530] \[Coverity\] Unused variable thread_handle, uninitialized variable cond_mutex in thread/pthread/thread_data.hpp
 
+* [phrase library..[@/libs/type_traits/ Type Traits]:]
+  * New type traits implemented [ticket 8189]:
+    * is_nothrow_move_constructible
+    * is_nothrow_move_assignable
+    * has_trivial_move_assign
+    * has_trivial_move_constructor
+
 * [phrase library..[@/libs/utility/ Utility]:]
   * Fix `basic_string_ref::find` ([ticket 8067]).
   * Update noncopyable for C++11 ([ticket 6578]).
   * Fix noncopyable compiler warning when used in DLL interface ([ticket 6935]).
   * Fix using `boost::addressof` with `boost::function` on SolarisStudio
     compiler ([ticket 7079]).
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Now uses new type traits from Boost.TypeTrait to detect `noexcept`
+    constructors and assignment
+    operators [ticket 8296]. This shall increase performance of
+    `boost::variant` for many types
+    in C++11.
+  * Multivisitation implemented [ticket 8459].
+  * Documentation updated to reflect C++11 features support.
 
 [/
 
