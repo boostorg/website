@@ -4,7 +4,7 @@
     [purpose
         New Libraries: Log, TTI, Type Erasure.
         Updated Libraries: Algorithm, Any, Chrono, Circular Buffer, Context,
-        Coroutine, Graph, Lexical Cast, Math, Multiprecision, Property Map,
+        Coroutine, Graph, Iostreams, Lexical Cast, Math, Multiprecision, Property Map,
         Thread, Type Traits, Unordered, Utility, Variant, Wave
     ]
     [authors [Clow, Marshall]]
@@ -127,6 +127,32 @@ Note that not all these values may be supported by a particular compiler.
   * Added maximum adjacency search from Fernando Vilas.
   * Added timeout support from Brammert Ottens to resource-constrained shortest paths (r_c_shortest_paths) algorithm.
   * Various fixes to documentation and examples and removal of outdated compiler workarounds.
+
+* [phrase library..[@/libs/iostreams/ Iostreams]:]
+  * `tee` now works correctly for std::streams ([ticket 8315]).
+  * Documentation fixes ([ticket 8385], [ticket 8460]).
+  * Avoid warning from Clang's `-Wimplicit-fallthrough` ([ticket 8482]).
+
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * ['Additional functionality]
+    * added Spatial Index, developed for Boost.Geometry by Adam Wulkiewicz. The spatial index was originally started by Federico J. Fernandez during the Google Summer of Code 2008 program, mentored by Hartmut Kaiser.
+    * added SVG-output, this was already in extensions for several years
+  * ['Documentation]
+    * small fixes of missing words
+  * ['Bugfixes]
+    * collinear opposite segments did sometimes (in circles) have a robustness issue, fixed
+    * fixed insertion of false intersection point (found by buffer)
+    * applied patch of Vladimir Petrovic for debugging traversals
+  * ['Solved tickets]
+    * [@https://svn.boost.org/trac/boost/ticket/7462 7462] degenerate union result for float, fixed
+    * [@https://svn.boost.org/trac/boost/ticket/7465 7465] wrong construtors access type in scale_transformer class, fixed
+    * [@https://svn.boost.org/trac/boost/ticket/7802 7802] cart_intersect.hpp unused parameter warnings, fixed
+    * [@https://svn.boost.org/trac/boost/ticket/8254 8254] faulty intersection, fixed
+    * [@https://svn.boost.org/trac/boost/ticket/8393 8393] polygon model doesn't adhere to stated Polygon concept rules, doc updated.
+    * [@https://svn.boost.org/trac/boost/ticket/8403 8403] silenced compiler warning C4127: conditional expression is constant
+    * [@https://svn.boost.org/trac/boost/ticket/8405 8405] silenced compiler warning C4189: '...' : local variable is initialized but not referenced
+  * ['Internal changes]
+    * Made several algorithms variant-aware (append, area, clear, convert, equals, length, num_points)
 
 * [phrase library..[@/libs/conversion/lexical_cast.htm Lexical cast]:]
   * Converting to character pointer now triggers compile time assert
