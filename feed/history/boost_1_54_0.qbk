@@ -87,6 +87,10 @@ Note that not all these values may be supported by a particular compiler.
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/accumulators/ Accumulators]:]
+  * Fixes comment typos ([@http://svn.boost.org/trac/boost/ticket/7917 #7917])
+  * Silence unused variable warnings ([@http://svn.boost.org/trac/boost/ticket/6926 #6926])
+
 * [phrase library..[@/libs/algorithm/ Algorithm]:]
   * The return types for copy_while and copy_until have been changed. This is an interface change. If you were using the return values from these functions, then you will have to modify your code. Instead of just returning the modified `OutputIterator`, these functions now return a `std::pair<InputIterator, OutputIterator>`. If this change affects your code, the simplest change is to add a `.second` to the end of the call, which will get you the same behavior that you had before.
   * Added C++14 versions of 'is_permutation', 'equal' and 'mismatch'.
@@ -246,10 +250,12 @@ Note that not all these values may be supported by a particular compiler.
 
 * [phrase library..[@/libs/utility/ Utility]:]
   * Fix `basic_string_ref::find` ([ticket 8067]).
+  * Fix `string_ref`'s logical operators.
   * Update noncopyable for C++11 ([ticket 6578]).
   * Fix noncopyable compiler warning when used in DLL interface ([ticket 6935]).
   * Fix using `boost::addressof` with `boost::function` on SolarisStudio
     compiler ([ticket 7079]).
+  * Disable annoying MSVC warning about operator comma ([ticket 7663])
 
 * [phrase library..[@/libs/variant/ Variant]:]
   * Now uses new type traits from Boost.TypeTrait to detect `noexcept`
@@ -262,6 +268,11 @@ Note that not all these values may be supported by a particular compiler.
 
 * [phrase library..[@/libs/wave/ Wave]:]
   * See the [@/libs/wave/ChangeLog Changelog] for details.
+
+* [prase library..[@/libs/xpressive xpressive]:]
+  * Remove unused variables, fixes [ticket 8039]
+  * Avoid name clash with macro `None` in glx.h, fixes [ticket 8204]
+  * Silence a gcc warning, fixes [ticket 8138]
 
 [endsect]
 
