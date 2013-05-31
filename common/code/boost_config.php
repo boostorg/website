@@ -20,6 +20,9 @@ UNZIP
 
 ARCHIVE_FILE_PREFIX
   Prefix for the root directory in the Boost ZIP archives.
+
+STATIC_DIR
+  Path to static copies of boost.
 */
 
 switch (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '')
@@ -48,6 +51,10 @@ if(!function_exists('virtual'))
     function virtual($location) {
         echo '<!--#include virtual="', $location, '" -->';
     }
+}
+
+if (!defined('STATIC_DIR')) {
+    define('STATIC_DIR', dirname(__FILE__).'/../../doc/archives');
 }
 
 ?>

@@ -88,6 +88,7 @@ display_from_archive(
   ),
   array(
     'fix_dir' => dirname(__FILE__).'/fixes',
+    'archive_dir' => STATIC_DIR,
     'use_http_expire_date' => true,
     'zipfile' => false,
   )
