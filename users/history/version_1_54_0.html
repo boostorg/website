@@ -216,6 +216,194 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added new traits classes, <code><span class="identifier">handler_type</span></code>
+                and <code><span class="identifier">async_result</span></code>,
+                that allow the customisation of the return type of an initiating
+                function.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added the <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">spawn</span><span class="special">()</span></code>
+                function, a high-level wrapper for running stackful coroutines, based
+                on the Boost.Coroutine library. The <code><span class="identifier">spawn</span><span class="special">()</span></code> function enables programs to implement
+                asynchronous logic in a synchronous manner. For example: <code><span class="identifier">size_t</span> <span class="identifier">n</span>
+                <span class="special">=</span> <span class="identifier">my_socket</span><span class="special">.</span><span class="identifier">async_read_some</span><span class="special">(</span><span class="identifier">my_buffer</span><span class="special">,</span> <span class="identifier">yield</span><span class="special">);</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added the <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">use_future</span></code> special value, which
+                provides first-class support for returning a C++11 <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">future</span></code> from an asynchronous operation's
+                initiating function. For example: <code><span class="identifier">future</span><span class="special">&lt;</span><span class="identifier">size_t</span><span class="special">&gt;</span> <span class="identifier">n</span>
+                <span class="special">=</span> <span class="identifier">my_socket</span><span class="special">.</span><span class="identifier">async_read_some</span><span class="special">(</span><span class="identifier">my_buffer</span><span class="special">,</span> <span class="identifier">asio</span><span class="special">::</span><span class="identifier">use_future</span><span class="special">);</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Promoted the stackless coroutine class and macros to be part of Asio's
+                documented interface, rather than part of the HTTP server 4 example.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a new handler hook called <code><span class="identifier">asio_handler_is_continuation</span></code>.
+                Asynchronous operations may represent a continuation of the asynchronous
+                control flow associated with the current executing handler. The
+                <code><span class="identifier">asio_handler_is_continuation</span></code>
+                hook can be customised to return <code><span class="keyword">true</span></code>
+                if this is the case, and Asio's implementation can use this knowledge
+                to optimise scheduling of the new handler. To cover common cases,
+                Asio customises the hook for strands, <code><span class="identifier">spawn</span><span class="special">()</span></code> and composed asynchronous operations.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added four new generic protocol classes, <code><span class="identifier">generic</span><span class="special">::</span><span class="identifier">datagram_protocol</span></code>,
+                <code><span class="identifier">generic</span><span class="special">::</span><span class="identifier">raw_protocol</span></code>, <code><span class="identifier">generic</span><span class="special">::</span><span class="identifier">seq_packet_protocol</span></code>
+                and <code><span class="identifier">generic</span><span class="special">::</span><span class="identifier">stream_protocol</span></code>, which implement
+                the <code><span class="identifier">Protocol</span></code> type
+                requirements, but allow the user to specify the address family (e.g.
+                <code><span class="identifier">AF_INET</span></code>) and protocol
+                type (e.g. <code><span class="identifier">IPPROTO_TCP</span></code>)
+                at runtime.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added C++11 move constructors that allow the conversion of a socket
+                (or acceptor) into a more generic type. For example, an <code><span class="identifier">ip</span><span class="special">::</span><span class="identifier">tcp</span><span class="special">::</span><span class="identifier">socket</span></code> can be converted into a
+                <code><span class="identifier">generic</span><span class="special">::</span><span class="identifier">stream_protocol</span><span class="special">::</span><span class="identifier">socket</span></code> via move construction.
+              </div>
+            </li>
+            <li>
+              <div>
+                Extended the <code><span class="identifier">basic_socket_acceptor</span><span class="special">&lt;&gt;</span></code> class's <code><span class="identifier">accept</span><span class="special">()</span></code> and <code><span class="identifier">async_accept</span><span class="special">()</span></code> functions to allow a new connection
+                to be accepted directly into a socket of a more generic type. For
+                example, an <code><span class="identifier">ip</span><span class="special">::</span><span class="identifier">tcp</span><span class="special">::</span><span class="identifier">acceptor</span></code> can be used to accept
+                into a <code><span class="identifier">generic</span><span class="special">::</span><span class="identifier">stream_protocol</span><span class="special">::</span><span class="identifier">socket</span></code> object.
+              </div>
+            </li>
+            <li>
+              <div>
+                Moved existing examples into a C++03-specific directory, and added
+                a new directory for C++11-specific examples. A limited subset of
+                the C++03 examples have been converted to their C++11 equivalents.
+              </div>
+            </li>
+            <li>
+              <div>
+                Various SSL enhancements. Thanks go to Nick Jones, on whose work
+                these changes are based.
+                <ul>
+                  <li>
+                    <div>
+                      Added support for SSL handshakes with re-use of data already
+                      read from the wire. New overloads of the <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">stream</span><span class="special">&lt;&gt;</span></code> class's <code><span class="identifier">handshake</span><span class="special">()</span></code>
+                      and <code><span class="identifier">async_handshake</span><span class="special">()</span></code> functions have been added.
+                      These accept a <code><span class="identifier">ConstBufferSequence</span></code>
+                      to be used as initial input to the ssl engine for the handshake
+                      procedure.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added support for creation of TLSv1.1 and TLSv1.2 <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">context</span></code> objects.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added a <code><span class="identifier">set_verify_depth</span><span class="special">()</span></code> function to the <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">context</span></code> and <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">stream</span><span class="special">&lt;&gt;</span></code>
+                      classes.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added the ability to load SSL certificate and key data from
+                      memory buffers. New functions, <code><span class="identifier">add_certificate_authority</span><span class="special">()</span></code>, <code><span class="identifier">use_certificate</span><span class="special">()</span></code>, <code><span class="identifier">use_certificate_chain</span><span class="special">()</span></code>, <code><span class="identifier">use_private_key</span><span class="special">()</span></code>, <code><span class="identifier">use_rsa_private_key</span><span class="special">()</span></code> and <code><span class="identifier">use_tmp_dh</span><span class="special">()</span></code>, have been added to the
+                      <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">context</span></code> class.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Changed <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">context</span></code>
+                      to automatically disable SSL compression by default. To enable,
+                      use the new <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">context</span><span class="special">::</span><span class="identifier">clear_options</span><span class="special">()</span></code> function, as in <code><span class="identifier">my_context</span><span class="special">.</span><span class="identifier">clear_options</span><span class="special">(</span><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">context</span><span class="special">::</span><span class="identifier">no_compression</span><span class="special">)</span></code>.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a potential deadlock in <code><span class="identifier">signal_set</span></code>
+                implementation.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed an error in acceptor example in documentation <a href="https://svn.boost.org/trac/boost/ticket/8421">#8421</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed copy-paste errors in waitable timer documentation <a href="https://svn.boost.org/trac/boost/ticket/8602">#8602</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added assertions to satisfy some code analysis tools <a href="https://svn.boost.org/trac/boost/ticket/7739">#7739</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a malformed <code><span class="preprocessor">#warning</span></code>
+                directive <a href="https://svn.boost.org/trac/boost/ticket/7939">#7939</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a potential data race in the Linux <code><span class="identifier">epoll</span></code>
+                implementation.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a Windows-specific bug, where certain operations might generate
+                an <code><span class="identifier">error_code</span></code> with
+                an invalid (i.e. <code><span class="identifier">NULL</span></code>)
+                <code><span class="identifier">error_category</span></code> <a href="https://svn.boost.org/trac/boost/ticket/8613">#8613</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">basic_waitable_timer</span></code>'s
+                underlying implementation so that it can handle any <code><span class="identifier">time_point</span></code> value without overflowing
+                the intermediate duration objects.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a problem with lost thread wakeups that can occur when making
+                concurrent calls to <code><span class="identifier">run</span><span class="special">()</span></code> and <code><span class="identifier">poll</span><span class="special">()</span></code> on the same <code><span class="identifier">io_service</span></code>
+                object <a href="https://svn.boost.org/trac/boost/ticket/8354">#8354</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed implementation of asynchronous connect operation so that it
+                can cope with spurious readiness notifications from the reactor <a href="https://svn.boost.org/trac/boost/ticket/7961">#7961</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/libs/chrono/">Chrono</a>:</span>
           <ul>
             <li>
