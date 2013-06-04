@@ -1,21 +1,23 @@
 [article Version 1.54.0
     [quickbook 1.5]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: ]
-    [authors [Dawes, Beman]]
+    [purpose
+        New Libraries: Log, TTI, Type Erasure.
+        Updated Libraries: Accumulators, Algorithm, Any, Asio, Chrono, Circular Buffer, Context,
+        Coroutine, Geometry, Graph, Iostreams, Lexical Cast, Math, Multiprecision, Polygon, Property Map,
+        Thread, Type Traits, Unordered, Utility, Variant, Wave, xpressive, uBLAS
+    ]
+    [authors [Clow, Marshall]]
     [last-revision ]
 ]
 
 [include ext.qbk]
 
-[/
-
-As the release progresses add the 'status' and 'download' elements to
-indicate the release status:
-
-Beta status:
+[documentation /doc/libs/1_54_0_beta1/]
 [status beta]
-[download http://sourceforge.net/projects/boost/files/boost/1.54.0_beta.x/]
+[download http://sourceforge.net/projects/boost/files/boost/1.54.0.beta.1/]
+
+[/
 
 Release status:
 [status released]
@@ -29,21 +31,45 @@ Release status:
     1. Libraries are listed in alphabetical order.
     2. Besides the dedicated entry, the lib name should be added to the
        [purpose] section at the beginning of the page.
-
-    Example new libraries message:
-
-* [phrase library..[@/libs/accumulators/ Accumulators]:] Framework for
-  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
-
-    Example update message:
-
-* [phrase library..[@/libs/interprocess/ Interprocess]:]
-  * Added anonymous shared memory for UNIX systems.
-  * Fixed missing move semantics on managed memory classes.
-  * Added copy_on_write and open_read_only options for shared memory
-    and mapped file managed classes.
-  * `shared_ptr` is movable and supports aliasing.
 ]
+
+[section News]
+
+Boost no longer supports the 80386 target CPU, the minimum x86 32-bit target is
+i486. The 80386 target was not properly supported by [@/libs/smart_ptr/
+Boost.SmartPtr] and [@/libs/atomic/ Boost.Atomic] (as well as the libraries
+that used them internally) even before this release. Some Boost libraries may
+have higher requirements on the minimum target CPU (like [@/libs/log/
+Boost.Log] for example), see the respective library documentation for details.
+
+Also by default, when building Boost for x86 32-bit targets it will compile for
+i686 (Pentium Pro) and later CPUs. This can be changed by specifying the
+[^instruction-set] property in [^b2] or [^bjam] command line, for example:
+
+[pre
+    b2 variant=release architecture=x86 instruction-set=i486 stage
+]
+
+Possible values for the [^instruction-set] are:
+
+* Target for the host CPU: [^native]
+* Generic x86 CPUs: [^i486], [^i586], [^i686]
+* Intel CPUs: [^pentium], [^pentium-mmx], [^pentiumpro], [^pentium2],
+  [^pentium3], [^pentium3m], [^pentium-m], [^pentium4], [^pentium4m],
+  [^prescott], [^nocona], [^core2], [^corei7], [^corei7-avx], [^core-avx-i],
+  [^conroe], [^conroe-xe], [^conroe-l], [^allendale], [^merom], [^merom-xe],
+  [^kentsfield], [^kentsfield-xe], [^penryn], [^wolfdale], [^yorksfield],
+  [^nehalem], [^sandy-bridge], [^ivy-bridge], [^haswell], [^atom]
+* AMD CPUs: [^k6], [^k6-2], [^k6-3], [^athlon], [^athlon-tbird], [^athlon-4],
+  [^athlon-xp], [^athlon-mp], [^k8], [^opteron], [^athlon64], [^athlon-fx],
+  [^k8-sse3], [^opteron-sse3], [^athlon64-sse3], [^amdfam10], [^barcelona],
+  [^bdver1], [^bdver2], [^bdver3], [^btver1], [^btver2]
+* VIA CPUs: [^c3], [^c3-2]
+* IDT CPUs: [^winchip-c6], [^winchip2]
+
+Note that not all these values may be supported by a particular compiler.
+
+[endsect]
 
 [section New Libraries]
 
@@ -58,27 +84,277 @@ Release status:
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/accumulators/ Accumulators]:]
+  * Fixes comment typos ([@http://svn.boost.org/trac/boost/ticket/7917 #7917])
+  * Silence unused variable warnings ([@http://svn.boost.org/trac/boost/ticket/6926 #6926])
+
 * [phrase library..[@/libs/algorithm/ Algorithm]:]
   * The return types for copy_while and copy_until have been changed. This is an interface change. If you were using the return values from these functions, then you will have to modify your code. Instead of just returning the modified `OutputIterator`, these functions now return a `std::pair<InputIterator, OutputIterator>`. If this change affects your code, the simplest change is to add a `.second` to the end of the call, which will get you the same behavior that you had before.
+  * Added C++14 versions of 'is_permutation', 'equal' and 'mismatch'.
+
+* [phrase library..[@/libs/any/ Any]:]
+  * Added C++11 features support [ticket 6999]:
+    * Move assignment and move constructors.
+    * Added `noexcept` modifiers.
+
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added new traits classes, `handler_type` and `async_result`, that allow the
+    customisation of the return type of an initiating function.
+  * Added the `asio::spawn()` function, a high-level wrapper for running
+    stackful coroutines, based on the Boost.Coroutine library. The `spawn()`
+    function enables programs to implement asynchronous logic in a synchronous
+    manner. For example: `size_t n = my_socket.async_read_some(my_buffer, yield);`.
+  * Added the `asio::use_future` special value, which provides first-class
+    support for returning a C++11 `std::future` from an asynchronous
+    operation's initiating function. For example:
+    `future<size_t> n = my_socket.async_read_some(my_buffer, asio::use_future);`.
+  * Promoted the stackless coroutine class and macros to be part of Asio's
+    documented interface, rather than part of the HTTP server 4 example.
+  * Added a new handler hook called `asio_handler_is_continuation`.
+    Asynchronous operations may represent a continuation of the asynchronous
+    control flow associated with the current executing handler. The
+    `asio_handler_is_continuation` hook can be customised to return `true` if
+    this is the case, and Asio's implementation can use this knowledge to
+    optimise scheduling of the new handler. To cover common cases, Asio
+    customises the hook for strands, `spawn()` and composed asynchronous
+    operations.
+  * Added four new generic protocol classes, `generic::datagram_protocol`,
+    `generic::raw_protocol`, `generic::seq_packet_protocol` and
+    `generic::stream_protocol`, which implement the `Protocol` type
+    requirements, but allow the user to specify the address family (e.g.
+    `AF_INET`) and protocol type (e.g. `IPPROTO_TCP`) at runtime.
+  * Added C++11 move constructors that allow the conversion of a socket (or
+    acceptor) into a more generic type. For example, an `ip::tcp::socket` can
+    be converted into a `generic::stream_protocol::socket` via move
+    construction.
+  * Extended the `basic_socket_acceptor<>` class's `accept()` and
+    `async_accept()` functions to allow a new connection to be accepted
+    directly into a socket of a more generic type. For example, an
+    `ip::tcp::acceptor` can be used to accept into a
+    `generic::stream_protocol::socket` object.
+  * Moved existing examples into a C++03-specific directory, and added a new
+    directory for C++11-specific examples. A limited subset of the C++03
+    examples have been converted to their C++11 equivalents.
+  * Various SSL enhancements. Thanks go to Nick Jones, on whose work these changes
+    are based.
+    * Added support for SSL handshakes with re-use of data already read from
+      the wire. New overloads of the `ssl::stream<>` class's `handshake()` and
+      `async_handshake()` functions have been added. These accept a
+      `ConstBufferSequence` to be used as initial input to the ssl engine for
+      the handshake procedure.
+    * Added support for creation of TLSv1.1 and TLSv1.2 `ssl::context` objects.
+    * Added a `set_verify_depth()` function to the `ssl::context` and
+      `ssl::stream<>` classes.
+    * Added the ability to load SSL certificate and key data from memory
+      buffers. New functions, `add_certificate_authority()`,
+      `use_certificate()`, `use_certificate_chain()`, `use_private_key()`,
+      `use_rsa_private_key()` and `use_tmp_dh()`, have been added to the
+      `ssl::context` class.
+    * Changed `ssl::context` to automatically disable SSL compression by
+      default. To enable, use the new `ssl::context::clear_options()` function,
+      as in `my_context.clear_options(ssl::context::no_compression)`.
+  * Fixed a potential deadlock in `signal_set` implementation.
+  * Fixed an error in acceptor example in documentation [ticket 8421].
+  * Fixed copy-paste errors in waitable timer documentation [ticket 8602].
+  * Added assertions to satisfy some code analysis tools [ticket 7739].
+  * Fixed a malformed `#warning` directive [ticket 7939].
+  * Fixed a potential data race in the Linux `epoll` implementation.
+  * Fixed a Windows-specific bug, where certain operations might generate an
+    `error_code` with an invalid (i.e. `NULL`) `error_category` [ticket 8613].
+  * Fixed `basic_waitable_timer`'s underlying implementation so that it can
+    handle any `time_point` value without overflowing the intermediate duration
+    objects.
+  * Fixed a problem with lost thread wakeups that can occur when making
+    concurrent calls to `run()` and `poll()` on the same `io_service` object
+    [ticket 8354].
+  * Fixed implementation of asynchronous connect operation so that it can cope
+    with spurious readiness notifications from the reactor [ticket 7961].
+
+* [phrase library..[@/libs/chrono/ Chrono]:]
+  * ['Fixed Bugs:]
+    * [@http://svn.boost.org/trac/boost/ticket/8079 #8079] Chrono memory leak
+    * [@http://svn.boost.org/trac/boost/ticket/8318 #8318] BOOST_FORCEINLINE constructors of time_point and duration
+    * [@http://svn.boost.org/trac/boost/ticket/8367 #8367] chrono does not compile with clang from XCode 4.5.2 with -std=c++11 -stdlib=libc++ and -arch armv7
+    * [@http://svn.boost.org/trac/boost/ticket/8370 #8370] typo in chrono reference
+    * [@http://svn.boost.org/trac/boost/ticket/8435 #8435] Can't compile Chrono on HP-UX due to no CLOCK_REALTIME macro.
+
+* [phrase library..[@/libs/circular_buffer Circular Buffer]:]
+  * Fixed warnings ([ticket 8032]).
 
 * [phrase library..[@/libs/context/ Context]:]
   * Support for SPARC architecture added.
 
 * [phrase library..[@/libs/coroutine/ Coroutine]:]
   * Support for segmented stacks (stack grows on demand) added.
-  * fixes for #7805, #7899, #7972, #8023, #8024, #8101
+  * [@http://svn.boost.org/trac/boost/ticket/7805 #7805] Typo
+  * [@http://svn.boost.org/trac/boost/ticket/7972 #7972] GCC warnings
+  * [@http://svn.boost.org/trac/boost/ticket/7988 #7988] C++11 range-for
+  * [@http://svn.boost.org/trac/boost/ticket/8023 #8023] Using iterator traits
+  * [@http://svn.boost.org/trac/boost/ticket/8024 #8024] Create const_iterator
+  * [@http://svn.boost.org/trac/boost/ticket/8101 #8101] Postfix operator++ for iterator
+  * [@http://svn.boost.org/trac/boost/ticket/8526 #8526] memory leak
+  * [@http://svn.boost.org/trac/boost/ticket/8544 #8544] calling managed DLL
 
-[/
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * ['Additional functionality]
+    * added Spatial Index, developed for Boost.Geometry by Adam Wulkiewicz. The spatial index was originally started by Federico J. Fernandez during the Google Summer of Code 2008 program, mentored by Hartmut Kaiser.
+    * added SVG-output, this was already in extensions for several years
+  * ['Documentation]
+    * small fixes of missing words
+  * ['Bugfixes]
+    * collinear opposite segments did sometimes (in circles) have a robustness issue, fixed
+    * fixed insertion of false intersection point (found by buffer)
+    * applied patch of Vladimir Petrovic for debugging traversals
+  * ['Solved tickets]
+    * [@https://svn.boost.org/trac/boost/ticket/7462 7462] degenerate union result for float, fixed
+    * [@https://svn.boost.org/trac/boost/ticket/7465 7465] wrong construtors access type in scale_transformer class, fixed
+    * [@https://svn.boost.org/trac/boost/ticket/7802 7802] cart_intersect.hpp unused parameter warnings, fixed
+    * [@https://svn.boost.org/trac/boost/ticket/8254 8254] faulty intersection, fixed
+    * [@https://svn.boost.org/trac/boost/ticket/8393 8393] polygon model doesn't adhere to stated Polygon concept rules, doc updated.
+    * [@https://svn.boost.org/trac/boost/ticket/8403 8403] silenced compiler warning C4127: conditional expression is constant
+    * [@https://svn.boost.org/trac/boost/ticket/8405 8405] silenced compiler warning C4189: '...' : local variable is initialized but not referenced
+  * ['Internal changes]
+    * Made several algorithms variant-aware (append, area, clear, convert, equals, length, num_points)
 
-* /TODO/: [phrase library..[@/libs/spirit/ Spirit]:]
-  * Spirit Vx.x, see the
-    '[@/doc/libs/1_xx_x/libs/spirit/doc/html/spirit/what_s_new/spirit_x_x.html What's New]'
-    section for details.
+* [phrase library..[@/libs/graph Graph]:]
+  * Bugs fixed from Trac: [ticket 6780], [ticket 7016], [ticket 7155], [ticket 7845], [ticket 7863], [ticket 7877], [ticket 8166], [ticket 8192], [ticket 8398], [ticket 8411], [ticket 8427], [ticket 8428], [ticket 8434], [ticket 8490].
+  * Added updates to VF2 subgraph isomorphism from Jakob Lykke Andersen and Flavio De Lorenzi.
+  * Added maximum adjacency search from Fernando Vilas.
+  * Added timeout support from Brammert Ottens to resource-constrained shortest paths (r_c_shortest_paths) algorithm.
+  * Various fixes to documentation and examples and removal of outdated compiler workarounds.
 
-* /TODO/: [phrase library..[@/libs/wave/ Wave]:]
+* [phrase library..[@/libs/iostreams/ Iostreams]:]
+  * `tee` now works correctly for std::streams ([ticket 8315]).
+  * Documentation fixes ([ticket 8385], [ticket 8460]).
+  * Avoid warning from Clang's `-Wimplicit-fallthrough` ([ticket 8482]).
+
+* [phrase library..[@/libs/conversion/lexical_cast.htm Lexical cast]:]
+  * Converting to character pointer now triggers compile time assert
+    instead of runtime [ticket 8334].
+  * Lexical cast is now capable of converting `boost::int128_type` and
+    `boost::uint128_type` [ticket 7909].
+  * Changed internal stream buffer handling, now works with libc++
+    [ticket 8267], [ticket 7704].
+  * Restored getting address of `lexical_cast` function that was
+    broken in 1.53.0 [ticket 7421].
+  * Fixed warnings, internals and tests [ticket 2558], [ticket 7949],
+    [ticket 8162], [ticket 8369], [ticket 8547].
+
+* [phrase library..[@/libs/math/ Math]:]
+  * Major reorganization to incorporate other Boost.Math like Integer Utilities (Greatest Common Divisor and Least Common Multiple), quaternions and octonions.
+    Making new chapter headings.
+  * Added many references to Boost.Multiprecision and `cpp_dec_float_50` as an example of a User-defined Type (UDT).
+  * Added Clang to list of supported compilers.
+  * Fixed constants to use a thread-safe cache of computed values when used at arbitrary precision.
+  * Added finding zeros of Bessel functions `cyl_bessel_j_zero`, `cyl_neumann_zero`, `airy_ai_zeros` and `airy_bi_zeros`(by Christopher Kormanyos).
+  * More accuracy improvements to the Bessel J and Y functions from Rocco Romeo.
+  * Fixed nasty cyclic dependency bug that caused some headers to not compile [@https://svn.boost.org/trac/boost/ticket/7999 #7999].
+  * Fixed bug in __tgamma that caused spurious overflow for arguments between 142.5 and 143.
+  * Fixed bug in raise_rounding_error that caused it to return an incorrect result when throwing an exception is turned off [@https://svn.boost.org/trac/boost/ticket/7905 #7905].
+  * Added minimal __float128 support.
+  * Fixed bug in edge-cases of poisson quantile [@https://svn.boost.org/trac/boost/ticket/8308 #8308].
+  * Adjusted heuristics used in Halley iteration to cope with inverting the incomplete beta in tricky regions
+    where the derivative is flatlining.  Example is computing the quantile of the Fisher F distribution for probabilities
+    smaller than machine epsilon.  See ticket [@https://svn.boost.org/trac/boost/ticket/8314 #8314].
+
+* [phrase library..[@/libs/multiprecision/ Multiprecision]:]
+  * [*Breaking change] renamed `rational_adapter` to `rational_adaptor`.
+  * Add support for [@http://perso.ens-lyon.fr/nathalie.revol/software.html MPFI].
+  * Add logged_adaptor.
+  * Add support for 128-bit floats via GCC's `__float128` or Intel's `_Quad` data types.
+  * Add support for user-defined literals in cpp_int, improve `constexpr` support.
+  * Fixed bug in integer division of `cpp_int` that results in incorrect sign of `cpp_int` when both arguments are small enough
+    to fit in a `double_limb_type`.  See [@https://svn.boost.org/trac/boost/ticket/8126 8126].
+  * Fixed bug in subtraction of a single limb in `cpp_int` that results in incorrect value when the result should have a 0
+    in the last limb: [@https://svn.boost.org/trac/boost/ticket/8133 8133].
+  * Fixed bug in `cpp_int` where division of 0 by something doesn't get zero in the result: [@https://svn.boost.org/trac/boost/ticket/8160 8160].
+  * Fixed bug in some transcendental functions that caused incorrect return values when variables are reused, for example with
+    `a = pow(a, b)`.  See [@https://svn.boost.org/trac/boost/ticket/8326 8326].
+
+* [phrase library..[@/libs/polygon/ Polygon]:]
+  * Updates and fixes to the Voronoi documentation.
+  * Bugs fixed from Trac: [ticket 8026], [ticket 8197], [ticket 8257].
+
+* [phrase library..[@/libs/property_map/ PropertyMap]:]
+  * Added `compose_property_map` from Guillaume Pinot.
+
+* [phrase library..[@/libs/thread/ Thread]:]
+  * ['New Features:]
+    * [@http://svn.boost.org/trac/boost/ticket/7285 #7285] C++11 compliance: Allow to pass movable arguments for call_once.
+    * [@http://svn.boost.org/trac/boost/ticket/7445 #7445] Async: Add future<>.then
+    * [@http://svn.boost.org/trac/boost/ticket/7449 #7449] Synchro: Add a synchronized value class
+  * ['Fixed Bugs:]
+    * [@http://svn.boost.org/trac/boost/ticket/4878 #4878] MinGW 4.5.0 undefined reference to bool interruptible_wait(detail::win32::handle handle_to_wait_for,detail::t imeout target_time).
+    * [@http://svn.boost.org/trac/boost/ticket/4882 #4882] Win32 shared_mutex does not handle timeouts correctly.
+    * [@http://svn.boost.org/trac/boost/ticket/5752 #5752] boost::call_once() is unreliable on some platforms
+    * [@http://svn.boost.org/trac/boost/ticket/6652 #6652] Boost.Thread shared_mutex.hpp:50:99: warning: dereferencing type-punned pointer will break strict-aliasing rules \[-Wstrict-aliasing\]
+    * [@http://svn.boost.org/trac/boost/ticket/6843 #6843] \[Intel C++\] Compile Errors with '#include <atomic>'
+    * [@http://svn.boost.org/trac/boost/ticket/6966 #6966] future boost::future_category inconsistent dll linkage
+    * [@http://svn.boost.org/trac/boost/ticket/7720 #7720] exception lock_error while intensive locking/unlocking of mutex
+    * [@http://svn.boost.org/trac/boost/ticket/7755 #7755] Thread: deadlock with shared_mutex on Windows
+    * [@http://svn.boost.org/trac/boost/ticket/7980 #7980] Build error: msvc-11.0 and BOOST_THREAD_DONT_USE_DATETIME
+    * [@http://svn.boost.org/trac/boost/ticket/7982 #7982] pthread_delay_np() parm compile error on AIX
+    * [@http://svn.boost.org/trac/boost/ticket/8027 #8027] thread library fails to compile with Visual Studio 2003
+    * [@http://svn.boost.org/trac/boost/ticket/8070 #8070] prefer GetTickCount64 over GetTickCount
+    * [@http://svn.boost.org/trac/boost/ticket/8136 #8136] boost::this_thread::sleep_for() sleeps longer than it should in Windows
+    * [@http://svn.boost.org/trac/boost/ticket/8212 #8212] Boost thread compilation error on Solaris 10
+    * [@http://svn.boost.org/trac/boost/ticket/8237 #8237] fix documentation for 'thread_group'
+    * [@http://svn.boost.org/trac/boost/ticket/8239 #8239] barrier::wait() not marked as interruption_point
+    * [@http://svn.boost.org/trac/boost/ticket/8323 #8323] boost::thread::try_join_for/try_join_until may block indefinitely due to a combination of problems in Boost.Thread and Boost.Chrono
+    * [@http://svn.boost.org/trac/boost/ticket/8337 #8337] The internal representation of "std::string(this->code()->message())" escapes, but is destroyed when it exits scope.
+    * [@http://svn.boost.org/trac/boost/ticket/8371 #8371] C++11 once_flag enabled when constexpr is not available
+    * [@http://svn.boost.org/trac/boost/ticket/8443 #8443] Header file inclusion order may cause crashes
+    * [@http://svn.boost.org/trac/boost/ticket/8451 #8451] Missing documented function 'boost::scoped_thread::joinable'
+    * [@http://svn.boost.org/trac/boost/ticket/8530 #8530] \[Coverity\] Unused variable thread_handle, uninitialized variable cond_mutex in thread/pthread/thread_data.hpp
+    * [@http://svn.boost.org/trac/boost/ticket/8596 #8596] With C++0x enabled, boost::packaged_task stores a reference to function objects, instead of a copy.
+
+* [phrase library..[@/libs/type_traits/ Type Traits]:]
+  * New type traits implemented [ticket 8189]:
+    * is_nothrow_move_constructible
+    * is_nothrow_move_assignable
+    * has_trivial_move_assign
+    * has_trivial_move_constructor
+
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * Some very basic `noexcept` support.
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * Fix `basic_string_ref::find` ([ticket 8067]).
+  * Fix `string_ref`'s logical operators.
+  * Update noncopyable for C++11 ([ticket 6578]).
+  * Fix noncopyable compiler warning when used in DLL interface ([ticket 6935]).
+  * Fix using `boost::addressof` with `boost::function` on SolarisStudio
+    compiler ([ticket 7079]).
+  * Disable annoying MSVC warning about operator comma ([ticket 7663])
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Now uses new type traits from Boost.TypeTrait to detect `noexcept`
+    constructors and assignment
+    operators [ticket 8296]. This shall increase performance of
+    `boost::variant` for many types
+    in C++11.
+  * Multivisitation implemented [ticket 8459].
+  * Documentation updated to reflect C++11 features support.
+
+* [phrase library..[@/libs/wave/ Wave]:]
   * See the [@/libs/wave/ChangeLog Changelog] for details.
 
-]
+* [phrase library..[@/libs/xpressive xpressive]:]
+  * Remove unused variables, fixes [ticket 8039]
+  * Avoid name clash with macro `None` in glx.h, fixes [ticket 8204]
+  * Silence a gcc warning, fixes [ticket 8138]
+
+[endsect]
+
+[section Post Beta Changes]
+
+/TODO/: Add to main release notes before final release.
+
+* [phrase library..[@/libs/numeric/ublas uBLAS]:]
+  * [ticket 6511] Division by scalar should use `enable_if<>`
+  * [ticket 7297] Make the free functions 'num_columns' and 'num_rows' support the uBLAS traits system and better work with expression types
+  * [ticket 6010] fixed linkage problems in assignment.hpp
+  * updated doc
 
 [endsect]
 
@@ -86,17 +362,54 @@ Release status:
 
 Boost's primary test compilers are:
 
-* /TODO/
+* Linux:
+  * GCC: 4.4.7, 4.5.3, 4.6.2, 4.6.3, 4.7.3
+  * GCC, C++98 mode: 4.7.3
+  * GCC, C++11 mode: 4.7.2, 4.7.3, 4.8.0
+  * Clang: 3.0, 3.1, 3.2
+  * Clang, C++11 mode: 3.2
+* OS X:
+  * GCC: 4.2
+  * Apple Clang: 4.2.1
+  * Apple Clang, C++11 mode: 4.2.1
+* Windows:
+  * GCC, mingw: 4.4.0, 4.4.7, 4.5.4, 4.6.3, 4.7.2, 4.8.0
+  * Visual C++: 8.0, 9.0, 10.0, 11.0
+* FreeBSD:
+  * GCC: 4.2.1
 
 Boost's additional test compilers include:
 
-* /TODO/
+* Linux:
+  * Clang: 3.0, 3.1, 3.2, from Subversion
+  * Clang, with libc++: 3.2
+  * GCC: 4.4.7, 4.5.3, 4.6.2, 4.6.3, 4.7.2, 4.7.3
+  * GCC, C++98 mode: 4.7.3
+  * GCC, C++11 mode: 4.7.3, 4.8.0
+* OS X:
+  * Apple Clang: 4.2.1
+  * Apple Clang, C++11 mode: 4.2.1
+  * Clang: from Subversion
+  * Clang, C++11 mode: from Subversion
+  * GCC: 4.2
+* Windows:
+  * GCC, mingw: 4.4.0, 4.4.7, 4.5.4, 4.6.3, 4.7.2, 4.8.0
+  * Visual C++: 9.0, 10.0, 11.0
+  * Visual C++, Windows Mobile 5, with STLport: 9.0
+* AIX:
+  * IBM XL C/C++ Enterprise Edition: 12.1.0.1
+* FreeBSD:
+  * GCC: 4.2.1
 
 [endsect]
 
 [section Acknowledgements]
 
-/TODO/
+[@/users/people/beman_dawes.html Beman Dawes],
+Eric Niebler,
+[@/users/people/rene_rivera.html Rene Rivera],
+Daniel James, Vladimir Prus and Marshall Clow
+managed this release.
 
 [endsect]
 
