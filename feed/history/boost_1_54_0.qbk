@@ -3,9 +3,9 @@
     [source-mode c++]
     [purpose
         New Libraries: Log, TTI, Type Erasure.
-        Updated Libraries: Accumulators, Algorithm, Any, Asio, Chrono, Circular Buffer, Context,
-        Coroutine, Geometry, Graph, Iostreams, Lexical Cast, Math, Multiprecision, Polygon, Property Map,
-        Thread, Type Traits, Unordered, Utility, Variant, Wave, xpressive, uBLAS
+        Updated Libraries: Accumulators, Algorithm, Any, Asio, Chrono, Circular Buffer, Container, Context,
+        Coroutine, Geometry, Graph, Interprocess, Intrusive, Iostreams, Lexical Cast, Math, Move, Multiprecision, Polygon, Property Map,
+        Thread, Type Traits, uBLAS, Unordered, Utility, Variant, Wave, xpressive
     ]
     [authors [Clow, Marshall]]
     [last-revision ]
@@ -181,6 +181,16 @@ Note that not all these values may be supported by a particular compiler.
 * [phrase library..[@/libs/circular_buffer Circular Buffer]:]
   * Fixed warnings ([ticket 8032]).
 
+* [phrase library..[@/libs/container/ Container]:]
+  *  Speed improvements in `vector` constructors/copy/move/swap, dispatching to memcpy when possible.
+  *  Support for `BOOST_NO_EXCEPTIONS` [@https://svn.boost.org/trac/boost/ticket/7227 #7227].
+  *  Fixed bugs [@https://svn.boost.org/trac/boost/ticket/7921 #7921],
+                [@https://svn.boost.org/trac/boost/ticket/7969 #7969],
+                [@https://svn.boost.org/trac/boost/ticket/8118 #8118],
+                [@https://svn.boost.org/trac/boost/ticket/8294 #8294],
+                [@https://svn.boost.org/trac/boost/ticket/8553 #8553].
+  *  Added experimental `static_vector` class.
+
 * [phrase library..[@/libs/context/ Context]:]
   * Support for SPARC architecture added.
 
@@ -223,6 +233,26 @@ Note that not all these values may be supported by a particular compiler.
   * Added timeout support from Brammert Ottens to resource-constrained shortest paths (r_c_shortest_paths) algorithm.
   * Various fixes to documentation and examples and removal of outdated compiler workarounds.
 
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  *  Added support for platform-specific flags to mapped_region (ticket #8030)
+  *  Fixed bugs [@https://svn.boost.org/trac/boost/ticket/7484 #7484],
+                [@https://svn.boost.org/trac/boost/ticket/7598 #7598],
+                [@https://svn.boost.org/trac/boost/ticket/7682 #7682],
+                [@https://svn.boost.org/trac/boost/ticket/7923 #7923],
+                [@https://svn.boost.org/trac/boost/ticket/7924 #7924],
+                [@https://svn.boost.org/trac/boost/ticket/7928 #7928],
+                [@https://svn.boost.org/trac/boost/ticket/7936 #7936],
+                [@https://svn.boost.org/trac/boost/ticket/8521 #8521],
+                [@https://svn.boost.org/trac/boost/ticket/8595 #8595].
+  *  [*ABI breaking]: Changed bootstamp function in Windows to use EventLog service start time
+     as system bootup time. Previously used `LastBootupTime` from WMI was unstable with
+     time synchronization and hibernation and unusable in practice. If you really need
+     to obtain pre Boost 1.54 behaviour define `BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME`
+     from command line or `detail/workaround.hpp`.
+
+* [phrase library..[@/libs/intrusive/ Intrusive]:]
+  *  Added `BOOST_NO_EXCEPTIONS` support (bug [@https://svn.boost.org/trac/boost/ticket/7849 #7849]).
+
 * [phrase library..[@/libs/iostreams/ Iostreams]:]
   * `tee` now works correctly for std::streams ([ticket 8315]).
   * Documentation fixes ([ticket 8385], [ticket 8460]).
@@ -256,6 +286,10 @@ Note that not all these values may be supported by a particular compiler.
   * Adjusted heuristics used in Halley iteration to cope with inverting the incomplete beta in tricky regions
     where the derivative is flatlining.  Example is computing the quantile of the Fisher F distribution for probabilities
     smaller than machine epsilon.  See ticket [@https://svn.boost.org/trac/boost/ticket/8314 #8314].
+
+* [phrase library..[@/libs/move/ Move]:]
+  *  Fixed bugs [@https://svn.boost.org/trac/boost/ticket/7969 #7969]),
+                [@https://svn.boost.org/trac/boost/ticket/8231 #8231]).
 
 * [phrase library..[@/libs/multiprecision/ Multiprecision]:]
   * [*Breaking change] renamed `rational_adapter` to `rational_adaptor`.
