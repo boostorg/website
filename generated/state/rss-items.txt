@@ -18637,77 +18637,91 @@
 "
 "  &lt;div id=&quot;version_1_54_0.news&quot;&gt;
 "    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;News&lt;/span&gt;&lt;/h3&gt;
-"    &lt;p&gt;
-"      Boost no longer supports the 80386 target CPU, the minimum x86 32-bit target
-"      is i486. The 80386 target was not properly supported by &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/smart_ptr/&quot;&gt;Boost.SmartPtr&lt;/a&gt;
-"      and &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/atomic/&quot;&gt;Boost.Atomic&lt;/a&gt; (as well as the libraries
-"      that used them internally) even before this release. Some Boost libraries may
-"      have higher requirements on the minimum target CPU (like &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/log/&quot;&gt;Boost.Log&lt;/a&gt;
-"      for example), see the respective library documentation for details.
-"    &lt;/p&gt;
-"    &lt;p&gt;
-"      Also by default, when building Boost for x86 32-bit targets it will compile
-"      for i686 (Pentium Pro) and later CPUs. This can be changed by specifying the
-"      &lt;tt&gt;instruction-set&lt;/tt&gt; property in &lt;tt&gt;b2&lt;/tt&gt; or &lt;tt&gt;bjam&lt;/tt&gt;
-"      command line, for example:
-"    &lt;/p&gt;
+"    &lt;div id=&quot;version_1_54_0.news.supported_cpus&quot;&gt;
+"      &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Supported CPUs&lt;/span&gt;&lt;/h3&gt;
+"      &lt;p&gt;
+"        Boost no longer supports the 80386 target CPU, the minimum x86 32-bit target
+"        is i486. The 80386 target was not properly supported by &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/smart_ptr/&quot;&gt;Boost.SmartPtr&lt;/a&gt;
+"        and &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/atomic/&quot;&gt;Boost.Atomic&lt;/a&gt; (as well as the libraries
+"        that used them internally) even before this release. Some Boost libraries
+"        may have higher requirements on the minimum target CPU (like &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/log/&quot;&gt;Boost.Log&lt;/a&gt;
+"        for example), see the respective library documentation for details.
+"      &lt;/p&gt;
+"      &lt;p&gt;
+"        Also by default, when building Boost for x86 32-bit targets it will compile
+"        for i686 (Pentium Pro) and later CPUs. This can be changed by specifying
+"        the &lt;tt&gt;instruction-set&lt;/tt&gt; property in &lt;tt&gt;b2&lt;/tt&gt;
+"        or &lt;tt&gt;bjam&lt;/tt&gt; command line, for example:
+"      &lt;/p&gt;
 "&lt;pre&gt;b2 variant=release architecture=x86 instruction-set=i486 stage
 "&lt;/pre&gt;
-"    &lt;p&gt;
-"      Possible values for the &lt;tt&gt;instruction-set&lt;/tt&gt; are:
-"    &lt;/p&gt;
-"    &lt;ul&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          Target for the host CPU: &lt;tt&gt;native&lt;/tt&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          Generic x86 CPUs: &lt;tt&gt;i486&lt;/tt&gt;, &lt;tt&gt;i586&lt;/tt&gt;, &lt;tt&gt;i686&lt;/tt&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          Intel CPUs: &lt;tt&gt;pentium&lt;/tt&gt;, &lt;tt&gt;pentium-mmx&lt;/tt&gt;,
-"          &lt;tt&gt;pentiumpro&lt;/tt&gt;, &lt;tt&gt;pentium2&lt;/tt&gt;, &lt;tt&gt;pentium3&lt;/tt&gt;,
-"          &lt;tt&gt;pentium3m&lt;/tt&gt;, &lt;tt&gt;pentium-m&lt;/tt&gt;, &lt;tt&gt;pentium4&lt;/tt&gt;,
-"          &lt;tt&gt;pentium4m&lt;/tt&gt;, &lt;tt&gt;prescott&lt;/tt&gt;, &lt;tt&gt;nocona&lt;/tt&gt;,
-"          &lt;tt&gt;core2&lt;/tt&gt;, &lt;tt&gt;corei7&lt;/tt&gt;, &lt;tt&gt;corei7-avx&lt;/tt&gt;,
-"          &lt;tt&gt;core-avx-i&lt;/tt&gt;, &lt;tt&gt;conroe&lt;/tt&gt;, &lt;tt&gt;conroe-xe&lt;/tt&gt;,
-"          &lt;tt&gt;conroe-l&lt;/tt&gt;, &lt;tt&gt;allendale&lt;/tt&gt;, &lt;tt&gt;merom&lt;/tt&gt;,
-"          &lt;tt&gt;merom-xe&lt;/tt&gt;, &lt;tt&gt;kentsfield&lt;/tt&gt;, &lt;tt&gt;kentsfield-xe&lt;/tt&gt;,
-"          &lt;tt&gt;penryn&lt;/tt&gt;, &lt;tt&gt;wolfdale&lt;/tt&gt;, &lt;tt&gt;yorksfield&lt;/tt&gt;,
-"          &lt;tt&gt;nehalem&lt;/tt&gt;, &lt;tt&gt;sandy-bridge&lt;/tt&gt;, &lt;tt&gt;ivy-bridge&lt;/tt&gt;,
-"          &lt;tt&gt;haswell&lt;/tt&gt;, &lt;tt&gt;atom&lt;/tt&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          AMD CPUs: &lt;tt&gt;k6&lt;/tt&gt;, &lt;tt&gt;k6-2&lt;/tt&gt;, &lt;tt&gt;k6-3&lt;/tt&gt;,
-"          &lt;tt&gt;athlon&lt;/tt&gt;, &lt;tt&gt;athlon-tbird&lt;/tt&gt;, &lt;tt&gt;athlon-4&lt;/tt&gt;,
-"          &lt;tt&gt;athlon-xp&lt;/tt&gt;, &lt;tt&gt;athlon-mp&lt;/tt&gt;, &lt;tt&gt;k8&lt;/tt&gt;,
-"          &lt;tt&gt;opteron&lt;/tt&gt;, &lt;tt&gt;athlon64&lt;/tt&gt;, &lt;tt&gt;athlon-fx&lt;/tt&gt;,
-"          &lt;tt&gt;k8-sse3&lt;/tt&gt;, &lt;tt&gt;opteron-sse3&lt;/tt&gt;, &lt;tt&gt;athlon64-sse3&lt;/tt&gt;,
-"          &lt;tt&gt;amdfam10&lt;/tt&gt;, &lt;tt&gt;barcelona&lt;/tt&gt;, &lt;tt&gt;bdver1&lt;/tt&gt;,
-"          &lt;tt&gt;bdver2&lt;/tt&gt;, &lt;tt&gt;bdver3&lt;/tt&gt;, &lt;tt&gt;btver1&lt;/tt&gt;,
-"          &lt;tt&gt;btver2&lt;/tt&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          VIA CPUs: &lt;tt&gt;c3&lt;/tt&gt;, &lt;tt&gt;c3-2&lt;/tt&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          IDT CPUs: &lt;tt&gt;winchip-c6&lt;/tt&gt;, &lt;tt&gt;winchip2&lt;/tt&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"    &lt;/ul&gt;
-"    &lt;p&gt;
-"      Note that not all these values may be supported by a particular compiler.
-"    &lt;/p&gt;
+"      &lt;p&gt;
+"        Possible values for the &lt;tt&gt;instruction-set&lt;/tt&gt; are:
+"      &lt;/p&gt;
+"      &lt;ul&gt;
+"        &lt;li&gt;
+"          &lt;div&gt;
+"            Target for the host CPU: &lt;tt&gt;native&lt;/tt&gt;
+"          &lt;/div&gt;
+"        &lt;/li&gt;
+"        &lt;li&gt;
+"          &lt;div&gt;
+"            Generic x86 CPUs: &lt;tt&gt;i486&lt;/tt&gt;, &lt;tt&gt;i586&lt;/tt&gt;,
+"            &lt;tt&gt;i686&lt;/tt&gt;
+"          &lt;/div&gt;
+"        &lt;/li&gt;
+"        &lt;li&gt;
+"          &lt;div&gt;
+"            Intel CPUs: &lt;tt&gt;pentium&lt;/tt&gt;, &lt;tt&gt;pentium-mmx&lt;/tt&gt;,
+"            &lt;tt&gt;pentiumpro&lt;/tt&gt;, &lt;tt&gt;pentium2&lt;/tt&gt;, &lt;tt&gt;pentium3&lt;/tt&gt;,
+"            &lt;tt&gt;pentium3m&lt;/tt&gt;, &lt;tt&gt;pentium-m&lt;/tt&gt;, &lt;tt&gt;pentium4&lt;/tt&gt;,
+"            &lt;tt&gt;pentium4m&lt;/tt&gt;, &lt;tt&gt;prescott&lt;/tt&gt;, &lt;tt&gt;nocona&lt;/tt&gt;,
+"            &lt;tt&gt;core2&lt;/tt&gt;, &lt;tt&gt;corei7&lt;/tt&gt;, &lt;tt&gt;corei7-avx&lt;/tt&gt;,
+"            &lt;tt&gt;core-avx-i&lt;/tt&gt;, &lt;tt&gt;conroe&lt;/tt&gt;, &lt;tt&gt;conroe-xe&lt;/tt&gt;,
+"            &lt;tt&gt;conroe-l&lt;/tt&gt;, &lt;tt&gt;allendale&lt;/tt&gt;, &lt;tt&gt;merom&lt;/tt&gt;,
+"            &lt;tt&gt;merom-xe&lt;/tt&gt;, &lt;tt&gt;kentsfield&lt;/tt&gt;, &lt;tt&gt;kentsfield-xe&lt;/tt&gt;,
+"            &lt;tt&gt;penryn&lt;/tt&gt;, &lt;tt&gt;wolfdale&lt;/tt&gt;, &lt;tt&gt;yorksfield&lt;/tt&gt;,
+"            &lt;tt&gt;nehalem&lt;/tt&gt;, &lt;tt&gt;sandy-bridge&lt;/tt&gt;, &lt;tt&gt;ivy-bridge&lt;/tt&gt;,
+"            &lt;tt&gt;haswell&lt;/tt&gt;, &lt;tt&gt;atom&lt;/tt&gt;
+"          &lt;/div&gt;
+"        &lt;/li&gt;
+"        &lt;li&gt;
+"          &lt;div&gt;
+"            AMD CPUs: &lt;tt&gt;k6&lt;/tt&gt;, &lt;tt&gt;k6-2&lt;/tt&gt;, &lt;tt&gt;k6-3&lt;/tt&gt;,
+"            &lt;tt&gt;athlon&lt;/tt&gt;, &lt;tt&gt;athlon-tbird&lt;/tt&gt;, &lt;tt&gt;athlon-4&lt;/tt&gt;,
+"            &lt;tt&gt;athlon-xp&lt;/tt&gt;, &lt;tt&gt;athlon-mp&lt;/tt&gt;, &lt;tt&gt;k8&lt;/tt&gt;,
+"            &lt;tt&gt;opteron&lt;/tt&gt;, &lt;tt&gt;athlon64&lt;/tt&gt;, &lt;tt&gt;athlon-fx&lt;/tt&gt;,
+"            &lt;tt&gt;k8-sse3&lt;/tt&gt;, &lt;tt&gt;opteron-sse3&lt;/tt&gt;, &lt;tt&gt;athlon64-sse3&lt;/tt&gt;,
+"            &lt;tt&gt;amdfam10&lt;/tt&gt;, &lt;tt&gt;barcelona&lt;/tt&gt;, &lt;tt&gt;bdver1&lt;/tt&gt;,
+"            &lt;tt&gt;bdver2&lt;/tt&gt;, &lt;tt&gt;bdver3&lt;/tt&gt;, &lt;tt&gt;btver1&lt;/tt&gt;,
+"            &lt;tt&gt;btver2&lt;/tt&gt;
+"          &lt;/div&gt;
+"        &lt;/li&gt;
+"        &lt;li&gt;
+"          &lt;div&gt;
+"            VIA CPUs: &lt;tt&gt;c3&lt;/tt&gt;, &lt;tt&gt;c3-2&lt;/tt&gt;
+"          &lt;/div&gt;
+"        &lt;/li&gt;
+"        &lt;li&gt;
+"          &lt;div&gt;
+"            IDT CPUs: &lt;tt&gt;winchip-c6&lt;/tt&gt;, &lt;tt&gt;winchip2&lt;/tt&gt;
+"          &lt;/div&gt;
+"        &lt;/li&gt;
+"      &lt;/ul&gt;
+"      &lt;p&gt;
+"        Note that not all these values may be supported by a particular compiler.
+"      &lt;/p&gt;
+"    &lt;/div&gt;
+"    &lt;div id=&quot;version_1_54_0.news.signals_deprecated&quot;&gt;
+"      &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Signals deprecated&lt;/span&gt;&lt;/h3&gt;
+"      &lt;p&gt;
+"        Boost.Signals is no longer being actively maintained, so it has been deprecated.
+"        Do not use Boost.Signals for new development (use &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/signals2/&quot;&gt;Boost.Signals2&lt;/a&gt;
+"        instead). If you have existing Boost.Signals-based code, it will continue
+"        to work, but consider moving to Boost.Signals2. There is &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/doc/html/signals2/api_changes.html#signals2.porting&quot;&gt;a
+"        porting guide&lt;/a&gt; in the Signals2 documentation.
+"      &lt;/p&gt;
+"    &lt;/div&gt;
 "  &lt;/div&gt;
 "  &lt;div id=&quot;version_1_54_0.new_libraries&quot;&gt;
 "    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
@@ -19620,6 +19634,19 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/signals/&quot;&gt;Signals&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                No longer actively maintained, so it is deprecated. Use &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/signals2&quot;&gt;Signals2&lt;/a&gt;
+"                for new development.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
 "          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/thread/&quot;&gt;Thread&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
@@ -20201,7 +20228,7 @@
 "  &lt;/div&gt;
 "</description></item>
 -last_modified
-.1370909390.07
+.1371193844.69
 -quickbook
 "feed/history/boost_1_54_0.qbk
 )

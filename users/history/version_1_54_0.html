@@ -49,77 +49,91 @@
 
   <div id="version_1_54_0.news">
     <h3><span class="link">News</span></h3>
-    <p>
-      Boost no longer supports the 80386 target CPU, the minimum x86 32-bit target
-      is i486. The 80386 target was not properly supported by <a href="/doc/libs/1_54_0_beta1/libs/smart_ptr/">Boost.SmartPtr</a>
-      and <a href="/doc/libs/1_54_0_beta1/libs/atomic/">Boost.Atomic</a> (as well as the libraries
-      that used them internally) even before this release. Some Boost libraries may
-      have higher requirements on the minimum target CPU (like <a href="/doc/libs/1_54_0_beta1/libs/log/">Boost.Log</a>
-      for example), see the respective library documentation for details.
-    </p>
-    <p>
-      Also by default, when building Boost for x86 32-bit targets it will compile
-      for i686 (Pentium Pro) and later CPUs. This can be changed by specifying the
-      <tt>instruction-set</tt> property in <tt>b2</tt> or <tt>bjam</tt>
-      command line, for example:
-    </p>
+    <div id="version_1_54_0.news.supported_cpus">
+      <h3><span class="link">Supported CPUs</span></h3>
+      <p>
+        Boost no longer supports the 80386 target CPU, the minimum x86 32-bit target
+        is i486. The 80386 target was not properly supported by <a href="/doc/libs/1_54_0_beta1/libs/smart_ptr/">Boost.SmartPtr</a>
+        and <a href="/doc/libs/1_54_0_beta1/libs/atomic/">Boost.Atomic</a> (as well as the libraries
+        that used them internally) even before this release. Some Boost libraries
+        may have higher requirements on the minimum target CPU (like <a href="/doc/libs/1_54_0_beta1/libs/log/">Boost.Log</a>
+        for example), see the respective library documentation for details.
+      </p>
+      <p>
+        Also by default, when building Boost for x86 32-bit targets it will compile
+        for i686 (Pentium Pro) and later CPUs. This can be changed by specifying
+        the <tt>instruction-set</tt> property in <tt>b2</tt>
+        or <tt>bjam</tt> command line, for example:
+      </p>
 <pre>b2 variant=release architecture=x86 instruction-set=i486 stage
 </pre>
-    <p>
-      Possible values for the <tt>instruction-set</tt> are:
-    </p>
-    <ul>
-      <li>
-        <div>
-          Target for the host CPU: <tt>native</tt>
-        </div>
-      </li>
-      <li>
-        <div>
-          Generic x86 CPUs: <tt>i486</tt>, <tt>i586</tt>, <tt>i686</tt>
-        </div>
-      </li>
-      <li>
-        <div>
-          Intel CPUs: <tt>pentium</tt>, <tt>pentium-mmx</tt>,
-          <tt>pentiumpro</tt>, <tt>pentium2</tt>, <tt>pentium3</tt>,
-          <tt>pentium3m</tt>, <tt>pentium-m</tt>, <tt>pentium4</tt>,
-          <tt>pentium4m</tt>, <tt>prescott</tt>, <tt>nocona</tt>,
-          <tt>core2</tt>, <tt>corei7</tt>, <tt>corei7-avx</tt>,
-          <tt>core-avx-i</tt>, <tt>conroe</tt>, <tt>conroe-xe</tt>,
-          <tt>conroe-l</tt>, <tt>allendale</tt>, <tt>merom</tt>,
-          <tt>merom-xe</tt>, <tt>kentsfield</tt>, <tt>kentsfield-xe</tt>,
-          <tt>penryn</tt>, <tt>wolfdale</tt>, <tt>yorksfield</tt>,
-          <tt>nehalem</tt>, <tt>sandy-bridge</tt>, <tt>ivy-bridge</tt>,
-          <tt>haswell</tt>, <tt>atom</tt>
-        </div>
-      </li>
-      <li>
-        <div>
-          AMD CPUs: <tt>k6</tt>, <tt>k6-2</tt>, <tt>k6-3</tt>,
-          <tt>athlon</tt>, <tt>athlon-tbird</tt>, <tt>athlon-4</tt>,
-          <tt>athlon-xp</tt>, <tt>athlon-mp</tt>, <tt>k8</tt>,
-          <tt>opteron</tt>, <tt>athlon64</tt>, <tt>athlon-fx</tt>,
-          <tt>k8-sse3</tt>, <tt>opteron-sse3</tt>, <tt>athlon64-sse3</tt>,
-          <tt>amdfam10</tt>, <tt>barcelona</tt>, <tt>bdver1</tt>,
-          <tt>bdver2</tt>, <tt>bdver3</tt>, <tt>btver1</tt>,
-          <tt>btver2</tt>
-        </div>
-      </li>
-      <li>
-        <div>
-          VIA CPUs: <tt>c3</tt>, <tt>c3-2</tt>
-        </div>
-      </li>
-      <li>
-        <div>
-          IDT CPUs: <tt>winchip-c6</tt>, <tt>winchip2</tt>
-        </div>
-      </li>
-    </ul>
-    <p>
-      Note that not all these values may be supported by a particular compiler.
-    </p>
+      <p>
+        Possible values for the <tt>instruction-set</tt> are:
+      </p>
+      <ul>
+        <li>
+          <div>
+            Target for the host CPU: <tt>native</tt>
+          </div>
+        </li>
+        <li>
+          <div>
+            Generic x86 CPUs: <tt>i486</tt>, <tt>i586</tt>,
+            <tt>i686</tt>
+          </div>
+        </li>
+        <li>
+          <div>
+            Intel CPUs: <tt>pentium</tt>, <tt>pentium-mmx</tt>,
+            <tt>pentiumpro</tt>, <tt>pentium2</tt>, <tt>pentium3</tt>,
+            <tt>pentium3m</tt>, <tt>pentium-m</tt>, <tt>pentium4</tt>,
+            <tt>pentium4m</tt>, <tt>prescott</tt>, <tt>nocona</tt>,
+            <tt>core2</tt>, <tt>corei7</tt>, <tt>corei7-avx</tt>,
+            <tt>core-avx-i</tt>, <tt>conroe</tt>, <tt>conroe-xe</tt>,
+            <tt>conroe-l</tt>, <tt>allendale</tt>, <tt>merom</tt>,
+            <tt>merom-xe</tt>, <tt>kentsfield</tt>, <tt>kentsfield-xe</tt>,
+            <tt>penryn</tt>, <tt>wolfdale</tt>, <tt>yorksfield</tt>,
+            <tt>nehalem</tt>, <tt>sandy-bridge</tt>, <tt>ivy-bridge</tt>,
+            <tt>haswell</tt>, <tt>atom</tt>
+          </div>
+        </li>
+        <li>
+          <div>
+            AMD CPUs: <tt>k6</tt>, <tt>k6-2</tt>, <tt>k6-3</tt>,
+            <tt>athlon</tt>, <tt>athlon-tbird</tt>, <tt>athlon-4</tt>,
+            <tt>athlon-xp</tt>, <tt>athlon-mp</tt>, <tt>k8</tt>,
+            <tt>opteron</tt>, <tt>athlon64</tt>, <tt>athlon-fx</tt>,
+            <tt>k8-sse3</tt>, <tt>opteron-sse3</tt>, <tt>athlon64-sse3</tt>,
+            <tt>amdfam10</tt>, <tt>barcelona</tt>, <tt>bdver1</tt>,
+            <tt>bdver2</tt>, <tt>bdver3</tt>, <tt>btver1</tt>,
+            <tt>btver2</tt>
+          </div>
+        </li>
+        <li>
+          <div>
+            VIA CPUs: <tt>c3</tt>, <tt>c3-2</tt>
+          </div>
+        </li>
+        <li>
+          <div>
+            IDT CPUs: <tt>winchip-c6</tt>, <tt>winchip2</tt>
+          </div>
+        </li>
+      </ul>
+      <p>
+        Note that not all these values may be supported by a particular compiler.
+      </p>
+    </div>
+    <div id="version_1_54_0.news.signals_deprecated">
+      <h3><span class="link">Signals deprecated</span></h3>
+      <p>
+        Boost.Signals is no longer being actively maintained, so it has been deprecated.
+        Do not use Boost.Signals for new development (use <a href="/doc/libs/1_54_0_beta1/libs/signals2/">Boost.Signals2</a>
+        instead). If you have existing Boost.Signals-based code, it will continue
+        to work, but consider moving to Boost.Signals2. There is <a href="/doc/libs/1_54_0_beta1/doc/html/signals2/api_changes.html#signals2.porting">a
+        porting guide</a> in the Signals2 documentation.
+      </p>
+    </div>
   </div>
   <div id="version_1_54_0.new_libraries">
     <h3><span class="link">New Libraries</span></h3>
@@ -1025,6 +1039,19 @@
               <div>
                 Added <code><span class="identifier">compose_property_map</span></code>
                 from Guillaume Pinot.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/signals/">Signals</a>:</span>
+          <ul>
+            <li>
+              <div>
+                No longer actively maintained, so it is deprecated. Use <a href="/doc/libs/1_54_0_beta1/libs/signals2">Signals2</a>
+                for new development.
               </div>
             </li>
           </ul>
