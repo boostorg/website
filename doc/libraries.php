@@ -128,6 +128,11 @@ function libref($lib)
   {
     print ($lib['name'] ? $lib['name'] : $lib['key']);
   }
+
+  if (!empty($lib['status']))
+  {
+      print ' <em>('.htmlentities($lib['status']).')</em>';
+  }
 }
 function libauthors($lib)
 {
