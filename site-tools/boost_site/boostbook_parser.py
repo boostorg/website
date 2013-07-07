@@ -148,6 +148,10 @@ class BoostBookParser:
             klass='link',
             *self.x_children(node))
     
+    def x_orderedlist(self,node):
+        return self.new_node('ol',
+            *self.x_children(node))
+    
     def x_itemizedlist(self,node):
         return self.new_node('ul',
             *self.x_children(node))
