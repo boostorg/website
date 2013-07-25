@@ -1,7 +1,7 @@
 [article Version 1.55.0
     [quickbook 1.5]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: ]
+    [purpose New Libraries: Updated Libraries: MultiIndex]
     [authors [Dawes, Beman]]
     [last-revision ]
 ]
@@ -55,7 +55,27 @@ Release status:
 
 [section Updated Libraries]
 
-* /TODO/
+* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+  * Boost.MultiIndex has been brought to a higher level of compliance with C++11. 
+    * `multi_index_container` is now efficiently movable.
+    * Initializer lists supported.
+    * Emplace functions provided.
+    * Non-copyable elements (such as `std::unique_ptr<T>`) supported. This includes
+      insertion of a range [`first`,`last`) where the iterators point to a type that
+      is convertible to that of the element: no copy construction happens in the
+      process.
+    * Random access indices provide `shrink_to_fit()`.
+    Refer to the [@/libs/multi_index/doc/compiler_specifics.html compiler specifics]
+    section for limitations on pre-C++11 compilers. 
+  * The following classes are deprecated:
+    * [@/libs/multi_index/doc/reference/key_extraction.html#member_offset `member_offset`],
+    * [@/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit `const_mem_fun_explicit`],
+    * [@/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit `mem_fun_explicit`],
+    * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_equal_to `composite_key_result_equal_to`],
+    * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_less `composite_key_result_less`],
+    * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_greater `composite_key_result_greater`],
+    * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_hash `composite_key_result_hash`].
+  * Maintenance fixes.
 
 [/
 
