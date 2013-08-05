@@ -55,6 +55,7 @@ class boost_libraries
                     case 'authors':
                     case 'description':
                     case 'documentation':
+                    case 'status':
                     {
                         if (isset($val['value'])) { $lib[$val['tag']] = trim($val['value']); }
                         else { $lib[$val['tag']] = ''; }

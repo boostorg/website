@@ -2,38 +2,40 @@
     [quickbook 1.5]
     [source-mode c++]
     [purpose
+        Changes to supported CPUs.
         New Libraries: Log, TTI, Type Erasure.
-        Updated Libraries: Accumulators, Algorithm, Any, Asio, Chrono, Circular Buffer, Context,
-        Coroutine, Geometry, Graph, Iostreams, Lexical Cast, Math, Multiprecision, Polygon, Property Map,
-        Thread, Type Traits, Unordered, Utility, Variant, Wave, xpressive, uBLAS
+        Updated Libraries: Accumulators, Algorithm, Any, Asio, Chrono, Circular Buffer, Container, Context,
+        Coroutine, Geometry, Graph, Interprocess, Intrusive, Iostreams, Lexical Cast,
+        Math, Meta State Machine, Move, Multiprecision, Polygon, Property Map, Range,
+        Thread, Type Traits, uBLAS, Unordered, Utility, Variant, Wave, xpressive
+        Deprecated Library: Signals.
     ]
     [authors [Clow, Marshall]]
-    [last-revision ]
+    [last-revision Mon, 1 Jul 2013 10:10:02 -0700]
 ]
 
 [include ext.qbk]
 
-[documentation /doc/libs/1_54_0_beta1/]
-[status beta]
-[download http://sourceforge.net/projects/boost/files/boost/1.54.0.beta.1/]
-
-[/
-
-Release status:
+[documentation /doc/libs/1_54_0/]
 [status released]
 [download http://sourceforge.net/projects/boost/files/boost/1.54.0/]
 
-]
+[section Patches]
 
-[/
-    When adding libraries:
+These are patches from library authors which were found too late to be
+fixed in the 1.54.0 release. Be careful as they have not been through the
+normal testing process.
 
-    1. Libraries are listed in alphabetical order.
-    2. Besides the dedicated entry, the lib name should be added to the
-       [purpose] section at the beginning of the page.
-]
+# [@/patches/1_54_0/001-coroutine.patch Coroutine patch]
+# [@/patches/1_54_0/002-date-time.patch Date Time patch]
+# [@/patches/1_54_0/003-log.patch Log patch]
+# [@/patches/1_54_0/004-thread.patch Thread patch]
+
+[endsect]
 
 [section News]
+
+[section Supported CPUs]
 
 Boost no longer supports the 80386 target CPU, the minimum x86 32-bit target is
 i486. The 80386 target was not properly supported by [@/libs/smart_ptr/
@@ -68,6 +70,20 @@ Possible values for the [^instruction-set] are:
 * IDT CPUs: [^winchip-c6], [^winchip2]
 
 Note that not all these values may be supported by a particular compiler.
+
+[endsect]
+
+[section Signals deprecated]
+
+Boost.Signals is no longer being actively maintained, so it has been
+deprecated.  Do not use Boost.Signals for new development (use
+[@/libs/signals2/ Boost.Signals2] instead). If you have existing
+Boost.Signals-based code, it will continue to work, but consider moving to
+Boost.Signals2. There is
+[@/doc/html/signals2/api_changes.html#signals2.porting a porting guide] in the
+Signals2 documentation.
+
+[endsect]
 
 [endsect]
 
@@ -181,6 +197,17 @@ Note that not all these values may be supported by a particular compiler.
 * [phrase library..[@/libs/circular_buffer Circular Buffer]:]
   * Fixed warnings ([ticket 8032]).
 
+* [phrase library..[@/libs/container/ Container]:]
+  *  Added experimental `static_vector` class, based on Andrew Hundt's and Adam Wulkiewicz's
+     high-performance `varray` class.
+  *  Speed improvements in `vector` constructors/copy/move/swap, dispatching to memcpy when possible.
+  *  Support for `BOOST_NO_EXCEPTIONS` [@https://svn.boost.org/trac/boost/ticket/7227 #7227].
+  *  Fixed bugs [@https://svn.boost.org/trac/boost/ticket/7921 #7921],
+                [@https://svn.boost.org/trac/boost/ticket/7969 #7969],
+                [@https://svn.boost.org/trac/boost/ticket/8118 #8118],
+                [@https://svn.boost.org/trac/boost/ticket/8294 #8294],
+                [@https://svn.boost.org/trac/boost/ticket/8553 #8553].
+
 * [phrase library..[@/libs/context/ Context]:]
   * Support for SPARC architecture added.
 
@@ -217,11 +244,31 @@ Note that not all these values may be supported by a particular compiler.
     * Made several algorithms variant-aware (append, area, clear, convert, equals, length, num_points)
 
 * [phrase library..[@/libs/graph Graph]:]
-  * Bugs fixed from Trac: [ticket 6780], [ticket 7016], [ticket 7155], [ticket 7845], [ticket 7863], [ticket 7877], [ticket 8166], [ticket 8192], [ticket 8398], [ticket 8411], [ticket 8427], [ticket 8428], [ticket 8434], [ticket 8490].
+  * Bugs fixed from Trac: [ticket 6780], [ticket 7016], [ticket 7155], [ticket 7845], [ticket 7863], [ticket 7877], [ticket 8166], [ticket 8192], [ticket 8398], [ticket 8411], [ticket 8427], [ticket 8428], [ticket 8434], [ticket 8490], [ticket 8681].
   * Added updates to VF2 subgraph isomorphism from Jakob Lykke Andersen and Flavio De Lorenzi.
   * Added maximum adjacency search from Fernando Vilas.
   * Added timeout support from Brammert Ottens to resource-constrained shortest paths (r_c_shortest_paths) algorithm.
   * Various fixes to documentation and examples and removal of outdated compiler workarounds.
+
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  *  Added support for platform-specific flags to mapped_region (ticket #8030)
+  *  Fixed bugs [@https://svn.boost.org/trac/boost/ticket/7484 #7484],
+                [@https://svn.boost.org/trac/boost/ticket/7598 #7598],
+                [@https://svn.boost.org/trac/boost/ticket/7682 #7682],
+                [@https://svn.boost.org/trac/boost/ticket/7923 #7923],
+                [@https://svn.boost.org/trac/boost/ticket/7924 #7924],
+                [@https://svn.boost.org/trac/boost/ticket/7928 #7928],
+                [@https://svn.boost.org/trac/boost/ticket/7936 #7936],
+                [@https://svn.boost.org/trac/boost/ticket/8521 #8521],
+                [@https://svn.boost.org/trac/boost/ticket/8595 #8595].
+  *  [*ABI breaking]: Changed bootstamp function in Windows to use EventLog service start time
+     as system bootup time. Previously used `LastBootupTime` from WMI was unstable with
+     time synchronization and hibernation and unusable in practice. If you really need
+     to obtain pre Boost 1.54 behaviour define `BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME`
+     from command line or `detail/workaround.hpp`.
+
+* [phrase library..[@/libs/intrusive/ Intrusive]:]
+  *  Added `BOOST_NO_EXCEPTIONS` support (bug [@https://svn.boost.org/trac/boost/ticket/7849 #7849]).
 
 * [phrase library..[@/libs/iostreams/ Iostreams]:]
   * `tee` now works correctly for std::streams ([ticket 8315]).
@@ -257,6 +304,15 @@ Note that not all these values may be supported by a particular compiler.
     where the derivative is flatlining.  Example is computing the quantile of the Fisher F distribution for probabilities
     smaller than machine epsilon.  See ticket [@https://svn.boost.org/trac/boost/ticket/8314 #8314].
 
+* [phrase library..[@/libs/msm/ Meta State Machine]:]
+  * Bugfix: Exit points broken for the favor_compile_time policy.
+  * Bugfix: copy breaks exit points of subsubmachines.
+  * Bugfix: [ticket 8046]
+
+* [phrase library..[@/libs/move/ Move]:]
+  *  Fixed bugs [@https://svn.boost.org/trac/boost/ticket/7969 #7969]),
+                [@https://svn.boost.org/trac/boost/ticket/8231 #8231]).
+
 * [phrase library..[@/libs/multiprecision/ Multiprecision]:]
   * [*Breaking change] renamed `rational_adapter` to `rational_adaptor`.
   * Add support for [@http://perso.ens-lyon.fr/nathalie.revol/software.html MPFI].
@@ -277,6 +333,20 @@ Note that not all these values may be supported by a particular compiler.
 
 * [phrase library..[@/libs/property_map/ PropertyMap]:]
   * Added `compose_property_map` from Guillaume Pinot.
+
+* [phrase library..[@/libs/range/ Range]:]
+  * ['Bug fixes:]
+    * [ticket 6944] Some Range concepts use the incorrect Iterator concept
+    * [ticket 7407] istream_range does not compile with wcin
+    * [ticket 7408] istream_range should not pull istream
+    * [ticket 7731] irange doesn't end iteration properly when step_size is 3 or more
+    * [ticket 7827] [range] cant compile r | indexed to range algorithm
+    * [ticket 8338] Iterator range does not work with pointer to array as iterator
+    * [ticket 8453] Incorrect configuration macro BOOST_NO_PARTIAL_TEMPLATE_SPECIALIZATION
+
+* [phrase library..[@/libs/signals/ Signals]:]
+  * No longer actively maintained, so it is deprecated.
+    Use [@/libs/signals2 Signals2] for new development.
 
 * [phrase library..[@/libs/thread/ Thread]:]
   * ['New Features:]
@@ -315,6 +385,12 @@ Note that not all these values may be supported by a particular compiler.
     * has_trivial_move_assign
     * has_trivial_move_constructor
 
+* [phrase library..[@/libs/numeric/ublas uBLAS]:]
+  * [ticket 6511] Division by scalar should use `enable_if<>`
+  * [ticket 7297] Make the free functions 'num_columns' and 'num_rows' support the uBLAS traits system and better work with expression types
+  * [ticket 6010] fixed linkage problems in assignment.hpp
+  * updated doc
+
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * Some very basic `noexcept` support.
 
@@ -343,18 +419,6 @@ Note that not all these values may be supported by a particular compiler.
   * Remove unused variables, fixes [ticket 8039]
   * Avoid name clash with macro `None` in glx.h, fixes [ticket 8204]
   * Silence a gcc warning, fixes [ticket 8138]
-
-[endsect]
-
-[section Post Beta Changes]
-
-/TODO/: Add to main release notes before final release.
-
-* [phrase library..[@/libs/numeric/ublas uBLAS]:]
-  * [ticket 6511] Division by scalar should use `enable_if<>`
-  * [ticket 7297] Make the free functions 'num_columns' and 'num_rows' support the uBLAS traits system and better work with expression types
-  * [ticket 6010] fixed linkage problems in assignment.hpp
-  * updated doc
 
 [endsect]
 

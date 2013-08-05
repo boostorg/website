@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Version 1.54.0 beta</title>
+  <title>Version 1.54.0</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
@@ -34,113 +34,159 @@
             <div class="section-title">
               <h1>Version 1.54.0</h1>
             </div>
-            <div class="section-note"><p>Note: This version is at an early stage in its release cycle. The information listed below is incomplete and some of the documentation links may not work yet.</p></div>
+
             <div class="section-body">
               <h2><span class=
-              "news-title">Version 1.54.0 beta</span></h2>
+              "news-title">Version 1.54.0</span></h2>
 
-              <p><span class=news-date">In Progress</span></p>
-              <p><a href="/doc/libs/1_54_0_beta1/">Documentation</a>
-              <p><span class="news-download"><a href="http://sourceforge.net/projects/boost/files/boost/1.54.0.beta.1/">Download this beta release.</a></span></p>
+              <p><span class=news-date">July  1st, 2013 17:10 GMT</span></p>
+              <p><a href="/doc/libs/1_54_0/">Documentation</a>
+              <table class="download-table"><caption>Downloads</caption><tr><th scope="col">Platform</th><th scope="col">File</th></tr>
+<tr><th scope="row" rowspan="2">unix</th><td><a href="http://sourceforge.net/projects/boost/files/boost/1.54.0/boost_1_54_0.tar.bz2/download">boost_1_54_0.tar.bz2</a></td></tr><tr><td><a href="http://sourceforge.net/projects/boost/files/boost/1.54.0/boost_1_54_0.tar.gz/download">boost_1_54_0.tar.gz</a></td></tr>
+<tr><th scope="row" rowspan="2">windows</th><td><a href="http://sourceforge.net/projects/boost/files/boost/1.54.0/boost_1_54_0.7z/download">boost_1_54_0.7z</a></td></tr><tr><td><a href="http://sourceforge.net/projects/boost/files/boost/1.54.0/boost_1_54_0.zip/download">boost_1_54_0.zip</a></td></tr></table>
               <div class="news-description">
                 <div class="description">
 
 
 
+  <div id="version_1_54_0.patches">
+    <h3><span class="link">Patches</span></h3>
+    <p>
+      These are patches from library authors which were found too late to be fixed
+      in the 1.54.0 release. Be careful as they have not been through the normal
+      testing process.
+    </p>
+    <ol>
+      <li>
+        <div>
+          <a href="/patches/1_54_0/001-coroutine.patch">Coroutine patch</a>
+        </div>
+      </li>
+      <li>
+        <div>
+          <a href="/patches/1_54_0/002-date-time.patch">Date Time patch</a>
+        </div>
+      </li>
+      <li>
+        <div>
+          <a href="/patches/1_54_0/003-log.patch">Log patch</a>
+        </div>
+      </li>
+      <li>
+        <div>
+          <a href="/patches/1_54_0/004-thread.patch">Thread patch</a>
+        </div>
+      </li>
+    </ol>
+  </div>
   <div id="version_1_54_0.news">
     <h3><span class="link">News</span></h3>
-    <p>
-      Boost no longer supports the 80386 target CPU, the minimum x86 32-bit target
-      is i486. The 80386 target was not properly supported by <a href="/doc/libs/1_54_0_beta1/libs/smart_ptr/">Boost.SmartPtr</a>
-      and <a href="/doc/libs/1_54_0_beta1/libs/atomic/">Boost.Atomic</a> (as well as the libraries
-      that used them internally) even before this release. Some Boost libraries may
-      have higher requirements on the minimum target CPU (like <a href="/doc/libs/1_54_0_beta1/libs/log/">Boost.Log</a>
-      for example), see the respective library documentation for details.
-    </p>
-    <p>
-      Also by default, when building Boost for x86 32-bit targets it will compile
-      for i686 (Pentium Pro) and later CPUs. This can be changed by specifying the
-      <tt>instruction-set</tt> property in <tt>b2</tt> or <tt>bjam</tt>
-      command line, for example:
-    </p>
+    <div id="version_1_54_0.news.supported_cpus">
+      <h3><span class="link">Supported CPUs</span></h3>
+      <p>
+        Boost no longer supports the 80386 target CPU, the minimum x86 32-bit target
+        is i486. The 80386 target was not properly supported by <a href="/libs/smart_ptr/">Boost.SmartPtr</a>
+        and <a href="/libs/atomic/">Boost.Atomic</a> (as well as the libraries
+        that used them internally) even before this release. Some Boost libraries
+        may have higher requirements on the minimum target CPU (like <a href="/libs/log/">Boost.Log</a>
+        for example), see the respective library documentation for details.
+      </p>
+      <p>
+        Also by default, when building Boost for x86 32-bit targets it will compile
+        for i686 (Pentium Pro) and later CPUs. This can be changed by specifying
+        the <tt>instruction-set</tt> property in <tt>b2</tt>
+        or <tt>bjam</tt> command line, for example:
+      </p>
 <pre>b2 variant=release architecture=x86 instruction-set=i486 stage
 </pre>
-    <p>
-      Possible values for the <tt>instruction-set</tt> are:
-    </p>
-    <ul>
-      <li>
-        <div>
-          Target for the host CPU: <tt>native</tt>
-        </div>
-      </li>
-      <li>
-        <div>
-          Generic x86 CPUs: <tt>i486</tt>, <tt>i586</tt>, <tt>i686</tt>
-        </div>
-      </li>
-      <li>
-        <div>
-          Intel CPUs: <tt>pentium</tt>, <tt>pentium-mmx</tt>,
-          <tt>pentiumpro</tt>, <tt>pentium2</tt>, <tt>pentium3</tt>,
-          <tt>pentium3m</tt>, <tt>pentium-m</tt>, <tt>pentium4</tt>,
-          <tt>pentium4m</tt>, <tt>prescott</tt>, <tt>nocona</tt>,
-          <tt>core2</tt>, <tt>corei7</tt>, <tt>corei7-avx</tt>,
-          <tt>core-avx-i</tt>, <tt>conroe</tt>, <tt>conroe-xe</tt>,
-          <tt>conroe-l</tt>, <tt>allendale</tt>, <tt>merom</tt>,
-          <tt>merom-xe</tt>, <tt>kentsfield</tt>, <tt>kentsfield-xe</tt>,
-          <tt>penryn</tt>, <tt>wolfdale</tt>, <tt>yorksfield</tt>,
-          <tt>nehalem</tt>, <tt>sandy-bridge</tt>, <tt>ivy-bridge</tt>,
-          <tt>haswell</tt>, <tt>atom</tt>
-        </div>
-      </li>
-      <li>
-        <div>
-          AMD CPUs: <tt>k6</tt>, <tt>k6-2</tt>, <tt>k6-3</tt>,
-          <tt>athlon</tt>, <tt>athlon-tbird</tt>, <tt>athlon-4</tt>,
-          <tt>athlon-xp</tt>, <tt>athlon-mp</tt>, <tt>k8</tt>,
-          <tt>opteron</tt>, <tt>athlon64</tt>, <tt>athlon-fx</tt>,
-          <tt>k8-sse3</tt>, <tt>opteron-sse3</tt>, <tt>athlon64-sse3</tt>,
-          <tt>amdfam10</tt>, <tt>barcelona</tt>, <tt>bdver1</tt>,
-          <tt>bdver2</tt>, <tt>bdver3</tt>, <tt>btver1</tt>,
-          <tt>btver2</tt>
-        </div>
-      </li>
-      <li>
-        <div>
-          VIA CPUs: <tt>c3</tt>, <tt>c3-2</tt>
-        </div>
-      </li>
-      <li>
-        <div>
-          IDT CPUs: <tt>winchip-c6</tt>, <tt>winchip2</tt>
-        </div>
-      </li>
-    </ul>
-    <p>
-      Note that not all these values may be supported by a particular compiler.
-    </p>
+      <p>
+        Possible values for the <tt>instruction-set</tt> are:
+      </p>
+      <ul>
+        <li>
+          <div>
+            Target for the host CPU: <tt>native</tt>
+          </div>
+        </li>
+        <li>
+          <div>
+            Generic x86 CPUs: <tt>i486</tt>, <tt>i586</tt>,
+            <tt>i686</tt>
+          </div>
+        </li>
+        <li>
+          <div>
+            Intel CPUs: <tt>pentium</tt>, <tt>pentium-mmx</tt>,
+            <tt>pentiumpro</tt>, <tt>pentium2</tt>, <tt>pentium3</tt>,
+            <tt>pentium3m</tt>, <tt>pentium-m</tt>, <tt>pentium4</tt>,
+            <tt>pentium4m</tt>, <tt>prescott</tt>, <tt>nocona</tt>,
+            <tt>core2</tt>, <tt>corei7</tt>, <tt>corei7-avx</tt>,
+            <tt>core-avx-i</tt>, <tt>conroe</tt>, <tt>conroe-xe</tt>,
+            <tt>conroe-l</tt>, <tt>allendale</tt>, <tt>merom</tt>,
+            <tt>merom-xe</tt>, <tt>kentsfield</tt>, <tt>kentsfield-xe</tt>,
+            <tt>penryn</tt>, <tt>wolfdale</tt>, <tt>yorksfield</tt>,
+            <tt>nehalem</tt>, <tt>sandy-bridge</tt>, <tt>ivy-bridge</tt>,
+            <tt>haswell</tt>, <tt>atom</tt>
+          </div>
+        </li>
+        <li>
+          <div>
+            AMD CPUs: <tt>k6</tt>, <tt>k6-2</tt>, <tt>k6-3</tt>,
+            <tt>athlon</tt>, <tt>athlon-tbird</tt>, <tt>athlon-4</tt>,
+            <tt>athlon-xp</tt>, <tt>athlon-mp</tt>, <tt>k8</tt>,
+            <tt>opteron</tt>, <tt>athlon64</tt>, <tt>athlon-fx</tt>,
+            <tt>k8-sse3</tt>, <tt>opteron-sse3</tt>, <tt>athlon64-sse3</tt>,
+            <tt>amdfam10</tt>, <tt>barcelona</tt>, <tt>bdver1</tt>,
+            <tt>bdver2</tt>, <tt>bdver3</tt>, <tt>btver1</tt>,
+            <tt>btver2</tt>
+          </div>
+        </li>
+        <li>
+          <div>
+            VIA CPUs: <tt>c3</tt>, <tt>c3-2</tt>
+          </div>
+        </li>
+        <li>
+          <div>
+            IDT CPUs: <tt>winchip-c6</tt>, <tt>winchip2</tt>
+          </div>
+        </li>
+      </ul>
+      <p>
+        Note that not all these values may be supported by a particular compiler.
+      </p>
+    </div>
+    <div id="version_1_54_0.news.signals_deprecated">
+      <h3><span class="link">Signals deprecated</span></h3>
+      <p>
+        Boost.Signals is no longer being actively maintained, so it has been deprecated.
+        Do not use Boost.Signals for new development (use <a href="/libs/signals2/">Boost.Signals2</a>
+        instead). If you have existing Boost.Signals-based code, it will continue
+        to work, but consider moving to Boost.Signals2. There is <a href="/doc/html/signals2/api_changes.html#signals2.porting">a
+        porting guide</a> in the Signals2 documentation.
+      </p>
+    </div>
   </div>
   <div id="version_1_54_0.new_libraries">
     <h3><span class="link">New Libraries</span></h3>
     <ul>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/log/">Log</a>:</span>
+          <span class="library"><a href="/libs/log/">Log</a>:</span>
   Logging library, from Andrey
           Semashev.
         </div>
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/tti/">TTI</a>:</span>
+          <span class="library"><a href="/libs/tti/">TTI</a>:</span>
   Type Traits Introspection library,
           from Edward Diener.
         </div>
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/type_erasure/">Type Erasure</a>:</span>
+          <span class="library"><a href="/libs/type_erasure/">Type Erasure</a>:</span>
   Runtime polymorphism
           based on concepts.
         </div>
@@ -152,7 +198,7 @@
     <ul>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/accumulators/">Accumulators</a>:</span>
+          <span class="library"><a href="/libs/accumulators/">Accumulators</a>:</span>
           <ul>
             <li>
               <div>
@@ -169,7 +215,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/algorithm/">Algorithm</a>:</span>
+          <span class="library"><a href="/libs/algorithm/">Algorithm</a>:</span>
           <ul>
             <li>
               <div>
@@ -192,7 +238,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/any/">Any</a>:</span>
+          <span class="library"><a href="/libs/any/">Any</a>:</span>
           <ul>
             <li>
               <div>
@@ -217,7 +263,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/asio/">Asio</a>:</span>
+          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
           <ul>
             <li>
               <div>
@@ -405,7 +451,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/chrono/">Chrono</a>:</span>
+          <span class="library"><a href="/libs/chrono/">Chrono</a>:</span>
           <ul>
             <li>
               <div>
@@ -450,7 +496,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/circular_buffer">Circular Buffer</a>:</span>
+          <span class="library"><a href="/libs/circular_buffer">Circular Buffer</a>:</span>
           <ul>
             <li>
               <div>
@@ -462,7 +508,42 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/context/">Context</a>:</span>
+          <span class="library"><a href="/libs/container/">Container</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added experimental <code><span class="identifier">static_vector</span></code>
+                class, based on Andrew Hundt's and Adam Wulkiewicz's high-performance
+                <code><span class="identifier">varray</span></code> class.
+              </div>
+            </li>
+            <li>
+              <div>
+                Speed improvements in <code><span class="identifier">vector</span></code>
+                constructors/copy/move/swap, dispatching to memcpy when possible.
+              </div>
+            </li>
+            <li>
+              <div>
+                Support for <code><span class="identifier">BOOST_NO_EXCEPTIONS</span></code>
+                <a href="https://svn.boost.org/trac/boost/ticket/7227">#7227</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed bugs <a href="https://svn.boost.org/trac/boost/ticket/7921">#7921</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/7969">#7969</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8118">#8118</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8294">#8294</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8553">#8553</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/context/">Context</a>:</span>
           <ul>
             <li>
               <div>
@@ -474,7 +555,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/coroutine/">Coroutine</a>:</span>
+          <span class="library"><a href="/libs/coroutine/">Coroutine</a>:</span>
           <ul>
             <li>
               <div>
@@ -534,7 +615,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/geometry/">Geometry</a>:</span>
+          <span class="library"><a href="/libs/geometry/">Geometry</a>:</span>
           <ul>
             <li>
               <div>
@@ -662,13 +743,13 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/graph">Graph</a>:</span>
+          <span class="library"><a href="/libs/graph">Graph</a>:</span>
           <ul>
             <li>
               <div>
                 Bugs fixed from Trac: <a href="https://svn.boost.org/trac/boost/ticket/6780">#6780</a>, <a href="https://svn.boost.org/trac/boost/ticket/7016">#7016</a>, <a href="https://svn.boost.org/trac/boost/ticket/7155">#7155</a>, <a href="https://svn.boost.org/trac/boost/ticket/7845">#7845</a>,
                 <a href="https://svn.boost.org/trac/boost/ticket/7863">#7863</a>, <a href="https://svn.boost.org/trac/boost/ticket/7877">#7877</a>, <a href="https://svn.boost.org/trac/boost/ticket/8166">#8166</a>, <a href="https://svn.boost.org/trac/boost/ticket/8192">#8192</a>, <a href="https://svn.boost.org/trac/boost/ticket/8398">#8398</a>, <a href="https://svn.boost.org/trac/boost/ticket/8411">#8411</a>,
-                <a href="https://svn.boost.org/trac/boost/ticket/8427">#8427</a>, <a href="https://svn.boost.org/trac/boost/ticket/8428">#8428</a>, <a href="https://svn.boost.org/trac/boost/ticket/8434">#8434</a>, <a href="https://svn.boost.org/trac/boost/ticket/8490">#8490</a>.
+                <a href="https://svn.boost.org/trac/boost/ticket/8427">#8427</a>, <a href="https://svn.boost.org/trac/boost/ticket/8428">#8428</a>, <a href="https://svn.boost.org/trac/boost/ticket/8434">#8434</a>, <a href="https://svn.boost.org/trac/boost/ticket/8490">#8490</a>, <a href="https://svn.boost.org/trac/boost/ticket/8681">#8681</a>.
               </div>
             </li>
             <li>
@@ -699,7 +780,57 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/iostreams/">Iostreams</a>:</span>
+          <span class="library"><a href="/libs/interprocess/">Interprocess</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added support for platform-specific flags to mapped_region (ticket
+                #8030)
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed bugs <a href="https://svn.boost.org/trac/boost/ticket/7484">#7484</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/7598">#7598</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/7682">#7682</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/7923">#7923</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/7924">#7924</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/7928">#7928</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/7936">#7936</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8521">#8521</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8595">#8595</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>ABI breaking</strong>: Changed bootstamp
+                function in Windows to use EventLog service start time as system
+                bootup time. Previously used <code><span class="identifier">LastBootupTime</span></code>
+                from WMI was unstable with time synchronization and hibernation and
+                unusable in practice. If you really need to obtain pre Boost 1.54
+                behaviour define <code><span class="identifier">BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME</span></code>
+                from command line or <code><span class="identifier">detail</span><span class="special">/</span><span class="identifier">workaround</span><span class="special">.</span><span class="identifier">hpp</span></code>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/intrusive/">Intrusive</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added <code><span class="identifier">BOOST_NO_EXCEPTIONS</span></code>
+                support (bug <a href="https://svn.boost.org/trac/boost/ticket/7849">#7849</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/iostreams/">Iostreams</a>:</span>
           <ul>
             <li>
               <div>
@@ -722,7 +853,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/conversion/lexical_cast.htm">Lexical cast</a>:</span>
+          <span class="library"><a href="/libs/conversion/lexical_cast.htm">Lexical cast</a>:</span>
           <ul>
             <li>
               <div>
@@ -759,7 +890,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/math/">Math</a>:</span>
+          <span class="library"><a href="/libs/math/">Math</a>:</span>
           <ul>
             <li>
               <div>
@@ -841,7 +972,42 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/multiprecision/">Multiprecision</a>:</span>
+          <span class="library"><a href="/libs/msm/">Meta State Machine</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Bugfix: Exit points broken for the favor_compile_time policy.
+              </div>
+            </li>
+            <li>
+              <div>
+                Bugfix: copy breaks exit points of subsubmachines.
+              </div>
+            </li>
+            <li>
+              <div>
+                Bugfix: <a href="https://svn.boost.org/trac/boost/ticket/8046">#8046</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/move/">Move</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed bugs <a href="https://svn.boost.org/trac/boost/ticket/7969">#7969</a>),
+                <a href="https://svn.boost.org/trac/boost/ticket/8231">#8231</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/multiprecision/">Multiprecision</a>:</span>
           <ul>
             <li>
               <div>
@@ -904,7 +1070,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/polygon/">Polygon</a>:</span>
+          <span class="library"><a href="/libs/polygon/">Polygon</a>:</span>
           <ul>
             <li>
               <div>
@@ -921,7 +1087,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/property_map/">PropertyMap</a>:</span>
+          <span class="library"><a href="/libs/property_map/">PropertyMap</a>:</span>
           <ul>
             <li>
               <div>
@@ -934,7 +1100,71 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/thread/">Thread</a>:</span>
+          <span class="library"><a href="/libs/range/">Range</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <em>Bug fixes:</em>
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/6944">#6944</a> Some Range concepts use the incorrect Iterator concept
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7407">#7407</a> istream_range does not compile with wcin
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7408">#7408</a> istream_range should not pull istream
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7731">#7731</a> irange doesn't end iteration properly when step_size
+                      is 3 or more
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/7827">#7827</a> [range] cant compile r | indexed to range algorithm
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/8338">#8338</a> Iterator range does not work with pointer to array
+                      as iterator
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/8453">#8453</a> Incorrect configuration macro BOOST_NO_PARTIAL_TEMPLATE_SPECIALIZATION
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/signals/">Signals</a>:</span>
+          <ul>
+            <li>
+              <div>
+                No longer actively maintained, so it is deprecated. Use <a href="/libs/signals2">Signals2</a>
+                for new development.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/thread/">Thread</a>:</span>
           <ul>
             <li>
               <div>
@@ -1118,7 +1348,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/type_traits/">Type Traits</a>:</span>
+          <span class="library"><a href="/libs/type_traits/">Type Traits</a>:</span>
           <ul>
             <li>
               <div>
@@ -1152,7 +1382,35 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/unordered/">Unordered</a>:</span>
+          <span class="library"><a href="/libs/numeric/ublas">uBLAS</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/6511">#6511</a> Division by scalar should use <code><span class="identifier">enable_if</span><span class="special">&lt;&gt;</span></code>
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/7297">#7297</a> Make the free functions 'num_columns' and 'num_rows' support
+                the uBLAS traits system and better work with expression types
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/6010">#6010</a> fixed linkage problems in assignment.hpp
+              </div>
+            </li>
+            <li>
+              <div>
+                updated doc
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/unordered/">Unordered</a>:</span>
           <ul>
             <li>
               <div>
@@ -1165,7 +1423,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/utility/">Utility</a>:</span>
+          <span class="library"><a href="/libs/utility/">Utility</a>:</span>
           <ul>
             <li>
               <div>
@@ -1205,7 +1463,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/variant/">Variant</a>:</span>
+          <span class="library"><a href="/libs/variant/">Variant</a>:</span>
           <ul>
             <li>
               <div>
@@ -1228,11 +1486,11 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/wave/">Wave</a>:</span>
+          <span class="library"><a href="/libs/wave/">Wave</a>:</span>
           <ul>
             <li>
               <div>
-                See the <a href="/doc/libs/1_54_0_beta1/libs/wave/ChangeLog">Changelog</a> for details.
+                See the <a href="/libs/wave/ChangeLog">Changelog</a> for details.
               </div>
             </li>
           </ul>
@@ -1240,7 +1498,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/xpressive">xpressive</a>:</span>
+          <span class="library"><a href="/libs/xpressive">xpressive</a>:</span>
           <ul>
             <li>
               <div>
@@ -1256,42 +1514,6 @@
             <li>
               <div>
                 Silence a gcc warning, fixes <a href="https://svn.boost.org/trac/boost/ticket/8138">#8138</a>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-    </ul>
-  </div>
-  <div id="version_1_54_0.post_beta_changes">
-    <h3><span class="link">Post Beta Changes</span></h3>
-    <p>
-      <em>TODO</em>: Add to main release notes before final release.
-    </p>
-    <ul>
-      <li>
-        <div>
-          <span class="library"><a href="/doc/libs/1_54_0_beta1/libs/numeric/ublas">uBLAS</a>:</span>
-          <ul>
-            <li>
-              <div>
-                <a href="https://svn.boost.org/trac/boost/ticket/6511">#6511</a> Division by scalar should use <code><span class="identifier">enable_if</span><span class="special">&lt;&gt;</span></code>
-              </div>
-            </li>
-            <li>
-              <div>
-                <a href="https://svn.boost.org/trac/boost/ticket/7297">#7297</a> Make the free functions 'num_columns' and 'num_rows' support
-                the uBLAS traits system and better work with expression types
-              </div>
-            </li>
-            <li>
-              <div>
-                <a href="https://svn.boost.org/trac/boost/ticket/6010">#6010</a> fixed linkage problems in assignment.hpp
-              </div>
-            </li>
-            <li>
-              <div>
-                updated doc
               </div>
             </li>
           </ul>

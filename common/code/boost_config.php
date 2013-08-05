@@ -32,7 +32,7 @@ switch (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '')
   case 'live.boost.org':
   case 'beta.boost.org':
   {
-    define('BOOST_CONFIG_FILE','/home/grafik/www.boost.org/config.php');
+    define('BOOST_CONFIG_FILE','/home/www/shared/config.php');
   }
   break;
 

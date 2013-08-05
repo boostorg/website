@@ -18631,104 +18631,148 @@
 )
 (feed/history/boost_1_54_0.qbk
 -item
-"<item><title>Version 1.54.0</title><link>http://www.boost.org/users/history/version_1_54_0.html</link><guid>http://www.boost.org/users/history/version_1_54_0.html</guid><pubDate>In Progress</pubDate><description>
+"<item><title>Version 1.54.0</title><link>http://www.boost.org/users/history/version_1_54_0.html</link><guid>http://www.boost.org/users/history/version_1_54_0.html</guid><pubDate>Mon, 1 Jul 2013 10:10:02 -0700</pubDate><description>
 "
 "
 "
+"  &lt;div id=&quot;version_1_54_0.patches&quot;&gt;
+"    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Patches&lt;/span&gt;&lt;/h3&gt;
+"    &lt;p&gt;
+"      These are patches from library authors which were found too late to be fixed
+"      in the 1.54.0 release. Be careful as they have not been through the normal
+"      testing process.
+"    &lt;/p&gt;
+"    &lt;ol&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;a href=&quot;http://www.boost.org/patches/1_54_0/001-coroutine.patch&quot;&gt;Coroutine patch&lt;/a&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;a href=&quot;http://www.boost.org/patches/1_54_0/002-date-time.patch&quot;&gt;Date Time patch&lt;/a&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;a href=&quot;http://www.boost.org/patches/1_54_0/003-log.patch&quot;&gt;Log patch&lt;/a&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;a href=&quot;http://www.boost.org/patches/1_54_0/004-thread.patch&quot;&gt;Thread patch&lt;/a&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ol&gt;
+"  &lt;/div&gt;
 "  &lt;div id=&quot;version_1_54_0.news&quot;&gt;
 "    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;News&lt;/span&gt;&lt;/h3&gt;
-"    &lt;p&gt;
-"      Boost no longer supports the 80386 target CPU, the minimum x86 32-bit target
-"      is i486. The 80386 target was not properly supported by &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/smart_ptr/&quot;&gt;Boost.SmartPtr&lt;/a&gt;
-"      and &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/atomic/&quot;&gt;Boost.Atomic&lt;/a&gt; (as well as the libraries
-"      that used them internally) even before this release. Some Boost libraries may
-"      have higher requirements on the minimum target CPU (like &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/log/&quot;&gt;Boost.Log&lt;/a&gt;
-"      for example), see the respective library documentation for details.
-"    &lt;/p&gt;
-"    &lt;p&gt;
-"      Also by default, when building Boost for x86 32-bit targets it will compile
-"      for i686 (Pentium Pro) and later CPUs. This can be changed by specifying the
-"      &lt;tt&gt;instruction-set&lt;/tt&gt; property in &lt;tt&gt;b2&lt;/tt&gt; or &lt;tt&gt;bjam&lt;/tt&gt;
-"      command line, for example:
-"    &lt;/p&gt;
+"    &lt;div id=&quot;version_1_54_0.news.supported_cpus&quot;&gt;
+"      &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Supported CPUs&lt;/span&gt;&lt;/h3&gt;
+"      &lt;p&gt;
+"        Boost no longer supports the 80386 target CPU, the minimum x86 32-bit target
+"        is i486. The 80386 target was not properly supported by &lt;a href=&quot;http://www.boost.org/libs/smart_ptr/&quot;&gt;Boost.SmartPtr&lt;/a&gt;
+"        and &lt;a href=&quot;http://www.boost.org/libs/atomic/&quot;&gt;Boost.Atomic&lt;/a&gt; (as well as the libraries
+"        that used them internally) even before this release. Some Boost libraries
+"        may have higher requirements on the minimum target CPU (like &lt;a href=&quot;http://www.boost.org/libs/log/&quot;&gt;Boost.Log&lt;/a&gt;
+"        for example), see the respective library documentation for details.
+"      &lt;/p&gt;
+"      &lt;p&gt;
+"        Also by default, when building Boost for x86 32-bit targets it will compile
+"        for i686 (Pentium Pro) and later CPUs. This can be changed by specifying
+"        the &lt;tt&gt;instruction-set&lt;/tt&gt; property in &lt;tt&gt;b2&lt;/tt&gt;
+"        or &lt;tt&gt;bjam&lt;/tt&gt; command line, for example:
+"      &lt;/p&gt;
 "&lt;pre&gt;b2 variant=release architecture=x86 instruction-set=i486 stage
 "&lt;/pre&gt;
-"    &lt;p&gt;
-"      Possible values for the &lt;tt&gt;instruction-set&lt;/tt&gt; are:
-"    &lt;/p&gt;
-"    &lt;ul&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          Target for the host CPU: &lt;tt&gt;native&lt;/tt&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          Generic x86 CPUs: &lt;tt&gt;i486&lt;/tt&gt;, &lt;tt&gt;i586&lt;/tt&gt;, &lt;tt&gt;i686&lt;/tt&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          Intel CPUs: &lt;tt&gt;pentium&lt;/tt&gt;, &lt;tt&gt;pentium-mmx&lt;/tt&gt;,
-"          &lt;tt&gt;pentiumpro&lt;/tt&gt;, &lt;tt&gt;pentium2&lt;/tt&gt;, &lt;tt&gt;pentium3&lt;/tt&gt;,
-"          &lt;tt&gt;pentium3m&lt;/tt&gt;, &lt;tt&gt;pentium-m&lt;/tt&gt;, &lt;tt&gt;pentium4&lt;/tt&gt;,
-"          &lt;tt&gt;pentium4m&lt;/tt&gt;, &lt;tt&gt;prescott&lt;/tt&gt;, &lt;tt&gt;nocona&lt;/tt&gt;,
-"          &lt;tt&gt;core2&lt;/tt&gt;, &lt;tt&gt;corei7&lt;/tt&gt;, &lt;tt&gt;corei7-avx&lt;/tt&gt;,
-"          &lt;tt&gt;core-avx-i&lt;/tt&gt;, &lt;tt&gt;conroe&lt;/tt&gt;, &lt;tt&gt;conroe-xe&lt;/tt&gt;,
-"          &lt;tt&gt;conroe-l&lt;/tt&gt;, &lt;tt&gt;allendale&lt;/tt&gt;, &lt;tt&gt;merom&lt;/tt&gt;,
-"          &lt;tt&gt;merom-xe&lt;/tt&gt;, &lt;tt&gt;kentsfield&lt;/tt&gt;, &lt;tt&gt;kentsfield-xe&lt;/tt&gt;,
-"          &lt;tt&gt;penryn&lt;/tt&gt;, &lt;tt&gt;wolfdale&lt;/tt&gt;, &lt;tt&gt;yorksfield&lt;/tt&gt;,
-"          &lt;tt&gt;nehalem&lt;/tt&gt;, &lt;tt&gt;sandy-bridge&lt;/tt&gt;, &lt;tt&gt;ivy-bridge&lt;/tt&gt;,
-"          &lt;tt&gt;haswell&lt;/tt&gt;, &lt;tt&gt;atom&lt;/tt&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          AMD CPUs: &lt;tt&gt;k6&lt;/tt&gt;, &lt;tt&gt;k6-2&lt;/tt&gt;, &lt;tt&gt;k6-3&lt;/tt&gt;,
-"          &lt;tt&gt;athlon&lt;/tt&gt;, &lt;tt&gt;athlon-tbird&lt;/tt&gt;, &lt;tt&gt;athlon-4&lt;/tt&gt;,
-"          &lt;tt&gt;athlon-xp&lt;/tt&gt;, &lt;tt&gt;athlon-mp&lt;/tt&gt;, &lt;tt&gt;k8&lt;/tt&gt;,
-"          &lt;tt&gt;opteron&lt;/tt&gt;, &lt;tt&gt;athlon64&lt;/tt&gt;, &lt;tt&gt;athlon-fx&lt;/tt&gt;,
-"          &lt;tt&gt;k8-sse3&lt;/tt&gt;, &lt;tt&gt;opteron-sse3&lt;/tt&gt;, &lt;tt&gt;athlon64-sse3&lt;/tt&gt;,
-"          &lt;tt&gt;amdfam10&lt;/tt&gt;, &lt;tt&gt;barcelona&lt;/tt&gt;, &lt;tt&gt;bdver1&lt;/tt&gt;,
-"          &lt;tt&gt;bdver2&lt;/tt&gt;, &lt;tt&gt;bdver3&lt;/tt&gt;, &lt;tt&gt;btver1&lt;/tt&gt;,
-"          &lt;tt&gt;btver2&lt;/tt&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          VIA CPUs: &lt;tt&gt;c3&lt;/tt&gt;, &lt;tt&gt;c3-2&lt;/tt&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          IDT CPUs: &lt;tt&gt;winchip-c6&lt;/tt&gt;, &lt;tt&gt;winchip2&lt;/tt&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"    &lt;/ul&gt;
-"    &lt;p&gt;
-"      Note that not all these values may be supported by a particular compiler.
-"    &lt;/p&gt;
+"      &lt;p&gt;
+"        Possible values for the &lt;tt&gt;instruction-set&lt;/tt&gt; are:
+"      &lt;/p&gt;
+"      &lt;ul&gt;
+"        &lt;li&gt;
+"          &lt;div&gt;
+"            Target for the host CPU: &lt;tt&gt;native&lt;/tt&gt;
+"          &lt;/div&gt;
+"        &lt;/li&gt;
+"        &lt;li&gt;
+"          &lt;div&gt;
+"            Generic x86 CPUs: &lt;tt&gt;i486&lt;/tt&gt;, &lt;tt&gt;i586&lt;/tt&gt;,
+"            &lt;tt&gt;i686&lt;/tt&gt;
+"          &lt;/div&gt;
+"        &lt;/li&gt;
+"        &lt;li&gt;
+"          &lt;div&gt;
+"            Intel CPUs: &lt;tt&gt;pentium&lt;/tt&gt;, &lt;tt&gt;pentium-mmx&lt;/tt&gt;,
+"            &lt;tt&gt;pentiumpro&lt;/tt&gt;, &lt;tt&gt;pentium2&lt;/tt&gt;, &lt;tt&gt;pentium3&lt;/tt&gt;,
+"            &lt;tt&gt;pentium3m&lt;/tt&gt;, &lt;tt&gt;pentium-m&lt;/tt&gt;, &lt;tt&gt;pentium4&lt;/tt&gt;,
+"            &lt;tt&gt;pentium4m&lt;/tt&gt;, &lt;tt&gt;prescott&lt;/tt&gt;, &lt;tt&gt;nocona&lt;/tt&gt;,
+"            &lt;tt&gt;core2&lt;/tt&gt;, &lt;tt&gt;corei7&lt;/tt&gt;, &lt;tt&gt;corei7-avx&lt;/tt&gt;,
+"            &lt;tt&gt;core-avx-i&lt;/tt&gt;, &lt;tt&gt;conroe&lt;/tt&gt;, &lt;tt&gt;conroe-xe&lt;/tt&gt;,
+"            &lt;tt&gt;conroe-l&lt;/tt&gt;, &lt;tt&gt;allendale&lt;/tt&gt;, &lt;tt&gt;merom&lt;/tt&gt;,
+"            &lt;tt&gt;merom-xe&lt;/tt&gt;, &lt;tt&gt;kentsfield&lt;/tt&gt;, &lt;tt&gt;kentsfield-xe&lt;/tt&gt;,
+"            &lt;tt&gt;penryn&lt;/tt&gt;, &lt;tt&gt;wolfdale&lt;/tt&gt;, &lt;tt&gt;yorksfield&lt;/tt&gt;,
+"            &lt;tt&gt;nehalem&lt;/tt&gt;, &lt;tt&gt;sandy-bridge&lt;/tt&gt;, &lt;tt&gt;ivy-bridge&lt;/tt&gt;,
+"            &lt;tt&gt;haswell&lt;/tt&gt;, &lt;tt&gt;atom&lt;/tt&gt;
+"          &lt;/div&gt;
+"        &lt;/li&gt;
+"        &lt;li&gt;
+"          &lt;div&gt;
+"            AMD CPUs: &lt;tt&gt;k6&lt;/tt&gt;, &lt;tt&gt;k6-2&lt;/tt&gt;, &lt;tt&gt;k6-3&lt;/tt&gt;,
+"            &lt;tt&gt;athlon&lt;/tt&gt;, &lt;tt&gt;athlon-tbird&lt;/tt&gt;, &lt;tt&gt;athlon-4&lt;/tt&gt;,
+"            &lt;tt&gt;athlon-xp&lt;/tt&gt;, &lt;tt&gt;athlon-mp&lt;/tt&gt;, &lt;tt&gt;k8&lt;/tt&gt;,
+"            &lt;tt&gt;opteron&lt;/tt&gt;, &lt;tt&gt;athlon64&lt;/tt&gt;, &lt;tt&gt;athlon-fx&lt;/tt&gt;,
+"            &lt;tt&gt;k8-sse3&lt;/tt&gt;, &lt;tt&gt;opteron-sse3&lt;/tt&gt;, &lt;tt&gt;athlon64-sse3&lt;/tt&gt;,
+"            &lt;tt&gt;amdfam10&lt;/tt&gt;, &lt;tt&gt;barcelona&lt;/tt&gt;, &lt;tt&gt;bdver1&lt;/tt&gt;,
+"            &lt;tt&gt;bdver2&lt;/tt&gt;, &lt;tt&gt;bdver3&lt;/tt&gt;, &lt;tt&gt;btver1&lt;/tt&gt;,
+"            &lt;tt&gt;btver2&lt;/tt&gt;
+"          &lt;/div&gt;
+"        &lt;/li&gt;
+"        &lt;li&gt;
+"          &lt;div&gt;
+"            VIA CPUs: &lt;tt&gt;c3&lt;/tt&gt;, &lt;tt&gt;c3-2&lt;/tt&gt;
+"          &lt;/div&gt;
+"        &lt;/li&gt;
+"        &lt;li&gt;
+"          &lt;div&gt;
+"            IDT CPUs: &lt;tt&gt;winchip-c6&lt;/tt&gt;, &lt;tt&gt;winchip2&lt;/tt&gt;
+"          &lt;/div&gt;
+"        &lt;/li&gt;
+"      &lt;/ul&gt;
+"      &lt;p&gt;
+"        Note that not all these values may be supported by a particular compiler.
+"      &lt;/p&gt;
+"    &lt;/div&gt;
+"    &lt;div id=&quot;version_1_54_0.news.signals_deprecated&quot;&gt;
+"      &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Signals deprecated&lt;/span&gt;&lt;/h3&gt;
+"      &lt;p&gt;
+"        Boost.Signals is no longer being actively maintained, so it has been deprecated.
+"        Do not use Boost.Signals for new development (use &lt;a href=&quot;http://www.boost.org/libs/signals2/&quot;&gt;Boost.Signals2&lt;/a&gt;
+"        instead). If you have existing Boost.Signals-based code, it will continue
+"        to work, but consider moving to Boost.Signals2. There is &lt;a href=&quot;http://www.boost.org/doc/html/signals2/api_changes.html#signals2.porting&quot;&gt;a
+"        porting guide&lt;/a&gt; in the Signals2 documentation.
+"      &lt;/p&gt;
+"    &lt;/div&gt;
 "  &lt;/div&gt;
 "  &lt;div id=&quot;version_1_54_0.new_libraries&quot;&gt;
 "    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
 "    &lt;ul&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/log/&quot;&gt;Log&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/log/&quot;&gt;Log&lt;/a&gt;:&lt;/span&gt;
 "  Logging library, from Andrey
 "          Semashev.
 "        &lt;/div&gt;
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/tti/&quot;&gt;TTI&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/tti/&quot;&gt;TTI&lt;/a&gt;:&lt;/span&gt;
 "  Type Traits Introspection library,
 "          from Edward Diener.
 "        &lt;/div&gt;
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/type_erasure/&quot;&gt;Type Erasure&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/type_erasure/&quot;&gt;Type Erasure&lt;/a&gt;:&lt;/span&gt;
 "  Runtime polymorphism
 "          based on concepts.
 "        &lt;/div&gt;
@@ -18740,7 +18784,7 @@
 "    &lt;ul&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/accumulators/&quot;&gt;Accumulators&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/accumulators/&quot;&gt;Accumulators&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -18757,7 +18801,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/algorithm/&quot;&gt;Algorithm&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/algorithm/&quot;&gt;Algorithm&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -18780,7 +18824,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/any/&quot;&gt;Any&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/any/&quot;&gt;Any&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -18805,7 +18849,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/asio/&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/asio/&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -18993,7 +19037,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/chrono/&quot;&gt;Chrono&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/chrono/&quot;&gt;Chrono&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19038,7 +19082,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/circular_buffer&quot;&gt;Circular Buffer&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/circular_buffer&quot;&gt;Circular Buffer&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19050,7 +19094,42 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/context/&quot;&gt;Context&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/container/&quot;&gt;Container&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added experimental &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;static_vector&lt;/span&gt;&lt;/code&gt;
+"                class, based on Andrew Hundt's and Adam Wulkiewicz's high-performance
+"                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;varray&lt;/span&gt;&lt;/code&gt; class.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Speed improvements in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;vector&lt;/span&gt;&lt;/code&gt;
+"                constructors/copy/move/swap, dispatching to memcpy when possible.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Support for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_NO_EXCEPTIONS&lt;/span&gt;&lt;/code&gt;
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7227&quot;&gt;#7227&lt;/a&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed bugs &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7921&quot;&gt;#7921&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7969&quot;&gt;#7969&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8118&quot;&gt;#8118&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8294&quot;&gt;#8294&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8553&quot;&gt;#8553&lt;/a&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/context/&quot;&gt;Context&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19062,7 +19141,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/coroutine/&quot;&gt;Coroutine&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/coroutine/&quot;&gt;Coroutine&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19122,7 +19201,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/geometry/&quot;&gt;Geometry&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/geometry/&quot;&gt;Geometry&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19250,13 +19329,13 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/graph&quot;&gt;Graph&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/graph&quot;&gt;Graph&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
 "                Bugs fixed from Trac: &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6780&quot;&gt;#6780&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7016&quot;&gt;#7016&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7155&quot;&gt;#7155&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7845&quot;&gt;#7845&lt;/a&gt;,
 "                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7863&quot;&gt;#7863&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7877&quot;&gt;#7877&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8166&quot;&gt;#8166&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8192&quot;&gt;#8192&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8398&quot;&gt;#8398&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8411&quot;&gt;#8411&lt;/a&gt;,
-"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8427&quot;&gt;#8427&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8428&quot;&gt;#8428&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8434&quot;&gt;#8434&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8490&quot;&gt;#8490&lt;/a&gt;.
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8427&quot;&gt;#8427&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8428&quot;&gt;#8428&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8434&quot;&gt;#8434&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8490&quot;&gt;#8490&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8681&quot;&gt;#8681&lt;/a&gt;.
 "              &lt;/div&gt;
 "            &lt;/li&gt;
 "            &lt;li&gt;
@@ -19287,7 +19366,57 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/iostreams/&quot;&gt;Iostreams&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/interprocess/&quot;&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added support for platform-specific flags to mapped_region (ticket
+"                #8030)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed bugs &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7484&quot;&gt;#7484&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7598&quot;&gt;#7598&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7682&quot;&gt;#7682&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7923&quot;&gt;#7923&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7924&quot;&gt;#7924&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7928&quot;&gt;#7928&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7936&quot;&gt;#7936&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8521&quot;&gt;#8521&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8595&quot;&gt;#8595&lt;/a&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;strong&gt;ABI breaking&lt;/strong&gt;: Changed bootstamp
+"                function in Windows to use EventLog service start time as system
+"                bootup time. Previously used &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;LastBootupTime&lt;/span&gt;&lt;/code&gt;
+"                from WMI was unstable with time synchronization and hibernation and
+"                unusable in practice. If you really need to obtain pre Boost 1.54
+"                behaviour define &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME&lt;/span&gt;&lt;/code&gt;
+"                from command line or &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;detail&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;workaround&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/intrusive/&quot;&gt;Intrusive&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_NO_EXCEPTIONS&lt;/span&gt;&lt;/code&gt;
+"                support (bug &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7849&quot;&gt;#7849&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/iostreams/&quot;&gt;Iostreams&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19310,7 +19439,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/conversion/lexical_cast.htm&quot;&gt;Lexical cast&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/conversion/lexical_cast.htm&quot;&gt;Lexical cast&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19347,7 +19476,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/math/&quot;&gt;Math&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/math/&quot;&gt;Math&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19429,7 +19558,42 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/multiprecision/&quot;&gt;Multiprecision&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/msm/&quot;&gt;Meta State Machine&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Bugfix: Exit points broken for the favor_compile_time policy.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Bugfix: copy breaks exit points of subsubmachines.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Bugfix: &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8046&quot;&gt;#8046&lt;/a&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/move/&quot;&gt;Move&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed bugs &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7969&quot;&gt;#7969&lt;/a&gt;),
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8231&quot;&gt;#8231&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/multiprecision/&quot;&gt;Multiprecision&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19492,7 +19656,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/polygon/&quot;&gt;Polygon&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/polygon/&quot;&gt;Polygon&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19509,7 +19673,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/property_map/&quot;&gt;PropertyMap&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/property_map/&quot;&gt;PropertyMap&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19522,7 +19686,71 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/thread/&quot;&gt;Thread&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/range/&quot;&gt;Range&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;em&gt;Bug fixes:&lt;/em&gt;
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6944&quot;&gt;#6944&lt;/a&gt; Some Range concepts use the incorrect Iterator concept
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7407&quot;&gt;#7407&lt;/a&gt; istream_range does not compile with wcin
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7408&quot;&gt;#7408&lt;/a&gt; istream_range should not pull istream
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7731&quot;&gt;#7731&lt;/a&gt; irange doesn't end iteration properly when step_size
+"                      is 3 or more
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7827&quot;&gt;#7827&lt;/a&gt; [range] cant compile r | indexed to range algorithm
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8338&quot;&gt;#8338&lt;/a&gt; Iterator range does not work with pointer to array
+"                      as iterator
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8453&quot;&gt;#8453&lt;/a&gt; Incorrect configuration macro BOOST_NO_PARTIAL_TEMPLATE_SPECIALIZATION
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/signals/&quot;&gt;Signals&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                No longer actively maintained, so it is deprecated. Use &lt;a href=&quot;http://www.boost.org/libs/signals2&quot;&gt;Signals2&lt;/a&gt;
+"                for new development.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/thread/&quot;&gt;Thread&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19706,7 +19934,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/type_traits/&quot;&gt;Type Traits&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/type_traits/&quot;&gt;Type Traits&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19740,7 +19968,35 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/unordered/&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/numeric/ublas&quot;&gt;uBLAS&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6511&quot;&gt;#6511&lt;/a&gt; Division by scalar should use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;enable_if&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7297&quot;&gt;#7297&lt;/a&gt; Make the free functions 'num_columns' and 'num_rows' support
+"                the uBLAS traits system and better work with expression types
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6010&quot;&gt;#6010&lt;/a&gt; fixed linkage problems in assignment.hpp
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                updated doc
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/unordered/&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19753,7 +20009,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/utility/&quot;&gt;Utility&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/utility/&quot;&gt;Utility&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19793,7 +20049,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/variant/&quot;&gt;Variant&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/variant/&quot;&gt;Variant&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19816,11 +20072,11 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/wave/&quot;&gt;Wave&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/wave/&quot;&gt;Wave&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
-"                See the &lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/wave/ChangeLog&quot;&gt;Changelog&lt;/a&gt; for details.
+"                See the &lt;a href=&quot;http://www.boost.org/libs/wave/ChangeLog&quot;&gt;Changelog&lt;/a&gt; for details.
 "              &lt;/div&gt;
 "            &lt;/li&gt;
 "          &lt;/ul&gt;
@@ -19828,7 +20084,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/xpressive&quot;&gt;xpressive&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/xpressive&quot;&gt;xpressive&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -19844,42 +20100,6 @@
 "            &lt;li&gt;
 "              &lt;div&gt;
 "                Silence a gcc warning, fixes &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8138&quot;&gt;#8138&lt;/a&gt;
-"              &lt;/div&gt;
-"            &lt;/li&gt;
-"          &lt;/ul&gt;
-"        &lt;/div&gt;
-"      &lt;/li&gt;
-"    &lt;/ul&gt;
-"  &lt;/div&gt;
-"  &lt;div id=&quot;version_1_54_0.post_beta_changes&quot;&gt;
-"    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Post Beta Changes&lt;/span&gt;&lt;/h3&gt;
-"    &lt;p&gt;
-"      &lt;em&gt;TODO&lt;/em&gt;: Add to main release notes before final release.
-"    &lt;/p&gt;
-"    &lt;ul&gt;
-"      &lt;li&gt;
-"        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_54_0_beta1/libs/numeric/ublas&quot;&gt;uBLAS&lt;/a&gt;:&lt;/span&gt;
-"          &lt;ul&gt;
-"            &lt;li&gt;
-"              &lt;div&gt;
-"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6511&quot;&gt;#6511&lt;/a&gt; Division by scalar should use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;enable_if&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
-"              &lt;/div&gt;
-"            &lt;/li&gt;
-"            &lt;li&gt;
-"              &lt;div&gt;
-"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7297&quot;&gt;#7297&lt;/a&gt; Make the free functions 'num_columns' and 'num_rows' support
-"                the uBLAS traits system and better work with expression types
-"              &lt;/div&gt;
-"            &lt;/li&gt;
-"            &lt;li&gt;
-"              &lt;div&gt;
-"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6010&quot;&gt;#6010&lt;/a&gt; fixed linkage problems in assignment.hpp
-"              &lt;/div&gt;
-"            &lt;/li&gt;
-"            &lt;li&gt;
-"              &lt;div&gt;
-"                updated doc
 "              &lt;/div&gt;
 "            &lt;/li&gt;
 "          &lt;/ul&gt;
@@ -20103,9 +20323,156 @@
 "  &lt;/div&gt;
 "</description></item>
 -last_modified
-.1370369698.55
+=1372698602
 -quickbook
 "feed/history/boost_1_54_0.qbk
+)
+(feed/history/boost_1_55_0.qbk
+-item
+"<item><title>Version 1.55.0</title><link>http://www.boost.org/users/history/version_1_55_0.html</link><guid>http://www.boost.org/users/history/version_1_55_0.html</guid><pubDate>In Progress</pubDate><description>
+"
+"
+"  &lt;div id=&quot;version_1_55_0.new_libraries&quot;&gt;
+"    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
+"    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;em&gt;TODO&lt;/em&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ul&gt;
+"  &lt;/div&gt;
+"  &lt;div id=&quot;version_1_55_0.updated_libraries&quot;&gt;
+"    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
+"    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/multi_index/index.html&quot;&gt;Multi-index Containers&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Boost.MultiIndex has been brought to a higher level of compliance
+"                with C++11.
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;multi_index_container&lt;/span&gt;&lt;/code&gt;
+"                      is now efficiently movable.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Initializer lists supported.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Emplace functions provided.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Non-copyable elements (such as &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;unique_ptr&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;) supported. This includes
+"                      insertion of a range [&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;first&lt;/span&gt;&lt;/code&gt;,&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;last&lt;/span&gt;&lt;/code&gt;) where the iterators
+"                      point to a type that is convertible to that of the element:
+"                      no copy construction happens in the process.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Random access indices provide &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;shrink_to_fit&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;. Refer to the &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/compiler_specifics.html&quot;&gt;compiler
+"                      specifics&lt;/a&gt; section for limitations on pre-C++11 compilers.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                The following classes are deprecated:
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#member_offset&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;member_offset&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;const_mem_fun_explicit&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;mem_fun_explicit&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_equal_to&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;composite_key_result_equal_to&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_less&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;composite_key_result_less&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_greater&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;composite_key_result_greater&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_hash&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;composite_key_result_hash&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Maintenance fixes.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ul&gt;
+"  &lt;/div&gt;
+"  &lt;div id=&quot;version_1_55_0.compilers_tested&quot;&gt;
+"    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Compilers Tested&lt;/span&gt;&lt;/h3&gt;
+"    &lt;p&gt;
+"      Boost's primary test compilers are:
+"    &lt;/p&gt;
+"    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;em&gt;TODO&lt;/em&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ul&gt;
+"    &lt;p&gt;
+"      Boost's additional test compilers include:
+"    &lt;/p&gt;
+"    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;em&gt;TODO&lt;/em&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ul&gt;
+"  &lt;/div&gt;
+"  &lt;div id=&quot;version_1_55_0.acknowledgements&quot;&gt;
+"    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Acknowledgements&lt;/span&gt;&lt;/h3&gt;
+"    &lt;p&gt;
+"      &lt;em&gt;TODO&lt;/em&gt;
+"    &lt;/p&gt;
+"  &lt;/div&gt;
+"</description></item>
+-last_modified
+.1375733554.82
+-quickbook
+"feed/history/boost_1_55_0.qbk
 )
 (feed/history/unversioned.qbk
 -item
@@ -20249,6 +20616,88 @@
 .1359713311.0
 -quickbook
 "feed/news/locale_1_53_0.qbk
+)
+(feed/news/old_compilers.qbk
+-item
+"<item><title>Old compilers</title><link>http://www.boost.org/users/news/old_compilers.html</link><guid>http://www.boost.org/users/news/old_compilers.html</guid><pubDate>Mon, 5 Aug 2013 21:00:07 BST</pubDate><description>
+"
+"
+"  &lt;p&gt;
+"    I just sent an email to user list asking if anyone is using old compilers, I'll
+"    repeat it here:
+"  &lt;/p&gt;
+"  &lt;blockquote&gt;
+"    &lt;p&gt;
+"      Hello all,
+"    &lt;/p&gt;
+"    &lt;p&gt;
+"      There has been some discussion on the development list about dropping all support
+"      for old C++ compilers. This will allow us to remove a lot of workarounds and
+"      simplify the code but before doing so it's a good idea to find out if anyone
+"      is still using them. Using boost with these compilers will cause a compile
+"      error in the config library (you can work round that using a custom configuration,
+"      but it's unlikely you'll be able to get much to work). The currently proposed
+"      versions for removing support are:
+"    &lt;/p&gt;
+"    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;p&gt;
+"          Digital Mars 8.40 and earlier
+"        &lt;/p&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;p&gt;
+"          Visual C++ 7.0 and earlier
+"        &lt;/p&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;p&gt;
+"          GCC 3.2 and earlier
+"        &lt;/p&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;p&gt;
+"          Intel C++ 5.0 and earlier
+"        &lt;/p&gt;
+"      &lt;/li&gt;
+"    &lt;/ul&gt;
+"    &lt;p&gt;
+"      Which is, I think, a very cautious list. There's also a good chance that we
+"      might want to remove support for Borland C++ 5.x. Is there anyone still using
+"      those compilers?
+"    &lt;/p&gt;
+"    &lt;p&gt;
+"      Just to be clear, this doesn't mean we'll be fully supporting all compilers
+"      later than these. Old compilers such as Visual C++ 7.1 and gcc 3.4 won't have
+"      a config error and we won't deliberately remove support, but support will be
+"      patchy. Many libraries (especially new ones) don't support those compilers,
+"      and we also don't have any formal testing for them, so if a new change breaks
+"      something, it might not be noticed.
+"    &lt;/p&gt;
+"    &lt;p&gt;
+"      If you are still using compilers which are a little more recent than the ones
+"      listed above, it might still be worth mentioning in case we consider removing
+"      support for them in the future.
+"    &lt;/p&gt;
+"    &lt;p&gt;
+"      Thanks in advance for any response,
+"    &lt;/p&gt;
+"    &lt;p&gt;
+"      Daniel James
+"    &lt;/p&gt;
+"  &lt;/blockquote&gt;
+"  &lt;p&gt;
+"    If you want to reply to the request and can't email the list you can &lt;a href=&quot;mailto:daniel@calamity.org.uk&quot;&gt;send
+"    me an email&lt;/a&gt;. Let me know if it's okay to forward it to the list.
+"  &lt;/p&gt;
+"  &lt;p&gt;
+"    Thanks again.
+"  &lt;/p&gt;
+"</description></item>
+-last_modified
+.1375732807.0
+-quickbook
+"feed/news/old_compilers.qbk
 )
 (feed/news/result_of_1_52_0.qbk
 -item
