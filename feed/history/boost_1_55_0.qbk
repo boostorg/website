@@ -89,17 +89,59 @@ Release status:
     * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_hash `composite_key_result_hash`].
   * Maintenance fixes.
 
-[/
+* [phrase library..[@/libs/graph/index.html Graph]:]
+  * `void` is no longer allowed as a bundled property type (for example, in the
+    VertexProperties template parameters to graph types); it did not work
+    reliably before, but a static assertion now forbids it entirely.  Use
+    `boost::no_property` instead.
+  * Added support for `finish_edge` visitor event point in depth-first search;
+    the change should be backward-compatible with visitors that do not have
+    that member function.
+  * Disabled building of tests on Sun compiler.
+  * Multiple source vertices are supported in non-named-parameter versions of
+    `breadth_first_visit`, `breadth_first_search`, `dijkstra_shortest_paths`,
+    and `dijkstra_shortest_paths_no_init`.  This feature is not yet documented;
+    to use it, replace the single parameter for the source vertex in each of
+    these functions by two input iterators of the same type containing the
+    source vertices to use.
+  * Added Hawick circuits algorithm; contributed by Louis Dionne.
+  * Added edge coloring algorithm; contributed by Maciej Piechotka.
+  * Added min-cost max-flow algorithm; contributed by Piotr Wygocki.
+  * Bugs and feature requests from Trac fixed: [ticket 5269], [ticket 8317],
+    [ticket 8433], [ticket 8791], [ticket 8877], [ticket 8986], [ticket 9012],
+    [ticket 9080].
 
-* /TODO/: [phrase library..[@/libs/spirit/ Spirit]:]
-  * Spirit Vx.x, see the
-    '[@/doc/libs/1_xx_x/libs/spirit/doc/html/spirit/what_s_new/spirit_x_x.html What's New]'
-    section for details.
+* [phrase library..[@/libs/property_map/index.html Boost.PropertyMap]:]
+  * dynamic_properties objects can now be built by non-destructively chaining
+    `.property(name, pm)` calls.  Example:
+    ```
+    boost::dynamic_properties()
+      .property("color", color_map)
+      .property("pos", position_map)
+    ```
+  * The use of raw pointers as property maps is deprecated; it often failed on
+    Visual Studio in the past.  This usage has been removed from all tests and
+    examples in Boost.Graph.  The replacement to use for vertex properties in
+    graphs (the most common use for this feature) is:
+    ```
+    boost::make_iterator_property_map(
+      <pointer or container .begin() iterator>,
+      get(boost::vertex_index, <graph object>))
+    ```
+    (Note: the lack of namespace qualification on get() in this code is
+    necessary for generic code).  Outside a graph context, the closest
+    equivalent is:
+    ```
+    boost::make_iterator_property_map(
+      <pointer>,
+      boost::typed_identity_property_map<std::size_t>())
+    ```
+    There are commented-out static assertions on lines 151 and 159 of
+    `<boost/property_map/property_map.hpp>` that can be un-commented to find
+    deprecated uses of pointers in user code.
 
-* /TODO/: [phrase library..[@/libs/wave/ Wave]:]
+* [phrase library..[@/libs/wave/ Wave]:]
   * See the [@/libs/wave/ChangeLog Changelog] for details.
-
-]
 
 [endsect]
 

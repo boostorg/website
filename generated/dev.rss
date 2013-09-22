@@ -156,6 +156,119 @@
           &lt;/ul&gt;
         &lt;/div&gt;
       &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/graph/index.html&quot;&gt;Graph&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;&lt;/code&gt; is no longer allowed
+                as a bundled property type (for example, in the VertexProperties
+                template parameters to graph types); it did not work reliably before,
+                but a static assertion now forbids it entirely. Use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;no_property&lt;/span&gt;&lt;/code&gt; instead.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;finish_edge&lt;/span&gt;&lt;/code&gt;
+                visitor event point in depth-first search; the change should be backward-compatible
+                with visitors that do not have that member function.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Disabled building of tests on Sun compiler.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Multiple source vertices are supported in non-named-parameter versions
+                of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;breadth_first_visit&lt;/span&gt;&lt;/code&gt;,
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;breadth_first_search&lt;/span&gt;&lt;/code&gt;,
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;dijkstra_shortest_paths&lt;/span&gt;&lt;/code&gt;,
+                and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;dijkstra_shortest_paths_no_init&lt;/span&gt;&lt;/code&gt;.
+                This feature is not yet documented; to use it, replace the single
+                parameter for the source vertex in each of these functions by two
+                input iterators of the same type containing the source vertices to
+                use.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added Hawick circuits algorithm; contributed by Louis Dionne.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added edge coloring algorithm; contributed by Maciej Piechotka.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added min-cost max-flow algorithm; contributed by Piotr Wygocki.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Bugs and feature requests from Trac fixed: &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5269&quot;&gt;#5269&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8317&quot;&gt;#8317&lt;/a&gt;,
+                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8433&quot;&gt;#8433&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8791&quot;&gt;#8791&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8877&quot;&gt;#8877&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8986&quot;&gt;#8986&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9012&quot;&gt;#9012&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9080&quot;&gt;#9080&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/property_map/index.html&quot;&gt;Boost.PropertyMap&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                dynamic_properties objects can now be built by non-destructively
+                chaining &lt;code&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;property&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;pm&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;&lt;/code&gt; calls. Example:
+&lt;pre&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;dynamic_properties&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;property&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;string&quot;&gt;&amp;quot;color&amp;quot;&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;color_map&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;property&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;string&quot;&gt;&amp;quot;pos&amp;quot;&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;position_map&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                The use of raw pointers as property maps is deprecated; it often
+                failed on Visual Studio in the past. This usage has been removed
+                from all tests and examples in Boost.Graph. The replacement to use
+                for vertex properties in graphs (the most common use for this feature)
+                is:
+&lt;pre&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;make_iterator_property_map&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;pointer&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;container&lt;/span&gt; &lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;iterator&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;,&lt;/span&gt;
+  &lt;span class=&quot;identifier&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;vertex_index&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;graph&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;))&lt;/span&gt;
+&lt;/pre&gt;
+                (Note: the lack of namespace qualification on get() in this code
+                is necessary for generic code). Outside a graph context, the closest
+                equivalent is:
+&lt;pre&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;make_iterator_property_map&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;pointer&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;,&lt;/span&gt;
+  &lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;typed_identity_property_map&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;size_t&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;())&lt;/span&gt;
+&lt;/pre&gt;
+                There are commented-out static assertions on lines 151 and 159 of
+                &lt;code&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;property_map&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;property_map&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt; that can be un-commented to find
+                deprecated uses of pointers in user code.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/wave/&quot;&gt;Wave&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                See the &lt;a href=&quot;http://www.boost.org/libs/wave/ChangeLog&quot;&gt;Changelog&lt;/a&gt; for details.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/div&gt;
   &lt;div id=&quot;version_1_55_0.compilers_tested&quot;&gt;

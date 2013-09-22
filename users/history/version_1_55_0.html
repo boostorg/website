@@ -192,6 +192,119 @@
           </ul>
         </div>
       </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/graph/index.html">Graph</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <code><span class="keyword">void</span></code> is no longer allowed
+                as a bundled property type (for example, in the VertexProperties
+                template parameters to graph types); it did not work reliably before,
+                but a static assertion now forbids it entirely. Use <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">no_property</span></code> instead.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added support for <code><span class="identifier">finish_edge</span></code>
+                visitor event point in depth-first search; the change should be backward-compatible
+                with visitors that do not have that member function.
+              </div>
+            </li>
+            <li>
+              <div>
+                Disabled building of tests on Sun compiler.
+              </div>
+            </li>
+            <li>
+              <div>
+                Multiple source vertices are supported in non-named-parameter versions
+                of <code><span class="identifier">breadth_first_visit</span></code>,
+                <code><span class="identifier">breadth_first_search</span></code>,
+                <code><span class="identifier">dijkstra_shortest_paths</span></code>,
+                and <code><span class="identifier">dijkstra_shortest_paths_no_init</span></code>.
+                This feature is not yet documented; to use it, replace the single
+                parameter for the source vertex in each of these functions by two
+                input iterators of the same type containing the source vertices to
+                use.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added Hawick circuits algorithm; contributed by Louis Dionne.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added edge coloring algorithm; contributed by Maciej Piechotka.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added min-cost max-flow algorithm; contributed by Piotr Wygocki.
+              </div>
+            </li>
+            <li>
+              <div>
+                Bugs and feature requests from Trac fixed: <a href="https://svn.boost.org/trac/boost/ticket/5269">#5269</a>, <a href="https://svn.boost.org/trac/boost/ticket/8317">#8317</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8433">#8433</a>, <a href="https://svn.boost.org/trac/boost/ticket/8791">#8791</a>, <a href="https://svn.boost.org/trac/boost/ticket/8877">#8877</a>, <a href="https://svn.boost.org/trac/boost/ticket/8986">#8986</a>, <a href="https://svn.boost.org/trac/boost/ticket/9012">#9012</a>, <a href="https://svn.boost.org/trac/boost/ticket/9080">#9080</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/property_map/index.html">Boost.PropertyMap</a>:</span>
+          <ul>
+            <li>
+              <div>
+                dynamic_properties objects can now be built by non-destructively
+                chaining <code><span class="special">.</span><span class="identifier">property</span><span class="special">(</span><span class="identifier">name</span><span class="special">,</span> <span class="identifier">pm</span><span class="special">)</span></code> calls. Example:
+<pre><span class="identifier">boost</span><span class="special">::</span><span class="identifier">dynamic_properties</span><span class="special">()</span>
+  <span class="special">.</span><span class="identifier">property</span><span class="special">(</span><span class="string">&quot;color&quot;</span><span class="special">,</span> <span class="identifier">color_map</span><span class="special">)</span>
+  <span class="special">.</span><span class="identifier">property</span><span class="special">(</span><span class="string">&quot;pos&quot;</span><span class="special">,</span> <span class="identifier">position_map</span><span class="special">)</span>
+</pre>
+              </div>
+            </li>
+            <li>
+              <div>
+                The use of raw pointers as property maps is deprecated; it often
+                failed on Visual Studio in the past. This usage has been removed
+                from all tests and examples in Boost.Graph. The replacement to use
+                for vertex properties in graphs (the most common use for this feature)
+                is:
+<pre><span class="identifier">boost</span><span class="special">::</span><span class="identifier">make_iterator_property_map</span><span class="special">(</span>
+  <span class="special">&lt;</span><span class="identifier">pointer</span> <span class="keyword">or</span> <span class="identifier">container</span> <span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="identifier">iterator</span><span class="special">&gt;,</span>
+  <span class="identifier">get</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">vertex_index</span><span class="special">,</span> <span class="special">&lt;</span><span class="identifier">graph</span> <span class="identifier">object</span><span class="special">&gt;))</span>
+</pre>
+                (Note: the lack of namespace qualification on get() in this code
+                is necessary for generic code). Outside a graph context, the closest
+                equivalent is:
+<pre><span class="identifier">boost</span><span class="special">::</span><span class="identifier">make_iterator_property_map</span><span class="special">(</span>
+  <span class="special">&lt;</span><span class="identifier">pointer</span><span class="special">&gt;,</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">typed_identity_property_map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;())</span>
+</pre>
+                There are commented-out static assertions on lines 151 and 159 of
+                <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">property_map</span><span class="special">/</span><span class="identifier">property_map</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> that can be un-commented to find
+                deprecated uses of pointers in user code.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/wave/">Wave</a>:</span>
+          <ul>
+            <li>
+              <div>
+                See the <a href="/libs/wave/ChangeLog">Changelog</a> for details.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
     </ul>
   </div>
   <div id="version_1_55_0.compilers_tested">
