@@ -1,9 +1,12 @@
 [article Version 1.55.0
     [quickbook 1.5]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: MultiIndex]
+    [purpose
+        New Libraries: Predef.
+        Updated Libraries: Context, Coroutine, Graph, Log, MultiIndex, PropertyMap, Wave.
+    ]
     [authors [Dawes, Beman]]
-    [last-revision ]
+    [last-revision $Date: $]
 ]
 
 [include ext.qbk]
@@ -67,28 +70,6 @@ Release status:
   * [@http://svn.boost.org/trac/boost/ticket/8782 #8782] no best alternative
   * [@http://svn.boost.org/trac/boost/ticket/8801 #8801] auto-linking
 
-* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
-  * Boost.MultiIndex has been brought to a higher level of compliance with C++11. 
-    * `multi_index_container` is now efficiently movable.
-    * Initializer lists supported.
-    * Emplace functions provided.
-    * Non-copyable elements (such as `std::unique_ptr<T>`) supported. This includes
-      insertion of a range [`first`,`last`) where the iterators point to a type that
-      is convertible to that of the element: no copy construction happens in the
-      process.
-    * Random access indices provide `shrink_to_fit()`.
-    Refer to the [@/libs/multi_index/doc/compiler_specifics.html compiler specifics]
-    section for limitations on pre-C++11 compilers. 
-  * The following classes are deprecated:
-    * [@/libs/multi_index/doc/reference/key_extraction.html#member_offset `member_offset`],
-    * [@/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit `const_mem_fun_explicit`],
-    * [@/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit `mem_fun_explicit`],
-    * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_equal_to `composite_key_result_equal_to`],
-    * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_less `composite_key_result_less`],
-    * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_greater `composite_key_result_greater`],
-    * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_hash `composite_key_result_hash`].
-  * Maintenance fixes.
-
 * [phrase library..[@/libs/graph/index.html Graph]:]
   * `void` is no longer allowed as a bundled property type (for example, in the
     VertexProperties template parameters to graph types); it did not work
@@ -111,7 +92,41 @@ Release status:
     [ticket 8433], [ticket 8791], [ticket 8877], [ticket 8986], [ticket 9012],
     [ticket 9080].
 
-* [phrase library..[@/libs/property_map/index.html Boost.PropertyMap]:]
+* [phrase library..[@/libs/log/ Log]:]
+  * General changes:
+    * Added a new configuration macro `BOOST_LOG_WITHOUT_DEFAULT_FACTORIES`. By defining this macro the user can disable compilation of the default filter and formatter factories used by settings parsers. This can substantially reduce binary sizes while still retaining support for settings parsers.
+    * Rewritten some of the parsers to reduce the compiled binary size. The rewritten parsers are more robust in detecting ambiguous and incorrect input.
+    * The following headers are deprecated and moved to other libraries: `boost/log/utility/intrusive_ref_counter.hpp`, `boost/log/utility/explicit_operator_bool.hpp`, `boost/log/utility/empty_deleter.hpp`. These headers will be removed in future releases.
+  * Bug fixes:
+    * Fixed `timer` attribute generating incorrect time readings on Windows on heavy thread contention when `QueryPerformanceCounter` API was used.
+    * Fixed a bug in the filter parser that prevented using parsed filters with some attributes.
+    * Fixed thread id formatting discrepancies between the default sink and formatters.
+    * Closed tickets: [ticket 8815], [ticket 8819], [ticket 8915], [ticket 8917], [ticket 9139], [ticket 9140], [ticket 9153], [ticket 9155].
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
+* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+  * Boost.MultiIndex has been brought to a higher level of compliance with C++11. 
+    * `multi_index_container` is now efficiently movable.
+    * Initializer lists supported.
+    * Emplace functions provided.
+    * Non-copyable elements (such as `std::unique_ptr<T>`) supported. This includes
+      insertion of a range [`first`,`last`) where the iterators point to a type that
+      is convertible to that of the element: no copy construction happens in the
+      process.
+    * Random access indices provide `shrink_to_fit()`.
+    Refer to the [@/libs/multi_index/doc/compiler_specifics.html compiler specifics]
+    section for limitations on pre-C++11 compilers. 
+  * The following classes are deprecated:
+    * [@/libs/multi_index/doc/reference/key_extraction.html#member_offset `member_offset`],
+    * [@/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit `const_mem_fun_explicit`],
+    * [@/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit `mem_fun_explicit`],
+    * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_equal_to `composite_key_result_equal_to`],
+    * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_less `composite_key_result_less`],
+    * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_greater `composite_key_result_greater`],
+    * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_hash `composite_key_result_hash`].
+  * Maintenance fixes.
+
+* [phrase library..[@/libs/property_map/index.html PropertyMap]:]
   * dynamic_properties objects can now be built by non-destructively chaining
     `.property(name, pm)` calls.  Example:
     ```
@@ -162,4 +177,3 @@ Boost's additional test compilers include:
 /TODO/
 
 [endsect]
-
