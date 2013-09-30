@@ -62,6 +62,17 @@ Release status:
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/container/ Container]:]
+
+*  Implemented [link container.main_features.scary_iterators SCARY iterators].
+  *  Fixed bugs [@https://svn.boost.org/trac/boost/ticket/8269 #8269],
+                [@https://svn.boost.org/trac/boost/ticket/8473 #8473],
+                [@https://svn.boost.org/trac/boost/ticket/8892 #8892],
+                [@https://svn.boost.org/trac/boost/ticket/9009 #9009],
+                [@https://svn.boost.org/trac/boost/ticket/9064 #9064],
+                [@https://svn.boost.org/trac/boost/ticket/9092 #9092],
+                [@https://svn.boost.org/trac/boost/ticket/9108 #9108].
+
 * [phrase library..[@/libs/context/ Context]:]
   * [@http://svn.boost.org/trac/boost/ticket/8650 #8650] SSE2 intrinsics
 
@@ -92,6 +103,27 @@ Release status:
     [ticket 8433], [ticket 8791], [ticket 8877], [ticket 8986], [ticket 9012],
     [ticket 9080].
 
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  *  Fixed bugs [@https://svn.boost.org/trac/boost/ticket/7156 #7156],
+                [@https://svn.boost.org/trac/boost/ticket/7164 #7164],
+                [@https://svn.boost.org/trac/boost/ticket/8277 #8277],
+                [@https://svn.boost.org/trac/boost/ticket/8976 #8976],
+                [@https://svn.boost.org/trac/boost/ticket/9065 #9065],
+                [@https://svn.boost.org/trac/boost/ticket/9073 #9073],
+                [@https://svn.boost.org/trac/boost/ticket/8277 #9908].
+
+* [phrase library..[@/libs/intrusive/ Intrusive]:]
+  *  [*Source breaking]: Deprecated `xxx_dont_splay` functions from splay containers.
+     Deprecated `splay_set_hook` from splay containers, use `bs_set_hook` instead.
+     Both will be removed in Boost 1.56.
+  *  [*ABI breaking]: Hash containers' end iterator was implemented pointing to one-past the end of the bucket array
+     (see [@https://svn.boost.org/trac/boost/ticket/8698 #8698]) causing severe bugs when values to be inserted
+     where allocated next to the bucket array. End iterator implementation was changed to point to the beginning
+     of the bucket array.
+  *  Big refactoring in order to reduce template and debug symbol bloat. Test object files have been slashed
+     to half in MSVC compilers in Debug mode. Toolchains without Identical COMDAT Folding (ICF) should notice size improvements.
+  *  Implemented [link intrusive.scary_iterators SCARY iterators].
+
 * [phrase library..[@/libs/log/ Log]:]
   * General changes:
     * Added a new configuration macro `BOOST_LOG_WITHOUT_DEFAULT_FACTORIES`. By defining this macro the user can disable compilation of the default filter and formatter factories used by settings parsers. This can substantially reduce binary sizes while still retaining support for settings parsers.
@@ -103,6 +135,13 @@ Release status:
     * Fixed thread id formatting discrepancies between the default sink and formatters.
     * Closed tickets: [ticket 8815], [ticket 8819], [ticket 8915], [ticket 8917], [ticket 9139], [ticket 9140], [ticket 9153], [ticket 9155].
   * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
+* [phrase library..[@/libs/move/ Move]:]
+  *  Fixed bugs  [@https://svn.boost.org/trac/boost/ticket/7952 #7952],
+                 [@https://svn.boost.org/trac/boost/ticket/8764 #8764],
+                 [@https://svn.boost.org/trac/boost/ticket/8765 #8765],
+                 [@https://svn.boost.org/trac/boost/ticket/8842 #8842],
+                 [@https://svn.boost.org/trac/boost/ticket/8979 #8979].
 
 * [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
   * Boost.MultiIndex has been brought to a higher level of compliance with C++11. 
