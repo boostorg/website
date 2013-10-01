@@ -65,6 +65,219 @@
     <ul>
       <li>
         <div>
+          <span class="library"><a href="/libs/accumulators/">Accumulators</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/7915">#7915</a> Fix silly typos.
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/8850">#8850</a> Fix MSVC warnings.
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/8262">#8262</a> Rename <code><span class="identifier">average</span></code>
+                to <code><span class="identifier">fdiv</span></code>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Implemented a limited port to Windows Runtime. This support requires
+                that the language extensions be enabled. Due to the restricted facilities
+                exposed by the Windows Runtime API, the port also comes with the
+                following caveats:
+                <ul>
+                  <li>
+                    <div>
+                      The core facilities such as the <code><span class="identifier">io_service</span></code>,
+                      <code><span class="identifier">strand</span></code>, buffers,
+                      composed operations, timers, etc., should all work as normal.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      For sockets, only client-side TCP is supported.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Explicit binding of a client-side TCP socket is not supported.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      The <code><span class="identifier">cancel</span><span class="special">()</span></code> function is not supported
+                      for sockets. Asynchronous operations may only be cancelled
+                      by closing the socket.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Operations that use <code><span class="identifier">null_buffers</span></code>
+                      are not supported.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Only <code><span class="identifier">tcp</span><span class="special">::</span><span class="identifier">no_delay</span></code> and <code><span class="identifier">socket_base</span><span class="special">::</span><span class="identifier">keep_alive</span></code> options are supported.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Resolvers do not support service names, only numbers. I.e.
+                      you must use &quot;80&quot; rather than &quot;http&quot;.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Most resolver query flags have no effect.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a regression (introduced in Boost 1.54) where, on some platforms,
+                errors from <code><span class="identifier">async_connect</span></code>
+                were not correctly propagated through to the completion handler (<a href="https://svn.boost.org/trac/boost/ticket/8795">#8795</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a Windows-specific regression (introduced in Boost 1.54) that
+                occurs when multiple threads are running an <code><span class="identifier">io_service</span></code>.
+                When the bug occurs, the result of an asynchronous operation (error
+                and bytes tranferred) is incorrectly discarded and zero values used
+                instead. For TCP sockets this results in spurious end-of-file notifications
+                (<a href="https://svn.boost.org/trac/boost/ticket/8933">#8933</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a bug in handler tracking, where it was not correctly printing
+                out some handler IDs (<a href="https://svn.boost.org/trac/boost/ticket/8808">#8808</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed the comparison used to test for successful synchronous accept
+                operations so that it works correctly with unsigned socket descriptors
+                (<a href="https://svn.boost.org/trac/boost/ticket/8752">#8752</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Ensured the signal number is correctly passed to the completion handler
+                when starting an <code><span class="identifier">async_wait</span></code>
+                on a signal that is already raised (<a href="https://svn.boost.org/trac/boost/ticket/8738">#8738</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Suppressed a g++ 4.8+ warning about unused typedefs (<a href="https://svn.boost.org/trac/boost/ticket/8980">#8980</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Enabled the move optimisation for handlers that use the default invocation
+                hook (<a href="https://svn.boost.org/trac/boost/ticket/8624">#8624</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Clarified that programs must not issue overlapping <code><span class="identifier">async_write_at</span></code> operations (<a href="https://svn.boost.org/trac/boost/ticket/8669">#8669</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed the Windows <code><span class="identifier">HANDLE</span></code>
+                backend to treat <code><span class="identifier">ERROR_MORE_DATA</span></code>
+                as a non-fatal error when returned by <code><span class="identifier">GetOverlappedResult</span></code>
+                for a synchronous read (<a href="https://svn.boost.org/trac/boost/ticket/8722">#8722</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Visual C++ language extensions use <code><span class="identifier">generic</span></code>
+                as a keyword. Added a workaround that renames the namespace to <code><span class="identifier">cpp_generic</span></code> when those language
+                extensions are in effect.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed some asynchronous operations that missed out on getting <code><span class="identifier">async_result</span></code> support in Boost 1.54.
+                In particular, the buffered stream templates have been updated so
+                that they adhere to current handler patterns (<a href="https://svn.boost.org/trac/boost/ticket/9000">#9000</a>, <a href="https://svn.boost.org/trac/boost/ticket/9001">#9001</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Enabled move support for Microsoft Visual Studio 2012 (<a href="https://svn.boost.org/trac/boost/ticket/8959">#8959</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">use_future</span></code>
+                support for Microsoft Visual Studio 2012.
+              </div>
+            </li>
+            <li>
+              <div>
+                Removed a use of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">min</span></code>
+                in the Windows IOCP backend to avoid a dependency on the <code><span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span></code> header (<a href="https://svn.boost.org/trac/boost/ticket/8758">#8758</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Eliminated some unnecessary handler copies.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed various minor and cosmetic issues in code and documentation
+                (including <a href="https://svn.boost.org/trac/boost/ticket/8347">#8347</a>, <a href="https://svn.boost.org/trac/boost/ticket/8950">#8950</a>, <a href="https://svn.boost.org/trac/boost/ticket/8953">#8953</a>, <a href="https://svn.boost.org/trac/boost/ticket/8965">#8965</a>, <a href="https://svn.boost.org/trac/boost/ticket/8997">#8997</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/container/">Container</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Implemented <span class="link">SCARY
+                iterators</span>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed bugs <a href="https://svn.boost.org/trac/boost/ticket/8269">#8269</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8473">#8473</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8892">#8892</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/9009">#9009</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/9064">#9064</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/9092">#9092</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/9108">#9108</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/libs/context/">Context</a>:</span>
           <ul>
             <li>
@@ -95,6 +308,229 @@
               <div>
                 <a href="http://svn.boost.org/trac/boost/ticket/8801">#8801</a>
                 auto-linking
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/fusion/">Fusion</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/8759">#8759</a> specialization of <code><span class="identifier">convert_impl</span></code>
+                for <code><span class="identifier">map_tag</span></code>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/graph/index.html">Graph</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <code><span class="keyword">void</span></code> is no longer allowed
+                as a bundled property type (for example, in the VertexProperties
+                template parameters to graph types); it did not work reliably before,
+                but a static assertion now forbids it entirely. Use <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">no_property</span></code> instead.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added support for <code><span class="identifier">finish_edge</span></code>
+                visitor event point in depth-first search; the change should be backward-compatible
+                with visitors that do not have that member function.
+              </div>
+            </li>
+            <li>
+              <div>
+                Disabled building of tests on Sun compiler.
+              </div>
+            </li>
+            <li>
+              <div>
+                Multiple source vertices are supported in non-named-parameter versions
+                of <code><span class="identifier">breadth_first_visit</span></code>,
+                <code><span class="identifier">breadth_first_search</span></code>,
+                <code><span class="identifier">dijkstra_shortest_paths</span></code>,
+                and <code><span class="identifier">dijkstra_shortest_paths_no_init</span></code>.
+                This feature is not yet documented; to use it, replace the single
+                parameter for the source vertex in each of these functions by two
+                input iterators of the same type containing the source vertices to
+                use.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added Hawick circuits algorithm; contributed by Louis Dionne.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added edge coloring algorithm; contributed by Maciej Piechotka.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added min-cost max-flow algorithm; contributed by Piotr Wygocki.
+              </div>
+            </li>
+            <li>
+              <div>
+                Bugs and feature requests from Trac fixed: <a href="https://svn.boost.org/trac/boost/ticket/5269">#5269</a>, <a href="https://svn.boost.org/trac/boost/ticket/8317">#8317</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8433">#8433</a>, <a href="https://svn.boost.org/trac/boost/ticket/8791">#8791</a>, <a href="https://svn.boost.org/trac/boost/ticket/8877">#8877</a>, <a href="https://svn.boost.org/trac/boost/ticket/8986">#8986</a>, <a href="https://svn.boost.org/trac/boost/ticket/9012">#9012</a>, <a href="https://svn.boost.org/trac/boost/ticket/9080">#9080</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/interprocess/">Interprocess</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed bugs <a href="https://svn.boost.org/trac/boost/ticket/7156">#7156</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/7164">#7164</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8277">#8277</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8976">#8976</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/9065">#9065</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/9073">#9073</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8277">#9908</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/intrusive/">Intrusive</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <strong>Source breaking</strong>: Deprecated <code><span class="identifier">xxx_dont_splay</span></code> functions from splay
+                containers. Deprecated <code><span class="identifier">splay_set_hook</span></code>
+                from splay containers, use <code><span class="identifier">bs_set_hook</span></code>
+                instead. Both will be removed in Boost 1.56.
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>ABI breaking</strong>: Hash containers' end
+                iterator was implemented pointing to one-past the end of the bucket
+                array (see <a href="https://svn.boost.org/trac/boost/ticket/8698">#8698</a>)
+                causing severe bugs when values to be inserted where allocated next
+                to the bucket array. End iterator implementation was changed to point
+                to the beginning of the bucket array.
+              </div>
+            </li>
+            <li>
+              <div>
+                Big refactoring in order to reduce template and debug symbol bloat.
+                Test object files have been slashed to half in MSVC compilers in
+                Debug mode. Toolchains without Identical COMDAT Folding (ICF) should
+                notice size improvements.
+              </div>
+            </li>
+            <li>
+              <div>
+                Implemented <span class="link">SCARY iterators</span>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/log/">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                General changes:
+                <ul>
+                  <li>
+                    <div>
+                      Added a new configuration macro <code><span class="identifier">BOOST_LOG_WITHOUT_DEFAULT_FACTORIES</span></code>.
+                      By defining this macro the user can disable compilation of
+                      the default filter and formatter factories used by settings
+                      parsers. This can substantially reduce binary sizes while still
+                      retaining support for settings parsers.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Rewritten some of the parsers to reduce the compiled binary
+                      size. The rewritten parsers are more robust in detecting ambiguous
+                      and incorrect input.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      The following headers are deprecated: <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">log</span><span class="special">/</span><span class="identifier">utility</span><span class="special">/</span><span class="identifier">intrusive_ref_counter</span><span class="special">.</span><span class="identifier">hpp</span></code>,
+                      <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">log</span><span class="special">/</span><span class="identifier">utility</span><span class="special">/</span><span class="identifier">explicit_operator_bool</span><span class="special">.</span><span class="identifier">hpp</span></code>, <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">log</span><span class="special">/</span><span class="identifier">utility</span><span class="special">/</span><span class="identifier">empty_deleter</span><span class="special">.</span><span class="identifier">hpp</span></code>.
+                      These headers will be removed in future releases. The contents
+                      of these headers were moved to other libraries.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Bug fixes:
+                <ul>
+                  <li>
+                    <div>
+                      Fixed <code><span class="identifier">timer</span></code>
+                      attribute generating incorrect time readings on Windows on
+                      heavy thread contention when <code><span class="identifier">QueryPerformanceCounter</span></code>
+                      API was used.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed a bug in the filter parser that prevented using parsed
+                      filters with some attributes.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed thread id formatting discrepancies between the default
+                      sink and formatters.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Closed tickets: <a href="https://svn.boost.org/trac/boost/ticket/8815">#8815</a>, <a href="https://svn.boost.org/trac/boost/ticket/8819">#8819</a>, <a href="https://svn.boost.org/trac/boost/ticket/8915">#8915</a>, <a href="https://svn.boost.org/trac/boost/ticket/8917">#8917</a>,
+                      <a href="https://svn.boost.org/trac/boost/ticket/9139">#9139</a>, <a href="https://svn.boost.org/trac/boost/ticket/9140">#9140</a>, <a href="https://svn.boost.org/trac/boost/ticket/9153">#9153</a>, <a href="https://svn.boost.org/trac/boost/ticket/9155">#9155</a>.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                See <a href="/libs/log/doc/html/log/changelog.html">changelog</a>
+                for more details.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/move/">Move</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed bugs <a href="https://svn.boost.org/trac/boost/ticket/7952">#7952</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8764">#8764</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8765">#8765</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8842">#8842</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/8979">#8979</a>.
               </div>
             </li>
           </ul>
@@ -194,60 +630,12 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/libs/graph/index.html">Graph</a>:</span>
+          <span class="library"><a href="/libs/phoenix/">Phoenix</a>:</span>
           <ul>
             <li>
               <div>
-                <code><span class="keyword">void</span></code> is no longer allowed
-                as a bundled property type (for example, in the VertexProperties
-                template parameters to graph types); it did not work reliably before,
-                but a static assertion now forbids it entirely. Use <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">no_property</span></code> instead.
-              </div>
-            </li>
-            <li>
-              <div>
-                Added support for <code><span class="identifier">finish_edge</span></code>
-                visitor event point in depth-first search; the change should be backward-compatible
-                with visitors that do not have that member function.
-              </div>
-            </li>
-            <li>
-              <div>
-                Disabled building of tests on Sun compiler.
-              </div>
-            </li>
-            <li>
-              <div>
-                Multiple source vertices are supported in non-named-parameter versions
-                of <code><span class="identifier">breadth_first_visit</span></code>,
-                <code><span class="identifier">breadth_first_search</span></code>,
-                <code><span class="identifier">dijkstra_shortest_paths</span></code>,
-                and <code><span class="identifier">dijkstra_shortest_paths_no_init</span></code>.
-                This feature is not yet documented; to use it, replace the single
-                parameter for the source vertex in each of these functions by two
-                input iterators of the same type containing the source vertices to
-                use.
-              </div>
-            </li>
-            <li>
-              <div>
-                Added Hawick circuits algorithm; contributed by Louis Dionne.
-              </div>
-            </li>
-            <li>
-              <div>
-                Added edge coloring algorithm; contributed by Maciej Piechotka.
-              </div>
-            </li>
-            <li>
-              <div>
-                Added min-cost max-flow algorithm; contributed by Piotr Wygocki.
-              </div>
-            </li>
-            <li>
-              <div>
-                Bugs and feature requests from Trac fixed: <a href="https://svn.boost.org/trac/boost/ticket/5269">#5269</a>, <a href="https://svn.boost.org/trac/boost/ticket/8317">#8317</a>,
-                <a href="https://svn.boost.org/trac/boost/ticket/8433">#8433</a>, <a href="https://svn.boost.org/trac/boost/ticket/8791">#8791</a>, <a href="https://svn.boost.org/trac/boost/ticket/8877">#8877</a>, <a href="https://svn.boost.org/trac/boost/ticket/8986">#8986</a>, <a href="https://svn.boost.org/trac/boost/ticket/9012">#9012</a>, <a href="https://svn.boost.org/trac/boost/ticket/9080">#9080</a>.
+                <a href="https://svn.boost.org/trac/boost/ticket/9049">#9049</a> <code><span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">function</span></code>
+                constructor is constexpr.
               </div>
             </li>
           </ul>
@@ -255,7 +643,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/libs/property_map/index.html">Boost.PropertyMap</a>:</span>
+          <span class="library"><a href="/libs/property_map/index.html">PropertyMap</a>:</span>
           <ul>
             <li>
               <div>
@@ -300,6 +688,34 @@
             <li>
               <div>
                 See the <a href="/libs/wave/ChangeLog">Changelog</a> for details.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/xpressive">xpressive</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/8843">#8843</a> throw instead of assert at incomplete charset
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/8880">#8880</a> remove unused local typedef
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/8882">#8882</a> use RAII instead of try/catch in sequence_stack.hpp
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/8474">#8474</a> make xpressive play nice with clang's -Wimplicit-fallthrough
+                diagnostic
               </div>
             </li>
           </ul>

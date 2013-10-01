@@ -20351,6 +20351,219 @@
 "    &lt;ul&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/accumulators/&quot;&gt;Accumulators&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7915&quot;&gt;#7915&lt;/a&gt; Fix silly typos.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8850&quot;&gt;#8850&lt;/a&gt; Fix MSVC warnings.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8262&quot;&gt;#8262&lt;/a&gt; Rename &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;average&lt;/span&gt;&lt;/code&gt;
+"                to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;fdiv&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/asio/&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Implemented a limited port to Windows Runtime. This support requires
+"                that the language extensions be enabled. Due to the restricted facilities
+"                exposed by the Windows Runtime API, the port also comes with the
+"                following caveats:
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      The core facilities such as the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_service&lt;/span&gt;&lt;/code&gt;,
+"                      &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;strand&lt;/span&gt;&lt;/code&gt;, buffers,
+"                      composed operations, timers, etc., should all work as normal.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      For sockets, only client-side TCP is supported.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Explicit binding of a client-side TCP socket is not supported.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      The &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;cancel&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; function is not supported
+"                      for sockets. Asynchronous operations may only be cancelled
+"                      by closing the socket.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Operations that use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;null_buffers&lt;/span&gt;&lt;/code&gt;
+"                      are not supported.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Only &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;tcp&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;no_delay&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;socket_base&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;keep_alive&lt;/span&gt;&lt;/code&gt; options are supported.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Resolvers do not support service names, only numbers. I.e.
+"                      you must use &amp;quot;80&amp;quot; rather than &amp;quot;http&amp;quot;.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Most resolver query flags have no effect.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed a regression (introduced in Boost 1.54) where, on some platforms,
+"                errors from &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;async_connect&lt;/span&gt;&lt;/code&gt;
+"                were not correctly propagated through to the completion handler (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8795&quot;&gt;#8795&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed a Windows-specific regression (introduced in Boost 1.54) that
+"                occurs when multiple threads are running an &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_service&lt;/span&gt;&lt;/code&gt;.
+"                When the bug occurs, the result of an asynchronous operation (error
+"                and bytes tranferred) is incorrectly discarded and zero values used
+"                instead. For TCP sockets this results in spurious end-of-file notifications
+"                (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8933&quot;&gt;#8933&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed a bug in handler tracking, where it was not correctly printing
+"                out some handler IDs (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8808&quot;&gt;#8808&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed the comparison used to test for successful synchronous accept
+"                operations so that it works correctly with unsigned socket descriptors
+"                (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8752&quot;&gt;#8752&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Ensured the signal number is correctly passed to the completion handler
+"                when starting an &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;async_wait&lt;/span&gt;&lt;/code&gt;
+"                on a signal that is already raised (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8738&quot;&gt;#8738&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Suppressed a g++ 4.8+ warning about unused typedefs (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8980&quot;&gt;#8980&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Enabled the move optimisation for handlers that use the default invocation
+"                hook (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8624&quot;&gt;#8624&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Clarified that programs must not issue overlapping &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;async_write_at&lt;/span&gt;&lt;/code&gt; operations (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8669&quot;&gt;#8669&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Changed the Windows &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;HANDLE&lt;/span&gt;&lt;/code&gt;
+"                backend to treat &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ERROR_MORE_DATA&lt;/span&gt;&lt;/code&gt;
+"                as a non-fatal error when returned by &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;GetOverlappedResult&lt;/span&gt;&lt;/code&gt;
+"                for a synchronous read (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8722&quot;&gt;#8722&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Visual C++ language extensions use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;generic&lt;/span&gt;&lt;/code&gt;
+"                as a keyword. Added a workaround that renames the namespace to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;cpp_generic&lt;/span&gt;&lt;/code&gt; when those language
+"                extensions are in effect.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed some asynchronous operations that missed out on getting &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;async_result&lt;/span&gt;&lt;/code&gt; support in Boost 1.54.
+"                In particular, the buffered stream templates have been updated so
+"                that they adhere to current handler patterns (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9000&quot;&gt;#9000&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9001&quot;&gt;#9001&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Enabled move support for Microsoft Visual Studio 2012 (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8959&quot;&gt;#8959&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;use_future&lt;/span&gt;&lt;/code&gt;
+"                support for Microsoft Visual Studio 2012.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Removed a use of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;min&lt;/span&gt;&lt;/code&gt;
+"                in the Windows IOCP backend to avoid a dependency on the &lt;code&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;algorithm&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt; header (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8758&quot;&gt;#8758&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Eliminated some unnecessary handler copies.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed various minor and cosmetic issues in code and documentation
+"                (including &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8347&quot;&gt;#8347&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8950&quot;&gt;#8950&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8953&quot;&gt;#8953&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8965&quot;&gt;#8965&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8997&quot;&gt;#8997&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/container/&quot;&gt;Container&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Implemented &lt;span class=&quot;link&quot;&gt;SCARY
+"                iterators&lt;/span&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed bugs &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8269&quot;&gt;#8269&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8473&quot;&gt;#8473&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8892&quot;&gt;#8892&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9009&quot;&gt;#9009&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9064&quot;&gt;#9064&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9092&quot;&gt;#9092&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9108&quot;&gt;#9108&lt;/a&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
 "          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/context/&quot;&gt;Context&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
@@ -20381,6 +20594,229 @@
 "              &lt;div&gt;
 "                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/8801&quot;&gt;#8801&lt;/a&gt;
 "                auto-linking
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/fusion/&quot;&gt;Fusion&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8759&quot;&gt;#8759&lt;/a&gt; specialization of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;convert_impl&lt;/span&gt;&lt;/code&gt;
+"                for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;map_tag&lt;/span&gt;&lt;/code&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/graph/index.html&quot;&gt;Graph&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;&lt;/code&gt; is no longer allowed
+"                as a bundled property type (for example, in the VertexProperties
+"                template parameters to graph types); it did not work reliably before,
+"                but a static assertion now forbids it entirely. Use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;no_property&lt;/span&gt;&lt;/code&gt; instead.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added support for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;finish_edge&lt;/span&gt;&lt;/code&gt;
+"                visitor event point in depth-first search; the change should be backward-compatible
+"                with visitors that do not have that member function.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Disabled building of tests on Sun compiler.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Multiple source vertices are supported in non-named-parameter versions
+"                of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;breadth_first_visit&lt;/span&gt;&lt;/code&gt;,
+"                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;breadth_first_search&lt;/span&gt;&lt;/code&gt;,
+"                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;dijkstra_shortest_paths&lt;/span&gt;&lt;/code&gt;,
+"                and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;dijkstra_shortest_paths_no_init&lt;/span&gt;&lt;/code&gt;.
+"                This feature is not yet documented; to use it, replace the single
+"                parameter for the source vertex in each of these functions by two
+"                input iterators of the same type containing the source vertices to
+"                use.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added Hawick circuits algorithm; contributed by Louis Dionne.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added edge coloring algorithm; contributed by Maciej Piechotka.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added min-cost max-flow algorithm; contributed by Piotr Wygocki.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Bugs and feature requests from Trac fixed: &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5269&quot;&gt;#5269&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8317&quot;&gt;#8317&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8433&quot;&gt;#8433&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8791&quot;&gt;#8791&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8877&quot;&gt;#8877&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8986&quot;&gt;#8986&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9012&quot;&gt;#9012&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9080&quot;&gt;#9080&lt;/a&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/interprocess/&quot;&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed bugs &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7156&quot;&gt;#7156&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7164&quot;&gt;#7164&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8277&quot;&gt;#8277&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8976&quot;&gt;#8976&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9065&quot;&gt;#9065&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9073&quot;&gt;#9073&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8277&quot;&gt;#9908&lt;/a&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/intrusive/&quot;&gt;Intrusive&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;strong&gt;Source breaking&lt;/strong&gt;: Deprecated &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;xxx_dont_splay&lt;/span&gt;&lt;/code&gt; functions from splay
+"                containers. Deprecated &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;splay_set_hook&lt;/span&gt;&lt;/code&gt;
+"                from splay containers, use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;bs_set_hook&lt;/span&gt;&lt;/code&gt;
+"                instead. Both will be removed in Boost 1.56.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;strong&gt;ABI breaking&lt;/strong&gt;: Hash containers' end
+"                iterator was implemented pointing to one-past the end of the bucket
+"                array (see &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8698&quot;&gt;#8698&lt;/a&gt;)
+"                causing severe bugs when values to be inserted where allocated next
+"                to the bucket array. End iterator implementation was changed to point
+"                to the beginning of the bucket array.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Big refactoring in order to reduce template and debug symbol bloat.
+"                Test object files have been slashed to half in MSVC compilers in
+"                Debug mode. Toolchains without Identical COMDAT Folding (ICF) should
+"                notice size improvements.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Implemented &lt;span class=&quot;link&quot;&gt;SCARY iterators&lt;/span&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/log/&quot;&gt;Log&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                General changes:
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Added a new configuration macro &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_LOG_WITHOUT_DEFAULT_FACTORIES&lt;/span&gt;&lt;/code&gt;.
+"                      By defining this macro the user can disable compilation of
+"                      the default filter and formatter factories used by settings
+"                      parsers. This can substantially reduce binary sizes while still
+"                      retaining support for settings parsers.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Rewritten some of the parsers to reduce the compiled binary
+"                      size. The rewritten parsers are more robust in detecting ambiguous
+"                      and incorrect input.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      The following headers are deprecated: &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;utility&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;intrusive_ref_counter&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;,
+"                      &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;utility&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;explicit_operator_bool&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;utility&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;empty_deleter&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;.
+"                      These headers will be removed in future releases. The contents
+"                      of these headers were moved to other libraries.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Bug fixes:
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;timer&lt;/span&gt;&lt;/code&gt;
+"                      attribute generating incorrect time readings on Windows on
+"                      heavy thread contention when &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;QueryPerformanceCounter&lt;/span&gt;&lt;/code&gt;
+"                      API was used.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed a bug in the filter parser that prevented using parsed
+"                      filters with some attributes.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed thread id formatting discrepancies between the default
+"                      sink and formatters.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Closed tickets: &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8815&quot;&gt;#8815&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8819&quot;&gt;#8819&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8915&quot;&gt;#8915&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8917&quot;&gt;#8917&lt;/a&gt;,
+"                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9139&quot;&gt;#9139&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9140&quot;&gt;#9140&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9153&quot;&gt;#9153&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9155&quot;&gt;#9155&lt;/a&gt;.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                See &lt;a href=&quot;http://www.boost.org/libs/log/doc/html/log/changelog.html&quot;&gt;changelog&lt;/a&gt;
+"                for more details.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/move/&quot;&gt;Move&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed bugs &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7952&quot;&gt;#7952&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8764&quot;&gt;#8764&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8765&quot;&gt;#8765&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8842&quot;&gt;#8842&lt;/a&gt;,
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8979&quot;&gt;#8979&lt;/a&gt;.
 "              &lt;/div&gt;
 "            &lt;/li&gt;
 "          &lt;/ul&gt;
@@ -20480,60 +20916,12 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/graph/index.html&quot;&gt;Graph&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/phoenix/&quot;&gt;Phoenix&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
-"                &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;&lt;/code&gt; is no longer allowed
-"                as a bundled property type (for example, in the VertexProperties
-"                template parameters to graph types); it did not work reliably before,
-"                but a static assertion now forbids it entirely. Use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;no_property&lt;/span&gt;&lt;/code&gt; instead.
-"              &lt;/div&gt;
-"            &lt;/li&gt;
-"            &lt;li&gt;
-"              &lt;div&gt;
-"                Added support for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;finish_edge&lt;/span&gt;&lt;/code&gt;
-"                visitor event point in depth-first search; the change should be backward-compatible
-"                with visitors that do not have that member function.
-"              &lt;/div&gt;
-"            &lt;/li&gt;
-"            &lt;li&gt;
-"              &lt;div&gt;
-"                Disabled building of tests on Sun compiler.
-"              &lt;/div&gt;
-"            &lt;/li&gt;
-"            &lt;li&gt;
-"              &lt;div&gt;
-"                Multiple source vertices are supported in non-named-parameter versions
-"                of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;breadth_first_visit&lt;/span&gt;&lt;/code&gt;,
-"                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;breadth_first_search&lt;/span&gt;&lt;/code&gt;,
-"                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;dijkstra_shortest_paths&lt;/span&gt;&lt;/code&gt;,
-"                and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;dijkstra_shortest_paths_no_init&lt;/span&gt;&lt;/code&gt;.
-"                This feature is not yet documented; to use it, replace the single
-"                parameter for the source vertex in each of these functions by two
-"                input iterators of the same type containing the source vertices to
-"                use.
-"              &lt;/div&gt;
-"            &lt;/li&gt;
-"            &lt;li&gt;
-"              &lt;div&gt;
-"                Added Hawick circuits algorithm; contributed by Louis Dionne.
-"              &lt;/div&gt;
-"            &lt;/li&gt;
-"            &lt;li&gt;
-"              &lt;div&gt;
-"                Added edge coloring algorithm; contributed by Maciej Piechotka.
-"              &lt;/div&gt;
-"            &lt;/li&gt;
-"            &lt;li&gt;
-"              &lt;div&gt;
-"                Added min-cost max-flow algorithm; contributed by Piotr Wygocki.
-"              &lt;/div&gt;
-"            &lt;/li&gt;
-"            &lt;li&gt;
-"              &lt;div&gt;
-"                Bugs and feature requests from Trac fixed: &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5269&quot;&gt;#5269&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8317&quot;&gt;#8317&lt;/a&gt;,
-"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8433&quot;&gt;#8433&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8791&quot;&gt;#8791&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8877&quot;&gt;#8877&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8986&quot;&gt;#8986&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9012&quot;&gt;#9012&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9080&quot;&gt;#9080&lt;/a&gt;.
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9049&quot;&gt;#9049&lt;/a&gt; &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;phoenix&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;function&lt;/span&gt;&lt;/code&gt;
+"                constructor is constexpr.
 "              &lt;/div&gt;
 "            &lt;/li&gt;
 "          &lt;/ul&gt;
@@ -20541,7 +20929,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/property_map/index.html&quot;&gt;Boost.PropertyMap&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/property_map/index.html&quot;&gt;PropertyMap&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20591,6 +20979,34 @@
 "          &lt;/ul&gt;
 "        &lt;/div&gt;
 "      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/xpressive&quot;&gt;xpressive&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8843&quot;&gt;#8843&lt;/a&gt; throw instead of assert at incomplete charset
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8880&quot;&gt;#8880&lt;/a&gt; remove unused local typedef
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8882&quot;&gt;#8882&lt;/a&gt; use RAII instead of try/catch in sequence_stack.hpp
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8474&quot;&gt;#8474&lt;/a&gt; make xpressive play nice with clang's -Wimplicit-fallthrough
+"                diagnostic
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
 "    &lt;/ul&gt;
 "  &lt;/div&gt;
 "  &lt;div id=&quot;version_1_55_0.compilers_tested&quot;&gt;
@@ -20624,7 +21040,7 @@
 "  &lt;/div&gt;
 "</description></item>
 -last_modified
-.1379841116.11
+.1380603227.55
 -quickbook
 "feed/history/boost_1_55_0.qbk
 )
