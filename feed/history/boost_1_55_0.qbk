@@ -126,6 +126,17 @@ Release status:
     (including [ticket 8347], [ticket 8950], [ticket 8953], [ticket 8965],
     [ticket 8997]).
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Added support for 64-bit atomic operations on x86 target for GCC, MSVC and compatible compilers. The support is enabled when it is known at compile time that the target CPU supports required instructions.
+  * Added support for 128-bit atomic operations on x86-64 target for GCC and compatible compilers. The support is enabled when it is known at compile time that the target CPU supports required instructions. The support can be tested for with the new `BOOST_ATOMIC_INT128_LOCK_FREE` macro.
+  * Added a more efficient implementation of `atomic<>` based on GCC `__atomic*` intrinsics available since GCC 4.7.
+  * Added support for more ARM v7 CPUs, improved detection of Thumb 2.
+  * Added support for x32 (i.e. 64-bit x86 with 32-bit pointers) target on GCC and compatible compilers.
+  * Removed dependency on Boost.Thread.
+  * Internal lock pool now includes proper padding and alignment to avoid false sharing.
+  * Fixed compilation with Intel compiler on Windows. Removed internal macro duplication when compiled on Windows.
+  * Some code refactoring to use C++11 features when available.
+
 * [phrase library..[@/libs/circular_buffer/ Circular Buffer]:]
   * Added support for rvalue references and rvalue references emulation
     using Boost.Move. Values are moved only if value type has noexcept move
@@ -281,7 +292,7 @@ Release status:
     cpp_int.  See [@https://svn.boost.org/trac/boost/ticket/8711 8711].
 
 * [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
-  * Boost.MultiIndex has been brought to a higher level of compliance with C++11. 
+  * Boost.MultiIndex has been brought to a higher level of compliance with C++11.
     * `multi_index_container` is now efficiently movable.
     * Initializer lists supported.
     * Emplace functions provided.
@@ -291,7 +302,7 @@ Release status:
       process.
     * Random access indices provide `shrink_to_fit()`.
     Refer to the [@/libs/multi_index/doc/compiler_specifics.html compiler specifics]
-    section for limitations on pre-C++11 compilers. 
+    section for limitations on pre-C++11 compilers.
   * The following classes are deprecated:
     * [@/libs/multi_index/doc/reference/key_extraction.html#member_offset `member_offset`],
     * [@/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit `const_mem_fun_explicit`],
@@ -334,11 +345,19 @@ Release status:
     `<boost/property_map/property_map.hpp>` that can be un-commented to find
     deprecated uses of pointers in user code.
 
+* [phrase library..[@/libs/smart_ptr/index.html SmartPtr]:]
+  * Added `boost/smart_ptr/intrusive_ref_counter.hpp` header, extracted from Boost.Log. The header implements a mixin base class that enables support for `intrusive_ptr` to user's classes.
+
 * [phrase library..[@/libs/timer/ Timer]:]
   * Fixed compilation on Intel compiler [ticket 8956].
 
 * [phrase library..[@/libs/type_traits/ Type Traits]:]
   * Added `is_copy_contructible` trait [ticket 8802].
+
+* [phrase library..[@/libs/utility/index.html Utility]:]
+  * `boost::result_of` can be set to use TR1 protocol by default and fall back to `decltype` if the function object does not support it (like C++11 lambda functions, for example). Define `BOOST_RESULT_OF_USE_TR1_WITH_DECLTYPE_FALLBACK` configuration macro to enable this mode.
+  * Improved support for C++11 in the `boost::base_from_member` class template. The class implements perfect forwarding for the constructor arguments, if the compiler supports rvalue references, variadic templates and function template default arguments.
+  * Added `boost/utility/explicit_operator_bool.hpp` and `boost/utility/empty_deleter.hpp` headers, which were extracted from Boost.Log. The headers implement utilities for defining explicit conversion operators to `bool` and a deleter function object that does nothing, respectively.
 
 * [phrase library..[@/libs/variant/ Variant]:]
   * Fixed compilation of constructor and assignment operator with const
