@@ -67,6 +67,11 @@ Release status:
   * [ticket 8850] Fix MSVC warnings.
   * [ticket 8262] Rename `average` to `fdiv`.
 
+* [phrase library..[@/libs/any/ Any]:]
+  * `boost::bad_any_cast` exception is now visible across modules [ticket 8751].
+  * Added `clear()` member function.
+  * Added missing `BOOST_NOEXCEPT`.
+
 * [phrase library..[@/libs/asio/ Asio]:]
   * Implemented a limited port to Windows Runtime. This support requires that the
     language extensions be enabled. Due to the restricted facilities exposed by
@@ -121,6 +126,13 @@ Release status:
     (including [ticket 8347], [ticket 8950], [ticket 8953], [ticket 8965],
     [ticket 8997]).
 
+* [phrase library..[@/libs/circular_buffer/ Circular Buffer]:]
+  * Added support for rvalue references and rvalue references emulation
+    using Boost.Move. Values are moved only if value type has noexcept move
+    constructor and noexcept move assignment operator [ticket 7888]. Now
+    Circular Buffer is usable with move-only types.
+  * Much better documentation.
+
 * [phrase library..[@/libs/container/ Container]:]
   *  Implemented [link container.main_features.scary_iterators SCARY iterators].
   *  Fixed bugs [@https://svn.boost.org/trac/boost/ticket/8269 #8269],
@@ -138,6 +150,9 @@ Release status:
   * New interface (unidirectional data transfer).
   * [@http://svn.boost.org/trac/boost/ticket/8782 #8782] no best alternative
   * [@http://svn.boost.org/trac/boost/ticket/8801 #8801] auto-linking
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Fixed Android compilation [ticket 8706].
 
 * [phrase library..[@/libs/fusion/ Fusion]:]
   * [ticket 8759] specialization of `convert_impl` for `map_tag`
@@ -185,6 +200,14 @@ Release status:
      to half in MSVC compilers in Debug mode. Toolchains without Identical COMDAT Folding (ICF) should notice size improvements.
   *  Implemented [link intrusive.scary_iterators SCARY iterators].
 
+* [phrase library..[@/libs/conversion/lexical_cast.htm Lexical cast]:]
+  * `std::bad_alloc` exceptions are now are not converted to
+    `boost::bad_lexical_cast` [ticket 8966].
+  * Added static assert that checks for `std::numeric_limits`
+    specializations if they are required for conversion. Use `BOOST_HAS_INT128`
+    for detecting 128 bit integers support [ticket 8790].
+  * Documentation improved and more usage examples added.
+
 * [phrase library..[@/libs/log/ Log]:]
   * General changes:
     * Added a new configuration macro `BOOST_LOG_WITHOUT_DEFAULT_FACTORIES`. By defining this macro the user can disable compilation of the default filter and formatter factories used by settings parsers. This can substantially reduce binary sizes while still retaining support for settings parsers.
@@ -197,12 +220,65 @@ Release status:
     * Closed tickets: [ticket 8815], [ticket 8819], [ticket 8915], [ticket 8917], [ticket 9139], [ticket 9140], [ticket 9153], [ticket 9155].
   * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
+* [phrase library..[@/libs/math/ Math]:]
+  * Suppress numerous warnings (mostly from GCC-4.8 and MSVC)
+    [@https://svn.boost.org/trac/boost/ticket/8384 #8384],
+    [@https://svn.boost.org/trac/boost/ticket/8855 #8855],
+    [@https://svn.boost.org/trac/boost/ticket/9107 #9107],
+    [@https://svn.boost.org/trac/boost/ticket/9109 #9109]..
+  * Fixed PGI compilation issue
+    [@https://svn.boost.org/trac/boost/ticket/8333 #8333].
+  * Fixed PGI constant value initialization issue that caused erf to generate
+    incorrect results [@https://svn.boost.org/trac/boost/ticket/8621 #8621].
+  * Prevent macro expansion of some C99 macros that are also C++ functions
+    [@https://svn.boost.org/trac/boost/ticket/8732 #8732] and
+    [@https://svn.boost.org/trac/boost/ticket/8733 #8733]..
+  * Fixed Student's T distribution to behave correctly with huge degrees of
+    freedom (larger than the largest representable integer)
+    [@https://svn.boost.org/trac/boost/ticket/8837 #8837].
+  * Make some core functions usable with `long double` even when the platform
+    has no standard library `long double` support
+    [@https://svn.boost.org/trac/boost/ticket/8940 #8940].
+  * Fix error handling of distributions to catch invalid scale and location
+    parameters when the random variable is infinite
+    [@https://svn.boost.org/trac/boost/ticket/9042 #9042] and
+    [@https://svn.boost.org/trac/boost/ticket/9126 #9126].
+  * Add workaround for broken <tuple> in Intel C++ 14
+    [@https://svn.boost.org/trac/boost/ticket/9087 #9087].
+  * Improve consistency of argument reduction in the elliptic integrals
+    [@https://svn.boost.org/trac/boost/ticket/9104 #9104].
+  * Fix bug in inverse incomplete beta that results in cancellation errors when
+    the beta function is really an arcsine or Student's T distribution.
+  * Fix issue in Bessel I and K function continued fractions that causes
+    spurious over/underflow.
+
 * [phrase library..[@/libs/move/ Move]:]
   *  Fixed bugs  [@https://svn.boost.org/trac/boost/ticket/7952 #7952],
                  [@https://svn.boost.org/trac/boost/ticket/8764 #8764],
                  [@https://svn.boost.org/trac/boost/ticket/8765 #8765],
                  [@https://svn.boost.org/trac/boost/ticket/8842 #8842],
                  [@https://svn.boost.org/trac/boost/ticket/8979 #8979].
+
+* [phrase library..[@/libs/multiprecision/ Multiprecision]:]
+  * Added support for Boost.Serialization.
+  * Suppressed some GCC warnings.  See
+    [@https://svn.boost.org/trac/boost/ticket/8872 8872].
+  * Fixed bug in pow for large integer arguments.  See
+    [@https://svn.boost.org/trac/boost/ticket/8809 8809].
+  * Fixed bug in pow for calculation of 0[super N].  See
+    [@https://svn.boost.org/trac/boost/ticket/8798 8798].
+  * Fixed bug in fixed precision cpp_int IO code that causes conversion to
+    string to fail when the bit count is very small (less than CHAR_BIT).  See
+    [@https://svn.boost.org/trac/boost/ticket/8745 8745].
+  * Fixed bug in cpp_int that causes left shift to fail when a fixed precision
+    type would overflow. See
+    [@https://svn.boost.org/trac/boost/ticket/8741 8741].
+  * Fixed some cosmetic warnings from cpp_int.  See
+    [@https://svn.boost.org/trac/boost/ticket/8748 8748].
+  * Fixed calls to functions which are required to be macros in C99.  See
+    [@https://svn.boost.org/trac/boost/ticket/8732 8732].
+  * Fixed bug that causes construction from INT_MIN, LONG_MIN etc to fail in
+    cpp_int.  See [@https://svn.boost.org/trac/boost/ticket/8711 8711].
 
 * [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
   * Boost.MultiIndex has been brought to a higher level of compliance with C++11. 
@@ -257,6 +333,22 @@ Release status:
     There are commented-out static assertions on lines 151 and 159 of
     `<boost/property_map/property_map.hpp>` that can be un-commented to find
     deprecated uses of pointers in user code.
+
+* [phrase library..[@/libs/timer/ Timer]:]
+  * Fixed compilation on Intel compiler [ticket 8956].
+
+* [phrase library..[@/libs/type_traits/ Type Traits]:]
+  * Added `is_copy_contructible` trait [ticket 8802].
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Fixed compilation of constructor and assignment operator with const
+    rvalues input parameters [ticket 8988].
+  * Fixed compilation of move assignment operator for situations when one
+    of the variant template classes has nothrow copy constructor and throwing
+    move constructor [ticket 8772].
+  * Fix compilation on exception-disabled environments [ticket 8717].
+  * Fix unreachable code warnings [ticket 8665].
+  * Removed duplicate code [ticket 7601].
 
 * [phrase library..[@/libs/wave/ Wave]:]
   * See the [@/libs/wave/ChangeLog Changelog] for details.
