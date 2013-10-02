@@ -362,7 +362,7 @@
                   <li>
                     <div>
                       <a href="http://svn.boost.org/trac/boost/ticket/9147">#9147</a>
-                      uninitialized `std::tm
+                      uninitialized <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">tm</span></code>
                     </div>
                   </li>
                 </ul>
@@ -876,38 +876,41 @@
               <div>
                 Boost.MultiIndex has been brought to a higher level of compliance
                 with C++11.
-                <ul>
-                  <li>
-                    <div>
-                      <code><span class="identifier">multi_index_container</span></code>
-                      is now efficiently movable.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      Initializer lists supported.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      Emplace functions provided.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      Non-copyable elements (such as <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>) supported. This includes
-                      insertion of a range [<code><span class="identifier">first</span></code>,<code><span class="identifier">last</span></code>) where the iterators
-                      point to a type that is convertible to that of the element:
-                      no copy construction happens in the process.
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      Random access indices provide <code><span class="identifier">shrink_to_fit</span><span class="special">()</span></code>. Refer to the <a href="/libs/multi_index/doc/compiler_specifics.html">compiler
-                      specifics</a> section for limitations on pre-C++11 compilers.
-                    </div>
-                  </li>
-                </ul>
+              </div>
+              <ul>
+                <li>
+                  <div>
+                    <code><span class="identifier">multi_index_container</span></code>
+                    is now efficiently movable.
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    Initializer lists supported.
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    Emplace functions provided.
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    Non-copyable elements (such as <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>) supported. This includes
+                    insertion of a range [<code><span class="identifier">first</span></code>,<code><span class="identifier">last</span></code>) where the iterators point
+                    to a type that is convertible to that of the element: no copy
+                    construction happens in the process.
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    Random access indices provide <code><span class="identifier">shrink_to_fit</span><span class="special">()</span></code>.
+                  </div>
+                </li>
+              </ul>
+              <div>
+                Refer to the <a href="/libs/multi_index/doc/compiler_specifics.html">compiler
+                specifics</a> section for limitations on pre-C++11 compilers.
               </div>
             </li>
             <li>
@@ -962,6 +965,28 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/libs/mpi/">MPI</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Replaced calls to deprecated MPI functions
+              </div>
+            </li>
+            <li>
+              <div>
+                Added support for multi-threaded initialization
+              </div>
+            </li>
+            <li>
+              <div>
+                Added in-place collectives
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/libs/phoenix/">Phoenix</a>:</span>
           <ul>
             <li>
@@ -981,11 +1006,11 @@
               <div>
                 dynamic_properties objects can now be built by non-destructively
                 chaining <code><span class="special">.</span><span class="identifier">property</span><span class="special">(</span><span class="identifier">name</span><span class="special">,</span> <span class="identifier">pm</span><span class="special">)</span></code> calls. Example:
+              </div>
 <pre><span class="identifier">boost</span><span class="special">::</span><span class="identifier">dynamic_properties</span><span class="special">()</span>
   <span class="special">.</span><span class="identifier">property</span><span class="special">(</span><span class="string">&quot;color&quot;</span><span class="special">,</span> <span class="identifier">color_map</span><span class="special">)</span>
   <span class="special">.</span><span class="identifier">property</span><span class="special">(</span><span class="string">&quot;pos&quot;</span><span class="special">,</span> <span class="identifier">position_map</span><span class="special">)</span>
 </pre>
-              </div>
             </li>
             <li>
               <div>
@@ -994,17 +1019,21 @@
                 from all tests and examples in Boost.Graph. The replacement to use
                 for vertex properties in graphs (the most common use for this feature)
                 is:
+              </div>
 <pre><span class="identifier">boost</span><span class="special">::</span><span class="identifier">make_iterator_property_map</span><span class="special">(</span>
   <span class="special">&lt;</span><span class="identifier">pointer</span> <span class="keyword">or</span> <span class="identifier">container</span> <span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="identifier">iterator</span><span class="special">&gt;,</span>
   <span class="identifier">get</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">vertex_index</span><span class="special">,</span> <span class="special">&lt;</span><span class="identifier">graph</span> <span class="identifier">object</span><span class="special">&gt;))</span>
 </pre>
+              <div>
                 (Note: the lack of namespace qualification on get() in this code
                 is necessary for generic code). Outside a graph context, the closest
                 equivalent is:
+              </div>
 <pre><span class="identifier">boost</span><span class="special">::</span><span class="identifier">make_iterator_property_map</span><span class="special">(</span>
   <span class="special">&lt;</span><span class="identifier">pointer</span><span class="special">&gt;,</span>
   <span class="identifier">boost</span><span class="special">::</span><span class="identifier">typed_identity_property_map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;())</span>
 </pre>
+              <div>
                 There are commented-out static assertions on lines 151 and 159 of
                 <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">property_map</span><span class="special">/</span><span class="identifier">property_map</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> that can be un-commented to find
                 deprecated uses of pointers in user code.

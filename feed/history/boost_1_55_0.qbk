@@ -1,5 +1,5 @@
 [article Version 1.55.0
-    [quickbook 1.5]
+    [quickbook 1.6]
     [source-mode c++]
     [purpose
         New Libraries: Predef.
@@ -9,7 +9,7 @@
     [last-revision]
 ]
 
-[include ext.qbk]
+[import ext.qbk]
 
 [/
 
@@ -308,14 +308,16 @@ Release status:
 
 * [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
   * Boost.MultiIndex has been brought to a higher level of compliance with C++11.
-    * `multi_index_container` is now efficiently movable.
-    * Initializer lists supported.
-    * Emplace functions provided.
-    * Non-copyable elements (such as `std::unique_ptr<T>`) supported. This includes
-      insertion of a range [`first`,`last`) where the iterators point to a type that
+    [itemized_list
+      [`multi_index_container` is now efficiently movable.]
+      [Initializer lists supported.]
+      [Emplace functions provided.]
+      [Non-copyable elements (such as `std::unique_ptr<T>`) supported. This includes
+      insertion of a range \[`first`,`last`) where the iterators point to a type that
       is convertible to that of the element: no copy construction happens in the
-      process.
-    * Random access indices provide `shrink_to_fit()`.
+      process.]
+      [Random access indices provide `shrink_to_fit()`.]
+    ]
     Refer to the [@/libs/multi_index/doc/compiler_specifics.html compiler specifics]
     section for limitations on pre-C++11 compilers.
   * The following classes are deprecated:
@@ -327,6 +329,11 @@ Release status:
     * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_greater `composite_key_result_greater`],
     * [@/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_hash `composite_key_result_hash`].
   * Maintenance fixes.
+
+* [phrase library..[@/libs/mpi/ MPI]:]
+  * Replaced calls to deprecated MPI functions
+  * Added support for multi-threaded initialization
+  * Added in-place collectives
 
 * [phrase library..[@/libs/phoenix/ Phoenix]:]
   * [ticket 9049] `phoenix::function` constructor is constexpr.
