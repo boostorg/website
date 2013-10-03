@@ -3,7 +3,13 @@
     [source-mode c++]
     [purpose
         New Libraries: Predef.
-        Updated Libraries: Accumulators, Asio, Context, Coroutine, Graph, Log, MultiIndex, PropertyMap, Wave.
+        Updated Libraries: Accumulators, Any, Asio, Atomic,
+        Chrono, Circular Buffer, Container, Context, Coroutine,
+        Filesystem, Fusion, Graph, Hash, Interprocess, Intrusive,
+        Lexical Cast, Log, Math, Move, Multiprecision,
+        Multi-index Containers, MPI, Phoenix, PropertyMap,
+        Rational, Thread, Timer, Type Traits, Unordered, Utility,
+        Variant, Wave, xpressive.
     ]
     [authors [Dawes, Beman]]
     [last-revision]
@@ -205,6 +211,11 @@ Release status:
     [ticket 8433], [ticket 8791], [ticket 8877], [ticket 8986], [ticket 9012],
     [ticket 9080].
 
+* [phrase library..[@/libs/hash/ Hash]:]
+  * Simplify a SFINAE check so that it will hopefully work on Sun 5.9
+    ([ticket 8822]).
+  * Suppress Visual C++ infinite loop warning ([ticket 8568]).
+
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
   *  Fixed bugs [@https://svn.boost.org/trac/boost/ticket/7156 #7156],
                 [@https://svn.boost.org/trac/boost/ticket/7164 #7164],
@@ -367,6 +378,14 @@ Release status:
     `<boost/property_map/property_map.hpp>` that can be un-commented to find
     deprecated uses of pointers in user code.
 
+* [phrase library..[@/libs/rational Rational]:]
+  * Added `lowest` and `max_digits10`, members of std::numeric_limits added in
+    C++11, to the unit-test code.  Needed since Boost.Test refers to one of
+    them when compiled in C++11 mode.
+  * Changed initialization of some internal variables to something that cannot
+    be a narrowing conversion, which fixes issue [ticket 5855].  Needed since
+    narrowing conversions are an error in C++11.
+
 * [phrase library..[@/libs/smart_ptr/index.html SmartPtr]:]
   * Added `boost/smart_ptr/intrusive_ref_counter.hpp` header, extracted from Boost.Log. The header implements a mixin base class that adds support for `intrusive_ptr` to user's classes.
 
@@ -420,6 +439,10 @@ Release status:
 * [phrase library..[@/libs/type_traits/ Type Traits]:]
   * Added `is_copy_contructible` trait [ticket 8802].
 
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * Avoid some warnings ([ticket 8851], [ticket 8874]).
+  * Avoid exposing some detail functions via. ADL on the iterators.
+
 * [phrase library..[@/libs/utility/index.html Utility]:]
   * `boost::result_of` can be set to use TR1 protocol by default and fall back to `decltype` if the function object does not support it (like C++11 lambda functions, for example). Define `BOOST_RESULT_OF_USE_TR1_WITH_DECLTYPE_FALLBACK` configuration macro to enable this mode.
   * Improved support for C++11 in the `boost::base_from_member` class template. The class implements perfect forwarding for the constructor arguments, if the compiler supports rvalue references, variadic templates and function template default arguments.
@@ -450,7 +473,13 @@ Release status:
 
 Boost's primary test compilers are:
 
-* /TODO/
+* Linux:
+* OS X:
+  * GCC: 4.2
+  * Apple Clang: 4.2.1
+  * Apple Clang, C++11 mode: 4.2.1
+* Windows:
+* FreeBSD:
 
 Boost's additional test compilers include:
 
