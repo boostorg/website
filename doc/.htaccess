@@ -32,13 +32,10 @@ RewriteRule ^libs/release(/.*)?$ libs/1_54_0$1 [R=303]
 RewriteRule ^libs/development(/.*)?$ libs/1_54_0$1 [R=303]
 
 # Rewrite specific versions to the dynamic handlers.
-RewriteRule ^libs/([0-9_]+(?:beta[0-9]*|snapshot)?)/?$ libraries.php/$1 [L]
+RewriteRule ^libs/([0-9_]+(?:b(?:eta)?[0-9]*|snapshot)?)/?$ libraries.php/$1 [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^libs/([0-9_]+(?:beta[0-9]*|snapshot)?)/(.+)$ display_libs.php/boost_$1/$2 [L]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^libs/?(.*)$ libraries.php$1 [L]
+RewriteRule ^libs/([0-9_]+(?:b(?:eta)?[0-9]*|snapshot)?)/(.+)$ display_libs.php/boost_$1/$2 [L]
 
 # Redirect boost build/bjam documentation to new boost build location.
 RewriteRule ^tools(?:\.html)?/jam/jam/(language|miscellaneous|history).html$ /boost-build2/doc/html/jam/$1.html [R=301]
