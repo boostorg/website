@@ -57,9 +57,13 @@ exist several unresolved issues. These include:
 * Serialization can't compile because of a missing include.
 * Using `has_member_function_callable_with` from Boost.Container's
   `allocator_traits` causes a compile error ([ticket 9332]).
-* For several libraries overloads with intializer lists are incorrectly
-  reported as ambiguous. This is a Visual C++ bug and it isn't clear if
-  there's a good workaround.
+* In libraries such as Unordered and MultiIndex, calling overloaded functions
+  with initializer lists can result in a compile error, with Visual C++
+  claiming that the overloads are ambiguous. This is a Visual C++ bug and it
+  isn't clear if there's a good workaround. This won't affect code that doesn't
+  use initializer lists, or uses an initializer list that doesn't require an
+  implicit conversion (i.e. an initializer list of the container's exact value
+  type).
 * Thread: `ex_scoped_thread` compile fails ([ticket 9333]).
 
 [endsect]
