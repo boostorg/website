@@ -11,21 +11,24 @@
         Rational, Thread, Timer, Type Traits, Unordered, Utility,
         Variant, Wave, xpressive.
     ]
-    [authors [Dawes, Beman]]
-    [last-revision]
+    [authors [Clow, Marshall]]
+    [last-revision Mon, 11 Nov 2013 11:50:20 -0800]
 ]
 
 [import ext.qbk]
 
 [documentation /doc/libs/1_55_0/]
-[status beta]
-[download http://sourceforge.net/projects/boost/files/boost/1.55.0.beta.1/]
-
-[/
-Release status:
 [status released]
 [download http://sourceforge.net/projects/boost/files/boost/1.55.0/]
-]
+
+[section Other Downloads]
+
+* [@https://sourceforge.net/projects/boost/files/boost-binaries/1.55.0/
+   Windows binaries]
+* [@https://sourceforge.net/projects/boost/files/boost-docs/1.55.0/
+   PDF documentation] (only for BoostBook based documentation).
+
+[endsect]
 
 [section News]
 
@@ -37,8 +40,12 @@ of compilers. The new minimum requirements are:
 * Intel 6.0
 * Visual C++ 7.1
 
+[*Note:] This is just the mininimum requirements for Config. Some Boost
+libraries may have higher mininimum requirements and not support all
+platforms or compilers.
+
 Other compilers are currently unchanged, but we are considering removing
-support for some other old compilers. Candidates for removal are:
+support for some other old compilers. *Candidates* for removal are:
 
 * Metroworks C++ (i.e. codewarrior)
 * SunPro 5.7 and earlier
@@ -47,6 +54,34 @@ support for some other old compilers. Candidates for removal are:
 If you're using any of these, please let us know on the mailing lists.
 We will take into account any feedback received before making a decision.
 
+[endsect]
+
+[section:known_bugs Known Bugs with Visual Studio 2013/Visual C++ 12]
+
+Visual Studio 2013 was released quite late in the release process, so there
+exist several unresolved issues. These include:
+
+* Serialization can't compile because of a missing include.
+* Using `has_member_function_callable_with` from Boost.Container's
+  `allocator_traits` causes a compile error ([ticket 9332]).
+* In libraries such as Unordered and MultiIndex, calling overloaded functions
+  with initializer lists can result in a compile error, with Visual C++
+  claiming that the overloads are ambiguous. This is a Visual C++ bug and it
+  isn't clear if there's a good workaround. This won't affect code that doesn't
+  use initializer lists, or uses an initializer list that doesn't require an
+  implicit conversion (i.e. an initializer list of the container's exact value
+  type).
+* Thread: `ex_scoped_thread` compile fails ([ticket 9333]).
+
+[endsect]
+
+[section Patches]
+
+# [@/patches/1_55_0/001-log_fix_dump_avx2.patch Log patch]:
+  fixes incorrect output of the
+  [@http://www.boost.org/doc/libs/1_55_0/libs/log/doc/html/log/detailed/utilities.html#log.detailed.utilities.manipulators.dump dump]
+  manipulator, when used on AVX2-enabled CPU (e.g. Intel Haswell).
+  
 [endsect]
 
 [section New Libraries]
@@ -476,6 +511,9 @@ We will take into account any feedback received before making a decision.
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * Avoid some warnings ([ticket 8851], [ticket 8874]).
   * Avoid exposing some detail functions via. ADL on the iterators.
+  * Work around variadic parameter bug in Visual Studio 2013.
+    The compiler still has problems with initializer lists,
+    but it might not be possible to work around those.
 
 * [phrase library..[@/libs/utility/index.html Utility]:]
   * `boost::result_of` can be set to use TR1 protocol by default and fall back to `decltype` if the function object does not support it (like C++11 lambda functions, for example). Define `BOOST_RESULT_OF_USE_TR1_WITH_DECLTYPE_FALLBACK` configuration macro to enable this mode.

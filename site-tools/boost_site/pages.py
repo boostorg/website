@@ -96,7 +96,7 @@ class Pages:
                     'description_xml' : page_data.description_xml
                 }
 
-                if page_data.type == 'release' and 'released' not in page_data.flags:
+                if page_data.type == 'release' and 'released' not in page_data.flags and 'beta' not in page_data.flags:
                     template_vars['note_xml'] = '<div class="section-note"><p>Note: This version is at an early stage in its release cycle. The information listed below is incomplete and some of the documentation links may not work yet.</p></div>'
 
                 if page_data.documentation:

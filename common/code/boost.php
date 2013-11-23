@@ -6,4 +6,4 @@
 */
 require_once(dirname(__FILE__) . '/boost_config.php');
 require_once(dirname(__FILE__) . '/boost_version.php');
-boost_set_current_version(1,54,0);
+boost_set_current_version(1,55,0);

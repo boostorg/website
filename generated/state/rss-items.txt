@@ -20329,14 +20329,31 @@
 )
 (feed/history/boost_1_55_0.qbk
 -item
-"<item><title>Version 1.55.0</title><link>http://www.boost.org/users/history/version_1_55_0.html</link><guid>http://www.boost.org/users/history/version_1_55_0.html</guid><pubDate>In Progress</pubDate><description>
+"<item><title>Version 1.55.0</title><link>http://www.boost.org/users/history/version_1_55_0.html</link><guid>http://www.boost.org/users/history/version_1_55_0.html</guid><pubDate>Mon, 11 Nov 2013 11:50:20 -0800</pubDate><description>
 "
 "
 "
+"  &lt;div id=&quot;version_1_55_0.other_downloads&quot;&gt;
+"    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Other Downloads&lt;/span&gt;&lt;/h3&gt;
+"    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;a href=&quot;https://sourceforge.net/projects/boost/files/boost-binaries/1.55.0/&quot;&gt;Windows
+"          binaries&lt;/a&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;a href=&quot;https://sourceforge.net/projects/boost/files/boost-docs/1.55.0/&quot;&gt;PDF
+"          documentation&lt;/a&gt; (only for BoostBook based documentation).
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ul&gt;
+"  &lt;/div&gt;
 "  &lt;div id=&quot;version_1_55_0.news&quot;&gt;
 "    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;News&lt;/span&gt;&lt;/h3&gt;
 "    &lt;p&gt;
-"      Support was removed from &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/config/&quot;&gt;Config&lt;/a&gt; for some
+"      Support was removed from &lt;a href=&quot;http://www.boost.org/libs/config/&quot;&gt;Config&lt;/a&gt; for some
 "      very old versions of compilers. The new minimum requirements are:
 "    &lt;/p&gt;
 "    &lt;ul&gt;
@@ -20362,8 +20379,14 @@
 "      &lt;/li&gt;
 "    &lt;/ul&gt;
 "    &lt;p&gt;
+"      &lt;strong&gt;Note:&lt;/strong&gt; This is just the mininimum requirements
+"      for Config. Some Boost libraries may have higher mininimum requirements and
+"      not support all platforms or compilers.
+"    &lt;/p&gt;
+"    &lt;p&gt;
 "      Other compilers are currently unchanged, but we are considering removing support
-"      for some other old compilers. Candidates for removal are:
+"      for some other old compilers. &lt;strong&gt;Candidates&lt;/strong&gt; for
+"      removal are:
 "    &lt;/p&gt;
 "    &lt;ul&gt;
 "      &lt;li&gt;
@@ -20387,12 +20410,63 @@
 "      take into account any feedback received before making a decision.
 "    &lt;/p&gt;
 "  &lt;/div&gt;
+"  &lt;div id=&quot;version_1_55_0.known_bugs&quot;&gt;
+"    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Known Bugs with Visual Studio
+"    2013/Visual C++ 12&lt;/span&gt;&lt;/h3&gt;
+"    &lt;p&gt;
+"      Visual Studio 2013 was released quite late in the release process, so there
+"      exist several unresolved issues. These include:
+"    &lt;/p&gt;
+"    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          Serialization can't compile because of a missing include.
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          Using &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;has_member_function_callable_with&lt;/span&gt;&lt;/code&gt;
+"          from Boost.Container's &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;allocator_traits&lt;/span&gt;&lt;/code&gt;
+"          causes a compile error (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9332&quot;&gt;#9332&lt;/a&gt;).
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          In libraries such as Unordered and MultiIndex, calling overloaded functions
+"          with initializer lists can result in a compile error, with Visual C++ claiming
+"          that the overloads are ambiguous. This is a Visual C++ bug and it isn't
+"          clear if there's a good workaround. This won't affect code that doesn't
+"          use initializer lists, or uses an initializer list that doesn't require
+"          an implicit conversion (i.e. an initializer list of the container's exact
+"          value type).
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          Thread: &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ex_scoped_thread&lt;/span&gt;&lt;/code&gt;
+"          compile fails (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9333&quot;&gt;#9333&lt;/a&gt;).
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ul&gt;
+"  &lt;/div&gt;
+"  &lt;div id=&quot;version_1_55_0.patches&quot;&gt;
+"    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Patches&lt;/span&gt;&lt;/h3&gt;
+"    &lt;ol&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;a href=&quot;http://www.boost.org/patches/1_55_0/001-log_fix_dump_avx2.patch&quot;&gt;Log patch&lt;/a&gt;:
+"          fixes incorrect output of the &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/log/doc/html/log/detailed/utilities.html#log.detailed.utilities.manipulators.dump&quot;&gt;dump&lt;/a&gt;
+"          manipulator, when used on AVX2-enabled CPU (e.g. Intel Haswell).
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ol&gt;
+"  &lt;/div&gt;
 "  &lt;div id=&quot;version_1_55_0.new_libraries&quot;&gt;
 "    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
 "    &lt;ul&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/predef/&quot;&gt;Predef&lt;/a&gt;:&lt;/span&gt; This library defines a
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/predef/&quot;&gt;Predef&lt;/a&gt;:&lt;/span&gt; This library defines a
 "          set of compiler, architecture, operating system, library, and other version
 "          numbers from the information it can gather of C, C++, Objective C, and
 "          Objective C++ predefined macros or those defined in generally available
@@ -20406,7 +20480,7 @@
 "    &lt;ul&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/accumulators/&quot;&gt;Accumulators&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/accumulators/&quot;&gt;Accumulators&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20429,7 +20503,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/any/&quot;&gt;Any&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/any/&quot;&gt;Any&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20458,7 +20532,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/asio/&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/asio/&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20624,7 +20698,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/atomic/&quot;&gt;Atomic&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/atomic/&quot;&gt;Atomic&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20686,7 +20760,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/chrono/&quot;&gt;Chrono&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/chrono/&quot;&gt;Chrono&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20719,7 +20793,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/circular_buffer/&quot;&gt;Circular Buffer&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/circular_buffer/&quot;&gt;Circular Buffer&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20760,7 +20834,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/config/&quot;&gt;Config&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/config/&quot;&gt;Config&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20798,7 +20872,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/container/&quot;&gt;Container&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/container/&quot;&gt;Container&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20822,7 +20896,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/context/&quot;&gt;Context&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/context/&quot;&gt;Context&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20835,7 +20909,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/coroutine/&quot;&gt;Coroutine&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/coroutine/&quot;&gt;Coroutine&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20859,7 +20933,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/filesystem/&quot;&gt;Filesystem&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/filesystem/&quot;&gt;Filesystem&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20871,7 +20945,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/fusion/&quot;&gt;Fusion&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/fusion/&quot;&gt;Fusion&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20884,7 +20958,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/geometry/index.html&quot;&gt;Geometry&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/geometry/index.html&quot;&gt;Geometry&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -20991,7 +21065,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/graph/index.html&quot;&gt;Graph&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/graph/index.html&quot;&gt;Graph&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21052,7 +21126,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/hash/&quot;&gt;Hash&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/hash/&quot;&gt;Hash&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21070,7 +21144,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/interprocess/&quot;&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/interprocess/&quot;&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21088,7 +21162,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/intrusive/&quot;&gt;Intrusive&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/intrusive/&quot;&gt;Intrusive&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21126,7 +21200,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/conversion/lexical_cast.htm&quot;&gt;Lexical cast&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/conversion/lexical_cast.htm&quot;&gt;Lexical cast&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21152,7 +21226,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/log/&quot;&gt;Log&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/log/&quot;&gt;Log&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21220,7 +21294,7 @@
 "            &lt;/li&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
-"                See &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/log/doc/html/log/changelog.html&quot;&gt;changelog&lt;/a&gt;
+"                See &lt;a href=&quot;http://www.boost.org/libs/log/doc/html/log/changelog.html&quot;&gt;changelog&lt;/a&gt;
 "                for more details.
 "              &lt;/div&gt;
 "            &lt;/li&gt;
@@ -21229,7 +21303,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/math/&quot;&gt;Math&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/math/&quot;&gt;Math&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21312,7 +21386,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/move/&quot;&gt;Move&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/move/&quot;&gt;Move&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21328,7 +21402,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/msm/&quot;&gt;Meta State Machine&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/msm/&quot;&gt;Meta State Machine&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21346,7 +21420,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/multiprecision/&quot;&gt;Multiprecision&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/multiprecision/&quot;&gt;Multiprecision&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21403,7 +21477,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/multi_index/index.html&quot;&gt;Multi-index Containers&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/multi_index/index.html&quot;&gt;Multi-index Containers&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21442,7 +21516,7 @@
 "                &lt;/li&gt;
 "              &lt;/ul&gt;
 "              &lt;div&gt;
-"                Refer to the &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/multi_index/doc/compiler_specifics.html&quot;&gt;compiler
+"                Refer to the &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/compiler_specifics.html&quot;&gt;compiler
 "                specifics&lt;/a&gt; section for limitations on pre-C++11 compilers.
 "              &lt;/div&gt;
 "            &lt;/li&gt;
@@ -21452,37 +21526,37 @@
 "                &lt;ul&gt;
 "                  &lt;li&gt;
 "                    &lt;div&gt;
-"                      &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#member_offset&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;member_offset&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#member_offset&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;member_offset&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
 "                    &lt;/div&gt;
 "                  &lt;/li&gt;
 "                  &lt;li&gt;
 "                    &lt;div&gt;
-"                      &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;const_mem_fun_explicit&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;const_mem_fun_explicit&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
 "                    &lt;/div&gt;
 "                  &lt;/li&gt;
 "                  &lt;li&gt;
 "                    &lt;div&gt;
-"                      &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;mem_fun_explicit&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;mem_fun_explicit&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
 "                    &lt;/div&gt;
 "                  &lt;/li&gt;
 "                  &lt;li&gt;
 "                    &lt;div&gt;
-"                      &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_equal_to&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;composite_key_result_equal_to&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_equal_to&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;composite_key_result_equal_to&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
 "                    &lt;/div&gt;
 "                  &lt;/li&gt;
 "                  &lt;li&gt;
 "                    &lt;div&gt;
-"                      &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_less&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;composite_key_result_less&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_less&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;composite_key_result_less&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
 "                    &lt;/div&gt;
 "                  &lt;/li&gt;
 "                  &lt;li&gt;
 "                    &lt;div&gt;
-"                      &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_greater&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;composite_key_result_greater&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_greater&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;composite_key_result_greater&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;,
 "                    &lt;/div&gt;
 "                  &lt;/li&gt;
 "                  &lt;li&gt;
 "                    &lt;div&gt;
-"                      &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_hash&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;composite_key_result_hash&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;.
+"                      &lt;a href=&quot;http://www.boost.org/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_hash&quot;&gt;&lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;composite_key_result_hash&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;.
 "                    &lt;/div&gt;
 "                  &lt;/li&gt;
 "                &lt;/ul&gt;
@@ -21498,7 +21572,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/mpi/&quot;&gt;MPI&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/mpi/&quot;&gt;MPI&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21520,7 +21594,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/phoenix/&quot;&gt;Phoenix&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/phoenix/&quot;&gt;Phoenix&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21533,7 +21607,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/polygon/&quot;&gt;Polygon&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/polygon/&quot;&gt;Polygon&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21557,7 +21631,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/property_map/index.html&quot;&gt;PropertyMap&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/property_map/index.html&quot;&gt;PropertyMap&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21601,7 +21675,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/rational&quot;&gt;Rational&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/rational&quot;&gt;Rational&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21623,7 +21697,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/smart_ptr/index.html&quot;&gt;SmartPtr&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/smart_ptr/index.html&quot;&gt;SmartPtr&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21636,7 +21710,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/Thread/&quot;&gt;Thread&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/Thread/&quot;&gt;Thread&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21782,7 +21856,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/timer/&quot;&gt;Timer&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/timer/&quot;&gt;Timer&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21794,7 +21868,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/type_traits/&quot;&gt;Type Traits&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/type_traits/&quot;&gt;Type Traits&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21807,7 +21881,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/unordered/&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/unordered/&quot;&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21819,12 +21893,19 @@
 "                Avoid exposing some detail functions via. ADL on the iterators.
 "              &lt;/div&gt;
 "            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Work around variadic parameter bug in Visual Studio 2013. The compiler
+"                still has problems with initializer lists, but it might not be possible
+"                to work around those.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
 "          &lt;/ul&gt;
 "        &lt;/div&gt;
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/utility/index.html&quot;&gt;Utility&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/utility/index.html&quot;&gt;Utility&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21856,7 +21937,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/variant/&quot;&gt;Variant&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/variant/&quot;&gt;Variant&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21891,11 +21972,11 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/wave/&quot;&gt;Wave&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/wave/&quot;&gt;Wave&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
-"                See the &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/wave/ChangeLog&quot;&gt;Changelog&lt;/a&gt; for details.
+"                See the &lt;a href=&quot;http://www.boost.org/libs/wave/ChangeLog&quot;&gt;Changelog&lt;/a&gt; for details.
 "              &lt;/div&gt;
 "            &lt;/li&gt;
 "          &lt;/ul&gt;
@@ -21903,7 +21984,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/libs/xpressive&quot;&gt;xpressive&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/xpressive&quot;&gt;xpressive&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -21940,7 +22021,7 @@
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
-"                Quickbook 1.6 finalized, see the &lt;a href=&quot;http://www.boost.org/doc/libs/1_55_0/doc/html/quickbook/versions.html#language_versions.1_6&quot;&gt;Quickbook
+"                Quickbook 1.6 finalized, see the &lt;a href=&quot;http://www.boost.org/doc/html/quickbook/versions.html#language_versions.1_6&quot;&gt;Quickbook
 "                documentation for details&lt;/a&gt;.
 "              &lt;/div&gt;
 "            &lt;/li&gt;
@@ -22134,7 +22215,7 @@
 "  &lt;/div&gt;
 "</description></item>
 -last_modified
-.1383550970.59
+=1384199420
 -quickbook
 "feed/history/boost_1_55_0.qbk
 )
@@ -22159,6 +22240,33 @@
 "      &lt;li&gt;
 "        &lt;div&gt;
 "          &lt;em&gt;TODO&lt;/em&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/uuid/index.html&quot;&gt;UUID&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added basic support for C++11 features.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Implemented SSE-optimized versions of some functions of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;uuid&lt;/span&gt;&lt;/code&gt;, including comparison operators
+"                and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;swap&lt;/span&gt;&lt;/code&gt;. The support
+"                for different versions of SSE is automatically detected at compile
+"                time for most compilers, but can also be explicitly enabled or disabled
+"                with &lt;a href=&quot;http://www.boost.org/libs/uuid/uuid.html#Configuration&quot;&gt;configuration
+"                macros&lt;/a&gt;. (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8509&quot;&gt;#8509&lt;/a&gt;)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Silenced some compiler warnings. (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8495&quot;&gt;#8495&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8697&quot;&gt;#8697&lt;/a&gt;)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
 "        &lt;/div&gt;
 "      &lt;/li&gt;
 "    &lt;/ul&gt;
@@ -22194,7 +22302,7 @@
 "  &lt;/div&gt;
 "</description></item>
 -last_modified
-.1381666077.2
+.1384294213.33
 -quickbook
 "feed/history/boost_1_56_0.qbk
 )

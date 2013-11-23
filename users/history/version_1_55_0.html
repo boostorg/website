@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Version 1.55.0 beta</title>
+  <title>Version 1.55.0</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
@@ -34,23 +34,42 @@
             <div class="section-title">
               <h1>Version 1.55.0</h1>
             </div>
-            <div class="section-note"><p>Note: This version is at an early stage in its release cycle. The information listed below is incomplete and some of the documentation links may not work yet.</p></div>
+
             <div class="section-body">
               <h2><span class=
-              "news-title">Version 1.55.0 beta</span></h2>
+              "news-title">Version 1.55.0</span></h2>
 
-              <p><span class=news-date">In Progress</span></p>
+              <p><span class=news-date">November 11th, 2013 19:50 GMT</span></p>
               <p><a href="/doc/libs/1_55_0/">Documentation</a>
-              <p><span class="news-download"><a href="http://sourceforge.net/projects/boost/files/boost/1.55.0.beta.1/">Download this beta release.</a></span></p>
+              <table class="download-table"><caption>Downloads</caption><tr><th scope="col">Platform</th><th scope="col">File</th></tr>
+<tr><th scope="row" rowspan="2">unix</th><td><a href="http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download">boost_1_55_0.tar.bz2</a></td></tr><tr><td><a href="http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.gz/download">boost_1_55_0.tar.gz</a></td></tr>
+<tr><th scope="row" rowspan="2">windows</th><td><a href="http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.7z/download">boost_1_55_0.7z</a></td></tr><tr><td><a href="http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.zip/download">boost_1_55_0.zip</a></td></tr></table>
               <div class="news-description">
                 <div class="description">
 
 
 
+  <div id="version_1_55_0.other_downloads">
+    <h3><span class="link">Other Downloads</span></h3>
+    <ul>
+      <li>
+        <div>
+          <a href="https://sourceforge.net/projects/boost/files/boost-binaries/1.55.0/">Windows
+          binaries</a>
+        </div>
+      </li>
+      <li>
+        <div>
+          <a href="https://sourceforge.net/projects/boost/files/boost-docs/1.55.0/">PDF
+          documentation</a> (only for BoostBook based documentation).
+        </div>
+      </li>
+    </ul>
+  </div>
   <div id="version_1_55_0.news">
     <h3><span class="link">News</span></h3>
     <p>
-      Support was removed from <a href="/doc/libs/1_55_0/libs/config/">Config</a> for some
+      Support was removed from <a href="/libs/config/">Config</a> for some
       very old versions of compilers. The new minimum requirements are:
     </p>
     <ul>
@@ -76,8 +95,14 @@
       </li>
     </ul>
     <p>
+      <strong>Note:</strong> This is just the mininimum requirements
+      for Config. Some Boost libraries may have higher mininimum requirements and
+      not support all platforms or compilers.
+    </p>
+    <p>
       Other compilers are currently unchanged, but we are considering removing support
-      for some other old compilers. Candidates for removal are:
+      for some other old compilers. <strong>Candidates</strong> for
+      removal are:
     </p>
     <ul>
       <li>
@@ -101,12 +126,63 @@
       take into account any feedback received before making a decision.
     </p>
   </div>
+  <div id="version_1_55_0.known_bugs">
+    <h3><span class="link">Known Bugs with Visual Studio
+    2013/Visual C++ 12</span></h3>
+    <p>
+      Visual Studio 2013 was released quite late in the release process, so there
+      exist several unresolved issues. These include:
+    </p>
+    <ul>
+      <li>
+        <div>
+          Serialization can't compile because of a missing include.
+        </div>
+      </li>
+      <li>
+        <div>
+          Using <code><span class="identifier">has_member_function_callable_with</span></code>
+          from Boost.Container's <code><span class="identifier">allocator_traits</span></code>
+          causes a compile error (<a href="https://svn.boost.org/trac/boost/ticket/9332">#9332</a>).
+        </div>
+      </li>
+      <li>
+        <div>
+          In libraries such as Unordered and MultiIndex, calling overloaded functions
+          with initializer lists can result in a compile error, with Visual C++ claiming
+          that the overloads are ambiguous. This is a Visual C++ bug and it isn't
+          clear if there's a good workaround. This won't affect code that doesn't
+          use initializer lists, or uses an initializer list that doesn't require
+          an implicit conversion (i.e. an initializer list of the container's exact
+          value type).
+        </div>
+      </li>
+      <li>
+        <div>
+          Thread: <code><span class="identifier">ex_scoped_thread</span></code>
+          compile fails (<a href="https://svn.boost.org/trac/boost/ticket/9333">#9333</a>).
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="version_1_55_0.patches">
+    <h3><span class="link">Patches</span></h3>
+    <ol>
+      <li>
+        <div>
+          <a href="/patches/1_55_0/001-log_fix_dump_avx2.patch">Log patch</a>:
+          fixes incorrect output of the <a href="http://www.boost.org/doc/libs/1_55_0/libs/log/doc/html/log/detailed/utilities.html#log.detailed.utilities.manipulators.dump">dump</a>
+          manipulator, when used on AVX2-enabled CPU (e.g. Intel Haswell).
+        </div>
+      </li>
+    </ol>
+  </div>
   <div id="version_1_55_0.new_libraries">
     <h3><span class="link">New Libraries</span></h3>
     <ul>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/predef/">Predef</a>:</span> This library defines a
+          <span class="library"><a href="/libs/predef/">Predef</a>:</span> This library defines a
           set of compiler, architecture, operating system, library, and other version
           numbers from the information it can gather of C, C++, Objective C, and
           Objective C++ predefined macros or those defined in generally available
@@ -120,7 +196,7 @@
     <ul>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/accumulators/">Accumulators</a>:</span>
+          <span class="library"><a href="/libs/accumulators/">Accumulators</a>:</span>
           <ul>
             <li>
               <div>
@@ -143,7 +219,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/any/">Any</a>:</span>
+          <span class="library"><a href="/libs/any/">Any</a>:</span>
           <ul>
             <li>
               <div>
@@ -172,7 +248,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/asio/">Asio</a>:</span>
+          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
           <ul>
             <li>
               <div>
@@ -338,7 +414,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/atomic/">Atomic</a>:</span>
+          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
           <ul>
             <li>
               <div>
@@ -400,7 +476,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/chrono/">Chrono</a>:</span>
+          <span class="library"><a href="/libs/chrono/">Chrono</a>:</span>
           <ul>
             <li>
               <div>
@@ -433,7 +509,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/circular_buffer/">Circular Buffer</a>:</span>
+          <span class="library"><a href="/libs/circular_buffer/">Circular Buffer</a>:</span>
           <ul>
             <li>
               <div>
@@ -474,7 +550,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/config/">Config</a>:</span>
+          <span class="library"><a href="/libs/config/">Config</a>:</span>
           <ul>
             <li>
               <div>
@@ -512,7 +588,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/container/">Container</a>:</span>
+          <span class="library"><a href="/libs/container/">Container</a>:</span>
           <ul>
             <li>
               <div>
@@ -536,7 +612,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/context/">Context</a>:</span>
+          <span class="library"><a href="/libs/context/">Context</a>:</span>
           <ul>
             <li>
               <div>
@@ -549,7 +625,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/coroutine/">Coroutine</a>:</span>
+          <span class="library"><a href="/libs/coroutine/">Coroutine</a>:</span>
           <ul>
             <li>
               <div>
@@ -573,7 +649,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/filesystem/">Filesystem</a>:</span>
+          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
           <ul>
             <li>
               <div>
@@ -585,7 +661,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/fusion/">Fusion</a>:</span>
+          <span class="library"><a href="/libs/fusion/">Fusion</a>:</span>
           <ul>
             <li>
               <div>
@@ -598,7 +674,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/geometry/index.html">Geometry</a>:</span>
+          <span class="library"><a href="/libs/geometry/index.html">Geometry</a>:</span>
           <ul>
             <li>
               <div>
@@ -705,7 +781,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/graph/index.html">Graph</a>:</span>
+          <span class="library"><a href="/libs/graph/index.html">Graph</a>:</span>
           <ul>
             <li>
               <div>
@@ -766,7 +842,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/hash/">Hash</a>:</span>
+          <span class="library"><a href="/libs/hash/">Hash</a>:</span>
           <ul>
             <li>
               <div>
@@ -784,7 +860,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/interprocess/">Interprocess</a>:</span>
+          <span class="library"><a href="/libs/interprocess/">Interprocess</a>:</span>
           <ul>
             <li>
               <div>
@@ -802,7 +878,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/intrusive/">Intrusive</a>:</span>
+          <span class="library"><a href="/libs/intrusive/">Intrusive</a>:</span>
           <ul>
             <li>
               <div>
@@ -840,7 +916,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/conversion/lexical_cast.htm">Lexical cast</a>:</span>
+          <span class="library"><a href="/libs/conversion/lexical_cast.htm">Lexical cast</a>:</span>
           <ul>
             <li>
               <div>
@@ -866,7 +942,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/log/">Log</a>:</span>
+          <span class="library"><a href="/libs/log/">Log</a>:</span>
           <ul>
             <li>
               <div>
@@ -934,7 +1010,7 @@
             </li>
             <li>
               <div>
-                See <a href="/doc/libs/1_55_0/libs/log/doc/html/log/changelog.html">changelog</a>
+                See <a href="/libs/log/doc/html/log/changelog.html">changelog</a>
                 for more details.
               </div>
             </li>
@@ -943,7 +1019,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/math/">Math</a>:</span>
+          <span class="library"><a href="/libs/math/">Math</a>:</span>
           <ul>
             <li>
               <div>
@@ -1026,7 +1102,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/move/">Move</a>:</span>
+          <span class="library"><a href="/libs/move/">Move</a>:</span>
           <ul>
             <li>
               <div>
@@ -1042,7 +1118,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/msm/">Meta State Machine</a>:</span>
+          <span class="library"><a href="/libs/msm/">Meta State Machine</a>:</span>
           <ul>
             <li>
               <div>
@@ -1060,7 +1136,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/multiprecision/">Multiprecision</a>:</span>
+          <span class="library"><a href="/libs/multiprecision/">Multiprecision</a>:</span>
           <ul>
             <li>
               <div>
@@ -1117,7 +1193,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/multi_index/index.html">Multi-index Containers</a>:</span>
+          <span class="library"><a href="/libs/multi_index/index.html">Multi-index Containers</a>:</span>
           <ul>
             <li>
               <div>
@@ -1156,7 +1232,7 @@
                 </li>
               </ul>
               <div>
-                Refer to the <a href="/doc/libs/1_55_0/libs/multi_index/doc/compiler_specifics.html">compiler
+                Refer to the <a href="/libs/multi_index/doc/compiler_specifics.html">compiler
                 specifics</a> section for limitations on pre-C++11 compilers.
               </div>
             </li>
@@ -1166,37 +1242,37 @@
                 <ul>
                   <li>
                     <div>
-                      <a href="/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#member_offset"><code><span class="identifier">member_offset</span></code></a>,
+                      <a href="/libs/multi_index/doc/reference/key_extraction.html#member_offset"><code><span class="identifier">member_offset</span></code></a>,
                     </div>
                   </li>
                   <li>
                     <div>
-                      <a href="/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit"><code><span class="identifier">const_mem_fun_explicit</span></code></a>,
+                      <a href="/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit"><code><span class="identifier">const_mem_fun_explicit</span></code></a>,
                     </div>
                   </li>
                   <li>
                     <div>
-                      <a href="/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit"><code><span class="identifier">mem_fun_explicit</span></code></a>,
+                      <a href="/libs/multi_index/doc/reference/key_extraction.html#const_mem_fun_explicit"><code><span class="identifier">mem_fun_explicit</span></code></a>,
                     </div>
                   </li>
                   <li>
                     <div>
-                      <a href="/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_equal_to"><code><span class="identifier">composite_key_result_equal_to</span></code></a>,
+                      <a href="/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_equal_to"><code><span class="identifier">composite_key_result_equal_to</span></code></a>,
                     </div>
                   </li>
                   <li>
                     <div>
-                      <a href="/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_less"><code><span class="identifier">composite_key_result_less</span></code></a>,
+                      <a href="/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_less"><code><span class="identifier">composite_key_result_less</span></code></a>,
                     </div>
                   </li>
                   <li>
                     <div>
-                      <a href="/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_greater"><code><span class="identifier">composite_key_result_greater</span></code></a>,
+                      <a href="/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_greater"><code><span class="identifier">composite_key_result_greater</span></code></a>,
                     </div>
                   </li>
                   <li>
                     <div>
-                      <a href="/doc/libs/1_55_0/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_hash"><code><span class="identifier">composite_key_result_hash</span></code></a>.
+                      <a href="/libs/multi_index/doc/reference/key_extraction.html#composite_key_result_hash"><code><span class="identifier">composite_key_result_hash</span></code></a>.
                     </div>
                   </li>
                 </ul>
@@ -1212,7 +1288,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/mpi/">MPI</a>:</span>
+          <span class="library"><a href="/libs/mpi/">MPI</a>:</span>
           <ul>
             <li>
               <div>
@@ -1234,7 +1310,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/phoenix/">Phoenix</a>:</span>
+          <span class="library"><a href="/libs/phoenix/">Phoenix</a>:</span>
           <ul>
             <li>
               <div>
@@ -1247,7 +1323,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/polygon/">Polygon</a>:</span>
+          <span class="library"><a href="/libs/polygon/">Polygon</a>:</span>
           <ul>
             <li>
               <div>
@@ -1271,7 +1347,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/property_map/index.html">PropertyMap</a>:</span>
+          <span class="library"><a href="/libs/property_map/index.html">PropertyMap</a>:</span>
           <ul>
             <li>
               <div>
@@ -1315,7 +1391,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/rational">Rational</a>:</span>
+          <span class="library"><a href="/libs/rational">Rational</a>:</span>
           <ul>
             <li>
               <div>
@@ -1337,7 +1413,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/smart_ptr/index.html">SmartPtr</a>:</span>
+          <span class="library"><a href="/libs/smart_ptr/index.html">SmartPtr</a>:</span>
           <ul>
             <li>
               <div>
@@ -1350,7 +1426,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/Thread/">Thread</a>:</span>
+          <span class="library"><a href="/libs/Thread/">Thread</a>:</span>
           <ul>
             <li>
               <div>
@@ -1496,7 +1572,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/timer/">Timer</a>:</span>
+          <span class="library"><a href="/libs/timer/">Timer</a>:</span>
           <ul>
             <li>
               <div>
@@ -1508,7 +1584,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/type_traits/">Type Traits</a>:</span>
+          <span class="library"><a href="/libs/type_traits/">Type Traits</a>:</span>
           <ul>
             <li>
               <div>
@@ -1521,7 +1597,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/unordered/">Unordered</a>:</span>
+          <span class="library"><a href="/libs/unordered/">Unordered</a>:</span>
           <ul>
             <li>
               <div>
@@ -1533,12 +1609,19 @@
                 Avoid exposing some detail functions via. ADL on the iterators.
               </div>
             </li>
+            <li>
+              <div>
+                Work around variadic parameter bug in Visual Studio 2013. The compiler
+                still has problems with initializer lists, but it might not be possible
+                to work around those.
+              </div>
+            </li>
           </ul>
         </div>
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/utility/index.html">Utility</a>:</span>
+          <span class="library"><a href="/libs/utility/index.html">Utility</a>:</span>
           <ul>
             <li>
               <div>
@@ -1570,7 +1653,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/variant/">Variant</a>:</span>
+          <span class="library"><a href="/libs/variant/">Variant</a>:</span>
           <ul>
             <li>
               <div>
@@ -1605,11 +1688,11 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/wave/">Wave</a>:</span>
+          <span class="library"><a href="/libs/wave/">Wave</a>:</span>
           <ul>
             <li>
               <div>
-                See the <a href="/doc/libs/1_55_0/libs/wave/ChangeLog">Changelog</a> for details.
+                See the <a href="/libs/wave/ChangeLog">Changelog</a> for details.
               </div>
             </li>
           </ul>
@@ -1617,7 +1700,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_55_0/libs/xpressive">xpressive</a>:</span>
+          <span class="library"><a href="/libs/xpressive">xpressive</a>:</span>
           <ul>
             <li>
               <div>
@@ -1654,7 +1737,7 @@
           <ul>
             <li>
               <div>
-                Quickbook 1.6 finalized, see the <a href="/doc/libs/1_55_0/doc/html/quickbook/versions.html#language_versions.1_6">Quickbook
+                Quickbook 1.6 finalized, see the <a href="/doc/html/quickbook/versions.html#language_versions.1_6">Quickbook
                 documentation for details</a>.
               </div>
             </li>

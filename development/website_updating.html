@@ -359,10 +359,12 @@ tidy --tidy-mark no -i -wrap 78 -m -asxhtml --merge-divs no --merge-spans no --d
   ServerName boost.localhost
   DocumentRoot "/path/to/boost/website/public_html/beta"
   &lt;Directory "/path/to/boost/website/public_html/beta"&gt;
-    Options MultiViews Includes ExecCGI FollowSymLinks +Includes
+    Options +MultiViews +Includes +ExecCGI +FollowSymLinks +Includes
     AllowOverride All
     Order allow,deny
     Allow from all
+    # For apache 2.4:
+    # Require all granted
   &lt;/Directory&gt;
 &lt;/VirtualHost&gt;
 </pre>
