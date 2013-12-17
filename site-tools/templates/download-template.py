@@ -5,7 +5,7 @@ for x in downloads:
     emit('<li><a href="#%s">%s</a></li>\n' % (x['anchor'], x['label']))
 
 emit('<li><a href="#history">Old Boost Releases</a></li>\n')
-emit('<li><a href="#repository">Subversion Repository</a></li>\n')
+emit('<li><a href="#repository">Git Repositories</a></li>\n')
 emit('</ul>\n')
 
 for x in downloads:
