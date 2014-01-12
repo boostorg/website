@@ -23,7 +23,7 @@ function boost_title()
 
 $libs = USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt')) :
-	new boost_libraries(dirname(__FILE__) . '/libraries.xml');
+	boost_libraries::from_file(dirname(__FILE__) . '/libraries.xml');
 $categories = $libs->get_categories();
 
 // Display types:

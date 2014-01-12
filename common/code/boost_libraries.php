@@ -13,9 +13,13 @@ class boost_libraries
     private $categories = array();
     private $db = array();
 
-    function boost_libraries($xml_file)
+    static function from_file($file_path)
     {
-        $xml = implode("",file($xml_file));
+        return new boost_libraries(file_get_contents($file_path));
+    }
+
+    private function __construct($xml)
+    {
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
