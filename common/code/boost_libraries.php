@@ -57,6 +57,7 @@ class boost_libraries
                     case 'description':
                     case 'documentation':
                     case 'status':
+                    case 'module':
                     {
                         if (isset($val['value'])) { $lib[$val['tag']] = trim($val['value']); }
                         else { $lib[$val['tag']] = ''; }
@@ -103,6 +104,11 @@ class boost_libraries
                     $lib['update-version'] = $lib['boost-version'];
                 }
 
+                if (!isset($lib['module'])) {
+                    $key_parts = explode('/', $lib['key'], 2);
+                    $lib['module'] = $key_parts[0];
+                }
+
                 $this->db[$lib['key']][] = $lib;
                 $lib = NULL;
             }
@@ -144,6 +150,7 @@ class boost_libraries
             foreach($libs as $lib) {
                 $writer->startElement('library');
                 $writer->writeElement('key', $lib['key']);
+                $writer->writeElement('module', $lib['module']);
                 $writer->writeElement('boost-version', $lib['boost-version']);
                 if ($lib['update-version'] != $lib['boost-version']) {
                     $writer->writeElement('update-version', $lib['update-version']);
