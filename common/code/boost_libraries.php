@@ -18,6 +18,11 @@ class boost_libraries
         return new boost_libraries(file_get_contents($file_path));
     }
 
+    static function from_string($xml)
+    {
+        return new boost_libraries($xml);
+    }
+
     private function __construct($xml)
     {
         $parser = xml_parser_create();
@@ -118,11 +123,67 @@ class boost_libraries
             }
         }
 
-        foreach ($this->db as $key => &$libs) {
-            uasort($libs, function($x, $y) {
-                return $x['update-version']->compare($y['update-version']);
-            });
+        foreach (array_keys($this->db) as $key) {
+            $this->sort_versions($key);
         }
+    }
+
+    public function update($xml, $update_version) {
+        $update_version = BoostVersion::from($update_version);
+        $version_key = (string) $update_version;
+        $update = new boost_libraries($xml);
+
+        foreach($update->db as $key => $libs) {
+            if (count($libs) > 1) {
+                throw new boost_libraries_exception("Duplicate key: {$key}\n");
+            }
+
+            $details = reset($libs);
+            $details['update-version'] = $update_version;
+
+            $this->db[$key][$version_key] = $details;
+            $this->reduce_versions($key);
+        }
+    }
+
+    private function sort_versions($key) {
+        uasort($this->db[$key], function($x, $y) {
+            return $x['update-version']->compare($y['update-version']);
+        });
+    }
+
+    private function reduce_versions($key) {
+        $this->sort_versions($key);
+        $last = null;
+
+        foreach ($this->db[$key] as $version => $current) {
+            if ($last) {
+                if ($this->equal_details($last, $current)) {
+                    unset($this->db[$key][$version]);
+                }
+            }
+
+            $last = $current;
+        }
+    }
+
+    private function equal_details($details1, $details2) {
+        if (count(array_diff_key($details1, $details2))) {
+            return false;
+        }
+
+        foreach($details1 as $key => $value) {
+            if ($key == 'update-version') continue;
+
+            if (is_object($value)) {
+                if ($value->compare($details2[$key]) != 0) return false;
+            }
+            else {
+                if ($value != $details2[$key]) return false;
+            }
+        }
+
+        return true;
     }
     
     /**
@@ -242,5 +303,12 @@ class boost_libraries
     function get_categories() {
         return $this->categories;
     }
+
+    function get_history($key) {
+        return $this->db[$key];
+    }
 }
+
+class boost_libraries_exception extends RuntimeException {}
+
 ?>
