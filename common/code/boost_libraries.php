@@ -95,31 +95,36 @@ class boost_libraries
             }
             else if ($val['tag'] == 'library' && $val['type'] == 'close' && $lib)
             {
-                $key_base = $key = $lib['key'];
-                $count = 0;
-                while (isset($this->db[$key])) {
-                    $key = $key_base.(++$count);
-                }
-                $this->db[$key] = $lib;
+                $this->db[$lib['key']][] = $lib;
                 $lib = NULL;
             }
         }
     }
     
     function get_for_version($version, $sort = null, $filter = null) {
-        return $this->get($sort, function($lib) use($version, $filter) {
-            return $version->compare($lib['boost-version']) >= 0 &&
-                (!isset($lib['boost-min-version']) ||
-                    $version->compare($lib['boost-min-version']) >= 0) &&
-                (!isset($lib['boost-max-version']) ||
-                    $version->compare($lib['boost-max-version']) <= 0) &&
-                (!$filter || call_user_func($filter, $lib));
-        });
-    }
+        $libs = array();
 
-    function get($sort = null, $filter = null) {
-        $libs = $filter ? array_filter($this->db, $filter) : $this->db;
-        // Strip out the array keys, as they shouldn't be used externally.
+        foreach($this->db as $key => $versions) {
+            $lib = null;
+
+            foreach($versions as $l) {
+                if ((isset($l['boost-version']) && $version->compare($l['boost-version']) < 0) ||
+                    (isset($l['boost-min-version']) && $version->compare($l['boost-min-version']) < 0) ||
+                    (isset($l['boost-max-version']) && $version->compare($l['boost-max-version']) > 0)) {
+                    continue;
+                }
+
+                // TODO: If $lib isn't null, decide which to use.
+                $lib = $l;
+            }
+
+            if ($lib) {
+                if ($filter && !call_user_func($filter, $lib)) continue;
+
+                $libs[$key] = $lib;
+            }
+        }
+
         $libs = array_values($libs);
         if($sort) {
             uasort($libs, sort_by_field($sort));
