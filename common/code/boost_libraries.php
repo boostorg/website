@@ -19,7 +19,9 @@ class boost_libraries
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
-        xml_parse_into_struct($parser, $xml, $values);
+        if (!xml_parse_into_struct($parser, $xml, $values)) {
+            die("Error parsing XML");
+        }
         xml_parser_free($parser);
 
         ##print '<!-- '; print_r($values); print ' -->';
