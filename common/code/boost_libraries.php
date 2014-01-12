@@ -113,13 +113,13 @@ class boost_libraries
                     $lib['module'] = $key_parts[0];
                 }
 
-                $this->db[$lib['key']][] = $lib;
+                $this->db[$lib['key']][(string) $lib['update-version']] = $lib;
                 $lib = NULL;
             }
         }
 
         foreach ($this->db as $key => &$libs) {
-            usort($libs, function($x, $y) {
+            uasort($libs, function($x, $y) {
                 return $x['update-version']->compare($y['update-version']);
             });
         }
