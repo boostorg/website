@@ -94,8 +94,10 @@ class boost_libraries
             }
             else if ($val['tag'] == 'library' && $val['type'] == 'close' && $lib)
             {
+                assert(isset($lib['boost-version']));
+                assert(isset($lib['key']));
+
                 if (!isset($lib['update-version'])) {
-                    assert(isset($lib['boost-version']));
                     $lib['update-version'] = $lib['boost-version'];
                 }
 
@@ -111,6 +113,76 @@ class boost_libraries
         }
     }
     
+    /**
+     * Generate an xml representation of the library data.
+     *
+     * @return string
+     */
+    function to_xml() {
+        $writer = new XMLWriter();
+        $writer->openMemory();
+        $writer->setIndent(true);
+        $writer->setIndentString('  ');
+
+        $writer->startDocument('1.0', 'US-ASCII');
+        $writer->startElement('boost');
+        $writer->writeAttribute('xmlns:xsi',
+                'http://www.w3.org/2001/XMLSchema-instance');
+
+        $writer->startElement('categories');
+        foreach ($this->categories as $name => $category) {
+            $writer->startElement('category');
+            $writer->writeAttribute('name', $name);
+            $writer->writeElement('title', $category['title']);
+            $writer->endElement();
+        }
+        $writer->endElement(); // categories
+
+        foreach ($this->db as $key => $libs) {
+            foreach($libs as $lib) {
+                $writer->startElement('library');
+                $writer->writeElement('key', $lib['key']);
+                $writer->writeElement('boost-version', $lib['boost-version']);
+                if ($lib['update-version'] != $lib['boost-version']) {
+                    $writer->writeElement('update-version', $lib['update-version']);
+                }
+                $this->write_optional_element($writer, $lib, 'status');
+                $this->write_optional_element($writer, $lib, 'name');
+                $this->write_optional_element($writer, $lib, 'authors');
+                $this->write_optional_element($writer, $lib, 'description');
+                $this->write_optional_element($writer, $lib, 'documentation');
+                $this->write_optional_element($writer, $lib, 'std-proposal');
+                $this->write_optional_element($writer, $lib, 'std-tr1');
+                foreach($lib['category'] as $category) {
+                    $writer->writeElement('category', $category);
+                }
+                $writer->endElement();
+            }
+        }
+
+        $writer->endElement(); // boost
+        $writer->endDocument();
+        return $writer->outputMemory();
+    }
+
+    /**
+     * Write a library element.
+     *
+     * @param XMLWriter $writer
+     * @param string $lib
+     * @param string $name
+     */
+    private function write_optional_element($writer, $lib, $name) {
+        if (isset($lib[$name])) {
+            $value = $lib[$name];
+            $value = is_bool($value) ?
+                    ($value ? "true" : "false") :
+                    (string) $value;
+
+            $writer->writeElement($name, $value);
+        }
+    }
+
     function get_for_version($version, $sort = null, $filter = null) {
         $libs = array();
 
