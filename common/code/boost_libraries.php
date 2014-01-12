@@ -95,6 +95,11 @@ class boost_libraries
             }
             else if ($val['tag'] == 'library' && $val['type'] == 'close' && $lib)
             {
+                if (!isset($lib['boost-min-version'])) {
+                    assert(isset($lib['boost-version']));
+                    $lib['boost-min-version'] = $lib['boost-version'];
+                }
+
                 $this->db[$lib['key']][] = $lib;
                 $lib = NULL;
             }
@@ -108,8 +113,7 @@ class boost_libraries
             $lib = null;
 
             foreach($versions as $l) {
-                if ((isset($l['boost-version']) && $version->compare($l['boost-version']) < 0) ||
-                    (isset($l['boost-min-version']) && $version->compare($l['boost-min-version']) < 0) ||
+                if ($version->compare($l['boost-min-version']) < 0 ||
                     (isset($l['boost-max-version']) && $version->compare($l['boost-max-version']) > 0)) {
                     continue;
                 }
