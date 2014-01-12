@@ -10,9 +10,11 @@ class BoostVersion {
     private $version, $beta;
     static $current;
 
-    function __construct($major, $minor, $point, $beta = false) {
-        $this->version = Array($major, $minor, $point);
-        $this->beta = $beta;
+    static function release($major, $minor, $point, $beta = false) {
+        $version = new BoostVersion;
+        $version->version = Array($major, $minor, $point);
+        $version->beta = $beta;
+        return $version;
     }
 
     /**
@@ -27,7 +29,7 @@ class BoostVersion {
             if (preg_match('@(\d+)[._](\d+)[._](\d+)([._ ]?beta(\d*))?@',
                 $value, $matches))
             {
-                return new BoostVersion(
+                return self::release(
                     (int) $matches[1],
                     (int) $matches[2],
                     (int) $matches[3],
@@ -108,8 +110,8 @@ class BoostVersion {
 }
 
 function boost_set_current_version($major, $minor, $point) {
-    global $boost_current_version;
     if (BoostVersion::$current != null)
         die("Setting current version twice.");
-    BoostVersion::$current = new BoostVersion($major, $minor, $point);
+    BoostVersion::$current =
+            BoostVersion::release($major, $minor, $point);
 }
