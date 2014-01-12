@@ -103,6 +103,12 @@ class boost_libraries
                 $lib = NULL;
             }
         }
+
+        foreach ($this->db as $key => &$libs) {
+            usort($libs, function($x, $y) {
+                return $x['update-version']->compare($y['update-version']);
+            });
+        }
     }
     
     function get_for_version($version, $sort = null, $filter = null) {
@@ -110,14 +116,10 @@ class boost_libraries
 
         foreach($this->db as $key => $versions) {
             $lib = null;
-            $update_version = null;
 
             foreach($versions as $l) {
-                if ($version->compare($l['update-version']) >= 0 &&
-                    (!$update_version || $update_version->compare($l['update-version']) < 0))
-                {
+                if ($version->compare($l['update-version']) >= 0) {
                     $lib = $l;
-                    $update_version = $l['update-version'];
                 }
             }
 
