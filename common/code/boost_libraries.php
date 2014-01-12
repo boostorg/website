@@ -125,6 +125,10 @@ class boost_libraries
 
         foreach (array_keys($this->db) as $key) {
             $this->sort_versions($key);
+
+            foreach (array_keys($this->db[$key]) as $version) {
+                sort($this->db[$key][$version]['category']);
+            }
         }
     }
 
