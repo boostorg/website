@@ -7,14 +7,59 @@
 */
 
 class BoostVersion {
-    private $version, $beta;
+    // These should be private, but php disagrees.
+
+    /** release_stage is for full releases, which should have version
+     *  information */
+    const release_stage = 0;
+
+    /** The contents of the master branch of the super project */
+    const master_stage = 1;
+
+    /** The contents of the develop branch of the super project */
+    const develop_stage = 2;
+
+    /** The contents of the latest branch of the super project */
+    const latest_stage = 3;
+
+    /** The version number */
+    private $version = Array(
+        'stage' => self::release_stage,
+        'major' => 0,
+        'minor' => 0,
+        'point' => 0
+    );
+
+    /** True for beta releases. This is a bit broken */
+    private $beta = false;
+
+    /** The current release version. */
     static $current;
 
+    private function __construct($version) {
+        $this->version = array_merge($this->version, $version);
+    }
+
     static function release($major, $minor, $point, $beta = false) {
-        $version = new BoostVersion;
-        $version->version = Array($major, $minor, $point);
+        $version = new BoostVersion(Array(
+            'major' => $major,
+            'minor' => $minor,
+            'point' => $point
+        ));
         $version->beta = $beta;
         return $version;
+    }
+
+    static function master() {
+        return new BoostVersion(Array('stage' => self::master_stage));
+    }
+
+    static function develop() {
+        return new BoostVersion(Array('stage' => self::develop_stage));
+    }
+
+    static function latest() {
+        return new BoostVersion(Array('stage' => self::latest_stage));
     }
 
     /**
@@ -26,6 +71,14 @@ class BoostVersion {
             return $value;
         }
         else if (is_string($value)) {
+            $value = trim($value, " \t\n\r\0\x0B/");
+
+            switch($value) {
+                case 'master': return self::master();
+                case 'develop': return self::develop();
+                case 'latest': return self::latest();
+            }
+
             if (preg_match('@(\d+)[._](\d+)[._](\d+)([._ ]?beta(\d*))?@',
                 $value, $matches))
             {
@@ -38,7 +91,7 @@ class BoostVersion {
             }
             else
             {
-                die("Invalid version");
+                die("Invalid version: ".htmlentities($value));
             }
         }
         else {
@@ -88,6 +141,7 @@ class BoostVersion {
      */
     function compare($x) {
         $x = BoostVersion::from($x);
+
         return $this->version < $x->version ? -1 :
             ($this->version > $x->version ? 1 : 0);
     }
@@ -96,7 +150,8 @@ class BoostVersion {
      * A string representation appropriate for output.
      */
     function __toString() {
-        return implode('.', $this->version).
+        return $this->version['stage'] ? $this->stage_name() :
+            implode('.', $this->version_numbers()).
             ($this->is_beta() ? ' beta'. $this->beta : '');
     }
 
@@ -104,8 +159,26 @@ class BoostVersion {
      * The name of the root directory for this version.
      */
     function dir() {
-        return 'boost_'.implode('_', $this->version).
+        return $this->version['stage'] ? $this->stage_name() :
+            'boost_'.implode('_', $this->version_numbers()).
             ($this->is_beta() ? '_beta'. $this->beta : '');
+    }
+
+    /** Return the version numbers from the verion array */
+    private function version_numbers() {
+        $numbers = $this->version;
+        array_shift($numbers);
+        return $numbers;
+    }
+
+    /** Return the name of an unversioned stage */
+    private function stage_name() {
+        switch($this->version['stage']) {
+            case self::master_stage: return 'master';
+            case self::develop_stage: return 'develop';
+            case self::latest_stage: return 'latest';
+            default: assert(false);
+        }
     }
 }
 
