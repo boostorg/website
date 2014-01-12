@@ -6,9 +6,6 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-define('BOOST_VERSION_BETA', 0);
-define('BOOST_VERSION_RELEASED', 1);
-
 class BoostVersion {
     var $version, $beta;
     static $current;
