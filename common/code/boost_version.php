@@ -7,7 +7,7 @@
 */
 
 class BoostVersion {
-    var $version, $beta;
+    private $version, $beta;
     static $current;
 
     function __construct($major, $minor, $point, $beta = false) {
