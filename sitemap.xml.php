@@ -11,14 +11,6 @@
 
 // Returns true if the library is part of the current release of boost.
 
-function current_version_filter($lib) {
-    return BoostVersion::current()->compare($lib['boost-version']) >= 0 &&
-        (!isset($lib['boost-min-version']) ||
-            BoostVersion::current()->compare($lib['boost-min-version']) >= 0) &&
-        (!isset($lib['boost-max-version']) ||
-            BoostVersion::current()->compare($lib['boost-max-version']) <= 0);
-}
-
 function xmlentities($text) {
     return str_replace(
         array('&', '<', '>', '"', "'"),
@@ -51,7 +43,7 @@ $libs = USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/generated/libraries.txt')) :
 	new boost_libraries(dirname(__FILE__) . '/doc/libraries.xml');
 
-foreach ($libs->get(null, 'current_version_filter') as $lib) {
+foreach ($libs->get_for_version(BoostVersion::current()) as $lib) {
     echo_sitemap_url("doc/libs/release/$lib[documentation]", '1.0', 'daily');
 }
 

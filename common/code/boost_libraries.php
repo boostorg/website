@@ -12,7 +12,7 @@ class boost_libraries
 {
     private $categories = array();
     private $db = array();
-    
+
     function boost_libraries($xml_file)
     {
         $xml = implode("",file($xml_file));
@@ -106,6 +106,17 @@ class boost_libraries
         }
     }
     
+    function get_for_version($version, $sort = null, $filter = null) {
+        return $this->get($sort, function($lib) use($version, $filter) {
+            return $version->compare($lib['boost-version']) >= 0 &&
+                (!isset($lib['boost-min-version']) ||
+                    $version->compare($lib['boost-min-version']) >= 0) &&
+                (!isset($lib['boost-max-version']) ||
+                    $version->compare($lib['boost-max-version']) <= 0) &&
+                (!$filter || call_user_func($filter, $lib));
+        });
+    }
+
     function get($sort = null, $filter = null) {
         $libs = $filter ? array_filter($this->db, $filter) : $this->db;
         // Strip out the array keys, as they shouldn't be used externally.
@@ -116,8 +127,8 @@ class boost_libraries
         return $libs;
     }
 
-    function get_categorized($sort = null, $filter = null) {
-        $libs = $this->get($sort, $filter);
+    function get_categorized_for_version($version, $sort = null, $filter = null) {
+        $libs = $this->get_for_version($version, $sort, $filter);
         $categories = $this->categories;
 
         foreach($libs as $key => $library) {

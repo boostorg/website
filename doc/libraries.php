@@ -97,12 +97,7 @@ if($category_value) $page_title.= ' - '. $categories[$category_value]['title'];
 function library_filter($lib) {
   global $filter_value, $category_value;
 
-  return BoostVersion::page()->compare($lib['boost-version']) >= 0 &&
-      (!isset($lib['boost-min-version']) ||
-        BoostVersion::page()->compare($lib['boost-min-version']) >= 0) &&
-      (!isset($lib['boost-max-version']) ||
-        BoostVersion::page()->compare($lib['boost-max-version']) <= 0) &&
-      (!$filter_value || ($lib[$filter_value] && $lib[$filter_value] !== 'false')) &&
+  return (!$filter_value || ($lib[$filter_value] && $lib[$filter_value] !== 'false')) &&
       (!isset($_GET['filter']) || $lib[$_GET['filter']]) &&
       (!$category_value || $category_value === 'all' ||
         array_search($category_value, $lib['category']) !== FALSE);
@@ -258,7 +253,7 @@ function category_link($name, $category) {
 
               <dl>
                 <?php
-                foreach ($libs->get($sort_value, 'library_filter') as $lib) { ?>
+                foreach ($libs->get_for_version(BoostVersion::page(), $sort_value, 'library_filter') as $lib) { ?>
 
                 <dt><?php libref($lib); ?></dt>
 
@@ -290,7 +285,7 @@ function category_link($name, $category) {
 
               <h2>By Category</h2>
               <?php
-              foreach ($libs->get_categorized($sort_value, 'library_filter') as $name => $category) {
+              foreach ($libs->get_categorized_for_version(BoostVersion::page(), $sort_value, 'library_filter') as $name => $category) {
                 if(count($category['libraries'])) {?>
                   <h3><?php category_link($name, $category); ?></h3>
                   <ul><?php foreach ($category['libraries'] as $lib) { ?>
