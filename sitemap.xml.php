@@ -27,7 +27,9 @@ function xmlentities($text) {
 }
 
 function echo_sitemap_url($loc, $priority, $freq) {
-    $loc_xml = xmlentities("http://$_SERVER[HTTP_HOST]/$loc");
+    $loc_xml = isset($_SERVER['HTTP_HOST']) ?
+            xmlentities("http://{$_SERVER['HTTP_HOST']}/{$loc}") :
+            xmlentities("http://www.boost.org/{$loc}");
 
     echo <<<EOL
 <url>
