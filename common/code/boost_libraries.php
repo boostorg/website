@@ -61,8 +61,7 @@ class boost_libraries
                     }
                     break;
                     case 'boost-version':
-                    case 'boost-min-version':
-                    case 'boost-max-version':
+                    case 'update-version':
                     {
                         if (isset($val['value'])) { $lib[$val['tag']] = BoostVersion::from($val['value']); }
                         else { $lib[$val['tag']] = ''; }
@@ -95,9 +94,9 @@ class boost_libraries
             }
             else if ($val['tag'] == 'library' && $val['type'] == 'close' && $lib)
             {
-                if (!isset($lib['boost-min-version'])) {
+                if (!isset($lib['update-version'])) {
                     assert(isset($lib['boost-version']));
-                    $lib['boost-min-version'] = $lib['boost-version'];
+                    $lib['update-version'] = $lib['boost-version'];
                 }
 
                 $this->db[$lib['key']][] = $lib;
@@ -111,15 +110,15 @@ class boost_libraries
 
         foreach($this->db as $key => $versions) {
             $lib = null;
+            $update_version = null;
 
             foreach($versions as $l) {
-                if ($version->compare($l['boost-min-version']) < 0 ||
-                    (isset($l['boost-max-version']) && $version->compare($l['boost-max-version']) > 0)) {
-                    continue;
+                if ($version->compare($l['update-version']) >= 0 &&
+                    (!$update_version || $update_version->compare($l['update-version']) < 0))
+                {
+                    $lib = $l;
+                    $update_version = $l['update-version'];
                 }
-
-                // TODO: If $lib isn't null, decide which to use.
-                $lib = $l;
             }
 
             if ($lib) {
