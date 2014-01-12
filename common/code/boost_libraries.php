@@ -38,7 +38,6 @@ class boost_libraries
             }
             else if ($val['tag'] == 'category' && $val['type'] == 'close' && $category)
             {
-                $category['libraries'] = array();
                 $this->categories[$category['name']] = $category;
                 $category = NULL;
             }
@@ -121,15 +120,14 @@ class boost_libraries
         $libs = $this->get($sort, $filter);
         $categories = $this->categories;
 
-        foreach($libs as $key => &$library) {
+        foreach($libs as $key => $library) {
             foreach($library['category'] as $category) {
                 if(!isset($this->categories[$category])) {
                     echo 'Unknown category: ', htmlentities($category), "\n";
                     exit(0);
                 }
-                $categories[$category]['libraries'][] = &$library;
+                $categories[$category]['libraries'][] = $library;
             }
-            unset($library);
         }
 
         return $categories;
