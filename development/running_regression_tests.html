@@ -8,7 +8,8 @@
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href=
   "/style-v2/section-development.css" />
-  <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
+  <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> 
+  <![endif]-->
 </head><!--
 Note: Editing website content is documented at:
 http://www.boost.org/development/website_updating.html
@@ -34,12 +35,13 @@ http://www.boost.org/development/website_updating.html
 
             <div class="section-title">
               <p><strong><em>It's easy to run regression tests on your Boost
-              distribution.</em></strong></p>
+              clone.</em></strong></p>
 
-              <p>To run a library's regression tests, run Boost's <a href=
-              "/boost-build2/"><tt>bjam</tt></a> utility from that library's
-              <tt>libs/<em>&lt;library&gt;</em>/test</tt> directory. To run a
-              single test, specify its name (as found in Jamfile.v2) on the
+              <p>To run a library's regression tests, run Boost's
+              <a href="/boost-build2/">b2</a> utility from the
+              <tt><i>&lt;boost-root&gt;</i>/libs/<em>&lt;library&gt;</em>/test</tt> directory. To run a
+              single test, specify its name (as found in 
+              <tt><i>&lt;boost-root&gt;</i>/libs/<em>&lt;library&gt;</em>/test/Jamfile.v2</tt>) on the
               command line.</p>
 
               <p>See the <a href=
@@ -48,11 +50,11 @@ http://www.boost.org/development/website_updating.html
               <tt>bjam</tt> for your platform, and navigating your Boost
               distribution.</p>
 
-              <p>To run every library's regression tests, run <tt>bjam</tt>
-              from Boost's <tt>/status</tt> directory.</p>
+              <p>To run every library's regression tests, run <tt>b2</tt>
+              from <tt><i>&lt;boost-root&gt;</i>//status</tt> directory.</p>
 
               <p>To run Boost.Build's regression tests, run "<tt>python
-              test_all.py</tt>" from Boost's <tt>tools/build/v2/test</tt>
+              test_all.py</tt>" from <tt><i>&lt;boost-root&gt;</i>/tools/build/v2/test</tt>
               directory. (Python 2.3 &le; version &lt; 3.0 required.)</p>
             </div>
 
@@ -61,7 +63,7 @@ http://www.boost.org/development/website_updating.html
             </div>
 
             <div class="section-body">
-              <p>This runs all regressions and reports the results back to
+              <p>This runs all Boost regression tests and reports the results back to
               the Boost community.</p>
 
               <h3>Requirements</h3>
@@ -82,12 +84,23 @@ http://www.boost.org/development/website_updating.html
                 test.</li>
 
                 <li>Download the <a href=
-                "http://svn.boost.org/svn/boost/trunk/tools/regression/src/run.py">
-                run.py</a> script into that directory.</li>
+                "https://github.com/boostorg/boost/blob/develop/tools/regression/src/run.py">
+                run.py</a> script into that directory:</li>
+                
+                <blockquote>
+                
+                <ol>
+                  <li>Open <a href="https://github.com/boostorg/boost/blob/develop/tools/regression/src/run.py">
+                  run.py</a> script in your browser.</li>
+                  <li>Click the <strong><em>Raw</em></strong> button.</li> 
+                  <li>Save as <tt>run.py</tt> in the directory you just created.</li>
+                </ol>
+
+                </blockquote>
 
                 <li>
                   <p>Run "<code>python run.py [options] [commands]</code>"
-                  with at minimum the two options:</p>
+                  <strong>with these two options at a minimum</strong>:</p>
 
                   <ul>
                     <li><tt>--runner</tt> - Your choice of name that
@@ -177,10 +190,10 @@ Options:
                 programs.</li>
 
                 <li>Download the most recent from the <a href=
-                "/users/download/#repository">Boost Subversion Repository</a>
+                "/users/download/#repository">Boost Git Repository</a>
                 into the subdirectory <tt>boost</tt>.</li>
 
-                <li>Build <tt>bjam</tt> and <tt>process_jam_log</tt> if
+                <li>Build <tt>b2</tt> and <tt>process_jam_log</tt> if
                 needed. (<tt>process_jam_log</tt> is a utility, which
                 extracts the test results from the log file produced by
                 Boost.Build).</li>
@@ -303,7 +316,7 @@ python run.py ... <strong>--user=</strong>
               <p>The main advantage of incremental runs is a significantly
               shorter turnaround time, but unfortunately they don't always
               produce reliable results. Some type of changes to the codebase
-              (changes to the bjam testing subsystem in particular) often
+              (changes to the b2 testing subsystem in particular) often
               require switching to a full mode for one cycle in order to
               produce trustworthy reports.</p>
 
