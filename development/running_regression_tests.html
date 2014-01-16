@@ -51,7 +51,7 @@ http://www.boost.org/development/website_updating.html
               distribution.</p>
 
               <p>To run every library's regression tests, run <tt>b2</tt>
-              from <tt><i>&lt;boost-root&gt;</i>//status</tt> directory.</p>
+              from <tt><i>&lt;boost-root&gt;</i>/status</tt> directory.</p>
 
               <p>To run Boost.Build's regression tests, run "<tt>python
               test_all.py</tt>" from <tt><i>&lt;boost-root&gt;</i>/tools/build/v2/test</tt>
@@ -99,24 +99,29 @@ http://www.boost.org/development/website_updating.html
                 </blockquote>
 
                 <li>
-                  <p>Run "<code>python run.py [options] [commands]</code>"
-                  <strong>with these two options at a minimum</strong>:</p>
+                  <p>Run "<code>python run.py options... [commands]</code>"
+                  <strong>with these three required options</strong>, plus any others you wish to employ:</p>
 
                   <ul>
-                    <li><tt>--runner</tt> - Your choice of name that
+                    <li><tt>--runner=</tt> - Your choice of name that
                     identifies your results in the reports <sup><a href=
                     "#runnerid1">1</a>, <a href=
                     "#runnerid2">2</a></sup>.</li>
 
-                    <li><tt>--toolsets</tt> - The toolset(s) you want to test
+                    <li><tt>--toolsets=</tt> - The toolset(s) you want to test
                     with <sup><a href="#toolsets">3</a></sup>.</li>
+                    
+                    <li><tt>--tag=</tt> - The tag (i.e. branch) you want to test.
+                    The only tages that currently make sense are
+                    <tt>develop</tt> and <tt>master</tt>.</li>
+                                        
                   </ul>
 
                   <p>For example:</p><tt>python run.py --runner=Metacomm
-                  --toolsets=gcc-4.2.1,msvc-8.0</tt>
+                  --toolsets=gcc-4.2.1,msvc-8.0 --tag=develop</tt>
                 </li>
               </ol>
-
+              
               <p><strong>Note</strong>: If you are behind a firewall/proxy
               server, everything should still "just work". In the rare cases
               when it doesn't, you can explicitly specify the proxy server
