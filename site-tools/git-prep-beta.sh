@@ -40,3 +40,6 @@ then
 
     exit 1
 fi
+
+#TODO: Should I also merge changes from local master?
+git merge -q --ff-only origin/master
