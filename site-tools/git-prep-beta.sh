@@ -43,3 +43,5 @@ fi
 
 #TODO: Should I also merge changes from local master?
 git merge -q --ff-only origin/master
+
+echo "Beta is now up to date."
