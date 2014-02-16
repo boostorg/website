@@ -23,6 +23,13 @@ function get_archive_location(
     $version = $path_parts[1];
     $key = $path_parts[2];
 
+    // TODO: Would be better to use the version object to get this, but
+    // we can't create it yet. I think it needs to also model 'boost-build',
+    // or maybe create another class which represents a collection of
+    // documentation.
+    $version_dir = (preg_match('@^[0-9]@', $version)) ?
+            "boost_{$version}" : $version;
+
     $file = false;
 
     if ($fix_dir) {
@@ -41,7 +48,7 @@ function get_archive_location(
 
         if ($archive_subdir)
         {
-            $file = $file . $archive_file_prefix . $version . '/' . $key;
+            $file = $file . $archive_file_prefix . $version_dir . '/' . $key;
         }
         else
         {
@@ -49,7 +56,9 @@ function get_archive_location(
         }
     }
 
-    $archive = $zipfile ? str_replace('\\','/', $archive_dir . '/' . $version . '.zip') : Null;
+    $archive = $zipfile ?
+            str_replace('\\','/', $archive_dir . '/' . $version_dir . '.zip') :
+            Null;
     
     return array(
         'version' => $version,

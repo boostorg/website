@@ -11,14 +11,6 @@
 
 // Returns true if the library is part of the current release of boost.
 
-function current_version_filter($lib) {
-    return BoostVersion::current()->compare($lib['boost-version']) >= 0 &&
-        (!isset($lib['boost-min-version']) ||
-            BoostVersion::current()->compare($lib['boost-min-version']) >= 0) &&
-        (!isset($lib['boost-max-version']) ||
-            BoostVersion::current()->compare($lib['boost-max-version']) <= 0);
-}
-
 function xmlentities($text) {
     return str_replace(
         array('&', '<', '>', '"', "'"),
@@ -27,7 +19,9 @@ function xmlentities($text) {
 }
 
 function echo_sitemap_url($loc, $priority, $freq) {
-    $loc_xml = xmlentities("http://$_SERVER[HTTP_HOST]/$loc");
+    $loc_xml = isset($_SERVER['HTTP_HOST']) ?
+            xmlentities("http://{$_SERVER['HTTP_HOST']}/{$loc}") :
+            xmlentities("http://www.boost.org/{$loc}");
 
     echo <<<EOL
 <url>
@@ -47,9 +41,9 @@ echo_sitemap_url("doc/libs/", '1.0', 'daily');
 
 $libs = USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/generated/libraries.txt')) :
-	new boost_libraries(dirname(__FILE__) . '/doc/libraries.xml');
+	boost_libraries::from_file(dirname(__FILE__) . '/doc/libraries.xml');
 
-foreach ($libs->get(null, 'current_version_filter') as $lib) {
+foreach ($libs->get_for_version(BoostVersion::current()) as $lib) {
     echo_sitemap_url("doc/libs/release/$lib[documentation]", '1.0', 'daily');
 }
 
