@@ -35,6 +35,29 @@ class boost_libraries
         return new boost_libraries($xml);
     }
 
+    /**
+     * Create from an array of library details.
+     *
+     * This is pretty hacky, I only added for a one-off function. If you want
+     * to make use of it, it could probably do with some sanity checks to
+     * make sure that the libraries are valid.
+     *
+     * @param array $libraries
+     * @return \boost_libraries
+     */
+    static function from_array($libraries)
+    {
+        $x = new boost_libraries('<boost></boost>');
+
+        foreach ($libraries as $lib) {
+            $version = isset($lib['update-version']) ? $lib['update-version'] :
+                $lib['boost-version'];
+            $x->db[$lib['key']][(string) $version] = $lib;
+        }
+
+        return $x;
+    }
+
     private function __construct($xml)
     {
         $parser = xml_parser_create();
@@ -51,7 +74,11 @@ class boost_libraries
         $category = NULL;
         foreach ( $values as $key => $val )
         {
-            if ($val['tag'] == 'category' && $val['type'] == 'open' && !$lib && !$category)
+            if ($val['tag'] == 'boost' || $val['tag'] == 'categories')
+            {
+                // Ignore boost tags.
+            }
+            else if ($val['tag'] == 'category' && $val['type'] == 'open' && !$lib && !$category)
             {
                 $category = isset($val['attributes']) ? $val['attributes'] : array();
             }
@@ -133,6 +160,11 @@ class boost_libraries
                 $this->db[$lib['key']][(string) $lib['update-version']] = $lib;
                 $lib = NULL;
             }
+            else
+            {
+                echo 'Invalid tag: ', htmlentities($val['tag']), "\n";
+                exit(0);
+            }
         }
 
         foreach (array_keys($this->db) as $key) {
@@ -205,9 +237,12 @@ class boost_libraries
     /**
      * Generate an xml representation of the library data.
      *
+     * @param array $exclude Fields to leave out of the library output
      * @return string
      */
-    function to_xml() {
+    function to_xml($exclude = array()) {
+        $exclude = array_flip($exclude);
+
         $writer = new XMLWriter();
         $writer->openMemory();
         $writer->setIndent(true);
@@ -218,33 +253,37 @@ class boost_libraries
         $writer->writeAttribute('xmlns:xsi',
                 'http://www.w3.org/2001/XMLSchema-instance');
 
-        $writer->startElement('categories');
-        foreach ($this->categories as $name => $category) {
-            $writer->startElement('category');
-            $writer->writeAttribute('name', $name);
-            $writer->writeElement('title', $category['title']);
-            $writer->endElement();
+        if ($this->categories) {
+            $writer->startElement('categories');
+            foreach ($this->categories as $name => $category) {
+                $writer->startElement('category');
+                $writer->writeAttribute('name', $name);
+                $writer->writeElement('title', $category['title']);
+                $writer->endElement();
+            }
+            $writer->endElement(); // categories
         }
-        $writer->endElement(); // categories
 
         foreach ($this->db as $key => $libs) {
             foreach($libs as $lib) {
                 $writer->startElement('library');
-                $writer->writeElement('key', $lib['key']);
-                $writer->writeElement('module', $lib['module']);
-                $writer->writeElement('boost-version', $lib['boost-version']);
+                $this->write_element($writer, $exclude, $lib, 'key');
+                $this->write_element($writer, $exclude, $lib, 'module');
+                $this->write_element($writer, $exclude, $lib, 'boost-version');
                 if ($lib['update-version'] != $lib['boost-version']) {
-                    $writer->writeElement('update-version', $lib['update-version']);
+                    $this->write_element($writer, $exclude, $lib, 'update-version');
                 }
-                $this->write_optional_element($writer, $lib, 'status');
-                $this->write_optional_element($writer, $lib, 'name');
-                $this->write_optional_element($writer, $lib, 'authors');
-                $this->write_optional_element($writer, $lib, 'description');
-                $this->write_optional_element($writer, $lib, 'documentation');
-                $this->write_optional_element($writer, $lib, 'std-proposal');
-                $this->write_optional_element($writer, $lib, 'std-tr1');
-                foreach($lib['category'] as $category) {
-                    $writer->writeElement('category', $category);
+                $this->write_optional_element($writer, $exclude, $lib, 'status');
+                $this->write_optional_element($writer, $exclude, $lib, 'name');
+                $this->write_optional_element($writer, $exclude, $lib, 'authors');
+                $this->write_optional_element($writer, $exclude, $lib, 'description');
+                $this->write_optional_element($writer, $exclude, $lib, 'documentation');
+                $this->write_optional_element($writer, $exclude, $lib, 'std-proposal');
+                $this->write_optional_element($writer, $exclude, $lib, 'std-tr1');
+                if (!isset($exclude['category'])) {
+                    foreach($lib['category'] as $category) {
+                        $writer->writeElement('category', $category);
+                    }
                 }
                 $writer->endElement();
             }
@@ -259,17 +298,32 @@ class boost_libraries
      * Write a library element.
      *
      * @param XMLWriter $writer
+     * @param array $exclude
      * @param string $lib
      * @param string $name
      */
-    private function write_optional_element($writer, $lib, $name) {
-        if (isset($lib[$name])) {
+    private function write_element($writer, $exclude, $lib, $name) {
+        if (!isset($exclude[$name])) {
             $value = $lib[$name];
             $value = is_bool($value) ?
                     ($value ? "true" : "false") :
                     (string) $value;
 
             $writer->writeElement($name, $value);
+        }
+    }
+
+    /**
+     * Write a library element.
+     *
+     * @param XMLWriter $writer
+     * @param array $exclude
+     * @param string $lib
+     * @param string $name
+     */
+    private function write_optional_element($writer, $exclude, $lib, $name) {
+        if (isset($lib[$name])) {
+            $this->write_element($writer, $exclude, $lib, $name);
         }
     }
 
