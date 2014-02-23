@@ -7,6 +7,7 @@
 
 require_once(dirname(__FILE__) . '/boost_utility.php');
 require_once(dirname(__FILE__) . '/boost_version.php');
+require_once(dirname(__FILE__) . '/url.php');
 
 class boost_libraries
 {
@@ -198,12 +199,18 @@ class boost_libraries
             $details = reset($libs);
             $details['update-version'] = $update_version;
 
-            if (!isset($details['module'])) {
-                $details['module'] = $module;
+            if ($module) {
+                if (!isset($details['module'])) {
+                    $details['module'] = $module;
+                }
+
+                $details['documentation'] = resolve_url(
+                        isset($details['documentation'])
+                            ? $details['documentation'] : '.',
+                        "/libs/{$details['module']}/");
+                $details['documentation'] =
+                        ltrim($details['documentation'], '/');
             }
-            $details['documentation'] = http_build_url(
-                    "/libs/{$details['module']}/",
-                    parse_url($details['documentation'] ?: '.'));
 
             $this->db[$key][$version_key] = $details;
             $this->reduce_versions($key);
