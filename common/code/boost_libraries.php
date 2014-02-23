@@ -13,11 +13,23 @@ class boost_libraries
     private $categories = array();
     private $db = array();
 
+    /**
+     * Read library details from an xml file.
+     *
+     * @param string $file_path
+     * @return \boost_libraries
+     */
     static function from_file($file_path)
     {
         return new boost_libraries(file_get_contents($file_path));
     }
 
+    /**
+     * Read library details from an xml string
+     *
+     * @param string $xml
+     * @return \boost_libraries
+     */
     static function from_string($xml)
     {
         return new boost_libraries($xml);
@@ -261,6 +273,14 @@ class boost_libraries
         }
     }
 
+    /**
+     * Get the library details for a particular release.
+     *
+     * @param \BoostVersion $version
+     * @param string $sort Optional field used to sort the libraries.
+     * @param callable $filter Optional filter function.
+     * @return array
+     */
     function get_for_version($version, $sort = null, $filter = null) {
         $libs = array();
 
@@ -287,6 +307,15 @@ class boost_libraries
         return $libs;
     }
 
+    /**
+     * Get the library details for a particular release, grouped into
+     * categories.
+     *
+     * @param \BoostVersion $version
+     * @param string $sort Optional field used to sort the libraries.
+     * @param callable $filter Optional filter function.
+     * @return array
+     */
     function get_categorized_for_version($version, $sort = null, $filter = null) {
         $libs = $this->get_for_version($version, $sort, $filter);
         $categories = $this->categories;
@@ -304,10 +333,21 @@ class boost_libraries
         return $categories;
     }
 
+    /**
+     * Get a list of the different categories.
+     *
+     * @return string
+     */
     function get_categories() {
         return $this->categories;
     }
 
+    /**
+     * Get the full history of a library.
+     *
+     * @param string $key
+     * @return array
+     */
     function get_history($key) {
         return $this->db[$key];
     }
