@@ -16,6 +16,7 @@ function main() {
 
     $libs = boost_libraries::from_file(dirname(__FILE__) . '/../doc/libraries.xml');
     if ($git_mirror) {
+        $git_mirror = realpath($git_mirror);
         update_from_git($libs, $git_mirror, 'master');
         update_from_git($libs, $git_mirror, 'develop');
     }
@@ -35,8 +36,7 @@ function update_from_git($libs, $location, $branch) {
 
     $modules = Array();
 
-    foreach(run_process("{$git_command} config -l --blob ".
-            "\$({$git_command} ls-tree {$branch} .gitmodules | cut -f 1 | cut -f 3 -d ' ')")
+    foreach(git_config_from_repo($git_command, $branch, ".gitmodules")
         as $line_number => $line)
     {
         if (!$line) continue;
@@ -80,6 +80,42 @@ function update_from_git($libs, $location, $branch) {
                     $branch);
             }
         }
+    }
+}
+
+function git_config_from_repo($git_command, $branch, $path) {
+    $temp_file = null;
+
+    if (git_version($git_command) >= array(1,8,4,0))
+    {
+        $blob = run_process("{$git_command} ls-tree {$branch} .gitmodules "
+            ."| cut -f 1 | cut -f 3 -d ' '");
+        $file_param = "--blob {$blob[0]}";
+    }
+    else
+    {
+        $temp_file = tempnam(sys_get_temp_dir(), 'boost-git-');
+        run_process("{$git_command} show {$branch}:{$path} ".
+                "> {$temp_file}");
+        $file_param = "-f {$temp_file}";
+    }
+
+    $result = run_process("{$git_command} config -l {$file_param}");
+    if ($temp_file) unlink($temp_file);
+    return $result;
+}
+
+function git_version($git_command) {
+    $output = run_process("{$git_command} --version");
+    $match = null;
+
+    if (count($output) == 1
+            && preg_match('@^git version ([0-9.]+)$@', $output[0], $match))
+    {
+        return array_pad(explode('.', $output[0]), 4, 0);
+    }
+    else {
+        return array(0,0,0,0);
     }
 }
 
