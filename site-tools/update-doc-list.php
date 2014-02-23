@@ -23,7 +23,7 @@ function main() {
 
     echo "Writing to disk\n";
 
-    file_put_contents(dirname(__FILE__) . '/../doc/libraries.xml.new', $libs->to_xml());
+    file_put_contents(dirname(__FILE__) . '/../doc/libraries.xml', $libs->to_xml());
     file_put_contents(dirname(__FILE__) . '/../generated/libraries.txt', serialize($libs));
 }
 
