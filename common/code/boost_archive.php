@@ -5,6 +5,7 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 require_once(dirname(__FILE__) . '/boost.php');
+require_once(dirname(__FILE__) . '/url.php');
 
 define('BOOST_DOCS_MODIFIED_DATE', 'Sun 30 Sep 2012 10:18:33 +0000');
 
@@ -465,32 +466,6 @@ function detect_redirect($content)
     }
 
     return false;
-}
-
-// Not a full implementation. Just good enough for redirecting.
-function resolve_url($url) {
-    $url = parse_url($url);
-
-    if(isset($url['schme'])) return $url;
-
-    $url['scheme'] = 'http'; # Detect other schemes?
-
-    if(!isset($url['host'])) {
-        $url['host'] = $_SERVER['HTTP_HOST'];
-        
-        if($url['path'][0] != '/') {
-            $path = explode('/', $_SERVER['REQUEST_URI']);
-            array_pop($path);
-            $rel_path = explode('/', $url['path']);
-            while(isset($rel_path[0]) && $rel_path[0] == '..') {
-                array_pop($path);
-                array_shift($rel_path);
-            }
-            $url['path'] = implode('/', $path).'/'.implode('/', $rel_path);
-        }
-    }
-    
-    return $url['scheme'].'://'.$url['host'] . $url['path'];
 }
 
 // Display the content in the standard boost template
