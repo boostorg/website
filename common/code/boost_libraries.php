@@ -176,7 +176,16 @@ class boost_libraries
         }
     }
 
-    public function update($xml, $update_version) {
+    /**
+     * Update the libraries from xml details.
+     *
+     * @param string $xml
+     * @param \boost_version $update_version The version of Boost that the
+     *      xml describes.
+     * @param type $module The module the xml is taken from.
+     * @throws boost_libraries_exception
+     */
+    public function update($xml, $update_version, $module = null) {
         $update_version = BoostVersion::from($update_version);
         $version_key = (string) $update_version;
         $update = new boost_libraries($xml);
@@ -188,6 +197,13 @@ class boost_libraries
 
             $details = reset($libs);
             $details['update-version'] = $update_version;
+
+            if (!isset($details['module'])) {
+                $details['module'] = $module;
+            }
+            $details['documentation'] = http_build_url(
+                    "/libs/{$details['module']}/",
+                    parse_url($details['documentation'] ?: '.'));
 
             $this->db[$key][$version_key] = $details;
             $this->reduce_versions($key);

@@ -27,6 +27,13 @@ function main() {
     file_put_contents(dirname(__FILE__) . '/../generated/libraries.txt', serialize($libs));
 }
 
+/**
+ *
+ * @param \boost_libraries $libs The libraries to update.
+ * @param string $location The location of the super project in the mirror.
+ * @param string $branch The branch to update from.
+ * @throws RuntimeException
+ */
 function update_from_git($libs, $location, $branch) {
     echo "Updating from {$branch}\n";
 
@@ -72,12 +79,12 @@ function update_from_git($libs, $location, $branch) {
             "{$location}/{$module['path']}";
         $module_command = "cd '{$module_location}' && git";
 
-        foreach(run_process("{$module_command} ls-tree {$module['hash']} metadata.xml") as $entry) {
+        foreach(run_process("{$module_command} ls-tree {$module['hash']} meta/libraries.xml") as $entry) {
             $entry = trim($entry);
             if (preg_match("@^100644 blob ([a-zA-Z0-9]+)\t(.*)$@", $entry, $matches)) {
                 $libs->update(
                     implode("\n", (run_process("{$module_command} show {$matches[1]}"))),
-                    $branch);
+                    $branch, $module);
             }
         }
     }
