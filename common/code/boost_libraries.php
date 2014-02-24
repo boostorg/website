@@ -308,7 +308,8 @@ class boost_libraries
     }
 
     private function equal_details($details1, $details2) {
-        if (count(array_diff_key($details1, $details2))) {
+        if (count(array_diff_key($details1, $details2))
+                || count(array_diff_key($details2, $details1))) {
             return false;
         }
 
