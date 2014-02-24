@@ -128,11 +128,6 @@ class boost_libraries
                     $lib['update-version'] = $lib['boost-version'];
                 }
 
-                if (!isset($lib['module'])) {
-                    $key_parts = explode('/', $lib['key'], 2);
-                    $lib['module'] = $key_parts[0];
-                }
-
                 $libs[$lib['key']][(string) $lib['update-version']] = $lib;
                 $lib = NULL;
             }
@@ -161,6 +156,9 @@ class boost_libraries
         $libs = array();
 
         foreach ($libraries as $lib) {
+            assert(isset($lib['boost-version']));
+            assert(isset($lib['key']));
+
             $version = isset($lib['update-version']) ? $lib['update-version'] :
                 $lib['boost-version'];
             $libs[$lib['key']][(string) $version] = $lib;
@@ -169,12 +167,35 @@ class boost_libraries
         return new self($libs, array());
     }
 
+    /**
+     *
+     * @param array $libs Nested array, key -> version -> details.
+     * @param array $categories
+     */
     private function __construct(array $libs, array $categories)
     {
         $this->db = $libs;
         $this->categories = $categories;
 
-        foreach (array_keys($this->db) as $key) {
+        foreach ($this->db as $key => &$libs) {
+            foreach ($libs as $version => &$details) {
+                assert(isset($details['boost-version']));
+
+                if (!isset($details['key'])) {
+                    $details['key'] = $key;
+                }
+
+                // TODO: Should this be set from $version?
+                if (!isset($details['update-version'])) {
+                    $details['update-version'] = $details['boost-version'];
+                }
+
+                if (!isset($details['module'])) {
+                    $key_parts = explode('/', $details['key'], 2);
+                    $details['module'] = $key_parts[0];
+                }
+            }
+
             $this->sort_versions($key);
 
             foreach (array_keys($this->db[$key]) as $version) {
