@@ -79,12 +79,26 @@ function update_from_git($libs, $location, $branch) {
             "{$location}/{$module['path']}";
         $module_command = "cd '{$module_location}' && git";
 
-        foreach(run_process("{$module_command} ls-tree {$module['hash']} meta/libraries.xml") as $entry) {
+        foreach(run_process("{$module_command} ls-tree {$module['hash']} "
+                ."meta/libraries.xml meta/libraries.json") as $entry)
+        {
             $entry = trim($entry);
             if (preg_match("@^100644 blob ([a-zA-Z0-9]+)\t(.*)$@", $entry, $matches)) {
-                $libs->update(
-                    implode("\n", (run_process("{$module_command} show {$matches[1]}"))),
-                    $branch, $module);
+                $hash = $matches[1];
+                $filename = $matches[2];
+                $text = implode("\n", (run_process("{$module_command} show {$matches[1]}")));
+                switch (pathinfo($filename, PATHINFO_EXTENSION)) {
+                    case 'xml':
+                        $new_libs = boost_libraries::from_xml($text);
+                        break;
+                    case 'json':
+                        $new_libs = boost_libraries::from_json($text);
+                        break;
+                    default:
+                        assert(false);
+                }
+
+                $libs->update($new_libs, $branch, $module);
             }
         }
     }

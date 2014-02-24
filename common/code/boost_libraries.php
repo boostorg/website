@@ -141,6 +141,47 @@ class boost_libraries
         return new self($libs, $categories);
     }
 
+    static function from_json($json)
+    {
+        $categories = array();
+        $libs = array();
+
+        $import = json_decode($json, true);
+
+        if (is_object($import)) {
+            if (isset($import['categories']) || isset($import['libraries'])) {
+                if (isset($import['categories'])) {
+                    $categories = $import['categories'];
+                }
+
+                if (isset($import['libraries'])) {
+                    $libs = $import['libraries'];
+                }
+            }
+            else {
+                $libs = array($import);
+            }
+        }
+        else {
+            $libs = $import;
+        }
+
+        $lib_db = array();
+
+        foreach ($libs as $lib) {
+            assert(isset($lib['key']));
+            assert(isset($lib['boost-version']));
+
+            if (!isset($lib['update-version'])) {
+                $lib['update-version'] = $lib['boost-version'];
+            }
+
+            $lib_db[$lib['key']][$lib['update-version']] = $lib;
+        }
+
+        return new boost_libraries($lib_db, $categories);
+    }
+
     /**
      * Create from an array of library details.
      *
@@ -209,16 +250,15 @@ class boost_libraries
     /**
      * Update the libraries from xml details.
      *
-     * @param string $xml
+     * @param \boost_libraries $update
      * @param \boost_version $update_version The version of Boost that the
      *      xml describes.
      * @param type $module The module the xml is taken from.
      * @throws boost_libraries_exception
      */
-    public function update($xml, $update_version, $module = null) {
+    public function update($update, $update_version, $module = null) {
         $update_version = BoostVersion::from($update_version);
         $version_key = (string) $update_version;
-        $update = self::from_xml($xml);
 
         foreach($update->db as $key => $libs) {
             if (count($libs) > 1) {
