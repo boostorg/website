@@ -181,6 +181,8 @@ class boost_libraries
             foreach ($libs as $version => &$details) {
                 assert(isset($details['boost-version']));
 
+                $details = self::normalize_spaces($details);
+
                 if (!isset($details['key'])) {
                     $details['key'] = $key;
                 }
@@ -398,12 +400,7 @@ class boost_libraries
                 }
 
                 $lib['boost-version'] = (string) $lib['boost-version'];
-
-                foreach($lib as $key => &$value) {
-                    if (is_string($value)) {
-                        $value = trim(preg_replace('@\s+@', ' ', $value));
-                    }
-                }
+                $lib = self::normalize_spaces($libs);
 
                 $export[] = $lib;
             }
@@ -502,6 +499,19 @@ class boost_libraries
      */
     function get_history($key) {
         return $this->db[$key];
+    }
+
+    /**
+     * Normalize the spaces in string values of an array.
+     */
+    private static function normalize_spaces($lib) {
+        foreach($lib as $key => &$value) {
+            if (is_string($value)) {
+                $value = trim(preg_replace('@\s+@', ' ', $value));
+            }
+        }
+
+        return $lib;
     }
 }
 
