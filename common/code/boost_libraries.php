@@ -77,7 +77,6 @@ class boost_libraries
                 {
                     case 'key':
                     case 'name':
-                    case 'authors':
                     case 'description':
                     case 'documentation':
                     case 'status':
@@ -106,11 +105,13 @@ class boost_libraries
                         $lib[$val['tag']] = ($value == 'true');
                     }
                     break;
+                    case 'authors':
+                    case 'maintainers':
                     case 'category':
                     {
                         if(isset($val['value'])) {
                             $name = trim($val['value']);
-                            $lib['category'][] = $name;
+                            $lib[$val['tag']][] = $name;
                         }
                     }
                     break;
@@ -236,6 +237,18 @@ class boost_libraries
                 if (!isset($details['module'])) {
                     $key_parts = explode('/', $details['key'], 2);
                     $details['module'] = $key_parts[0];
+                }
+
+                if (!isset($details['authors'])) {
+                    // Preserve the current empty authors tags.
+                    $details['authors'] = '';
+                }
+                else if (is_array($details['authors'])) {
+                    $details['authors'] = implode(', ', $details['authors']);
+                }
+
+                if (isset($details['maintainers']) && is_array($details['maintainers'])) {
+                    $details['maintainers'] = implode(', ', $details['maintainers']);
                 }
             }
 
@@ -368,16 +381,13 @@ class boost_libraries
                 }
                 $this->write_optional_element($writer, $exclude, $lib, 'status');
                 $this->write_optional_element($writer, $exclude, $lib, 'name');
-                $this->write_optional_element($writer, $exclude, $lib, 'authors');
+                $this->write_many_elements($writer, $exclude, $lib, 'authors');
+                $this->write_many_elements($writer, $exclude, $lib, 'maintainers');
                 $this->write_optional_element($writer, $exclude, $lib, 'description');
                 $this->write_optional_element($writer, $exclude, $lib, 'documentation');
                 $this->write_optional_element($writer, $exclude, $lib, 'std-proposal');
                 $this->write_optional_element($writer, $exclude, $lib, 'std-tr1');
-                if (!isset($exclude['category'])) {
-                    foreach($lib['category'] as $category) {
-                        $writer->writeElement('category', $category);
-                    }
-                }
+                $this->write_many_elements($writer, $exclude, $lib, 'category');
                 $writer->endElement();
             }
         }
@@ -385,6 +395,27 @@ class boost_libraries
         $writer->endElement(); // boost
         $writer->endDocument();
         return $writer->outputMemory();
+    }
+
+    /**
+     * Write a library array.
+     *
+     * @param XMLWriter $writer
+     * @param array $exclude
+     * @param string $lib
+     * @param string $name
+     */
+    private function write_many_elements($writer, $exclude, $lib, $name) {
+        if (isset($lib[$name]) && !isset($exclude[$name])) {
+            if (is_array($lib[$name])) {
+                foreach($lib[$name] as $value) {
+                    $writer->writeElement($name, $value);
+                }
+            }
+            else {
+                $writer->writeElement($name, $lib[$name]);
+            }
+        }
     }
 
     /**
