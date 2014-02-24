@@ -2,7 +2,7 @@
 
 require_once(__DIR__.'/../boost_libraries.php');
 
-$libraries = boost_libraries::from_string('<?xml version="1.0" encoding="US-ASCII"?>
+$libraries = boost_libraries::from_xml('<?xml version="1.0" encoding="US-ASCII"?>
 <boost xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <categories>
     <category name="String">

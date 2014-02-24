@@ -13,7 +13,7 @@ function main() {
             exit(1);
     }
 
-    $libs = boost_libraries::from_file(__DIR__ . '/../doc/libraries.xml');
+    $libs = boost_libraries::from_xml_file(__DIR__ . '/../doc/libraries.xml');
 
     $library_details = $libs->get_for_version(BoostVersion::develop());
 

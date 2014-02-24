@@ -14,7 +14,7 @@ function main() {
             exit(1);
     }
 
-    $libs = boost_libraries::from_file(dirname(__FILE__) . '/../doc/libraries.xml');
+    $libs = boost_libraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
     if ($git_mirror) {
         $git_mirror = realpath($git_mirror);
         update_from_git($libs, $git_mirror, 'master');

@@ -20,9 +20,9 @@ class boost_libraries
      * @param string $file_path
      * @return \boost_libraries
      */
-    static function from_file($file_path)
+    static function from_xml_file($file_path)
     {
-        return self::from_string(file_get_contents($file_path));
+        return self::from_xml(file_get_contents($file_path));
     }
 
     /**
@@ -31,7 +31,7 @@ class boost_libraries
      * @param string $xml
      * @return \boost_libraries
      */
-    static function from_string($xml)
+    static function from_xml($xml)
     {
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
@@ -216,7 +216,7 @@ class boost_libraries
     public function update($xml, $update_version, $module = null) {
         $update_version = BoostVersion::from($update_version);
         $version_key = (string) $update_version;
-        $update = self::from_string($xml);
+        $update = self::from_xml($xml);
 
         foreach($update->db as $key => $libs) {
             if (count($libs) > 1) {
