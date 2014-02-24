@@ -378,6 +378,54 @@ class boost_libraries
     }
 
     /**
+     * Generate a json representation of the library data.
+     *
+     * @param array $exclude Fields to leave out of the library output
+     * @return string
+     */
+    function to_json($exclude = array()) {
+        $export = array();
+        foreach ($this->db as $libs) {
+            foreach($libs as $lib) {
+                if ($lib['update-version'] == $lib['boost-version']) {
+                    unset($lib['update-version']);
+                }
+
+                foreach ($exclude as $field) {
+                    if (isset($lib[$field])) {
+                        unset($lib[$field]);
+                    }
+                }
+
+                $lib['boost-version'] = (string) $lib['boost-version'];
+
+                foreach($lib as $key => &$value) {
+                    if (is_string($value)) {
+                        $value = trim(preg_replace('@\s+@', ' ', $value));
+                    }
+                }
+
+                $export[] = $lib;
+            }
+        }
+
+        // Pick an export format depending on what data we have.
+        if ($this->categories) {
+            $export = Array(
+                'categories' => $this->categories,
+                'libraries' => $export,
+            );
+        }
+        else if (count($export) == 1) {
+            $export = $export[0];
+        }
+
+        // I'm not sure why php escapes slashes, but I don't want them so
+        // I'll just zap them. Maybe stop doing that in the future.
+        return str_replace('\\/', '/', json_encode($export, JSON_PRETTY_PRINT));
+    }
+
+    /**
      * Get the library details for a particular release.
      *
      * @param \BoostVersion $version
