@@ -22,7 +22,7 @@ class boost_libraries
      */
     static function from_file($file_path)
     {
-        return new boost_libraries(file_get_contents($file_path));
+        return self::from_string(file_get_contents($file_path));
     }
 
     /**
@@ -32,34 +32,6 @@ class boost_libraries
      * @return \boost_libraries
      */
     static function from_string($xml)
-    {
-        return new boost_libraries($xml);
-    }
-
-    /**
-     * Create from an array of library details.
-     *
-     * This is pretty hacky, I only added for a one-off function. If you want
-     * to make use of it, it could probably do with some sanity checks to
-     * make sure that the libraries are valid.
-     *
-     * @param array $libraries
-     * @return \boost_libraries
-     */
-    static function from_array($libraries)
-    {
-        $x = new boost_libraries('<boost></boost>');
-
-        foreach ($libraries as $lib) {
-            $version = isset($lib['update-version']) ? $lib['update-version'] :
-                $lib['boost-version'];
-            $x->db[$lib['key']][(string) $version] = $lib;
-        }
-
-        return $x;
-    }
-
-    private function __construct($xml)
     {
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
@@ -71,8 +43,11 @@ class boost_libraries
 
         ##print '<!-- '; print_r($values); print ' -->';
         
-        $lib = NULL;
+        $categories = array();
         $category = NULL;
+        $libs = array();
+        $lib = NULL;
+
         foreach ( $values as $key => $val )
         {
             if ($val['tag'] == 'boost' || $val['tag'] == 'categories')
@@ -89,7 +64,7 @@ class boost_libraries
             }
             else if ($val['tag'] == 'category' && $val['type'] == 'close' && $category)
             {
-                $this->categories[$category['name']] = $category;
+                $categories[$category['name']] = $category;
                 $category = NULL;
             }
             else if ($val['tag'] == 'library' && $val['type'] == 'open')
@@ -158,7 +133,7 @@ class boost_libraries
                     $lib['module'] = $key_parts[0];
                 }
 
-                $this->db[$lib['key']][(string) $lib['update-version']] = $lib;
+                $libs[$lib['key']][(string) $lib['update-version']] = $lib;
                 $lib = NULL;
             }
             else
@@ -167,6 +142,37 @@ class boost_libraries
                 exit(0);
             }
         }
+
+        return new self($libs, $categories);
+    }
+
+    /**
+     * Create from an array of library details.
+     *
+     * This is pretty hacky, I only added for a one-off function. If you want
+     * to make use of it, it could probably do with some sanity checks to
+     * make sure that the libraries are valid.
+     *
+     * @param array $libraries
+     * @return \boost_libraries
+     */
+    static function from_array($libraries)
+    {
+        $libs = array();
+
+        foreach ($libraries as $lib) {
+            $version = isset($lib['update-version']) ? $lib['update-version'] :
+                $lib['boost-version'];
+            $libs[$lib['key']][(string) $version] = $lib;
+        }
+
+        return new self($libs, array());
+    }
+
+    private function __construct(array $libs, array $categories)
+    {
+        $this->db = $libs;
+        $this->categories = $categories;
 
         foreach (array_keys($this->db) as $key) {
             $this->sort_versions($key);
@@ -189,7 +195,7 @@ class boost_libraries
     public function update($xml, $update_version, $module = null) {
         $update_version = BoostVersion::from($update_version);
         $version_key = (string) $update_version;
-        $update = new boost_libraries($xml);
+        $update = self::from_string($xml);
 
         foreach($update->db as $key => $libs) {
             if (count($libs) > 1) {
