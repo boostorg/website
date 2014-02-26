@@ -222,16 +222,22 @@ class boost_libraries
         foreach ($this->db as $key => &$libs) {
             foreach ($libs as $version => &$details) {
                 assert(isset($details['boost-version']));
-
                 $details = self::normalize_spaces($details);
 
                 if (!isset($details['key'])) {
                     $details['key'] = $key;
                 }
 
+                $details['boost-version'] =
+                        BoostVersion::from($details['boost-version']);
+
                 // TODO: Should this be set from $version?
                 if (!isset($details['update-version'])) {
                     $details['update-version'] = $details['boost-version'];
+                }
+                else {
+                    $details['update-version'] =
+                        BoostVersion::from($details['update-version']);
                 }
 
                 if (!isset($details['module'])) {
@@ -503,6 +509,7 @@ class boost_libraries
      * @return array
      */
     function get_for_version($version, $sort = null, $filter = null) {
+        $version = BoostVersion::from($version);
         $libs = array();
 
         foreach($this->db as $key => $versions) {
