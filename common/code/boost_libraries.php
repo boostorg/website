@@ -18,7 +18,7 @@ class boost_libraries
      * Read library details from an xml file.
      *
      * @param string $file_path
-     * @return \boost_libraries
+     * @return \BoostVersion
      */
     static function from_xml_file($file_path)
     {
@@ -264,7 +264,7 @@ class boost_libraries
      * Update the libraries from xml details.
      *
      * @param \boost_libraries $update
-     * @param \boost_version $update_version The version of Boost that the
+     * @param \BoostVersion $update_version The version of Boost that the
      *      xml describes.
      * @param type $module The module the xml is taken from.
      * @throws boost_libraries_exception
