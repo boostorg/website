@@ -102,51 +102,6 @@ function update_from_git($libs, $location, $branch) {
             }
         }
     }
-
-    // Get the library data, so that it can be updated with maintainers.
-    // In case you're wondering why the result from get_for_version doesn't
-    // use 'key' as its key, it's for historical reasons I think, might be
-    // fixable.
-    $libs_copy = $libs->get_for_version($branch);
-
-    $libs_index = array();
-    foreach ($libs_copy as $index => $details) {
-        $libs_index[$details['key']] = $index;
-    }
-
-    // Grab the maintainers...
-    foreach(run_process("{$git_command} ls-tree {$branch} "
-        ."libs/maintainers.txt") as $entry)
-    {
-        $entry = trim($entry);
-        if (preg_match("@^100644 blob ([a-zA-Z0-9]+)\t(.*)$@", $entry, $matches)) {
-            $hash = $matches[1];
-            $filename = $matches[2];
-            foreach (run_process("{$git_command} show {$hash}") as $line) {
-                $line = trim($line);
-                if (!$line || $line[0] == '#') {
-                    continue;
-                }
-
-                $matches = null;
-                if (!preg_match('@^([^\s]+)\s*(.*)$@', $line, $matches)) {
-                    echo "Unable to parse line: {$line}\n";
-                    exit(1);
-                }
-
-                if (isset($libs_index[$matches[1]])) {
-                    $index = $libs_index[$matches[1]];
-                    $libs_copy[$index]['maintainers'] = array_map('trim',
-                            explode(',', $matches[2]));
-                }
-                else {
-                    echo "Unable to find library: {$matches[1]}\n";
-                }
-            }
-        }
-    }
-
-    $libs->update(boost_libraries::from_array($libs_copy), $branch);
 }
 
 function git_config_from_repo($git_command, $branch, $path) {

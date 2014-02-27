@@ -14,8 +14,42 @@ function main() {
     }
 
     $libs = boost_libraries::from_xml_file(__DIR__ . '/../doc/libraries.xml');
-
     $library_details = $libs->get_for_version(BoostVersion::develop());
+
+    // Get the library data, so that it can be updated with maintainers.
+    // In case you're wondering why the result from get_for_version doesn't
+    // use 'key' as its key, it's for historical reasons I think, might be
+    // fixable.
+
+    $libs_index = array();
+    foreach ($library_details as $index => $details) {
+        $libs_index[$details['key']] = $index;
+    }
+
+    foreach (file("$boost_root/libs/maintainers.txt") as $line)
+    {
+        $line = trim($line);
+        if (!$line || $line[0] == '#') {
+            continue;
+        }
+
+        $matches = null;
+        if (!preg_match('@^([^\s]+)\s*(.*)$@', $line, $matches)) {
+            echo "Unable to parse line: {$line}\n";
+            exit(1);
+        }
+
+        if (isset($libs_index[$matches[1]])) {
+            $index = $libs_index[$matches[1]];
+            $library_details[$index]['maintainers'] = array_map('trim',
+                    explode(',', $matches[2]));
+        }
+        else {
+            echo "Unable to find library: {$matches[1]}\n";
+        }
+    }
+
+    // Split the libraries up into modules.
 
     $libraries_by_module = array();
 
@@ -46,6 +80,8 @@ function main() {
 
         $libraries_by_module[$module][] = $library;
     }
+
+    // Write the module metadata
 
     foreach ($libraries_by_module as $module => $libraries) {
         $module_libraries = boost_libraries::from_array($libraries);
