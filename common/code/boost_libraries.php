@@ -470,6 +470,11 @@ class boost_libraries
                 if ($lib['update-version'] == $lib['boost-version']) {
                     unset($lib['update-version']);
                 }
+                else {
+                    $lib['update-version'] = (string) $lib['update-version'];
+                }
+
+                $lib['boost-version'] = (string) $lib['boost-version'];
 
                 foreach ($exclude as $field) {
                     if (isset($lib[$field])) {
@@ -477,8 +482,7 @@ class boost_libraries
                     }
                 }
 
-                $lib['boost-version'] = (string) $lib['boost-version'];
-                $lib = self::normalize_spaces($libs);
+                $lib = self::normalize_spaces($lib);
 
                 $export[] = $lib;
             }
