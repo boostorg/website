@@ -38,14 +38,20 @@ function main() {
             echo "Unable to parse line: {$line}\n";
             exit(1);
         }
+        
+        $key = $matches[1];
+        $values = $matches[2];
+        
+        if ($key === 'logic') { $key = 'logic/tribool'; }
+        if ($key === 'operators') { $key = 'utility/operators'; }
 
-        if (isset($libs_index[$matches[1]])) {
-            $index = $libs_index[$matches[1]];
+        if (isset($libs_index[$key])) {
+            $index = $libs_index[$key];
             $library_details[$index]['maintainers'] = array_map('trim',
-                    explode(',', $matches[2]));
+                    explode(',', $values));
         }
         else {
-            echo "Unable to find library: {$matches[1]}\n";
+            echo "Unable to find library: {$key}\n";
         }
     }
 
