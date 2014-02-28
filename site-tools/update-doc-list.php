@@ -15,6 +15,8 @@ function main() {
     }
 
     $libs = boost_libraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
+    $libs->squash_name_arrays();
+
     if ($git_mirror) {
         $git_mirror = realpath($git_mirror);
         update_from_git($libs, $git_mirror, 'master');
@@ -98,6 +100,7 @@ function update_from_git($libs, $location, $branch) {
                         assert(false);
                 }
 
+                $new_libs->squash_name_arrays();
                 $libs->update($new_libs, $branch, $module);
             }
         }

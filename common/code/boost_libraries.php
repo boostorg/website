@@ -9,6 +9,13 @@ require_once(dirname(__FILE__) . '/boost_utility.php');
 require_once(dirname(__FILE__) . '/boost_version.php');
 require_once(dirname(__FILE__) . '/url.php');
 
+/**
+ * Stores the details of all the boost libraries organised by version.
+ *
+ * This is pretty awkward as there are a few different representions here
+ * and it's quite easy to get confused between them. Maybe needs to be split
+ * up into a couple of different classes.
+ */
 class boost_libraries
 {
     private $categories = array();
@@ -250,19 +257,36 @@ class boost_libraries
                     // Preserve the current empty authors tags.
                     $details['authors'] = '';
                 }
-                else if (is_array($details['authors'])) {
-                    $details['authors'] = implode(', ', $details['authors']);
-                }
-
-                if (isset($details['maintainers']) && is_array($details['maintainers'])) {
-                    $details['maintainers'] = implode(', ', $details['maintainers']);
-                }
             }
 
             $this->sort_versions($key);
 
             foreach (array_keys($this->db[$key]) as $version) {
                 sort($this->db[$key][$version]['category']);
+            }
+        }
+    }
+
+    /**
+     * Convert authors and maintainers to strings.
+     * This is kind of rubbish, but I want authors and maintainers to be
+     * arrays in the repo metadata, but strings on the website. So call this
+     * when creating the website file.
+     */
+    public function squash_name_arrays() {
+        foreach ($this->db as $key => &$libs) {
+            foreach ($libs as $version => &$details) {
+                if (isset($details['authors']) && is_array($details['authors']))
+                {
+                    $details['authors'] = implode(', ', $details['authors']);
+                }
+
+                if (isset($details['maintainers'])
+                        && is_array($details['maintainers']))
+                {
+                    $details['maintainers']
+                            = implode(', ', $details['maintainers']);
+                }
             }
         }
     }
