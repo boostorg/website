@@ -91,17 +91,17 @@ function update_from_git($libs, $location, $branch) {
                 $text = implode("\n", (run_process("{$module_command} show {$hash}")));
                 switch (pathinfo($filename, PATHINFO_EXTENSION)) {
                     case 'xml':
-                        $new_libs = boost_libraries::from_xml($text);
+                        $new_libs = boost_libraries::from_xml($text, $branch);
                         break;
                     case 'json':
-                        $new_libs = boost_libraries::from_json($text);
+                        $new_libs = boost_libraries::from_json($text, $branch);
                         break;
                     default:
                         assert(false);
                 }
 
                 $new_libs->squash_name_arrays();
-                $libs->update($new_libs, $branch, $module);
+                $libs->update($new_libs, $module);
             }
         }
     }

@@ -38,7 +38,7 @@ class boost_libraries
      * @param string $xml
      * @return \boost_libraries
      */
-    static function from_xml($xml)
+    static function from_xml($xml, $version = null)
     {
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
@@ -139,10 +139,10 @@ class boost_libraries
             }
         }
 
-        return new self($libs, $categories);
+        return new self($libs, $categories, $version);
     }
 
-    static function from_json($json)
+    static function from_json($json, $version = null)
     {
         $categories = array();
         $libs = array();
@@ -168,7 +168,7 @@ class boost_libraries
             $libs = $import;
         }
 
-        return new boost_libraries($libs, $categories);
+        return new self($libs, $categories, $version);
     }
 
     /**
@@ -191,20 +191,39 @@ class boost_libraries
      * @param array $libs Array of lib details, can contain multiple historical
      *      entries, using 'update-version' to indicate their historical order.
      * @param array $categories
+     * @param BoostVersion $version Optional version to use when update-version
+     *      or boost-version is missing.
      */
-    private function __construct(array $flat_libs, array $categories)
+    private function __construct(array $flat_libs, array $categories,
+            $version = null)
     {
+        if ($version) { $version = BoostVersion::from($version); }
+
         $this->db = array();
         $this->categories = $categories;
 
         foreach ($flat_libs as $lib) {
             assert(isset($lib['key']));
-            assert(isset($lib['boost-version']));
 
-            $lib['boost-version'] = BoostVersion::from($lib['boost-version']);
-            $lib['update-version'] = isset($lib['update-version'])
-                    ? BoostVersion::from($lib['update-version'])
-                    : $lib['boost-version'];
+            if (isset($lib['boost-version'])) {
+                $lib['boost-version']
+                        = BoostVersion::from($lib['boost-version']);
+            }
+
+            if (isset($lib['update-version'])) {
+                $lib['update-version']
+                        = BoostVersion::from($lib['update-version']);
+            }
+            else if ($version) {
+                $lib['update-version'] = $version;
+            }
+            else if (isset($lib['boost-version'])) {
+                $lib['update-version'] = $lib['boost-version'];
+            }
+            else {
+                throw new boost_libraries_exception(
+                        "No version info for {$lib['key']}");
+            }
 
             if (!isset($lib['module'])) {
                 $key_parts = explode('/', $lib['key'], 2);
@@ -223,7 +242,17 @@ class boost_libraries
         foreach ($this->db as $key => $lib_entries) {
             $this->sort_versions($key);
 
+            $boost_version = null;
+
             foreach (array_keys($lib_entries) as $version) {
+                if (!$boost_version && isset($version['boost-version'])) {
+                    $boost_version = $version['boost-version'];
+                }
+
+                if ($boost_version && !isset($version['boost-version'])) {
+                    $version['boost-version'] = $boost_version;
+                }
+
                 sort($this->db[$key][$version]['category']);
             }
         }
@@ -262,17 +291,13 @@ class boost_libraries
      * @param type $module The module the xml is taken from.
      * @throws boost_libraries_exception
      */
-    public function update($update, $update_version, $module = null) {
-        $update_version = BoostVersion::from($update_version);
-        $version_key = (string) $update_version;
-
+    public function update($update, $module = null) {
         foreach($update->db as $key => $libs) {
             if (count($libs) > 1) {
                 throw new boost_libraries_exception("Duplicate key: {$key}\n");
             }
 
             $details = reset($libs);
-            $details['update-version'] = $update_version;
 
             if ($module) {
                 if (!isset($details['module'])) {
@@ -287,7 +312,7 @@ class boost_libraries
                         ltrim($details['documentation'], '/');
             }
 
-            $this->db[$key][$version_key] = $details;
+            $this->db[$key][(string) $details['update-version']] = $details;
             $this->reduce_versions($key);
         }
     }
