@@ -39,9 +39,11 @@ function main() {
             exit(1);
         }
         
-        $key = $matches[1];
-        $values = $matches[2];
+        $key = trim($matches[1]);
+        $values = trim($matches[2]);
         
+        if (!$values) { continue; }
+
         if ($key === 'logic') { $key = 'logic/tribool'; }
         if ($key === 'operators') { $key = 'utility/operators'; }
 
