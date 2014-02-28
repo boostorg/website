@@ -239,6 +239,8 @@ class boost_libraries
                     = self::normalize_spaces($lib);
         }
 
+        ksort($this->db);
+
         foreach ($this->db as $key => $lib_entries) {
             $this->sort_versions($key);
 
@@ -315,6 +317,8 @@ class boost_libraries
             $this->db[$key][(string) $details['update-version']] = $details;
             $this->reduce_versions($key);
         }
+
+        ksort($this->db);
     }
 
     private function sort_versions($key) {
