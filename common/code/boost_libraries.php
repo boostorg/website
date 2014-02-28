@@ -146,10 +146,11 @@ class boost_libraries
     {
         $categories = array();
         $libs = array();
+        $json = trim($json);
 
         $import = json_decode($json, true);
 
-        if (is_object($import)) {
+        if ($json[0] == '{') {
             if (isset($import['categories']) || isset($import['libraries'])) {
                 if (isset($import['categories'])) {
                     $categories = $import['categories'];
