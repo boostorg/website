@@ -4,23 +4,32 @@ require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
 
 function main() {
     $args = $_SERVER['argv'];
-    $git_mirror = null;
+    $location = null;
 
     switch (count($args)) {
         case 1: break;
-        case 2: $git_mirror = $args[1]; break;
+        case 2: $location = $args[1]; break;
         default:
-            echo "Usage: update-doc-list.php [mirror_root]";
+            echo "Usage: update-doc-list.php [path]";
             exit(1);
     }
 
     $libs = boost_libraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
     $libs->squash_name_arrays();
 
-    if ($git_mirror) {
-        $git_mirror = realpath($git_mirror);
-        update_from_git($libs, $git_mirror, 'master');
-        update_from_git($libs, $git_mirror, 'develop');
+    if ($location) {
+        $location = realpath($location);
+
+        if (get_bool_from_array(run_process(
+                "cd '${location}' && git rev-parse --is-bare-repository")))
+        {
+            update_from_git($libs, $location, 'master');
+            update_from_git($libs, $location, 'develop');
+        }
+        else
+        {
+            update_from_checkout($libs, $location);
+        }
     }
 
     echo "Writing to disk\n";
@@ -40,9 +49,6 @@ function update_from_git($libs, $location, $branch) {
     echo "Updating from {$branch}\n";
 
     $git_command = "cd '${location}' && git";
-
-    $is_bare = get_bool_from_array(run_process("{$git_command} rev-parse --is-bare-repository"));
-
     $modules = Array();
 
     foreach(git_config_from_repo($git_command, $branch, ".gitmodules")
@@ -77,8 +83,7 @@ function update_from_git($libs, $location, $branch) {
     }
 
     foreach($modules as $name => $module) {
-        $module_location = $is_bare ? "{$location}/{$module['url']}" :
-            "{$location}/{$module['path']}";
+        $module_location = "{$location}/{$module['url']}";
         $module_command = "cd '{$module_location}' && git";
 
         foreach(run_process("{$module_command} ls-tree {$module['hash']} "
@@ -103,6 +108,38 @@ function update_from_git($libs, $location, $branch) {
                 $new_libs->squash_name_arrays();
                 $libs->update($new_libs, $module);
             }
+        }
+    }
+}
+
+/**
+ *
+ * @param \boost_libraries $libs The libraries to update.
+ * @param string $location The location of the super project in the mirror.
+ * @param string $branch The branch to update from.
+ * @throws RuntimeException
+ */
+function update_from_checkout($libs, $location, $branch = 'latest') {
+    echo "Updating from local checkout/{$branch}\n";
+
+    foreach (glob("{$location}/libs/*") as $module_path) {
+        foreach (glob("{$module_path}/meta/libraries.*") as $path) {
+            $module = pathinfo($module_path, PATHINFO_FILENAME);
+
+            $text = file_get_contents($path);
+            switch (pathinfo($path, PATHINFO_EXTENSION)) {
+                case 'xml':
+                    $new_libs = boost_libraries::from_xml($text, $branch);
+                    break;
+                case 'json':
+                    $new_libs = boost_libraries::from_json($text, $branch);
+                    break;
+                default:
+                    assert(false);
+            }
+
+            $new_libs->squash_name_arrays();
+            $libs->update($new_libs, $module);
         }
     }
 }
