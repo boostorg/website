@@ -129,14 +129,7 @@ class boost_libraries
             }
             else if ($val['tag'] == 'library' && $val['type'] == 'close' && $lib)
             {
-                assert(isset($lib['boost-version']));
-                assert(isset($lib['key']));
-
-                if (!isset($lib['update-version'])) {
-                    $lib['update-version'] = $lib['boost-version'];
-                }
-
-                $libs[$lib['key']][(string) $lib['update-version']] = $lib;
+                $libs[] = $lib;
                 $lib = NULL;
             }
             else
@@ -175,20 +168,7 @@ class boost_libraries
             $libs = $import;
         }
 
-        $lib_db = array();
-
-        foreach ($libs as $lib) {
-            assert(isset($lib['key']));
-            assert(isset($lib['boost-version']));
-
-            if (!isset($lib['update-version'])) {
-                $lib['update-version'] = $lib['boost-version'];
-            }
-
-            $lib_db[$lib['key']][$lib['update-version']] = $lib;
-        }
-
-        return new boost_libraries($lib_db, $categories);
+        return new boost_libraries($libs, $categories);
     }
 
     /**
@@ -201,67 +181,49 @@ class boost_libraries
      * @param array $libraries
      * @return \boost_libraries
      */
-    static function from_array($libraries)
+    static function from_array($libs)
     {
-        $libs = array();
-
-        foreach ($libraries as $lib) {
-            assert(isset($lib['boost-version']));
-            assert(isset($lib['key']));
-
-            $version = isset($lib['update-version']) ? $lib['update-version'] :
-                $lib['boost-version'];
-            $libs[$lib['key']][(string) $version] = $lib;
-        }
-
         return new self($libs, array());
     }
 
     /**
      *
-     * @param array $libs Nested array, key -> version -> details.
+     * @param array $libs Array of lib details, can contain multiple historical
+     *      entries, using 'update-version' to indicate their historical order.
      * @param array $categories
      */
-    private function __construct(array $libs, array $categories)
+    private function __construct(array $flat_libs, array $categories)
     {
-        $this->db = $libs;
+        $this->db = array();
         $this->categories = $categories;
 
-        foreach ($this->db as $key => &$libs) {
-            foreach ($libs as $version => &$details) {
-                assert(isset($details['boost-version']));
-                $details = self::normalize_spaces($details);
+        foreach ($flat_libs as $lib) {
+            assert(isset($lib['key']));
+            assert(isset($lib['boost-version']));
 
-                if (!isset($details['key'])) {
-                    $details['key'] = $key;
-                }
+            $lib['boost-version'] = BoostVersion::from($lib['boost-version']);
+            $lib['update-version'] = isset($lib['update-version'])
+                    ? BoostVersion::from($lib['update-version'])
+                    : $lib['boost-version'];
 
-                $details['boost-version'] =
-                        BoostVersion::from($details['boost-version']);
-
-                // TODO: Should this be set from $version?
-                if (!isset($details['update-version'])) {
-                    $details['update-version'] = $details['boost-version'];
-                }
-                else {
-                    $details['update-version'] =
-                        BoostVersion::from($details['update-version']);
-                }
-
-                if (!isset($details['module'])) {
-                    $key_parts = explode('/', $details['key'], 2);
-                    $details['module'] = $key_parts[0];
-                }
-
-                if (!isset($details['authors'])) {
-                    // Preserve the current empty authors tags.
-                    $details['authors'] = '';
-                }
+            if (!isset($lib['module'])) {
+                $key_parts = explode('/', $lib['key'], 2);
+                $lib['module'] = $key_parts[0];
             }
 
+            // Preserve the current empty authors tags.
+            if (!isset($lib['authors'])) {
+                $lib['authors'] = '';
+            }
+
+            $this->db[$lib['key']][(string) $lib['update-version']]
+                    = self::normalize_spaces($lib);
+        }
+
+        foreach ($this->db as $key => $lib_entries) {
             $this->sort_versions($key);
 
-            foreach (array_keys($this->db[$key]) as $version) {
+            foreach (array_keys($lib_entries) as $version) {
                 sort($this->db[$key][$version]['category']);
             }
         }
