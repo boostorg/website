@@ -162,6 +162,89 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/libs/multi_index/index.html">Multi-index Containers</a>:</span>
+          <ul>
+            <li>
+              <div>
+                The <code><span class="identifier">erase</span><span class="special">(</span><span class="identifier">iterator</span><span class="special">)</span></code>
+                member function of hashed indices used to have poor performance under
+                low load conditions due to the requirement that an iterator to the
+                next element must be returned (see ticket <a href="https://svn.boost.org/trac/boost/ticket/4264">#4264</a>).
+                In accordance with the resolution of <a href="http://lwg.github.io/issues/lwg-closed.html#579">LWG
+                issue #579</a>, this problem has been fixed while maintaining
+                the interface of <code><span class="identifier">erase</span></code>,
+                at the expense of using one more word of memory per element. In fact,
+                C++ complexity requirements on unordered associative containers have
+                been improved for hashed indices so that
+              </div>
+              <ul>
+                <li>
+                  <div>
+                    deletion of a given element is unconditionally constant-time,
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    worst-case performance is not <code><span class="identifier">O</span><span class="special">(</span><span class="identifier">n</span><span class="special">)</span></code> but <code><span class="identifier">O</span><span class="special">(</span><span class="identifier">n</span><span class="special">&lt;</span><span class="identifier">subscript</span><span class="special">&gt;</span><span class="identifier">dist</span><span class="special">&lt;/</span><span class="identifier">subscript</span><span class="special">&gt;)</span></code>, where <code><span class="identifier">n</span><span class="special">&lt;</span><span class="identifier">subscript</span><span class="special">&gt;</span><span class="identifier">dist</span><span class="special">&lt;/</span><span class="identifier">subscript</span><span class="special">&gt;</span></code> is the number of non-equivalent
+                    elements in the index.
+                  </div>
+                </li>
+              </ul>
+              <div>
+                Due to the fact that hashed indices rely on a new data structure,
+                the internal representation of their iterators and local iterators
+                have changed, which affects serialization: their corresponding serialization
+                <a href="/libs/serialization/doc/tutorial.html#versioning">class
+                version</a> has been bumped from 0 to 1. Old archives involving
+                hashed index (local) iterators can be loaded by Boost 1.56 version
+                of Boost.MultiIndex, but not the other way around.
+              </div>
+            </li>
+            <li>
+              <div>
+                Hashed indices now provide <code><span class="identifier">reserve</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Hashed indices can now be checked for equality and inequality following
+                the (suitably adapted) C++ standard specification in *[unord.req]*.
+              </div>
+            </li>
+            <li>
+              <div>
+                The public interface of Boost.MultiIndex provide <code><span class="keyword">noexcept</span></code>
+                specifications where appropriate (for compliant compilers).
+              </div>
+            </li>
+            <li>
+              <div>
+                Improved performance of failed insertions into a <code><span class="identifier">multi_index_container</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Much internal code aimed at supporting MSVC++ 7.0 and prior has been
+                removed. Compilation times without this legacy code might be slightly
+                faster.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a bug with insertion via iterators dereferencing to rvalues
+                (ticket <a href="https://svn.boost.org/trac/boost/ticket/9665">#9665</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Maintenance fixes.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/lib/program_options/">Program Options</a>:</span>
           <ul>
             <li>
