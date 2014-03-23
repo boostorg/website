@@ -1,7 +1,9 @@
 [article Version 1.56.0
     [quickbook 1.6]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: Flyweight, Multi-index Containers]
+    [purpose 
+    New Libraries: Updated Libraries: Flyweight, Multi-index Containers.
+    Updated Libraries: Smart Pointers.]
     [authors [Dawes, Beman]]
     [/ last-revision is used for the final release data]
     [last-revision ]
@@ -93,6 +95,16 @@
   * Columns in the `--help` output are now aligned across all option groups ([ticket 6114]).
   * Option names with dashes are no longer truncated in error messages ([ticket 8009]).
 
+* [phrase library..[@/libs/smart_ptr/ Smart Pointers]:]
+  * Updated the overloads of [@/libs/smart_ptr/make_shared_array.html make_shared]
+    and [@/libs/smart_ptr/make_shared_array.html allocate_shared] of array types (`T[]` or 
+    `T[N]`) to conform to the specification in C++ standard paper
+    [@http://http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n3939.html N3939] and
+    significantly reduced the spatial overhead of the internal bookkeeping structures.
+  * Updated the implementations of make_shared and
+    allocate_shared for scalar types and array types, respectively, to resolve C++ standard
+    library defect report [@http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#2070 #2070].
+    
 * [phrase library..[@/libs/uuid/index.html UUID]:]
   * Added basic support for C++11 features.
   * Implemented SSE-optimized versions of some functions of `uuid`, including comparison operators and `swap`. The support for different versions of SSE is automatically detected at compile time for most compilers, but can also be explicitly enabled or disabled with [@/libs/uuid/uuid.html#Configuration configuration macros]. ([ticket 8509])
