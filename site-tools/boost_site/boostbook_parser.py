@@ -181,6 +181,14 @@ class BoostBookParser:
         return self.new_node('tt',
             *self.x_children(node))
 
+    def x_subscript(self,node):
+        return self.new_node('sub',
+            *self.x_children(node))
+
+    def x_superscript(self,node):
+        return self.new_node('sup',
+            *self.x_children(node))
+
     def x_emphasis(self,node):
         role = ''
         if node.hasAttribute('role'):
