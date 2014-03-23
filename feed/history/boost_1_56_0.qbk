@@ -1,7 +1,7 @@
 [article Version 1.56.0
     [quickbook 1.6]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: ]
+    [purpose New Libraries: Updated Libraries: Multi-index Containers]
     [authors [Dawes, Beman]]
     [/ last-revision is used for the final release data]
     [last-revision ]
@@ -50,7 +50,36 @@
   * [@http://svn.boost.org/trac/boost/ticket/9734 #9734] wrong check of mmap() return value
   * [@http://svn.boost.org/trac/boost/ticket/9735 #9735] no memset() for protected_stack_allocator
   * [@http://svn.boost.org/trac/boost/ticket/9760 #9760] coroutine iterator need const operator==
-  
+
+* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+  * The `erase(iterator)` member function of hashed indices used to have poor performance under low load
+    conditions due to the requirement that an iterator to the next element must be returned
+    (see ticket [@https://svn.boost.org/trac/boost/ticket/4264 #4264]). In accordance with the resolution of
+    [@http://lwg.github.io/issues/lwg-closed.html#579 LWG issue #579], this problem has been fixed
+    while maintaining the interface of `erase`, at the expense of using one more word of memory per element.
+    In fact, C++ complexity requirements on unordered associative containers have been improved for hashed
+    indices so that
+    [itemized_list
+      [deletion of a given element is unconditionally constant-time,]
+      [worst-case performance is not `O(n)` but `O(n<subscript>dist</subscript>)`, where `n<subscript>dist</subscript>` is the number of non-equivalent elements in the index.]
+    ]
+    Due to the fact that hashed indices rely on a new data structure, the internal representation of their
+    iterators and local iterators have changed, which affects serialization: their corresponding serialization
+    [@libs/serialization/doc/tutorial.html#versioning class version] has been bumped from 0 to 1. Old archives
+    involving hashed index (local) iterators can be loaded by Boost 1.56 version of Boost.MultiIndex, but not
+    the other way around. 
+  * Hashed indices now provide `reserve`.
+  * Hashed indices can now be checked for equality and inequality following the (suitably adapted) C++ standard
+    specification in *\[unord.req\]*.
+  * The public interface of Boost.MultiIndex provide `noexcept` specifications where appropriate (for compliant
+    compilers).
+  * Improved performance of failed insertions into a `multi_index_container`.
+  * Much internal code aimed at supporting MSVC++ 7.0 and prior has been removed. Compilation times without this
+    legacy code might be slightly faster.
+  * Fixed a bug with insertion via iterators dereferencing to rvalues (ticket
+    [@https://svn.boost.org/trac/boost/ticket/9665 #9665]).
+  * Maintenance fixes.
+
 * [phrase library..[@/lib/program_options/ Program Options]:]
   * Columns in the `--help` output are now aligned across all option groups ([ticket 6114]).
   * Option names with dashes are no longer truncated in error messages ([ticket 8009]).
