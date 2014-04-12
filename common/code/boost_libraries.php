@@ -236,7 +236,6 @@ class boost_libraries
                 $lib['authors'] = '';
             }
 
-            // Set up the 'std' field.
             if (!isset($lib['std'])) {
                 $lib['std'] = array();
             }
