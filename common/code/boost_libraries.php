@@ -115,6 +115,7 @@ class boost_libraries
                     case 'authors':
                     case 'maintainers':
                     case 'category':
+                    case 'std':
                     {
                         if(isset($val['value'])) {
                             $name = trim($val['value']);
@@ -234,6 +235,29 @@ class boost_libraries
             if (!isset($lib['authors'])) {
                 $lib['authors'] = '';
             }
+
+            // Set up the 'std' field.
+            if (!isset($lib['std'])) {
+                $lib['std'] = array();
+            }
+
+            foreach(array('proposal', 'tr1') as $std) {
+                $tag = "std-{$std}";
+
+                if (isset($lib[$tag])) {
+                    if ($lib[$tag]) {
+                        $lib['std'][] = $std;
+                    }
+                    else {
+                        $lib['std'] = array_diff($lib['std'], array($std));
+                    }
+                }
+                else {
+                    $lib[$tag] = in_array($std, $lib['std']);
+                }
+            }
+
+            $lib['std'] = array_unique($lib['std']);
 
             $this->db[$lib['key']][(string) $lib['update-version']]
                     = self::normalize_spaces($lib);
@@ -407,8 +431,7 @@ class boost_libraries
                 $this->write_many_elements($writer, $exclude, $lib, 'maintainers');
                 $this->write_optional_element($writer, $exclude, $lib, 'description');
                 $this->write_optional_element($writer, $exclude, $lib, 'documentation');
-                $this->write_optional_element($writer, $exclude, $lib, 'std-proposal');
-                $this->write_optional_element($writer, $exclude, $lib, 'std-tr1');
+                $this->write_many_elements($writer, $exclude, $lib, 'std');
                 $this->write_many_elements($writer, $exclude, $lib, 'category');
                 $writer->endElement();
             }
@@ -489,6 +512,12 @@ class boost_libraries
                 else {
                     $lib['update-version'] = (string) $lib['update-version'];
                 }
+
+                if (empty($lib['std'])) {
+                    unset($lib['std']);
+                }
+                unset($lib['std-tr1']);
+                unset($lib['std-proposal']);
 
                 $lib['boost-version'] = (string) $lib['boost-version'];
 
