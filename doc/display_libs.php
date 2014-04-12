@@ -73,6 +73,7 @@ display_from_archive(
   array('@^libs/filesystem/(v\d/)?doc/.*(html|htm)$@i','simple','text/html'),
   array('@^libs/system/doc/.*(html|htm)$@i','simple','text/html'),
   array('@^libs/numeric/conversion/doc/.*(html|htm)$@i','simple','text/html'),
+  array('@^libs/optional/doc/html/.*(html|htm)$@i','basic','text/html'),
   array('@^libs/optional/doc/.*(html|htm)$@i','simple','text/html'),
   array('@^libs/polygon/doc/.*(html|htm)$@i','simple','text/html'),
   //~ default to processed output for libs and tools
