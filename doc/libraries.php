@@ -92,21 +92,22 @@ function library_filter($lib) {
 
 function libref($lib)
 {
-  if (isset($lib['documentation']) && $lib['documentation'] != '')
+  if (!empty($lib['documentation']))
   {
-    if (isset($_SERVER["PATH_INFO"]) && $_SERVER["PATH_INFO"] != '' && $_SERVER["PATH_INFO"] != '/')
+    $path_info = filter_input(INPUT_SERVER, 'PATH_INFO', FILTER_SANITIZE_URL);
+    if ($path_info && $path_info != '/')
     {
-      $docref = '/doc/libs'.$_SERVER["PATH_INFO"].'/'.$lib['documentation'];
+      $docref = '/doc/libs'.$path_info.'/'.$lib['documentation'];
     }
     else
     {
       $docref = '/doc/libs/release/'.$lib['documentation'];
     }
-    print '<a href="'.$docref.'">'.($lib['name'] ? $lib['name'] : $lib['key']).'</a>';
+    print '<a href="'.$docref.'">'.($lib['name'] ?: $lib['key']).'</a>';
   }
   else
   {
-    print ($lib['name'] ? $lib['name'] : $lib['key']);
+    print ($lib['name'] ?: $lib['key']);
   }
 
   if (!empty($lib['status']))
@@ -116,11 +117,11 @@ function libref($lib)
 }
 function libauthors($lib)
 {
-  print ($lib['authors'] ? $lib['authors'] : '&nbsp;');
+  print ($lib['authors'] ?: '&nbsp;');
 }
 function libavailable($lib)
 {
-  print ($lib['boost-version'] ? "{$lib['boost-version']}" : '&nbsp;');
+  print ($lib['boost-version'] ?: '&nbsp;');
 }
 function libstandard($lib)
 {
@@ -148,7 +149,7 @@ function option_link($description, $field, $value)
   $current_value = isset($_GET[$field]) ? $_GET[$field] : '';
 
   if($current_value == $value) {
-    echo '<span>';
+    echo '<span>',htmlentities($description), '</span>';
   }
   else {
     $params = $_GET;
@@ -162,16 +163,8 @@ function option_link($description, $field, $value)
       }
     }
 
-    echo '<a href="'.htmlentities($base_uri.$url_params).'">';
-  }
-
-  echo htmlentities($description);
-
-  if($current_value == $value) {
-    echo '</span>';
-  }
-  else {
-    echo '</a>';
+    echo '<a href="'.htmlentities($base_uri.$url_params).'">',
+          htmlentities($description), '</a>';
   }
 }
 
