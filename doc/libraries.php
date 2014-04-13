@@ -197,14 +197,14 @@ class LibraryPage {
         print ($p ? implode(', ', $p) : '&nbsp;');
     }
 
-    function libcategories($lib, $categories) {
+    function libcategories($lib) {
         $first = true;
         if ($lib['category']) {
             foreach ($lib['category'] as $category_name) {
                 if (!$first)
                     echo ', ';
                 $first = false;
-                $this->category_link($category_name, $categories[$category_name]);
+                $this->category_link($category_name);
             }
         }
         if ($first)
@@ -233,9 +233,11 @@ class LibraryPage {
         }
     }
 
-    function category_link($name, $category) {
+    function category_link($name) {
+        $category = $this->categories[$name];
         $this->option_link(
-                isset($category['title']) ? $category['title'] : $name, 'view', 'category_' . $name);
+                isset($category['title']) ? $category['title'] : $name,
+                'view', 'category_' . $name);
     }
 }
 
@@ -245,8 +247,6 @@ $library_page = new LibraryPage($_GET,
     USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt')) :
 	boost_libraries::from_xml_file(dirname(__FILE__) . '/libraries.xml'));
-
-$categories = $library_page->categories;
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -320,7 +320,7 @@ $categories = $library_page->categories;
 
                     <dt>Categories</dt>
 
-                    <dd><?php $library_page->libcategories($lib, $categories); ?></dd>
+                    <dd><?php $library_page->libcategories($lib); ?></dd>
                   </dl>
                 </dd><!-- --><?php } ?>
               </dl>
@@ -331,7 +331,7 @@ $categories = $library_page->categories;
               <?php
               foreach ($library_page->categorized_libraries() as $name => $category) {
                 if(count($category['libraries'])) {?>
-                  <h3><?php $library_page->category_link($name, $category); ?></h3>
+                  <h3><?php $library_page->category_link($name); ?></h3>
                   <ul><?php foreach ($category['libraries'] as $lib) { ?>
                     <li><?php $library_page->libref($lib); ?>: <?php echo ($lib['description'] ? htmlentities($lib['description'],ENT_NOQUOTES,'UTF-8') : '&nbsp;'); ?></li>
                   <?php } ?></ul>
