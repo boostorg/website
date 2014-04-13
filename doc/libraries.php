@@ -82,7 +82,7 @@ if($category_value) $page_title.= ' - '. $categories[$category_value]['title'];
 function library_filter($lib) {
   global $filter_value, $category_value;
 
-  return (!$filter_value || ($lib[$filter_value] && $lib[$filter_value] !== 'false')) &&
+  return (!$filter_value || $lib[$filter_value]) &&
       (!isset($_GET['filter']) || $lib[$_GET['filter']]) &&
       (!$category_value || $category_value === 'all' ||
         array_search($category_value, $lib['category']) !== FALSE);
