@@ -2,9 +2,9 @@
 
 <html>
 <head>
-<?php $_file->content_head(); ?>
+<?php echo $_file['head']; ?>
 </head>
 <body>
-<?php $_file->content(); ?>
+<?php echo $_file['content']; ?>
 </body>
 </html>

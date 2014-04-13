@@ -11,8 +11,13 @@
 
 function alter_title($params, $text)
 {
-    $version = BoostVersion::from($params['version']);
-    return str_ireplace('</title>', " - $version</title>", $text);
+    if (isset($params['version'])) {
+        $version = BoostVersion::from($params['version']);
+        return str_ireplace('</title>', " - $version</title>", $text);
+    }
+    else {
+        return $text;
+    }
 }
 
 function html_init(&$params)
@@ -122,6 +127,10 @@ function remove_html_banner($text) {
 
 function latest_link($params)
 {
+    if (!isset($params['version'])) {
+        return;
+    }
+
     $version = BoostVersion::from($params['version']);
 
     $current = BoostVersion::current();

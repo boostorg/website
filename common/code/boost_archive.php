@@ -320,7 +320,7 @@ function boost_archive_render_callbacks($content, $params) {
     $charset = $params['charset'] ? $params['charset'] : 'us-ascii';
     $title = $params['title'] ? "$params[title]" : 'Boost C++ Libraries';
 
-    if ($params['version'] != 'boost-build') {
+    if (!empty($params['version']) && $params['version'] != 'boost-build') {
         $title = "$params[title] - " . BoostVersion::from($params['version']);
     }
 

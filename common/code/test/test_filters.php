@@ -23,7 +23,7 @@ function filter_test($filter, $params, $expected) {
         ++$failure_count;
         
         echo
-            '<h2>Failure for filter $filter</h2>',
+            "<h2>Failure for filter {$filter}</h2>",
             '<p>Expected:</p><pre>',
             htmlentities($expected),
             '</pre><p>Result:</p><pre>',
@@ -44,7 +44,7 @@ $test_text_expected = <<<EOL
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
-<title>Boost C++ Libraries - Hello_world_test.txt</title></head>
+<title>Hello_world_test.txt</title></head>
 <body>
 <h3>Hello_world_test.txt</h3>
 <pre>
@@ -76,7 +76,7 @@ $test_cpp_expected = <<<EOL
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
-<title>Boost C++ Libraries - foo/test.cpp</title></head>
+<title>foo/test.cpp</title></head>
 <body>
 <h3>foo/test.cpp</h3>
 <pre>
@@ -120,10 +120,72 @@ $params = Array(
     'content' => $test_doc
 );
 
-filter_test('boost_book_html', $params, '');
-filter_test('boost_libs', $params, '');
-filter_test('simple', $params, '');
-filter_test('basic', $params, '');
+$test_boost_book_expected = <<<EOL
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<title>Test Document</title></head>
+<body>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test Document</title>
+</head>
+<body>
+<h1>Simple test case for the filters</h1>
+<p>For now just test a
+<a class="external" href="http://svn.boost.org/trac/boost/">link to an external site</a>,
+<a href="/tools/boostbook/">an absolute path</a> and
+<a href="../../../development/">a relative path</a>.
+</p>
+</body>
+</html>
+EOL;
+
+$test_boost_libs_expected = <<<EOL
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<title>Test Document</title></head>
+<body>
+
+<h1>Simple test case for the filters</h1>
+<p>For now just test a
+<a class="external" href="http://svn.boost.org/trac/boost/">link to an external site</a>,
+<a href="/tools/boostbook/">an absolute path</a> and
+<a href="../../../development/">a relative path</a>.
+</p>
+</body>
+</html>
+EOL;
+
+$test_simple_expected = <<<EOL
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test Document</title>
+</head>
+<body>
+<h1>Simple test case for the filters</h1>
+<p>For now just test a
+<a href="http://svn.boost.org/trac/boost/">link to an external site</a>,
+<a href="/tools/boostbook/">an absolute path</a> and
+<a href="../../../development/">a relative path</a>.
+</p>
+</body>
+</html>
+EOL;
+
+filter_test('boost_book_html', $params, $test_boost_book_expected);
+filter_test('boost_libs', $params, $test_boost_libs_expected);
+filter_test('simple', $params, $test_simple_expected);
+// TODO: This doesn't work because the filter calls 'virtual', which breaks
+// out of the buffered output.
+//filter_test('basic', $params, '');
 
 /* Frames */
 
