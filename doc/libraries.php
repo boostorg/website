@@ -6,86 +6,143 @@ define('USE_SERIALIZED_INFO', true);
 require_once(dirname(__FILE__) . '/../common/code/boost.php');
 require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
 
-$libs = USE_SERIALIZED_INFO ?
-	unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt')) :
-	boost_libraries::from_xml_file(dirname(__FILE__) . '/libraries.xml');
-$categories = $libs->get_categories();
+class LibraryPage {
+    static $view_fields = Array(
+        '' => 'All',
+        'categorized' => 'Categorized'
+    );
 
-// Display types:
+    static $filter_fields = Array(
+        'std-proposal' => 'Standard Proposals',
+        'std-tr1' => 'TR1 libraries',
+        'header-only' => '[old]',
+        'autolink' => '[old]'
+    );
 
-$view_fields = Array(
-    '' => 'All',
-    'categorized' => 'Categorized'
-);
-$filter_fields = Array(
-    'std-proposal' => 'Standard Proposals',
-    'std-tr1' => 'TR1 libraries',
-    'header-only' => '[old]',
-    'autolink' => '[old]');
-$sort_fields =  Array(
-    'name' => 'Name',
-    'boost-version' => 'First Release',
-    'std-proposal' => 'STD Proposal',
-    'std-tr1' => 'STD::TR1',
-    'key' => 'Key'
-);
-$display_sort_fields = Array(
-    '' => 'Name',
-    'boost-version' => 'First Release'
-);
+    static $sort_fields =  Array(
+        'name' => 'Name',
+        'boost-version' => 'First Release',
+        'std-proposal' => 'STD Proposal',
+        'std-tr1' => 'STD::TR1',
+        'key' => 'Key'
+    );
 
-// View
+    static $display_sort_fields = Array(
+        '' => 'Name',
+        'boost-version' => 'First Release'
+    );
 
-$view_value = isset($_GET['view']) ? $_GET['view'] : '';
+    var $libs;
+    var $categories;
 
-$category_value = '';
-$filter_value = '';
+    var $view_value = '';
+    var $category_value = '';
+    var $filter_value = '';
+    var $sort_value = 'name';
+    var $attribute_filter = false;
 
-if(strpos($view_value, 'filtered_') === 0) {
-    $filter_value = substr($view_value, strlen('filtered_'));
-    if(!isset($filter_fields[$filter_value])) {
-        echo 'Invalid filter field.'; exit(0);
+    function __construct($params, $libs) {
+        $this->libs = $libs;
+        $this->categories = $libs->get_categories();
+
+        if (isset($params['view'])) { $this->view_value = $params['view']; }
+
+        if (strpos($this->view_value, 'filtered_') === 0) {
+            $this->filter_value = substr($this->view_value, strlen('filtered_'));
+            if (!isset(self::$filter_fields[$this->filter_value])) {
+                echo 'Invalid filter field.'; exit(0);
+            }
+            if (self::$filter_fields[$this->filter_value] == '[old]') {
+                echo 'Filter field no longer supported.'; exit(0);
+            }
+        }
+        else if (strpos($this->view_value, 'category_') === 0) {
+            $this->category_value = substr($this->view_value, strlen('category_'));
+            if(!isset($this->categories[$this->category_value])) {
+                echo 'Invalid category: '.htmlentities($this->category_value); exit(0);
+            }
+        }
+        else {
+            $this->filter_value = '';
+            if (!isset(self::$view_fields[$this->view_value])) {
+                echo 'Invalid view value.'; exit(0);
+            }
+        }
+
+        if (!empty($params['sort'])) {
+            $this->sort_value = $params['sort'];
+
+            if (!isset(self::$sort_fields[$this->sort_value])) {
+                echo 'Invalid sort field.'; exit(0);
+            }
+        }
+
+        if (!empty($params['filter'])) {
+            $this->attribute_filter = $params['filter'];
+        }
     }
-    if ($filter_fields[$filter_value] == '[old]') {
-        echo 'Filter field no longer supported.'; exit(0);
+
+    function filter($lib) {
+        return (!$this->filter_value || $lib[$this->filter_value]) &&
+            (!$this->attribute_filter || $lib[$this->attribute_filter]) &&
+            (!$this->category_value || $this->category_value === 'all' ||
+            array_search($this->category_value, $lib['category']) !== FALSE);
     }
-}
-else if(strpos($view_value, 'category_') === 0) {
-    $category_value = substr($view_value, strlen('category_'));
-    if(!isset($categories[$category_value])) {
-        echo 'Invalid category: '.htmlentities($category_value); exit(0);
+
+    function title() {
+        $page_title = BoostVersion::page_title().' Library Documentation';
+        if ($this->category_value) {
+            $page_title.= ' - '. $this->categories[$this->category_value]['title'];
+        }
+
+        return $page_title;
     }
-}
-else {
-    $filter_value = '';
-    if(!isset($view_fields[$view_value])) {
-        echo 'Invalid view value.'; exit(0);
+
+    function category_subtitle() {
+        if($this->category_value) {
+            echo '<h2>',
+                htmlentities($this->categories[$this->category_value]['title']),
+                '</h2>';
+        }
     }
-}
 
-// Sort
+    function view_menu_items() {
+        foreach (self::$view_fields as $key => $description) {
+            echo '<li>';
+            option_link($description, 'view', $key);
+            echo '</li> ';
+        }
+    }
 
-$sort_value = isset($_GET['sort']) && $_GET['sort'] ?
-    $_GET['sort'] : 'name';
+    function filter_menu_items() {
+        foreach (self::$filter_fields as $key => $description) {
+            if (!preg_match('@^\[.*\]$@', $description)) {
+                echo '<li>';
+                option_link($description, 'view', 'filtered_'.$key);
+                echo '</li> ';
+            }
+        }
+    }
 
-if(!isset($sort_fields[$sort_value])) {
-    echo 'Invalid sort field.'; exit(0);
-}
+    function sort_menu_items() {
+        foreach (self::$display_sort_fields as $key => $description) {
+            echo '<li>';
+            option_link($description, 'sort', $key);
+            echo '</li> ';
+        }
+    }
 
-// Page title
+    function filtered_libraries() {
+        return $this->libs->get_for_version(BoostVersion::page(),
+                $this->sort_value,
+                array($this, 'filter'));
+    }
 
-$page_title = BoostVersion::page_title().' Library Documentation';
-if($category_value) $page_title.= ' - '. $categories[$category_value]['title'];
-
-// Functions
-
-function library_filter($lib) {
-  global $filter_value, $category_value;
-
-  return (!$filter_value || $lib[$filter_value]) &&
-      (!isset($_GET['filter']) || $lib[$_GET['filter']]) &&
-      (!$category_value || $category_value === 'all' ||
-        array_search($category_value, $lib['category']) !== FALSE);
+    function categorized_libraries() {
+        return $this->libs->get_categorized_for_version(BoostVersion::page(),
+                $this->sort_value,
+                array($this, 'filter'));
+    }
 }
 
 // Library display functions:
@@ -174,13 +231,22 @@ function category_link($name, $category) {
     'view', 'category_'.$name);
 }
 
+// Page variables
+
+$library_page = new LibraryPage($_GET,
+    USE_SERIALIZED_INFO ?
+	unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt')) :
+	boost_libraries::from_xml_file(dirname(__FILE__) . '/libraries.xml'));
+
+$categories = $library_page->categories;
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title><?php echo htmlentities($page_title); ?></title>
+  <title><?php echo htmlentities($library_page->title()); ?></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-doc.css" />
@@ -198,40 +264,32 @@ function category_link($name, $category) {
         <div class="section" id="intro">
           <div class="section-0">
             <div class="section-title">
-              <h1><?php echo htmlentities($page_title); ?></h1>
+              <h1><?php echo htmlentities($library_page->title()); ?></h1>
             </div>
 
             <div class="section-body">
               <div id="options">
                   <div id="view-options">
                     <ul class="menu">
-                    <?php foreach($view_fields as $key => $description) : ?>
-                      <li><?php option_link($description, 'view', $key); ?></li><?php
-                    endforeach; ?>
-                    <?php foreach($filter_fields as $key => $description) : ?>
-                      <?php if (!preg_match('@^\[.*\]$@', $description)) : ?>
-                      <li><?php option_link($description, 'view', 'filtered_'.$key); ?></li>
-                      <?php endif; ?>
-                    <?php endforeach; ?>
+                    <?php $library_page->view_menu_items(); ?>
+                    <?php $library_page->filter_menu_items(); ?>
                     </ul>
                   </div>
                   <div id="sort-options">
                     <div class="label">Sort by:</div>
                     <ul class="menu">
-                    <?php foreach($display_sort_fields as $key => $description) : ?>
-                      <li><?php option_link($description, 'sort', $key); ?></li>
-                    <?php endforeach; ?>
+                    <?php $library_page->sort_menu_items(); ?>
                     </ul>
                   </div>
               </div>
 
-              <?php if($view_value != 'categorized') { ?>
+              <?php if ($library_page->view_value != 'categorized') { ?>
 
-              <?php if($category_value) echo '<h2>', htmlentities($categories[$category_value]['title']), '</h2>'; ?>
+              <?php $library_page->category_subtitle(); ?>
 
               <dl>
                 <?php
-                foreach ($libs->get_for_version(BoostVersion::page(), $sort_value, 'library_filter') as $lib) { ?>
+                foreach ($library_page->filtered_libraries() as $lib) { ?>
 
                 <dt><?php libref($lib); ?></dt>
 
@@ -263,7 +321,7 @@ function category_link($name, $category) {
 
               <h2>By Category</h2>
               <?php
-              foreach ($libs->get_categorized_for_version(BoostVersion::page(), $sort_value, 'library_filter') as $name => $category) {
+              foreach ($library_page->categorized_libraries() as $name => $category) {
                 if(count($category['libraries'])) {?>
                   <h3><?php category_link($name, $category); ?></h3>
                   <ul><?php foreach ($category['libraries'] as $lib) { ?>
