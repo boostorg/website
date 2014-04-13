@@ -178,6 +178,12 @@ class LibraryPage {
         }
     }
 
+    function libdescription($lib) {
+        echo $lib['description'] ?
+                htmlentities($lib['description'],ENT_NOQUOTES,'UTF-8') :
+                '&nbsp;';
+    }
+
     function libauthors($lib) {
         print ($lib['authors'] ? : '&nbsp;');
     }
@@ -291,54 +297,51 @@ $library_page = new LibraryPage($_GET,
                   </div>
               </div>
 
-              <?php if ($library_page->view_value != 'categorized') { ?>
+              <?php if ($library_page->view_value != 'categorized'): ?>
 
               <?php $library_page->category_subtitle(); ?>
-
               <dl>
-                <?php
-                foreach ($library_page->filtered_libraries() as $lib) { ?>
-
+              <?php foreach ($library_page->filtered_libraries() as $lib): ?>
                 <dt><?php $library_page->libref($lib); ?></dt>
-
                 <dd>
-                  <p>
-                  <?php echo ($lib['description'] ? htmlentities($lib['description'],ENT_NOQUOTES,'UTF-8') : '&nbsp;'); ?></p>
-
+                  <p><?php $library_page->libdescription($lib); ?></p>
                   <dl class="fields">
                     <dt>Author(s)</dt>
-
                     <dd><?php $library_page->libauthors($lib); ?></dd>
-
                     <dt>First&nbsp;Release</dt>
-
                     <dd><?php $library_page->libavailable($lib); ?></dd>
-
                     <dt>Standard</dt>
-
                     <dd><?php $library_page->libstandard($lib); ?></dd>
-
                     <dt>Categories</dt>
-
                     <dd><?php $library_page->libcategories($lib); ?></dd>
                   </dl>
-                </dd><!-- --><?php } ?>
+                </dd>
+              <?php endforeach; ?>
               </dl>
 
-              <?php } else { ?>
+              <?php else: ?>
 
               <h2>By Category</h2>
               <?php
               foreach ($library_page->categorized_libraries() as $name => $category) {
-                if(count($category['libraries'])) {?>
-                  <h3><?php $library_page->category_link($name); ?></h3>
-                  <ul><?php foreach ($category['libraries'] as $lib) { ?>
-                    <li><?php $library_page->libref($lib); ?>: <?php echo ($lib['description'] ? htmlentities($lib['description'],ENT_NOQUOTES,'UTF-8') : '&nbsp;'); ?></li>
-                  <?php } ?></ul>
-                <?php } ?>
-              <?php } ?>
+                if(count($category['libraries'])) {
+                  echo '<h3>';
+                  $library_page->category_link($name);
+                  echo '</h3>';
+                  echo '<ul>';
+                  foreach ($category['libraries'] as $lib) {
+                    echo '<li>';
+                    $library_page->libref($lib);
+                    echo ': ';
+                    $library_page->libdescription($lib);
+                    echo '</li>';
+                  }
+                  echo '</ul>';
+                }
+              }
+              ?>
 
-              <?php } ?>
+              <?php endif ?>
             </div>
           </div>
         </div>
