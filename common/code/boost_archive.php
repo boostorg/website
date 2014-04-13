@@ -317,8 +317,8 @@ function conditional_get($last_modified)
 // General purpose render callbacks.
 
 function boost_archive_render_callbacks($content, $params) {
-    $charset = $params['charset'] ? $params['charset'] : 'us-ascii';
-    $title = $params['title'] ? "$params[title]" : 'Boost C++ Libraries';
+    $charset = !empty($params['charset']) ? $params['charset'] : 'us-ascii';
+    $title = !empty($params['title']) ? "$params[title]" : 'Boost C++ Libraries';
 
     if (!empty($params['version']) && $params['version'] != 'boost-build') {
         $title = "$params[title] - " . BoostVersion::from($params['version']);
