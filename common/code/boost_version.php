@@ -134,6 +134,15 @@ class BoostVersion {
     }
 
     /**
+     * Is this a numbered release version?
+     * (as opposed to a develop branch)
+     * @return boolean
+     */
+    function is_numbered_release() {
+        return $this->version['stage'] = self::release_stage;
+    }
+
+    /**
      * Compare this verison with another. Ignores the beta field
      * (i.e. 1.50.0 beta1 == 1.50.0 beta).
      * @return int, -1 if less than the other version, 0 if the

@@ -41,7 +41,7 @@ echo_sitemap_url("doc/libs/", '1.0', 'daily');
 
 $libs = USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/generated/libraries.txt')) :
-	boost_libraries::from_file(dirname(__FILE__) . '/doc/libraries.xml');
+	boost_libraries::from_xml_file(dirname(__FILE__) . '/doc/libraries.xml');
 
 foreach ($libs->get_for_version(BoostVersion::current()) as $lib) {
     echo_sitemap_url("doc/libs/release/$lib[documentation]", '1.0', 'daily');
