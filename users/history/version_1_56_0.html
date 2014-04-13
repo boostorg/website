@@ -73,6 +73,205 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/libs/context/">Context</a>:</span>
+          <ul>
+            <li>
+              <div>
+                fcontext_t is opaque pointer to context-data
+              </div>
+            </li>
+            <li>
+              <div>
+                changed signature of make_fcontext()
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/8826">#8826</a> no executable stack
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/9437">#9437</a> catch exceptions on iOS and Windows Phone 8
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/9445">#9445</a> support for x32 ABIs
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/9522">#9522</a> support for powerpc_64le
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/9743">#9743</a> bugfix for powerpc_64 le/be
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/coroutine/">Coroutine</a>:</span>
+          <ul>
+            <li>
+              <div>
+                support of symmetric coroutines
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/9355">#9355</a> fix race condition in protected_stack_allocator
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/9551">#9551</a> list of supported architectures
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/9734">#9734</a> wrong check of mmap() return value
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/9735">#9735</a> no memset() for protected_stack_allocator
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://svn.boost.org/trac/boost/ticket/9760">#9760</a> coroutine iterator need const operator==
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/flyweight/index.html">Flyweight</a>:</span>
+          <ul>
+            <li>
+              <div>
+                In compilers with variadic template support, <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">flyweight</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> now provides a perfectly forwarding
+                constructor to <code><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span></code>
+                (previously an emulation was used).
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">flyweight</span></code> now replicates
+                the initializer-list constructors and assignment operators of its
+                underlying type.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed intermodule static initialization problem (ticket <a href="https://svn.boost.org/trac/boost/ticket/9553">#9553</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Maintenance fixes.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/multi_index/index.html">Multi-index Containers</a>:</span>
+          <ul>
+            <li>
+              <div>
+                The <code><span class="identifier">erase</span><span class="special">(</span><span class="identifier">iterator</span><span class="special">)</span></code>
+                member function of hashed indices used to have poor performance under
+                low load conditions due to the requirement that an iterator to the
+                next element must be returned (see ticket <a href="https://svn.boost.org/trac/boost/ticket/4264">#4264</a>). In accordance
+                with the resolution of <a href="http://lwg.github.io/issues/lwg-closed.html#579">LWG
+                issue #579</a>, this problem has been fixed while maintaining
+                the interface of <code><span class="identifier">erase</span></code>,
+                at the expense of using one more word of memory per element. In fact,
+                C++ complexity requirements on unordered associative containers have
+                been improved for hashed indices so that
+              </div>
+              <ul>
+                <li>
+                  <div>
+                    deletion of a given element is unconditionally constant-time,
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    worst-case performance is not <code><span class="identifier">O</span><span class="special">(</span><span class="identifier">n</span><span class="special">)</span></code> but <code>O(n<sub>dist</sub>)</code>, where <code>n<sub>dist</sub></code> is the number of
+                    non-equivalent elements in the index.
+                  </div>
+                </li>
+              </ul>
+              <div>
+                Due to the fact that hashed indices rely on a new data structure,
+                the internal representation of their iterators and local iterators
+                have changed, which affects serialization: their corresponding serialization
+                <a href="/libs/serialization/doc/tutorial.html#versioning">class
+                version</a> has been bumped from 0 to 1. Old archives involving
+                hashed index (local) iterators can be loaded by Boost 1.56 version
+                of Boost.MultiIndex, but not the other way around.
+              </div>
+            </li>
+            <li>
+              <div>
+                Hashed indices now provide <code><span class="identifier">reserve</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Hashed indices can now be checked for equality and inequality following
+                the (suitably adapted) C++ standard specification in <strong>[unord.req]</strong>.
+              </div>
+            </li>
+            <li>
+              <div>
+                The public interface of Boost.MultiIndex provide <code><span class="keyword">noexcept</span></code>
+                specifications where appropriate (for compliant compilers).
+              </div>
+            </li>
+            <li>
+              <div>
+                Improved performance of failed insertions into a <code><span class="identifier">multi_index_container</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Much internal code aimed at supporting MSVC++ 7.0 and prior has been
+                removed. Compilation times without this legacy code might be slightly
+                faster.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a bug with insertion via iterators dereferencing to rvalues
+                (ticket <a href="https://svn.boost.org/trac/boost/ticket/9665">#9665</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Made Boost.MultiIndex compatible with <code><span class="identifier">BOOST_BIND_NO_PLACEHOLDERS</span></code>
+                (ticket <a href="https://svn.boost.org/trac/boost/ticket/9798">#9798</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Maintenance fixes.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/lib/program_options/">Program Options</a>:</span>
           <ul>
             <li>
@@ -85,6 +284,30 @@
               <div>
                 Option names with dashes are no longer truncated in error messages
                 (<a href="https://svn.boost.org/trac/boost/ticket/8009">#8009</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/smart_ptr/">Smart Pointers</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Updated the overloads of <a href="/libs/smart_ptr/make_shared_array.html">make_shared</a>
+                and <a href="/libs/smart_ptr/make_shared_array.html">allocate_shared</a>
+                of array types (<code><span class="identifier">T</span><span class="special">[]</span></code> or <code><span class="identifier">T</span><span class="special">[</span><span class="identifier">N</span><span class="special">]</span></code>) to conform to the specification
+                in C++ standard paper <a href="http://http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n3939.html">N3939</a>
+                and significantly reduced the spatial overhead of the internal bookkeeping
+                structures.
+              </div>
+            </li>
+            <li>
+              <div>
+                Updated the implementations of make_shared and allocate_shared for
+                scalar types and array types, respectively, to resolve C++ standard
+                library defect report <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#2070">#2070</a>.
               </div>
             </li>
           </ul>

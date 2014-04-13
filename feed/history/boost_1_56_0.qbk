@@ -1,7 +1,9 @@
 [article Version 1.56.0
     [quickbook 1.6]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: ]
+    [purpose 
+    New Libraries: Updated Libraries: Flyweight, Multi-index Containers.
+    Updated Libraries: Smart Pointers.]
     [authors [Dawes, Beman]]
     [/ last-revision is used for the final release data]
     [last-revision ]
@@ -34,10 +36,76 @@
 * [phrase library..[@/lib/concept_check/ Concept Check]:]
   * Fewer warnings (includes [ticket 5012]).
   
+* [phrase library..[@/libs/context/ Context]:]
+  * fcontext_t is opaque pointer to context-data
+  * changed signature of make_fcontext()
+  * [ticket 8826] no executable stack
+  * [ticket 9437] catch exceptions on iOS and Windows Phone 8
+  * [ticket 9445] support for x32 ABIs
+  * [ticket 9522] support for powerpc_64le
+  * [ticket 9743] bugfix for powerpc_64 le/be
+
+* [phrase library..[@/libs/coroutine/ Coroutine]:]
+  * support of symmetric coroutines
+  * [ticket 9355] fix race condition in protected_stack_allocator
+  * [ticket 9551] list of supported architectures
+  * [ticket 9734] wrong check of mmap() return value
+  * [ticket 9735] no memset() for protected_stack_allocator
+  * [ticket 9760] coroutine iterator need const operator==
+
+* [phrase library..[@/libs/flyweight/index.html Flyweight]:]
+  * In compilers with variadic template support, `boost::flyweight<T>` now provides a perfectly forwarding
+    constructor to `T::T` (previously an emulation was used).
+  * `flyweight` now replicates the initializer-list constructors and assignment operators of its underlying type.
+  * Fixed intermodule static initialization problem (ticket [ticket 9553]).
+  * Maintenance fixes.
+    
+* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+  * The `erase(iterator)` member function of hashed indices used to have poor performance under low load
+    conditions due to the requirement that an iterator to the next element must be returned
+    (see ticket [ticket 4264]). In accordance with the resolution of
+    [@http://lwg.github.io/issues/lwg-closed.html#579 LWG issue #579], this problem has been fixed
+    while maintaining the interface of `erase`, at the expense of using one more word of memory per element.
+    In fact, C++ complexity requirements on unordered associative containers have been improved for hashed
+    indices so that
+    [itemized_list
+      [deletion of a given element is unconditionally constant-time,]
+      [worst-case performance is not `O(n)` but
+      '''<code>O(n<subscript>dist</subscript>)</code>''', where
+      '''<code>n<subscript>dist</subscript></code>''' is the number of
+      non-equivalent elements in the index.]
+    ]
+    Due to the fact that hashed indices rely on a new data structure, the internal representation of their
+    iterators and local iterators have changed, which affects serialization: their corresponding serialization
+    [@/libs/serialization/doc/tutorial.html#versioning class version] has been bumped from 0 to 1. Old archives
+    involving hashed index (local) iterators can be loaded by Boost 1.56 version of Boost.MultiIndex, but not
+    the other way around. 
+  * Hashed indices now provide `reserve`.
+  * Hashed indices can now be checked for equality and inequality following the (suitably adapted) C++ standard
+    specification in [*\[unord.req\]].
+  * The public interface of Boost.MultiIndex provide `noexcept` specifications where appropriate (for compliant
+    compilers).
+  * Improved performance of failed insertions into a `multi_index_container`.
+  * Much internal code aimed at supporting MSVC++ 7.0 and prior has been removed. Compilation times without this
+    legacy code might be slightly faster.
+  * Fixed a bug with insertion via iterators dereferencing to rvalues (ticket [ticket 9665]).
+  * Made Boost.MultiIndex compatible with `BOOST_BIND_NO_PLACEHOLDERS` (ticket [ticket 9798]). 
+  * Maintenance fixes.
+
 * [phrase library..[@/lib/program_options/ Program Options]:]
   * Columns in the `--help` output are now aligned across all option groups ([ticket 6114]).
   * Option names with dashes are no longer truncated in error messages ([ticket 8009]).
 
+* [phrase library..[@/libs/smart_ptr/ Smart Pointers]:]
+  * Updated the overloads of [@/libs/smart_ptr/make_shared_array.html make_shared]
+    and [@/libs/smart_ptr/make_shared_array.html allocate_shared] of array types (`T[]` or 
+    `T[N]`) to conform to the specification in C++ standard paper
+    [@http://http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n3939.html N3939] and
+    significantly reduced the spatial overhead of the internal bookkeeping structures.
+  * Updated the implementations of make_shared and
+    allocate_shared for scalar types and array types, respectively, to resolve C++ standard
+    library defect report [@http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#2070 #2070].
+    
 * [phrase library..[@/libs/uuid/index.html UUID]:]
   * Added basic support for C++11 features.
   * Implemented SSE-optimized versions of some functions of `uuid`, including comparison operators and `swap`. The support for different versions of SSE is automatically detected at compile time for most compilers, but can also be explicitly enabled or disabled with [@/libs/uuid/uuid.html#Configuration configuration macros]. ([ticket 8509])
