@@ -9,7 +9,7 @@
 <?php
 
 require_once(dirname(__FILE__) . '/../boost_archive.php');
-$template = dirname(__FILE__) . '/test_template.php';
+$template = dirname(__FILE__) . '/template.php';
 
 $failure_count = 0;
 
