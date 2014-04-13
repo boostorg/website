@@ -32,9 +32,11 @@ class LibraryPage {
         'boost-version' => 'First Release'
     );
 
+    var $params;
     var $libs;
     var $categories;
 
+    var $base_uri = '';
     var $view_value = '';
     var $category_value = '';
     var $filter_value = '';
@@ -42,9 +44,11 @@ class LibraryPage {
     var $attribute_filter = false;
 
     function __construct($params, $libs) {
+        $this->params = $params;
         $this->libs = $libs;
         $this->categories = $libs->get_categories();
 
+        $this->base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
         if (isset($params['view'])) { $this->view_value = $params['view']; }
 
         if (strpos($this->view_value, 'filtered_') === 0) {
@@ -208,13 +212,12 @@ class LibraryPage {
     }
 
     function option_link($description, $field, $value) {
-        $base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
-        $current_value = isset($_GET[$field]) ? $_GET[$field] : '';
+        $current_value = isset($this->params[$field]) ? $this->params[$field] : '';
 
         if ($current_value == $value) {
             echo '<span>', htmlentities($description), '</span>';
         } else {
-            $params = $_GET;
+            $params = $this->params;
             $params[$field] = $value;
 
             $url_params = '';
@@ -225,7 +228,7 @@ class LibraryPage {
                 }
             }
 
-            echo '<a href="' . htmlentities($base_uri . $url_params) . '">',
+            echo '<a href="' . htmlentities($this->base_uri . $url_params) . '">',
             htmlentities($description), '</a>';
         }
     }
