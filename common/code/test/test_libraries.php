@@ -37,11 +37,11 @@ $accumulators_details = '<library>
     <category>Math</category>
   </library>';
 
-$libraries->update(boost_libraries::from_xml($accumulators_details), '1.36.0');
+$libraries->update(boost_libraries::from_xml($accumulators_details, '1.36.0'));
 $r = $libraries->get_history('accumulators');
 assert(count($r) == 1);
 
-$libraries->update(boost_libraries::from_xml($accumulators_details), 'develop');
+$libraries->update(boost_libraries::from_xml($accumulators_details, 'develop'));
 $r = $libraries->get_history('accumulators');
 assert(count($r) == 1);
 
@@ -59,19 +59,21 @@ $new_accumulators_details = '<library>
     <category>Generic</category>
   </library>';
 
-$libraries->update(boost_libraries::from_xml($new_accumulators_details), 'develop');
+$libraries->update(boost_libraries::from_xml($new_accumulators_details, 'develop'));
 $r = $libraries->get_history('accumulators');
 assert(count($r) == 2);
 assert(isset($r['1.36.0']));
 assert(isset($r['develop']));
 assert($r['1.36.0']['category'] == array('Math'));
 assert($r['develop']['category'] == array('Generic', 'Math'));
+assert(!isset($r['master']));
 
-$libraries->update(boost_libraries::from_xml($new_accumulators_details), 'master');
+$libraries->update(boost_libraries::from_xml($new_accumulators_details, 'master'));
 $r = $libraries->get_history('accumulators');
 assert(count($r) == 2);
 assert(isset($r['1.36.0']));
 assert(isset($r['master']));
 assert(!isset($r['develop']));
 assert($r['1.36.0']['category'] == array('Math'));
-assert($r['develop']['category'] == array('Generic', 'Math'));
+assert($r['master']['category'] == array('Generic', 'Math'));
+assert(!isset($r['develop']));
