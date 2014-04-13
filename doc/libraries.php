@@ -119,7 +119,7 @@ class LibraryPage {
     function view_menu_items() {
         foreach (self::$view_fields as $key => $description) {
             echo '<li>';
-            option_link($description, 'view', $key);
+            $this->option_link($description, 'view', $key);
             echo '</li> ';
         }
     }
@@ -128,7 +128,7 @@ class LibraryPage {
         foreach (self::$filter_fields as $key => $description) {
             if (!preg_match('@^\[.*\]$@', $description)) {
                 echo '<li>';
-                option_link($description, 'view', 'filtered_'.$key);
+                $this->option_link($description, 'view', 'filtered_'.$key);
                 echo '</li> ';
             }
         }
@@ -137,7 +137,7 @@ class LibraryPage {
     function sort_menu_items() {
         foreach (self::$display_sort_fields as $key => $description) {
             echo '<li>';
-            option_link($description, 'sort', $key);
+            $this->option_link($description, 'sort', $key);
             echo '</li> ';
         }
     }
@@ -153,92 +153,87 @@ class LibraryPage {
                 $this->sort_value,
                 array($this, 'filter'));
     }
-}
 
-// Library display functions:
+    // Library display functions:
 
-function libref($lib)
-{
-  if (!empty($lib['documentation']))
-  {
-    $path_info = filter_input(INPUT_SERVER, 'PATH_INFO', FILTER_SANITIZE_URL);
-    if ($path_info && $path_info != '/')
-    {
-      $docref = '/doc/libs'.$path_info.'/'.$lib['documentation'];
-    }
-    else
-    {
-      $docref = '/doc/libs/release/'.$lib['documentation'];
-    }
-    print '<a href="'.$docref.'">'.($lib['name'] ?: $lib['key']).'</a>';
-  }
-  else
-  {
-    print ($lib['name'] ?: $lib['key']);
-  }
+    function libref($lib) {
+        if (!empty($lib['documentation'])) {
+            $path_info = filter_input(INPUT_SERVER, 'PATH_INFO', FILTER_SANITIZE_URL);
+            if ($path_info && $path_info != '/') {
+                $docref = '/doc/libs' . $path_info . '/' . $lib['documentation'];
+            } else {
+                $docref = '/doc/libs/release/' . $lib['documentation'];
+            }
+            print '<a href="' . $docref . '">' . ($lib['name'] ? : $lib['key']) . '</a>';
+        } else {
+            print ($lib['name'] ? : $lib['key']);
+        }
 
-  if (!empty($lib['status']))
-  {
-      print ' <em>('.htmlentities($lib['status']).')</em>';
-  }
-}
-function libauthors($lib)
-{
-  print ($lib['authors'] ?: '&nbsp;');
-}
-function libavailable($lib)
-{
-  print ($lib['boost-version'] ?: '&nbsp;');
-}
-function libstandard($lib)
-{
-  $p = array();
-  if ($lib['std-proposal']) { $p[] = 'Proposed'; }
-  if ($lib['std-tr1']) { $p[] = 'TR1'; }
-  print ($p ? implode(', ',$p) : '&nbsp;');
-}
-function libcategories($lib, $categories)
-{
-  $first = true;
-  if($lib['category']) {
-    foreach($lib['category'] as $category_name) {
-      if(!$first) echo ', ';
-      $first = false;
-      category_link($category_name, $categories[$category_name]);
-    }
-  }
-  if($first) echo '&nbsp;';
-}
-
-function option_link($description, $field, $value)
-{
-  $base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
-  $current_value = isset($_GET[$field]) ? $_GET[$field] : '';
-
-  if($current_value == $value) {
-    echo '<span>',htmlentities($description), '</span>';
-  }
-  else {
-    $params = $_GET;
-    $params[$field] = $value;
-
-    $url_params = '';
-    foreach($params as $k => $v) {
-      if($v) {
-        $url_params .= $url_params ? '&' : '?';
-        $url_params .= urlencode($k) . '='. urlencode($v);
-      }
+        if (!empty($lib['status'])) {
+            print ' <em>(' . htmlentities($lib['status']) . ')</em>';
+        }
     }
 
-    echo '<a href="'.htmlentities($base_uri.$url_params).'">',
-          htmlentities($description), '</a>';
-  }
-}
+    function libauthors($lib) {
+        print ($lib['authors'] ? : '&nbsp;');
+    }
 
-function category_link($name, $category) {
-  option_link(
-    isset($category['title']) ? $category['title'] : $name,
-    'view', 'category_'.$name);
+    function libavailable($lib) {
+        print ($lib['boost-version'] ? : '&nbsp;');
+    }
+
+    function libstandard($lib) {
+        $p = array();
+        if ($lib['std-proposal']) {
+            $p[] = 'Proposed';
+        }
+        if ($lib['std-tr1']) {
+            $p[] = 'TR1';
+        }
+        print ($p ? implode(', ', $p) : '&nbsp;');
+    }
+
+    function libcategories($lib, $categories) {
+        $first = true;
+        if ($lib['category']) {
+            foreach ($lib['category'] as $category_name) {
+                if (!$first)
+                    echo ', ';
+                $first = false;
+                $this->category_link($category_name, $categories[$category_name]);
+            }
+        }
+        if ($first)
+            echo '&nbsp;';
+    }
+
+    function option_link($description, $field, $value) {
+        $base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
+        $current_value = isset($_GET[$field]) ? $_GET[$field] : '';
+
+        if ($current_value == $value) {
+            echo '<span>', htmlentities($description), '</span>';
+        } else {
+            $params = $_GET;
+            $params[$field] = $value;
+
+            $url_params = '';
+            foreach ($params as $k => $v) {
+                if ($v) {
+                    $url_params .= $url_params ? '&' : '?';
+                    $url_params .= urlencode($k) . '=' . urlencode($v);
+                }
+            }
+
+            echo '<a href="' . htmlentities($base_uri . $url_params) . '">',
+            htmlentities($description), '</a>';
+        }
+    }
+
+    function category_link($name, $category) {
+        $this->option_link(
+                isset($category['title']) ? $category['title'] : $name, 'view', 'category_' . $name);
+    }
 }
 
 // Page variables
@@ -301,7 +296,7 @@ $categories = $library_page->categories;
                 <?php
                 foreach ($library_page->filtered_libraries() as $lib) { ?>
 
-                <dt><?php libref($lib); ?></dt>
+                <dt><?php $library_page->libref($lib); ?></dt>
 
                 <dd>
                   <p>
@@ -310,19 +305,19 @@ $categories = $library_page->categories;
                   <dl class="fields">
                     <dt>Author(s)</dt>
 
-                    <dd><?php libauthors($lib); ?></dd>
+                    <dd><?php $library_page->libauthors($lib); ?></dd>
 
                     <dt>First&nbsp;Release</dt>
 
-                    <dd><?php libavailable($lib); ?></dd>
+                    <dd><?php $library_page->libavailable($lib); ?></dd>
 
                     <dt>Standard</dt>
 
-                    <dd><?php libstandard($lib); ?></dd>
+                    <dd><?php $library_page->libstandard($lib); ?></dd>
 
                     <dt>Categories</dt>
 
-                    <dd><?php libcategories($lib, $categories); ?></dd>
+                    <dd><?php $library_page->libcategories($lib, $categories); ?></dd>
                   </dl>
                 </dd><!-- --><?php } ?>
               </dl>
@@ -333,9 +328,9 @@ $categories = $library_page->categories;
               <?php
               foreach ($library_page->categorized_libraries() as $name => $category) {
                 if(count($category['libraries'])) {?>
-                  <h3><?php category_link($name, $category); ?></h3>
+                  <h3><?php $library_page->category_link($name, $category); ?></h3>
                   <ul><?php foreach ($category['libraries'] as $lib) { ?>
-                    <li><?php libref($lib); ?>: <?php echo ($lib['description'] ? htmlentities($lib['description'],ENT_NOQUOTES,'UTF-8') : '&nbsp;'); ?></li>
+                    <li><?php $library_page->libref($lib); ?>: <?php echo ($lib['description'] ? htmlentities($lib['description'],ENT_NOQUOTES,'UTF-8') : '&nbsp;'); ?></li>
                   <?php } ?></ul>
                 <?php } ?>
               <?php } ?>
