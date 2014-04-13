@@ -114,12 +114,21 @@ class BoostVersion {
      * @return BoostVersion
      */
     static function page() {
+        return self::page_version() ?: self::current();
+    }
+
+    static function page_title() {
+        $version = self::page_version();
+        return $version ? "Boost {$version}" : "Boost";
+    }
+
+    static private function page_version() {
         static $boost_version;
 
         if ($boost_version == null) {
             $boost_version = isset($_SERVER["PATH_INFO"]) ?
                 BoostVersion::from($_SERVER["PATH_INFO"]) :
-                BoostVersion::current();
+                false;
         }
 
         return $boost_version;

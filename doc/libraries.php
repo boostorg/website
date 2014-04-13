@@ -6,21 +6,6 @@ define('USE_SERIALIZED_INFO', true);
 require_once(dirname(__FILE__) . '/../common/code/boost.php');
 require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
 
-function boost_title()
-{
-    $vinfo = array();
-    if (isset($_SERVER["PATH_INFO"])) {
-        preg_match('@([0-9]+)_([0-9]+)_([0-9]+)@',$_SERVER["PATH_INFO"],$vinfo);
-    }
-    if (isset($vinfo[0])) {
-        array_shift($vinfo);
-        return 'Boost '.implode('.', $vinfo);
-    }
-    else {
-        return 'Boost';
-    }
-}
-
 $libs = USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt')) :
 	boost_libraries::from_xml_file(dirname(__FILE__) . '/libraries.xml');
@@ -89,7 +74,7 @@ if(!isset($sort_fields[$sort_value])) {
 
 // Page title
 
-$page_title = boost_title().' Library Documentation';
+$page_title = BoostVersion::page_title().' Library Documentation';
 if($category_value) $page_title.= ' - '. $categories[$category_value]['title'];
 
 // Functions
