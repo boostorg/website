@@ -85,8 +85,8 @@ class LibraryPage {
     function filter($lib) {
         return (!$this->filter_value || $lib[$this->filter_value]) &&
             (!$this->attribute_filter || $lib[$this->attribute_filter]) &&
-            (!$this->category_value || $this->category_value === 'all' ||
-            array_search($this->category_value, $lib['category']) !== FALSE);
+            (!$this->category_value ||
+                array_search($this->category_value, $lib['category']) !== FALSE);
     }
 
     function title() {
