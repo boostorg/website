@@ -83,10 +83,20 @@ class LibraryPage {
     }
 
     function filter($lib) {
-        return (!$this->filter_value || $lib[$this->filter_value]) &&
-            (!$this->attribute_filter || $lib[$this->attribute_filter]) &&
-            (!$this->category_value ||
-                array_search($this->category_value, $lib['category']) !== FALSE);
+        if ($this->filter_value && !$lib[$this->filter_value]) {
+            return false;
+        }
+
+        if ($this->attribute_filter && !$lib[$this->attribute_filter]) {
+            return false;
+        }
+
+        if ($this->category_value &&
+                !in_array($this->category_value, $lib['category'])) {
+            return false;
+        }
+
+        return true;
     }
 
     function title() {
