@@ -384,7 +384,7 @@ class boost_libraries
 
         return true;
     }
-    
+
     /**
      * Generate an xml representation of the library data.
      *
@@ -417,13 +417,13 @@ class boost_libraries
 
         foreach ($this->db as $key => $libs) {
             foreach($libs as $lib) {
+                $lib = self::clean_for_output($lib);
+
                 $writer->startElement('library');
                 $this->write_element($writer, $exclude, $lib, 'key');
                 $this->write_element($writer, $exclude, $lib, 'module');
                 $this->write_optional_element($writer, $exclude, $lib, 'boost-version');
-                if (!isset($lib['boost-version']) || $lib['update-version'] != $lib['boost-version']) {
-                    $this->write_element($writer, $exclude, $lib, 'update-version');
-                }
+                $this->write_optional_element($writer, $exclude, $lib, 'update-version');
                 $this->write_optional_element($writer, $exclude, $lib, 'status');
                 $this->write_optional_element($writer, $exclude, $lib, 'name');
                 $this->write_many_elements($writer, $exclude, $lib, 'authors');
@@ -505,23 +505,11 @@ class boost_libraries
         $export = array();
         foreach ($this->db as $libs) {
             foreach($libs as $lib) {
-
-                if (isset($lib['boost-version']) && $lib['update-version'] == $lib['boost-version']) {
-                    unset($lib['update-version']);
-                }
-                else {
-                    $lib['update-version'] = (string) $lib['update-version'];
-                }
-
                 if (empty($lib['std'])) {
                     unset($lib['std']);
                 }
                 unset($lib['std-tr1']);
                 unset($lib['std-proposal']);
-
-                if (isset($lib['boost-version'])) {
-                    $lib['boost-version'] = (string) $lib['boost-version'];
-                }
 
                 foreach ($exclude as $field) {
                     if (isset($lib[$field])) {
@@ -529,6 +517,7 @@ class boost_libraries
                     }
                 }
 
+                $lib = self::clean_for_output($lib, $exclude);
                 $lib = self::normalize_spaces($lib);
 
                 $export[] = $lib;
@@ -639,6 +628,33 @@ class boost_libraries
             if (is_string($value)) {
                 $value = trim(preg_replace('@\s+@', ' ', $value));
             }
+        }
+
+        return $lib;
+    }
+
+    /**
+     * Prepare library details for output.
+     *
+     * Currently just reduces the version information.
+     *
+     * @param array $lib
+     * @return array Library details for output.
+     */
+    static function clean_for_output($lib) {
+        assert(isset($lib['update-version']) || isset($lib['boost-version']));
+
+        if (isset($lib['update-version'])) {
+            $lib['update-version'] = (string) $lib['update-version'];
+        }
+
+        if (isset($lib['boost-version'])) {
+            $lib['boost-version'] = (string) $lib['boost-version'];
+        }
+
+        if (isset($lib['boost-version']) && isset($lib['update-version']) &&
+                $lib['update-version'] == $lib['boost-version']) {
+            unset($lib['update-version']);
         }
 
         return $lib;
