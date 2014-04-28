@@ -87,16 +87,16 @@ class LibraryPage {
     }
 
     function filter($lib) {
-        if ($this->filter_value && !$lib[$this->filter_value]) {
+        if ($this->filter_value && empty($lib[$this->filter_value])) {
             return false;
         }
 
-        if ($this->attribute_filter && !$lib[$this->attribute_filter]) {
+        if ($this->attribute_filter && empty($lib[$this->attribute_filter])) {
             return false;
         }
 
-        if ($this->category_value &&
-                !in_array($this->category_value, $lib['category'])) {
+        if ($this->category_value && (empty($lib['category']) ||
+                !in_array($this->category_value, $lib['category']))) {
             return false;
         }
 
@@ -168,9 +168,11 @@ class LibraryPage {
             } else {
                 $docref = '/doc/libs/release/' . $lib['documentation'];
             }
-            print '<a href="' . $docref . '">' . ($lib['name'] ? : $lib['key']) . '</a>';
+            print '<a href="' . htmlentities($docref) . '">' .
+                    htmlentities(!empty($lib['name']) ? $lib['name'] : $lib['key']) .
+                    '</a>';
         } else {
-            print ($lib['name'] ? : $lib['key']);
+            print htmlentities(!empty($lib['name']) ? $lib['name'] : $lib['key']);
         }
 
         if (!empty($lib['status'])) {
@@ -179,17 +181,19 @@ class LibraryPage {
     }
 
     function libdescription($lib) {
-        echo $lib['description'] ?
+        echo !empty($lib['description']) ?
                 htmlentities($lib['description'],ENT_NOQUOTES,'UTF-8') :
                 '&nbsp;';
     }
 
     function libauthors($lib) {
-        print ($lib['authors'] ? : '&nbsp;');
+        print !empty($lib['authors']) ?
+                htmlentities($lib['authors']) : '&nbsp;';
     }
 
     function libavailable($lib) {
-        print ($lib['boost-version'] ? : '&nbsp;');
+        print !empty($lib['boost-version']) ?
+            htmlentities($lib['boost-version']) : '&nbsp;';
     }
 
     function libstandard($lib) {
