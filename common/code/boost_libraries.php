@@ -193,7 +193,7 @@ class boost_libraries
      *      entries, using 'update-version' to indicate their historical order.
      * @param array $categories
      * @param BoostVersion $version Optional version to use when update-version
-     *      or boost-version is missing.
+     *      is missing.
      */
     private function __construct(array $flat_libs, array $categories,
             $version = null)
@@ -420,8 +420,8 @@ class boost_libraries
                 $writer->startElement('library');
                 $this->write_element($writer, $exclude, $lib, 'key');
                 $this->write_element($writer, $exclude, $lib, 'module');
-                $this->write_element($writer, $exclude, $lib, 'boost-version');
-                if ($lib['update-version'] != $lib['boost-version']) {
+                $this->write_optional_element($writer, $exclude, $lib, 'boost-version');
+                if (!isset($lib['boost-version']) || $lib['update-version'] != $lib['boost-version']) {
                     $this->write_element($writer, $exclude, $lib, 'update-version');
                 }
                 $this->write_optional_element($writer, $exclude, $lib, 'status');
@@ -505,7 +505,8 @@ class boost_libraries
         $export = array();
         foreach ($this->db as $libs) {
             foreach($libs as $lib) {
-                if ($lib['update-version'] == $lib['boost-version']) {
+
+                if (isset($lib['boost-version']) && $lib['update-version'] == $lib['boost-version']) {
                     unset($lib['update-version']);
                 }
                 else {
@@ -518,7 +519,9 @@ class boost_libraries
                 unset($lib['std-tr1']);
                 unset($lib['std-proposal']);
 
-                $lib['boost-version'] = (string) $lib['boost-version'];
+                if (isset($lib['boost-version'])) {
+                    $lib['boost-version'] = (string) $lib['boost-version'];
+                }
 
                 foreach ($exclude as $field) {
                     if (isset($lib[$field])) {
