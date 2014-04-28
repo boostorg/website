@@ -5,13 +5,21 @@ require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
 function main() {
     $args = $_SERVER['argv'];
     $location = null;
+    $version = null;
 
     switch (count($args)) {
+        case 3: $version = $args[2];
+        case 2: $location = $args[1];
         case 1: break;
-        case 2: $location = $args[1]; break;
         default:
-            echo "Usage: update-doc-list.php [path]";
+            echo "Usage: update-doc-list.php [path] [version]";
             exit(1);
+    }
+
+    // TODO: Support releases.
+    if ($version && !in_array($version, ['master', 'develop', 'latest'])) {
+        echo "Invalid version: $version\n";
+        exit(1);
     }
 
     $libs = boost_libraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
@@ -20,15 +28,31 @@ function main() {
     if ($location) {
         $location = realpath($location);
 
-        if (get_bool_from_array(run_process(
+        if (is_file($location))
+        {
+            update_from_file($libs, $location, $version);
+        }
+        else if (get_bool_from_array(run_process(
                 "cd '${location}' && git rev-parse --is-bare-repository")))
         {
-            update_from_git($libs, $location, 'master');
-            update_from_git($libs, $location, 'develop');
+            if ($version) {
+                update_from_git($libs, $location, $version);
+            }
+            else {
+                update_from_git($libs, $location, 'master');
+                update_from_git($libs, $location, 'develop');
+            }
         }
         else
         {
-            update_from_checkout($libs, $location);
+            // TODO: Could get version from the branch in a git checkout.
+            // TODO: Support non-git trees (i.e. a release).
+            if (!$version) {
+                echo "Error: Version required for local tree.";
+                exit(1);
+            }
+
+            update_from_local_copy($libs, $location, $version);
         }
     }
 
@@ -94,19 +118,7 @@ function update_from_git($libs, $location, $branch) {
                 $hash = $matches[1];
                 $filename = $matches[2];
                 $text = implode("\n", (run_process("{$module_command} show {$hash}")));
-                switch (pathinfo($filename, PATHINFO_EXTENSION)) {
-                    case 'xml':
-                        $new_libs = boost_libraries::from_xml($text, $branch);
-                        break;
-                    case 'json':
-                        $new_libs = boost_libraries::from_json($text, $branch);
-                        break;
-                    default:
-                        assert(false);
-                }
-
-                $new_libs->squash_name_arrays();
-                $libs->update($new_libs, $module);
+                $libs->update(load_from_text($text, $filename, $branch), $module);
             }
         }
     }
@@ -119,29 +131,41 @@ function update_from_git($libs, $location, $branch) {
  * @param string $branch The branch to update from.
  * @throws RuntimeException
  */
-function update_from_checkout($libs, $location, $branch = 'latest') {
+function update_from_local_copy($libs, $location, $branch = 'latest') {
     echo "Updating from local checkout/{$branch}\n";
 
     foreach (glob("{$location}/libs/*") as $module_path) {
         foreach (glob("{$module_path}/meta/libraries.*") as $path) {
             $module = pathinfo($module_path, PATHINFO_FILENAME);
-
-            $text = file_get_contents($path);
-            switch (pathinfo($path, PATHINFO_EXTENSION)) {
-                case 'xml':
-                    $new_libs = boost_libraries::from_xml($text, $branch);
-                    break;
-                case 'json':
-                    $new_libs = boost_libraries::from_json($text, $branch);
-                    break;
-                default:
-                    assert(false);
-            }
-
-            $new_libs->squash_name_arrays();
-            $libs->update($new_libs, $module);
+            $libs->update(load_from_file($path, $branch), $module);
         }
     }
+}
+
+function update_from_file($libs, $location, $version) {
+    echo "Updated from local file\n";
+    $libs->update(load_from_file($location, $version));
+}
+
+function load_from_file($path, $branch) {
+    return load_from_text(file_get_contents($path), $path, $branch);
+}
+
+function load_from_text($text, $filename, $branch) {
+    switch (pathinfo($filename, PATHINFO_EXTENSION)) {
+        case 'xml':
+            $new_libs = boost_libraries::from_xml($text, $branch);
+            break;
+        case 'json':
+            $new_libs = boost_libraries::from_json($text, $branch);
+            break;
+        default:
+            echo "Error: $filename.\n"; exit(0);
+            assert(false);
+    }
+
+    $new_libs->squash_name_arrays();
+    return $new_libs;
 }
 
 function git_config_from_repo($git_command, $branch, $path) {
