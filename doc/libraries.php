@@ -193,7 +193,7 @@ class LibraryPage {
 
     function libavailable($lib) {
         print !empty($lib['boost-version']) ?
-            htmlentities($lib['boost-version']) : '&nbsp;';
+            htmlentities($lib['boost-version']) : '<i>unreleased</i>';
     }
 
     function libstandard($lib) {
