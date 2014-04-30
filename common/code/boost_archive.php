@@ -80,6 +80,7 @@ function display_from_archive(
             'title' => NULL,
             'charset' => NULL,
             'content' => NULL,
+            'error' => false,
         ),
         $params
     );
@@ -409,6 +410,7 @@ function echo_filtered($extractor, $params) {
 function file_not_found($params, $message = null)
 {
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+    if (!$params['error']) { $params['error'] = 404; }
 
     $head = <<<HTML
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
@@ -450,7 +452,7 @@ function display_template($params, $_file) {
 
 function latest_link($params)
 {
-    if (!isset($params['version'])) {
+    if (!isset($params['version']) || $params['error']) {
         return;
     }
 
