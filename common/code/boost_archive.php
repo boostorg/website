@@ -408,13 +408,6 @@ function echo_filtered($extractor, $params) {
 
 function file_not_found($params, $message = null)
 {
-    if(is_string($params)) {
-        $params = Array(
-            'file' => $params,
-            'template' => dirname(__FILE__)."/template.php"
-        );
-    }
-
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
 
     $head = <<<HTML
