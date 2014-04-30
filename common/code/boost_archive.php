@@ -489,7 +489,7 @@ function latest_link($params)
         break;
     case 1:
         echo '<div class="boost-common-header-notice">';
-        if (is_file(ARCHIVE_DIR."/{$current->dir()}/$params[key]"))
+        if (realpath(ARCHIVE_DIR."/{$current->dir()}/$params[key]") !== false)
         {
             echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$params['key'],'">',
                 "Click here to view the latest version of this page.",
