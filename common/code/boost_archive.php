@@ -474,6 +474,46 @@ function display_template($params, $_file) {
     include($params['template']);
 }
 
+function latest_link($params)
+{
+    if (!isset($params['version'])) {
+        return;
+    }
+
+    $version = BoostVersion::from($params['version']);
+
+    $current = BoostVersion::current();
+    switch ($current->compare($version))
+    {
+    case 0:
+        break;
+    case 1:
+        echo '<div class="boost-common-header-notice">';
+        if (is_file(ARCHIVE_DIR."/{$current->dir()}/$params[key]"))
+        {
+            echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$params['key'],'">',
+                "Click here to view the latest version of this page.",
+                '</a>';
+        }
+        else
+        {
+            echo '<a class="boost-common-header-inner" href="/doc/libs/">',
+                "This is an old version of boost. ",
+                "Click here for the latest version's documentation home page.",
+                '</a>';
+        }
+        echo '</div>', "\n";
+        break;
+    case -1:
+        echo '<div class="boost-common-header-notice">';
+        echo '<span class="boost-common-header-inner">';
+        echo 'This is the documentation for a development version of boost';
+        echo '</span>';
+        echo '</div>', "\n";
+        break;
+    }
+}
+
 // Return a readable error message for unzip exit state.
 
 function unzip_error($exit_status) {
