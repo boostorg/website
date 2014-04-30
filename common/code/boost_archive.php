@@ -9,65 +9,54 @@ require_once(dirname(__FILE__) . '/url.php');
 
 define('BOOST_DOCS_MODIFIED_DATE', 'Sun 30 Sep 2012 10:18:33 +0000');
 
-function get_archive_location(
-    $pattern,
-    $vpath,
-    $archive_subdir = true,
-    $zipfile = true,
-    $fix_dir = false,
-    $archive_dir = ARCHIVE_DIR,
-    $archive_file_prefix = ARCHIVE_FILE_PREFIX)
+function get_archive_location($params)
 {
     $path_parts = array();
-    preg_match($pattern, $vpath, $path_parts);
+    preg_match($params['pattern'], $params['vpath'], $path_parts);
 
-    $version = $path_parts[1];
-    $key = $path_parts[2];
+    $params['version'] = $path_parts[1];
+    $params['key'] = $path_parts[2];
 
     // TODO: Would be better to use the version object to get this, but
     // we can't create it yet. I think it needs to also model 'boost-build',
     // or maybe create another class which represents a collection of
     // documentation.
-    $version_dir = (preg_match('@^[0-9]@', $version)) ?
-            "boost_{$version}" : $version;
+    $version_dir = (preg_match('@^[0-9]@', $params['version'])) ?
+            "boost_{$params['version']}" : $params['version'];
 
     $file = false;
 
-    if ($fix_dir) {
-        $fix_path = "{$fix_dir}{$vpath}";
+    if ($params['fix_dir']) {
+        $fix_path = "{$params['fix_dir']}{$params['vpath']}";
 
         if (is_file($fix_path) ||
             (is_dir($fix_path) && is_file("{$fix_path}/index.html")))
         {
-            $zipfile = false;
-            $file = "{$fix_dir}{$vpath}";
+            $params['zipfile'] = false;
+            $file = "{$params['fix_dir']}{$params['vpath']}";
         }
     }
 
     if (!$file) {
-        $file = ($zipfile ? '' : $archive_dir . '/');
+        $file = ($params['zipfile'] ? '' : $params['archive_dir'] . '/');
 
-        if ($archive_subdir)
+        if ($params['archive_subdir'])
         {
-            $file = $file . $archive_file_prefix . $version_dir . '/' . $key;
+            $file = $file . $params['archive_file_prefix'] . $version_dir . '/' . $params['key'];
         }
         else
         {
-            $file = $file . $archive_file_prefix . $key;
+            $file = $file . $params['archive_file_prefix'] . $params['key'];
         }
     }
 
-    $archive = $zipfile ?
-            str_replace('\\','/', $archive_dir . '/' . $version_dir . '.zip') :
+    $params['file'] = $file;
+
+    $params['archive'] = $params['zipfile'] ?
+            str_replace('\\','/', $params['archive_dir'] . '/' . $version_dir . '.zip') :
             Null;
     
-    return array(
-        'version' => $version,
-        'key' => $key,
-        'file' => $file,
-        'archive' => $archive,
-        'zipfile' => $zipfile
-    );
+    return $params;
 }
 
 function display_from_archive(
@@ -95,16 +84,8 @@ function display_from_archive(
         $params
     );
 
-    $params = array_merge($params, get_archive_location(
-        $params['pattern'],
-        $params['vpath'],
-        $params['archive_subdir'],
-        $params['zipfile'],
-        $params['fix_dir'],
-        $params['archive_dir'],
-        $params['archive_file_prefix']
-    ));
-    
+    $params = get_archive_location($params);
+
     // Calculate expiry date if requested.
 
     $expires = null;
