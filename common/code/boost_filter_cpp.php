@@ -10,7 +10,7 @@ require_once(dirname(__FILE__).'/boost_filter_text.php');
 function cpp_filter($params) {
     $params['title'] = htmlentities($params['key']);
 
-    display_template($params['template'],
+    display_template($params,
         boost_archive_render_callbacks(cpp_filter_content($params), $params));
 }
 

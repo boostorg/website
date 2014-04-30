@@ -360,7 +360,7 @@ function display_dir($params, $dir)
     
     $params['content'] = $content;
 
-    display_template($params['template'], boost_archive_render_callbacks($content, $params));
+    display_template($params, boost_archive_render_callbacks($content, $params));
 }
 
 function display_raw_file($params, $type)
@@ -446,7 +446,7 @@ HTML;
     $content .= htmlentities($message);
     $content .= '</p>';
 
-    display_template($params['template'], Array('head' => $head, 'content' => $content));
+    display_template($params, Array('head' => $head, 'content' => $content));
 }
 
 /*
@@ -470,8 +470,8 @@ function detect_redirect($content)
 
 // Display the content in the standard boost template
 
-function display_template($template, $_file) {
-    include($template);
+function display_template($params, $_file) {
+    include($params['template']);
 }
 
 // Return a readable error message for unzip exit state.

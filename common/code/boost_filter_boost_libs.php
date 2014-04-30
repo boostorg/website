@@ -16,7 +16,7 @@ function boost_libs_filter($params)
         $text = remove_html_banner($text);
         $text = prepare_themed_html($text);
         
-        display_template($params['template'],
+        display_template($params,
             boost_archive_render_callbacks($text, $params));
     }
     else {

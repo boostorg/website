@@ -9,7 +9,7 @@ require_once(dirname(__FILE__).'/boost_filters.php');
 
 function boost_frame1_filter($params) {
     html_init($params);
-    display_template($params['template'],
+    display_template($params,
         boost_archive_render_callbacks(boost_frame1_filter_content($params), $params));
 }
 
