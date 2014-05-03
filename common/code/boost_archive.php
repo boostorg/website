@@ -14,7 +14,11 @@ function get_archive_location($params)
     $path_parts = array();
     preg_match($params['pattern'], $params['vpath'], $path_parts);
 
-    $params['version'] = $path_parts[1];
+    if ($path_parts[1] == 'boost-build') {
+        $params['version'] = null;
+    } else {
+        $params['version'] = $path_parts[1];
+    }
     $params['key'] = $path_parts[2];
 
     // TODO: Would be better to use the version object to get this, but
@@ -92,7 +96,7 @@ function display_from_archive(
     $expires = null;
     if ($params['use_http_expire_date'])
     {
-        if ($params['version'] == 'boost-build') {
+        if (!$params['version']) {
             $expires = "+1 week";
         }
         else {
@@ -302,7 +306,7 @@ function boost_archive_render_callbacks($content, $params) {
     $charset = !empty($params['charset']) ? $params['charset'] : 'us-ascii';
     $title = !empty($params['title']) ? "$params[title]" : 'Boost C++ Libraries';
 
-    if (!empty($params['version']) && $params['version'] != 'boost-build') {
+    if (!empty($params['version'])) {
         $title = "$params[title] - " . BoostVersion::from($params['version']);
     }
 
