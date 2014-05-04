@@ -9,65 +9,58 @@ require_once(dirname(__FILE__) . '/url.php');
 
 define('BOOST_DOCS_MODIFIED_DATE', 'Sun 30 Sep 2012 10:18:33 +0000');
 
-function get_archive_location(
-    $pattern,
-    $vpath,
-    $archive_subdir = true,
-    $zipfile = true,
-    $fix_dir = false,
-    $archive_dir = ARCHIVE_DIR,
-    $archive_file_prefix = ARCHIVE_FILE_PREFIX)
+function get_archive_location($params)
 {
     $path_parts = array();
-    preg_match($pattern, $vpath, $path_parts);
+    preg_match($params['pattern'], $params['vpath'], $path_parts);
 
-    $version = $path_parts[1];
-    $key = $path_parts[2];
+    if ($path_parts[1] == 'boost-build') {
+        $params['version'] = null;
+    } else {
+        $params['version'] = $path_parts[1];
+    }
+    $params['key'] = $path_parts[2];
 
     // TODO: Would be better to use the version object to get this, but
     // we can't create it yet. I think it needs to also model 'boost-build',
     // or maybe create another class which represents a collection of
     // documentation.
-    $version_dir = (preg_match('@^[0-9]@', $version)) ?
-            "boost_{$version}" : $version;
+    $version_dir = (preg_match('@^[0-9]@', $params['version'])) ?
+            "boost_{$params['version']}" : $params['version'];
 
     $file = false;
 
-    if ($fix_dir) {
-        $fix_path = "{$fix_dir}{$vpath}";
+    if ($params['fix_dir']) {
+        $fix_path = "{$params['fix_dir']}{$params['vpath']}";
 
         if (is_file($fix_path) ||
             (is_dir($fix_path) && is_file("{$fix_path}/index.html")))
         {
-            $zipfile = false;
-            $file = "{$fix_dir}{$vpath}";
+            $params['zipfile'] = false;
+            $file = "{$params['fix_dir']}{$params['vpath']}";
         }
     }
 
     if (!$file) {
-        $file = ($zipfile ? '' : $archive_dir . '/');
+        $file = ($params['zipfile'] ? '' : $params['archive_dir'] . '/');
 
-        if ($archive_subdir)
+        if ($params['archive_subdir'])
         {
-            $file = $file . $archive_file_prefix . $version_dir . '/' . $key;
+            $file = $file . $params['archive_file_prefix'] . $version_dir . '/' . $params['key'];
         }
         else
         {
-            $file = $file . $archive_file_prefix . $key;
+            $file = $file . $params['archive_file_prefix'] . $params['key'];
         }
     }
 
-    $archive = $zipfile ?
-            str_replace('\\','/', $archive_dir . '/' . $version_dir . '.zip') :
+    $params['file'] = $file;
+
+    $params['archive'] = $params['zipfile'] ?
+            str_replace('\\','/', $params['archive_dir'] . '/' . $version_dir . '.zip') :
             Null;
     
-    return array(
-        'version' => $version,
-        'key' => $key,
-        'file' => $file,
-        'archive' => $archive,
-        'zipfile' => $zipfile
-    );
+    return $params;
 }
 
 function display_from_archive(
@@ -91,26 +84,19 @@ function display_from_archive(
             'title' => NULL,
             'charset' => NULL,
             'content' => NULL,
+            'error' => false,
         ),
         $params
     );
 
-    $params = array_merge($params, get_archive_location(
-        $params['pattern'],
-        $params['vpath'],
-        $params['archive_subdir'],
-        $params['zipfile'],
-        $params['fix_dir'],
-        $params['archive_dir'],
-        $params['archive_file_prefix']
-    ));
-    
+    $params = get_archive_location($params);
+
     // Calculate expiry date if requested.
 
     $expires = null;
     if ($params['use_http_expire_date'])
     {
-        if ($params['version'] == 'boost-build') {
+        if (!$params['version']) {
             $expires = "+1 week";
         }
         else {
@@ -320,7 +306,7 @@ function boost_archive_render_callbacks($content, $params) {
     $charset = !empty($params['charset']) ? $params['charset'] : 'us-ascii';
     $title = !empty($params['title']) ? "$params[title]" : 'Boost C++ Libraries';
 
-    if (!empty($params['version']) && $params['version'] != 'boost-build') {
+    if (!empty($params['version'])) {
         $title = "$params[title] - " . BoostVersion::from($params['version']);
     }
 
@@ -360,7 +346,7 @@ function display_dir($params, $dir)
     
     $params['content'] = $content;
 
-    display_template($params['template'], boost_archive_render_callbacks($content, $params));
+    display_template($params, boost_archive_render_callbacks($content, $params));
 }
 
 function display_raw_file($params, $type)
@@ -427,14 +413,8 @@ function echo_filtered($extractor, $params) {
 
 function file_not_found($params, $message = null)
 {
-    if(is_string($params)) {
-        $params = Array(
-            'file' => $params,
-            'template' => dirname(__FILE__)."/template.php"
-        );
-    }
-
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+    if (!$params['error']) { $params['error'] = 404; }
 
     $head = <<<HTML
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
@@ -446,7 +426,7 @@ HTML;
     $content .= htmlentities($message);
     $content .= '</p>';
 
-    display_template($params['template'], Array('head' => $head, 'content' => $content));
+    display_template($params, Array('head' => $head, 'content' => $content));
 }
 
 /*
@@ -470,8 +450,48 @@ function detect_redirect($content)
 
 // Display the content in the standard boost template
 
-function display_template($template, $_file) {
-    include($template);
+function display_template($params, $_file) {
+    include($params['template']);
+}
+
+function latest_link($params)
+{
+    if (!isset($params['version']) || $params['error']) {
+        return;
+    }
+
+    $version = BoostVersion::from($params['version']);
+
+    $current = BoostVersion::current();
+    switch ($current->compare($version))
+    {
+    case 0:
+        break;
+    case 1:
+        echo '<div class="boost-common-header-notice">';
+        if (realpath("{$params['archive_dir']}/{$current->dir()}/$params[key]") !== false)
+        {
+            echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$params['key'],'">',
+                "Click here to view the latest version of this page.",
+                '</a>';
+        }
+        else
+        {
+            echo '<a class="boost-common-header-inner" href="/doc/libs/">',
+                "This is an old version of boost. ",
+                "Click here for the latest version's documentation home page.",
+                '</a>';
+        }
+        echo '</div>', "\n";
+        break;
+    case -1:
+        echo '<div class="boost-common-header-notice">';
+        echo '<span class="boost-common-header-inner">';
+        echo 'This is the documentation for a development version of boost';
+        echo '</span>';
+        echo '</div>', "\n";
+        break;
+    }
 }
 
 // Return a readable error message for unzip exit state.

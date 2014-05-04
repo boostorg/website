@@ -11,7 +11,7 @@ function qbk_filter($params) {
     $params['title'] = htmlentities($params['key']);
     $params['noindex'] = true;
 
-    display_template($params['template'],
+    display_template($params,
         boost_archive_render_callbacks(qbk_filter_content($params), $params));
 }
 
