@@ -10,9 +10,12 @@ class PullRequestPage {
 
     function display() {
         foreach ($this->pull_requests as $name => $repo_requests) {
+            $repo_count = count($repo_requests);
+
             echo "<h2>", htmlentities($name), "</h2>\n",
-            "<p>", htmlentities(count($repo_requests)),
-            " open requests:</p>\n";
+                "<p> {$repo_count} open request",
+                ($repo_count != 1 ? 's' : ''),
+                ":</p>\n";
             foreach ($repo_requests as $pull) {
                 echo "<li>",
                 "<a href='" . htmlentities($pull->html_url) . "'>",
