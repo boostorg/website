@@ -41,6 +41,17 @@
 * [phrase library..[@/libs/assign/ Assign]:]
   * Resolve some C++11 ambiguities ([ticket 3073]).
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * The library has been redesigned. Besides internal refactoring, various bugs were fixed, including incorrect values of feature test macros and interer overflow handling.
+  * Implemented support for 128-bit atomic operations on Windows x64 with MSVC. The library assumes presence of the `cmpxchg16b` instruction in the target CPUs. Some early AMD CPUs don't support this instruction. To target those define the `BOOST_ATOMIC_NO_CMPXCHG16B` macro.
+  * Implemented experimental support for Windows ARM target with MSVC.
+  * Implemented experimental support for DEC Alpha target with GCC.
+  * Improved support for ARMv6 and later with GCC. Implemented all atomic operations as assembler blocks instead of CAS-based loops.
+  * Implemented optional support for the `BOOST_ATOMIC_FLAG_INIT` macro and static initialization of `atomic_flag`. ([ticket 8158])
+  * Fixed compilation for SPARCv9 target. ([ticket 9446])
+  * Fixed compilation for PowerPC target. ([ticket 9447])
+  * Fixed several compatibility problems with Clang on x86 and x86-64. ([ticket 9610], [ticket 9842])
+
 * [phrase library..[@/libs/circular_buffer/ Circular Buffer]:]
   * [ticket 9970] Support for the C++11 allocator model
 
