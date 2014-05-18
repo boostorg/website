@@ -12,8 +12,9 @@ class PullRequestPage {
     var $page_view;
 
     function __construct($params) {
-        $this->pull_requests = json_decode(
+        $json_data = json_decode(
                 file_get_contents(__DIR__ . '/../data/pull-requests.json'));
+        $this->pull_requests = $json_data->pull_requests;
         $this->base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
         $this->params = $params;
         if (isset($params['page_view'])) {
