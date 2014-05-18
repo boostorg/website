@@ -22,9 +22,9 @@ class PullRequestPage {
                 htmlentities(rtrim($pull->title, '.')),
                 "</a>",
                 " (created: ",
-                htmlentities(date("j M Y", $pull->created_at)),
+                htmlentities(date("j M Y", strtotime($pull->created_at))),
                 ", updated: ",
-                htmlentities(date("j M Y", $pull->updated_at)),
+                htmlentities(date("j M Y", strtotime($pull->updated_at))),
                 ")",
                 "</li>\n";
             }
