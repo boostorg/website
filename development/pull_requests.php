@@ -38,7 +38,7 @@ class PullRequestPage {
         echo '</div>';
 
         echo '<p>Last updated: ',
-            htmlentities(date("j M g:ia", strtotime($this->last_updated))),
+            htmlentities(gmdate("j M g:ia", strtotime($this->last_updated))),
             "</p>\n";
 
         switch ($this->page_view) {
@@ -94,9 +94,9 @@ class PullRequestPage {
             htmlentities(rtrim($pull->title, '.')),
             "</a>",
             " (created: ",
-            htmlentities(date("j M Y", strtotime($pull->created_at))),
+            htmlentities(gmdate("j M Y", strtotime($pull->created_at))),
             ", updated: ",
-            htmlentities(date("j M Y", strtotime($pull->updated_at))),
+            htmlentities(gmdate("j M Y", strtotime($pull->updated_at))),
             ")",
             "</li>\n";
     }
