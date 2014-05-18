@@ -7,6 +7,7 @@ class PullRequestPage {
     );
 
     var $pull_requests;
+    var $last_updated;
     var $base_uri;
     var $params;
     var $page_view;
@@ -15,6 +16,7 @@ class PullRequestPage {
         $json_data = json_decode(
                 file_get_contents(__DIR__ . '/../data/pull-requests.json'));
         $this->pull_requests = $json_data->pull_requests;
+        $this->last_updated = $json_data->last_updated;
         $this->base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
         $this->params = $params;
         if (isset($params['page_view'])) {
@@ -34,6 +36,10 @@ class PullRequestPage {
         echo '</ul>';
         echo '</div>';
         echo '</div>';
+
+        echo '<p>Last updated: ',
+            htmlentities(date("j M g:ia", strtotime($this->last_updated))),
+            "</p>\n";
 
         switch ($this->page_view) {
             case '':
