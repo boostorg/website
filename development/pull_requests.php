@@ -1,14 +1,52 @@
 <?php
 
 class PullRequestPage {
+    static $page_view_options = Array(
+        '' => 'By Library',
+        'date' => 'By Age',
+    );
+
     var $pull_requests;
+    var $base_uri;
+    var $params;
+    var $page_view;
 
     function __construct($params) {
         $this->pull_requests = json_decode(
                 file_get_contents(__DIR__ . '/../data/pull-requests.json'));
+        $this->base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
+        $this->params = $params;
+        if (isset($params['page_view'])) {
+            $this->page_view =  $params['page_view'];
+        }
     }
 
     function display() {
+        echo '<div id="options">';
+        echo '<div id="view-options">';
+        echo '<ul class="menu">';
+        foreach (self::$page_view_options as $key => $description) {
+            echo '<li>';
+            $this->option_link($description, 'page_view', $key);
+            echo '</li> ';
+        }
+        echo '</ul>';
+        echo '</div>';
+        echo '</div>';
+
+        switch ($this->page_view) {
+            case '':
+                $this->by_library();
+                break;
+            case 'date':
+                $this->by_date();
+                break;
+            default:
+                echo "Invalid page_view.";
+        }
+    }
+
+    function by_library() {
         foreach ($this->pull_requests as $name => $repo_requests) {
             $repo_count = count($repo_requests);
 
@@ -17,17 +55,64 @@ class PullRequestPage {
                 ($repo_count != 1 ? 's' : ''),
                 ":</p>\n";
             foreach ($repo_requests as $pull) {
-                echo "<li>",
-                "<a href='" . htmlentities($pull->html_url) . "'>",
-                htmlentities(rtrim($pull->title, '.')),
-                "</a>",
-                " (created: ",
-                htmlentities(date("j M Y", strtotime($pull->created_at))),
-                ", updated: ",
-                htmlentities(date("j M Y", strtotime($pull->updated_at))),
-                ")",
-                "</li>\n";
+                $this->pull_request_item($pull);
             }
+        }
+    }
+
+    function by_date() {
+        $pull_requests = Array();
+        foreach ($this->pull_requests as $name => $repo_requests) {
+            foreach ($repo_requests as $pull) {
+                $pull->name = $name;
+                $pull_requests[] = $pull;
+            }
+        }
+
+        usort($pull_requests, function($x, $y) {
+            return strtotime($x->created_at) - strtotime($y->created_at);
+        });
+
+        echo '<ul>';
+        foreach ($pull_requests as $pull) {
+            $this->pull_request_item($pull, $pull->name);
+        }
+        echo "</ul>\n";
+    }
+
+    function pull_request_item($pull, $name = null) {
+        echo "<li>",
+            "<a href='" . htmlentities($pull->html_url) . "'>",
+            ($name ? htmlentities($name).": " : ''),
+            htmlentities(rtrim($pull->title, '.')),
+            "</a>",
+            " (created: ",
+            htmlentities(date("j M Y", strtotime($pull->created_at))),
+            ", updated: ",
+            htmlentities(date("j M Y", strtotime($pull->updated_at))),
+            ")",
+            "</li>\n";
+    }
+
+    function option_link($description, $field, $value) {
+        $current_value = isset($this->params[$field]) ? $this->params[$field] : '';
+
+        if ($current_value == $value) {
+            echo '<span>', htmlentities($description), '</span>';
+        } else {
+            $params = $this->params;
+            $params[$field] = $value;
+
+            $url_params = '';
+            foreach ($params as $k => $v) {
+                if ($v) {
+                    $url_params .= $url_params ? '&' : '?';
+                    $url_params .= urlencode($k) . '=' . urlencode($v);
+                }
+            }
+
+            echo '<a href="' . htmlentities($this->base_uri . $url_params) . '">',
+            htmlentities($description), '</a>';
         }
     }
 }
