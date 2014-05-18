@@ -37,8 +37,8 @@ class PullRequestPage {
         echo '</div>';
         echo '</div>';
 
-        echo '<p>Last updated: ',
-            htmlentities(gmdate("j M g:ia", strtotime($this->last_updated))),
+        echo '<p>Last updated ',
+            $this->time_ago($this->last_updated),
             "</p>\n";
 
         switch ($this->page_view) {
@@ -121,6 +121,30 @@ class PullRequestPage {
             echo '<a href="' . htmlentities($this->base_uri . $url_params) . '">',
             htmlentities($description), '</a>';
         }
+    }
+
+    function time_ago($date, $now = null) {
+        $date = new DateTime($date);
+        $now = new DateTime($now ?: 'now');
+        $diff = date_diff($date, $now);
+        $val = false;
+        foreach(
+            Array(
+                'y' => 'year',
+                'm' => 'month',
+                'd' => 'day',
+                'h' => 'hour',
+                'i' => 'minute',
+                's' => 'second',
+            ) as $member => $unit)
+        {
+            if ($diff->{$member}) {
+                $val = $diff->{$member};
+                break;
+            }
+        }
+        return $val ? ("{$val} {$unit}".($val != 1 ? 's' : '')." ago") :
+            'just now';
     }
 }
 
