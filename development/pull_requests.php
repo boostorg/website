@@ -126,6 +126,10 @@ class PullRequestPage {
     function time_ago($date, $now = null) {
         $date = new DateTime($date);
         $now = new DateTime($now ?: 'now');
+        if ($date >= $now) {
+            return ($date - $now <= 2) ? "just now" :
+                "<i>in the future??? (probably an error somewhere)</i>";
+        }
         $diff = date_diff($date, $now);
         $val = false;
         foreach(
@@ -139,12 +143,11 @@ class PullRequestPage {
             ) as $member => $unit)
         {
             if ($diff->{$member}) {
-                $val = $diff->{$member};
-                break;
+                return "{$diff->{$member}} {$unit}".
+                    ($val != 1 ? 's' : '').
+                    " ago";
             }
         }
-        return $val ? ("{$val} {$unit}".($val != 1 ? 's' : '')." ago") :
-            'just now';
     }
 }
 
