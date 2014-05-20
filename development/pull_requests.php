@@ -90,7 +90,7 @@ class PullRequestPage {
     function pull_request_item($pull, $name = null) {
         echo "<li>",
             "<a href='" . htmlentities($pull->html_url) . "'>",
-            ($name ? htmlentities($name).": " : ''),
+            ($name ? htmlentities(preg_replace('@^boostorg/@', '', $name)).": " : ''),
             htmlentities(rtrim($pull->title, '.')),
             "</a>",
             " (created: ",
