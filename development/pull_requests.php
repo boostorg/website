@@ -142,10 +142,8 @@ class PullRequestPage {
                 's' => 'second',
             ) as $member => $unit)
         {
-            if ($diff->{$member}) {
-                return "{$diff->{$member}} {$unit}".
-                    ($val != 1 ? 's' : '').
-                    " ago";
+            if ($val = $diff->{$member}) {
+                return "{$val} {$unit}".($val != 1 ? 's' : '')." ago";
             }
         }
     }
