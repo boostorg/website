@@ -137,6 +137,18 @@
   * Fixed gmp_rational to allow move-copy from an already copied-from object, see [@https://svn.boost.org/trac/boost/ticket/9497 9497].
   * Added list of values for numeric_limits.
 
+* [phrase library..[@/libs/optional/ Optional]:]
+  * Added support for rvalue references. Now `optional<T>` works with moveable but non-copyable `T`'s.
+  * Improved `swap` (now uses move operations).
+  * `optional` is moveable, including conditional `noexcept` specifications, which make it `move_if_noexcept`-friendly.
+  * Using explicit operator bool() on platforms that support it ([ticket 4227]).
+  * Forward declaration of `operator<<(ostream&, optional const&)` to prevent inadvertent incorrect serialization of optional objects.
+  * Removed depprecated function `reset()` from examples ([ticket 9005]).
+  * Equality comparison with `boost::none` does not require that `T` be EqualityComparable.
+  * Optional rvalue references are explicitly disallowed.
+  * Binding temporaries to optional references is explicitly disallowed.
+  * Updated documentation.
+  
 * [phrase library..[@/libs/program_options/ Program Options]:]
   * Columns in the `--help` output are now aligned across all option groups ([ticket 6114]).
   * Option names with dashes are no longer truncated in error messages ([ticket 8009]).
