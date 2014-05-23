@@ -101,7 +101,8 @@ class Pages:
                         <div class="section-note"><p>Note: This release is
                         still under development. Please don't use this page as
                         a source of information, it's here for development
-                        purposes. Everthing is subject to change.</p></div>"""
+                        purposes only. Everything is subject to
+                        change.</p></div>"""
 
                 if page_data.documentation:
                     template_vars['documentation_para'] = '<p><a href="' + boost_site.util.htmlencode(page_data.documentation) + '">Documentation</a>'
