@@ -9,7 +9,7 @@ function main() {
     switch (count($args)) {
         case 2: $boost_root = $args[1]; break;
         default:
-            echo "Usage: update-doc-list.php boost_root";
+            echo "Usage: update-doc-list.php boost_root\n";
             exit(1);
     }
 

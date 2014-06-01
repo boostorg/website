@@ -12,7 +12,7 @@ function main() {
         case 2: $location = $args[1];
         case 1: break;
         default:
-            echo "Usage: update-doc-list.php [path] [version]";
+            echo "Usage: update-doc-list.php [path] [version]\n";
             exit(1);
     }
 
@@ -48,7 +48,7 @@ function main() {
             // TODO: Could get version from the branch in a git checkout.
             // TODO: Support non-git trees (i.e. a release).
             if (!$version) {
-                echo "Error: Version required for local tree.";
+                echo "Error: Version required for local tree.\n";
                 exit(1);
             }
 
