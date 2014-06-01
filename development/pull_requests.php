@@ -90,7 +90,7 @@ class PullRequestPage {
     function pull_request_item($pull, $name = null) {
         echo "<li>",
             "<a href='" . htmlentities($pull->html_url) . "'>",
-            ($name ? htmlentities($name).": " : ''),
+            ($name ? htmlentities(preg_replace('@^boostorg/@', '', $name)).": " : ''),
             htmlentities(rtrim($pull->title, '.')),
             "</a>",
             " (created: ",
@@ -126,6 +126,10 @@ class PullRequestPage {
     function time_ago($date, $now = null) {
         $date = new DateTime($date);
         $now = new DateTime($now ?: 'now');
+        if ($date >= $now) {
+            return ($date - $now <= 2) ? "just now" :
+                "<i>in the future??? (probably an error somewhere)</i>";
+        }
         $diff = date_diff($date, $now);
         $val = false;
         foreach(
@@ -138,13 +142,10 @@ class PullRequestPage {
                 's' => 'second',
             ) as $member => $unit)
         {
-            if ($diff->{$member}) {
-                $val = $diff->{$member};
-                break;
+            if ($val = $diff->{$member}) {
+                return "{$val} {$unit}".($val != 1 ? 's' : '')." ago";
             }
         }
-        return $val ? ("{$val} {$unit}".($val != 1 ? 's' : '')." ago") :
-            'just now';
     }
 }
 
