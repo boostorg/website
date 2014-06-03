@@ -511,14 +511,14 @@ class boost_libraries
                 unset($lib['std-tr1']);
                 unset($lib['std-proposal']);
 
+                $lib = self::clean_for_output($lib, $exclude);
+                $lib = self::normalize_spaces($lib);
+
                 foreach ($exclude as $field) {
                     if (isset($lib[$field])) {
                         unset($lib[$field]);
                     }
                 }
-
-                $lib = self::clean_for_output($lib, $exclude);
-                $lib = self::normalize_spaces($lib);
 
                 $export[] = $lib;
             }
@@ -642,7 +642,9 @@ class boost_libraries
      * @return array Library details for output.
      */
     static function clean_for_output($lib) {
-        assert(isset($lib['update-version']) || isset($lib['boost-version']));
+        if (!isset($lib['update-version']) && !isset($lib['boost-version'])) {
+            throw new RuntimeException("No version data for {$lib['name']}.");
+        }
 
         if (isset($lib['update-version'])) {
             $lib['update-version'] = (string) $lib['update-version'];
