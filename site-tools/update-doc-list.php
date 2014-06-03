@@ -23,7 +23,6 @@ function main() {
     }
 
     $libs = boost_libraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
-    $libs->squash_name_arrays();
 
     if ($location) {
         $location = realpath($location);
@@ -59,6 +58,8 @@ function main() {
     echo "Writing to disk\n";
 
     file_put_contents(dirname(__FILE__) . '/../doc/libraries.xml', $libs->to_xml());
+
+    $libs->squash_name_arrays();
     file_put_contents(dirname(__FILE__) . '/../generated/libraries.txt', serialize($libs));
 }
 
@@ -164,7 +165,6 @@ function load_from_text($text, $filename, $branch) {
             assert(false);
     }
 
-    $new_libs->squash_name_arrays();
     return $new_libs;
 }
 
