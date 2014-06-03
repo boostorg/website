@@ -292,18 +292,35 @@ class boost_libraries
     public function squash_name_arrays() {
         foreach ($this->db as $key => &$libs) {
             foreach ($libs as $version => &$details) {
-                if (isset($details['authors']) && is_array($details['authors']))
+                if (isset($details['authors']))
                 {
-                    $details['authors'] = implode(', ', $details['authors']);
+                    $details['authors']
+                            = $this->names_to_string($details['authors']);
                 }
 
-                if (isset($details['maintainers'])
-                        && is_array($details['maintainers']))
+                if (isset($details['maintainers']))
                 {
                     $details['maintainers']
-                            = implode(', ', $details['maintainers']);
+                            = $this->names_to_string($details['maintainers']);
                 }
             }
+        }
+    }
+
+    /**
+     * @param array|string $names
+     * @return string
+     */
+    private function names_to_string($names) {
+        if (is_array($names)) {
+            $last_name = array_pop($names);
+
+            return $names ?
+                    implode(', ', $names)." and {$last_name}" :
+                    $last_name;
+        }
+        else {
+            return $names;
         }
     }
 
