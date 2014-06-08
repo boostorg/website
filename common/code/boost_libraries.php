@@ -226,11 +226,6 @@ class boost_libraries
                         "No version info for {$lib['key']}");
             }
 
-            if (!isset($lib['module'])) {
-                $key_parts = explode('/', $lib['key'], 2);
-                $lib['module'] = $key_parts[0];
-            }
-
             // Preserve the current empty authors tags.
             if (!isset($lib['authors'])) {
                 $lib['authors'] = '';
@@ -292,18 +287,35 @@ class boost_libraries
     public function squash_name_arrays() {
         foreach ($this->db as $key => &$libs) {
             foreach ($libs as $version => &$details) {
-                if (isset($details['authors']) && is_array($details['authors']))
+                if (isset($details['authors']))
                 {
-                    $details['authors'] = implode(', ', $details['authors']);
+                    $details['authors']
+                            = $this->names_to_string($details['authors']);
                 }
 
-                if (isset($details['maintainers'])
-                        && is_array($details['maintainers']))
+                if (isset($details['maintainers']))
                 {
                     $details['maintainers']
-                            = implode(', ', $details['maintainers']);
+                            = $this->names_to_string($details['maintainers']);
                 }
             }
+        }
+    }
+
+    /**
+     * @param array|string $names
+     * @return string
+     */
+    private function names_to_string($names) {
+        if (is_array($names)) {
+            $last_name = array_pop($names);
+
+            return $names ?
+                    implode(', ', $names)." and {$last_name}" :
+                    $last_name;
+        }
+        else {
+            return $names;
         }
     }
 
@@ -511,14 +523,14 @@ class boost_libraries
                 unset($lib['std-tr1']);
                 unset($lib['std-proposal']);
 
+                $lib = self::clean_for_output($lib, $exclude);
+                $lib = self::normalize_spaces($lib);
+
                 foreach ($exclude as $field) {
                     if (isset($lib[$field])) {
                         unset($lib[$field]);
                     }
                 }
-
-                $lib = self::clean_for_output($lib, $exclude);
-                $lib = self::normalize_spaces($lib);
 
                 $export[] = $lib;
             }
@@ -642,7 +654,9 @@ class boost_libraries
      * @return array Library details for output.
      */
     static function clean_for_output($lib) {
-        assert(isset($lib['update-version']) || isset($lib['boost-version']));
+        if (!isset($lib['update-version']) && !isset($lib['boost-version'])) {
+            throw new RuntimeException("No version data for {$lib['name']}.");
+        }
 
         if (isset($lib['update-version'])) {
             $lib['update-version'] = (string) $lib['update-version'];
