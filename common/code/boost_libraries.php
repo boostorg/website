@@ -226,11 +226,6 @@ class boost_libraries
                         "No version info for {$lib['key']}");
             }
 
-            if (!isset($lib['module'])) {
-                $key_parts = explode('/', $lib['key'], 2);
-                $lib['module'] = $key_parts[0];
-            }
-
             // Preserve the current empty authors tags.
             if (!isset($lib['authors'])) {
                 $lib['authors'] = '';

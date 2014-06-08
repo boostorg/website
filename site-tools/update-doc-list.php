@@ -119,7 +119,7 @@ function update_from_git($libs, $location, $branch) {
                 $hash = $matches[1];
                 $filename = $matches[2];
                 $text = implode("\n", (run_process("{$module_command} show {$hash}")));
-                $libs->update(load_from_text($text, $filename, $branch), $module);
+                $libs->update(load_from_text($text, $filename, $branch), $name);
             }
         }
     }
@@ -137,6 +137,7 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
 
     foreach (glob("{$location}/libs/*") as $module_path) {
         foreach (glob("{$module_path}/meta/libraries.*") as $path) {
+            // TODO: Would be better to get module names from .gitmodules file.
             $module = pathinfo($module_path, PATHINFO_FILENAME);
             $libs->update(load_from_file($path, $branch), $module);
         }
