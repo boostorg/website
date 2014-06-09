@@ -368,6 +368,12 @@ class boost_libraries
 
         foreach ($this->db[$key] as $version => $current) {
             if ($last) {
+                if (!isset($current['boost-version'])
+                        && isset($last['boost-version'])) {
+                    $current['boost-version'] = $last['boost-version'];
+                    $this->db[$key][$version] = $current;
+                }
+
                 if ($this->equal_details($last, $current)) {
                     unset($this->db[$key][$version]);
                 }
