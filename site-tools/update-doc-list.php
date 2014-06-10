@@ -23,7 +23,6 @@ function main() {
     }
 
     $libs = boost_libraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
-    $libs->squash_name_arrays();
 
     if ($location) {
         $location = realpath($location);
@@ -59,6 +58,8 @@ function main() {
     echo "Writing to disk\n";
 
     file_put_contents(dirname(__FILE__) . '/../doc/libraries.xml', $libs->to_xml());
+
+    $libs->squash_name_arrays();
     file_put_contents(dirname(__FILE__) . '/../generated/libraries.txt', serialize($libs));
 }
 
@@ -118,7 +119,7 @@ function update_from_git($libs, $location, $branch) {
                 $hash = $matches[1];
                 $filename = $matches[2];
                 $text = implode("\n", (run_process("{$module_command} show {$hash}")));
-                $libs->update(load_from_text($text, $filename, $branch), $module);
+                $libs->update(load_from_text($text, $filename, $branch), $name);
             }
         }
     }
@@ -136,6 +137,7 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
 
     foreach (glob("{$location}/libs/*") as $module_path) {
         foreach (glob("{$module_path}/meta/libraries.*") as $path) {
+            // TODO: Would be better to get module names from .gitmodules file.
             $module = pathinfo($module_path, PATHINFO_FILENAME);
             $libs->update(load_from_file($path, $branch), $module);
         }
@@ -164,7 +166,6 @@ function load_from_text($text, $filename, $branch) {
             assert(false);
     }
 
-    $new_libs->squash_name_arrays();
     return $new_libs;
 }
 
