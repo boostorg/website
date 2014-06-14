@@ -26,6 +26,9 @@
 * [phrase library..[@/libs/align/ Align]:]
   Memory alignment functions, allocators, and adaptors, from Glen Fernandes.
 
+* [phrase library..[@/libs/core/ Core]:]
+  Core utilities used by other libraries, with minimal dependencies. Maintained by Peter Dimov, Glen Fernandes and Andrey Semashev.
+
 * /TODO/
 
 [endsect]
@@ -42,15 +45,17 @@
   * Resolve some C++11 ambiguities ([ticket 3073]).
 
 * [phrase library..[@/libs/atomic/ Atomic]:]
-  * The library has been redesigned. Besides internal refactoring, various bugs were fixed, including incorrect values of feature test macros and interer overflow handling.
+  * The library has been redesigned. Besides internal refactoring, various bugs were fixed, including incorrect values of feature test macros and integer overflow handling.
+  * Changed values of the `memory_order` enumeration. The concrete values are not part of the interface, but this change may potentially break ABI, if the enum is used in user's interfaces.
   * Implemented support for 128-bit atomic operations on Windows x64 with MSVC. The library assumes presence of the `cmpxchg16b` instruction in the target CPUs. Some early AMD CPUs don't support this instruction. To target those define the `BOOST_ATOMIC_NO_CMPXCHG16B` macro.
   * Implemented experimental support for Windows ARM target with MSVC.
   * Implemented experimental support for DEC Alpha target with GCC.
-  * Improved support for ARMv6 and later with GCC. Implemented all atomic operations as assembler blocks instead of CAS-based loops.
+  * Improved support for ARMv6 and later with GCC. Implemented all atomic operations as assembler blocks instead of CAS-based loops. 64-bit operations are supported with ARMv7.
   * Implemented optional support for the `BOOST_ATOMIC_FLAG_INIT` macro and static initialization of `atomic_flag`. ([ticket 8158])
   * Fixed compilation for SPARCv9 target. ([ticket 9446])
   * Fixed compilation for PowerPC target. ([ticket 9447])
   * Fixed several compatibility problems with Clang on x86 and x86-64. ([ticket 9610], [ticket 9842])
+  * Removed specialized code for Windows on IA64 platform.
 
 * [phrase library..[@/libs/circular_buffer/ Circular Buffer]:]
   * [ticket 9970] Support for the C++11 allocator model
@@ -81,6 +86,23 @@
   * `flyweight` now replicates the initializer-list constructors and assignment operators of its underlying type.
   * Fixed intermodule static initialization problem (ticket [ticket 9553]).
   * Maintenance fixes.
+
+* [phrase library..[@/libs/log/index.html Log]:]
+  * General changes:
+    * For Windows targets, the library now compiles for Windows XP by default.
+    * Added indexing operators with `attribute_name` arguments to `record` and `record_view`.
+    * Added operators for non-const object output to `basic_formatting_ostream`. ([ticket 9389])
+    * Added support for putting function names and source file names of named scopes into the formatted strings. ([ticket 9263])
+    * Added support for incomplete and empty markers to the named scope formatter. ([ticket 9123])
+    * The default presentation for incomplete named scope lists has changed: trailing scope delimiter is omitted.
+    * Added a support header for `std::regex`.
+    * By default Boost.Log uses Boost.Regex internally as the regular expressions backend. The backend can be changed by defining configuration macros.
+  * Bug fixes:
+    * Fixed `dump` manipulator output on AVX2-enabled CPUs (e.g. Intel Haswell).
+    * Fixed compilation of `get_attribute` method of loggers.
+    * Fixed a possible race in `locked_backend()` function implementation of synchronous and asynchronous sink frontends.
+    * Fixed a possible infinite block of the logging threads in the asynchronous sink enqueue methods when `block_on_overflow` strategy was used.
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
 * [phrase library..[@/libs/math/index.html Math]:]
   * Fix Geometric distribution use of Policies, see [@https://svn.boost.org/trac/boost/ticket/9833 #9833].
@@ -173,6 +195,11 @@
 
 * [phrase library..[@/libs/tr1/index.html TR1]:]
   * This library is now deprecated.
+
+* [phrase library..[@/libs/utility/index.html Utility]:]
+  * Some components were moved to the new Boost.Core library.
+  * `empty_deleter` is deprecated in favor of `null_deleter` from Boost.Core. `empty_deleter` is an alias for `null_deleter`, it will be removed in future releases.
+  * `base_from_member` utility now supports lvalue reference member types. ([ticket 7577])
 
 * [phrase library..[@/libs/uuid/index.html UUID]:]
   * Added basic support for C++11 features.
