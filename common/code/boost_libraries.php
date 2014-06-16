@@ -150,6 +150,11 @@ class boost_libraries
         $json = trim($json);
 
         $import = json_decode($json, true);
+        if (!$import) {
+            // TODO: Proper error handling.
+            echo "Error decoding json: $json\n";
+            exit(0);
+        }
 
         if ($json[0] == '{') {
             if (isset($import['categories']) || isset($import['libraries'])) {
