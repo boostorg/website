@@ -76,19 +76,7 @@ function update_from_git($libs, $location, $branch) {
 
     $git_command = "cd '${location}' && git";
     $super_project = new BoostSuperProject($location, $branch);
-    $modules = Array();
-
-    foreach($super_project->parse_config_file(".gitmodules") as $line_number => $line)
-    {
-        if (!$line) continue;
-
-        if (preg_match('@^submodule\.(\w+)\.(\w+)=(.*)$@', trim($line), $matches)) {
-            $modules[$matches[1]][$matches[2]] = $matches[3];
-        }
-        else {
-            throw new RuntimeException("Unsupported config line: {$line}");
-        }
-    }
+    $modules = $super_project->get_modules();
 
     $modules_by_path = Array();
     foreach($modules as $name => $details) {
@@ -137,11 +125,12 @@ function update_from_git($libs, $location, $branch) {
 function update_from_local_copy($libs, $location, $branch = 'latest') {
     echo "Updating from local checkout/{$branch}\n";
 
-    foreach (glob("{$location}/libs/*") as $module_path) {
-        foreach (glob("{$module_path}/meta/libraries.*") as $path) {
-            // TODO: Would be better to get module names from .gitmodules file.
-            $module = pathinfo($module_path, PATHINFO_FILENAME);
-            $libs->update(load_from_file($path, $branch), $module);
+    $super_project = new BoostSuperProject($location);
+    foreach ($super_project->get_modules() as $name => $module_details) {
+        foreach (
+                glob("{$location}/{$module_details['path']}/meta/libraries.*")
+                as $path) {
+            $libs->update(load_from_file($path, $branch), $name);
         }
     }
 }

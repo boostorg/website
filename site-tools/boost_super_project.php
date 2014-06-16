@@ -33,6 +33,24 @@ class BoostSuperProject {
         }
     }
 
+    public function get_modules() {
+        $modules = Array();
+
+        foreach($this->parse_config_file(".gitmodules") as $line_number => $line)
+        {
+            if (!$line) continue;
+
+            if (preg_match('@^submodule\.(\w+)\.(\w+)=(.*)$@', trim($line), $matches)) {
+                $modules[$matches[1]][$matches[2]] = $matches[3];
+            }
+            else {
+                throw new RuntimeException("Unsupported config line: {$line}");
+            }
+        }
+
+        return $modules;
+    }
+
     public function run_git($command) {
         return run_process("git -C \"{$this->location}\" {$command}");
     }
