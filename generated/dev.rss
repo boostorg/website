@@ -23,6 +23,14 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/core/&quot;&gt;Core&lt;/a&gt;:&lt;/span&gt;
+  Core utilities used by other
+          libraries, with minimal dependencies. Maintained by Peter Dimov, Glen Fernandes
+          and Andrey Semashev.
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;em&gt;TODO&lt;/em&gt;
         &lt;/div&gt;
       &lt;/li&gt;
@@ -51,7 +59,15 @@
               &lt;div&gt;
                 The library has been redesigned. Besides internal refactoring, various
                 bugs were fixed, including incorrect values of feature test macros
-                and interer overflow handling.
+                and integer overflow handling.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed values of the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;memory_order&lt;/span&gt;&lt;/code&gt;
+                enumeration. The concrete values are not part of the interface, but
+                this change may potentially break ABI, if the enum is used in user's
+                interfaces.
               &lt;/div&gt;
             &lt;/li&gt;
             &lt;li&gt;
@@ -76,7 +92,8 @@
             &lt;li&gt;
               &lt;div&gt;
                 Improved support for ARMv6 and later with GCC. Implemented all atomic
-                operations as assembler blocks instead of CAS-based loops.
+                operations as assembler blocks instead of CAS-based loops. 64-bit
+                operations are supported with ARMv7.
               &lt;/div&gt;
             &lt;/li&gt;
             &lt;li&gt;
@@ -100,6 +117,11 @@
               &lt;div&gt;
                 Fixed several compatibility problems with Clang on x86 and x86-64.
                 (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9610&quot;&gt;#9610&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9842&quot;&gt;#9842&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Removed specialized code for Windows on IA64 platform.
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
@@ -234,6 +256,107 @@
             &lt;li&gt;
               &lt;div&gt;
                 Maintenance fixes.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/log/index.html&quot;&gt;Log&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                General changes:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      For Windows targets, the library now compiles for Windows XP
+                      by default.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Added indexing operators with &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;attribute_name&lt;/span&gt;&lt;/code&gt;
+                      arguments to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;record&lt;/span&gt;&lt;/code&gt;
+                      and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;record_view&lt;/span&gt;&lt;/code&gt;.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Added operators for non-const object output to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;basic_formatting_ostream&lt;/span&gt;&lt;/code&gt;.
+                      (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9389&quot;&gt;#9389&lt;/a&gt;)
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Added support for putting function names and source file names
+                      of named scopes into the formatted strings. (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9263&quot;&gt;#9263&lt;/a&gt;)
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Added support for incomplete and empty markers to the named
+                      scope formatter. (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9123&quot;&gt;#9123&lt;/a&gt;)
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      The default presentation for incomplete named scope lists has
+                      changed: trailing scope delimiter is omitted.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Added a support header for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;regex&lt;/span&gt;&lt;/code&gt;.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      By default Boost.Log uses Boost.Regex internally as the regular
+                      expressions backend. The backend can be changed by defining
+                      configuration macros.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Bug fixes:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Fixed &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;dump&lt;/span&gt;&lt;/code&gt;
+                      manipulator output on AVX2-enabled CPUs (e.g. Intel Haswell).
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Fixed compilation of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;get_attribute&lt;/span&gt;&lt;/code&gt;
+                      method of loggers.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Fixed a possible race in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;locked_backend&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; function implementation of
+                      synchronous and asynchronous sink frontends.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Fixed a possible infinite block of the logging threads in the
+                      asynchronous sink enqueue methods when &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;block_on_overflow&lt;/span&gt;&lt;/code&gt;
+                      strategy was used.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                See &lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/log/doc/html/log/changelog.html&quot;&gt;changelog&lt;/a&gt;
+                for more details.
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
@@ -607,6 +730,33 @@
             &lt;li&gt;
               &lt;div&gt;
                 This library is now deprecated.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/utility/index.html&quot;&gt;Utility&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Some components were moved to the new Boost.Core library.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;empty_deleter&lt;/span&gt;&lt;/code&gt; is
+                deprecated in favor of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;null_deleter&lt;/span&gt;&lt;/code&gt;
+                from Boost.Core. &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;empty_deleter&lt;/span&gt;&lt;/code&gt;
+                is an alias for &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;null_deleter&lt;/span&gt;&lt;/code&gt;,
+                it will be removed in future releases.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;base_from_member&lt;/span&gt;&lt;/code&gt;
+                utility now supports lvalue reference member types. (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/7577&quot;&gt;#7577&lt;/a&gt;)
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;

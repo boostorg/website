@@ -64,6 +64,14 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/core/">Core</a>:</span>
+  Core utilities used by other
+          libraries, with minimal dependencies. Maintained by Peter Dimov, Glen Fernandes
+          and Andrey Semashev.
+        </div>
+      </li>
+      <li>
+        <div>
           <em>TODO</em>
         </div>
       </li>
@@ -92,7 +100,15 @@
               <div>
                 The library has been redesigned. Besides internal refactoring, various
                 bugs were fixed, including incorrect values of feature test macros
-                and interer overflow handling.
+                and integer overflow handling.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed values of the <code><span class="identifier">memory_order</span></code>
+                enumeration. The concrete values are not part of the interface, but
+                this change may potentially break ABI, if the enum is used in user's
+                interfaces.
               </div>
             </li>
             <li>
@@ -117,7 +133,8 @@
             <li>
               <div>
                 Improved support for ARMv6 and later with GCC. Implemented all atomic
-                operations as assembler blocks instead of CAS-based loops.
+                operations as assembler blocks instead of CAS-based loops. 64-bit
+                operations are supported with ARMv7.
               </div>
             </li>
             <li>
@@ -141,6 +158,11 @@
               <div>
                 Fixed several compatibility problems with Clang on x86 and x86-64.
                 (<a href="https://svn.boost.org/trac/boost/ticket/9610">#9610</a>, <a href="https://svn.boost.org/trac/boost/ticket/9842">#9842</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Removed specialized code for Windows on IA64 platform.
               </div>
             </li>
           </ul>
@@ -275,6 +297,107 @@
             <li>
               <div>
                 Maintenance fixes.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/log/index.html">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                General changes:
+                <ul>
+                  <li>
+                    <div>
+                      For Windows targets, the library now compiles for Windows XP
+                      by default.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added indexing operators with <code><span class="identifier">attribute_name</span></code>
+                      arguments to <code><span class="identifier">record</span></code>
+                      and <code><span class="identifier">record_view</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added operators for non-const object output to <code><span class="identifier">basic_formatting_ostream</span></code>.
+                      (<a href="https://svn.boost.org/trac/boost/ticket/9389">#9389</a>)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added support for putting function names and source file names
+                      of named scopes into the formatted strings. (<a href="https://svn.boost.org/trac/boost/ticket/9263">#9263</a>)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added support for incomplete and empty markers to the named
+                      scope formatter. (<a href="https://svn.boost.org/trac/boost/ticket/9123">#9123</a>)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      The default presentation for incomplete named scope lists has
+                      changed: trailing scope delimiter is omitted.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added a support header for <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">regex</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      By default Boost.Log uses Boost.Regex internally as the regular
+                      expressions backend. The backend can be changed by defining
+                      configuration macros.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Bug fixes:
+                <ul>
+                  <li>
+                    <div>
+                      Fixed <code><span class="identifier">dump</span></code>
+                      manipulator output on AVX2-enabled CPUs (e.g. Intel Haswell).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed compilation of <code><span class="identifier">get_attribute</span></code>
+                      method of loggers.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed a possible race in <code><span class="identifier">locked_backend</span><span class="special">()</span></code> function implementation of
+                      synchronous and asynchronous sink frontends.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed a possible infinite block of the logging threads in the
+                      asynchronous sink enqueue methods when <code><span class="identifier">block_on_overflow</span></code>
+                      strategy was used.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                See <a href="/doc/libs/master/libs/log/doc/html/log/changelog.html">changelog</a>
+                for more details.
               </div>
             </li>
           </ul>
@@ -648,6 +771,33 @@
             <li>
               <div>
                 This library is now deprecated.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/utility/index.html">Utility</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Some components were moved to the new Boost.Core library.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">empty_deleter</span></code> is
+                deprecated in favor of <code><span class="identifier">null_deleter</span></code>
+                from Boost.Core. <code><span class="identifier">empty_deleter</span></code>
+                is an alias for <code><span class="identifier">null_deleter</span></code>,
+                it will be removed in future releases.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">base_from_member</span></code>
+                utility now supports lvalue reference member types. (<a href="https://svn.boost.org/trac/boost/ticket/7577">#7577</a>)
               </div>
             </li>
           </ul>
