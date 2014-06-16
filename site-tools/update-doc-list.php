@@ -1,6 +1,7 @@
 <?php
 
 require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
+require_once(dirname(__FILE__) . '/boost_super_project.php');
 
 function main() {
     $args = $_SERVER['argv'];
@@ -74,10 +75,10 @@ function update_from_git($libs, $location, $branch) {
     echo "Updating from {$branch}\n";
 
     $git_command = "cd '${location}' && git";
+    $super_project = new BoostSuperProject($location, $branch);
     $modules = Array();
 
-    foreach(git_config_from_repo($git_command, $branch, ".gitmodules")
-        as $line_number => $line)
+    foreach($super_project->parse_config_file(".gitmodules") as $line_number => $line)
     {
         if (!$line) continue;
 
@@ -94,7 +95,8 @@ function update_from_git($libs, $location, $branch) {
         $modules_by_path[$details['path']] = $name;
     }
 
-    foreach(run_process("{$git_command} ls-tree {$branch} ".implode(' ', array_keys($modules_by_path)))
+    foreach($super_project->run_git(
+            "ls-tree {$branch} ".implode(' ', array_keys($modules_by_path)))
         as $line_number => $line)
     {
         if (!$line) continue;
@@ -169,42 +171,6 @@ function load_from_text($text, $filename, $branch) {
     return $new_libs;
 }
 
-function git_config_from_repo($git_command, $branch, $path) {
-    $temp_file = null;
-
-    if (git_version($git_command) >= array(1,8,4,0))
-    {
-        $blob = run_process("{$git_command} ls-tree {$branch} .gitmodules "
-            ."| cut -f 1 | cut -f 3 -d ' '");
-        $file_param = "--blob {$blob[0]}";
-    }
-    else
-    {
-        $temp_file = tempnam(sys_get_temp_dir(), 'boost-git-');
-        run_process("{$git_command} show {$branch}:{$path} ".
-                "> {$temp_file}");
-        $file_param = "-f {$temp_file}";
-    }
-
-    $result = run_process("{$git_command} config -l {$file_param}");
-    if ($temp_file) unlink($temp_file);
-    return $result;
-}
-
-function git_version($git_command) {
-    $output = run_process("{$git_command} --version");
-    $match = null;
-
-    if (count($output) == 1
-            && preg_match('@^git version ([0-9.]+)$@', $output[0], $match))
-    {
-        return array_pad(explode('.', $output[0]), 4, 0);
-    }
-    else {
-        return array(0,0,0,0);
-    }
-}
-
 function get_bool_from_array($array) {
     if (count($array) != 1) throw new RuntimeException("get_bool_from_array: invalid array");
     switch ($array[0]) {
@@ -212,25 +178,6 @@ function get_bool_from_array($array) {
         case 'false': return false;
         default: throw new RuntimeException("invalid bool: ${array[0]}");
     }
-}
-
-class ProcessError extends RuntimeException {
-    public $error_code;
-
-    function __construct($error_code) {
-        $this->error_code = $error_code;
-        parent::__construct("Process failed with status: {$error_code}");
-    }
-}
-
-function run_process($command) {
-    exec($command, $output, $return_var);
-
-    if ($return_var != 0) {
-        throw new ProcessError($return_var);
-    }
-
-    return $output;
 }
 
 main();
