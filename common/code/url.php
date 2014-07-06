@@ -9,28 +9,28 @@
 // Not a full implementation.
 function resolve_url($url, $base = null) {
     if (!$base) {
-        $base = parse_url($_SERVER['REQUEST_URI']);
-        $base['scheme'] = $_SERVER['REQUEST_SCHEME'];
-        $base['host'] = $_SERVER['HTTP_HOST'];
+        $base_parts = parse_url($_SERVER['REQUEST_URI']);
+        $base_parts['scheme'] = $_SERVER['REQUEST_SCHEME'];
+        $base_parts['host'] = $_SERVER['HTTP_HOST'];
     }
     else {
-        $base = parse_url($base);
+        $base_parts = parse_url($base);
     }
 
-    $url = parse_url($url);
+    $url_parts = parse_url($url);
 
-    if (isset($url['scheme'])) {
+    if (isset($url_parts['scheme'])) {
         return $url;
     }
 
-    if (isset($base['scheme'])) $url['scheme'] = $base['scheme'];
+    if (isset($base_parts['scheme'])) $url_parts['scheme'] = $base_parts['scheme'];
 
-    if (!isset($url['host'])) {
-        if (isset($base['host'])) $url['host'] = $base['host'];
-        $url['path'] = resolve_path($url['path'], $base['path']);
+    if (!isset($url_parts['host'])) {
+        if (isset($base_parts['host'])) $url_parts['host'] = $base_parts['host'];
+        $url_parts['path'] = resolve_path($url_parts['path'], $base_parts['path']);
     }
 
-    return build_url($url);
+    return build_url($url_parts);
 }
 
 function resolve_path($path, $base_path) {
