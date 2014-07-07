@@ -129,6 +129,23 @@
     <ul>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/any/">Any</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed rvalue references related issues (<a href="https://svn.boost.org/trac/boost/ticket/9215">#9215</a>, <a href="https://svn.boost.org/trac/boost/ticket/9462">#9462</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Dropped support of antique compilers.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/assign/">Assign</a>:</span>
           <ul>
             <li>
@@ -221,7 +238,12 @@
           <ul>
             <li>
               <div>
-                <a href="https://svn.boost.org/trac/boost/ticket/9970">#9970</a> Support for the C++11 allocator model
+                <a href="https://svn.boost.org/trac/boost/ticket/9970">#9970</a>,<a href="https://svn.boost.org/trac/boost/ticket/9334">#9334</a> Support for the C++11 allocator model.
+              </div>
+            </li>
+            <li>
+              <div>
+                Dropped support of antique compilers.
               </div>
             </li>
           </ul>
@@ -344,6 +366,43 @@
             <li>
               <div>
                 Maintenance fixes.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/lexical_cast/">Lexical Cast</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added the <code><span class="identifier">try_lexical_convert</span></code>
+                function, that retuns <code><span class="keyword">false</span></code>
+                in case of failed conversion and does not require output parameter
+                to be Default Constructable (<a href="https://svn.boost.org/trac/boost/ticket/6700">#6700</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed conversion of string values with leading zeroes to <code><span class="keyword">bool</span></code> (<a href="https://svn.boost.org/trac/boost/ticket/9659">#9659</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Code was changed to produce a smaller binaries and simplify compiler's
+                work (<a href="https://svn.boost.org/trac/boost/ticket/9046">#9046</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Boost.LexicalCast library was separated from the Boost.Conversion
+                library.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed some warnings (<a href="https://svn.boost.org/trac/boost/ticket/8991">#8991</a>).
               </div>
             </li>
           </ul>
@@ -888,6 +947,66 @@
             <li>
               <div>
                 Silenced some compiler warnings. (<a href="https://svn.boost.org/trac/boost/ticket/8495">#8495</a>, <a href="https://svn.boost.org/trac/boost/ticket/8697">#8697</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/variant/">Variant</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <strong>Breaking change:</strong> Variant now uses
+                variadic templates if they are supported by compiler. This leads
+                to smaller binaries and better compilation times but in some cases
+                may break metaprogramming functions, especially if <a href="/doc/libs/master/libs/variant/doc/html/variant/BOOST_VARIANT_ENUM_PARAMS.html">BOOST_VARIANT_ENUM_PARAMS</a>
+                and <a href="/doc/libs/master/libs/variant/doc/html/variant/BOOST_VARIANT_ENUM_SHIFTED_PARAMS.html">BOOST_VARIANT_ENUM_SHIFTED_PARAMS</a>
+                are not used. Usage of variadic templates <a href="/doc/libs/master/libs/variant/doc/html/variant/BOOST_VARIANT_DO_NOT_USE_VARIADIC_TEMPLATES.html">may
+                be disabled</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="/doc/libs/master/libs/variant/doc/html/variant/reference.html#header.boost.variant.polymorphic_get_hpp">Added</a>
+                <code><span class="identifier">polymorphic_get</span></code> function
+                <a href="https://svn.boost.org/trac/boost/ticket/9479">#9479</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Move-only classes now can be returned by visitors.
+              </div>
+            </li>
+            <li>
+              <div>
+                Optimized variant::swap() and fixed ambiguity in <code><span class="identifier">move_swap</span></code>
+                <a href="https://svn.boost.org/trac/boost/ticket/2839">#2839</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added conditional noexcepts to move assignments, default and move
+                constructors making <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">variant</span></code>
+                <code><span class="identifier">move_if_noexcept</span></code>-friendly
+                (<a href="https://svn.boost.org/trac/boost/ticket/7911">#7911</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Exceptions are now visible across modules even with -fvisibility=hidden
+                flags.
+              </div>
+            </li>
+            <li>
+              <div>
+                Dropped support of antique compilers.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed some warnings (<a href="https://svn.boost.org/trac/boost/ticket/3020">#3020</a>).
               </div>
             </li>
           </ul>
