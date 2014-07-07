@@ -71,6 +71,7 @@ All header paths should remain the same. The new modules are:
 
 * [phrase library..[@/libs/atomic/ Atomic]:]
   * The library has been redesigned. Besides internal refactoring, various bugs were fixed, including incorrect values of feature test macros and integer overflow handling.
+  * In C++03 mode `boost::atomic<T>` no longer compiles if `T` has non-trivial default constructor. This code compiled with previous releases but the default constructor was not actually called. The library requires `T` to be a /trivial/ type (see paragraph 3.9/9 in the standard). This requirement is in effect regardless of the C++ version but C++11 compilers may successfully compile the violating code.
   * Changed values of the `memory_order` enumeration. The concrete values are not part of the interface, but this change may potentially break ABI, if the enum is used in user's interfaces.
   * Implemented support for 128-bit atomic operations on Windows x64 with MSVC. The library assumes presence of the `cmpxchg16b` instruction in the target CPUs. Some early AMD CPUs don't support this instruction. To target those define the `BOOST_ATOMIC_NO_CMPXCHG16B` macro.
   * Implemented experimental support for Windows ARM target with MSVC.
