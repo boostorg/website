@@ -2,9 +2,9 @@
     [quickbook 1.6]
     [source-mode c++]
     [purpose 
-    New Libraries: Align.
-    Updated Libraries: Circular buffer, Flyweight, Multi-index Containers,
-      Smart Pointers.]
+    New Libraries: Align, TypeIndex.
+    Updated Libraries: Any, Circular buffer, Flyweight, Lexical cast, Multi-index Containers,
+      Smart Pointers, Variant.]
     [authors [Dawes, Beman]]
     [/ last-revision is used for the final release data]
     [last-revision ]
@@ -62,6 +62,10 @@ All header paths should remain the same. The new modules are:
   * `shared_ptr` is movable and supports aliasing ([ticket 1234]).
 ]
 
+* [phrase library..[@/libs/any/ Any]:]
+  * Fixed rvalue references related issues ([ticket 9215], [ticket 9462]).
+  * Dropped support of antique compilers.
+
 * [phrase library..[@/libs/assign/ Assign]:]
   * Resolve some C++11 ambiguities ([ticket 3073]).
 
@@ -79,7 +83,8 @@ All header paths should remain the same. The new modules are:
   * Removed specialized code for Windows on IA64 platform.
 
 * [phrase library..[@/libs/circular_buffer/ Circular Buffer]:]
-  * [ticket 9970] Support for the C++11 allocator model
+  * [ticket 9970],[ticket 9334] Support for the C++11 allocator model.
+  * Dropped support of antique compilers.
 
 * [phrase library..[@/libs/concept_check/ Concept Check]:]
   * Fewer warnings (includes [ticket 5012]).
@@ -107,6 +112,14 @@ All header paths should remain the same. The new modules are:
   * `flyweight` now replicates the initializer-list constructors and assignment operators of its underlying type.
   * Fixed intermodule static initialization problem (ticket [ticket 9553]).
   * Maintenance fixes.
+
+* [phrase library..[@/libs/lexical_cast/ Lexical Cast]:]
+  * Added the `try_lexical_convert` function, that retuns `false` in case of failed conversion and
+    does not require output parameter to be Default Constructable ([ticket 6700]).
+  * Fixed conversion of string values with leading zeroes to `bool` ([ticket 9659]).
+  * Code was changed to produce a smaller binaries and simplify compiler's work ([ticket 9046]).
+  * Boost.LexicalCast library was separated from the Boost.Conversion library.
+  * Fixed some warnings ([ticket 8991]).
 
 * [phrase library..[@/libs/log/index.html Log]:]
   * General changes:
@@ -228,6 +241,23 @@ All header paths should remain the same. The new modules are:
   * Added basic support for C++11 features.
   * Implemented SSE-optimized versions of some functions of `uuid`, including comparison operators and `swap`. The support for different versions of SSE is automatically detected at compile time for most compilers, but can also be explicitly enabled or disabled with [@/libs/uuid/uuid.html#Configuration configuration macros]. ([ticket 8509])
   * Silenced some compiler warnings. ([ticket 8495], [ticket 8697])
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * [*Breaking change:] Variant now uses variadic templates if they are supported by compiler.
+    This leads to smaller binaries and better compilation times but in some cases may break metaprogramming functions,
+    especially if [@/libs/variant/doc/html/variant/BOOST_VARIANT_ENUM_PARAMS.html BOOST_VARIANT_ENUM_PARAMS] and
+    [@/libs/variant/doc/html/variant/BOOST_VARIANT_ENUM_SHIFTED_PARAMS.html BOOST_VARIANT_ENUM_SHIFTED_PARAMS] are not used.
+    Usage of variadic templates
+    [@/libs/variant/doc/html/variant/BOOST_VARIANT_DO_NOT_USE_VARIADIC_TEMPLATES.html may be disabled].
+  * [@/libs/variant/doc/html/variant/reference.html#header.boost.variant.polymorphic_get_hpp Added]
+    `polymorphic_get` function [ticket 9479].
+  * Move-only classes now can be returned by visitors.
+  * Optimized variant::swap() and fixed ambiguity in `move_swap` [ticket 2839].
+  * Added conditional noexcepts to move assignments, default and move
+    constructors making `boost::variant` `move_if_noexcept`-friendly ([ticket 7911]).
+  * Exceptions are now visible across modules even with -fvisibility=hidden flags.
+  * Dropped support of antique compilers.
+  * Fixed some warnings ([ticket 3020]).
 
 * [phrase library..[@/libs/predef/ Predef]:]
   * Addition of `BOOST_PLAT_*` platform definitions for MinGW and
