@@ -28,11 +28,13 @@ function main() {
     if ($location) {
         $location = realpath($location);
 
-        if (is_file($location))
+        if (!is_dir($location))
         {
-            update_from_file($libs, $location, $version);
+            echo "Not a directory: {$location}\n";
+            exit(1);
         }
-        else if (get_bool_from_array(run_process(
+
+        if (get_bool_from_array(run_process(
                 "cd '${location}' && git rev-parse --is-bare-repository")))
         {
             if ($version) {
@@ -132,11 +134,6 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
             $libs->update(load_from_file($path, $branch), $name);
         }
     }
-}
-
-function update_from_file($libs, $location, $version) {
-    echo "Updated from local file\n";
-    $libs->update(load_from_file($location, $version));
 }
 
 function load_from_file($path, $branch) {
