@@ -182,6 +182,12 @@ class BoostVersion {
             ($this->is_beta() ? '_beta'. $this->beta : '');
     }
 
+    /** Return the git tag/branch for the version */
+    function git_ref() {
+        return $this->version['stage'] ? $this->stage_name() :
+            'boost-'.implode('.', $this->version_numbers());
+    }
+
     /** Return the version numbers from the verion array */
     private function version_numbers() {
         $numbers = $this->version;

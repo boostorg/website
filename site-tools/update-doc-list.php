@@ -17,22 +17,25 @@ function main() {
             exit(1);
     }
 
-    // TODO: Support releases.
-    if ($version && !in_array($version, ['master', 'develop', 'latest'])) {
-        echo "Invalid version: $version\n";
-        exit(1);
+    if ($version) {
+        // BoostVersion dies if version is invalid.
+        $version = BoostVersion::from($version);
     }
 
     $libs = boost_libraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
 
     if ($location) {
-        $location = realpath($location);
+        $real_location = realpath($location);
 
-        if (is_file($location))
+        if ($real_location && !is_dir($real_location))
         {
-            update_from_file($libs, $location, $version);
+            echo "Not a directory: {$location}\n";
+            exit(1);
         }
-        else if (get_bool_from_array(run_process(
+
+        $location = $real_location;
+
+        if (get_bool_from_array(run_process(
                 "cd '${location}' && git rev-parse --is-bare-repository")))
         {
             if ($version) {
@@ -68,13 +71,13 @@ function main() {
  *
  * @param \boost_libraries $libs The libraries to update.
  * @param string $location The location of the super project in the mirror.
- * @param string $branch The branch to update from.
+ * @param BoostVersion|string $version The version to update from.
  * @throws RuntimeException
  */
-function update_from_git($libs, $location, $branch) {
+function update_from_git($libs, $location, $version) {
+    $branch = BoostVersion::from($version)->git_ref();
     echo "Updating from {$branch}\n";
 
-    $git_command = "cd '${location}' && git";
     $super_project = new BoostSuperProject($location, $branch);
     $modules = $super_project->get_modules();
 
@@ -104,12 +107,17 @@ function update_from_git($libs, $location, $branch) {
         foreach(run_process("{$module_command} ls-tree {$module['hash']} "
                 ."meta/libraries.xml meta/libraries.json") as $entry)
         {
-            $entry = trim($entry);
-            if (preg_match("@^100644 blob ([a-zA-Z0-9]+)\t(.*)$@", $entry, $matches)) {
-                $hash = $matches[1];
-                $filename = $matches[2];
-                $text = implode("\n", (run_process("{$module_command} show {$hash}")));
-                $libs->update(load_from_text($text, $filename, $branch), $name);
+            try {
+                $entry = trim($entry);
+                if (preg_match("@^100644 blob ([a-zA-Z0-9]+)\t(.*)$@", $entry, $matches)) {
+                    $hash = $matches[1];
+                    $filename = $matches[2];
+                    $text = implode("\n", (run_process("{$module_command} show {$hash}")));
+                    $libs->update(load_from_text($text, $filename, $branch), $name);
+                }
+            }
+            catch (library_decode_exception $e) {
+                echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
             }
         }
     }
@@ -130,14 +138,14 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
         foreach (
                 glob("{$location}/{$module_details['path']}/meta/libraries.*")
                 as $path) {
-            $libs->update(load_from_file($path, $branch), $name);
+            try {
+                $libs->update(load_from_file($path, $branch), $name);
+            }
+            catch (library_decode_exception $e) {
+                echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
+            }
         }
     }
-}
-
-function update_from_file($libs, $location, $version) {
-    echo "Updated from local file\n";
-    $libs->update(load_from_file($location, $version));
 }
 
 function load_from_file($path, $branch) {
