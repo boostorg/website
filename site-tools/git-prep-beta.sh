@@ -36,13 +36,13 @@ then
     echo "Changes on origin/beta:"
     echo
 
-    git log --pretty=oneline beta...origin/beta
+    git log --reverse --pretty=oneline beta..origin/beta
 
     echo
     echo "Changes on beta:"
     echo
 
-    git log --pretty=oneline origin/beta...beta
+    git log --reverse --pretty=oneline origin/beta..beta
 
     exit 1
 fi
@@ -54,7 +54,7 @@ then
     echo "Unmerged changes on beta:"
     echo
 
-    git log --pretty=oneline origin/master...beta
+    git log --reverse --pretty=oneline origin/master..beta
 
     exit 1
 fi
