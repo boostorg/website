@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 # Goto the root of the website
 cd $(dirname $0)/..
