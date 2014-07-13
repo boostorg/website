@@ -25,7 +25,7 @@ fi
 
 echo "- Fetching from origin"
 
-git fetch -q
+git fetch -q origin
 
 echo "- Update local beta from origin"
 
