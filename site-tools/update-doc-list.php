@@ -25,13 +25,15 @@ function main() {
     $libs = boost_libraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
 
     if ($location) {
-        $location = realpath($location);
+        $real_location = realpath($location);
 
-        if (!is_dir($location))
+        if ($real_location && !is_dir($real_location))
         {
             echo "Not a directory: {$location}\n";
             exit(1);
         }
+
+        $location = $real_location;
 
         if (get_bool_from_array(run_process(
                 "cd '${location}' && git rev-parse --is-bare-repository")))
