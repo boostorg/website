@@ -17,10 +17,9 @@ function main() {
             exit(1);
     }
 
-    // TODO: Support releases.
-    if ($version && !in_array($version, ['master', 'develop', 'latest'])) {
-        echo "Invalid version: $version\n";
-        exit(1);
+    if ($version) {
+        // BoostVersion dies if version is invalid.
+        $version = BoostVersion::from($version);
     }
 
     $libs = boost_libraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
@@ -70,10 +69,11 @@ function main() {
  *
  * @param \boost_libraries $libs The libraries to update.
  * @param string $location The location of the super project in the mirror.
- * @param string $branch The branch to update from.
+ * @param BoostVersion|string $version The version to update from.
  * @throws RuntimeException
  */
-function update_from_git($libs, $location, $branch) {
+function update_from_git($libs, $location, $version) {
+    $branch = BoostVersion::from($version)->git_ref();
     echo "Updating from {$branch}\n";
 
     $super_project = new BoostSuperProject($location, $branch);
