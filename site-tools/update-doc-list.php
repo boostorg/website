@@ -105,12 +105,17 @@ function update_from_git($libs, $location, $version) {
         foreach(run_process("{$module_command} ls-tree {$module['hash']} "
                 ."meta/libraries.xml meta/libraries.json") as $entry)
         {
-            $entry = trim($entry);
-            if (preg_match("@^100644 blob ([a-zA-Z0-9]+)\t(.*)$@", $entry, $matches)) {
-                $hash = $matches[1];
-                $filename = $matches[2];
-                $text = implode("\n", (run_process("{$module_command} show {$hash}")));
-                $libs->update(load_from_text($text, $filename, $branch), $name);
+            try {
+                $entry = trim($entry);
+                if (preg_match("@^100644 blob ([a-zA-Z0-9]+)\t(.*)$@", $entry, $matches)) {
+                    $hash = $matches[1];
+                    $filename = $matches[2];
+                    $text = implode("\n", (run_process("{$module_command} show {$hash}")));
+                    $libs->update(load_from_text($text, $filename, $branch), $name);
+                }
+            }
+            catch (library_decode_exception $e) {
+                echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
             }
         }
     }
@@ -131,7 +136,12 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
         foreach (
                 glob("{$location}/{$module_details['path']}/meta/libraries.*")
                 as $path) {
-            $libs->update(load_from_file($path, $branch), $name);
+            try {
+                $libs->update(load_from_file($path, $branch), $name);
+            }
+            catch (library_decode_exception $e) {
+                echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
+            }
         }
     }
 }

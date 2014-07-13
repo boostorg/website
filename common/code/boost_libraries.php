@@ -151,9 +151,7 @@ class boost_libraries
 
         $import = json_decode($json, true);
         if (!$import) {
-            // TODO: Proper error handling.
-            echo "Error decoding json: $json\n";
-            exit(0);
+            throw new library_decode_exception("Error decoding json.", $json);
         }
 
         if ($json[0] == '{') {
@@ -687,5 +685,17 @@ class boost_libraries
 }
 
 class boost_libraries_exception extends RuntimeException {}
+class library_decode_exception extends boost_libraries_exception {
+    private $content = '';
+
+    function __construct($message, $content) {
+        parent::__construct($message);
+        $this->content = $content;
+    }
+
+    public function content() {
+        return $this->content;
+    }
+}
 
 ?>
