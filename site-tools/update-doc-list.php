@@ -74,7 +74,6 @@ function main() {
 function update_from_git($libs, $location, $branch) {
     echo "Updating from {$branch}\n";
 
-    $git_command = "cd '${location}' && git";
     $super_project = new BoostSuperProject($location, $branch);
     $modules = $super_project->get_modules();
 
