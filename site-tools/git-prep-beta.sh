@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+# Do a fast forward merge without checking out the destination branch.
 git_ff_merge() {
     from=$1
     to=$2
@@ -22,7 +23,11 @@ then
     exit 1
 fi
 
+echo "- Fetching from origin"
+
 git fetch -q
+
+echo "- Update local beta from origin"
 
 if ! git_ff_merge origin/beta beta
 then
@@ -42,6 +47,8 @@ then
     exit 1
 fi
 
+echo "- Check for unmerged changes in beta"
+
 if [ $(git rev-parse beta) != $(git merge-base origin/master beta) ]
 then
     echo "Unmerged changes on beta:"
@@ -52,9 +59,11 @@ then
     exit 1
 fi
 
+echo "- Update beta from origin/master"
+
 #TODO: Should I also merge changes from local master?
 git_ff_merge origin/master beta
 git push origin beta
 git checkout beta
 
-echo "Beta is now up to date."
+echo "- Beta is now up to date."
