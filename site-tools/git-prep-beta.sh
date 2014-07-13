@@ -1,5 +1,17 @@
 #!/bin/bash -e
 
+git_ff_merge() {
+    from=$1
+    to=$2
+
+    if [[ $(git symbolic-ref --short -q HEAD) == $to ]]
+    then
+        git merge -q --ff-only $from
+    else
+        git fetch -q . $from:$to
+    fi
+}
+
 # Goto the root of the website
 cd $(dirname $0)/..
 
@@ -11,9 +23,8 @@ then
 fi
 
 git fetch -q
-git checkout -q beta
 
-if ! git merge -q --ff-only origin/beta
+if ! git_ff_merge origin/beta beta
 then
     echo "Unable to fast forward merge from origin/beta."
     echo
@@ -31,7 +42,7 @@ then
     exit 1
 fi
 
-if [ $(git rev-parse HEAD) != $(git merge-base origin/master beta) ]
+if [ $(git rev-parse beta) != $(git merge-base origin/master beta) ]
 then
     echo "Unmerged changes on beta:"
     echo
@@ -42,6 +53,8 @@ then
 fi
 
 #TODO: Should I also merge changes from local master?
-git merge -q --ff-only origin/master
+git_ff_merge origin/master beta
+git push origin beta
+git checkout beta
 
 echo "Beta is now up to date."
