@@ -46,6 +46,11 @@ class BoostBookParser:
         if download_node:
             download_item = self.get_child(download_node[0]).data
 
+        download_basename = None
+        download_basename_node = article_node.getElementsByTagName('download_basename')
+        if download_basename_node:
+            download_basename = self.get_child(download_basename_node[0]).data
+
         documentation = None
         documentation_node = article_node.getElementsByTagName('documentation')
         if documentation_node:
@@ -76,6 +81,7 @@ class BoostBookParser:
             'pub_date' : pub_date,
             'last_modified' : last_modified,
             'download_item' : download_item,
+            'download_basename' : download_basename,
             'documentation' : documentation,
             'status_item' : status_item
         }
@@ -107,6 +113,8 @@ class BoostBookParser:
             if body_item.nodeName in ['title', 'articleinfo']:
                 continue
             if self.get_child(body_item, tag = 'download'):
+                continue
+            if self.get_child(body_item, tag = 'download_basename'):
                 continue
             if self.get_child(body_item, tag = 'status'):
                 continue

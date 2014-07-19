@@ -169,6 +169,7 @@ class Page:
         self.last_modified = attrs.get('last_modified')
         self.pub_date = attrs.get('pub_date')
         self.download_item = attrs.get('download')
+        self.download_basename = attrs.get('download_basename')
         self.documentation = attrs.get('documentation')
         self.qbk_hash = attrs.get('qbk_hash')
 
@@ -211,6 +212,7 @@ class Page:
             'last_modified': self.last_modified,
             'pub_date': self.pub_date,
             'download': self.download_item,
+            'download_basename': self.download_basename,
             'documentation': self.documentation,
             'qbk_hash': self.qbk_hash
         }
@@ -228,6 +230,7 @@ class Page:
         self.pub_date = values['pub_date']
         self.last_modified = values['last_modified']
         self.download_item = values['download_item']
+        self.download_basename = values['download_basename']
         self.documentation = values['documentation']
         self.id = values['id']
         if not self.id:
@@ -266,31 +269,40 @@ class Page:
             return ''
         if self.type == 'release' and ('beta' not in self.flags and 'released' not in self.flags):
             return ''
-    
-        match = re.match('.*/boost/(\d+)\.(\d+)\.(\d+)/', self.download_item)
-        if(match):
-            major = int(match.group(1))
-            minor = int(match.group(2))
-            point = int(match.group(3))
-            base_name = 'boost_' + match.group(1) + '_' + match.group(2) + '_' + match.group(3)
-    
-            # Pick which files are available by examining the version number.
-            # This could possibly be meta-data in the rss feed instead of being
-            # hardcoded here.
-    
-            # TODO: Key order hardcoded later.
-            
+
+        downloads = None
+
+        if self.download_basename:
             downloads = {
-                'unix' : [base_name + '.tar.bz2', base_name + '.tar.gz'],
-                'windows' : []
+                'unix' : [self.download_basename + '.tar.bz2', self.download_basename + '.tar.gz'],
+                'windows' : [self.download_basename + '.7z', self.download_basename + '.zip']
             }
+        else:
+            match = re.match('.*/boost/(\d+)\.(\d+)\.(\d+)/', self.download_item)
+            if(match):
+                major = int(match.group(1))
+                minor = int(match.group(2))
+                point = int(match.group(3))
+                base_name = 'boost_' + match.group(1) + '_' + match.group(2) + '_' + match.group(3)
     
-            if(major == 1 and minor >= 32 and minor <= 33):
-                downloads['windows'].append(base_name + '.exe')
-            elif(major > 1 or minor > 34 or (minor == 34 and point == 1)):
-                downloads['windows'].append(base_name + '.7z')
-            downloads['windows'].append(base_name + '.zip')
-            
+                # Pick which files are available by examining the version number.
+                # This could possibly be meta-data in the rss feed instead of being
+                # hardcoded here.
+
+                # TODO: Key order hardcoded later.
+
+                downloads = {
+                    'unix' : [base_name + '.tar.bz2', base_name + '.tar.gz'],
+                    'windows' : []
+                }
+
+                if(major == 1 and minor >= 32 and minor <= 33):
+                    downloads['windows'].append(base_name + '.exe')
+                elif(major > 1 or minor > 34 or (minor == 34 and point == 1)):
+                    downloads['windows'].append(base_name + '.7z')
+                downloads['windows'].append(base_name + '.zip')
+
+        if downloads is not None:
             # Print the download table.
             
             output = ''
