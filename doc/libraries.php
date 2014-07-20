@@ -63,7 +63,7 @@ class LibraryPage {
         else if (strpos($this->view_value, 'category_') === 0) {
             $this->category_value = substr($this->view_value, strlen('category_'));
             if(!isset($this->categories[$this->category_value])) {
-                echo 'Invalid category: '.htmlentities($this->category_value); exit(0);
+                echo 'Invalid category: '.html_encode($this->category_value); exit(0);
             }
         }
         else {
@@ -115,7 +115,7 @@ class LibraryPage {
     function category_subtitle() {
         if($this->category_value) {
             echo '<h2>',
-                htmlentities($this->categories[$this->category_value]['title']),
+                html_encode($this->categories[$this->category_value]['title']),
                 '</h2>';
         }
     }
@@ -168,32 +168,32 @@ class LibraryPage {
             } else {
                 $docref = '/doc/libs/release/' . $lib['documentation'];
             }
-            print '<a href="' . htmlentities($docref) . '">' .
-                    htmlentities(!empty($lib['name']) ? $lib['name'] : $lib['key']) .
+            print '<a href="' . html_encode($docref) . '">' .
+                    html_encode(!empty($lib['name']) ? $lib['name'] : $lib['key']) .
                     '</a>';
         } else {
-            print htmlentities(!empty($lib['name']) ? $lib['name'] : $lib['key']);
+            print html_encode(!empty($lib['name']) ? $lib['name'] : $lib['key']);
         }
 
         if (!empty($lib['status'])) {
-            print ' <em>(' . htmlentities($lib['status']) . ')</em>';
+            print ' <em>(' . html_encode($lib['status']) . ')</em>';
         }
     }
 
     function libdescription($lib) {
         echo !empty($lib['description']) ?
-                htmlentities($lib['description'],ENT_NOQUOTES,'UTF-8') :
+                html_encode($lib['description'],ENT_NOQUOTES,'UTF-8') :
                 '&nbsp;';
     }
 
     function libauthors($lib) {
         print !empty($lib['authors']) ?
-                htmlentities($lib['authors']) : '&nbsp;';
+                html_encode($lib['authors']) : '&nbsp;';
     }
 
     function libavailable($lib) {
         print !empty($lib['boost-version']) ?
-            htmlentities($lib['boost-version']) : '<i>unreleased</i>';
+            html_encode($lib['boost-version']) : '<i>unreleased</i>';
     }
 
     function libstandard($lib) {
@@ -225,7 +225,7 @@ class LibraryPage {
         $current_value = isset($this->params[$field]) ? $this->params[$field] : '';
 
         if ($current_value == $value) {
-            echo '<span>', htmlentities($description), '</span>';
+            echo '<span>', html_encode($description), '</span>';
         } else {
             $params = $this->params;
             $params[$field] = $value;
@@ -238,8 +238,8 @@ class LibraryPage {
                 }
             }
 
-            echo '<a href="' . htmlentities($this->base_uri . $url_params) . '">',
-            htmlentities($description), '</a>';
+            echo '<a href="' . html_encode($this->base_uri . $url_params) . '">',
+            html_encode($description), '</a>';
         }
     }
 
@@ -264,7 +264,7 @@ $library_page = new LibraryPage($_GET,
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title><?php echo htmlentities($library_page->title()); ?></title>
+  <title><?php echo html_encode($library_page->title()); ?></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-doc.css" />
@@ -282,7 +282,7 @@ $library_page = new LibraryPage($_GET,
         <div class="section" id="intro">
           <div class="section-0">
             <div class="section-title">
-              <h1><?php echo htmlentities($library_page->title()); ?></h1>
+              <h1><?php echo html_encode($library_page->title()); ?></h1>
             </div>
 
             <div class="section-body">

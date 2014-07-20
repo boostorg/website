@@ -91,7 +91,7 @@ class BoostVersion {
             }
             else
             {
-                die("Invalid version: ".htmlentities($value));
+                die("Invalid version: ".html_encode($value));
             }
         }
         else {

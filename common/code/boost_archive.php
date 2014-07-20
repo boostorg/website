@@ -327,7 +327,7 @@ function display_dir($params, $dir)
 {
     $handle = opendir($dir);
     
-    $title = htmlentities("Index listing for $params[key]");
+    $title = html_encode("Index listing for $params[key]");
 
     $params['title'] = $title;
     $params['noindex'] = true;
@@ -338,7 +338,7 @@ function display_dir($params, $dir)
     {
         if (substr($file, 0, 1) == '.') continue;
         if (is_dir("$dir$file")) $file .= '/';
-        $file = htmlentities($file);
+        $file = html_encode($file);
         $content .= "<li><a rel='nofollow' href='$file'>$file</a></li>\n";
     }
 
@@ -423,7 +423,7 @@ HTML;
 
     $content = '<h1>404 Not Found</h1><p>File "' . $params['file'] . '" not found.</p><p>';
     if(!empty($params['zipfile'])) $content .= "Unzip error: ";
-    $content .= htmlentities($message);
+    $content .= html_encode($message);
     $content .= '</p>';
 
     display_template($params, Array('head' => $head, 'content' => $content));

@@ -5,8 +5,8 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
+require_once(dirname(__FILE__) . '/boost.php');
 require_once(dirname(__FILE__) . '/boost_utility.php');
-require_once(dirname(__FILE__) . '/boost_version.php');
 require_once(dirname(__FILE__) . '/url.php');
 
 /**
@@ -105,7 +105,7 @@ class boost_libraries
                     {
                         $value = isset($val['value']) ? trim($val['value']) : false;
                         if($value && $value != 'true' && $value != 'false') {
-                            echo 'Invalid value for ',htmlentities($val['tag']),
+                            echo 'Invalid value for ',html_encode($val['tag']),
                                 ': ', $value, "\n";
                             exit(0);
                         }
@@ -124,7 +124,7 @@ class boost_libraries
                     }
                     break;
                     default:
-                        echo 'Invalid tag: ', htmlentities($val['tag']), "\n";
+                        echo 'Invalid tag: ', html_encode($val['tag']), "\n";
                         exit(0);
                 }
             }
@@ -135,7 +135,7 @@ class boost_libraries
             }
             else
             {
-                echo 'Invalid tag: ', htmlentities($val['tag']), "\n";
+                echo 'Invalid tag: ', html_encode($val['tag']), "\n";
                 exit(0);
             }
         }
@@ -612,7 +612,7 @@ class boost_libraries
         foreach($libs as $key => $library) {
             foreach($library['category'] as $category) {
                 if(!isset($this->categories[$category])) {
-                    echo 'Unknown category: ', htmlentities($category), "\n";
+                    echo 'Unknown category: ', html_encode($category), "\n";
                     exit(0);
                 }
                 $categories[$category]['libraries'][] = $library;

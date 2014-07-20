@@ -7,7 +7,7 @@
 
 function text_filter($params)
 {
-    $params['title'] = htmlentities($params['key']);
+    $params['title'] = html_encode($params['key']);
 
     display_template($params,
         boost_archive_render_callbacks(text_filter_content($params), $params));
@@ -16,7 +16,7 @@ function text_filter($params)
 function text_filter_content($params)
 {
     return
-        "<h3>".htmlentities($params['key'])."</h3>\n".
+        "<h3>".html_encode($params['key'])."</h3>\n".
         "<pre>\n".
         encoded_text($params, 'text').
         "</pre>\n";
@@ -39,7 +39,7 @@ function encoded_text($params, $type) {
         as $index => $part)
     {
         if($index % 2 == 0) {
-            $html = htmlentities($part);
+            $html = html_encode($part);
         
             if($type == 'cpp') {
                 $html = preg_replace(
@@ -57,10 +57,10 @@ function encoded_text($params, $type) {
         else {
             $url = process_absolute_url($part, $root);
             if($url) {
-                 $text .= '<a href="'.htmlentities($url).'">'.htmlentities($part).'</a>';
+                 $text .= '<a href="'.html_encode($url).'">'.html_encode($part).'</a>';
             }
             else {
-                $text .= htmlentities($part);
+                $text .= html_encode($part);
             }
        }
     }

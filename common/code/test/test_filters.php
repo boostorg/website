@@ -25,9 +25,9 @@ function filter_test($filter, $params, $expected) {
         echo
             "<h2>Failure for filter {$filter}</h2>",
             '<p>Expected:</p><pre>',
-            htmlentities($expected),
+            html_encode($expected),
             '</pre><p>Result:</p><pre>',
-            htmlentities($result),
+            html_encode($result),
             '</pre>';
     }
 }

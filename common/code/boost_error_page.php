@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__.'/boost.php');
+
 function error_page_404($location = null) {
     if(!$location && isset($_SERVER['REQUEST_URI'])) {
         $location = $_SERVER['REQUEST_URI'];
@@ -16,7 +18,7 @@ function error_page($header, $title, $message) {
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title><?php print htmlentities($title); ?></title>
+  <title><?php print html_encode($title); ?></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
@@ -34,12 +36,12 @@ function error_page($header, $title, $message) {
         <div class="section" id="intro">
           <div class="section-0">
             <div class="section-title">
-              <h1><?php print htmlentities($title); ?></h1>
+              <h1><?php print html_encode($title); ?></h1>
             </div>
 
             <?php if($message) : ?>
             <div class="section-body">
-              <p><?php print htmlentities($message); ?></p>
+              <p><?php print html_encode($message); ?></p>
             </div>
             <?php endif ?>
           </div>

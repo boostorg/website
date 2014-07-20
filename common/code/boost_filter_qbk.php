@@ -8,7 +8,7 @@
 require_once(dirname(__FILE__).'/boost_filter_text.php');
 
 function qbk_filter($params) {
-    $params['title'] = htmlentities($params['key']);
+    $params['title'] = html_encode($params['key']);
     $params['noindex'] = true;
 
     display_template($params,
@@ -18,7 +18,7 @@ function qbk_filter($params) {
 function qbk_filter_content($params)
 {
     return
-        "<h3>".htmlentities($params['key'])."</h3>\n".
+        "<h3>".html_encode($params['key'])."</h3>\n".
         "<pre>\n".
         encoded_text($params, 'qbk').
         "</pre>\n";

@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__.'/../common/code/boost.php');
+
 class PullRequestPage {
     static $page_view_options = Array(
         '' => 'By Library',
@@ -57,7 +59,7 @@ class PullRequestPage {
         foreach ($this->pull_requests as $name => $repo_requests) {
             $repo_count = count($repo_requests);
 
-            echo "<h2>", htmlentities($name), "</h2>\n",
+            echo "<h2>", html_encode($name), "</h2>\n",
                 "<p> {$repo_count} open request",
                 ($repo_count != 1 ? 's' : ''),
                 ":</p>\n";
@@ -89,14 +91,14 @@ class PullRequestPage {
 
     function pull_request_item($pull, $name = null) {
         echo "<li>",
-            "<a href='" . htmlentities($pull->html_url) . "'>",
-            ($name ? htmlentities(preg_replace('@^boostorg/@', '', $name)).": " : ''),
-            htmlentities(rtrim($pull->title, '.')),
+            "<a href='" . html_encode($pull->html_url) . "'>",
+            ($name ? html_encode(preg_replace('@^boostorg/@', '', $name)).": " : ''),
+            html_encode(rtrim($pull->title, '.')),
             "</a>",
             " (created: ",
-            htmlentities(gmdate("j M Y", strtotime($pull->created_at))),
+            html_encode(gmdate("j M Y", strtotime($pull->created_at))),
             ", updated: ",
-            htmlentities(gmdate("j M Y", strtotime($pull->updated_at))),
+            html_encode(gmdate("j M Y", strtotime($pull->updated_at))),
             ")",
             "</li>\n";
     }
@@ -105,7 +107,7 @@ class PullRequestPage {
         $current_value = isset($this->params[$field]) ? $this->params[$field] : '';
 
         if ($current_value == $value) {
-            echo '<span>', htmlentities($description), '</span>';
+            echo '<span>', html_encode($description), '</span>';
         } else {
             $params = $this->params;
             $params[$field] = $value;
@@ -118,8 +120,8 @@ class PullRequestPage {
                 }
             }
 
-            echo '<a href="' . htmlentities($this->base_uri . $url_params) . '">',
-            htmlentities($description), '</a>';
+            echo '<a href="' . html_encode($this->base_uri . $url_params) . '">',
+            html_encode($description), '</a>';
         }
     }
 

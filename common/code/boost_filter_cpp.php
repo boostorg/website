@@ -8,7 +8,7 @@
 require_once(dirname(__FILE__).'/boost_filter_text.php');
 
 function cpp_filter($params) {
-    $params['title'] = htmlentities($params['key']);
+    $params['title'] = html_encode($params['key']);
 
     display_template($params,
         boost_archive_render_callbacks(cpp_filter_content($params), $params));
@@ -17,7 +17,7 @@ function cpp_filter($params) {
 function cpp_filter_content($params)
 {
     return
-        "<h3>".htmlentities($params['key'])."</h3>\n".
+        "<h3>".html_encode($params['key'])."</h3>\n".
         "<pre>\n".
         encoded_text($params, 'cpp').
         "</pre>\n";
