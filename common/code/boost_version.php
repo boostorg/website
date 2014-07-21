@@ -79,14 +79,14 @@ class BoostVersion {
                 case 'latest': return self::latest();
             }
 
-            if (preg_match('@(\d+)[._](\d+)[._](\d+)([._ ]?beta(\d*))?@',
+            if (preg_match('@(\d+)[._](\d+)[._](\d+)([-._ ]?b(?:eta)?(\d*))?@',
                 $value, $matches))
             {
                 return self::release(
                     (int) $matches[1],
                     (int) $matches[2],
                     (int) $matches[3],
-                    empty($matches[4]) ? false : (int) $matches[5]
+                    empty($matches[4]) ? false : (int) ($matches[5] ?: 1)
                 );
             }
             else
@@ -160,8 +160,13 @@ class BoostVersion {
     function compare($x) {
         $x = BoostVersion::from($x);
 
+        // Full releases come after betas.
+        $beta = ($this->beta === false) ? 9999 : $this->beta;
+        $x_beta = ($x->beta === false) ? 9999 : $x->beta;
+
         return $this->version < $x->version ? -1 :
-            ($this->version > $x->version ? 1 : 0);
+            ($this->version > $x->version ? 1 : 0) ?:
+            ($beta < $x_beta ? -1 : ($beta > $x_beta ? 1 : 0));
     }
 
     /**
@@ -185,10 +190,11 @@ class BoostVersion {
     /** Return the git tag/branch for the version */
     function git_ref() {
         return $this->version['stage'] ? $this->stage_name() :
-            'boost-'.implode('.', $this->version_numbers());
+            'boost-'.implode('.', $this->version_numbers()).
+            ($this->is_beta() ? '-beta'. $this->beta : '');
     }
 
-    /** Return the version numbers from the verion array */
+    /** Return the version numbers from the version array */
     private function version_numbers() {
         $numbers = $this->version;
         array_shift($numbers);
