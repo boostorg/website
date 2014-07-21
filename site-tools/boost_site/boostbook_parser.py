@@ -181,6 +181,10 @@ class BoostBookParser:
         return self.new_node('code',
             *self.x_children(node))
 
+    def x_macroname(self,node):
+        return self.new_node('code',
+            *self.x_children(node))
+
     def x_programlisting(self,node):
         return self.new_node('pre',
             *self.x_children(node))
