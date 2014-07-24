@@ -952,6 +952,46 @@
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
+                &lt;strong&gt;Breaking change&lt;/strong&gt;: moved a number
+                of non-core headers that are predominantly used for internal maintenance
+                into &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;libs&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;include_private&lt;/span&gt;&lt;/code&gt;. The headers effected
+                are &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;tools&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;test_data&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;tools&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;remez&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;,
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;constants&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;generate&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;tools&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;,
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;tools&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;hpp&lt;/span&gt;&lt;/code&gt;. You can continue to use these
+                headers by adding &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;libs&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;include_private&lt;/span&gt;&lt;/code&gt;
+                to your compiler's include path.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;Breaking change&lt;/strong&gt;: A number of distributions
+                and special functions were returning the maximum finite value rather
+                than raising an overflow_error, this has now been fixed, which means
+                these functions now behave as documented. However, since the default
+                behavior on raising an overflow_error is to throw a &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;overflow_error&lt;/span&gt;&lt;/code&gt; exception, applications
+                which have come to reply rely on these functions not throwing may
+                experience exceptions where they did not before. The special functions
+                involved are gamma_p_inva, gamma_q_inva, ibeta_inva, ibetac_inva,
+                ibeta_invb, ibetac_invb, gamma_p_inv, gamma_q_inv. The distributions
+                involved are pareto_distrib, beta_distrib, geometric_distrib, negative_binomial_distrib,
+                binomial_distrib, chi_squared_distrib, gamma_distrib, inverse_chi_squared_distrib,
+                inverse_gamma_distrib. See &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10111&quot;&gt;#10111&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix round and trunc functions so they can be used with integer arguments,
+                see &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10066&quot;&gt;#10066&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix Halley iteration to handle zero derivative (with non-zero second
+                derivative), see &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10046&quot;&gt;#10046&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
                 Fix Geometric distribution use of Policies, see &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9833&quot;&gt;#9833&lt;/a&gt;.
               &lt;/div&gt;
             &lt;/li&gt;
@@ -1185,6 +1225,22 @@
         &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_56_0_b1/libs/multiprecision/&quot;&gt;Multiprecision&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Change floating point to rational conversions to be implicit, see
+                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10082&quot;&gt;10082&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix definition of checked_cpp_rational typedef.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix bug in assignment from string in cpp_int, see &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9936&quot;&gt;9936&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
             &lt;li&gt;
               &lt;div&gt;
                 Added new cpp_bin_float backend for binary floating point.

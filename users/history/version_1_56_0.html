@@ -990,6 +990,46 @@
           <ul>
             <li>
               <div>
+                <strong>Breaking change</strong>: moved a number
+                of non-core headers that are predominantly used for internal maintenance
+                into <code><span class="identifier">libs</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">include_private</span></code>. The headers effected
+                are <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">tools</span><span class="special">/</span><span class="identifier">test_data</span><span class="special">.</span><span class="identifier">hpp</span></code>, <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">tools</span><span class="special">/</span><span class="identifier">remez</span><span class="special">.</span><span class="identifier">hpp</span></code>,
+                <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">constants</span><span class="special">/</span><span class="identifier">generate</span><span class="special">.</span><span class="identifier">hpp</span></code>, <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">tools</span><span class="special">/</span><span class="identifier">solve</span><span class="special">.</span><span class="identifier">hpp</span></code>,
+                <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">tools</span><span class="special">/</span><span class="identifier">test</span><span class="special">.</span><span class="identifier">hpp</span></code>. You can continue to use these
+                headers by adding <code><span class="identifier">libs</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">include_private</span></code>
+                to your compiler's include path.
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>Breaking change</strong>: A number of distributions
+                and special functions were returning the maximum finite value rather
+                than raising an overflow_error, this has now been fixed, which means
+                these functions now behave as documented. However, since the default
+                behavior on raising an overflow_error is to throw a <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">overflow_error</span></code> exception, applications
+                which have come to reply rely on these functions not throwing may
+                experience exceptions where they did not before. The special functions
+                involved are gamma_p_inva, gamma_q_inva, ibeta_inva, ibetac_inva,
+                ibeta_invb, ibetac_invb, gamma_p_inv, gamma_q_inv. The distributions
+                involved are pareto_distrib, beta_distrib, geometric_distrib, negative_binomial_distrib,
+                binomial_distrib, chi_squared_distrib, gamma_distrib, inverse_chi_squared_distrib,
+                inverse_gamma_distrib. See <a href="https://svn.boost.org/trac/boost/ticket/10111">#10111</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix round and trunc functions so they can be used with integer arguments,
+                see <a href="https://svn.boost.org/trac/boost/ticket/10066">#10066</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix Halley iteration to handle zero derivative (with non-zero second
+                derivative), see <a href="https://svn.boost.org/trac/boost/ticket/10046">#10046</a>.
+              </div>
+            </li>
+            <li>
+              <div>
                 Fix Geometric distribution use of Policies, see <a href="https://svn.boost.org/trac/boost/ticket/9833">#9833</a>.
               </div>
             </li>
@@ -1223,6 +1263,22 @@
         <div>
           <span class="library"><a href="/doc/libs/1_56_0_b1/libs/multiprecision/">Multiprecision</a>:</span>
           <ul>
+            <li>
+              <div>
+                Change floating point to rational conversions to be implicit, see
+                <a href="https://svn.boost.org/trac/boost/ticket/10082">10082</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix definition of checked_cpp_rational typedef.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix bug in assignment from string in cpp_int, see <a href="https://svn.boost.org/trac/boost/ticket/9936">9936</a>.
+              </div>
+            </li>
             <li>
               <div>
                 Added new cpp_bin_float backend for binary floating point.
