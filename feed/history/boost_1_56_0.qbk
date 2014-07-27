@@ -8,10 +8,10 @@
         Updated libraries: 
             Any, Assign, Atomic, Circular Buffer, Concept Check,
             Container, Context, Coroutine, Dynamic Bitset, Chrono, Flyweight,
-            Interprocess, Intrusive,
+            Hash, Interprocess, Intrusive,
             Log, Math, Move, MultiArray, Multi-index Containers,
             Multiprecision, Optional, Predef, Preprocessor, Program Options, Regex,
-            Smart Pointers, Thread, TTI, Utility, UUID, Variant.
+            Smart Pointers, Thread, TTI, Unordered, Utility, UUID, Variant.
         Deprecated Libraries: TR1
 
     ]
@@ -157,6 +157,10 @@ All header paths should remain the same. The new modules are:
   * `flyweight` now replicates the initializer-list constructors and assignment operators of its underlying type.
   * Fixed intermodule static initialization problem (ticket [ticket 9553]).
   * Maintenance fixes.
+
+* [phrase library..[@/libs/functional/hash/ Hash]:]
+  * Removed some Visual C++ 6 workarounds.
+  * Ongoing work on improving `hash_combine`.
   
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
   *  Fixed bugs:
@@ -415,6 +419,12 @@ All header paths should remain the same. The new modules are:
 * [phrase library..[@/libs/tti/ TTI]:]
   * Ticket [ticket 9441]: Added better support for Sun Solaris Studio C++ compiler.
   * Ticket [ticket 9444]: Handle all situations where the enclosing class is not a class type.
+
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * Minor documentation and warning fixes ([ticket 9377], [ticket 9719]).
+  * Always use prime number of buckets for integers. Fixes performance
+    regression when inserting consecutive integers ([ticket 9282]).
+  * Only construct elements using allocators, as specified in C++11 standard.
 
 * [phrase library..[@/libs/utility/index.html Utility]:]
   * Some components were moved to the new Boost.Core library.
