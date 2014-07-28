@@ -6,10 +6,10 @@
         New modules from existing code:
             Assert, Core, Lexical_Cast, Throw_Exception.
         Updated libraries: 
-            Any, Assign, Atomic, Circular Buffer, Concept Check,
+            Accumulators, Any, Assign, Atomic, Circular Buffer, Concept Check,
             Container, Context, Coroutine, Dynamic Bitset, Chrono, Flyweight,
-            Hash, Interprocess, Intrusive,
-            Log, Math, Move, MultiArray, Multi-index Containers,
+            Fusion, Hash, Interprocess, Intrusive,
+            Log, Math, Move, MPL, MultiArray, Multi-index Containers,
             Multiprecision, Optional, Predef, Preprocessor, Program Options, Regex,
             Smart Pointers, Thread, TTI, Unordered, Utility, UUID, Variant.
         Deprecated Libraries: TR1
@@ -68,6 +68,9 @@ All header paths should remain the same. The new modules are:
 [endsect]
 
 [section Updated Libraries]
+
+* [phrase library..[@/libs/accumulators/ Acumulators]:]
+  * New accumulators `rolling_variance` and `rolling_moment`
 
 * [phrase library..[@/libs/any/ Any]:]
   * Fixed rvalue references related issues ([ticket 9215], [ticket 9462]).
@@ -150,13 +153,15 @@ All header paths should remain the same. The new modules are:
   * [@http://svn.boost.org/trac/boost/ticket/10069 #10069] Overflow in chrono clocks on 32bit
   * [@http://svn.boost.org/trac/boost/ticket/10151 #10151] timegm function not available on QNX
 
-
 * [phrase library..[@/libs/flyweight/index.html Flyweight]:]
   * In compilers with variadic template support, `boost::flyweight<T>` now provides a perfectly forwarding
     constructor to `T::T` (previously an emulation was used).
   * `flyweight` now replicates the initializer-list constructors and assignment operators of its underlying type.
   * Fixed intermodule static initialization problem (ticket [ticket 9553]).
   * Maintenance fixes.
+
+* [phrase library..[@/libs/fusion/ Fusion]:]
+  * Fusion is enabled for use on GPU
 
 * [phrase library..[@/libs/functional/hash/ Hash]:]
   * Removed some Visual C++ 6 workarounds.
@@ -275,6 +280,9 @@ All header paths should remain the same. The new modules are:
   *  Fixed bug [@https://svn.boost.org/trac/boost/ticket/9482 #9482: ['"MSVC macros not undefined in boost/move/detail/config_end.hpp"]],
                [@https://svn.boost.org/trac/boost/ticket/9045 #9045: ['"Wrong macro name on docs"]],
                [@https://svn.boost.org/trac/boost/ticket/8420 #8420: ['"move's is_convertible does not compile with aligned data"]].
+
+* [phrase library..[@/libs/mpl/ MPL]:]
+  * `boost::mpl::for_each` is enabled for use on GPU
 
 * [phrase library..[@/libs/multi_array/index.html MultiArray]:]
   * [ticket 5664] operator() checks for Collection concept but requires RandomAccessCollection
