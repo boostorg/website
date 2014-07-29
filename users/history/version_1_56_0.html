@@ -167,6 +167,158 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/1_56_0_b1/libs/asio/">Asio</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">spawn</span><span class="special">()</span></code>
+                to work correctly with new Boost.Coroutine interface (<a href="https://svn.boost.org/trac/boost/ticket/9442">#9442</a>,
+                <a href="https://svn.boost.org/trac/boost/ticket/9928">#9928</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Ensured that incomplete <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">spawn</span><span class="special">()</span></code> coroutines are correctly unwound
+                when cleaned up by the <code><span class="identifier">io_service</span></code>
+                destructor (<a href="https://svn.boost.org/trac/boost/ticket/9731">#9731</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed delegation of continuation hook for handlers produced by <code><span class="identifier">io_service</span><span class="special">::</span><span class="identifier">wrap</span><span class="special">()</span></code>
+                and <code><span class="identifier">strand</span><span class="special">::</span><span class="identifier">wrap</span><span class="special">()</span></code>
+                (<a href="https://svn.boost.org/trac/boost/ticket/9741">#9741</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed the Windows I/O completion port backend to use <code><span class="identifier">ConnectEx</span></code>, if available, for connection-oriented
+                IP sockets.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed the <code><span class="identifier">io_service</span></code>
+                backend for non-Windows (and non-IOCP Windows) platforms to use a
+                single condition variable per <code><span class="identifier">io_service</span></code>
+                instance. This addresses a potential race condition when <code><span class="identifier">run_one</span><span class="special">()</span></code>
+                is used from multiple threads.
+              </div>
+            </li>
+            <li>
+              <div>
+                Prevented integer overflow when computing timeouts based on some
+                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span></code> and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">chrono</span></code>
+                clocks (<a href="https://svn.boost.org/trac/boost/ticket/9662">#9662</a>, <a href="https://svn.boost.org/trac/boost/ticket/9778">#9778</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Made further changes to <code><span class="identifier">EV_CLEAR</span></code>
+                handling in the kqueue backend, to address other cases where the
+                <code><span class="identifier">close</span><span class="special">()</span></code>
+                system call may hang on Mac OS X.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed infinite recursion in implementation of <code><span class="identifier">resolver_query_base</span><span class="special">::</span><span class="identifier">flags</span><span class="special">::</span><span class="keyword">operator</span><span class="special">~</span></code> (<a href="https://svn.boost.org/trac/boost/ticket/9548">#9548</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Made the <code><span class="identifier">select</span></code> reactor
+                more efficient on Windows for large numbers of sockets (<a href="https://svn.boost.org/trac/boost/ticket/9528">#9528</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a Windows-specific type-aliasing issue reported by <tt>gcc</tt>
+                (<a href="https://svn.boost.org/trac/boost/ticket/9550">#9550</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Prevented execution of compile-time-only buffer test to avoid triggering
+                an address sanitiser warning (<a href="https://svn.boost.org/trac/boost/ticket/8295">#8295</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Disabled the <code><span class="identifier">GetQueuedCompletionStatus</span></code>
+                timeout workaround on recent versions of Windows.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added support for string-based scope IDs when using link-local multicast
+                addresses.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed IPv6 multicast group join to use the address's scope ID as
+                the interface, if an interface is not explicitly specified.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed multicast test failure on Mac OS X and the BSDs by using a
+                link-local multicast address.
+              </div>
+            </li>
+            <li>
+              <div>
+                Worked around a <tt>gcc</tt> problem to do with anonymous
+                enums (<a href="https://svn.boost.org/trac/boost/ticket/10042">#10042</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Reverted the Windows <code><span class="identifier">HANDLE</span></code>
+                backend change to ignore <code><span class="identifier">ERROR_MORE_DATA</span></code>.
+                Instead, the error will be propagated as with any other (i.e. in
+                an <code><span class="identifier">error_code</span></code> or
+                thrown as a <code><span class="identifier">system_error</span></code>),
+                and the number of bytes transferred will be returned. For code that
+                needs to handle partial messages, the <code><span class="identifier">error_code</span></code>
+                overload should be used (<a href="https://svn.boost.org/trac/boost/ticket/10034">#10034</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed an off-by-one error in the <code><span class="identifier">signal_set</span></code>
+                implementation's signal number check (<a href="https://svn.boost.org/trac/boost/ticket/9324">#9324</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed to use SSE2 intrinsics rather than inline assembly, to allow
+                the Cray compiler to work.
+              </div>
+            </li>
+            <li>
+              <div>
+                Stopped using certain Winsock functions that are marked as deprecated
+                in the latest Visual C++ and Windows SDK.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a workaround for building the unit tests with <tt>gcc</tt>
+                on AIX.
+              </div>
+            </li>
+            <li>
+              <div>
+                Various minor documentation improvements (<a href="https://svn.boost.org/trac/boost/ticket/8295">#8295</a>, <a href="https://svn.boost.org/trac/boost/ticket/9605">#9605</a>, <a href="https://svn.boost.org/trac/boost/ticket/9771">#9771</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/1_56_0_b1/libs/assign/">Assign</a>:</span>
           <ul>
             <li>
@@ -1551,6 +1703,46 @@
             <li>
               <div>
                 Added list of values for numeric_limits.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/1_56_0_b1/libs/numeric/odeint/">Odeint</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added algebra and operations dispatcher for automatic detection of
+                appropriate algebras and operations.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added support for Eigen, Boost.Multiarray, Boost.Mpi, Boost.Compute,
+                Blaze, and NT2.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed algebra interface to use algebra.norm_inf function.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added iterators for iterating through the solution of the ODEs, hence
+                an alternative to the integrate functions.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added the Velocity-Verlet method.
+              </div>
+            </li>
+            <li>
+              <div>
+                Minor bug fixes.
               </div>
             </li>
           </ul>

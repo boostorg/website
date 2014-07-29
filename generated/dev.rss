@@ -129,6 +129,158 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_56_0_b1/libs/asio/&quot;&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;asio&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;spawn&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+                to work correctly with new Boost.Coroutine interface (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9442&quot;&gt;#9442&lt;/a&gt;,
+                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9928&quot;&gt;#9928&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Ensured that incomplete &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;asio&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;spawn&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt; coroutines are correctly unwound
+                when cleaned up by the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_service&lt;/span&gt;&lt;/code&gt;
+                destructor (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9731&quot;&gt;#9731&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed delegation of continuation hook for handlers produced by &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_service&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;wrap&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;strand&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;wrap&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+                (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9741&quot;&gt;#9741&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed the Windows I/O completion port backend to use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ConnectEx&lt;/span&gt;&lt;/code&gt;, if available, for connection-oriented
+                IP sockets.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_service&lt;/span&gt;&lt;/code&gt;
+                backend for non-Windows (and non-IOCP Windows) platforms to use a
+                single condition variable per &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;io_service&lt;/span&gt;&lt;/code&gt;
+                instance. This addresses a potential race condition when &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;run_one&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+                is used from multiple threads.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Prevented integer overflow when computing timeouts based on some
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;chrono&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;chrono&lt;/span&gt;&lt;/code&gt;
+                clocks (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9662&quot;&gt;#9662&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9778&quot;&gt;#9778&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Made further changes to &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;EV_CLEAR&lt;/span&gt;&lt;/code&gt;
+                handling in the kqueue backend, to address other cases where the
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;()&lt;/span&gt;&lt;/code&gt;
+                system call may hang on Mac OS X.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed infinite recursion in implementation of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;resolver_query_base&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;flags&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;keyword&quot;&gt;operator&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;~&lt;/span&gt;&lt;/code&gt; (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9548&quot;&gt;#9548&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Made the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;select&lt;/span&gt;&lt;/code&gt; reactor
+                more efficient on Windows for large numbers of sockets (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9528&quot;&gt;#9528&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed a Windows-specific type-aliasing issue reported by &lt;tt&gt;gcc&lt;/tt&gt;
+                (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9550&quot;&gt;#9550&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Prevented execution of compile-time-only buffer test to avoid triggering
+                an address sanitiser warning (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8295&quot;&gt;#8295&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Disabled the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;GetQueuedCompletionStatus&lt;/span&gt;&lt;/code&gt;
+                timeout workaround on recent versions of Windows.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for string-based scope IDs when using link-local multicast
+                addresses.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed IPv6 multicast group join to use the address's scope ID as
+                the interface, if an interface is not explicitly specified.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed multicast test failure on Mac OS X and the BSDs by using a
+                link-local multicast address.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Worked around a &lt;tt&gt;gcc&lt;/tt&gt; problem to do with anonymous
+                enums (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10042&quot;&gt;#10042&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Reverted the Windows &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;HANDLE&lt;/span&gt;&lt;/code&gt;
+                backend change to ignore &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;ERROR_MORE_DATA&lt;/span&gt;&lt;/code&gt;.
+                Instead, the error will be propagated as with any other (i.e. in
+                an &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;error_code&lt;/span&gt;&lt;/code&gt; or
+                thrown as a &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;system_error&lt;/span&gt;&lt;/code&gt;),
+                and the number of bytes transferred will be returned. For code that
+                needs to handle partial messages, the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;error_code&lt;/span&gt;&lt;/code&gt;
+                overload should be used (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10034&quot;&gt;#10034&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed an off-by-one error in the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;signal_set&lt;/span&gt;&lt;/code&gt;
+                implementation's signal number check (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9324&quot;&gt;#9324&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed to use SSE2 intrinsics rather than inline assembly, to allow
+                the Cray compiler to work.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Stopped using certain Winsock functions that are marked as deprecated
+                in the latest Visual C++ and Windows SDK.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added a workaround for building the unit tests with &lt;tt&gt;gcc&lt;/tt&gt;
+                on AIX.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Various minor documentation improvements (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8295&quot;&gt;#8295&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9605&quot;&gt;#9605&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9771&quot;&gt;#9771&lt;/a&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_56_0_b1/libs/assign/&quot;&gt;Assign&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
@@ -1513,6 +1665,46 @@
             &lt;li&gt;
               &lt;div&gt;
                 Added list of values for numeric_limits.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/1_56_0_b1/libs/numeric/odeint/&quot;&gt;Odeint&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added algebra and operations dispatcher for automatic detection of
+                appropriate algebras and operations.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for Eigen, Boost.Multiarray, Boost.Mpi, Boost.Compute,
+                Blaze, and NT2.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed algebra interface to use algebra.norm_inf function.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added iterators for iterating through the solution of the ODEs, hence
+                an alternative to the integrate functions.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added the Velocity-Verlet method.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Minor bug fixes.
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
