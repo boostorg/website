@@ -321,7 +321,9 @@ class boost_libraries
      * @param type $module The module the xml is taken from.
      * @throws boost_libraries_exception
      */
-    public function update($update, $module = null) {
+    public function update($update, $module = null, $module_path = null) {
+        assert(!$module || $module_path);
+
         foreach($update->db as $key => $libs) {
             if (count($libs) > 1) {
                 throw new boost_libraries_exception("Duplicate key: {$key}\n");
@@ -330,18 +332,12 @@ class boost_libraries
             $details = reset($libs);
 
             if ($module) {
-                if (!isset($details['module'])) {
-                    $details['module'] = $module;
-                }
+                assert(!isset($details['module']));
 
-                // TODO: This isn't right, some modules have a different
-                // path to their name.
-                $details['documentation'] = resolve_url(
-                        isset($details['documentation'])
-                            ? $details['documentation'] : '.',
-                        "/libs/{$details['module']}/");
-                $details['documentation'] =
-                        ltrim($details['documentation'], '/');
+                $details['module'] = $module;
+
+                $documentation_url = isset($details['documentation']) ? $details['documentation'] : '.';
+                $details['documentation'] = resolve_url($documentation_url, rtrim($module_path, '/').'/');
             }
 
             $this->db[$key][(string) $details['update-version']] = $details;

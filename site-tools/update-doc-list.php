@@ -117,7 +117,7 @@ function update_from_git($libs, $location, $version) {
                     $hash = $matches[1];
                     $filename = $matches[2];
                     $text = implode("\n", (run_process("{$module_command} show {$hash}")));
-                    $libs->update(load_from_text($text, $filename, $branch), $name);
+                    $libs->update(load_from_text($text, $filename, $branch), $name, $module['path']);
                 }
             }
             catch (library_decode_exception $e) {
@@ -143,7 +143,7 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
                 glob("{$location}/{$module_details['path']}/meta/libraries.*")
                 as $path) {
             try {
-                $libs->update(load_from_file($path, $branch), $name);
+                $libs->update(load_from_file($path, $branch), $name, $module_details['path']);
             }
             catch (library_decode_exception $e) {
                 echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
