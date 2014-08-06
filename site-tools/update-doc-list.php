@@ -59,6 +59,10 @@ function main() {
         }
     }
 
+    if ($version && $version->is_numbered_release() && !$version->is_beta()) {
+        $libs->update_for_release($version);
+    }
+
     echo "Writing to disk\n";
 
     file_put_contents(dirname(__FILE__) . '/../doc/libraries.xml', $libs->to_xml());

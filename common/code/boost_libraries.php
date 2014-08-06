@@ -185,9 +185,9 @@ class boost_libraries
      * @param array $libraries
      * @return \boost_libraries
      */
-    static function from_array($libs)
+    static function from_array($libs, $version = null)
     {
-        return new self($libs, array());
+        return new self($libs, array(), $version);
     }
 
     /**
@@ -334,6 +334,8 @@ class boost_libraries
                     $details['module'] = $module;
                 }
 
+                // TODO: This isn't right, some modules have a different
+                // path to their name.
                 $details['documentation'] = resolve_url(
                         isset($details['documentation'])
                             ? $details['documentation'] : '.',
@@ -347,6 +349,20 @@ class boost_libraries
         }
 
         ksort($this->db);
+    }
+
+    public function update_for_release($version) {
+        $version = BoostVersion::from($version);
+
+        $libs = $this->get_for_version($version);
+        foreach($libs as &$lib_details) {
+            if (!isset($lib_details['boost-version'])) {
+                $lib_details['boost-version'] = $version;
+            }
+        }
+        unset($lib_details);
+
+        $this->update(self::from_array($libs, $version));
     }
 
     private function sort_versions($key) {
@@ -575,6 +591,7 @@ class boost_libraries
             if ($lib) {
                 if ($filter && !call_user_func($filter, $lib)) continue;
 
+                unset($lib['update-version']);
                 $libs[$key] = $lib;
             }
         }
