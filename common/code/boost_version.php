@@ -148,7 +148,7 @@ class BoostVersion {
      * @return boolean
      */
     function is_numbered_release() {
-        return $this->version['stage'] = self::release_stage;
+        return $this->version['stage'] === self::release_stage;
     }
 
     /**
