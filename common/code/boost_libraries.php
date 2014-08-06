@@ -262,20 +262,10 @@ class boost_libraries
 
         ksort($this->db);
 
-        foreach ($this->db as $key => $lib_entries) {
+        foreach (array_keys($this->db) as $key) {
             $this->sort_versions($key);
 
-            $boost_version = null;
-
-            foreach (array_keys($lib_entries) as $version) {
-                if (!$boost_version && isset($version['boost-version'])) {
-                    $boost_version = $version['boost-version'];
-                }
-
-                if ($boost_version && !isset($version['boost-version'])) {
-                    $version['boost-version'] = $boost_version;
-                }
-
+            foreach (array_keys($this->db[$key]) as $version) {
                 sort($this->db[$key][$version]['category']);
             }
         }
