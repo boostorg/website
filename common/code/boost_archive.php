@@ -300,29 +300,6 @@ function conditional_get($last_modified)
     return false;
 }
 
-// General purpose render callbacks.
-
-function boost_archive_render_callbacks($content, $params) {
-    $charset = !empty($params['charset']) ? $params['charset'] : 'us-ascii';
-    $title = !empty($params['title']) ? "$params[title]" : 'Boost C++ Libraries';
-
-    if (!empty($params['version'])) {
-        $title = "$params[title] - " . BoostVersion::from($params['version']);
-    }
-
-    $head = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
-
-    if (!empty($params['noindex']))
-        $head .= "<meta name=\"robots\" content=\"noindex\">\n";
-
-    $head .= "<title>${title}</title>";
-
-    return Array(
-        'head' => $head,
-        'content' => $content
-    );
-}
-
 function display_raw_file($params, $type)
 {
     ## header('Content-Disposition: attachment; filename="downloaded.pdf"');

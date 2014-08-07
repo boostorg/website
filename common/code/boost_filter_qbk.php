@@ -12,8 +12,7 @@ class BoostFilterQbk extends BoostFilterText
         $this->params['noindex'] = true;
 
         display_template($this->params,
-            boost_archive_render_callbacks(
-                $this->qbk_filter_content(), $this->params));
+            $this->template_params($this->qbk_filter_content()));
     }
 
     function qbk_filter_content()

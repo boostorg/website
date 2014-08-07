@@ -12,8 +12,7 @@ class BoostFilterText extends BoostFilters
         $this->params['title'] = html_encode($this->params['key']);
 
         display_template($this->params,
-            boost_archive_render_callbacks(
-                $this->text_filter_content(), $this->params));
+            $this->template_params($this->text_filter_content()));
     }
 
     function text_filter_content()

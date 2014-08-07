@@ -133,4 +133,27 @@ class BoostFilters
             return $text;
         }
     }
+
+    // General purpose render callbacks.
+
+    function template_params($content) {
+        $charset = !empty($this->params['charset']) ? $this->params['charset'] : 'us-ascii';
+        $title = !empty($this->params['title']) ? $this->params['title'] : 'Boost C++ Libraries';
+
+        if (!empty($this->params['version'])) {
+            $title = "{$this->params['title']} - " . BoostVersion::from($this->params['version']);
+        }
+
+        $head = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
+
+        if (!empty($this->params['noindex']))
+            $head .= "<meta name=\"robots\" content=\"noindex\">\n";
+
+        $head .= "<title>${title}</title>";
+
+        return Array(
+            'head' => $head,
+            'content' => $content
+        );
+    }
 }

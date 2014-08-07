@@ -10,8 +10,7 @@ class BoostFilterBoostFrame1 extends BoostFilters
     function echo_filtered() {
         $this->html_init();
         display_template($this->params,
-            boost_archive_render_callbacks(
-                $this->boost_frame1_filter_content(), $this->params));
+            $this->template_params($this->boost_frame1_filter_content()));
     }
 
     function boost_frame1_filter_content()
