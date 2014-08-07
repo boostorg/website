@@ -16,7 +16,7 @@ require_once(dirname(__FILE__) . '/url.php');
  * and it's quite easy to get confused between them. Maybe needs to be split
  * up into a couple of different classes.
  */
-class boost_libraries
+class BoostLibraries
 {
     private $categories = array();
     private $db = array();
@@ -36,7 +36,7 @@ class boost_libraries
      * Read library details from an xml string
      *
      * @param string $xml
-     * @return \boost_libraries
+     * @return \BoostLibraries
      */
     static function from_xml($xml, $version = null)
     {
@@ -183,7 +183,7 @@ class boost_libraries
      * make sure that the libraries are valid.
      *
      * @param array $libraries
-     * @return \boost_libraries
+     * @return \BoostLibraries
      */
     static function from_array($libs, $version = null)
     {
@@ -225,7 +225,7 @@ class boost_libraries
                 $lib['update-version'] = $lib['boost-version'];
             }
             else {
-                throw new boost_libraries_exception(
+                throw new BoostLibraries_exception(
                         "No version info for {$lib['key']}");
             }
 
@@ -315,18 +315,18 @@ class boost_libraries
     /**
      * Update the libraries from xml details.
      *
-     * @param \boost_libraries $update
+     * @param \BoostLibraries $update
      * @param \BoostVersion $update_version The version of Boost that the
      *      xml describes.
      * @param type $module The module the xml is taken from.
-     * @throws boost_libraries_exception
+     * @throws BoostLibraries_exception
      */
     public function update($update, $module = null, $module_path = null) {
         assert(!$module || $module_path);
 
         foreach($update->db as $key => $libs) {
             if (count($libs) > 1) {
-                throw new boost_libraries_exception("Duplicate key: {$key}\n");
+                throw new BoostLibraries_exception("Duplicate key: {$key}\n");
             }
 
             $details = reset($libs);
@@ -687,8 +687,8 @@ class boost_libraries
     }
 }
 
-class boost_libraries_exception extends RuntimeException {}
-class library_decode_exception extends boost_libraries_exception {
+class BoostLibraries_exception extends RuntimeException {}
+class library_decode_exception extends BoostLibraries_exception {
     private $content = '';
 
     function __construct($message, $content) {

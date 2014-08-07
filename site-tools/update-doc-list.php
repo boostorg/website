@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
+require_once(__DIR__.'/../common/code/boost.php');
 require_once(dirname(__FILE__) . '/boost_super_project.php');
 
 function main() {
@@ -22,7 +22,7 @@ function main() {
         $version = BoostVersion::from($version);
     }
 
-    $libs = boost_libraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
+    $libs = BoostLibraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
 
     if ($location) {
         $real_location = realpath($location);
@@ -73,7 +73,7 @@ function main() {
 
 /**
  *
- * @param \boost_libraries $libs The libraries to update.
+ * @param \BoostLibraries $libs The libraries to update.
  * @param string $location The location of the super project in the mirror.
  * @param BoostVersion|string $version The version to update from.
  * @throws RuntimeException
@@ -129,7 +129,7 @@ function update_from_git($libs, $location, $version) {
 
 /**
  *
- * @param \boost_libraries $libs The libraries to update.
+ * @param \BoostLibraries $libs The libraries to update.
  * @param string $location The location of the super project in the mirror.
  * @param string $branch The branch to update from.
  * @throws RuntimeException
@@ -159,10 +159,10 @@ function load_from_file($path, $branch) {
 function load_from_text($text, $filename, $branch) {
     switch (pathinfo($filename, PATHINFO_EXTENSION)) {
         case 'xml':
-            $new_libs = boost_libraries::from_xml($text, $branch);
+            $new_libs = BoostLibraries::from_xml($text, $branch);
             break;
         case 'json':
-            $new_libs = boost_libraries::from_json($text, $branch);
+            $new_libs = BoostLibraries::from_json($text, $branch);
             break;
         default:
             echo "Error: $filename.\n"; exit(0);
