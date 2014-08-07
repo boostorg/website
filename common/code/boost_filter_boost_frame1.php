@@ -7,16 +7,16 @@
 
 class BoostFilterBoostFrame1 extends BoostFilters
 {
-    function echo_filtered($params) {
-        $this->html_init($params);
-        display_template($params,
+    function echo_filtered() {
+        $this->html_init();
+        display_template($this->params,
             boost_archive_render_callbacks(
-                $this->boost_frame1_filter_content($params), $params));
+                $this->boost_frame1_filter_content(), $this->params));
     }
 
-    function boost_frame1_filter_content($params)
+    function boost_frame1_filter_content()
     {
-        $text = $this->prepare_html($params['content'], true);
+        $text = $this->prepare_html($this->params['content'], true);
 
         $text = substr($text,strpos($text,'<div class="spirit-nav">'));
         $text = substr($text,0,strpos($text,'</body>'));

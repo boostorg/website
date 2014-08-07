@@ -7,20 +7,20 @@
 
 class BoostFilterBoostLibs extends BoostFilters
 {
-    function echo_filtered($params)
+    function echo_filtered()
     {
-        $this->html_init($params);
-        $text = $this->extract_html_body($params['content']);
+        $this->html_init();
+        $text = $this->extract_html_body($this->params['content']);
         if($text) {
             $text = $this->prepare_html($text, true);
             $text = $this->remove_html_banner($text);
             $text = $this->prepare_themed_html($text);
 
-            display_template($params,
-                boost_archive_render_callbacks($text, $params));
+            display_template($this->params,
+                boost_archive_render_callbacks($text, $this->params));
         }
         else {
-            print $params['content'];
+            print $this->params['content'];
         }
     }
 

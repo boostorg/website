@@ -11,10 +11,17 @@
 
 class BoostFilters
 {
-    function alter_title($params, $text)
+    var $params;
+
+    function __construct($params)
     {
-        if (!empty($params['version'])) {
-            $version = BoostVersion::from($params['version']);
+        $this->params = $params;
+    }
+
+    function alter_title($text)
+    {
+        if (!empty($this->params['version'])) {
+            $version = BoostVersion::from($this->params['version']);
             return str_ireplace('</title>', " - $version</title>", $text);
         }
         else {
@@ -22,18 +29,18 @@ class BoostFilters
         }
     }
 
-    function html_init(&$params)
+    function html_init()
     {
-        preg_match('@text/html; charset=([^\s"\']+)@i',$params['content'],$charset);
+        preg_match('@text/html; charset=([^\s"\']+)@i',$this->params['content'],$charset);
         if (isset($charset[1]))
         {
-            $params['charset'] = $charset[1];
+            $this->params['charset'] = $charset[1];
         }
 
-        preg_match('@<title>([^<]+)</title>@i',$params['content'],$title);
+        preg_match('@<title>([^<]+)</title>@i',$this->params['content'],$title);
         if (isset($title[1]))
         {
-            $params['title'] = $title[1];
+            $this->params['title'] = $title[1];
         }
     }
 

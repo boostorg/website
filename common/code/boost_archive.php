@@ -400,8 +400,8 @@ function unzip_command($params) {
 
 function echo_filtered($extractor, $params) {
     $name = "BoostFilter".underscore_to_camel_case($extractor);
-    $extractor = new $name;
-    $extractor->echo_filtered($params);
+    $extractor = new $name($params);
+    $extractor->echo_filtered();
 }
 
 function underscore_to_camel_case($name) {

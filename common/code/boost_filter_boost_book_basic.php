@@ -7,9 +7,9 @@
 
 class BoostFilterBoostBookBasic extends BoostFilters
 {
-    function echo_filtered($params)
+    function echo_filtered()
     {
-        $text = $params['content'];
+        $text = $this->params['content'];
 
         $match = null;
 
@@ -17,12 +17,12 @@ class BoostFilterBoostBookBasic extends BoostFilters
         $pos2 = strpos($text, '<body', $pos1);
         $pos3 = strpos($text, '>', $pos2) + 1;
         $pos4 = strpos($text, '<div class="spirit-nav">', $pos3);
-        echo $this->alter_title($params, substr($text, 0, $pos1));
+        echo $this->alter_title(substr($text, 0, $pos1));
         echo '<link rel="icon" href="/favicon.ico" type="image/ico"/>';
         echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"/>';
         echo substr($text, $pos1, $pos3 - $pos1);
         virtual("/common/heading-doc.html");
-        echo latest_link($params);
+        echo latest_link($this->params);
 
         $text = preg_replace('@(<div[^>]* )title="[^"]*"([^>]*>)@', '$1$2', substr($text, $pos4));
         echo $this->prepare_html($text);
