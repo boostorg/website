@@ -1,7 +1,6 @@
 <?php
 
 require_once(__DIR__.'/../common/code/boost.php');
-require_once(__DIR__ . '/boost_super_project.php');
 
 function main() {
     $args = $_SERVER['argv'];
