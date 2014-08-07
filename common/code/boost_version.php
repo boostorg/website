@@ -210,11 +210,10 @@ class BoostVersion {
             default: assert(false);
         }
     }
-}
 
-function boost_set_current_version($major, $minor, $point) {
-    if (BoostVersion::$current != null)
-        die("Setting current version twice.");
-    BoostVersion::$current =
-            BoostVersion::release($major, $minor, $point);
+    static function set_current($major, $minor, $point) {
+        if (self::$current != null)
+            die("Setting current version twice.");
+        self::$current = self::release($major, $minor, $point);
+    }
 }

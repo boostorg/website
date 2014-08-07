@@ -5,9 +5,21 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 require_once(dirname(__FILE__) . '/boost_config.php');
-require_once(dirname(__FILE__) . '/boost_version.php');
-boost_set_current_version(1,56,0);
 
 function html_encode($text) {
     return htmlentities($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
 }
+
+spl_autoload_register(function($name) {
+    if (!preg_match('@^[A-Za-z0-9\\\\_]*$@', $name)) {
+        throw new \RuntimeException("Invalid autoload name: {$name}");
+    }
+
+    $file_path = __DIR__.'/'
+        .strtolower(preg_replace('@([a-z])([A-Z])@', '$1_$2', $name))
+        .'.php';
+
+    if (is_file($file_path)) { require_once($file_path); }
+});
+
+BoostVersion::set_current(1, 56, 0);
