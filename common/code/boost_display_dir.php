@@ -25,6 +25,6 @@ class BoostDisplayDir extends BoostFilters
 
         $this->params['content'] = $content;
 
-        display_template($this->params, $this->template_params($content));
+        $this->display_template($this->template_params($content));
     }
 }

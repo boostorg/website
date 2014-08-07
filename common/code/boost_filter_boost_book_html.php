@@ -9,8 +9,7 @@ class BoostFilterBoostBookHtml extends BoostFilters
 {
     function echo_filtered() {
         $this->html_init();
-        display_template($this->params,
-            $this->template_params(
+        $this->display_template($this->template_params(
                 $this->boost_book_html_filter_content()));
     }
 

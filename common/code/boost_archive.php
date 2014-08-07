@@ -79,7 +79,6 @@ class BoostArchive
                 'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
                 'use_http_expire_date' => false,
                 'override_extractor' => null,
-                'template' => dirname(__FILE__)."/template.php",
                 'title' => NULL,
                 'charset' => NULL,
                 'content' => NULL,
@@ -381,7 +380,7 @@ HTML;
     $content .= html_encode($message);
     $content .= '</p>';
 
-    display_template($params, Array('head' => $head, 'content' => $content));
+    (new BoostFilters($params))->display_template(Array('head' => $head, 'content' => $content));
 }
 
 /*
@@ -401,12 +400,6 @@ function detect_redirect($content)
     }
 
     return false;
-}
-
-// Display the content in the standard boost template
-
-function display_template($params, $_file) {
-    include($params['template']);
 }
 
 function latest_link($params)

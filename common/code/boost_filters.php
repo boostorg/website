@@ -11,6 +11,8 @@
 
 class BoostFilters
 {
+    static $template = null;
+
     var $params;
     var $charset = null;
     var $title = null;
@@ -157,5 +159,9 @@ class BoostFilters
             'head' => $head,
             'content' => $content
         );
+    }
+
+    function display_template($_file) {
+        include(self::$template ?: __DIR__.'/template.php');
     }
 }

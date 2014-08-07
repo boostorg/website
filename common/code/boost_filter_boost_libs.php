@@ -16,7 +16,7 @@ class BoostFilterBoostLibs extends BoostFilters
             $text = $this->remove_html_banner($text);
             $text = $this->prepare_themed_html($text);
 
-            display_template($this->params, $this->template_params($text));
+            $this->display_template($this->template_params($text));
         }
         else {
             print $this->params['content'];

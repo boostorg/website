@@ -10,7 +10,7 @@ class BoostFilterCpp extends BoostFilterText
     function echo_filtered() {
         $this->title = html_encode($this->params['key']);
 
-        display_template($this->params,
+        $this->display_template(
             $this->template_params($this->cpp_filter_content()));
     }
 

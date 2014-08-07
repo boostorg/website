@@ -11,7 +11,7 @@ class BoostFilterQbk extends BoostFilterText
         $this->title = html_encode($this->params['key']);
         $this->params['noindex'] = true;
 
-        display_template($this->params,
+        $this->display_template(
             $this->template_params($this->qbk_filter_content()));
     }
 

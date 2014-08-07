@@ -9,7 +9,8 @@
 <?php
 
 require_once(dirname(__FILE__) . '/../boost_archive.php');
-$template = dirname(__FILE__) . '/template.php';
+
+BoostFilters::$template = __DIR__.'/template.php';
 
 $failure_count = 0;
 
@@ -54,7 +55,6 @@ Hello World!</pre>
 EOL;
 
 $params = Array(
-    'template' => $template,
     'key' => 'Hello_world_test.txt',
     'content' => $test_text
 );
@@ -87,7 +87,6 @@ int main() {}</pre>
 EOL;
 
 $params = Array(
-    'template' => $template,
     'key' => 'foo/test.cpp',
     'content' => $test_cpp
 );
@@ -114,7 +113,6 @@ $test_doc = <<<EOL
 EOL;
 
 $params = Array(
-    'template' => $template,
     'content' => $test_doc
 );
 
