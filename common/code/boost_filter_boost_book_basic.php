@@ -7,23 +7,26 @@
 
 require_once(dirname(__FILE__).'/boost_filters.php');
 
-function boost_book_basic_filter($params)
+class BoostFilterBoostBookBasic
 {
-    $text = $params['content'];
-    
-    $match = null;
+    function echo_filtered($params)
+    {
+        $text = $params['content'];
 
-    $pos1 = strpos($text, '</head>');
-    $pos2 = strpos($text, '<body', $pos1);
-    $pos3 = strpos($text, '>', $pos2) + 1;
-    $pos4 = strpos($text, '<div class="spirit-nav">', $pos3);
-    echo alter_title($params, substr($text, 0, $pos1));
-    echo '<link rel="icon" href="/favicon.ico" type="image/ico"/>';
-    echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"/>';
-    echo substr($text, $pos1, $pos3 - $pos1);
-    virtual("/common/heading-doc.html");
-    echo latest_link($params);
-    
-    $text = preg_replace('@(<div[^>]* )title="[^"]*"([^>]*>)@', '$1$2', substr($text, $pos4));
-    echo prepare_html($text);
+        $match = null;
+
+        $pos1 = strpos($text, '</head>');
+        $pos2 = strpos($text, '<body', $pos1);
+        $pos3 = strpos($text, '>', $pos2) + 1;
+        $pos4 = strpos($text, '<div class="spirit-nav">', $pos3);
+        echo alter_title($params, substr($text, 0, $pos1));
+        echo '<link rel="icon" href="/favicon.ico" type="image/ico"/>';
+        echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"/>';
+        echo substr($text, $pos1, $pos3 - $pos1);
+        virtual("/common/heading-doc.html");
+        echo latest_link($params);
+
+        $text = preg_replace('@(<div[^>]* )title="[^"]*"([^>]*>)@', '$1$2', substr($text, $pos4));
+        echo prepare_html($text);
+    }
 }

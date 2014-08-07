@@ -7,7 +7,10 @@
 
 require_once(dirname(__FILE__).'/boost_filters.php');
 
-function simple_filter($params)
+class BoostFilterSimple
 {
-    print prepare_html($params['content']);
+    function echo_filtered($params)
+    {
+        print prepare_html($params['content']);
+    }
 }

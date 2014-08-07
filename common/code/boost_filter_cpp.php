@@ -5,20 +5,21 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-require_once(dirname(__FILE__).'/boost_filter_text.php');
+class BoostFilterCpp {
+    function echo_filtered($params) {
+        $params['title'] = html_encode($params['key']);
 
-function cpp_filter($params) {
-    $params['title'] = html_encode($params['key']);
+        display_template($params,
+            boost_archive_render_callbacks(
+                $this->cpp_filter_content($params), $params));
+    }
 
-    display_template($params,
-        boost_archive_render_callbacks(cpp_filter_content($params), $params));
-}
-
-function cpp_filter_content($params)
-{
-    return
-        "<h3>".html_encode($params['key'])."</h3>\n".
-        "<pre>\n".
-        encoded_text($params, 'cpp').
-        "</pre>\n";
+    function cpp_filter_content($params)
+    {
+        return
+            "<h3>".html_encode($params['key'])."</h3>\n".
+            "<pre>\n".
+            (new BoostFilterText())->encoded_text($params, 'cpp').
+            "</pre>\n";
+    }
 }

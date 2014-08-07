@@ -399,9 +399,13 @@ function unzip_command($params) {
 //
 
 function echo_filtered($extractor, $params) {
-    require_once(dirname(__FILE__)."/boost_filter_$extractor.php");
-    $extractor_name = $extractor.'_filter';
-    call_user_func($extractor_name, $params);
+    $name = "BoostFilter".underscore_to_camel_case($extractor);
+    $extractor = new $name;
+    $extractor->echo_filtered($params);
+}
+
+function underscore_to_camel_case($name) {
+    return str_replace(' ','', ucwords(str_replace('_', ' ', $name)));
 }
 
 /* File Not Found */

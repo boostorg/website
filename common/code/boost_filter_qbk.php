@@ -5,21 +5,23 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-require_once(dirname(__FILE__).'/boost_filter_text.php');
-
-function qbk_filter($params) {
-    $params['title'] = html_encode($params['key']);
-    $params['noindex'] = true;
-
-    display_template($params,
-        boost_archive_render_callbacks(qbk_filter_content($params), $params));
-}
-
-function qbk_filter_content($params)
+class BoostFilterQbk
 {
-    return
-        "<h3>".html_encode($params['key'])."</h3>\n".
-        "<pre>\n".
-        encoded_text($params, 'qbk').
-        "</pre>\n";
+    function echo_filtered($params) {
+        $params['title'] = html_encode($params['key']);
+        $params['noindex'] = true;
+
+        display_template($params,
+            boost_archive_render_callbacks(
+                $this->qbk_filter_content($params), $params));
+    }
+
+    function qbk_filter_content($params)
+    {
+        return
+            "<h3>".html_encode($params['key'])."</h3>\n".
+            "<pre>\n".
+            (new BoostFilterText())->encoded_text($params, 'cpp').
+            "</pre>\n";
+    }
 }
