@@ -6,7 +6,6 @@
 */
 
 require_once(dirname(__FILE__) . '/boost.php');
-require_once(dirname(__FILE__) . '/boost_utility.php');
 
 class boost_feed
 {
@@ -100,7 +99,7 @@ class boost_feed
     
     function sort_by($field)
     {
-        uasort($this->db, sort_by_field($field));
+        uasort($this->db, BoostUtility::sort_by_field($field));
     }
 }
 ?>

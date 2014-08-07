@@ -5,8 +5,6 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-require_once(dirname(__FILE__) . '/boost.php');
-require_once(dirname(__FILE__) . '/boost_utility.php');
 require_once(dirname(__FILE__) . '/url.php');
 
 /**
@@ -594,7 +592,7 @@ class BoostLibraries
 
         $libs = array_values($libs);
         if($sort) {
-            uasort($libs, sort_by_field($sort));
+            uasort($libs, BoostUtility::sort_by_field($sort));
         }
         return $libs;
     }
