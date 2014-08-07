@@ -141,7 +141,7 @@ class BoostArchive
                     if (!http_headers('text/html', filemtime($check_file), $expires))
                         return;
 
-                    return display_dir($this->params, $check_file);
+                    return (new BoostDisplayDir($this->params))->display($check_file);
                 }
             }
             else if (!is_readable($check_file)) {
@@ -321,32 +321,6 @@ function boost_archive_render_callbacks($content, $params) {
         'head' => $head,
         'content' => $content
     );
-}
-
-function display_dir($params, $dir)
-{
-    $handle = opendir($dir);
-    
-    $title = html_encode("Index listing for $params[key]");
-
-    $params['title'] = $title;
-    $params['noindex'] = true;
-    
-    $content = "<h3>$title</h3>\n<ul>\n";
-
-    while (($file = readdir($handle)) !== false)
-    {
-        if (substr($file, 0, 1) == '.') continue;
-        if (is_dir("$dir$file")) $file .= '/';
-        $file = html_encode($file);
-        $content .= "<li><a rel='nofollow' href='$file'>$file</a></li>\n";
-    }
-
-    $content .= "</ul>\n";
-    
-    $params['content'] = $content;
-
-    display_template($params, boost_archive_render_callbacks($content, $params));
 }
 
 function display_raw_file($params, $type)
