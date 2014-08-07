@@ -16,17 +16,12 @@ function get_archive_location($params)
 
     if ($path_parts[1] == 'boost-build') {
         $params['version'] = null;
+        $version_dir = $path_parts[1];
     } else {
-        $params['version'] = $path_parts[1];
+        $params['version'] = BoostVersion::from($path_parts[1]);
+        $version_dir = "boost_{$path_parts[1]}";
     }
     $params['key'] = $path_parts[2];
-
-    // TODO: Would be better to use the version object to get this, but
-    // we can't create it yet. I think it needs to also model 'boost-build',
-    // or maybe create another class which represents a collection of
-    // documentation.
-    $version_dir = (preg_match('@^[0-9]@', $params['version'])) ?
-            "boost_{$params['version']}" : $params['version'];
 
     $file = false;
 
@@ -100,8 +95,8 @@ function display_from_archive(
             $expires = "+1 week";
         }
         else {
-            $compare_version = BoostVersion::from($params['version'])->
-                compare(BoostVersion::current());
+            $compare_version = $params['version']
+                ->compare(BoostVersion::current());
             $expires = $compare_version === -1 ? "+1 year" :
                 ($compare_version === 0 ? "+1 week" : "+1 day");
         }

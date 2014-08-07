@@ -11,7 +11,7 @@
 
 function alter_title($params, $text)
 {
-    if (isset($params['version'])) {
+    if (!empty($params['version'])) {
         $version = BoostVersion::from($params['version']);
         return str_ireplace('</title>', " - $version</title>", $text);
     }
