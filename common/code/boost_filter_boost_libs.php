@@ -5,17 +5,15 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-require_once(dirname(__FILE__).'/boost_filters.php');
-
-class BoostFilterBoostLibs
+class BoostFilterBoostLibs extends BoostFilters
 {
     function echo_filtered($params)
     {
-        html_init($params);
-        $text = extract_html_body($params['content']);
+        $this->html_init($params);
+        $text = $this->extract_html_body($params['content']);
         if($text) {
-            $text = prepare_html($text, true);
-            $text = remove_html_banner($text);
+            $text = $this->prepare_html($text, true);
+            $text = $this->remove_html_banner($text);
             $text = $this->prepare_themed_html($text);
 
             display_template($params,

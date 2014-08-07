@@ -5,11 +5,10 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-require_once(dirname(__FILE__).'/boost_filters.php');
-
-class BoostFilterBoostFrame1 {
+class BoostFilterBoostFrame1 extends BoostFilters
+{
     function echo_filtered($params) {
-        html_init($params);
+        $this->html_init($params);
         display_template($params,
             boost_archive_render_callbacks(
                 $this->boost_frame1_filter_content($params), $params));
@@ -17,7 +16,7 @@ class BoostFilterBoostFrame1 {
 
     function boost_frame1_filter_content($params)
     {
-        $text = prepare_html($params['content'], true);
+        $text = $this->prepare_html($params['content'], true);
 
         $text = substr($text,strpos($text,'<div class="spirit-nav">'));
         $text = substr($text,0,strpos($text,'</body>'));

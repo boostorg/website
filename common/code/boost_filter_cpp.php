@@ -5,7 +5,8 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-class BoostFilterCpp {
+class BoostFilterCpp extends BoostFilters
+{
     function echo_filtered($params) {
         $params['title'] = html_encode($params['key']);
 

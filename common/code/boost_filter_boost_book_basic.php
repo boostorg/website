@@ -5,9 +5,7 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-require_once(dirname(__FILE__).'/boost_filters.php');
-
-class BoostFilterBoostBookBasic
+class BoostFilterBoostBookBasic extends BoostFilters
 {
     function echo_filtered($params)
     {
@@ -19,7 +17,7 @@ class BoostFilterBoostBookBasic
         $pos2 = strpos($text, '<body', $pos1);
         $pos3 = strpos($text, '>', $pos2) + 1;
         $pos4 = strpos($text, '<div class="spirit-nav">', $pos3);
-        echo alter_title($params, substr($text, 0, $pos1));
+        echo $this->alter_title($params, substr($text, 0, $pos1));
         echo '<link rel="icon" href="/favicon.ico" type="image/ico"/>';
         echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"/>';
         echo substr($text, $pos1, $pos3 - $pos1);
@@ -27,6 +25,6 @@ class BoostFilterBoostBookBasic
         echo latest_link($params);
 
         $text = preg_replace('@(<div[^>]* )title="[^"]*"([^>]*>)@', '$1$2', substr($text, $pos4));
-        echo prepare_html($text);
+        echo $this->prepare_html($text);
     }
 }

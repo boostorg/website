@@ -5,7 +5,7 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-class BoostFilterText
+class BoostFilterText extends BoostFilters
 {
     function echo_filtered($params)
     {
