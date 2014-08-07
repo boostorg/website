@@ -8,7 +8,7 @@
 class BoostFilterQbk extends BoostFilterText
 {
     function echo_filtered() {
-        $this->params['title'] = html_encode($this->params['key']);
+        $this->title = html_encode($this->params['key']);
         $this->params['noindex'] = true;
 
         display_template($this->params,

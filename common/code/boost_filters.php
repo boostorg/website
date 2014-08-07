@@ -12,6 +12,8 @@
 class BoostFilters
 {
     var $params;
+    var $charset = null;
+    var $title = null;
 
     function __construct($params)
     {
@@ -34,13 +36,13 @@ class BoostFilters
         preg_match('@text/html; charset=([^\s"\']+)@i',$this->params['content'],$charset);
         if (isset($charset[1]))
         {
-            $this->params['charset'] = $charset[1];
+            $this->charset = $charset[1];
         }
 
         preg_match('@<title>([^<]+)</title>@i',$this->params['content'],$title);
         if (isset($title[1]))
         {
-            $this->params['title'] = $title[1];
+            $this->title = $title[1];
         }
     }
 
@@ -137,11 +139,11 @@ class BoostFilters
     // General purpose render callbacks.
 
     function template_params($content) {
-        $charset = !empty($this->params['charset']) ? $this->params['charset'] : 'us-ascii';
-        $title = !empty($this->params['title']) ? $this->params['title'] : 'Boost C++ Libraries';
+        $charset = $this->charset ?: 'us-ascii';
+        $title = $this->title ?: 'Boost C++ Libraries';
 
         if (!empty($this->params['version'])) {
-            $title = "{$this->params['title']} - " . BoostVersion::from($this->params['version']);
+            $title = "{$this->title} - " . BoostVersion::from($this->params['version']);
         }
 
         $head = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";

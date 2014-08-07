@@ -9,7 +9,7 @@ class BoostFilterText extends BoostFilters
 {
     function echo_filtered()
     {
-        $this->params['title'] = html_encode($this->params['key']);
+        $this->title = html_encode($this->params['key']);
 
         display_template($this->params,
             $this->template_params($this->text_filter_content()));

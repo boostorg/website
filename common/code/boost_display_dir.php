@@ -8,7 +8,7 @@ class BoostDisplayDir extends BoostFilters
 
         $title = html_encode("Index listing for {$this->params['key']}");
 
-        $this->params['title'] = $title;
+        $this->title = $title;
         $this->params['noindex'] = true;
 
         $content = "<h3>$title</h3>\n<ul>\n";

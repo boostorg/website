@@ -43,7 +43,7 @@ $test_text_expected = <<<EOL
 
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
 <title>Hello_world_test.txt</title></head>
 <body>
 <h3>Hello_world_test.txt</h3>
@@ -56,7 +56,6 @@ EOL;
 $params = Array(
     'template' => $template,
     'key' => 'Hello_world_test.txt',
-    'charset' => 'US-ASCII',
     'content' => $test_text
 );
 
@@ -75,7 +74,7 @@ $test_cpp_expected = <<<EOL
 
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
 <title>foo/test.cpp</title></head>
 <body>
 <h3>foo/test.cpp</h3>
@@ -90,7 +89,6 @@ EOL;
 $params = Array(
     'template' => $template,
     'key' => 'foo/test.cpp',
-    'charset' => 'US-ASCII',
     'content' => $test_cpp
 );
 
