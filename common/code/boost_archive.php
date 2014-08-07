@@ -9,228 +9,233 @@ require_once(dirname(__FILE__) . '/url.php');
 
 define('BOOST_DOCS_MODIFIED_DATE', 'Sun 30 Sep 2012 10:18:33 +0000');
 
-function get_archive_location($params)
+class BoostArchive
 {
-    $path_parts = array();
-    preg_match($params['pattern'], $params['vpath'], $path_parts);
+    var $params;
 
-    if ($path_parts[1] == 'boost-build') {
-        $params['version'] = null;
-        $version_dir = $path_parts[1];
-    } else {
-        $params['version'] = BoostVersion::from($path_parts[1]);
-        $version_dir = "boost_{$path_parts[1]}";
+    function __construct($params = Array()) {
+        $this->params = $params;
     }
-    $params['key'] = $path_parts[2];
 
-    $file = false;
+    function get_archive_location()
+    {
+        $path_parts = array();
+        preg_match($this->params['pattern'], $this->params['vpath'], $path_parts);
 
-    if ($params['fix_dir']) {
-        $fix_path = "{$params['fix_dir']}{$params['vpath']}";
-
-        if (is_file($fix_path) ||
-            (is_dir($fix_path) && is_file("{$fix_path}/index.html")))
-        {
-            $params['zipfile'] = false;
-            $file = "{$params['fix_dir']}{$params['vpath']}";
+        if ($path_parts[1] == 'boost-build') {
+            $this->params['version'] = null;
+            $version_dir = $path_parts[1];
+        } else {
+            $this->params['version'] = $path_parts[1];
+            $version_dir = "boost_{$path_parts[1]}";
         }
+        $this->params['key'] = $path_parts[2];
+
+        $file = false;
+
+        if ($this->params['fix_dir']) {
+            $fix_path = "{$this->params['fix_dir']}{$this->params['vpath']}";
+
+            if (is_file($fix_path) ||
+                (is_dir($fix_path) && is_file("{$fix_path}/index.html")))
+            {
+                $this->params['zipfile'] = false;
+                $file = "{$this->params['fix_dir']}{$this->params['vpath']}";
+            }
+        }
+
+        if (!$file) {
+            $file = ($this->params['zipfile'] ? '' : $this->params['archive_dir'] . '/');
+
+            if ($this->params['archive_subdir'])
+            {
+                $file = $file . $this->params['archive_file_prefix'] . $version_dir . '/' . $this->params['key'];
+            }
+            else
+            {
+                $file = $file . $this->params['archive_file_prefix'] . $this->params['key'];
+            }
+        }
+
+        $this->params['file'] = $file;
+
+        $this->params['archive'] = $this->params['zipfile'] ?
+                str_replace('\\','/', $this->params['archive_dir'] . '/' . $version_dir . '.zip') :
+                Null;
     }
 
-    if (!$file) {
-        $file = ($params['zipfile'] ? '' : $params['archive_dir'] . '/');
+    function display_from_archive($content_map = array())
+    {
+        // Set default values
 
-        if ($params['archive_subdir'])
+        $this->params = array_merge(
+            array(
+                'pattern' => '@^[/]([^/]+)[/](.*)$@',
+                'vpath' => $_SERVER["PATH_INFO"],
+                'archive_subdir' => true,
+                'zipfile' => true,
+                'fix_dir' => false,
+                'archive_dir' => ARCHIVE_DIR,
+                'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
+                'use_http_expire_date' => false,
+                'override_extractor' => null,
+                'template' => dirname(__FILE__)."/template.php",
+                'title' => NULL,
+                'charset' => NULL,
+                'content' => NULL,
+                'error' => false,
+            ),
+            $this->params
+        );
+
+        $this->get_archive_location();
+
+        // Calculate expiry date if requested.
+
+        $expires = null;
+        if ($this->params['use_http_expire_date'])
         {
-            $file = $file . $params['archive_file_prefix'] . $version_dir . '/' . $params['key'];
+            if (!$this->params['version']) {
+                $expires = "+1 week";
+            }
+            else {
+                $compare_version = BoostVersion::from($this->params['version'])->
+                    compare(BoostVersion::current());
+                $expires = $compare_version === -1 ? "+1 year" :
+                    ($compare_version === 0 ? "+1 week" : "+1 day");
+            }
+        }
+
+        // Check file exists.
+
+        if ($this->params['zipfile'])
+        {
+            $check_file = $this->params['archive'];
+
+            if (!is_readable($check_file)) {
+                file_not_found($this->params, 'Unable to find zipfile.');
+                return;
+            }
         }
         else
         {
-            $file = $file . $params['archive_file_prefix'] . $params['key'];
+            $check_file = $this->params['file'];
+
+            if (is_dir($check_file))
+            {
+                if(substr($check_file, -1) != '/') {
+                    $redirect = resolve_url(basename($check_file).'/');
+                    header("Location: $redirect", TRUE, 301);
+                    return;
+                }
+
+                $found_file = NULL;
+                if (is_readable("$check_file/index.html")) $found_file = 'index.html';
+                else if (is_readable("$check_file/index.htm")) $found_file = 'index.htm';
+
+                if ($found_file) {
+                    $this->params['file'] = $check_file = $check_file.$found_file;
+                    $this->params['key'] = $this->params['key'].$found_file;
+                }
+                else {
+                    if (!http_headers('text/html', filemtime($check_file), $expires))
+                        return;
+
+                    return display_dir($this->params, $check_file);
+                }
+            }
+            else if (!is_readable($check_file)) {
+                file_not_found($this->params, 'Unable to find file.');
+                return;
+            }
         }
-    }
 
-    $params['file'] = $file;
+        // Choose filter to use
 
-    $params['archive'] = $params['zipfile'] ?
-            str_replace('\\','/', $params['archive_dir'] . '/' . $version_dir . '.zip') :
-            Null;
-    
-    return $params;
-}
+        $info_map = array_merge($content_map, array(
+            array('@[.](txt|py|rst|jam|v2|bat|sh|xml|toyxml)$@i','text','text/plain'),
+            array('@[.](qbk|quickbook)$@i','qbk','text/plain'),
+            array('@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
+            array('@[.]png$@i','raw','image/png'),
+            array('@[.]gif$@i','raw','image/gif'),
+            array('@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
+            array('@[.]css$@i','raw','text/css'),
+            array('@[.]js$@i','raw','application/x-javascript'),
+            array('@[.]pdf$@i','raw','application/pdf'),
+            array('@[.](html|htm)$@i','raw','text/html'),
+            array('@(/|^)(Jamroot|Jamfile|ChangeLog|configure)$@i','text','text/plain'),
+            array('@[.]dtd$@i','raw','application/xml-dtd'),
+            ));
 
-function display_from_archive(
-    $content_map = array(),
-    $params = array())
-{
-    // Set default values
+        $preprocess = null;
+        $extractor = null;
+        $type = null;
 
-    $params = array_merge(
-        array(
-            'pattern' => '@^[/]([^/]+)[/](.*)$@',
-            'vpath' => $_SERVER["PATH_INFO"],
-            'archive_subdir' => true,
-            'zipfile' => true,
-            'fix_dir' => false,
-            'archive_dir' => ARCHIVE_DIR,
-            'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
-            'use_http_expire_date' => false,
-            'override_extractor' => null,
-            'template' => dirname(__FILE__)."/template.php",
-            'title' => NULL,
-            'charset' => NULL,
-            'content' => NULL,
-            'error' => false,
-        ),
-        $params
-    );
+        foreach ($info_map as $i)
+        {
+            if (preg_match($i[0],$this->params['key']))
+            {
+                $extractor = $i[1];
+                $type = $i[2];
+                $preprocess = isset($i[3]) ? $i[3] : NULL;
+                break;
+            }
+        }
 
-    $params = get_archive_location($params);
+        if ($this->params['override_extractor'])
+            $extractor = $this->params['override_extractor'];
 
-    // Calculate expiry date if requested.
+        if (!$extractor) {
+            file_not_found($this->params);
+            return;
+        }
 
-    $expires = null;
-    if ($params['use_http_expire_date'])
-    {
-        if (!$params['version']) {
-            $expires = "+1 week";
+        // Handle ETags and Last-Modified HTTP headers.
+
+        // Output raw files.
+
+        if($extractor == 'raw') {
+            if (!http_headers($type, filemtime($check_file), $expires))
+                return;
+
+            if($_SERVER['REQUEST_METHOD'] != 'HEAD')
+                display_raw_file($this->params, $type);
         }
         else {
-            $compare_version = $params['version']
-                ->compare(BoostVersion::current());
-            $expires = $compare_version === -1 ? "+1 year" :
-                ($compare_version === 0 ? "+1 week" : "+1 day");
-        }
-    }
+            // Read file from hard drive or zipfile
 
-    // Check file exists.
-
-    if ($params['zipfile'])
-    {
-        $check_file = $params['archive'];
-
-        if (!is_readable($check_file)) {
-            file_not_found($params, 'Unable to find zipfile.');
-            return;        
-        }
-    }
-    else
-    {
-        $check_file = $params['file'];
-        
-        if (is_dir($check_file))
-        {
-            if(substr($check_file, -1) != '/') {
-                $redirect = resolve_url(basename($check_file).'/');
-                header("Location: $redirect", TRUE, 301);
+            // Note: this sets $this->params['content'] with either the content or an error
+            // message:
+            if(!extract_file($this->params, $this->params['content'])) {
+                file_not_found($this->params, $this->params['content']);
                 return;
             }
 
-            $found_file = NULL;
-            if (is_readable("$check_file/index.html")) $found_file = 'index.html';
-            else if (is_readable("$check_file/index.htm")) $found_file = 'index.htm';
+            // Check if the file contains a redirect.
 
-            if ($found_file) {
-                $params['file'] = $check_file = $check_file.$found_file;
-                $params['key'] = $params['key'].$found_file;
-            }
-            else {
-                if (!http_headers('text/html', filemtime($check_file), $expires))
+            if($type == 'text/html') {
+                if($redirect = detect_redirect($this->params['content'])) {
+                    http_headers('text/html', null, "+1 day");
+                    header("Location: $redirect", TRUE, 301);
+                    if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $this->params['content'];
                     return;
-
-                return display_dir($params, $check_file);
+                }
             }
-        }
-        else if (!is_readable($check_file)) {
-            file_not_found($params, 'Unable to find file.');
-            return;        
-        }
-    }
 
-    // Choose filter to use
-
-    $info_map = array_merge($content_map, array(
-        array('@[.](txt|py|rst|jam|v2|bat|sh|xml|toyxml)$@i','text','text/plain'),
-        array('@[.](qbk|quickbook)$@i','qbk','text/plain'),
-        array('@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
-        array('@[.]png$@i','raw','image/png'),
-        array('@[.]gif$@i','raw','image/gif'),
-        array('@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
-        array('@[.]css$@i','raw','text/css'),
-        array('@[.]js$@i','raw','application/x-javascript'),
-        array('@[.]pdf$@i','raw','application/pdf'),
-        array('@[.](html|htm)$@i','raw','text/html'),
-        array('@(/|^)(Jamroot|Jamfile|ChangeLog|configure)$@i','text','text/plain'),
-        array('@[.]dtd$@i','raw','application/xml-dtd'),
-        ));
-
-    $preprocess = null;
-    $extractor = null;
-    $type = null;
-
-    foreach ($info_map as $i)
-    {
-        if (preg_match($i[0],$params['key']))
-        {
-            $extractor = $i[1];
-            $type = $i[2];
-            $preprocess = isset($i[3]) ? $i[3] : NULL;
-            break;
-        }
-    }
-    
-    if ($params['override_extractor'])
-        $extractor = $params['override_extractor'];
-
-    if (!$extractor) {
-        file_not_found($params);
-        return;
-    }
-
-    // Handle ETags and Last-Modified HTTP headers.
-
-    // Output raw files.
-
-    if($extractor == 'raw') {
-        if (!http_headers($type, filemtime($check_file), $expires))
-            return;
-
-        if($_SERVER['REQUEST_METHOD'] != 'HEAD')
-            display_raw_file($params, $type);
-    }
-    else {
-        // Read file from hard drive or zipfile
-    
-        // Note: this sets $params['content'] with either the content or an error
-        // message:
-        if(!extract_file($params, $params['content'])) {
-            file_not_found($params, $params['content']);
-            return;
-        }
-    
-        // Check if the file contains a redirect.
-    
-        if($type == 'text/html') {
-            if($redirect = detect_redirect($params['content'])) {
-                http_headers('text/html', null, "+1 day");
-                header("Location: $redirect", TRUE, 301);
-                if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $params['content'];
+            if (!http_headers('text/html', filemtime($check_file), $expires))
                 return;
-            }
-        }
-    
-        if (!http_headers('text/html', filemtime($check_file), $expires))
-            return;
 
-        // Finally process the file and display it.
-    
-        if($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-            if ($preprocess) {
-                $params['content'] = call_user_func($preprocess, $params['content']);
+            // Finally process the file and display it.
+
+            if($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+                if ($preprocess) {
+                    $this->params['content'] = call_user_func($preprocess, $this->params['content']);
+                }
+
+                echo_filtered($extractor, $this->params);
             }
-    
-            echo_filtered($extractor, $params);
         }
-   }
+    }
 }
 
 // HTTP header handling
