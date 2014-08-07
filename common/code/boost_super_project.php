@@ -16,7 +16,8 @@ class BoostSuperProject {
         if ($this->git_branch) {
             if (self::git_version() >= array(1,8,4,0)) {
                 $blob = $this->run_git("ls-tree {$this->git_branch} \"{$path}\"");
-                $blob = preg_split("@[\t ]@", $blob[0])[2];
+                $blob = preg_split("@[\t ]@", $blob[0]);
+                $blob = $blob[2];
                 return $this->run_git("config -l --blob {$blob}");
             }
             else {

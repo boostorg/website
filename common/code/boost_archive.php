@@ -140,7 +140,8 @@ class BoostArchive
                     if (!http_headers('text/html', filemtime($check_file), $expires))
                         return;
 
-                    return (new BoostDisplayDir($this->params))->display($check_file);
+                    $display_dir = new BoostDisplayDir($this->params);
+                    return $display_dir->display($check_file);
                 }
             }
             else if (!is_readable($check_file)) {
@@ -380,7 +381,8 @@ HTML;
     $content .= html_encode($message);
     $content .= '</p>';
 
-    (new BoostFilters($params))->display_template(Array('head' => $head, 'content' => $content));
+    $filter = new BoostFilters($params);
+    $filter->display_template(Array('head' => $head, 'content' => $content));
 }
 
 /*

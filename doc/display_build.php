@@ -22,10 +22,12 @@ EOS;
         str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
-(new BoostArchive(array(
+$archive = new BoostArchive(array(
     'archive_subdir' => false,
     'zipfile' => false,
-)))->display_from_archive(
+));
+
+$archive->display_from_archive(
   array(
   //~ array(path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type[,preprocess hook]),
   array('@^boost-build/index[.]html$@i','simple','text/html', 'add_boost_build_analytics'),
