@@ -6,7 +6,7 @@
 */
 require_once(dirname(__FILE__) . '/boost_config.php');
 require_once(dirname(__FILE__) . '/boost_version.php');
-boost_set_current_version(1,55,0);
+boost_set_current_version(1,56,0);
 
 function html_encode($text) {
     return htmlentities($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
