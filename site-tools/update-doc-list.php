@@ -35,7 +35,7 @@ function main() {
 
         $location = $real_location;
 
-        if (get_bool_from_array(run_process(
+        if (get_bool_from_array(BoostSuperProject::run_process(
                 "cd '${location}' && git rev-parse --is-bare-repository")))
         {
             if ($version) {
@@ -108,7 +108,7 @@ function update_from_git($libs, $location, $version) {
         $module_location = "{$location}/{$module['url']}";
         $module_command = "cd '{$module_location}' && git";
 
-        foreach(run_process("{$module_command} ls-tree {$module['hash']} "
+        foreach(BoostSuperProject::run_process("{$module_command} ls-tree {$module['hash']} "
                 ."meta/libraries.xml meta/libraries.json") as $entry)
         {
             try {
@@ -116,7 +116,7 @@ function update_from_git($libs, $location, $version) {
                 if (preg_match("@^100644 blob ([a-zA-Z0-9]+)\t(.*)$@", $entry, $matches)) {
                     $hash = $matches[1];
                     $filename = $matches[2];
-                    $text = implode("\n", (run_process("{$module_command} show {$hash}")));
+                    $text = implode("\n", (BoostSuperProject::run_process("{$module_command} show {$hash}")));
                     $libs->update(load_from_text($text, $filename, $branch), $name, $module['path']);
                 }
             }

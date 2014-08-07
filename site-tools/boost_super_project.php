@@ -14,7 +14,7 @@ class BoostSuperProject {
 
     public function parse_config_file($path) {
         if ($this->git_branch) {
-            if (git_version() >= array(1,8,4,0)) {
+            if (self::git_version() >= array(1,8,4,0)) {
                 $blob = $this->run_git("ls-tree {$this->git_branch} \"{$path}\"");
                 $blob = preg_split("@[\t ]@", $blob[0])[2];
                 return $this->run_git("config -l --blob {$blob}");
@@ -52,32 +52,35 @@ class BoostSuperProject {
     }
 
     public function run_git($command) {
-        return run_process("git -C \"{$this->location}\" {$command}");
-    }
-}
-
-function git_version() {
-    $output = run_process("git --version");
-    $match = null;
-
-    if (count($output) == 1
-            && preg_match('@^git version ([0-9.]+)$@', $output[0], $match))
-    {
-        return array_pad(explode('.', $match[1]), 4, 0);
-    }
-    else {
-        return array(0,0,0,0);
-    }
-}
-
-function run_process($command) {
-    exec($command, $output, $return_var);
-
-    if ($return_var != 0) {
-        throw new ProcessError($return_var);
+        return self::run_process("git -C \"{$this->location}\" {$command}");
     }
 
-    return $output;
+    // A couple of utility functions that don't really fit, so might move
+    // later.
+
+    static function git_version() {
+        $output = self::run_process("git --version");
+        $match = null;
+
+        if (count($output) == 1
+                && preg_match('@^git version ([0-9.]+)$@', $output[0], $match))
+        {
+            return array_pad(explode('.', $match[1]), 4, 0);
+        }
+        else {
+            return array(0,0,0,0);
+        }
+    }
+
+    static function run_process($command) {
+        exec($command, $output, $return_var);
+
+        if ($return_var != 0) {
+            throw new ProcessError($return_var);
+        }
+
+        return $output;
+    }
 }
 
 class ProcessError extends RuntimeException {
