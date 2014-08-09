@@ -31,13 +31,13 @@ function get_archive_location($params)
     $file = false;
 
     if ($params['fix_dir']) {
-        $fix_path = "{$params['fix_dir']}{$params['vpath']}";
+        $fix_path = "{$params['fix_dir']}/{$version_dir}/{$params['key']}";
 
         if (is_file($fix_path) ||
             (is_dir($fix_path) && is_file("{$fix_path}/index.html")))
         {
             $params['zipfile'] = false;
-            $file = "{$params['fix_dir']}{$params['vpath']}";
+            $file = $fix_path;
         }
     }
 
