@@ -70,7 +70,7 @@ function build_url($url) {
         $result .= "?{$url['query']}";
     }
     if (isset($url['fragment'])) {
-        $result .= "?{$url['fragment']}";
+        $result .= "#{$url['fragment']}";
     }
 
     return $result;
