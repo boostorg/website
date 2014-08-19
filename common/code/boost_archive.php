@@ -34,13 +34,13 @@ class BoostArchive
         $file = false;
 
         if ($this->params['fix_dir']) {
-            $fix_path = "{$this->params['fix_dir']}{$this->params['vpath']}";
+            $fix_path = "{$this->params['fix_dir']}/{$version_dir}/{$this->params['key']}";
 
             if (is_file($fix_path) ||
                 (is_dir($fix_path) && is_file("{$fix_path}/index.html")))
             {
                 $this->params['zipfile'] = false;
-                $file = "{$this->params['fix_dir']}{$this->params['vpath']}";
+                $file = $fix_path;
             }
         }
 

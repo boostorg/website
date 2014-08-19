@@ -115,7 +115,7 @@ function main() {
         }
 
         file_put_contents($meta_file, $module_libraries->to_json(
-                array('boost-version', 'update-version', 'module')));
+                array('boost-version', 'update-version', 'module'))."\n");
     }
 }
 
