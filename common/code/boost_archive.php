@@ -27,11 +27,7 @@ class BoostArchive
             $version_dir = $path_parts[1];
         } else {
             $this->params['version'] = BoostVersion::from($path_parts[1]);
-
-            // Would like to use a BoostVersion method here (such as
-            // $this->params['version']->dir()), but unfortunately the beta
-            // directories aren't predictable enough.
-            $version_dir = $this->params['version']->is_numbered_release() ?
+            $version_dir = is_numeric($path_parts[1][0]) ?
                 "boost_{$path_parts[1]}" : $path_parts[1];
         }
         $this->params['key'] = $path_parts[2];
