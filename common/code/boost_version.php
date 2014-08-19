@@ -180,6 +180,9 @@ class BoostVersion {
 
     /**
      * The name of the root directory for this version.
+     *
+     * Doesn't work for beta versions, as they're not consistent enough.
+     * Some examples: boost_1_54_0_beta, boost_1_55_0b1, boost_1_56_0_b1.
      */
     function dir() {
         return $this->version['stage'] ? $this->stage_name() :
