@@ -26,7 +26,7 @@ class BoostArchive
             $this->params['version'] = null;
             $version_dir = $path_parts[1];
         } else {
-            $this->params['version'] = $path_parts[1];
+            $this->params['version'] = BoostVersion::from($path_parts[1]);
             $version_dir = "boost_{$path_parts[1]}";
         }
         $this->params['key'] = $path_parts[2];
