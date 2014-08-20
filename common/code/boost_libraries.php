@@ -227,17 +227,7 @@ class BoostLibraries
     public function squash_name_arrays() {
         foreach ($this->db as $key => &$libs) {
             foreach ($libs as $version => $lib) {
-                if (isset($lib->details['authors']))
-                {
-                    $lib->details['authors']
-                            = $this->names_to_string($lib->details['authors']);
-                }
-
-                if (isset($lib->details['maintainers']))
-                {
-                    $lib->details['maintainers']
-                            = $this->names_to_string($lib->details['maintainers']);
-                }
+                $lib->squash_name_arrays();
             }
         }
     }
@@ -261,6 +251,8 @@ class BoostLibraries
 
     /**
      * Update the libraries from xml details.
+     *
+     * TODO: module details should be set when creating the libraries.
      *
      * @param \BoostLibraries $update
      * @param \BoostVersion $update_version The version of Boost that the
@@ -287,7 +279,7 @@ class BoostLibraries
                 $lib->details['documentation'] = resolve_url($documentation_url, rtrim($module_path, '/').'/');
             }
 
-            $this->db[$key][(string) $lib->details['update-version']] = $details;
+            $this->db[$key][(string) $lib->details['update-version']] = $lib;
             $this->reduce_versions($key);
         }
 
@@ -320,41 +312,13 @@ class BoostLibraries
 
         foreach ($this->db[$key] as $version => $current) {
             if ($last) {
-                if (!isset($current->details['boost-version'])
-                        && isset($last->details['boost-version'])) {
-                    $current->details['boost-version'] = $last->details['boost-version'];
-                }
-
-                if ($this->equal_details($last, $current)) {
+                $current->fill_in_details_from_previous_version($last);
+                if ($current->equal_to($last)) {
                     unset($this->db[$key][$version]);
                 }
             }
-
             $last = $current;
         }
-    }
-
-    private function equal_details($lib1, $lib2) {
-        $details1 = $lib1->details;
-        $details2 = $lib2->details;
-
-        if (count(array_diff_key($details1, $details2))
-                || count(array_diff_key($details2, $details1))) {
-            return false;
-        }
-
-        foreach($details1 as $key => $value) {
-            if ($key == 'update-version') continue;
-
-            if (is_object($value)) {
-                if ($value->compare($details2[$key]) != 0) return false;
-            }
-            else {
-                if ($value != $details2[$key]) return false;
-            }
-        }
-
-        return true;
     }
 
     /**

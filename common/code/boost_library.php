@@ -94,4 +94,73 @@ class BoostLibrary
 
         $this->details = $lib;
     }
+
+    /** Kind of hacky way to fill in details that probably shouldn't be
+     *  stored here anyway. */
+    public function fill_in_details_from_previous_version($previous) {
+        if (!isset($this->details['boost-version'])
+                && isset($previous->details['boost-version'])) {
+            $this->details['boost-version'] = $previous->details['boost-version'];
+        }
+    }
+
+    public function equal_to($other) {
+        $details1 = $this->details;
+        $details2 = $other->details;
+
+        if (count(array_diff_key($details1, $details2))
+                || count(array_diff_key($details2, $details1))) {
+            return false;
+        }
+
+        foreach($details1 as $key => $value) {
+            if ($key == 'update-version') continue;
+
+            if (is_object($value)) {
+                if ($value->compare($details2[$key]) != 0) return false;
+            }
+            else {
+                if ($value != $details2[$key]) return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Convert authors and maintainers to strings.
+     * This is kind of rubbish, but I want authors and maintainers to be
+     * arrays in the repo metadata, but strings on the website. So call this
+     * when creating the website file.
+     */
+    public function squash_name_arrays() {
+        if (isset($this->details['authors']))
+        {
+            $this->details['authors']
+                    = $this->names_to_string($this->details['authors']);
+        }
+
+        if (isset($this->details['maintainers']))
+        {
+            $this->details['maintainers']
+                    = $this->names_to_string($this->details['maintainers']);
+        }
+    }
+
+    /**
+     * @param array|string $names
+     * @return string
+     */
+    private function names_to_string($names) {
+        if (is_array($names)) {
+            $last_name = array_pop($names);
+
+            return $names ?
+                    implode(', ', $names)." and {$last_name}" :
+                    $last_name;
+        }
+        else {
+            return $names;
+        }
+    }
 }
