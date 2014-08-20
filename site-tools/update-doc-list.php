@@ -156,12 +156,14 @@ function load_from_file($path, $branch) {
 }
 
 function load_from_text($text, $filename, $branch) {
+    $info = array();
+    if ($branch) { $info['version'] = $branch; }
     switch (pathinfo($filename, PATHINFO_EXTENSION)) {
         case 'xml':
-            $new_libs = BoostLibraries::from_xml($text, $branch);
+            $new_libs = BoostLibraries::from_xml($text, $info);
             break;
         case 'json':
-            $new_libs = BoostLibraries::from_json($text, $branch);
+            $new_libs = BoostLibraries::from_json($text, $info);
             break;
         default:
             echo "Error: $filename.\n"; exit(0);

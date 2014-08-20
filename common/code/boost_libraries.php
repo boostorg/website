@@ -36,7 +36,7 @@ class BoostLibraries
      * @param string $xml
      * @return \BoostLibraries
      */
-    static function from_xml($xml, $version = null)
+    static function from_xml($xml, $info = null)
     {
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
@@ -138,10 +138,10 @@ class BoostLibraries
             }
         }
 
-        return new self($libs, $categories, $version);
+        return new self($libs, $categories, $info);
     }
 
-    static function from_json($json, $version = null)
+    static function from_json($json, $info = null)
     {
         $categories = array();
         $libs = array();
@@ -170,7 +170,7 @@ class BoostLibraries
             $libs = $import;
         }
 
-        return new self($libs, $categories, $version);
+        return new self($libs, $categories, $info);
     }
 
     /**
@@ -183,9 +183,9 @@ class BoostLibraries
      * @param array $libraries
      * @return \BoostLibraries
      */
-    static function from_array($libs, $version = null)
+    static function from_array($libs, $info = null)
     {
-        return new self($libs, array(), $version);
+        return new self($libs, array(), $info);
     }
 
     /**
@@ -193,15 +193,12 @@ class BoostLibraries
      * @param array $libs Array of lib details, can contain multiple historical
      *      entries, using 'update-version' to indicate their historical order.
      * @param array $categories
-     * @param BoostVersion $version Optional version to use when update-version
-     *      is missing.
+     * @param array $info Optional info to use when creating libraries.
+     *                    See BoostLibrary for details.
      */
     private function __construct(array $flat_libs, array $categories,
-            $version = null)
+            $info = null)
     {
-        $info = array();
-        if ($version) { $info['version'] = BoostVersion::from($version); }
-
         $this->db = array();
         $this->categories = $categories;
 
@@ -297,7 +294,7 @@ class BoostLibraries
         }
         unset($lib_details);
 
-        $this->update(self::from_array($libs, $version));
+        $this->update(self::from_array($libs, array('version' => $version)));
     }
 
     private function sort_versions($key) {
