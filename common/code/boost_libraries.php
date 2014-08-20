@@ -203,23 +203,24 @@ class BoostLibraries
         $this->db = array();
         $this->categories = $categories;
 
-        foreach ($flat_libs as $lib) {
+        foreach ($flat_libs as $details) {
             $update_version =
-                isset($lib['update-version']) ? $lib['update-version'] : (
+                isset($details['update-version']) ? $details['update-version'] : (
                 isset($info['version']) ? $info['version'] : (
-                isset($lib['boost-version']) ? $lib['boost-version'] : null));
+                isset($details['boost-version']) ? $details['boost-version']
+                    : null));
             if (!$update_version) {
                 throw new BoostLibraries_exception(
-                        "No version info for {$lib['key']}");
+                        "No version info for {$details['key']}");
             }
             $update_version = BoostVersion::from($update_version);
-            if (isset($lib['update-version'])) {
-                unset($lib['update-version']);
+            if (isset($details['update-version'])) {
+                unset($details['update-version']);
             }
 
-            $lib = new BoostLibrary($lib, $info);
+            $lib = new BoostLibrary($details, $info);
             $lib->update_version = $update_version;
-            $this->db[$lib->details['key']][(string) $update_version] = $lib;
+            $this->db[$details['key']][(string) $update_version] = $lib;
         }
 
         ksort($this->db);
@@ -439,23 +440,23 @@ class BoostLibraries
         $export = array();
         foreach ($this->db as $libs) {
             foreach($libs as $lib) {
-                $lib = $lib->details;
+                $details = $lib->details;
 
-                if (empty($lib['std'])) {
-                    unset($lib['std']);
+                if (empty($details['std'])) {
+                    unset($details['std']);
                 }
-                unset($lib['std-tr1']);
-                unset($lib['std-proposal']);
+                unset($details['std-tr1']);
+                unset($details['std-proposal']);
 
-                $lib = self::clean_for_output($lib, $exclude);
+                $details = self::clean_for_output($details, $exclude);
 
                 foreach ($exclude as $field) {
-                    if (isset($lib[$field])) {
-                        unset($lib[$field]);
+                    if (isset($details[$field])) {
+                        unset($details[$field]);
                     }
                 }
 
-                $export[] = $lib;
+                $export[] = $details;
             }
         }
 
@@ -489,17 +490,17 @@ class BoostLibraries
         $libs = array();
 
         foreach($this->db as $key => $versions) {
-            $lib = null;
+            $details = null;
 
-            foreach($versions as $l) {
-                if ($version->compare($l->update_version) >= 0) {
-                    $lib = $l->details;
+            foreach($versions as $lib) {
+                if ($version->compare($lib->update_version) >= 0) {
+                    $details = $lib->details;
                 }
             }
 
-            if ($lib) {
-                if ($filter && !call_user_func($filter, $lib)) continue;
-                $libs[$key] = $lib;
+            if ($details) {
+                if ($filter && !call_user_func($filter, $details)) continue;
+                $libs[$key] = $details;
             }
         }
 
