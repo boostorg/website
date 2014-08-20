@@ -38,6 +38,7 @@ class BoostLibrary
 
     public function __construct($lib, $info) {
         assert(isset($lib['key']));
+        assert(isset($info['module']) == isset($info['path']));
 
         if (isset($lib['boost-version'])) {
             $lib['boost-version']
@@ -57,6 +58,15 @@ class BoostLibrary
         else {
             throw new BoostLibraries_exception(
                     "No version info for {$lib['key']}");
+        }
+
+        if (isset($info['module'])) {
+            assert(!isset($lib['module']));
+            $lib['module'] = $info['module'];
+            $documentation_url =
+                isset($lib['documentation']) ? $lib['documentation'] : '.';
+            $lib['documentation'] =
+                resolve_url($documentation_url, rtrim($info['path'], '/').'/');
         }
 
         // Preserve the current empty authors tags.

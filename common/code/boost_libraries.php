@@ -249,33 +249,16 @@ class BoostLibraries
     /**
      * Update the libraries from xml details.
      *
-     * TODO: module details should be set when creating the libraries.
-     *
      * @param \BoostLibraries $update
-     * @param \BoostVersion $update_version The version of Boost that the
-     *      xml describes.
-     * @param type $module The module the xml is taken from.
      * @throws BoostLibraries_exception
      */
-    public function update($update, $module = null, $module_path = null) {
-        assert(!$module || $module_path);
-
+    public function update($update) {
         foreach($update->db as $key => $libs) {
             if (count($libs) > 1) {
                 throw new BoostLibraries_exception("Duplicate key: {$key}\n");
             }
 
             $lib = reset($libs);
-
-            if ($module) {
-                assert(!isset($lib->details['module']));
-
-                $lib->details['module'] = $module;
-
-                $documentation_url = isset($lib->details['documentation']) ? $lib->details['documentation'] : '.';
-                $lib->details['documentation'] = resolve_url($documentation_url, rtrim($module_path, '/').'/');
-            }
-
             $this->db[$key][(string) $lib->details['update-version']] = $lib;
             $this->reduce_versions($key);
         }
