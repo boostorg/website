@@ -12,13 +12,13 @@ require_once(dirname(__FILE__) . '/url.php');
  * The basic details about a single library.
  *
  * $info keys when creating:
- *      version = boost version
  *      module  = module name
  *      path    = module path
  */
 class BoostLibrary
 {
     var $details = null;
+    var $update_version = null; // Used by BoostLibraries.
 
     /**
      * Read a libraries json file, and return an array of BoostLibrary.
@@ -37,27 +37,13 @@ class BoostLibrary
     }
 
     public function __construct($lib, $info) {
+        assert(!isset($lib['update-version']));
         assert(isset($lib['key']));
         assert(isset($info['module']) == isset($info['path']));
 
         if (isset($lib['boost-version'])) {
             $lib['boost-version']
                     = BoostVersion::from($lib['boost-version']);
-        }
-
-        if (isset($lib['update-version'])) {
-            $lib['update-version']
-                    = BoostVersion::from($lib['update-version']);
-        }
-        else if (isset($info['version'])) {
-            $lib['update-version'] = BoostVersion::from($info['version']);
-        }
-        else if (isset($lib['boost-version'])) {
-            $lib['update-version'] = $lib['boost-version'];
-        }
-        else {
-            throw new BoostLibraries_exception(
-                    "No version info for {$lib['key']}");
         }
 
         if (isset($info['module'])) {
@@ -124,8 +110,6 @@ class BoostLibrary
         }
 
         foreach($details1 as $key => $value) {
-            if ($key == 'update-version') continue;
-
             if (is_object($value)) {
                 if ($value->compare($details2[$key]) != 0) return false;
             }
