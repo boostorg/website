@@ -86,6 +86,11 @@ class LibraryPage {
     }
 
     function filter($lib) {
+        if (BoostVersion::page()->is_numbered_release()
+                && !$lib['boost-version']) {
+            return false;
+        }
+
         if ($this->filter_value && empty($lib[$this->filter_value])) {
             return false;
         }
