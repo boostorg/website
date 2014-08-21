@@ -29,6 +29,11 @@ class BoostUtility
 
     static function cmp_boost_version($a,$b)
     {
+        if (empty($a['boost-version'])) {
+            if (empty($b['boost-version'])) { return 0; }
+            return 1;
+        }
+        if (empty($b['boost-version'])) { return -1; }
         return BoostVersion::from($a['boost-version'])
             ->compare($b['boost-version']);
     }
