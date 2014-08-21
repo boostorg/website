@@ -41,7 +41,7 @@ class BoostLibrary
         assert(isset($lib['key']));
         assert(isset($info['module']) == isset($info['path']));
 
-        if (isset($lib['boost-version'])) {
+        if (!empty($lib['boost-version'])) {
             $lib['boost-version']
                     = BoostVersion::from($lib['boost-version']);
         }
@@ -86,7 +86,7 @@ class BoostLibrary
                 $value = trim(preg_replace('@\s+@', ' ', $value));
             }
         }
-        sort($lib['category']);
+        if (!empty($lib['category'])) { sort($lib['category']); }
 
         $this->details = $lib;
     }
