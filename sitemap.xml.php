@@ -3,7 +3,6 @@
     echo '<?xml version="1.0" encoding="UTF-8"?>', "\n";
     define('USE_SERIALIZED_INFO', true);
     require_once(dirname(__FILE__) . '/common/code/boost.php');
-    require_once(dirname(__FILE__) . '/common/code/boost_libraries.php');
 ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
@@ -41,7 +40,7 @@ echo_sitemap_url("doc/libs/", '1.0', 'daily');
 
 $libs = USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/generated/libraries.txt')) :
-	boost_libraries::from_xml_file(dirname(__FILE__) . '/doc/libraries.xml');
+	BoostLibraries::from_xml_file(dirname(__FILE__) . '/doc/libraries.xml');
 
 foreach ($libs->get_for_version(BoostVersion::current()) as $lib) {
     echo_sitemap_url("doc/libs/release/$lib[documentation]", '1.0', 'daily');

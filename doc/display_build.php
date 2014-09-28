@@ -1,5 +1,6 @@
 <?php
-require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
+
+require_once(dirname(__FILE__) . '/../common/code/boost.php');
 
 function add_boost_build_analytics($content) {
     $analytics = <<<EOS
@@ -21,14 +22,15 @@ EOS;
         str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
-display_from_archive(
+$archive = new BoostArchive(array(
+    'archive_subdir' => false,
+    'zipfile' => false,
+));
+
+$archive->display_from_archive(
   array(
   //~ array(path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type[,preprocess hook]),
   array('@^boost-build/index[.]html$@i','simple','text/html', 'add_boost_build_analytics'),
   array('@[.](html|htm)$@i','boost_book_html','text/html')
-  ),
-  array(
-    'archive_subdir' => false,
-    'zipfile' => false,
   )
 );

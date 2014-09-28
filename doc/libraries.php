@@ -4,7 +4,6 @@
 define('USE_SERIALIZED_INFO', true);
 
 require_once(dirname(__FILE__) . '/../common/code/boost.php');
-require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
 
 class LibraryPage {
     static $view_fields = Array(
@@ -87,6 +86,11 @@ class LibraryPage {
     }
 
     function filter($lib) {
+        if (BoostVersion::page()->is_numbered_release()
+                && !$lib['boost-version']) {
+            return false;
+        }
+
         if ($this->filter_value && empty($lib[$this->filter_value])) {
             return false;
         }
@@ -256,7 +260,7 @@ class LibraryPage {
 $library_page = new LibraryPage($_GET,
     USE_SERIALIZED_INFO ?
 	unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt')) :
-	boost_libraries::from_xml_file(dirname(__FILE__) . '/libraries.xml'));
+	BoostLibraries::from_xml_file(dirname(__FILE__) . '/libraries.xml'));
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"

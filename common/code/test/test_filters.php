@@ -9,7 +9,8 @@
 <?php
 
 require_once(dirname(__FILE__) . '/../boost_archive.php');
-$template = dirname(__FILE__) . '/template.php';
+
+BoostFilters::$template = __DIR__.'/template.php';
 
 $failure_count = 0;
 
@@ -43,7 +44,7 @@ $test_text_expected = <<<EOL
 
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
 <title>Hello_world_test.txt</title></head>
 <body>
 <h3>Hello_world_test.txt</h3>
@@ -54,9 +55,7 @@ Hello World!</pre>
 EOL;
 
 $params = Array(
-    'template' => $template,
     'key' => 'Hello_world_test.txt',
-    'charset' => 'US-ASCII',
     'content' => $test_text
 );
 
@@ -75,7 +74,7 @@ $test_cpp_expected = <<<EOL
 
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
 <title>foo/test.cpp</title></head>
 <body>
 <h3>foo/test.cpp</h3>
@@ -88,9 +87,7 @@ int main() {}</pre>
 EOL;
 
 $params = Array(
-    'template' => $template,
     'key' => 'foo/test.cpp',
-    'charset' => 'US-ASCII',
     'content' => $test_cpp
 );
 
@@ -116,7 +113,6 @@ $test_doc = <<<EOL
 EOL;
 
 $params = Array(
-    'template' => $template,
     'content' => $test_doc
 );
 

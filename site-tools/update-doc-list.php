@@ -1,7 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__) . '/../common/code/boost_libraries.php');
-require_once(dirname(__FILE__) . '/boost_super_project.php');
+require_once(__DIR__.'/../common/code/boost.php');
 
 function main() {
     $args = $_SERVER['argv'];
@@ -22,7 +21,7 @@ function main() {
         $version = BoostVersion::from($version);
     }
 
-    $libs = boost_libraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
+    $libs = BoostLibraries::from_xml_file(dirname(__FILE__) . '/../doc/libraries.xml');
 
     if ($location) {
         $real_location = realpath($location);
@@ -35,7 +34,7 @@ function main() {
 
         $location = $real_location;
 
-        if (get_bool_from_array(run_process(
+        if (get_bool_from_array(BoostSuperProject::run_process(
                 "cd '${location}' && git rev-parse --is-bare-repository")))
         {
             if ($version) {
@@ -73,7 +72,7 @@ function main() {
 
 /**
  *
- * @param \boost_libraries $libs The libraries to update.
+ * @param \BoostLibraries $libs The libraries to update.
  * @param string $location The location of the super project in the mirror.
  * @param BoostVersion|string $version The version to update from.
  * @throws RuntimeException
@@ -107,8 +106,13 @@ function update_from_git($libs, $location, $version) {
     foreach($modules as $name => $module) {
         $module_location = "{$location}/{$module['url']}";
         $module_command = "cd '{$module_location}' && git";
+        $info = array(
+            'version' => $branch,
+            'module' => $name,
+            'path' => $module['path'],
+        );
 
-        foreach(run_process("{$module_command} ls-tree {$module['hash']} "
+        foreach(BoostSuperProject::run_process("{$module_command} ls-tree {$module['hash']} "
                 ."meta/libraries.xml meta/libraries.json") as $entry)
         {
             try {
@@ -116,8 +120,8 @@ function update_from_git($libs, $location, $version) {
                 if (preg_match("@^100644 blob ([a-zA-Z0-9]+)\t(.*)$@", $entry, $matches)) {
                     $hash = $matches[1];
                     $filename = $matches[2];
-                    $text = implode("\n", (run_process("{$module_command} show {$hash}")));
-                    $libs->update(load_from_text($text, $filename, $branch), $name, $module['path']);
+                    $text = implode("\n", (BoostSuperProject::run_process("{$module_command} show {$hash}")));
+                    $libs->update(load_from_text($text, $filename, $info));
                 }
             }
             catch (library_decode_exception $e) {
@@ -129,7 +133,7 @@ function update_from_git($libs, $location, $version) {
 
 /**
  *
- * @param \boost_libraries $libs The libraries to update.
+ * @param \BoostLibraries $libs The libraries to update.
  * @param string $location The location of the super project in the mirror.
  * @param string $branch The branch to update from.
  * @throws RuntimeException
@@ -139,11 +143,17 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
 
     $super_project = new BoostSuperProject($location);
     foreach ($super_project->get_modules() as $name => $module_details) {
+        $info = array(
+            'version' => $branch,
+            'module' => $name,
+            'path' => $module_details['path'],
+        );
+
         foreach (
                 glob("{$location}/{$module_details['path']}/meta/libraries.*")
                 as $path) {
             try {
-                $libs->update(load_from_file($path, $branch), $name, $module_details['path']);
+                $libs->update(load_from_file($path, $info));
             }
             catch (library_decode_exception $e) {
                 echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
@@ -152,17 +162,17 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
     }
 }
 
-function load_from_file($path, $branch) {
-    return load_from_text(file_get_contents($path), $path, $branch);
+function load_from_file($path, $info) {
+    return load_from_text(file_get_contents($path), $path, $info);
 }
 
-function load_from_text($text, $filename, $branch) {
+function load_from_text($text, $filename, $info) {
     switch (pathinfo($filename, PATHINFO_EXTENSION)) {
         case 'xml':
-            $new_libs = boost_libraries::from_xml($text, $branch);
+            $new_libs = BoostLibraries::from_xml($text, $info);
             break;
         case 'json':
-            $new_libs = boost_libraries::from_json($text, $branch);
+            $new_libs = BoostLibraries::from_json($text, $info);
             break;
         default:
             echo "Error: $filename.\n"; exit(0);

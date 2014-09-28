@@ -16,7 +16,7 @@ if (strncmp($_SERVER['REQUEST_URI'], '/doc/libs/1_', 12) == 0  &&
     exit(0);
 }
 
-require_once(dirname(__FILE__) . '/../common/code/boost_archive.php');
+require_once(dirname(__FILE__) . '/../common/code/boost.php');
 
 function add_spirit_analytics($content) {
     $server = $_SERVER['HTTP_HOST'];
@@ -54,7 +54,14 @@ EOS;
     return str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
-display_from_archive(
+$archive = new BoostArchive(array(
+    'fix_dir' => dirname(__FILE__).'/fixes',
+    'archive_dir' => STATIC_DIR,
+    'use_http_expire_date' => true,
+    'zipfile' => false,
+));
+
+$archive->display_from_archive(
   array(
   //~ special cases that can't be processed at all (some redirects)
   array('@^libs/gil/doc/.*(html|htm)$@i','raw','text/html'),
@@ -86,11 +93,5 @@ display_from_archive(
   array('@^more/.*html$@i','basic','text/html'),
   //~ the headers are text files displayed in an embeded page
   array('@^boost/.*$@i','cpp','text/plain')
-  ),
-  array(
-    'fix_dir' => dirname(__FILE__).'/fixes',
-    'archive_dir' => STATIC_DIR,
-    'use_http_expire_date' => true,
-    'zipfile' => false,
   )
 );
