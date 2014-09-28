@@ -52,7 +52,7 @@ class BoostLibrary
             $documentation_url =
                 isset($lib['documentation']) ? $lib['documentation'] : '.';
             $lib['documentation'] =
-                resolve_url($documentation_url, rtrim($info['path'], '/').'/');
+                ltrim(resolve_url($documentation_url, trim($info['path'], '/').'/'), '/');
         }
 
         // Preserve the current empty authors tags.
