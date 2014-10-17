@@ -37,6 +37,12 @@
 
 * /TODO/
 
+* [phrase library..[@/libs/flyweight/index.html Flyweight]:]
+  * Added serialization support via [@/libs/serialization/index.html Boost Serialization].
+  * `flyweight` default constructor was made explicit in Boost 1.56, which introduces a
+    regression in some initialization scenarios. The former non-explicit default constructor
+    has been restored (ticket [ticket 10439]). 
+
 * [phrase library..[@/libs/iterator/ Iterator]:]
   * Most components of the library were moved into the `boost::iterators` namespace. For backward compatibility the components are also accessible in the `boost` namespace.
   * Iterator operators are now conditionally defined based on the iterator category.
@@ -49,6 +55,14 @@
 
 * [phrase library..[@/libs/utility/ Utility]:]
   * The `next()` and `prior()` functions taking distance arguments were reworked. The code now work correctly when the distance is unsigned or both arguments are integers. The new code relies on the availability of operators supported by the first argument to select the correct implementation.
+  
+* [phrase library..[@/libs/numeric/ublas/ uBLAS]:]
+  * removed doxygen documentation to make the distribution lighter
+  * the interface of matrices and vectors has been extended with cbegin, cend, crbegin and crend member functions, as defined in c++11
+  * New facades matrix_row and matrix_column to access to the matrices as an array of rows and an array of columns, respectively.
+  * various bug fixes
+  * removed warnings with MSVC for unused parameters
+  * regression tests now mostly in green for all configuration and compilers !
 
 [/ TODO: These libraries always use the same message, referring to their
    individual release notes. So check if they apply before the beta:
