@@ -3,9 +3,9 @@
     [source-mode c++]
     [purpose
         Updated Libraries:
-        Coroutine, Flyweight, Iterator,
+        Coroutine, Flyweight, Geometry, Iterator,
         MultiArray, Multi-Index Containers, Preprocessor,
-        Thread, Utility, uBLAS.
+        Thread, Units, Utility, uBLAS.
     ]
     [authors [Clow, Marshall]]
     [/ last-revision is used for the final release data]
@@ -33,26 +33,47 @@ Also, the release notes are incomplete at the moment.
 
 [section Updated Libraries]
 
-* [phrase library..[@/libs/coroutine/index.html Coroutine]:]
+* [phrase library..[@/libs/coroutine/ Coroutine]:]
   * optionally register stacks with valgrind
   * [ticket 10386] MSVC link error in asymmetric_coroutine.hpp: symbol already defined
   * [ticket 10536] call to 'begin(...pull_coroutine< R > & c)' is ambiguous
 
-* [phrase library..[@/libs/flyweight/index.html Flyweight]:]
-  * Added serialization support via [@/libs/serialization/index.html Boost Serialization].
+* [phrase library..[@/libs/flyweight/ Flyweight]:]
+  * Added serialization support via [@/libs/serialization/ Boost Serialization].
   * `flyweight` default constructor was made explicit in Boost 1.56, which introduces a
     regression in some initialization scenarios. The former non-explicit default constructor
     has been restored (ticket [ticket 10439]). 
+
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * ['Improvements]
+    * The support of parameters convertible to value_type in rtree insert(), remove() and count() functions
+  * ['Solved tickets]
+    * [@https://svn.boost.org/trac/boost/ticket/8402 8402] Implicit conversion warnings
+    * [@https://svn.boost.org/trac/boost/ticket/9354 9354] Bug in winding strategy affecting within() and covered_by() for non-cartesian coordinate systems
+    * [@https://svn.boost.org/trac/boost/ticket/10177 10177] Missing include
+    * [@https://svn.boost.org/trac/boost/ticket/10345 10345] Distance fails to compile for some coordinate types
+    * [@https://svn.boost.org/trac/boost/ticket/10398 10398] Wrong neighbour check in buffer, calculating turns
+    * [@https://svn.boost.org/trac/boost/ticket/10421 10421] Invalid Point-Box distance for spherical CS
+    * [@https://svn.boost.org/trac/boost/ticket/10615 10615] Rtree constructor feature request
+    * [@https://svn.boost.org/trac/boost/ticket/10643 10643] Invalid point_on_surface() result for big coordinates
+    * [@https://svn.boost.org/trac/boost/ticket/10668 10668] Implicit conversion warnings (duplicated 8402)
+  * ['Bugfixes]
+    * Several fixes of bugs in algorithm buffer
+    * Bug in point_on_surface() for CCW Polygons (extreme_points()) and numerical issue (thanks to Matt Amos)
+    * Bug in disjoint() for A/A fixed by replacement of point_on_surface() with point_on_border() (thanks to Matt Amos)
+    * The result of convex_hull(), duplicated Point in open output, too small number of Points for 1- and 2-Point input
+    * Imprecision for big coordinates in centroid(), fixed by Points translation (related with ticket 10643)
+    * for_each_segment() not taking into account the last segment of open Geometry
 
 * [phrase library..[@/libs/iterator/ Iterator]:]
   * Most components of the library were moved into the `boost::iterators` namespace. For backward compatibility the components are also accessible in the `boost` namespace.
   * Iterator operators are now conditionally defined based on the iterator category.
   * Some of the internal components of the library were made public (`minimum_category`, for example).
 
-* [phrase library..[@/libs/multi_array/index.html MultiArray]:]
+* [phrase library..[@/libs/multi_array/ MultiArray]:]
   * Fixed a friend-declaration related warning for clang (thanks to Marcel Raad).
 
-* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+* [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
   * When `std::tuple`s are available, these can be used for lookup operations
     in indices equipped with composite keys. `boost::tuple`s are also supported
     for backwards compatibility.
@@ -96,6 +117,13 @@ Also, the release notes are incomplete at the moment.
     * [@http://svn.boost.org/trac/boost/ticket/10478 #10478] Data race in boost/thread/future.hpp
     * [@http://svn.boost.org/trac/boost/ticket/10529 #10529] The pthread/condition_variable_any constructor reports incorrect error code for pthread_cond_init
     * [@http://svn.boost.org/trac/boost/ticket/10563 #10563] shared_future<R>::then should be const
+
+* [phrase library..[@/libs/units/ Units]:]
+    * New unit system  <boost/units/systems/information.hpp> units for: bit, byte, nat, hartley and shannon,
+    * Add scale units for binary prefixes kibi, mebi, gibi, tebi, pebi, zebi and yobi IEC prefixes
+    * Fix output of NaN on msvc-14
+    * Add support for C++11 numeric_limits::max_digits10 and ::lowest
+    * warning fixes
 
 * [phrase library..[@/libs/utility/ Utility]:]
   * The `next()` and `prior()` functions taking distance arguments were reworked. The code now work correctly when the distance is unsigned or both arguments are integers. The new code relies on the availability of operators supported by the first argument to select the correct implementation.
