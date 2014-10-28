@@ -43,6 +43,13 @@ Also, the release notes are incomplete at the moment.
 * [phrase library..[@/libs/config/ Config]:]
   * `BOOST_HAS_PRAGMA_DETECT_MISMATCH` macro was added
 
+* [phrase library..[@/libs/container/ Container]:]  
+  *  Added support for `initializer_list`. Contributed by Robert Matusewicz.
+  *  Fixed double destruction bugs in vector and backward expansion capable allocators.
+  *  Fixed bugs:
+    * [@https://svn.boost.org/trac/boost/ticket/10263 Trac #10263 (['"AIX 6.1 bug with sched_yield() function out of scope"])].
+    * [@https://github.com/boostorg/container/pull/16 GitHub #16: ['Fix iterators of incomplete type containers]]. Thanks to Mikael Persson.
+
 * [phrase library..[@/libs/coroutine/ Coroutine]:]
   * optionally register stacks with valgrind
   * [ticket 10386] MSVC link error in asymmetric_coroutine.hpp: symbol already defined
@@ -74,6 +81,25 @@ Also, the release notes are incomplete at the moment.
     * The result of convex_hull(), duplicated Point in open output, too small number of Points for 1- and 2-Point input
     * Imprecision for big coordinates in centroid(), fixed by Points translation (related with ticket 10643)
     * for_each_segment() not taking into account the last segment of open Geometry
+    
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  *  Removed `unique_ptr`, now forwards boost::interprocess::unique_ptr to the general purpose
+    `boost::movelib::unique_ptr` class from [*Boost.Move]. This implementation is closer to the standard
+    `std::unique_ptr` implementation and it's better maintained.
+  *  Fixed bugs:
+    * [@https://svn.boost.org/trac/boost/ticket/10262 Trac #10262 (['"AIX 6.1 bug with variable definition hz"])].
+    * [@https://svn.boost.org/trac/boost/ticket/10229 Trac #10229 (['"Compiling errors in interprocess\detail\os_file_functions.hpp"])].
+    * [@https://svn.boost.org/trac/boost/ticket/10506 Trac #10506 (['"Infinite loop in create_or_open_file"])].
+    * [@https://github.com/boostorg/interprocess/pull/11 GitHub Pull #11 (['"Compile fix for BOOST_USE_WINDOWS_H"])].
+  *  Reorganized Doxygen marks to obtain a better header reference.    
+
+* [phrase library..[@/libs/intrusive/ Intrusive]:]  
+  *  Experimental version of node checkers, contributed by Matei David. Many thanks!
+  *  Implemented [@http://www.open-std.org/JTC1/sc22/WG21/docs/papers/2013/n3644.pdf N3644: Null Forward Iterators] from C++14.
+  *  Fixed bugs:
+    *  [@https://github.com/boostorg/intrusive/pull/12 GitHub Pull #12: ['Fix MSVC14 warning C4456: declaration of 'x_parent_right' hides previous local declaration]]
+    *  [@https://svn.boost.org/trac/boost/ticket/10520 Boost Trac #10520: ['Conversion warning in intrusive/detail/utilities.hpp]]
+    *  [@https://svn.boost.org/trac/boost/ticket/10469 Boost Trac #10469: ['Erasing from intrusive unordered_multiset with optimize_multikey goes into an infinite loop]]
 
 * [phrase library..[@/libs/iterator/ Iterator]:]
   * Most components of the library were moved into the `boost::iterators` namespace. For backward compatibility the components are also accessible in the `boost` namespace.
@@ -82,6 +108,14 @@ Also, the release notes are incomplete at the moment.
 
 * [phrase library..[@/libs/lexical_cast/ Lexical Cast]:]
   * Some internal changes, library now consist of multiple headers instead of a single one [ticket 10391], [ticket 10173]
+  
+* [phrase library..[@/libs/move/ Move]:]
+  *  Added `unique_ptr` smart pointer. Thanks to Howard Hinnant for his excellent unique_ptr emulation code and testsuite.
+  *  Added `move_if_noexcept` utility. Thanks to Antony Polukhin for the implementation.
+  *  Fixed bugs:
+    *  [@https://svn.boost.org/trac/boost/ticket/9785 Trac #9785: ['"Compiler warning with intel icc in boost/move/core.hpp"]],
+    *  [@https://svn.boost.org/trac/boost/ticket/10460 Trac #10460: ['"Compiler error due to looser throw specifier"]],
+    *  [@https://github.com/boostorg/move/pull/3 Git Pull #3: ['"Don't delete copy constructor when rvalue references are disabled"]],
 
 * [phrase library..[@/libs/multi_array/ MultiArray]:]
   * Fixed a friend-declaration related warning for clang (thanks to Marcel Raad).
