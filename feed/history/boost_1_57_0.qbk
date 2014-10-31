@@ -3,7 +3,7 @@
     [source-mode c++]
     [purpose
         Updated Libraries:
-        Any, Circular Buffer, Config, Coroutine, Flyweight, Geometry, Iterator,
+        Any, Asio, Circular Buffer, Config, Coroutine, Flyweight, Geometry, Iterator,
         Lexical Cast, Math, MultiArray, Multiprecision, Multi-Index Containers, Preprocessor,
         Thread, TypeIndex, TypeTraits, Units, Utility, uBLAS.
     ]
@@ -36,6 +36,25 @@ Also, the release notes are incomplete at the moment.
 * [phrase library..[@/libs/any/ Any]:]
   * RTTI is not required any more ([@/libs/type_index TypeIndex] library is used for RTTI emulation)
   * Fixed [ticket 8958]
+  
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Fixed the [^kqueue] reactor so that it works on FreeBSD ([ticket 10606]).
+  * Fixed an issue in the [^kqueue] reactor which resulted in spinning when using
+    serial ports on Mac OS ([ticket 10496]).
+  * Fixed [^kqueue] reactor support for read-only file descriptors
+    ([ticket 10367]).
+  * Fixed a compile error when using the [^/dev/poll] reactor ([ticket 10350],
+    [ticket 10572]).
+  * Changed the Windows backend to use `WSASocketW`, as `WSASocketA` has been
+    deprecated ([ticket 10534]).
+  * Fixed some warnings reported by Visual C++ 2013 ([ticket 10376]).
+  * Fixed integer type used in the WinRT version of the byte-order conversion
+    functions ([ticket 10539]).
+  * Changed documentation to indicate that `use_future` and `spawn()` are not
+    made available when including the `asio.hpp` convenience header ([ticket
+    10567]).
+  * Explicitly marked `asio::strand` as deprecated. Use
+    `asio::io_service::strand` instead.
 
 * [phrase library..[@/libs/circular_buffer/ Circular Buffer]:]
   * Fixed some warnings and `move_if_noexcept` from Boost.Move is used [ticket 7888]
