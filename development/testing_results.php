@@ -12,6 +12,6 @@ $archive = new BoostArchive(array(
 
 $archive->display_from_archive(
   array(
-  //~ array(path-regex,raw|simple|text|cpp|boost_book_html|boost_libs_html,mime-type),
+  //~ array(path-regex,raw|simple|text|cpp|boost_libs_html,mime-type),
   )
 );
