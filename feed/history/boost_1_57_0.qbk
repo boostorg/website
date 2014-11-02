@@ -3,9 +3,10 @@
     [source-mode c++]
     [purpose
         Updated Libraries:
-        Any, Asio, Circular Buffer, Config, Coroutine, Flyweight, Geometry, Iterator,
-        Lexical Cast, Math, MultiArray, Multiprecision, Multi-Index Containers, Preprocessor,
-        Thread, TypeIndex, TypeTraits, Units, Utility, uBLAS.
+        Any, Asio, Circular Buffer, Config, Container, Coroutine, Flyweight,
+        Geometry, Interprocess, Intrusive, Iterator,
+        Lexical Cast, Math, Move, MultiArray, Multiprecision, Multi-Index Containers, Preprocessor,
+        Thread, TypeIndex, TypeTraits, Units, Unordered, Utility, uBLAS.
     ]
     [authors [Clow, Marshall]]
     [/ last-revision is used for the final release data]
@@ -16,7 +17,7 @@
 [status beta]
 [download http://sourceforge.net/projects/boost/files/boost/1.57.0.beta.1/]
 [download_basename boost_1_57_0_b1]
-[documentation /doc/libs/1_57_0_b1/]
+[documentation /doc/libs/1_57_0/]
 
 [section Beta Issues]
 
@@ -127,14 +128,6 @@ Also, the release notes are incomplete at the moment.
 
 * [phrase library..[@/libs/lexical_cast/ Lexical Cast]:]
   * Some internal changes, library now consist of multiple headers instead of a single one [ticket 10391], [ticket 10173]
-  
-* [phrase library..[@/libs/move/ Move]:]
-  *  Added `unique_ptr` smart pointer. Thanks to Howard Hinnant for his excellent unique_ptr emulation code and testsuite.
-  *  Added `move_if_noexcept` utility. Thanks to Antony Polukhin for the implementation.
-  *  Fixed bugs:
-    *  [@https://svn.boost.org/trac/boost/ticket/9785 Trac #9785: ['"Compiler warning with intel icc in boost/move/core.hpp"]],
-    *  [@https://svn.boost.org/trac/boost/ticket/10460 Trac #10460: ['"Compiler error due to looser throw specifier"]],
-    *  [@https://github.com/boostorg/move/pull/3 Git Pull #3: ['"Don't delete copy constructor when rvalue references are disabled"]],
 
 * [phrase library..[@/libs/math/ Math]:]
     * Added Hyperexponential Distribution.
@@ -143,6 +136,13 @@ Also, the release notes are incomplete at the moment.
     * Fixed some corner cases in function round.
     * Don't support 80-bit floats in cstdfloat.hpp if standard library support is broken.
 
+* [phrase library..[@/libs/move/ Move]:]
+*  Added `unique_ptr` smart pointer. Thanks to Howard Hinnant for his excellent unique_ptr emulation code and testsuite.
+*  Added `move_if_noexcept` utility. Thanks to Antony Polukhin for the implementation.
+*  Fixed bugs:
+  *  [@https://svn.boost.org/trac/boost/ticket/9785 Trac #9785: ['"Compiler warning with intel icc in boost/move/core.hpp"]],
+  *  [@https://svn.boost.org/trac/boost/ticket/10460 Trac #10460: ['"Compiler error due to looser throw specifier"]],
+  *  [@https://github.com/boostorg/move/pull/3 Git Pull #3: ['"Don't delete copy constructor when rvalue references are disabled"]],
 * [phrase library..[@/libs/multi_array/ MultiArray]:]
   * Fixed a friend-declaration related warning for clang (thanks to Marcel Raad).
 
@@ -210,6 +210,11 @@ Also, the release notes are incomplete at the moment.
     * Fix output of NaN on msvc-14
     * Add support for C++11 numeric_limits::max_digits10 and ::lowest
     * warning fixes
+
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * Fix the `pointer` typedef in iterators ([ticket 10672]).
+  * Fix Coverity warning
+    ([@https://github.com/boostorg/unordered/pull/2 GitHub #2]).
 
 * [phrase library..[@/libs/utility/ Utility]:]
   * The `next()` and `prior()` functions taking distance arguments were reworked. The code now work correctly when the distance is unsigned or both arguments are integers. The new code relies on the availability of operators supported by the first argument to select the correct implementation.
