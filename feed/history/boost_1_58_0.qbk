@@ -40,6 +40,25 @@
     optionally [@/libs/flyweight/doc/reference/flyweight.html#disable_hash_support disabled] to avoid
     clashes with legacy code where this support has already been defined by the user.
 
+* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+  * The efficiency of lookup operations has improved in situations where they involve the generation
+    of temporary values of `key_type`. Consider for instance the following code: 
+    ```
+    typedef multi_index_container<
+      std::string,
+      indexed_by<
+        ordered_unique<identity<std::string> >
+      >
+    > multi_t;
+    ...
+    multi_t m=...;
+    m.find("boost"); // passed a const char*, not a std::string    
+    ```
+    In previous versions of the library, the `find` operation generates several temporary
+    `std::string`s (one every time an internally comparison is made). In sufficiently advanced
+    compilers, this is now avoided so that only one temporary is created.
+  * Maintenance fixes.
+
 * /TODO/
 
 [/ TODO: These libraries always use the same message, referring to their
