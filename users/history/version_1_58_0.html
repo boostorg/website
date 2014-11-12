@@ -82,6 +82,42 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/libs/multi_index/index.html">Multi-index Containers</a>:</span>
+          <ul>
+            <li>
+              <div>
+                The efficiency of lookup operations has improved in situations where
+                they involve the generation of temporary values of <code><span class="identifier">key_type</span></code>. Consider for instance
+                the following code:
+              </div>
+<pre><span class="keyword">typedef</span> <span class="identifier">multi_index_container</span><span class="special">&lt;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span>
+  <span class="identifier">indexed_by</span><span class="special">&lt;</span>
+    <span class="identifier">ordered_unique</span><span class="special">&lt;</span><span class="identifier">identity</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="special">&gt;</span>
+  <span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">multi_t</span><span class="special">;</span>
+<span class="special">...</span>
+<span class="identifier">multi_t</span> <span class="identifier">m</span><span class="special">=...;</span>
+<span class="identifier">m</span><span class="special">.</span><span class="identifier">find</span><span class="special">(</span><span class="string">&quot;boost&quot;</span><span class="special">);</span> <span class="comment">// passed a const char*, not a std::string    </span>
+</pre>
+              <div>
+                In previous versions of the library, the <code><span class="identifier">find</span></code>
+                operation generates several temporary <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>s
+                (one every time an internally comparison is made). In sufficiently
+                advanced compilers, this is now avoided so that only one temporary
+                is created.
+              </div>
+            </li>
+            <li>
+              <div>
+                Maintenance fixes.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <em>TODO</em>
         </div>
       </li>
