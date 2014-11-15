@@ -8,10 +8,11 @@ RewriteRule ^.*$ http://www\.boost\.org%{REQUEST_URI} [R=301]
 
 RewriteRule ^html(/.*)?$ libs/release/doc/html$1 [R=301]
 
-# Always serve up the latest css/image files in doc/html and doc/src.
-RewriteRule ^libs/[^/]*/doc/(?:html|src)/(.*\.css)$ libs/common/doc/src/$1 [L]
-RewriteRule ^libs/[^/]*/doc/(?:html|src)/images/([^/]*)$ libs/common/doc/src/images/$1 [L]
-RewriteRule ^libs/[^/]*/boost.png$ libs/common/boost.png [L]
+# Always serve up the latest css/image files in doc/html and doc/src
+# in release versions.
+RewriteRule ^libs/[0-9][^/]*/doc/(?:html|src)/(.*\.css)$ libs/common/doc/src/$1 [L]
+RewriteRule ^libs/[0-9][^/]*/doc/(?:html|src)/images/([^/]*)$ libs/common/doc/src/images/$1 [L]
+RewriteRule ^libs/[0-9][^/]*/boost.png$ libs/common/boost.png [L]
 
 # Serve some other static files directly from archive
 # Requires an appropriate soft link.
