@@ -566,9 +566,9 @@ class BoostLibraries
      * @return array Library details for output.
      */
     static function clean_for_output($lib) {
-        if (!isset($lib['update-version']) && !isset($lib['boost-version'])) {
-            throw new RuntimeException("No version data for {$lib['name']}.");
-        }
+        //if (!isset($lib['update-version']) && !isset($lib['boost-version'])) {
+        //    throw new RuntimeException("No version data for {$lib['name']}.");
+        //}
 
         if (isset($lib['update-version'])) {
             $lib['update-version'] = (string) $lib['update-version'];
