@@ -2,8 +2,6 @@
 
 require_once(__DIR__.'/../common/code/boost.php');
 
-// TODO: Correct http headers.
-
 if (isset($_GET['version'])) {
     try {
         $version = BoostVersion::from($_GET['version']);
@@ -29,4 +27,5 @@ $lib_array = $libs->get_for_version($version, null,
 $version_libs = BoostLibraries::from_array($lib_array,
     array('version' => $version));
 
+header('Content-type: application/json');
 echo $version_libs->to_json();
