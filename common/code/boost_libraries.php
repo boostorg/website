@@ -474,7 +474,10 @@ class BoostLibraries
         // I'm not sure why php escapes slashes, but I don't want them so
         // I'll just zap them. Maybe stop doing that in the future.
         return str_replace('\\/', '/',
-            json_encode($export, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            json_encode($export,
+                (defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 0) |
+                (defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : 0)
+            ));
     }
 
     /**
