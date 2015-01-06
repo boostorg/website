@@ -14,16 +14,18 @@ if (isset($_GET['version'])) {
         exit(1);
     }
 } else {
-    $version = BoostVersion::from('develop'); //current();
+    $version = BoostVersion::current();
 }
 
 // TODO: Need a better way to load the libraries.
 $libs = unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt'));
 
 // TODO: This is just crazy.
-$lib_array = $libs->get_for_version($version, null, function($lib) use($version) {
-    return !$version->is_numbered_release() || $lib['boost-version'];
-});
+function only_released($lib) {
+    return $lib['boost-version'];
+}
+$lib_array = $libs->get_for_version($version, null, 
+    $version->is_numbered_release() ? 'only_released' : null);
 $version_libs = BoostLibraries::from_array($lib_array,
     array('version' => $version));
 
