@@ -15,8 +15,7 @@ if (isset($_GET['version'])) {
     $version = BoostVersion::current();
 }
 
-// TODO: Need a better way to load the libraries.
-$libs = unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt'));
+$libs = BoostLibraries::load();
 
 // TODO: This is just crazy.
 function only_released($lib) {

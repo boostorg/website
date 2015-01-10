@@ -5,6 +5,8 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
+// Change this when developing.
+define('USE_SERIALIZED_INFO', true);
 require_once(dirname(__FILE__) . '/url.php');
 
 /**
@@ -18,6 +20,17 @@ class BoostLibraries
 {
     private $categories = array();
     private $db = array();
+
+    /**
+     *
+     */
+
+    static function load()
+    {
+        return USE_SERIALIZED_INFO ?
+            unserialize(file_get_contents(dirname(__FILE__) . '/../../generated/libraries.txt')) :
+            BoostLibraries::from_xml_file(dirname(__FILE__) . '/../../doc/libraries.xml');
+    }
 
     /**
      * Read library details from an xml file.
