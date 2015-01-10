@@ -16,15 +16,11 @@ if (isset($_GET['version'])) {
     $version = BoostVersion::current();
 }
 
-$libs = BoostLibraries::load();
-
-// TODO: This is just crazy.
-function only_released($lib) {
-    return $lib['boost-version'];
-}
-$lib_array = $libs->get_for_version($version, null, 
-    $version->is_numbered_release() ? 'only_released' : null);
-$version_libs = BoostLibraries::from_array($lib_array,
+// TODO: This is a bit awkard, should probably have an alternative
+//       to 'get_for_version' which returns a BoostLibraries instance
+//       rather than an array.
+$version_libs = BoostLibraries::from_array(
+    BoostLibraries::load()->get_for_version($version),
     array('version' => $version));
 
 header('Content-type: application/json');

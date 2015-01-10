@@ -297,7 +297,8 @@ class BoostLibraries
     public function update_for_release($version) {
         $version = BoostVersion::from($version);
 
-        $libs = $this->get_for_version($version);
+        $libs = $this->get_for_version($version, null,
+            'BoostLibraries::filter_all');
         foreach($libs as &$lib_details) {
             if (!isset($lib_details['boost-version'])) {
                 $lib_details['boost-version'] = $version;
@@ -493,6 +494,14 @@ class BoostLibraries
             ));
     }
 
+    static function filter_released($x) {
+        return $x['boost-version'];
+    }
+
+    static function filter_all($x) {
+        return true;
+    }
+
     /**
      * Get the library details for a particular release.
      *
@@ -504,6 +513,12 @@ class BoostLibraries
     function get_for_version($version, $sort = null, $filter = null) {
         $version = BoostVersion::from($version);
         $libs = array();
+
+        if (!$filter) {
+            $filter = $version->is_numbered_release() ?
+                'BoostLibraries::filter_released' :
+                'BoostLibraries::filter_all';
+        }
 
         foreach($this->db as $key => $versions) {
             $details = null;
