@@ -6,10 +6,11 @@ if (isset($_GET['version'])) {
     try {
         $version = BoostVersion::from($_GET['version']);
     }
-    catch (Exception $e) {
-        // TODO: Better error, probably should be json at least
-        echo "Invalid version string.";
-        exit(1);
+    catch (BoostVersion_Exception $e) {
+        echo json_encode(Array(
+            'error' => $e->getMessage(),
+        ));
+        exit(0);
     }
 } else {
     $version = BoostVersion::current();

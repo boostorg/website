@@ -91,7 +91,8 @@ class BoostVersion {
             }
             else
             {
-                die("Invalid version: ".html_encode($value));
+                throw new BoostVersion_Exception(
+                    "Invalid version: ".html_encode($value));
             }
         }
         else {
@@ -220,3 +221,5 @@ class BoostVersion {
         self::$current = self::release($major, $minor, $point);
     }
 }
+
+class BoostVersion_Exception extends RuntimeException {}
