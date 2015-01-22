@@ -41,7 +41,7 @@ class BoostSuperProject {
         {
             if (!$line) continue;
 
-            if (preg_match('@^submodule\.(\w+)\.(\w+)=(.*)$@', trim($line), $matches)) {
+            if (preg_match('@^submodule\.([\w/]+)\.(\w+)=(.*)$@', trim($line), $matches)) {
                 $modules[$matches[1]][$matches[2]] = $matches[3];
             }
             else {
