@@ -25,7 +25,8 @@ function main() {
 
     foreach (BoostSuperProject::run_process("git -C {$location} tag") as $tag) {
         if (preg_match('@^boost-1\.\d+\.\d+$@', $tag)) {
-            $library_details = $libraries->get_for_version($tag);
+            $library_details = $libraries->get_for_version($tag, null,
+                'BoostLibraries::filter_all');
 
             $libs_index = array();
             foreach ($library_details as $index => $details) {

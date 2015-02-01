@@ -5,6 +5,8 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
+// Change this when developing.
+define('USE_SERIALIZED_INFO', true);
 require_once(dirname(__FILE__) . '/url.php');
 
 /**
@@ -18,6 +20,17 @@ class BoostLibraries
 {
     private $categories = array();
     private $db = array();
+
+    /**
+     *
+     */
+
+    static function load()
+    {
+        return USE_SERIALIZED_INFO ?
+            unserialize(file_get_contents(dirname(__FILE__) . '/../../generated/libraries.txt')) :
+            BoostLibraries::from_xml_file(dirname(__FILE__) . '/../../doc/libraries.xml');
+    }
 
     /**
      * Read library details from an xml file.
@@ -284,7 +297,8 @@ class BoostLibraries
     public function update_for_release($version) {
         $version = BoostVersion::from($version);
 
-        $libs = $this->get_for_version($version);
+        $libs = $this->get_for_version($version, null,
+            'BoostLibraries::filter_all');
         foreach($libs as &$lib_details) {
             if (!isset($lib_details['boost-version'])) {
                 $lib_details['boost-version'] = $version;
@@ -474,7 +488,18 @@ class BoostLibraries
         // I'm not sure why php escapes slashes, but I don't want them so
         // I'll just zap them. Maybe stop doing that in the future.
         return str_replace('\\/', '/',
-            json_encode($export, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            json_encode($export,
+                (defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 0) |
+                (defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : 0)
+            ));
+    }
+
+    static function filter_released($x) {
+        return $x['boost-version'];
+    }
+
+    static function filter_all($x) {
+        return true;
     }
 
     /**
@@ -488,6 +513,12 @@ class BoostLibraries
     function get_for_version($version, $sort = null, $filter = null) {
         $version = BoostVersion::from($version);
         $libs = array();
+
+        if (!$filter) {
+            $filter = $version->is_numbered_release() ?
+                'BoostLibraries::filter_released' :
+                'BoostLibraries::filter_all';
+        }
 
         foreach($this->db as $key => $versions) {
             $details = null;
@@ -566,9 +597,9 @@ class BoostLibraries
      * @return array Library details for output.
      */
     static function clean_for_output($lib) {
-        if (!isset($lib['update-version']) && !isset($lib['boost-version'])) {
-            throw new RuntimeException("No version data for {$lib['name']}.");
-        }
+        //if (!isset($lib['update-version']) && !isset($lib['boost-version'])) {
+        //    throw new RuntimeException("No version data for {$lib['name']}.");
+        //}
 
         if (isset($lib['update-version'])) {
             $lib['update-version'] = (string) $lib['update-version'];

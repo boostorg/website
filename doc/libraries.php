@@ -1,8 +1,5 @@
 <?php
 
-// Change this when developing.
-define('USE_SERIALIZED_INFO', true);
-
 require_once(dirname(__FILE__) . '/../common/code/boost.php');
 
 class LibraryPage {
@@ -257,11 +254,7 @@ class LibraryPage {
 
 // Page variables
 
-$library_page = new LibraryPage($_GET,
-    USE_SERIALIZED_INFO ?
-	unserialize(file_get_contents(dirname(__FILE__) . '/../generated/libraries.txt')) :
-	BoostLibraries::from_xml_file(dirname(__FILE__) . '/libraries.xml'));
-
+$library_page = new LibraryPage($_GET, BoostLibraries::load());
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
