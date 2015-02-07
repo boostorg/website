@@ -7,6 +7,12 @@
 
 class BoostFilterText extends BoostFilters
 {
+    function __construct($params) {
+        parent::__construct($params);
+        // TODO: Better support for other character sets?
+        $this->charset = 'UTF-8';
+    }
+
     function echo_filtered()
     {
         $this->title = html_encode($this->params['key']);
@@ -41,7 +47,7 @@ class BoostFilterText extends BoostFilters
             as $index => $part)
         {
             if($index % 2 == 0) {
-                $html = html_encode($part);
+                $html = $this->html_encode_with_fallback($part);
 
                 if($type == 'cpp') {
                     $html = preg_replace(
@@ -59,15 +65,29 @@ class BoostFilterText extends BoostFilters
             else {
                 $url = $this->process_absolute_url($part, $root);
                 if($url) {
-                    $text .= '<a href="'.html_encode($url).'">'.html_encode($part).'</a>';
+                    $text .= '<a href="'.html_encode($url).'">'.
+                        $this->html_encode_with_fallback($part).'</a>';
                 }
                 else {
-                    $text .= html_encode($part);
+                    $text .= $this->html_encode_with_fallback($part);
                 }
             }
         }
 
         return $text;
+    }
+
+    function html_encode_with_fallback($text) {
+        // Could probably handle this better with php 5.4 or multibyte
+        // extensions.
+        $encoded_text = html_encode($text);
+
+        if ($text && !$encoded_text) {
+            $encoded_text = html_encode(
+                preg_replace('/[\x80-\xFF]/', "\xef\xbf\xbd", $text));
+        }
+
+        return $encoded_text;
     }
 
     function process_absolute_url($url, $root = null) {
