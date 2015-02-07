@@ -7,7 +7,7 @@
 require_once(dirname(__FILE__) . '/boost_config.php');
 
 function html_encode($text) {
-    return htmlentities($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+    return htmlentities($text, ENT_COMPAT, 'UTF-8');
 }
 
 spl_autoload_register(function($name) {
