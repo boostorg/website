@@ -33,8 +33,8 @@ function main() {
                 $libs_index[$details['key']] = $index;
             }
 
-            foreach(read_maintainers(
-                git_file($location, $tag, 'libs/maintainers.txt'))
+            foreach(BoostMaintainers::read_from_text(
+                git_file($location, $tag, 'libs/maintainers.txt'))->maintainers
                 as $key => $lib_maintainers)
             {
                 if (isset($libs_index[$key])) {
@@ -62,38 +62,6 @@ function main() {
     foreach ($names as $lib) {
         echo "{$lib} from: ".implode(', ', $unknown_libs[$lib])."\n";
     }
-}
-
-function read_maintainers($line_array) {
-    if (!$line_array) { return array(); }
-
-    $maintainers = array();
-
-    foreach ($line_array as $line) {
-        $line = trim($line);
-        if (!$line || $line[0] == '#') {
-            continue;
-        }
-
-        $matches = null;
-        if (!preg_match('@^([^\s]+)\s*(.*)$@', $line, $matches)) {
-            echo "Unable to parse line: {$line}\n";
-            exit(1);
-        }
-
-        $key = trim($matches[1]);
-        $values = trim($matches[2]);
-
-        if (!$values) { continue; }
-
-        if ($key === 'logic') { $key = 'logic/tribool'; }
-        if ($key === 'operators') { $key = 'utility/operators'; }
-        if ($key === 'functional/foward') { $key = 'functional/forward'; }
-
-        $maintainers[$key] = array_map('trim', explode(',', $values));
-    }
-
-    return $maintainers;
 }
 
 function git_file($location, $ref, $path) {
