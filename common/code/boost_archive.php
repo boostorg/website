@@ -154,7 +154,7 @@ class BoostArchive
         // Choose filter to use
 
         $info_map = array_merge($content_map, array(
-            array('@[.](txt|py|rst|jam|v2|bat|sh|xml|toyxml)$@i','text','text/plain'),
+            array('@[.](txt|py|rst|jam|v2|bat|sh|xml|xsl|toyxml)$@i','text','text/plain'),
             array('@[.](qbk|quickbook)$@i','qbk','text/plain'),
             array('@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
             array('@[.]png$@i','raw','image/png'),
