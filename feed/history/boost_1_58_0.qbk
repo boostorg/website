@@ -83,6 +83,19 @@
     * Fixed build failure on GNU Hurd.
     * Fixed incorrect behavior of text file sink backend in case if free space on the file system gets exhausted. The sink will no longer create lots of empty files in attempt to recover. ([ticket 11016])
   * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+  
+* [phrase library..[@/libs/math/ Math]:]
+  * Added two new special functions - trigamma and polygamma.
+  * Large update to the Elliptic integral code to use Carlson's latest algorithms - these should be more stable, more accurate
+    and slightly faster than before.  Also added support for Carlson's RG integral.
+  * Added ellint_d, jacobi_zeta and heuman_lambda elliptic integrals.
+  * Fixed namespace scope constants so they are constexpr on conforming compilers, see [@https://svn.boost.org/trac/boost/ticket/10901 #10901].
+  * Fixed various cases of spurious under/overflow in the incomplete beta and gamma functions, plus the elliptic integrals, with thanks to Rocco Romeo.
+  * Fix 3-arg legendre_p and legendre_q functions to not call the policy based overload if the final argument is not actually a policy.
+  * Cleaned up some dead code in the incomplete beta function, see [@https://svn.boost.org/trac/boost/ticket/10985 #10985].
+  * Fixed extreme-value pdf for large valued inputs, see [@https://svn.boost.org/trac/boost/ticket/10938 #10938].
+  * Switched documentation to use SVG rather than PNG graphs and equations - browsers seem to have finally caught up!
+
 
 * [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
   * The efficiency of lookup operations has improved in situations where they involve the generation
