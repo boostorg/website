@@ -55,11 +55,22 @@
   * support for ARM/iOS (32+64 bit)
   * class execution_context (C++14)
 
+* [phrase library..[@/libs/conversion/ Conversion]:]
+  * `polymorphic_pointer_downcast` and `polymorphic_pointer_cast` functions were added (thanks to Boris Rasin) [ticket 10780]
+  * All the functions now throw exceptions using `boost::throw_exception`
+  * Documnetation update
+
+* [phrase library..[@/libs/lexical_cast/ Lexical Cast]:]
+  * Now std::stream is used for conversions to float numbers [ticket 5660], [ticket 6975], [ticket 10639]
+
 * [phrase library..[@/libs/flyweight/ Flyweight]:]
   * Added hash support both with `std::hash` and [@/doc/html/hash.html `boost::hash`]. This can be
     optionally [@/libs/flyweight/doc/reference/flyweight.html#disable_hash_support disabled] to avoid
     clashes with legacy code where this support has already been defined by the user.
   * Maintenance fixes.
+
+* [phrase library..[@/libs/function/ Function]:]
+  * Added support for functions accepting C++11 rvalues and Boost.Move rvalues [ticket 10585].
 
 * [phrase library..[@/libs/fusion/ Fusion]:]
   * Automatic hash creation function ([@https://github.com/boostorg/fusion/pull/12 Github PR #12])
@@ -116,6 +127,13 @@
     compilers, this is now avoided so that only one temporary is created.
   * Maintenance fixes.
 
+* [phrase library..[@/libs/multiprecision/ Multiprecision]:]
+  * Changed `frexp` to always be non-expression template generating, see: [@https://svn.boost.org/trac/boost/ticket/10993 10993].
+  * Improved support of cpp_dec_float on Cygwin and other platforms with missing long double support, see [@https://svn.boost.org/trac/boost/ticket/10924 10924].
+  * Improved noexcept support and added some more tests, see [@https://svn.boost.org/trac/boost/ticket/10990 10990].
+  * Various workarounds applied for Intel-15.0 and Solaris-12.4 compilers.
+
+
 * [phrase library..[@/libs/predef/ Predef]:]
   * Version 1.2
   * Added Visual Studio 2015 detection.
@@ -148,8 +166,31 @@
     * [@http://svn.boost.org/trac/boost/ticket/11035 #11035] BOOST_HAS_PTHREAD_MUTEXATTR_SETTYPE not defined for Android
     * [@http://svn.boost.org/trac/boost/ticket/11053 #11053] The attached code results in a R6025 - pure virtual function call in run_thread_exit_callbacks
 
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * Link time assertions added on platforms that support it
 
-
+* [phrase library..[@/libs/variant/ Variant]:]
+  * [*Breaking change:] Compile time checked getter is now used by default in `boost::get<U>(VariantT)` and `boost::polymorphic_get<U>(VariantT)`.
+    New getter asserts that type `U` is one of the types that can be stored in `VariantT`. Define `BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT`
+    to change default behavior. See
+    [@/libs/variant/doc/html/variant/reference.html#header.boost.variant.get_hpp get.hpp] and
+    [@/libs/variant/doc/html/variant/reference.html#header.boost.variant.polymorphic_get_hpp polymorphic_get.hpp]
+    descriptions for more info [ticket 547].
+  * Added missing comparison operators to variant [ticket 8620], [ticket 10811]
+  * Multiple documentations fixes [ticket 10273], [ticket 10653]
+  * Variadic templats enabled on Clang [ticket 10832]
+  * Autodetection of return types for visitors in C++14, which makes it possible to use `boost::apply_visitor` with generic lambdas [ticket 10837]:
+    ```
+    auto str = boost::apply_visitor(
+        [](auto v) {
+            return boost::lexical_cast<std::string>(v);
+        },
+        variant_instance
+    );
+    ```
+  * Improved swap functions [ticket 10882]
+  * Many improvements to variadic templates, even more methods support variadics.
+  * Multiple bugfixes and testing improvements including Coveralls integration
 
 
 * /TODO/
