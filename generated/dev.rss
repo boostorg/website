@@ -124,6 +124,30 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/conversion/&quot;&gt;Conversion&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;polymorphic_pointer_downcast&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;polymorphic_pointer_cast&lt;/span&gt;&lt;/code&gt;
+                functions were added (thanks to Boris Rasin) &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10780&quot;&gt;#10780&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                All the functions now throw exceptions using &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;throw_exception&lt;/span&gt;&lt;/code&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Documnetation update
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/flyweight/&quot;&gt;Flyweight&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
@@ -138,6 +162,19 @@
             &lt;li&gt;
               &lt;div&gt;
                 Maintenance fixes.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/function/&quot;&gt;Function&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for functions accepting C++11 rvalues and Boost.Move
+                rvalues &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10585&quot;&gt;#10585&lt;/a&gt;.
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
@@ -227,6 +264,19 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/lexical_cast/&quot;&gt;Lexical Cast&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Now std::stream is used for conversions to float numbers &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/5660&quot;&gt;#5660&lt;/a&gt;,
+                &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6975&quot;&gt;#6975&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10639&quot;&gt;#10639&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/log/&quot;&gt;Log&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
@@ -270,6 +320,65 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/math/&quot;&gt;Math&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added two new special functions - trigamma and polygamma.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Large update to the Elliptic integral code to use Carlson's latest
+                algorithms - these should be more stable, more accurate and slightly
+                faster than before. Also added support for Carlson's RG integral.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added ellint_d, jacobi_zeta and heuman_lambda elliptic integrals.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed namespace scope constants so they are constexpr on conforming
+                compilers, see &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10901&quot;&gt;#10901&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed various cases of spurious under/overflow in the incomplete
+                beta and gamma functions, plus the elliptic integrals, with thanks
+                to Rocco Romeo.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix 3-arg legendre_p and legendre_q functions to not call the policy
+                based overload if the final argument is not actually a policy.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Cleaned up some dead code in the incomplete beta function, see &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10985&quot;&gt;#10985&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed extreme-value pdf for large valued inputs, see &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10938&quot;&gt;#10938&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Switched documentation to use SVG rather than PNG graphs and equations
+                - browsers seem to have finally caught up!
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/multi_index/index.html&quot;&gt;Multi-index Containers&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
@@ -299,6 +408,35 @@
             &lt;li&gt;
               &lt;div&gt;
                 Maintenance fixes.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/multiprecision/&quot;&gt;Multiprecision&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;frexp&lt;/span&gt;&lt;/code&gt; to
+                always be non-expression template generating, see: &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10993&quot;&gt;10993&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improved support of cpp_dec_float on Cygwin and other platforms with
+                missing long double support, see &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10924&quot;&gt;10924&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improved noexcept support and added some more tests, see &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10990&quot;&gt;10990&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Various workarounds applied for Intel-15.0 and Solaris-12.4 compilers.
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
@@ -479,6 +617,81 @@
                     &lt;/div&gt;
                   &lt;/li&gt;
                 &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/type_index/&quot;&gt;TypeIndex&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Link time assertions added on platforms that support it
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/variant/&quot;&gt;Variant&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;Breaking change:&lt;/strong&gt; Compile time checked
+                getter is now used by default in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;U&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;VariantT&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;polymorphic_get&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;U&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;VariantT&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt;&lt;/code&gt;. New getter asserts that type &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;U&lt;/span&gt;&lt;/code&gt; is one of the types that can
+                be stored in &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;VariantT&lt;/span&gt;&lt;/code&gt;.
+                Define &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT&lt;/span&gt;&lt;/code&gt;
+                to change default behavior. See &lt;a href=&quot;http://www.boost.org/libs/variant/doc/html/variant/reference.html#header.boost.variant.get_hpp&quot;&gt;get.hpp&lt;/a&gt;
+                and &lt;a href=&quot;http://www.boost.org/libs/variant/doc/html/variant/reference.html#header.boost.variant.polymorphic_get_hpp&quot;&gt;polymorphic_get.hpp&lt;/a&gt;
+                descriptions for more info &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/547&quot;&gt;#547&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added missing comparison operators to variant &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/8620&quot;&gt;#8620&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10811&quot;&gt;#10811&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Multiple documentations fixes &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10273&quot;&gt;#10273&lt;/a&gt;, &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10653&quot;&gt;#10653&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Variadic templats enabled on Clang &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10832&quot;&gt;#10832&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Autodetection of return types for visitors in C++14, which makes
+                it possible to use &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;apply_visitor&lt;/span&gt;&lt;/code&gt;
+                with generic lambdas &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10837&quot;&gt;#10837&lt;/a&gt;:
+              &lt;/div&gt;
+&lt;pre&gt;&lt;span class=&quot;keyword&quot;&gt;auto&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;special&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;apply_visitor&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;special&quot;&gt;[](&lt;/span&gt;&lt;span class=&quot;keyword&quot;&gt;auto&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;special&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;lexical_cast&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;special&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;identifier&quot;&gt;variant_instance&lt;/span&gt;
+&lt;span class=&quot;special&quot;&gt;);&lt;/span&gt;
+&lt;/pre&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improved swap functions &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10882&quot;&gt;#10882&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Many improvements to variadic templates, even more methods support
+                variadics.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Multiple bugfixes and testing improvements including Coveralls integration
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
