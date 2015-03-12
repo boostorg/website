@@ -24,8 +24,6 @@
 * [phrase library..[@/libs/sort/ Sort]:] 
   * includes spreadsort, a general-case hybrid radix sort that is faster than O(n*log(n))
 
-* /TODO/
-
 [endsect]
 
 [section Updated Libraries]
@@ -71,6 +69,12 @@
   * All the functions now throw exceptions using `boost::throw_exception`
   * Documnetation update
 
+* [phrase library..[@/libs/date_time/ DateTime]:]
+  * Restored `to_time_t` function.
+  * Renamed variable v_type to var_type so it longer conflicts with an AIX
+    system variable.
+  * Documnetation fixes.
+
 * [phrase library..[@/libs/flyweight/ Flyweight]:]
   * Added hash support both with `std::hash` and [@/doc/html/hash.html `boost::hash`]. This can be
     optionally [@/libs/flyweight/doc/reference/flyweight.html#disable_hash_support disabled] to avoid
@@ -79,6 +83,12 @@
 
 * [phrase library..[@/libs/function/ Function]:]
   * Added support for functions accepting C++11 rvalues and Boost.Move rvalues [ticket 10585].
+
+* [phrase library..[@/libs/functional/factory/ Functional/Factory]:]
+  * Minor breaking change: the default template parameter to indicate that it
+    shouldn't use an allocator is now `void`, instead of `boost::none_t`.
+    For details, see the
+    [@/libs/functional/factory/doc/html/#boost_functional_factory.changes changelog].
 
 * [phrase library..[@/libs/fusion/ Fusion]:]
   * Automatic hash creation function ([@https://github.com/boostorg/fusion/pull/12 Github PR #12])
@@ -94,6 +104,10 @@
   * result_of::at<Seq, N>::type is now defined when sizeof of sequence is less than N ([ticket 6507], [ticket 7651]) 
   * Fix missing includes ([ticket 8457]).
   * Many documentation fixes & improvements ([ticket 6090], [ticket 5324], [@https://github.com/boostorg/fusion/pull/33 GitHub PR #33], [@https://github.com/boostorg/fusion/pull/53 GitHub PR #53], [@https://github.com/boostorg/fusion/pull/56 GitHub PR #56])
+
+* [phrase library..[@/libs/hash/ Hash]:]
+  * Fixed strict aliasing violation
+    ([@https://github.com/boostorg/functional/pull/3 GitHub #3]).
 
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
   * Reduced some compile-time dependencies. Updated to Boost.Container changes.
@@ -217,6 +231,13 @@
 * [phrase library..[@/libs/units Units]:]
   * Fix for base units with arbitrary dimensions.
 
+* [phrase library..[@/libs/unordered Unordered]:]
+  * Fix move assignment with stateful, propagate_on_container_move_assign
+    allocators ([ticket 10777]).
+  * Fix potential overflow when calculating number of buckets to allocate
+    ([@https://github.com/boostorg/unordered/pull/4 GitHub #4]).
+  * Other minor changes, see [@/doc/html/unordered/changes.html] changlog.
+
 * [phrase library..[@/libs/variant/ Variant]:]
   * [*Breaking change:] Compile time checked getter is now used by default in `boost::get<U>(VariantT)` and `boost::polymorphic_get<U>(VariantT)`.
     New getter asserts that type `U` is one of the types that can be stored in `VariantT`. Define `BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT`
@@ -239,8 +260,6 @@
   * Improved swap functions [ticket 10882]
   * Many improvements to variadic templates, even more methods support variadics.
   * Multiple bugfixes and testing improvements including Coveralls integration
-
-* /TODO/
 
 [endsect]
 
