@@ -115,6 +115,92 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/container/&quot;&gt;Container&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Experimental &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;small_vector&lt;/span&gt;&lt;/code&gt;
+                container.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Massive dependency reorganization. Now &lt;em&gt;Boost.Container&lt;/em&gt;
+                depends on very basic utilities like Boost.Core and &lt;em&gt;Boost.Intrusive&lt;/em&gt;.
+                Preprocessed code size have decreased considerably and compilation
+                times have improved.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;nth&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;index_of&lt;/span&gt;&lt;/code&gt; functions to containers
+                with random-access iterators (except &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;basic_string&lt;/span&gt;&lt;/code&gt;).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added C++17's &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;allocator_traits&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;Allocator&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;is_always_equal&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Updated containers to implement new constructors as specified in
+                &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#2210&quot;&gt;2210.
+                Missing allocator-extended constructor for allocator-aware containers&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed bugs:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/9931&quot;&gt;#9931:
+                      &lt;em&gt;&amp;quot;flat_map::insert(ordered_unique_range_t...)
+                      fails with move_iterators&amp;quot;&lt;/em&gt;&lt;/a&gt; (reopened).
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/11076&quot;&gt;#11076:
+                      &lt;em&gt;&amp;quot;Unqualified calls to memmove/memcpy in container/detail/copy_move_algo.hpp&amp;quot;&lt;/em&gt;&lt;/a&gt;.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10790&quot;&gt;Trac
+                      #10790 (&lt;em&gt;long long errors from container&amp;quot;&lt;/em&gt;)&lt;/a&gt;.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10808&quot;&gt;Trac
+                      #10808 (&lt;em&gt;compare equal operator of vector is broken&amp;quot;&lt;/em&gt;)&lt;/a&gt;.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;em&gt;Source Breaking&lt;/em&gt;: &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;scoped_allocator_adaptor&lt;/span&gt;&lt;/code&gt;'s
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;propagate_on_container_copy_assignment&lt;/span&gt;&lt;/code&gt;,
+                &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;propagate_on_container_move_assignment&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;propagate_on_container_swap&lt;/span&gt;&lt;/code&gt;
+                are no longer &lt;code&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;integral_constant&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;keyword&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;keyword&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt; types. The dependency reorganization
+                needed to break with those classes to avoid MPL dependencies, and
+                interoperability with &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;integral_constant&lt;/span&gt;&lt;/code&gt;
+                was not guaranteed. Code assumming &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;true_type&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;false_type&lt;/span&gt;&lt;/code&gt;
+                on this will not compile. As a workaround, use the guaranteed internal
+                &lt;code&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;value&lt;/span&gt;&lt;/code&gt;
+                constant: &lt;code&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;boost&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;integral_constant&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;keyword&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;scoped_allocator_adaptor&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;Allocator&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;propagate_on_container_move_assignment&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;identifier&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/context/&quot;&gt;Context&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
@@ -272,6 +358,79 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/interprocess/&quot;&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Reduced some compile-time dependencies. Updated to Boost.Container
+                changes.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed bugs:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href=&quot;https://github.com/boostorg/interprocess/pull/13&quot;&gt;GitHub
+                      Pull #13 (&lt;em&gt;&amp;quot;haiku: we don't have XSI shared memory,
+                      so don't try to use it&amp;quot;&lt;/em&gt;)&lt;/a&gt;.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/intrusive/&quot;&gt;Intrusive&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Reduced compile-time dependencies, headers, and the use of Boost.Preprocessor,
+                specially for hooks and iterators.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed bugs:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/6720&quot;&gt;Boost
+                      Trac #6720: &lt;em&gt;intrusive::unordered_set::clear_and_dispose
+                      does not compile on VC11 Beta when passed a stateless lambda&lt;/em&gt;&lt;/a&gt;
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10771&quot;&gt;Boost
+                      Trac #10771: &lt;em&gt;remove_if is broken for slist&lt;/em&gt;&lt;/a&gt;
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10853&quot;&gt;Boost
+                      Trac #10853: &lt;em&gt;problem with detection of const_cast_from&lt;/em&gt;&lt;/a&gt;
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10987&quot;&gt;Boost
+                      Trac #10987: &lt;em&gt;bug in any_xxx_node_traits, returning
+                      by reference&lt;/em&gt;&lt;/a&gt;
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/lexical_cast/&quot;&gt;Lexical Cast&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
@@ -380,6 +539,44 @@
               &lt;div&gt;
                 Switched documentation to use SVG rather than PNG graphs and equations
                 - browsers seem to have finally caught up!
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/move/&quot;&gt;Move&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_MOVE_BASE&lt;/span&gt; &lt;span class=&quot;identifier&quot;&gt;BOOST_MOVE_BASE&lt;/span&gt;&lt;/code&gt; utility.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;adl_move_swap&lt;/span&gt;&lt;/code&gt;
+                utility.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Reduced dependencies on other Boost libraries to make the library
+                a bit more lightweight.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed bugs:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/11044&quot;&gt;Trac
+                      #11044: &lt;em&gt;&amp;quot;boost::rv inherits off union, when
+                      such passed as template argument&amp;quot;&lt;/em&gt;&lt;/a&gt;.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
@@ -549,6 +746,18 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/random/&quot;&gt;Random&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added non_central_chi_squared_distribution.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/thread/&quot;&gt;Thread&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
@@ -696,11 +905,35 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/type_erasure/&quot;&gt;TypeErasure&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed compilation with MSVC 12.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/type_index/&quot;&gt;TypeIndex&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
                 Link time assertions added on platforms that support it
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/libs/units&quot;&gt;Units&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix for base units with arbitrary dimensions.
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
