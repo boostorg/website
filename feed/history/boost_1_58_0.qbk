@@ -196,6 +196,15 @@ to test this.
   * Improved noexcept support and added some more tests, see [@https://svn.boost.org/trac/boost/ticket/10990 10990].
   * Various workarounds applied for Intel-15.0 and Solaris-12.4 compilers.
 
+* [phrase library..[@/libs/optional/ Optional]:]
+  * Improved documentation; documented IO operations and header files.
+  * ['Fixed Bugs:]
+    * `boost::none_t` is no longer convertible from literal 0. This avoids a bug where `optional<rational<int>> oi = 0;` would initialize an optional object with no contained value. 
+    * Added a way to manually disable move semantics: just define macro `BOOST_OPTIONAL_CONFIG_NO_RVALUE_REFERENCES`. This can be used to work around [@http://svn.boost.org/trac/boost/ticket/10399 #10399].
+    * [@http://svn.boost.org/trac/boost/ticket/10825 #10825] Improved the trick that prevents streaming out `optional` without header `optional_io.hpp` by using safe-bool idiom.
+    * [@http://svn.boost.org/trac/boost/ticket/11087 #11087] It is no longer possible to assign `optional<U>` to `optional<T>` when `U` is not assignable or convertible to `T`.
+    * [@http://svn.boost.org/trac/boost/ticket/10839 #10839] Value accessors now work correctly on rvalues of `optional<T&>`.
+
 * [phrase library..[@/libs/phoenix/ Phoenix]:]
   * Version 3.2.0
   * ['New Features:]
