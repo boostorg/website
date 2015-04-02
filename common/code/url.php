@@ -10,8 +10,9 @@
 function resolve_url($url, $base = null) {
     if (!$base) {
         $base_parts = parse_url($_SERVER['REQUEST_URI']);
-        $base_parts['scheme'] = $_SERVER['REQUEST_SCHEME'];
         $base_parts['host'] = $_SERVER['HTTP_HOST'];
+        //$base_parts['scheme'] = $_SERVER['REQUEST_SCHEME'];
+        $base_parts['scheme'] = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http';
     }
     else {
         $base_parts = parse_url($base);
