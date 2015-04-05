@@ -90,6 +90,11 @@ class BoostArchive
 
         $this->get_archive_location();
 
+        // Only use a permanent redirect for releases (beta or full).
+
+        $redirect_status_code = $this->params['version'] &&
+            $this->params['version']->is_numbered_release() ? 301 : 302;
+
         // Calculate expiry date if requested.
 
         $expires = null;
@@ -125,7 +130,7 @@ class BoostArchive
             {
                 if(substr($check_file, -1) != '/') {
                     $redirect = resolve_url(basename($check_file).'/');
-                    header("Location: $redirect", TRUE, 301);
+                    header("Location: $redirect", TRUE, $redirect_status_code);
                     return;
                 }
 
@@ -217,7 +222,7 @@ class BoostArchive
             if($type == 'text/html') {
                 if($redirect = detect_redirect($this->params['content'])) {
                     http_headers('text/html', null, "+1 day");
-                    header("Location: $redirect", TRUE, 301);
+                    header("Location: $redirect", TRUE, $redirect_status_code);
                     if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $this->params['content'];
                     return;
                 }
