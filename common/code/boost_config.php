@@ -12,6 +12,9 @@ BOOST_CONFIG_FILE
 BOOST_RSS_DIR
   Path to directory with RSS feeds from Gmane.
 
+BOOST_DATA_DIR
+  Path to directory containing data files and repos from cron jobs.
+
 ARCHIVE_PREFIX
   Partial path for Boost release archives, the ZIP versions.
 
@@ -55,6 +58,10 @@ if(!function_exists('virtual'))
 
 if (!defined('STATIC_DIR')) {
     define('STATIC_DIR', dirname(__FILE__).'/../../doc/archives');
+}
+
+if (!defined('BOOST_DATA_DIR')) {
+    define('BOOST_DATA_DIR', dirname(__FILE__).'/../../data');
 }
 
 ?>
