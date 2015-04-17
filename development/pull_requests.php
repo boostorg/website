@@ -16,7 +16,7 @@ class PullRequestPage {
 
     function __construct($params) {
         $json_data = json_decode(
-                file_get_contents(__DIR__ . '/../data/pull-requests.json'));
+                file_get_contents(BOOST_DATA_DIR.'/pull-requests.json'));
         $this->pull_requests = $json_data->pull_requests;
         $this->last_updated = $json_data->last_updated;
         $this->base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);

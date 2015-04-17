@@ -22,7 +22,7 @@ class BoostArchive
         $path_parts = array();
         preg_match($this->params['pattern'], $this->params['vpath'], $path_parts);
 
-        if ($path_parts[1] == 'boost-build') {
+        if (in_array($path_parts[1], array('boost-build', 'regression'))) {
             $this->params['version'] = null;
             $version_dir = $path_parts[1];
         } else {
