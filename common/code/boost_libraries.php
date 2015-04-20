@@ -49,7 +49,7 @@ class BoostLibraries
      * @param string $xml
      * @return \BoostLibraries
      */
-    static function from_xml($xml, $info = null)
+    static function from_xml($xml)
     {
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
@@ -151,10 +151,10 @@ class BoostLibraries
             }
         }
 
-        return new self($libs, $categories, $info);
+        return new self($libs, $categories);
     }
 
-    static function from_json($json, $info = null)
+    static function from_json($json)
     {
         $categories = array();
         $libs = array();
@@ -183,7 +183,7 @@ class BoostLibraries
             $libs = $import;
         }
 
-        return new self($libs, $categories, $info);
+        return new self($libs, $categories);
     }
 
     /**
@@ -196,9 +196,9 @@ class BoostLibraries
      * @param array $libraries
      * @return \BoostLibraries
      */
-    static function from_array($libs, $info = null)
+    static function from_array($libs, $version = null)
     {
-        return new self($libs, array(), $info);
+        return new self($libs, array(), $version);
     }
 
     /**
@@ -206,12 +206,11 @@ class BoostLibraries
      * @param array $libs Array of lib details, can contain multiple historical
      *      entries, using 'update-version' to indicate their historical order.
      * @param array $categories
-     * @param array $info Optional info to use when creating libraries.
-     *                    As in BoostLibrary, with additional field:
-     *                    version = default update version
+     * @param array $version Optional update version to use when version info
+     *                       is missing.
      */
     private function __construct(array $flat_libs, array $categories,
-            $info = null)
+            $version = null)
     {
         $this->db = array();
         $this->categories = $categories;
@@ -219,7 +218,7 @@ class BoostLibraries
         foreach ($flat_libs as $details) {
             $update_version =
                 isset($details['update-version']) ? $details['update-version'] : (
-                isset($info['version']) ? $info['version'] : (
+                $version ? $version : (
                 isset($details['boost-version']) ? $details['boost-version']
                     : null));
             if (!$update_version) {
@@ -233,9 +232,6 @@ class BoostLibraries
 
             $lib = new BoostLibrary($details);
             $lib->update_version = $update_version;
-            if (!empty($info['module'])) {
-                $lib->set_module($info['module'], $info['path']);
-            }
             $this->db[$details['key']][(string) $update_version] = $lib;
         }
 

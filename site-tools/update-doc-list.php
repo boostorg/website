@@ -106,11 +106,6 @@ function update_from_git($libs, $location, $version) {
     foreach($modules as $name => $module) {
         $module_location = "{$location}/{$module['url']}";
         $module_command = "cd '{$module_location}' && git";
-        $info = array(
-            'version' => $branch,
-            'module' => $name,
-            'path' => $module['path'],
-        );
 
         foreach(BoostSuperProject::run_process("{$module_command} ls-tree {$module['hash']} "
                 ."meta/libraries.xml meta/libraries.json") as $entry)
@@ -121,7 +116,7 @@ function update_from_git($libs, $location, $version) {
                     $hash = $matches[1];
                     $filename = $matches[2];
                     $text = implode("\n", (BoostSuperProject::run_process("{$module_command} show {$hash}")));
-                    $libs->update(load_from_text($text, $filename, $info), $branch);
+                    $libs->update(load_from_text($text, $filename, $name, $module['path']), $branch);
                 }
             }
             catch (library_decode_exception $e) {
@@ -143,17 +138,11 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
 
     $super_project = new BoostSuperProject($location);
     foreach ($super_project->get_modules() as $name => $module_details) {
-        $info = array(
-            'version' => $branch,
-            'module' => $name,
-            'path' => $module_details['path'],
-        );
-
         foreach (
                 glob("{$location}/{$module_details['path']}/meta/libraries.*")
                 as $path) {
             try {
-                $libs->update(load_from_file($path, $info), $branch);
+                $libs->update(load_from_file($path, $name, $module_details['path']), $branch);
             }
             catch (library_decode_exception $e) {
                 echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
@@ -162,14 +151,15 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
     }
 }
 
-function load_from_file($path, $info) {
-    return load_from_text(file_get_contents($path), $path, $info);
+function load_from_file($path, $module_name, $module_path) {
+    return load_from_text(file_get_contents($path), $path,
+        $module_name, $module_path);
 }
 
-function load_from_text($text, $filename, $info) {
+function load_from_text($text, $filename, $module_name = null, $module_path = null) {
     $libraries = BoostLibrary::read_libraries_json($text);
     foreach($libraries as $lib) {
-        $lib->set_module($info['module'], $info['path']);
+        $lib->set_module($module_name, $module_path);
     }
     return $libraries;
 }
