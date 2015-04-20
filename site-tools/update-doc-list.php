@@ -34,7 +34,19 @@ function main() {
 
         $location = $real_location;
 
-        if (get_bool_from_array(BoostSuperProject::run_process(
+        // If this is not a git repo.
+        // TODO: Don't output stderr.
+        exec("git -C \"{$location}\" rev-parse --git-dir", $output, $return_var);
+        if ($return_var != 0)
+        {
+            if (!$version || !$version->is_numbered_release()) {
+                echo "Error: Release version required for release.\n";
+                exit(1);
+            }
+
+            update_from_release($libs, $location, $version);
+        }
+        else if (get_bool_from_array(BoostSuperProject::run_process(
                 "cd '${location}' && git rev-parse --is-bare-repository")))
         {
             if ($version) {
@@ -48,13 +60,12 @@ function main() {
         else
         {
             // TODO: Could get version from the branch in a git checkout.
-            // TODO: Support non-git trees (i.e. a release).
             if (!$version) {
                 echo "Error: Version required for local tree.\n";
                 exit(1);
             }
 
-            update_from_local_copy($libs, $location, $version);
+            update_from_local_clone($libs, $location, $version);
         }
     }
 
@@ -133,7 +144,7 @@ function update_from_git($libs, $location, $version) {
  * @param string $branch The branch to update from.
  * @throws RuntimeException
  */
-function update_from_local_copy($libs, $location, $branch = 'latest') {
+function update_from_local_clone($libs, $location, $branch = 'latest') {
     echo "Updating from local checkout/{$branch}\n";
 
     $super_project = new BoostSuperProject($location);
@@ -147,6 +158,65 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
             catch (library_decode_exception $e) {
                 echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
             }
+        }
+    }
+}
+
+/**
+ *
+ * @param \BoostLibraries $libs The libraries to update.
+ * @param string $location The location of the super project in the mirror.
+ * @param BoostVersion $version The version of the release.
+ * @throws RuntimeException
+ */
+function update_from_release($libs, $location, $version) {
+    // We don't have a list for modules, so have to work it out from the
+    // existing library data.
+
+    // If we're updating an old version, then use that as the basis,
+    // For a new version, take the data from the master branch, as this
+    // may contain new modules that aren't in a release yet.
+    $equivalent_version =
+        BoostVersion::$current->compare($version) >=0 ?
+            $version : BoostVersion::master();
+
+    // Grab the modules from the metadata.
+    $module_for_keys = [];
+    foreach($libs->get_for_version($equivalent_version) as $details) {
+        $module_for_keys[$details['key']] = $details['module'];
+    }
+
+    // Scan release for metadata files.
+    $module_paths = [];
+    foreach (new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator("{$location}/libs",
+        FilesystemIterator::CURRENT_AS_SELF |
+        FilesystemIterator::UNIX_PATHS)) as $info)
+    {
+        if ($info->isDot() && $info->getFilename()=='.') {
+            $path = dirname($info->getSubPathname());
+            if (is_file("{$info->getPathname()}/libraries.json")) {
+                $module_paths[] = "libs/".dirname($path);
+            }
+        }
+    }
+
+    foreach ($module_paths as $path) {
+        $json_path = "{$location}/{$path}/meta/libraries.json";
+        try {
+            $libraries = BoostLibrary::read_libraries_json(
+                file_get_contents($json_path), $version);
+
+            // Get the module for each library.
+            foreach($libraries as $lib) {
+                if (!isset($module_for_keys[$lib->details['key']])) {
+                    echo "No module for key: {$lib->details['key']}.\n";
+                } else {
+                    $lib->set_module($module_for_keys[$lib->details['key']], $path);
+                }
+            }
+        } catch (library_decode_exception $e) {
+            echo "Error decoding metadata for module at {$json_path}:\n{$e->content()}\n";
         }
     }
 }
