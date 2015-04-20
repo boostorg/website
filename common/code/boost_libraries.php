@@ -231,8 +231,11 @@ class BoostLibraries
                 unset($details['update-version']);
             }
 
-            $lib = new BoostLibrary($details, $info);
+            $lib = new BoostLibrary($details);
             $lib->update_version = $update_version;
+            if (!empty($info['module'])) {
+                $lib->set_module($info['module'], $info['path']);
+            }
             $this->db[$details['key']][(string) $update_version] = $lib;
         }
 
