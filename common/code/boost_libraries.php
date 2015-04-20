@@ -364,7 +364,7 @@ class BoostLibraries
                 if ($lib->update_version) {
                     $details['update-version'] = $lib->update_version;
                 }
-                $details = self::clean_for_output($details);
+                $details = BoostLibrary::clean_for_output($details);
 
                 $writer->startElement('library');
                 $this->write_element($writer, $exclude, $details, 'key');
@@ -452,23 +452,7 @@ class BoostLibraries
         $export = array();
         foreach ($this->db as $libs) {
             foreach($libs as $lib) {
-                $details = $lib->details;
-
-                if (empty($details['std'])) {
-                    unset($details['std']);
-                }
-                unset($details['std-tr1']);
-                unset($details['std-proposal']);
-
-                $details = self::clean_for_output($details, $exclude);
-
-                foreach ($exclude as $field) {
-                    if (isset($details[$field])) {
-                        unset($details[$field]);
-                    }
-                }
-
-                $export[] = $details;
+                $export[] = $lib->array_for_json($exclude);
             }
         }
 
@@ -586,34 +570,6 @@ class BoostLibraries
     }
 
 
-    /**
-     * Prepare library details for output.
-     *
-     * Currently just reduces the version information.
-     *
-     * @param array $lib
-     * @return array Library details for output.
-     */
-    static function clean_for_output($lib) {
-        //if (!isset($lib['update-version']) && !isset($lib['boost-version'])) {
-        //    throw new RuntimeException("No version data for {$lib['name']}.");
-        //}
-
-        if (isset($lib['update-version'])) {
-            $lib['update-version'] = (string) $lib['update-version'];
-        }
-
-        if (isset($lib['boost-version'])) {
-            $lib['boost-version'] = (string) $lib['boost-version'];
-        }
-
-        if (isset($lib['boost-version']) && isset($lib['update-version']) &&
-                $lib['update-version'] == $lib['boost-version']) {
-            unset($lib['update-version']);
-        }
-
-        return $lib;
-    }
 }
 
 class BoostLibraries_exception extends RuntimeException {}

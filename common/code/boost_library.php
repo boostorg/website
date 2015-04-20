@@ -33,6 +33,22 @@ class BoostLibrary
             }, $libs);
     }
 
+    static function get_libraries_json($libs, $exclude = array()) {
+        $export = array_map(function($lib) use($exclude) {
+            return $lib->array_for_json($exclude);
+        }, $libs);
+
+        if (count($export) == 1) { $export = reset($export); }
+
+        // I'm not sure why php escapes slashes, but I don't want them so
+        // I'll just zap them. Maybe stop doing that in the future.
+        return str_replace('\\/', '/',
+            json_encode($export,
+                (defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 0) |
+                (defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : 0)
+            ));
+    }
+
     public function __construct($lib) {
         assert(!isset($lib['update-version']));
         assert(isset($lib['key']));
@@ -87,6 +103,26 @@ class BoostLibrary
         $this->details['module'] = $module_name;
         $this->details['documentation'] =
             ltrim(resolve_url($documentation_url, $module_path), '/');
+    }
+
+    public function array_for_json($exclude = array()) {
+        $details = $this->details;
+
+        if (empty($details['std'])) {
+            unset($details['std']);
+        }
+        unset($details['std-tr1']);
+        unset($details['std-proposal']);
+
+        $details = self::clean_for_output($details, $exclude);
+
+        foreach ($exclude as $field) {
+            if (isset($details[$field])) {
+                unset($details[$field]);
+            }
+        }
+
+        return $details;
     }
 
     /** Kind of hacky way to fill in details that probably shouldn't be
@@ -154,5 +190,34 @@ class BoostLibrary
         else {
             return $names;
         }
+    }
+
+    /**
+     * Prepare library details for output.
+     *
+     * Currently just reduces the version information.
+     *
+     * @param array $lib
+     * @return array Library details for output.
+     */
+    static function clean_for_output($lib) {
+        //if (!isset($lib['update-version']) && !isset($lib['boost-version'])) {
+        //    throw new RuntimeException("No version data for {$lib['name']}.");
+        //}
+
+        if (isset($lib['update-version'])) {
+            $lib['update-version'] = (string) $lib['update-version'];
+        }
+
+        if (isset($lib['boost-version'])) {
+            $lib['boost-version'] = (string) $lib['boost-version'];
+        }
+
+        if (isset($lib['boost-version']) && isset($lib['update-version']) &&
+                $lib['update-version'] == $lib['boost-version']) {
+            unset($lib['update-version']);
+        }
+
+        return $lib;
     }
 }

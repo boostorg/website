@@ -19,9 +19,9 @@ if (isset($_GET['version'])) {
 // TODO: This is a bit awkard, should probably have an alternative
 //       to 'get_for_version' which returns a BoostLibraries instance
 //       rather than an array.
-$version_libs = BoostLibraries::from_array(
-    BoostLibraries::load()->get_for_version($version),
-    $version);
+$version_libs = array_map(function($lib) { return new BoostLibrary($lib); },
+    BoostLibraries::load()->get_for_version($version));
 
 header('Content-type: application/json');
+echo BoostLibrary::get_libraries_json($version_libs);
 echo $version_libs->to_json();
