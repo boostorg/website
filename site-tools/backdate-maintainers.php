@@ -47,9 +47,11 @@ function main() {
                 }
             }
 
-            $libraries->update(
-                BoostLibraries::from_array($library_details,
-                    array('version' => $tag)));
+            $update = array_map(function($lib) {
+                return new BoostLibrary($lib);
+            }, $library_details);
+
+            $libraries->update($update, $tag);
         }
     }
 

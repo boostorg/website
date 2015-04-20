@@ -121,7 +121,7 @@ function update_from_git($libs, $location, $version) {
                     $hash = $matches[1];
                     $filename = $matches[2];
                     $text = implode("\n", (BoostSuperProject::run_process("{$module_command} show {$hash}")));
-                    $libs->update(load_from_text($text, $filename, $info));
+                    $libs->update(load_from_text($text, $filename, $info), $branch);
                 }
             }
             catch (library_decode_exception $e) {
@@ -153,7 +153,7 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
                 glob("{$location}/{$module_details['path']}/meta/libraries.*")
                 as $path) {
             try {
-                $libs->update(load_from_file($path, $info));
+                $libs->update(load_from_file($path, $info), $branch);
             }
             catch (library_decode_exception $e) {
                 echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
@@ -167,19 +167,11 @@ function load_from_file($path, $info) {
 }
 
 function load_from_text($text, $filename, $info) {
-    switch (pathinfo($filename, PATHINFO_EXTENSION)) {
-        case 'xml':
-            $new_libs = BoostLibraries::from_xml($text, $info);
-            break;
-        case 'json':
-            $new_libs = BoostLibraries::from_json($text, $info);
-            break;
-        default:
-            echo "Error: $filename.\n"; exit(0);
-            assert(false);
+    $libraries = BoostLibrary::read_libraries_json($text);
+    foreach($libraries as $lib) {
+        $lib->set_module($info['module'], $info['path']);
     }
-
-    return $new_libs;
+    return $libraries;
 }
 
 function get_bool_from_array($array) {

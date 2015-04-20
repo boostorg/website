@@ -278,19 +278,18 @@ class BoostLibraries
     }
 
     /**
-     * Update the libraries from xml details.
+     * Update the libraries from an array of BoostLibrary.
      *
-     * @param \BoostLibraries $update
+     * @param array $update
      * @throws BoostLibraries_exception
      */
-    public function update($update) {
-        foreach($update->db as $key => $libs) {
-            if (count($libs) > 1) {
-                throw new BoostLibraries_exception("Duplicate key: {$key}\n");
-            }
+    public function update($update, $update_version) {
+        $update_version = BoostVersion::from($update_version);
 
-            $lib = reset($libs);
-            $this->db[$key][(string) $lib->update_version] = $lib;
+        foreach($update as $lib) {
+            $key = $lib->details['key'];
+            $lib->update_version = $update_version;
+            $this->db[$key][(string) $update_version] = $lib;
             $this->reduce_versions($key);
         }
 
@@ -302,14 +301,14 @@ class BoostLibraries
 
         $libs = $this->get_for_version($version, null,
             'BoostLibraries::filter_all');
-        foreach($libs as &$lib_details) {
+        $new_libs = [];
+        foreach($libs as $lib_details) {
             if (!isset($lib_details['boost-version'])) {
                 $lib_details['boost-version'] = $version;
             }
+            $new_libs[] = new BoostLibrary($lib_details);
         }
-        unset($lib_details);
-
-        $this->update(self::from_array($libs, array('version' => $version)));
+        $this->update($new_libs, $version);
     }
 
     private function sort_versions($key) {
