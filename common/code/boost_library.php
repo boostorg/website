@@ -89,7 +89,10 @@ class BoostLibrary
                 $value = trim(preg_replace('@\s+@', ' ', $value));
             }
         }
-        if (!empty($lib['category'])) { sort($lib['category']); }
+        if (!empty($lib['category'])) {
+            $lib['category'] = array_map('ucwords', $lib['category']);
+            sort($lib['category']);
+        }
 
         $this->details = $lib;
     }

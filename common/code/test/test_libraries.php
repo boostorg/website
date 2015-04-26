@@ -35,7 +35,7 @@ $accumulators_details = '{
     "authors": "Eric Niebler",
     "description": "Framework for incremental calculation, and collection of statistical accumulators.",
     "documentation": "libs/accumulators/",
-    "category": [ "Math" ]
+    "category": [ "math" ]
 }';
 
 $libraries->update(BoostLibrary::read_libraries_json($accumulators_details), '1.36.0');
