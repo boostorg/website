@@ -5,8 +5,11 @@ require_once(__DIR__.'/../boost.php');
 $libraries = BoostLibraries::from_xml('<?xml version="1.0" encoding="US-ASCII"?>
 <boost xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <categories>
-    <category name="String">
-      <title>String and text processing</title>
+    <category name="Math">
+      <title>Maths stuff.</title>
+    </category>
+    <category name="Generic">
+      <title>Nonbranded stuff.</title>
     </category>
   </categories>
   <library>
