@@ -34,7 +34,19 @@ function main() {
 
         $location = $real_location;
 
-        if (get_bool_from_array(BoostSuperProject::run_process(
+        // If this is not a git repo.
+        // TODO: Don't output stderr.
+        exec("git -C \"{$location}\" rev-parse --git-dir", $output, $return_var);
+        if ($return_var != 0)
+        {
+            if (!$version || !$version->is_numbered_release()) {
+                echo "Error: Release version required for release.\n";
+                exit(1);
+            }
+
+            update_from_release($libs, $location, $version);
+        }
+        else if (get_bool_from_array(BoostSuperProject::run_process(
                 "cd '${location}' && git rev-parse --is-bare-repository")))
         {
             if ($version) {
@@ -48,13 +60,12 @@ function main() {
         else
         {
             // TODO: Could get version from the branch in a git checkout.
-            // TODO: Support non-git trees (i.e. a release).
             if (!$version) {
                 echo "Error: Version required for local tree.\n";
                 exit(1);
             }
 
-            update_from_local_copy($libs, $location, $version);
+            update_from_local_clone($libs, $location, $version);
         }
     }
 
@@ -106,11 +117,6 @@ function update_from_git($libs, $location, $version) {
     foreach($modules as $name => $module) {
         $module_location = "{$location}/{$module['url']}";
         $module_command = "cd '{$module_location}' && git";
-        $info = array(
-            'version' => $branch,
-            'module' => $name,
-            'path' => $module['path'],
-        );
 
         foreach(BoostSuperProject::run_process("{$module_command} ls-tree {$module['hash']} "
                 ."meta/libraries.xml meta/libraries.json") as $entry)
@@ -121,7 +127,7 @@ function update_from_git($libs, $location, $version) {
                     $hash = $matches[1];
                     $filename = $matches[2];
                     $text = implode("\n", (BoostSuperProject::run_process("{$module_command} show {$hash}")));
-                    $libs->update(load_from_text($text, $filename, $info));
+                    $libs->update(load_from_text($text, $filename, $name, $module['path']), $branch);
                 }
             }
             catch (library_decode_exception $e) {
@@ -138,22 +144,16 @@ function update_from_git($libs, $location, $version) {
  * @param string $branch The branch to update from.
  * @throws RuntimeException
  */
-function update_from_local_copy($libs, $location, $branch = 'latest') {
+function update_from_local_clone($libs, $location, $branch = 'latest') {
     echo "Updating from local checkout/{$branch}\n";
 
     $super_project = new BoostSuperProject($location);
     foreach ($super_project->get_modules() as $name => $module_details) {
-        $info = array(
-            'version' => $branch,
-            'module' => $name,
-            'path' => $module_details['path'],
-        );
-
         foreach (
                 glob("{$location}/{$module_details['path']}/meta/libraries.*")
                 as $path) {
             try {
-                $libs->update(load_from_file($path, $info));
+                $libs->update(load_from_file($path, $name, $module_details['path']), $branch);
             }
             catch (library_decode_exception $e) {
                 echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
@@ -162,24 +162,76 @@ function update_from_local_copy($libs, $location, $branch = 'latest') {
     }
 }
 
-function load_from_file($path, $info) {
-    return load_from_text(file_get_contents($path), $path, $info);
-}
+/**
+ *
+ * @param \BoostLibraries $libs The libraries to update.
+ * @param string $location The location of the super project in the mirror.
+ * @param BoostVersion $version The version of the release.
+ * @throws RuntimeException
+ */
+function update_from_release($libs, $location, $version) {
+    // We don't have a list for modules, so have to work it out from the
+    // existing library data.
 
-function load_from_text($text, $filename, $info) {
-    switch (pathinfo($filename, PATHINFO_EXTENSION)) {
-        case 'xml':
-            $new_libs = BoostLibraries::from_xml($text, $info);
-            break;
-        case 'json':
-            $new_libs = BoostLibraries::from_json($text, $info);
-            break;
-        default:
-            echo "Error: $filename.\n"; exit(0);
-            assert(false);
+    // If we're updating an old version, then use that as the basis,
+    // For a new version, take the data from the master branch, as this
+    // may contain new modules that aren't in a release yet.
+    $equivalent_version =
+        BoostVersion::$current->compare($version) >=0 ?
+            $version : BoostVersion::master();
+
+    // Grab the modules from the metadata.
+    $module_for_keys = [];
+    foreach($libs->get_for_version($equivalent_version) as $details) {
+        $module_for_keys[$details['key']] = $details['module'];
     }
 
-    return $new_libs;
+    // Scan release for metadata files.
+    $module_paths = [];
+    foreach (new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator("{$location}/libs",
+        FilesystemIterator::CURRENT_AS_SELF |
+        FilesystemIterator::UNIX_PATHS)) as $info)
+    {
+        if ($info->isDot() && $info->getFilename()=='.') {
+            $path = dirname($info->getSubPathname());
+            if (is_file("{$info->getPathname()}/libraries.json")) {
+                $module_paths[] = "libs/".dirname($path);
+            }
+        }
+    }
+
+    foreach ($module_paths as $path) {
+        $json_path = "{$location}/{$path}/meta/libraries.json";
+        try {
+            $libraries = BoostLibrary::read_libraries_json(
+                file_get_contents($json_path), $version);
+
+            // Get the module for each library.
+            foreach($libraries as $lib) {
+                if (!isset($module_for_keys[$lib->details['key']])) {
+                    echo "No module for key: {$lib->details['key']}.\n";
+                } else {
+                    $lib->set_module($module_for_keys[$lib->details['key']], $path);
+                }
+            }
+        } catch (library_decode_exception $e) {
+            echo "Error decoding metadata for module at {$json_path}:\n{$e->content()}\n";
+        }
+    }
+}
+
+function load_from_file($path, $module_name, $module_path) {
+    return load_from_text(file_get_contents($path), $path,
+        $module_name, $module_path);
+}
+
+function load_from_text($text, $filename, $module_name = null, $module_path = null) {
+    $libraries = BoostLibrary::read_libraries_json($text);
+    foreach($libraries as $lib) {
+        $lib->set_module($module_name, $module_path);
+    }
+    return $libraries;
 }
 
 function get_bool_from_array($array) {

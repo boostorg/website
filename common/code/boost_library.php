@@ -10,10 +10,6 @@ require_once(dirname(__FILE__) . '/url.php');
 
 /**
  * The basic details about a single library.
- *
- * $info keys when creating:
- *      module  = module name
- *      path    = module path
  */
 class BoostLibrary
 {
@@ -23,7 +19,7 @@ class BoostLibrary
     /**
      * Read a libraries json file, and return an array of BoostLibrary.
      */
-    static function read_libraries_json($json, $info = array()) {
+    static function read_libraries_json($json) {
         $json = trim($json);
         $libs = json_decode($json, true);
         if (!$libs) {
@@ -32,27 +28,34 @@ class BoostLibrary
         if ($json[0] == '{') {
             $libs = array($libs);
         }
-        return array_map(
-            function($lib) { return new BoostLibrary($lib, $info); }, $libs);
+        return array_map(function($lib) {
+                return new BoostLibrary($lib);
+            }, $libs);
     }
 
-    public function __construct($lib, $info) {
+    static function get_libraries_json($libs, $exclude = array()) {
+        $export = array_map(function($lib) use($exclude) {
+            return $lib->array_for_json($exclude);
+        }, $libs);
+
+        if (count($export) == 1) { $export = reset($export); }
+
+        // I'm not sure why php escapes slashes, but I don't want them so
+        // I'll just zap them. Maybe stop doing that in the future.
+        return str_replace('\\/', '/',
+            json_encode($export,
+                (defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 0) |
+                (defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : 0)
+            ));
+    }
+
+    public function __construct($lib) {
         assert(!isset($lib['update-version']));
         assert(isset($lib['key']));
-        assert(isset($info['module']) == isset($info['path']));
 
         if (!empty($lib['boost-version'])) {
             $lib['boost-version']
                     = BoostVersion::from($lib['boost-version']);
-        }
-
-        if (isset($info['module'])) {
-            assert(!isset($lib['module']));
-            $lib['module'] = $info['module'];
-            $documentation_url =
-                isset($lib['documentation']) ? $lib['documentation'] : '.';
-            $lib['documentation'] =
-                ltrim(resolve_url($documentation_url, trim($info['path'], '/').'/'), '/');
         }
 
         // Preserve the current empty authors tags.
@@ -86,9 +89,43 @@ class BoostLibrary
                 $value = trim(preg_replace('@\s+@', ' ', $value));
             }
         }
-        if (!empty($lib['category'])) { sort($lib['category']); }
+        if (!empty($lib['category'])) {
+            $lib['category'] = array_map('ucwords', $lib['category']);
+            sort($lib['category']);
+        }
 
         $this->details = $lib;
+    }
+
+    public function set_module($module_name, $module_path) {
+        assert(!isset($this->details['module']));
+        $module_path = trim($module_path, '/').'/';
+        $documentation_url =
+            isset($this->details['documentation']) ?
+            $this->details['documentation'] : '.';
+        $this->details['module'] = $module_name;
+        $this->details['documentation'] =
+            ltrim(resolve_url($documentation_url, $module_path), '/');
+    }
+
+    public function array_for_json($exclude = array()) {
+        $details = $this->details;
+
+        if (empty($details['std'])) {
+            unset($details['std']);
+        }
+        unset($details['std-tr1']);
+        unset($details['std-proposal']);
+
+        $details = self::clean_for_output($details, $exclude);
+
+        foreach ($exclude as $field) {
+            if (isset($details[$field])) {
+                unset($details[$field]);
+            }
+        }
+
+        return $details;
     }
 
     /** Kind of hacky way to fill in details that probably shouldn't be
@@ -156,5 +193,34 @@ class BoostLibrary
         else {
             return $names;
         }
+    }
+
+    /**
+     * Prepare library details for output.
+     *
+     * Currently just reduces the version information.
+     *
+     * @param array $lib
+     * @return array Library details for output.
+     */
+    static function clean_for_output($lib) {
+        //if (!isset($lib['update-version']) && !isset($lib['boost-version'])) {
+        //    throw new RuntimeException("No version data for {$lib['name']}.");
+        //}
+
+        if (isset($lib['update-version'])) {
+            $lib['update-version'] = (string) $lib['update-version'];
+        }
+
+        if (isset($lib['boost-version'])) {
+            $lib['boost-version'] = (string) $lib['boost-version'];
+        }
+
+        if (isset($lib['boost-version']) && isset($lib['update-version']) &&
+                $lib['update-version'] == $lib['boost-version']) {
+            unset($lib['update-version']);
+        }
+
+        return $lib;
     }
 }

@@ -49,7 +49,7 @@ class BoostLibraries
      * @param string $xml
      * @return \BoostLibraries
      */
-    static function from_xml($xml, $info = null)
+    static function from_xml($xml)
     {
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
@@ -151,10 +151,10 @@ class BoostLibraries
             }
         }
 
-        return new self($libs, $categories, $info);
+        return new self($libs, $categories);
     }
 
-    static function from_json($json, $info = null)
+    static function from_json($json)
     {
         $categories = array();
         $libs = array();
@@ -183,7 +183,7 @@ class BoostLibraries
             $libs = $import;
         }
 
-        return new self($libs, $categories, $info);
+        return new self($libs, $categories);
     }
 
     /**
@@ -196,9 +196,9 @@ class BoostLibraries
      * @param array $libraries
      * @return \BoostLibraries
      */
-    static function from_array($libs, $info = null)
+    static function from_array($libs, $version = null)
     {
-        return new self($libs, array(), $info);
+        return new self($libs, array(), $version);
     }
 
     /**
@@ -206,12 +206,11 @@ class BoostLibraries
      * @param array $libs Array of lib details, can contain multiple historical
      *      entries, using 'update-version' to indicate their historical order.
      * @param array $categories
-     * @param array $info Optional info to use when creating libraries.
-     *                    As in BoostLibrary, with additional field:
-     *                    version = default update version
+     * @param array $version Optional update version to use when version info
+     *                       is missing.
      */
     private function __construct(array $flat_libs, array $categories,
-            $info = null)
+            $version = null)
     {
         $this->db = array();
         $this->categories = $categories;
@@ -219,7 +218,7 @@ class BoostLibraries
         foreach ($flat_libs as $details) {
             $update_version =
                 isset($details['update-version']) ? $details['update-version'] : (
-                isset($info['version']) ? $info['version'] : (
+                $version ? $version : (
                 isset($details['boost-version']) ? $details['boost-version']
                     : null));
             if (!$update_version) {
@@ -231,7 +230,7 @@ class BoostLibraries
                 unset($details['update-version']);
             }
 
-            $lib = new BoostLibrary($details, $info);
+            $lib = new BoostLibrary($details);
             $lib->update_version = $update_version;
             $this->db[$details['key']][(string) $update_version] = $lib;
         }
@@ -275,19 +274,39 @@ class BoostLibraries
     }
 
     /**
-     * Update the libraries from xml details.
+     * Update the libraries from an array of BoostLibrary.
      *
-     * @param \BoostLibraries $update
+     * @param array $update
      * @throws BoostLibraries_exception
      */
-    public function update($update) {
-        foreach($update->db as $key => $libs) {
-            if (count($libs) > 1) {
-                throw new BoostLibraries_exception("Duplicate key: {$key}\n");
+    public function update($update, $update_version) {
+        $update_version = BoostVersion::from($update_version);
+
+        foreach($update as $lib) {
+            $invalid_categories = array_diff($lib->details['category'],
+                array_keys($this->categories));
+            $valid_categories = array_intersect($lib->details['category'],
+                    array_keys($this->categories));
+            if ($invalid_categories) {
+                echo $lib->details['key'], ": Invalid categories: ",
+                   implode(', ', $invalid_categories), "\n"; 
             }
 
-            $lib = reset($libs);
-            $this->db[$key][(string) $lib->update_version] = $lib;
+            // The convention is that Miscellaneous contains libraries that
+            // aren't in any other category. Otherwise Miscellaneous would
+            // contain everything.
+            if (count($valid_categories) > 1 && in_array('Miscellaneous', $valid_categories)) {
+                echo $lib->details['key'], ": In Miscellaneous + other categories.\n";
+                unset($valid_categories[array_search('Miscellaneous', $valid_categories)]);
+            } else if (!$valid_categories) {
+                $valid_categories = ['Miscellaneous'];
+            }
+
+            $lib->details['category'] = $valid_categories;
+
+            $key = $lib->details['key'];
+            $lib->update_version = $update_version;
+            $this->db[$key][(string) $update_version] = $lib;
             $this->reduce_versions($key);
         }
 
@@ -299,14 +318,14 @@ class BoostLibraries
 
         $libs = $this->get_for_version($version, null,
             'BoostLibraries::filter_all');
-        foreach($libs as &$lib_details) {
+        $new_libs = [];
+        foreach($libs as $lib_details) {
             if (!isset($lib_details['boost-version'])) {
                 $lib_details['boost-version'] = $version;
             }
+            $new_libs[] = new BoostLibrary($lib_details);
         }
-        unset($lib_details);
-
-        $this->update(self::from_array($libs, array('version' => $version)));
+        $this->update($new_libs, $version);
     }
 
     private function sort_versions($key) {
@@ -366,7 +385,7 @@ class BoostLibraries
                 if ($lib->update_version) {
                     $details['update-version'] = $lib->update_version;
                 }
-                $details = self::clean_for_output($details);
+                $details = BoostLibrary::clean_for_output($details);
 
                 $writer->startElement('library');
                 $this->write_element($writer, $exclude, $details, 'key');
@@ -454,23 +473,7 @@ class BoostLibraries
         $export = array();
         foreach ($this->db as $libs) {
             foreach($libs as $lib) {
-                $details = $lib->details;
-
-                if (empty($details['std'])) {
-                    unset($details['std']);
-                }
-                unset($details['std-tr1']);
-                unset($details['std-proposal']);
-
-                $details = self::clean_for_output($details, $exclude);
-
-                foreach ($exclude as $field) {
-                    if (isset($details[$field])) {
-                        unset($details[$field]);
-                    }
-                }
-
-                $export[] = $details;
+                $export[] = $lib->array_for_json($exclude);
             }
         }
 
@@ -588,34 +591,6 @@ class BoostLibraries
     }
 
 
-    /**
-     * Prepare library details for output.
-     *
-     * Currently just reduces the version information.
-     *
-     * @param array $lib
-     * @return array Library details for output.
-     */
-    static function clean_for_output($lib) {
-        //if (!isset($lib['update-version']) && !isset($lib['boost-version'])) {
-        //    throw new RuntimeException("No version data for {$lib['name']}.");
-        //}
-
-        if (isset($lib['update-version'])) {
-            $lib['update-version'] = (string) $lib['update-version'];
-        }
-
-        if (isset($lib['boost-version'])) {
-            $lib['boost-version'] = (string) $lib['boost-version'];
-        }
-
-        if (isset($lib['boost-version']) && isset($lib['update-version']) &&
-                $lib['update-version'] == $lib['boost-version']) {
-            unset($lib['update-version']);
-        }
-
-        return $lib;
-    }
 }
 
 class BoostLibraries_exception extends RuntimeException {}
