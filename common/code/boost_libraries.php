@@ -318,7 +318,7 @@ class BoostLibraries
 
         $libs = $this->get_for_version($version, null,
             'BoostLibraries::filter_all');
-        $new_libs = [];
+        $new_libs = array();
         foreach($libs as $lib_details) {
             if (!isset($lib_details['boost-version'])) {
                 $lib_details['boost-version'] = $version;
