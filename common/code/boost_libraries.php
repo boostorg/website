@@ -299,7 +299,7 @@ class BoostLibraries
                 echo $lib->details['key'], ": In Miscellaneous + other categories.\n";
                 unset($valid_categories[array_search('Miscellaneous', $valid_categories)]);
             } else if (!$valid_categories) {
-                $valid_categories = ['Miscellaneous'];
+                $valid_categories = array('Miscellaneous');
             }
 
             $lib->details['category'] = $valid_categories;
