@@ -283,9 +283,11 @@ class BoostLibraries
         $update_version = BoostVersion::from($update_version);
 
         foreach($update as $lib) {
-            $invalid_categories = array_diff($lib->details['category'],
+            $category = array_key_exists('category', $lib->details)
+                ? $lib->details['category'] : array();
+            $invalid_categories = array_diff($category,
                 array_keys($this->categories));
-            $valid_categories = array_intersect($lib->details['category'],
+            $valid_categories = array_intersect($category,
                     array_keys($this->categories));
             if ($invalid_categories) {
                 echo $lib->details['key'], ": Invalid categories: ",
