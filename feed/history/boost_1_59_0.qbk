@@ -47,6 +47,21 @@
   * [ticket 11234] doesn't compile when used with boost::range::algorithms
   * [ticket 11356] coroutines segfaults with BOOST_USE_SEGMENTED_STACKS
 
+* [phrase library..[@/libs/log/ Log]:]
+  * General changes:
+    * On systems with [@https://gcc.gnu.org/wiki/Visibility symbol visibility] support (e.g. Linux) the library is now built with all internal symbols hidden.
+    * *Breaking change:* The library has been ported to Boost.TypeIndex for its underlying type info management tool. This affected the following public interfaces:
+      * `invalid_type` exceptions thrown by the library now have `typeindex::type_index` attached as the description of the offending type. The type was previously identified by `type_info_wrapper`.
+      * Boost.Exception `type_info_info` error information now contains `typeindex::type_index` instead of `type_info_wrapper`.
+      * `attribute_value::get_type()` now returns `typeindex::type_index` instead of `type_info_wrapper`. User-defined attribute value implementations should be similarly changed (the `attribute_value::impl::get_type()` virtual method now also returns `typeindex::type_index`).
+    * `type_info_wrapper` component has been deprecated and will be removed in future releases. Boost.TypeIndex is recommended as a replacement.
+    * Removed the previously deprecated headers: `boost/log/utility/intrusive_ref_counter.hpp`, `boost/log/utility/explicit_operator_bool.hpp`, `boost/log/utility/empty_deleter.hpp`.
+    * Added support for building the library for OpenBSD. ([ticket 11446])
+    * Improved internal implementation of the event synchronization primitive used for asynchronous logging. ([ticket 11398])
+  * Bug fixes:
+    * Fixed incorrect behavior of `attribute_value_set::insert()` and `attribute_value_set` constructor in some cases. ([ticket 11190])
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
 * [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
   * Added [@/libs/multi_index/doc/tutorial/indices.html#rnk_indices ranked indices].
   * Maintenance fixes.
