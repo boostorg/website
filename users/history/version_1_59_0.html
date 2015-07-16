@@ -74,6 +74,16 @@
                 <a href="https://svn.boost.org/trac/boost/ticket/11223">#11223</a> check support for std::integer_sequence
               </div>
             </li>
+            <li>
+              <div>
+                execution_context uses internally Windows Fibers with BOOST_USE_WINFIBERS
+              </div>
+            </li>
+            <li>
+              <div>
+                support of assember for MinGW on Windows (32bit)
+              </div>
+            </li>
           </ul>
         </div>
       </li>
@@ -99,6 +109,103 @@
             <li>
               <div>
                 <a href="https://svn.boost.org/trac/boost/ticket/11356">#11356</a> coroutines segfaults with BOOST_USE_SEGMENTED_STACKS
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/1_59_0_b1/libs/log/">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                General changes:
+                <ul>
+                  <li>
+                    <div>
+                      On systems with <a href="https://gcc.gnu.org/wiki/Visibility">symbol
+                      visibility</a> support (e.g. Linux) the library is now
+                      built with all internal symbols hidden.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <strong>Breaking change:</strong> The library
+                      has been ported to Boost.TypeIndex for its underlying type
+                      info management tool. This affected the following public interfaces:
+                      <ul>
+                        <li>
+                          <div>
+                            <code><span class="identifier">invalid_type</span></code>
+                            exceptions thrown by the library now have <code><span class="identifier">typeindex</span><span class="special">::</span><span class="identifier">type_index</span></code> attached
+                            as the description of the offending type. The type was
+                            previously identified by <code><span class="identifier">type_info_wrapper</span></code>.
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            Boost.Exception <code><span class="identifier">type_info_info</span></code>
+                            error information now contains <code><span class="identifier">typeindex</span><span class="special">::</span><span class="identifier">type_index</span></code>
+                            instead of <code><span class="identifier">type_info_wrapper</span></code>.
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            <code><span class="identifier">attribute_value</span><span class="special">::</span><span class="identifier">get_type</span><span class="special">()</span></code> now returns <code><span class="identifier">typeindex</span><span class="special">::</span><span class="identifier">type_index</span></code> instead
+                            of <code><span class="identifier">type_info_wrapper</span></code>.
+                            User-defined attribute value implementations should be
+                            similarly changed (the <code><span class="identifier">attribute_value</span><span class="special">::</span><span class="identifier">impl</span><span class="special">::</span><span class="identifier">get_type</span><span class="special">()</span></code> virtual method now
+                            also returns <code><span class="identifier">typeindex</span><span class="special">::</span><span class="identifier">type_index</span></code>).
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">type_info_wrapper</span></code>
+                      component has been deprecated and will be removed in future
+                      releases. Boost.TypeIndex is recommended as a replacement.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Removed the previously deprecated headers: <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">log</span><span class="special">/</span><span class="identifier">utility</span><span class="special">/</span><span class="identifier">intrusive_ref_counter</span><span class="special">.</span><span class="identifier">hpp</span></code>,
+                      <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">log</span><span class="special">/</span><span class="identifier">utility</span><span class="special">/</span><span class="identifier">explicit_operator_bool</span><span class="special">.</span><span class="identifier">hpp</span></code>, <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">log</span><span class="special">/</span><span class="identifier">utility</span><span class="special">/</span><span class="identifier">empty_deleter</span><span class="special">.</span><span class="identifier">hpp</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added support for building the library for OpenBSD. (<a href="https://svn.boost.org/trac/boost/ticket/11446">#11446</a>)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Improved internal implementation of the event synchronization
+                      primitive used for asynchronous logging. (<a href="https://svn.boost.org/trac/boost/ticket/11398">#11398</a>)
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Bug fixes:
+                <ul>
+                  <li>
+                    <div>
+                      Fixed incorrect behavior of <code><span class="identifier">attribute_value_set</span><span class="special">::</span><span class="identifier">insert</span><span class="special">()</span></code> and <code><span class="identifier">attribute_value_set</span></code>
+                      constructor in some cases. (<a href="https://svn.boost.org/trac/boost/ticket/11190">#11190</a>)
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                See <a href="/doc/libs/1_59_0_b1/libs/log/doc/html/log/changelog.html">changelog</a>
+                for more details.
               </div>
             </li>
           </ul>
@@ -154,6 +261,97 @@
               <div>
                 Fix <code><span class="identifier">MAKE_YYYYM</span></code> macros
                 to correctly limit the month.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/1_59_0_b1/libs/test/">Boost.Test v3</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Major new features
+                <ul>
+                  <li>
+                    <div>
+                      <code><span class="identifier">BOOST_TEST</span></code>
+                      generic assertion
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      data driven test cases
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      test units can now have <em>attributes</em> for
+                      finer control over tests behavior (logical grouping, test dependencies,
+                      test enabling/disabling)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      CLI learned <code><span class="identifier">colour_output</span></code>
+                      and <code><span class="identifier">list_content</span></code>,
+                      extended unit test filtering (negation, labels)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      refactored and rewritten documentation using quickbook
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Addressed issues:
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/2018">#2018</a> <a href="https://svn.boost.org/trac/boost/ticket/2450">#2450</a> <a href="https://svn.boost.org/trac/boost/ticket/2600">#2600</a> <a href="https://svn.boost.org/trac/boost/ticket/2717">#2717</a> <a href="https://svn.boost.org/trac/boost/ticket/2759">#2759</a> <a href="https://svn.boost.org/trac/boost/ticket/3182">#3182</a> <a href="https://svn.boost.org/trac/boost/ticket/3316">#3316</a> <a href="https://svn.boost.org/trac/boost/ticket/3392">#3392</a> <a href="https://svn.boost.org/trac/boost/ticket/3402">#3402</a> <a href="https://svn.boost.org/trac/boost/ticket/3445">#3445</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/3463">#3463</a> <a href="https://svn.boost.org/trac/boost/ticket/3542">#3542</a> <a href="https://svn.boost.org/trac/boost/ticket/3481">#3481</a> <a href="https://svn.boost.org/trac/boost/ticket/3495">#3495</a> <a href="https://svn.boost.org/trac/boost/ticket/3592">#3592</a> <a href="https://svn.boost.org/trac/boost/ticket/3595">#3595</a> <a href="https://svn.boost.org/trac/boost/ticket/3623">#3623</a> <a href="https://svn.boost.org/trac/boost/ticket/3664">#3664</a> <a href="https://svn.boost.org/trac/boost/ticket/3784">#3784</a> <a href="https://svn.boost.org/trac/boost/ticket/3785">#3785</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/3811">#3811</a> <a href="https://svn.boost.org/trac/boost/ticket/3834">#3834</a> <a href="https://svn.boost.org/trac/boost/ticket/3896">#3896</a> <a href="https://svn.boost.org/trac/boost/ticket/3932">#3932</a> <a href="https://svn.boost.org/trac/boost/ticket/3938">#3938</a> <a href="https://svn.boost.org/trac/boost/ticket/3964">#3964</a> <a href="https://svn.boost.org/trac/boost/ticket/3978">#3978</a> <a href="https://svn.boost.org/trac/boost/ticket/3979">#3979</a> <a href="https://svn.boost.org/trac/boost/ticket/4161">#4161</a> <a href="https://svn.boost.org/trac/boost/ticket/4275">#4275</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/4389">#4389</a> <a href="https://svn.boost.org/trac/boost/ticket/4434">#4434</a> <a href="https://svn.boost.org/trac/boost/ticket/4587">#4587</a> <a href="https://svn.boost.org/trac/boost/ticket/4806">#4806</a> <a href="https://svn.boost.org/trac/boost/ticket/4911">#4911</a> <a href="https://svn.boost.org/trac/boost/ticket/4923">#4923</a> <a href="https://svn.boost.org/trac/boost/ticket/4924">#4924</a> <a href="https://svn.boost.org/trac/boost/ticket/4982">#4982</a> <a href="https://svn.boost.org/trac/boost/ticket/5008">#5008</a> <a href="https://svn.boost.org/trac/boost/ticket/5036">#5036</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/5262">#5262</a> <a href="https://svn.boost.org/trac/boost/ticket/5374">#5374</a> <a href="https://svn.boost.org/trac/boost/ticket/5412">#5412</a> <a href="https://svn.boost.org/trac/boost/ticket/5563">#5563</a> <a href="https://svn.boost.org/trac/boost/ticket/5582">#5582</a> <a href="https://svn.boost.org/trac/boost/ticket/5599">#5599</a> <a href="https://svn.boost.org/trac/boost/ticket/5718">#5718</a> <a href="https://svn.boost.org/trac/boost/ticket/5729">#5729</a> <a href="https://svn.boost.org/trac/boost/ticket/5870">#5870</a> <a href="https://svn.boost.org/trac/boost/ticket/5972">#5972</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/6002">#6002</a> <a href="https://svn.boost.org/trac/boost/ticket/6071">#6071</a> <a href="https://svn.boost.org/trac/boost/ticket/6074">#6074</a> <a href="https://svn.boost.org/trac/boost/ticket/6161">#6161</a> <a href="https://svn.boost.org/trac/boost/ticket/6766">#6766</a> <a href="https://svn.boost.org/trac/boost/ticket/6712">#6712</a> <a href="https://svn.boost.org/trac/boost/ticket/6748">#6748</a> <a href="https://svn.boost.org/trac/boost/ticket/7046">#7046</a> <a href="https://svn.boost.org/trac/boost/ticket/7136">#7136</a> <a href="https://svn.boost.org/trac/boost/ticket/7410">#7410</a> <a href="https://svn.boost.org/trac/boost/ticket/7894">#7894</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/8201">#8201</a> <a href="https://svn.boost.org/trac/boost/ticket/8272">#8272</a> <a href="https://svn.boost.org/trac/boost/ticket/8467">#8467</a> <a href="https://svn.boost.org/trac/boost/ticket/8862">#8862</a> <a href="https://svn.boost.org/trac/boost/ticket/8895">#8895</a> <a href="https://svn.boost.org/trac/boost/ticket/9179">#9179</a> <a href="https://svn.boost.org/trac/boost/ticket/9272">#9272</a> <a href="https://svn.boost.org/trac/boost/ticket/9390">#9390</a> <a href="https://svn.boost.org/trac/boost/ticket/9409">#9409</a> <a href="https://svn.boost.org/trac/boost/ticket/9537">#9537</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://svn.boost.org/trac/boost/ticket/9539">#9539</a> <a href="https://svn.boost.org/trac/boost/ticket/9581">#9581</a> <a href="https://svn.boost.org/trac/boost/ticket/9960">#9960</a> <a href="https://svn.boost.org/trac/boost/ticket/10318">#10318</a> <a href="https://svn.boost.org/trac/boost/ticket/10394">#10394</a> <a href="https://svn.boost.org/trac/boost/ticket/10888">#10888</a> <a href="https://svn.boost.org/trac/boost/ticket/11054">#11054</a> <a href="https://svn.boost.org/trac/boost/ticket/11347">#11347</a> <a href="https://svn.boost.org/trac/boost/ticket/11358">#11358</a> <a href="https://svn.boost.org/trac/boost/ticket/11359">#11359</a>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </li>
           </ul>
