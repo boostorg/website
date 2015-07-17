@@ -46,6 +46,20 @@
   * [ticket 11230] coroutine_error returns dangling exception message pointer
   * [ticket 11234] doesn't compile when used with boost::range::algorithms
   * [ticket 11356] coroutines segfaults with BOOST_USE_SEGMENTED_STACKS
+  
+* [phrase library..[@/libs/fusion/ Fusion]:]
+  * Add a new concept, `Unbounded Sequence` for sequence and `Unbounded Iterator` for iterator.
+    Currently, `Unbounded Sequence` affects the behaviour of `fusion::(value_)at(_c)` and `fusion::(value_)at_key`. `Unbounded Iterator` has no effect (reserved for future release).
+    For more details, see [@libs/fusion/doc/html/fusion/sequence/concepts/unbounded_sequence.html Unbounded Sequence] and
+    [@/libs/fusion/doc/html/fusion/iterator/concepts/unbounded_iterator.html Unbounded Iterator]. ([@https://github.com/boostorg/fusion/pull/85 pull-request 85])
+  * Support C++11 variadic templates for `fusion::list`. ([@https://github.com/boostorg/fusion/pull/84])
+  * ['Fixed bugs:]
+    * Fix missing include `<utility>`. ([ticket 11161])
+    * Revert some constexpr support, regression in 1.58.0. ([ticket 11211], [ticket 11267])
+    * Fix compile error with fold due to missing include. ([ticket 11249])
+    * Fix compile error with adapting an empty struct, regression in 1.58.0. ([ticket 11269])
+    * Remove use of obsolete (and incorrect) workaround for sequence comparison, it affects MSVC-8 and earlier. ([@https://github.com/boostorg/fusion/pull/78 pull-request 78])
+    * Fix compile error while copying a sequece which derived from fusion::list, regression in 1.58.0. ([@https://github.com/boostorg/fusion/pull/87 pull-request 87])
 
 * [phrase library..[@/libs/log/ Log]:]
   * General changes:
