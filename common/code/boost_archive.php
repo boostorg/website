@@ -165,6 +165,7 @@ class BoostArchive
             array('@[.]png$@i','raw','image/png'),
             array('@[.]gif$@i','raw','image/gif'),
             array('@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
+            array('@[.]svg$@i','raw','image/svg+xml'),
             array('@[.]css$@i','raw','text/css'),
             array('@[.]js$@i','raw','application/x-javascript'),
             array('@[.]pdf$@i','raw','application/pdf'),

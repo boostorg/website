@@ -2,10 +2,13 @@
     [quickbook 1.6]
     [source-mode c++]
     [purpose
+        [/
         New Libraries:
+        Coroutine2
+        ]
         Updated Libraries:
-        [/ Please don't add updated libraries yet, it
-           can create unnecessary merge conflicts.]
+        Container, Context, Coroutine, Fusion, Interprocess, Intrusive, Log,
+        Move, Multi-index Containers, Predef, Program Options, Test.
     ]
     [authors [Dawes, Beman]]
     [/ last-revision is used for the final release date]
@@ -14,19 +17,20 @@
 
 [import ext.qbk]
 
-[/ Add attributes here as release progresses. See end of file for details. ]
+[status beta]
+[download http://sourceforge.net/projects/boost/files/boost/1.59.0.beta.1/]
+[download_basename boost_1_59_0_b1]
 [documentation /doc/libs/1_59_0_b1/]
 
+[/
 [section New Libraries]
 
-[/ Example:
-* [phrase library..[@/libs/accumulators/ Accumulators]:] Framework for
-  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
-]
-
-* /TODO/
+* [phrase library..[@/libs/coroutine2/ Coroutine2]:]
+  An extendible and configurable type-conversion framework,
+  from Vladimir Batov.
 
 [endsect]
+]
 
 [section Updated Libraries]
 
@@ -59,7 +63,7 @@
     Currently, `Unbounded Sequence` affects the behaviour of `fusion::(value_)at(_c)` and `fusion::(value_)at_key`. `Unbounded Iterator` has no effect (reserved for future release).
     For more details, see [@libs/fusion/doc/html/fusion/sequence/concepts/unbounded_sequence.html Unbounded Sequence] and
     [@/libs/fusion/doc/html/fusion/iterator/concepts/unbounded_iterator.html Unbounded Iterator]. ([@https://github.com/boostorg/fusion/pull/85 pull-request 85])
-  * Support C++11 variadic templates for `fusion::list`. ([@https://github.com/boostorg/fusion/pull/84])
+  * Support C++11 variadic templates for `fusion::list`. ([@https://github.com/boostorg/fusion/pull/84 pull-request 84])
   * ['Fixed bugs:]
     * Fix missing include `<utility>`. ([ticket 11161])
     * Revert some constexpr support, regression in 1.58.0. ([ticket 11211], [ticket 11267])
@@ -67,6 +71,8 @@
     * Fix compile error with adapting an empty struct, regression in 1.58.0. ([ticket 11269])
     * Remove use of obsolete (and incorrect) workaround for sequence comparison, it affects MSVC-8 and earlier. ([@https://github.com/boostorg/fusion/pull/78 pull-request 78])
     * Fix compile error while copying a sequece which derived from fusion::list, regression in 1.58.0. ([@https://github.com/boostorg/fusion/pull/87 pull-request 87])
+    * Fix compile error on copying a fusion::tuple. ([ticket 11140])
+    * Add workarounds for GCC 4.6 with constexpr. ([ticket 11517])
 
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
   * [@https://svn.boost.org/trac/boost/ticket/5139 ( Trac #5139 ( (['"Initial Stream Position in Boost.Interprocess.Vectorstream"])].
@@ -111,7 +117,7 @@
   * Fix `BOOST_ARCH_PARISC` to correctly spelled name.
   * Fix `MAKE_YYYYM` macros to correctly limit the month.
 
-* [phrase library..[@/libs/program_options/index.html Program Options]:]
+* [phrase library..[@/libs/program_options/ Program Options]:]
 
   * Fix compilation errors, missing dllexport and warnings with MSVC and MinGW
     (Daniela Engert, Marcel Raad).
@@ -200,14 +206,6 @@ managed this release.
 [endsect]
 
 [/
-For Beta release, something like:
-
-[status beta]
-[download http://sourceforge.net/projects/boost/files/boost/1.56.0.beta.1/]
-[download_basename boost_1_56_0_b1]
-[documentation /doc/libs/1_56_0_b1/]
-
-Add libraries to 'purpose field'.
 
 For final release:
 
