@@ -16,6 +16,6 @@ $archive = new BoostArchive(array(
 
 $archive->display_from_archive(
   array(
-  array('@[.](html|htm)$@i','basic','text/html')
+  array('', '@[.](html|htm)$@i','basic','text/html')
   )
 );
