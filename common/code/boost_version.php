@@ -79,6 +79,7 @@ class BoostVersion {
                 case 'latest': return self::latest();
             }
 
+            // TODO: Make this stricter by only matching whole string. Might break something?
             if (preg_match('@(\d+)[._](\d+)[._](\d+)([-._ ]?b(?:eta)?(\d*))?@',
                 $value, $matches))
             {
@@ -128,7 +129,7 @@ class BoostVersion {
 
         if ($boost_version == null) {
             $boost_version = isset($_SERVER["PATH_INFO"]) ?
-                BoostVersion::from($_SERVER["PATH_INFO"]) :
+                BoostVersion::from(strtok($_SERVER["PATH_INFO"], '/')) :
                 false;
         }
 
