@@ -193,7 +193,12 @@ class BoostArchive
             $extractor = $this->params['override_extractor'];
 
         if (!$extractor) {
-            file_not_found($this->params);
+            if (strpos($_SERVER['HTTP_HOST'], 'www.boost.org') === false) {
+                file_not_found($this->params,
+                    "No extractor found for filename.");
+            } else {
+                file_not_found($this->params);
+            }
             return;
         }
 
