@@ -47,7 +47,7 @@ switch (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '')
 
 define('ARCHIVE_FILE_PREFIX', '');
 
-require_once(BOOST_CONFIG_FILE);
+if (is_file(BOOST_CONFIG_FILE)) { require_once(BOOST_CONFIG_FILE); }
 
 if(!function_exists('virtual'))
 {

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Filter Tests</title>
 </head>
 <body>
@@ -44,12 +45,81 @@ $test_text_expected = <<<EOL
 
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Hello_world_test.txt</title></head>
 <body>
 <h3>Hello_world_test.txt</h3>
 <pre>
 Hello World!</pre>
+</body>
+</html>
+EOL;
+
+$params = Array(
+    'key' => 'Hello_world_test.txt',
+    'content' => $test_text
+);
+
+filter_test('text', $params, $test_text_expected);
+
+/* UTF-8 Plain Text
+ */
+
+$test_text = <<<EOL
+Iñtërnâtiônàlizætiøn
+EOL;
+
+$test_text_expected = <<<EOL
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Hello_world_test.txt</title></head>
+<body>
+<h3>Hello_world_test.txt</h3>
+<pre>
+I&ntilde;t&euml;rn&acirc;ti&ocirc;n&agrave;liz&aelig;ti&oslash;n</pre>
+</body>
+</html>
+EOL;
+
+$params = Array(
+    'key' => 'Hello_world_test.txt',
+    'content' => $test_text
+);
+
+filter_test('text', $params, $test_text_expected);
+
+
+/* Non-UTF-8 Plain Text
+ *
+ * We can't practically suppport encodings other than UTF-8, so if
+ * the text isn't valid UTF-8 then use a fallback, the unknown character
+ * symbol.
+ */
+
+$unknown_character = "\xef\xbf\xbd";
+
+// The second line is valid UTF-8, but because the string was
+// rejected it still gets marked as an unknown character.
+$test_text = <<<EOL
+\xb6
+Iñtërnâtiônàlizætiøn
+EOL;
+
+$test_text_expected = <<<EOL
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Hello_world_test.txt</title></head>
+<body>
+<h3>Hello_world_test.txt</h3>
+<pre>
+{$unknown_character}
+I{$unknown_character}{$unknown_character}t{$unknown_character}{$unknown_character}rn{$unknown_character}{$unknown_character}ti{$unknown_character}{$unknown_character}n{$unknown_character}{$unknown_character}liz{$unknown_character}{$unknown_character}ti{$unknown_character}{$unknown_character}n</pre>
 </body>
 </html>
 EOL;
@@ -74,7 +144,7 @@ $test_cpp_expected = <<<EOL
 
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>foo/test.cpp</title></head>
 <body>
 <h3>foo/test.cpp</h3>
