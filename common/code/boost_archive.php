@@ -334,9 +334,9 @@ function display_raw_file($params, $type)
         if($exit_status > 3) {
             $unzip_error = unzip_error($params, $exit_status);
             if ($unzip_error[0]) {
-                header("{$_SERVER["SERVER_PROTOCOL"]} {$unzip_error[0]}");
+                header("{$_SERVER["SERVER_PROTOCOL"]} {$unzip_error[0]}", true);
             }
-            echo "Error extracting file: {$unzip_error[1]}.";
+            echo "Error extracting file: {$unzip_error[1]}";
         }
     }
     else {
