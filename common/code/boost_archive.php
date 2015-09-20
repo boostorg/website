@@ -331,8 +331,13 @@ function display_raw_file($params, $type)
         // Don't display errors for a corrupt zip file, as we seemd to
         // be getting them for legitimate files.
 
-        if($exit_status > 3)
-            echo 'Error extracting file: '.unzip_error($params, $exit_status);
+        if($exit_status > 3) {
+            $unzip_error = unzip_error($params, $exit_status);
+            if ($unzip_error[0]) {
+                header("{$_SERVER["SERVER_PROTOCOL"]} {$unzip_error[0]}");
+            }
+            echo "Error extracting file: {$unzip_error[1]}.";
+        }
     }
     else {
         readfile($params['file']);
@@ -353,7 +358,11 @@ function extract_file($params, &$content) {
             return true;
         }
         else {
-            $content = strstr($_SERVER['HTTP_HOST'], 'beta') ? unzip_error($params, $exit_status) : null;
+            $content = null;
+            if (strstr($_SERVER['HTTP_HOST'], 'beta')) {
+                // TODO: Consider using the error code from unzip_error here.
+                $content = unzip_error($params, $exit_status)[1];
+            }
             return false;
         }
     }
@@ -467,8 +476,10 @@ function latest_link($params)
 // Return a readable error message for unzip exit state.
 
 function unzip_error($params, $exit_status) {
+    $code="500 Internal Server Error";
+
     switch($exit_status) {
-    case 0: $message = 'No error.'; break;
+    case 0: $message = 'No error.'; $code = null; break;
     case 1: $message = 'One  or  more  warning  errors  were  encountered.'; break;
     case 2: $message = 'A generic error in the zipfile format was detected.'; break;
     case 3: $message = 'A severe error in the zipfile format was detected.'; break;
@@ -484,7 +495,7 @@ function unzip_error($params, $exit_status) {
         $message .= '.';
         break;
     case 10: $message = 'Invalid options were specified on the command line.'; break;
-    case 11: $message = 'No matching files were found.'; break;
+    case 11: $message = 'No matching files were found.'; $code="404 Not Found"; break;
     case 50: $message = 'The disk is (or was) full during extraction.'; break;
     case 51: $message = 'The end of the ZIP archive was encountered prematurely.'; break;
     case 80: $message = 'The user aborted unzip prematurely with control-C (or similar).'; break;
@@ -493,5 +504,5 @@ function unzip_error($params, $exit_status) {
     default: $message = 'Unknown unzip error code.'; break;
     }
 
-    return "Error code ".html_encode($exit_status)." - {$message}";
+    return array($code, "Error code ".html_encode($exit_status)." - {$message}");
 }
