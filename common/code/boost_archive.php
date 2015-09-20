@@ -224,9 +224,9 @@ class BoostArchive
         else {
             // Read file from hard drive or zipfile
 
-            // Note: this sets $this->params['content'] with either the content or an error
-            // message:
-            if(!extract_file($this->params, $this->params['content'])) {
+            // Note: this sets $this->params['content'] with either the
+            // content or an error message.
+            if(!extract_file($this->params)) {
                 error_page($this->params, $this->params['content']);
                 return;
             }
@@ -332,11 +332,11 @@ function display_raw_file($params, $type)
         // be getting them for legitimate files.
 
         if($exit_status > 3) {
-            $unzip_error = unzip_error($params, $exit_status);
-            if ($unzip_error[0]) {
-                header("{$_SERVER["SERVER_PROTOCOL"]} {$unzip_error[0]}", true);
+            unzip_error($params, $exit_status);
+            if ($params['error']) {
+                header("{$_SERVER["SERVER_PROTOCOL"]} {$params['error']}", true);
             }
-            echo "Error extracting file: {$unzip_error[1]}";
+            echo "Error extracting file: {$params['content']}";
         }
     }
     else {
@@ -344,7 +344,7 @@ function display_raw_file($params, $type)
     }
 }
 
-function extract_file($params, &$content) {
+function extract_file(&$params) {
     if($params['zipfile']) {
         $file_handle = popen(unzip_command($params),'r');
         $text = '';
@@ -354,21 +354,19 @@ function extract_file($params, &$content) {
         $exit_status = pclose($file_handle);
 
         if($exit_status == 0) {
-            $content = $text;
+            $params['content'] = $text;
             return true;
         }
         else {
-            $content = null;
+            $params['content'] = null;
             if (strstr($_SERVER['HTTP_HOST'], 'beta')) {
-                // TODO: Consider using the error code from unzip_error here.
-                $content = unzip_error($params, $exit_status);
-                $content = $content[1];
+                unzip_error($params, $exit_status);
             }
             return false;
         }
     }
     else {
-        $content = file_get_contents($params['file']);
+        $params['content'] = file_get_contents($params['file']);
         return true;
     }
 }
@@ -474,9 +472,9 @@ function latest_link($params)
     }
 }
 
-// Return a readable error message for unzip exit state.
+// Updates $params with the appropriate unzip error.
 
-function unzip_error($params, $exit_status) {
+function unzip_error(&$params, $exit_status) {
     $code="500 Internal Server Error";
 
     switch($exit_status) {
@@ -505,5 +503,6 @@ function unzip_error($params, $exit_status) {
     default: $message = 'Unknown unzip error code.'; break;
     }
 
-    return array($code, "Error code ".html_encode($exit_status)." - {$message}");
+    $params['content'] = "Error code ".html_encode($exit_status)." - {$message}";
+    if ($code) { $params['error'] = $code; }
 }
