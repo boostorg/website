@@ -218,8 +218,7 @@ class BoostArchive
             if (!http_headers($type, filemtime($check_file), $expires))
                 return;
 
-            if($_SERVER['REQUEST_METHOD'] != 'HEAD')
-                display_raw_file($this->params, $type);
+            display_raw_file($this->params, $_SERVER['REQUEST_METHOD'], $type);
         }
         else {
             // Read file from hard drive or zipfile
@@ -320,13 +319,18 @@ function conditional_get($last_modified)
     return false;
 }
 
-function display_raw_file($params, $type)
+function display_raw_file($params, $method, $type)
 {
     ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
     if($params['zipfile']) {
-        $file_handle = popen(unzip_command($params), 'rb');
-        fpassthru($file_handle);
-        $exit_status = pclose($file_handle);
+        if ($method == 'HEAD') {
+            $output = null;
+            exec(unzip_command($params).' > /dev/null', $output, $exit_status);
+        } else {
+            $file_handle = popen(unzip_command($params), 'rb');
+            fpassthru($file_handle);
+            $exit_status = pclose($file_handle);
+        }
     
         // Don't display errors for a corrupt zip file, as we seemd to
         // be getting them for legitimate files.
@@ -340,7 +344,7 @@ function display_raw_file($params, $type)
         }
     }
     else {
-        readfile($params['file']);
+        if ($method != 'HEAD') { readfile($params['file']); }
     }
 }
 
