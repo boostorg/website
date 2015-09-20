@@ -118,7 +118,7 @@ class BoostArchive
             $check_file = $this->params['archive'];
 
             if (!is_readable($check_file)) {
-                file_not_found($this->params, 'Unable to find zipfile.');
+                error_page($this->params, 'Unable to find zipfile.');
                 return;
             }
         }
@@ -151,7 +151,7 @@ class BoostArchive
                 }
             }
             else if (!is_readable($check_file)) {
-                file_not_found($this->params, 'Unable to find file.');
+                error_page($this->params, 'Unable to find file.');
                 return;
             }
         }
@@ -202,10 +202,10 @@ class BoostArchive
 
         if (!$extractor) {
             if (strpos($_SERVER['HTTP_HOST'], 'www.boost.org') === false) {
-                file_not_found($this->params,
+                error_page($this->params,
                     "No extractor found for filename.");
             } else {
-                file_not_found($this->params);
+                error_page($this->params);
             }
             return;
         }
@@ -224,10 +224,10 @@ class BoostArchive
         else {
             // Read file from hard drive or zipfile
 
-            // Note: this sets $this->params['content'] with either the content or an error
-            // message:
-            if(!extract_file($this->params, $this->params['content'])) {
-                file_not_found($this->params, $this->params['content']);
+            // Note: this sets $this->params['content'] with either the
+            // content or an error message.
+            if(!extract_file($this->params)) {
+                error_page($this->params, $this->params['content']);
                 return;
             }
 
@@ -331,15 +331,20 @@ function display_raw_file($params, $type)
         // Don't display errors for a corrupt zip file, as we seemd to
         // be getting them for legitimate files.
 
-        if($exit_status > 3)
-            echo 'Error extracting file: '.unzip_error($exit_status);
+        if($exit_status > 3) {
+            unzip_error($params, $exit_status);
+            if ($params['error']) {
+                header("{$_SERVER["SERVER_PROTOCOL"]} {$params['error']}", true);
+            }
+            echo "Error extracting file: {$params['content']}";
+        }
     }
     else {
         readfile($params['file']);
     }
 }
 
-function extract_file($params, &$content) {
+function extract_file(&$params) {
     if($params['zipfile']) {
         $file_handle = popen(unzip_command($params),'r');
         $text = '';
@@ -349,16 +354,19 @@ function extract_file($params, &$content) {
         $exit_status = pclose($file_handle);
 
         if($exit_status == 0) {
-            $content = $text;
+            $params['content'] = $text;
             return true;
         }
         else {
-            $content = strstr($_SERVER['HTTP_HOST'], 'beta') ? unzip_error($exit_status) : null;
+            $params['content'] = null;
+            if (strstr($_SERVER['HTTP_HOST'], 'beta')) {
+                unzip_error($params, $exit_status);
+            }
             return false;
         }
     }
     else {
-        $content = file_get_contents($params['file']);
+        $params['content'] = file_get_contents($params['file']);
         return true;
     }
 }
@@ -386,17 +394,17 @@ function underscore_to_camel_case($name) {
 
 /* File Not Found */
 
-function file_not_found($params, $message = null)
+function error_page($params, $message = null)
 {
-    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-    if (!$params['error']) { $params['error'] = 404; }
+    if (!$params['error']) { $params['error'] = "404 Not Found"; }
+    header("{$_SERVER["SERVER_PROTOCOL"]} {$params['error']}");
 
     $head = <<<HTML
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
   <title>Boost C++ Libraries - 404 Not Found</title>
 HTML;
 
-    $content = '<h1>404 Not Found</h1><p>File "' . $params['file'] . '" not found.</p><p>';
+    $content = '<h1>'.html_encode($params['error']).'</h1><p>File "' . html_encode($params['file']) . '" not found.</p><p>';
     if(!empty($params['zipfile'])) $content .= "Unzip error: ";
     $content .= html_encode($message);
     $content .= '</p>';
@@ -464,26 +472,37 @@ function latest_link($params)
     }
 }
 
-// Return a readable error message for unzip exit state.
+// Updates $params with the appropriate unzip error.
 
-function unzip_error($exit_status) {
+function unzip_error(&$params, $exit_status) {
+    $code="500 Internal Server Error";
+
     switch($exit_status) {
-    case 0: return 'No error.';
-    case 1: return 'One  or  more  warning  errors  were  encountered.';
-    case 2: return 'A generic error in the zipfile format was detected.';
-    case 3: return 'A severe error in the zipfile format was detected.';
-    case 4: return 'Unzip was unable to allocate memory for one or more buffers during program initialization.';
-    case 5: return 'Unzip was unable to allocate memory or unable to obtain a tty to read the decryption password(s).';
-    case 6: return 'Unzip was unable to allocate memory during decompression to disk.';
-    case 7: return 'Unzip was unable to allocate memory during in-memory decompression.';
-    case 9: return 'The specified zipfile was not found.';
-    case 10: return 'Invalid options were specified on the command line.';
-    case 11: return 'No matching files were found.';
-    case 50: return 'The disk is (or was) full during extraction.';
-    case 51: return 'The end of the ZIP archive was encountered prematurely.';
-    case 80: return 'The user aborted unzip prematurely with control-C (or similar).';
-    case 81: return 'Testing or extraction of one or more files failed due to unsupported compression methods or unsupported decryption.';
-    case 82: return 'No files were found due to bad decryption password(s).';
-    default: return 'Unknown unzip error code: ' + $exit_status;
+    case 0: $message = 'No error.'; $code = null; break;
+    case 1: $message = 'One  or  more  warning  errors  were  encountered.'; break;
+    case 2: $message = 'A generic error in the zipfile format was detected.'; break;
+    case 3: $message = 'A severe error in the zipfile format was detected.'; break;
+    case 4: $message = 'Unzip was unable to allocate memory for one or more buffers during program initialization.'; break;
+    case 5: $message = 'Unzip was unable to allocate memory or unable to obtain a tty to read the decryption password(s).'; break;
+    case 6: $message = 'Unzip was unable to allocate memory during decompression to disk.'; break;
+    case 7: $message = 'Unzip was unable to allocate memory during in-memory decompression.'; break;
+    case 9:
+        $message = 'The specified zipfile was not found';
+        if (isset($params['archive']) && is_file($params['archive'])) {
+            $message .= ' <i>(the file exists, so this is probably an error reading the file)</i>';
+        }
+        $message .= '.';
+        break;
+    case 10: $message = 'Invalid options were specified on the command line.'; break;
+    case 11: $message = 'No matching files were found.'; $code="404 Not Found"; break;
+    case 50: $message = 'The disk is (or was) full during extraction.'; break;
+    case 51: $message = 'The end of the ZIP archive was encountered prematurely.'; break;
+    case 80: $message = 'The user aborted unzip prematurely with control-C (or similar).'; break;
+    case 81: $message = 'Testing or extraction of one or more files failed due to unsupported compression methods or unsupported decryption.'; break;
+    case 82: $message = 'No files were found due to bad decryption password(s).'; break;
+    default: $message = 'Unknown unzip error code.'; break;
     }
+
+    $params['content'] = "Error code ".html_encode($exit_status)." - {$message}";
+    if ($code) { $params['error'] = $code; }
 }
