@@ -361,7 +361,8 @@ function extract_file($params, &$content) {
             $content = null;
             if (strstr($_SERVER['HTTP_HOST'], 'beta')) {
                 // TODO: Consider using the error code from unzip_error here.
-                $content = unzip_error($params, $exit_status)[1];
+                $content = unzip_error($params, $exit_status);
+                $content = $content[1];
             }
             return false;
         }
