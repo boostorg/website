@@ -16,7 +16,8 @@ function main() {
     $library_details =
         BoostLibraries::from_xml_file(__DIR__ . '/../doc/libraries.xml')
             ->get_for_version(BoostVersion::develop());
-    $git_submodules = (new BoostSuperProject($boost_root))->get_modules();
+    $super_project = new BoostSuperProject($boost_root);
+    $git_submodules = $super_project->get_modules();
 
     // Split the libraries up into modules.
 
