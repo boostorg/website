@@ -181,13 +181,13 @@ function update_from_release($libs, $location, $version) {
             $version : BoostVersion::master();
 
     // Grab the modules from the metadata.
-    $module_for_keys = [];
+    $module_for_keys = array();
     foreach($libs->get_for_version($equivalent_version) as $details) {
         $module_for_keys[$details['key']] = $details['module'];
     }
 
     // Scan release for metadata files.
-    $module_paths = [];
+    $module_paths = array();
     foreach (new RecursiveIteratorIterator(
         new RecursiveDirectoryIterator("{$location}/libs",
         FilesystemIterator::CURRENT_AS_SELF |
