@@ -23,7 +23,7 @@ function main() {
 
     $unknown_libs = array();
 
-    foreach (BoostSuperProject::run_process("git -C {$location} tag") as $tag) {
+    foreach (BoostSuperProject::run_process("cd \"{$location}\" && git tag") as $tag) {
         if (preg_match('@^boost-1\.\d+\.\d+$@', $tag)) {
             $library_details = $libraries->get_for_version($tag, null,
                 'BoostLibraries::filter_all');

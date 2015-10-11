@@ -53,7 +53,7 @@ class BoostSuperProject {
     }
 
     public function run_git($command) {
-        return self::run_process("git -C \"{$this->location}\" {$command}");
+        return self::run_process("cd \"{$this->location}\" && git {$command}");
     }
 
     // A couple of utility functions that don't really fit, so might move

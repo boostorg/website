@@ -36,7 +36,7 @@ function main() {
 
         // If this is not a git repo.
         // TODO: Don't output stderr.
-        exec("git -C \"{$location}\" rev-parse --git-dir", $output, $return_var);
+        exec("cd \"{$location}\" && git rev-parse --git-dir", $output, $return_var);
         if ($return_var != 0)
         {
             if (!$version || !$version->is_numbered_release()) {
