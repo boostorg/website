@@ -606,9 +606,9 @@ class BoostLibraries_XMLWriter {
         $this->text = '';
     }
 
-    function outputMemory() {
+    function outputMemory($flush = true) {
         $x = $this->text;
-        $this->text = '';
+        if ($flush) { $this->text = ''; }
         return $x;
     }
 
