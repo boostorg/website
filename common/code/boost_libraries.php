@@ -635,11 +635,16 @@ class BoostLibraries_XMLWriter {
     }
 
     function endElement() {
-        $this->closeElementIfOpen();
-        assert($this->element_stack);
-        $name = array_pop($this->element_stack);
-        $this->startLine();
-        $this->write("</${name}>");
+        if ($this->in_element) {
+            $this->write('/>');
+            $this->in_element = false;
+            array_pop($this->element_stack);
+        } else {
+            assert($this->element_stack);
+            $name = array_pop($this->element_stack);
+            $this->startLine();
+            $this->write("</${name}>");
+        }
     }
 
     private function closeElementIfOpen() {
