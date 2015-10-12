@@ -361,6 +361,10 @@ class BoostLibraries
         $exclude = array_flip($exclude);
 
         $writer = new BoostLibraries_XMLWriter();
+        $writer->openMemory();
+        //$writer->setIndent(true);
+        //$writer->setIndentString('  ');
+
         $writer->startDocument('1.0', 'US-ASCII');
         $writer->startElement('boost');
         $writer->writeAttribute('xmlns:xsi',
@@ -598,8 +602,14 @@ class BoostLibraries_XMLWriter {
     var $in_element = false;
     var $element_stack = array();
 
+    function openMemory() {
+        $this->text = '';
+    }
+
     function outputMemory() {
-        return $this->text;
+        $x = $this->text;
+        $this->text = '';
+        return $x;
     }
 
     function startDocument($version, $encoding) {
@@ -607,19 +617,19 @@ class BoostLibraries_XMLWriter {
         assert(!$this->text);
         assert(!$this->in_element);
         assert(!$this->element_stack);
-        $this->text="<?xml version=\"{$version}\" encoding=\"{$encoding}\"?".">";
+        $this->write("<?xml version=\"{$version}\" encoding=\"{$encoding}\"?".">");
     }
 
     function endDocument() {
         assert(!$this->in_element);
         assert(!$this->element_stack);
-        $this->text .= "\n";
+        $this->write("\n");
     }
 
     function startElement($name) {
         $this->closeElementIfOpen();
         $this->startLine();
-        $this->text .= "<{$name}";
+        $this->write("<{$name}");
         $this->in_element = true;
         $this->element_stack[] = $name;
     }
@@ -629,12 +639,12 @@ class BoostLibraries_XMLWriter {
         assert($this->element_stack);
         $name = array_pop($this->element_stack);
         $this->startLine();
-        $this->text .= "</${name}>";
+        $this->write("</${name}>");
     }
 
     private function closeElementIfOpen() {
         if ($this->in_element) {
-            $this->text .= '>';
+            $this->write('>');
             $this->in_element = false;
         }
     }
@@ -642,16 +652,16 @@ class BoostLibraries_XMLWriter {
     function writeElement($name, $value) {
         $this->closeElementIfOpen();
         $this->startLine();
-        $this->text .= "<{$name}>";
+        $this->write("<{$name}>");
         $this->writeText($value);
-        $this->text .= "</{$name}>";
+        $this->write("</{$name}>");
     }
 
     function writeAttribute($name, $value) {
         assert($this->in_element);
-        $this->text .= " {$name}=\"";
+        $this->write(" {$name}=\"");
         $this->writeText($value);
-        $this->text .= "\"";
+        $this->write("\"");
     }
 
     private function writeText($text) {
@@ -662,11 +672,15 @@ class BoostLibraries_XMLWriter {
                 $decimal_char = hexdec(bin2hex(iconv('utf-8', 'ucs-4', $x[0])));
                 return "&#{$decimal_char};";
             }, $text);
-        $this->text .= $text;
+        $this->write($text);
     }
 
     private function startLine() {
-        $this->text .= "\n".str_repeat('  ', count($this->element_stack));
+        $this->write("\n".str_repeat('  ', count($this->element_stack)));
+    }
+
+    private function write($x) {
+        $this->text .= $x;
     }
 }
 
