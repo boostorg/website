@@ -670,7 +670,7 @@ class BoostLibraries_XMLWriter {
     }
 
     private function writeText($text) {
-        $text = htmlspecialchars($text, ENT_COMPAT | ENT_XML1, 'UTF-8');
+        $text = htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
         // This bizarre text converts all remaining non-ascii characters
         // to xml entities. There's probably a better way to do this.
         $text = preg_replace_callback('/[^\0-\x{80}]/u', function ($x) {
