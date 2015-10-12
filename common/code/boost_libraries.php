@@ -360,11 +360,7 @@ class BoostLibraries
     function to_xml($exclude = array()) {
         $exclude = array_flip($exclude);
 
-        $writer = new XMLWriter();
-        $writer->openMemory();
-        $writer->setIndent(true);
-        $writer->setIndentString('  ');
-
+        $writer = new BoostLibraries_XMLWriter();
         $writer->startDocument('1.0', 'US-ASCII');
         $writer->startElement('boost');
         $writer->writeAttribute('xmlns:xsi',
@@ -593,6 +589,85 @@ class BoostLibraries
     }
 
 
+}
+
+// Simple class to write out XML as XMLWriter isn't always available.
+// Implements a very limited subset of the commands.
+class BoostLibraries_XMLWriter {
+    var $text = '';
+    var $in_element = false;
+    var $element_stack = array();
+
+    function outputMemory() {
+        return $this->text;
+    }
+
+    function startDocument($version, $encoding) {
+        assert($encoding === 'US-ASCII');
+        assert(!$this->text);
+        assert(!$this->in_element);
+        assert(!$this->element_stack);
+        $this->text="<?xml version=\"{$version}\" encoding=\"{$encoding}\"?".">";
+    }
+
+    function endDocument() {
+        assert(!$this->in_element);
+        assert(!$this->element_stack);
+        $this->text .= "\n";
+    }
+
+    function startElement($name) {
+        $this->closeElementIfOpen();
+        $this->startLine();
+        $this->text .= "<{$name}";
+        $this->in_element = true;
+        $this->element_stack[] = $name;
+    }
+
+    function endElement() {
+        $this->closeElementIfOpen();
+        assert($this->element_stack);
+        $name = array_pop($this->element_stack);
+        $this->startLine();
+        $this->text .= "</${name}>";
+    }
+
+    private function closeElementIfOpen() {
+        if ($this->in_element) {
+            $this->text .= '>';
+            $this->in_element = false;
+        }
+    }
+
+    function writeElement($name, $value) {
+        $this->closeElementIfOpen();
+        $this->startLine();
+        $this->text .= "<{$name}>";
+        $this->writeText($value);
+        $this->text .= "</{$name}>";
+    }
+
+    function writeAttribute($name, $value) {
+        assert($this->in_element);
+        $this->text .= " {$name}=\"";
+        $this->writeText($value);
+        $this->text .= "\"";
+    }
+
+    private function writeText($text) {
+        $text = htmlspecialchars($text, ENT_COMPAT | ENT_XML1, 'UTF-8');
+        // This bizarre text converts all remaining non-ascii characters
+        // to xml entities. There's probably a better way to do this.
+        $text = preg_replace_callback('/[^\0-\x{80}]/u', function ($x) {
+                $decimal_char = hexdec(bin2hex(iconv('utf-8', 'ucs-4', $x[0])));
+                return "&#{$decimal_char};";
+            }, $text);
+        $this->text .= $text;
+    }
+
+    private function startLine() {
+        $this->text .= "\n".str_repeat('  ', count($this->element_stack));
+    }
 }
 
 class BoostLibraries_exception extends RuntimeException {}
