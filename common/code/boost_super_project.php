@@ -49,6 +49,15 @@ class BoostSuperProject {
             }
         }
 
+        foreach ($modules as $name => $settings) {
+            if (empty($settings['url'])) {
+                throw new RuntimeException("Missing URL for {$name}.");
+            }
+            else if (!preg_match('@^\.\./(\w+)\.git$@', $settings['url'])) {
+                throw new RuntimeException("Invalid URL for {$name}.");
+            }
+        }
+
         return $modules;
     }
 
