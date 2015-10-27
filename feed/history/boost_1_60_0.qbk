@@ -17,6 +17,22 @@
 [/ Add attributes here as release progresses. See end of file for details. ]
 [documentation /doc/libs/master/]
 
+[section Notes for Windows users]
+
+This release of Boost will by default compile for Windows Vista/Windows Server 2008, if the compiler supports a recent enough Windows SDK, and for Windows XP otherwise. Binaries compiled with default options may not run on the older Windows versions.
+
+It is still possible to explicitly specify target Windows version by defining `BOOST_USE_WINAPI_VERSION` to a numeric version of Windows API. For example, building Boost for Windows XP can be done with the following command:
+
+[pre
+    b2 release define=BOOST_USE_WINAPI_VERSION=0x0501
+]
+
+The list of Windows API version numbers can be seen on [@https://msdn.microsoft.com/en-us/library/6sehtctf.aspx this] page.
+
+This change only concerns libraries that use the common Windows API abstraction layer. Currently, these libraries are: Boost.Chrono, Boost.Dll, Boost.Log, Boost.UUID. This will also affect all dependent libraries.
+
+[endsect]
+
 [section New Libraries]
 
 [/ Example:
@@ -36,16 +52,44 @@
   * `shared_ptr` is movable and supports aliasing ([ticket 1234]).
 ]
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Enforced proper alignment of `atomic<>` storage. This should fix possible issues on platforms that support atomic operations on data units larger than the native word size. This may also change binary layout of user's data structures that have `atomic<>` members.
+  * Fixed compilation for PowerPC with IBM XL C++ compiler. Corrected memory barriers in PowerPC assembler.
+  * Fixed compilation with MSVC-8 for ARM.
+  * Fixed compilation with gcc 4.4 for x86-64, when 128-bit atomic operations were used. ([ticket 10994])
+  * Optimized some gcc assembler blocks for x86/x86-64 to reduce the number of used registers. This may require binutils 2.10 or later.
+
 * [phrase library..[@/libs/context/ Context]:]
   * [ticket 11603] typo in PPC32/MACH-O asm
   * support for CYGWIN
 
+* [phrase library..[@/libs/core/ Core]:]
+  * In symbol demangling tools, added support for gabi++ ABI implementation used in Android NDK.
+  * Added a new `enable_if_has_type` tool for performing SFINAE checks for presence of a nested type.
+
 * [phrase library..[@/libs/flyweight/index.html Flyweight]:]
   * Maintenance fixes.
+
+* [phrase library..[@/libs/log/ Log]:]
+  * General changes:
+    * On Windows, the configuration macro `BOOST_LOG_USE_WINNT6_API` is no longer used by the library. The target Windows version should be configured by defining macro `BOOST_USE_WINAPI_VERSION`.
+  * Bug fixes:
+    * Fixed compilation for Android using Google NDK. ([ticket 11559])
+    * Fixed compilation of some logging statements, where the first object to be put into stream is not directly supported by `formatting_ostream`. ([ticket 11549])
+    * Added a workaround for Solaris Studio 12.4, which should fix the compilation of `formatting_ostream`. ([ticket 11545])
+    * Fixed compilation when native `wchar_t` type is disabled. ([ticket 11541])
+    * Fixed exporting symbols from the `boost_log_setup` library on POSIX-like systems.
+    * Fixed compilation of character decorators.
+    * Added a workaround for incorrect file name generation in text file sink backend, when the file name contains date/time placeholders. ([ticket 11691])
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
 * [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
   * Fixed an interoperability problem with [@http://www.qt.io/ Qt] due to the
     optional definition of a macro with name `foreach` in this framework.
+
+* [phrase library..[@/libs/uuid/ UUID]:]
+  * Added a workaround for MSVC codegen bug that could cause crashes when comparing UUIDs.
+  * Added detection of AVX being enabled with MSVC compiler switches.
   
 * /TODO/
 
