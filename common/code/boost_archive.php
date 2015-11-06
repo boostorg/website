@@ -328,10 +328,7 @@ function display_raw_file($params, $type)
         fpassthru($file_handle);
         $exit_status = pclose($file_handle);
     
-        // Don't display errors for a corrupt zip file, as we seemd to
-        // be getting them for legitimate files.
-
-        if($exit_status > 3) {
+        if($exit_status > 1) {
             $unzip_error = unzip_error($params, $exit_status);
             if ($unzip_error[0]) {
                 header("{$_SERVER["SERVER_PROTOCOL"]} {$unzip_error[0]}", true);
