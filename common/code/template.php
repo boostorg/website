@@ -14,7 +14,7 @@
   <div id="heading">
     <?php virtual("/common/heading.html"); ?>
   </div>
-  <?php echo latest_link($params); ?>
+  <?php if (isset($params)) { echo latest_link($params); } ?>
 
   <div id="body">
     <div id="body-inner">
