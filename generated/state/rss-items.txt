@@ -28938,6 +28938,33 @@
 "
 "
 "
+"  &lt;div id=&quot;version_1_60_0.notes_for_windows_users&quot;&gt;
+"    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Notes for Windows
+"    users&lt;/span&gt;&lt;/h3&gt;
+"    &lt;p&gt;
+"      This release of Boost will by default compile for Windows Vista/Windows Server
+"      2008, if the compiler supports a recent enough Windows SDK, and for Windows
+"      XP otherwise. Binaries compiled with default options may not run on the older
+"      Windows versions.
+"    &lt;/p&gt;
+"    &lt;p&gt;
+"      It is still possible to explicitly specify target Windows version by defining
+"      &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_USE_WINAPI_VERSION&lt;/span&gt;&lt;/code&gt; to
+"      a numeric version of Windows API. For example, building Boost for Windows XP
+"      can be done with the following command:
+"    &lt;/p&gt;
+"&lt;pre&gt;    b2 release define=BOOST_USE_WINAPI_VERSION=0x0501
+"&lt;/pre&gt;
+"    &lt;p&gt;
+"      The list of Windows API version numbers can be seen on &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/6sehtctf.aspx&quot;&gt;this&lt;/a&gt;
+"      page.
+"    &lt;/p&gt;
+"    &lt;p&gt;
+"      This change only concerns libraries that use the common Windows API abstraction
+"      layer. Currently, these libraries are: Boost.Chrono, Boost.Dll, Boost.Log,
+"      Boost.UUID. This will also affect all dependent libraries.
+"    &lt;/p&gt;
+"  &lt;/div&gt;
 "  &lt;div id=&quot;version_1_60_0.new_libraries&quot;&gt;
 "    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
 "    &lt;ul&gt;
@@ -28951,6 +28978,109 @@
 "  &lt;div id=&quot;version_1_60_0.updated_libraries&quot;&gt;
 "    &lt;h3&gt;&lt;span class=&quot;link&quot;&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
 "    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/atomic/&quot;&gt;Atomic&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Enforced proper alignment of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;atomic&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt; storage. This should fix
+"                possible issues on platforms that support atomic operations on data
+"                units larger than the native word size. This may also change binary
+"                layout of user's data structures that have &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;atomic&lt;/span&gt;&lt;span class=&quot;special&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt; members.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed compilation for PowerPC with IBM XL C++ compiler. Corrected
+"                memory barriers in PowerPC assembler.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed compilation with MSVC-8 for ARM.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed compilation with gcc 4.4 for x86-64, when 128-bit atomic operations
+"                were used. (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/10994&quot;&gt;#10994&lt;/a&gt;)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Optimized some gcc assembler blocks for x86/x86-64 to reduce the
+"                number of used registers. This may require binutils 2.10 or later.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/chrono/&quot;&gt;Chrono - 2.0.5&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;em&gt;Fixes:&lt;/em&gt;
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/10778&quot;&gt;#10778&lt;/a&gt;
+"                      VC14 CTP4 Atomic don't compile with boost::chrono durations
+"                      which are not TriviallyCopyable
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/10840&quot;&gt;#10840&lt;/a&gt;
+"                      Missing std:: qualifier for puts call in test_7868.cpp
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/10851&quot;&gt;#10851&lt;/a&gt;
+"                      Missing std:: qualifier for puts call in time_point_output.cpp
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/10893&quot;&gt;#10893&lt;/a&gt;
+"                      Minor doc typo in Boost.Chrono
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/10992&quot;&gt;#10992&lt;/a&gt;
+"                      Chrono IO state savers inconsistent with Boost.IO state savers
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/10995&quot;&gt;#10995&lt;/a&gt;
+"                      duration_put::put_value truncates fractional part
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11006&quot;&gt;#11006&lt;/a&gt;
+"                      Impossible to instantiate time_fmt_io_saver due to several
+"                      errors.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11012&quot;&gt;#11012&lt;/a&gt;
+"                      chrono_io v2 fail to compile with boost::chrono::duration&amp;lt;
+"                      boost::rational&amp;lt;int&amp;gt; &amp;gt;
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
 "          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/context/&quot;&gt;Context&lt;/a&gt;:&lt;/span&gt;
@@ -28970,11 +29100,108 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/core/&quot;&gt;Core&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                In symbol demangling tools, added support for gabi++ ABI implementation
+"                used in Android NDK.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added a new &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;enable_if_has_type&lt;/span&gt;&lt;/code&gt;
+"                tool for performing SFINAE checks for presence of a nested type.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
 "          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/flyweight/index.html&quot;&gt;Flyweight&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
 "                Maintenance fixes.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/log/&quot;&gt;Log&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                General changes:
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      On Windows, the configuration macro &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_LOG_USE_WINNT6_API&lt;/span&gt;&lt;/code&gt;
+"                      is no longer used by the library. The target Windows version
+"                      should be configured by defining macro &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;BOOST_USE_WINAPI_VERSION&lt;/span&gt;&lt;/code&gt;.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Bug fixes:
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed compilation for Android using Google NDK. (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/11559&quot;&gt;#11559&lt;/a&gt;)
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed compilation of some logging statements, where the first
+"                      object to be put into stream is not directly supported by
+"                      &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;formatting_ostream&lt;/span&gt;&lt;/code&gt;.
+"                      (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/11549&quot;&gt;#11549&lt;/a&gt;)
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Added a workaround for Solaris Studio 12.4, which should fix
+"                      the compilation of &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;formatting_ostream&lt;/span&gt;&lt;/code&gt;.
+"                      (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/11545&quot;&gt;#11545&lt;/a&gt;)
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed compilation when native &lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;wchar_t&lt;/span&gt;&lt;/code&gt;
+"                      type is disabled. (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/11541&quot;&gt;#11541&lt;/a&gt;)
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed exporting symbols from the &lt;code&gt;&lt;span class=&quot;identifier&quot;&gt;boost_log_setup&lt;/span&gt;&lt;/code&gt;
+"                      library on POSIX-like systems.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed compilation of character decorators.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Added a workaround for incorrect file name generation in text
+"                      file sink backend, when the file name contains date/time placeholders.
+"                      (&lt;a href=&quot;https://svn.boost.org/trac/boost/ticket/11691&quot;&gt;#11691&lt;/a&gt;)
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                See &lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/log/doc/html/log/changelog.html&quot;&gt;changelog&lt;/a&gt;
+"                for more details.
 "              &lt;/div&gt;
 "            &lt;/li&gt;
 "          &lt;/ul&gt;
@@ -28993,6 +29220,246 @@
 "            &lt;li&gt;
 "              &lt;div&gt;
 "                Maintenance fixes.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/thread/&quot;&gt;Threrad - 4.6.0&lt;/a&gt;:&lt;/span&gt;
+"  &lt;em&gt;New
+"          Experimental Features:&lt;/em&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11231&quot;&gt;#11231&lt;/a&gt;
+"                Allow to set continuation future's destructor behavior to non-blocking
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11424&quot;&gt;#11424&lt;/a&gt;
+"                Provide shared_timed_mutex as an alternative name for shared_mutex
+"                and deprecate the use of shared_mutex as a timed mutex
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11734&quot;&gt;#11734&lt;/a&gt;
+"                future::then(Cont) should be able to execute the contination on undetermined
+"                thread
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11736&quot;&gt;#11736&lt;/a&gt;
+"                Allow to use launch::executor on future::then(launch::executor, cont)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11737&quot;&gt;#11737&lt;/a&gt;
+"                Add a launch::inherit policy that can be used on ::then() to use
+"                the policy of the parent future &lt;em&gt;Fixed Bugs:&lt;/em&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/3926&quot;&gt;#3926&lt;/a&gt;
+"                thread_specific_ptr + dlopen library causes a SIGSEGV.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/6377&quot;&gt;#6377&lt;/a&gt;
+"                Condition variable blocks when changing time
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/6787&quot;&gt;#6787&lt;/a&gt;
+"                boost::thread::sleep() hangs if system time is rolled back
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/7665&quot;&gt;#7665&lt;/a&gt;
+"                this_thread::sleep_for no longer uses steady_clock in thread
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/7720&quot;&gt;#7720&lt;/a&gt;
+"                exception lock_error while intensive locking/unlocking of mutex
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/9309&quot;&gt;#9309&lt;/a&gt;
+"                test_latch fails often on clang-darwin-tot11
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/10788&quot;&gt;#10788&lt;/a&gt;
+"                GetLogicalProcessor isn't available for Windows platform less or
+"                equals to 0x0502
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11090&quot;&gt;#11090&lt;/a&gt;
+"                ex_future_unwrap- ThreadSanitizer: lock-order-inversion (potential
+"                deadlock)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11158&quot;&gt;#11158&lt;/a&gt;
+"                Pthread thread deadlock when faketime used
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11174&quot;&gt;#11174&lt;/a&gt;
+"                boost::condition_variable::timed_wait with predicate unexpectedly
+"                wakes up while should wait infinite
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11185&quot;&gt;#11185&lt;/a&gt;
+"                Incorrect URL redirection
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11192&quot;&gt;#11192&lt;/a&gt;
+"                boost::future&amp;lt;&amp;gt;::then() with an executor doesn't compile when
+"                the callback returns a future
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11250&quot;&gt;#11250&lt;/a&gt;
+"                future made from make_exceptional fails on assertion in destructor
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11256&quot;&gt;#11256&lt;/a&gt;
+"                future&amp;lt;&amp;gt;::is_ready() == false in continuation function
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11261&quot;&gt;#11261&lt;/a&gt;
+"                bad use of scoped threads in basic_thread_pool
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11262&quot;&gt;#11262&lt;/a&gt;
+"                bad use of direct pointer in shared_state_nullary_task
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11263&quot;&gt;#11263&lt;/a&gt;
+"                lock already locked lock
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11266&quot;&gt;#11266&lt;/a&gt;
+"                boost::packaged_task has invalid variadic signature
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11302&quot;&gt;#11302&lt;/a&gt;
+"                boost thread doesn't build with BOOST_THREAD_PATCH.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11322&quot;&gt;#11322&lt;/a&gt;
+"                sleep_for() nanoseconds overload will always return too early on
+"                windows
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11329&quot;&gt;#11329&lt;/a&gt;
+"                using declarative for GetProcessHeap, .... fails
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11368&quot;&gt;#11368&lt;/a&gt;
+"                boost thread's usage of CreateWaitableTimer wakes PC from sleep (doh)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11377&quot;&gt;#11377&lt;/a&gt;
+"                Boost condition variable always waits for system clock deadline
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11435&quot;&gt;#11435&lt;/a&gt;
+"                gcc compiler warning in future.hpp
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11555&quot;&gt;#11555&lt;/a&gt;
+"                devector.hpp assumes allocator_traits_type is always present
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11562&quot;&gt;#11562&lt;/a&gt;
+"                Timer (using steady_clock) expires after computer time is set forward
+"                on Ubuntu 64-bit
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11672&quot;&gt;#11672&lt;/a&gt;
+"                Thread: Should use unique_ptr, not auto_ptr
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11688&quot;&gt;#11688&lt;/a&gt;
+"                thread::try_join_until: Avoid busy wait if system clock changes
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;a href=&quot;http://svn.boost.org/trac/boost/ticket/11672&quot;&gt;#11716&lt;/a&gt;
+"                ::then(f) should inherit the parent Executor
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class=&quot;library&quot;&gt;&lt;a href=&quot;http://www.boost.org/doc/libs/master/libs/uuid/&quot;&gt;UUID&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added a workaround for MSVC codegen bug that could cause crashes
+"                when comparing UUIDs.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added detection of AVX being enabled with MSVC compiler switches.
 "              &lt;/div&gt;
 "            &lt;/li&gt;
 "          &lt;/ul&gt;
@@ -29284,7 +29751,7 @@
 "  &lt;/div&gt;
 "</description></item>
 -last_modified
-.1447005101.75
+.1447012568.65
 -quickbook
 "feed/history/boost_1_60_0.qbk
 )
