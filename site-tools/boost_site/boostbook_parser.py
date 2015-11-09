@@ -56,6 +56,11 @@ class BoostBookParser:
         if documentation_node:
             documentation = self.get_child(documentation_node[0]).data
 
+        final_documentation = None
+        final_documentation_node = article_node.getElementsByTagName('final_documentation')
+        if final_documentation_node:
+            final_documentation = self.get_child(final_documentation_node[0]).data
+
         status_item = None
         status_node = article_node.getElementsByTagName('status')
         if status_node:
@@ -83,6 +88,7 @@ class BoostBookParser:
             'download_item' : download_item,
             'download_basename' : download_basename,
             'documentation' : documentation,
+            'final_documentation' : final_documentation,
             'status_item' : status_item
         }
 
@@ -121,6 +127,8 @@ class BoostBookParser:
             if self.get_child(body_item, tag = 'notice'):
                 continue
             if self.get_child(body_item, tag = 'documentation'):
+                continue
+            if self.get_child(body_item, tag = 'final_documentation'):
                 continue
             description_xhtml.appendChild(self.x(body_item))
 
