@@ -66,6 +66,18 @@ This change only concerns libraries that use the common Windows API abstraction 
     * [@http://svn.boost.org/trac/boost/ticket/10995 #10995] 	duration_put::put_value truncates fractional part
     * [@http://svn.boost.org/trac/boost/ticket/11006 #11006] 	Impossible to instantiate time_fmt_io_saver due to several errors.
     * [@http://svn.boost.org/trac/boost/ticket/11012 #11012] 	chrono_io v2 fail to compile with boost::chrono::duration< boost::rational<int> >
+    
+* [phrase library..[@/libs/container/ Container]:]
+    * Implemented [link container.extended_functionality.polymorphic_memory_resources Polymorphic Memory Resources].
+    * Add more BOOST_ASSERT checks to test preconditions in some operations (like `pop_back`, `pop_front`, `back`, `front`, etc.)
+    * Added C++11 `back`/`front` operations to [classref boost::container::basic_string basic_string].
+    * Fixed bugs:
+       * [@https://svn.boost.org/trac/boost/ticket/11627 Trac #11627: ['"small_vector<T,n>::swap() appears to be broken"]].
+       * [@https://svn.boost.org/trac/boost/ticket/11628 Trac #11628: ['"small_vector<int,n> iterates over elements in destructor"]].
+       * [@https://svn.boost.org/trac/boost/ticket/11697 Trac #11697: ['"Wrong initialization order in tuple copy-constructor"]].
+       * [@https://svn.boost.org/trac/boost/ticket/11698 Trac #11698: ['"Missing return statement in static_storage_allocator"]].
+       * [@https://github.com/boostorg/container/pull/29 GitHub #29: ['Doc fixes for flap_map complexity requirements]].
+       * [@https://github.com/boostorg/container/pull/31 GitHub #31: ['DL_SIZE_IMPL also dereference addr]].
 
 * [phrase library..[@/libs/context/ Context]:]
   * [ticket 11603] typo in PPC32/MACH-O asm
@@ -91,6 +103,20 @@ This change only concerns libraries that use the common Windows API abstraction 
     * The generic fusion sequence convert to a deque fails with a compiler error. ([ticket 11572])
     * (doc) Return type of functions incorrect. ([ticket 3358])
 
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  *  Improved [classref boost::interprocess::offset_ptr offset_ptr] performance and removed any undefined behaviour. No
+   special cases needed for different compilers.
+  *  Fixed bugs:
+    * [@https://svn.boost.org/trac/boost/ticket/11699 ( Trac #11699 ( (['"Forward declarations of std templates causes stack corruption under Visual Studio 2015"])].
+
+* [phrase library..[@/libs/intrusive/ Intrusive]:]
+  *  [link intrusive.advanced_lookups_insertions Advanced lookup and insertions] in ordered associative containers
+     now support comparison functions that are not required to offer the same strict weak ordering as `key_compare`,
+     the container must be partitioned in regards to the passed comparison object.
+  *  Fixed bugs:
+    *  [@https://svn.boost.org/trac/boost/ticket/11701 Boost Trac #11701: ['Regression in boost::intrusive::set::equal_range]]
+    *  [@https://svn.boost.org/trac/boost/ticket/11765 Boost Trac #11765: ['sgtree.hpp:830: bad if test ?]]
+
 * [phrase library..[@/libs/locale Locale]:]
   * Implemented generic codecvt facet and add general purpose utf8_codecvt facet
   * Added posix locale support for FreeBSD 10.0 and above
@@ -115,6 +141,9 @@ This change only concerns libraries that use the common Windows API abstraction 
     * Fixed compilation of character decorators.
     * Added a workaround for incorrect file name generation in text file sink backend, when the file name contains date/time placeholders. ([ticket 11691])
   * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
+* [phrase library..[@/libs/move/ Move]:]
+  *  Fixed bug [@https://svn.boost.org/trac/boost/ticket/11615 Trac #11615: ['"Boost.Move should use the qualified name for std::size_t in type_traits.hpp"]],
 
 * [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
   * Fixed an interoperability problem with [@http://www.qt.io/ Qt] due to the
