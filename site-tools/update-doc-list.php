@@ -215,6 +215,10 @@ function update_from_release($libs, $location, $version) {
                     $lib->set_module($module_for_keys[$lib->details['key']], $path);
                 }
             }
+
+            // TODO:I shouldn't need the version here, since it's already set.
+            // Or maybe I shouldn't have set it before.
+            $libs->update($libraries, $version);
         } catch (library_decode_exception $e) {
             echo "Error decoding metadata for module at {$json_path}:\n{$e->content()}\n";
         }
