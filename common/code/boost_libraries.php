@@ -304,6 +304,9 @@ class BoostLibraries
                 $valid_categories = array('Miscellaneous');
             }
 
+            // Sort categories to normalize them.
+            // TODO: Shouldn't really be setting this directly from here.
+            sort($valid_categories);
             $lib->details['category'] = $valid_categories;
 
             $key = $lib->details['key'];
