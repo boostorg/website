@@ -281,8 +281,28 @@ class BoostLibraries
      * @param array $update
      * @throws BoostLibraries_exception
      */
-    public function update($update, $update_version) {
-        $update_version = BoostVersion::from($update_version);
+    public function update($update_version = null, $update = null) {
+        $this->update_start($update_version);
+        if ($update) { $this->update_modules($update_version, $update); }
+        $this->update_finish($update_version);
+    }
+
+    public function update_start($update_version = null) {
+        if ($update_version) {
+            $update_version = BoostVersion::from($update_version);
+
+            // TODO: Support for deleted libraries:
+            // $deleted_library = ????
+            // foreach(array_keys($this->db) as $key) {
+            //     $this->db[$key][(string) $update_version] = $deleted_library;
+            // }
+        }
+    }
+
+    public function update_modules($update_version, $update) {
+        if ($update_version) {
+            $update_version = BoostVersion::from($update_version);
+        }
 
         foreach($update as $lib) {
             $category = array_key_exists('category', $lib->details)
@@ -311,31 +331,51 @@ class BoostLibraries
             sort($valid_categories);
             $lib->details['category'] = $valid_categories;
 
+            if ($update_version) {
+                $lib->update_version = $update_version;
+            }
+
             $key = $lib->details['key'];
-            $lib->update_version = $update_version;
-            $this->db[$key][(string) $update_version] = $lib;
+            $this->db[$key][(string) $lib->update_version] = $lib;
+        }
+    }
+
+    public function update_finish($version) {
+        if ($version) {
+            $version = BoostVersion::from($version);
+        }
+
+        $this->clean_db();
+
+        // If this is a release, then pull all the libraries back out,
+        // and set their version when not available.
+        //
+        // Note: can only do this after 'clean_db' as that copies the
+        // old release details into the new release.
+        if ($version && $version->is_numbered_release()) {
+            $libs = $this->get_for_version($version, null,
+                'BoostLibraries::filter_all');
+            $new_libs = array();
+            foreach($libs as $lib_details) {
+                $current_version = BoostVersion::from($lib_details['boost-version']);
+                if ($current_version->is_unreleased() || $current_version->is_beta())
+                {
+                    $lib_details['boost-version'] = $version;
+                }
+
+                $new_libs[] = new BoostLibrary($lib_details);
+            }
+            $this->update_modules($version, $new_libs);
+            $this->clean_db();
+        }
+    }
+
+    private function clean_db() {
+        foreach(array_keys($this->db) as $key) {
             $this->reduce_versions($key);
         }
 
         ksort($this->db);
-    }
-
-    public function update_for_release($version) {
-        $version = BoostVersion::from($version);
-
-        $libs = $this->get_for_version($version, null,
-            'BoostLibraries::filter_all');
-        $new_libs = array();
-        foreach($libs as $lib_details) {
-            $current_version = BoostVersion::from($lib_details['boost-version']);
-            if ($current_version->is_unreleased() || $current_version->is_beta())
-            {
-                $lib_details['boost-version'] = $version;
-            }
-
-            $new_libs[] = new BoostLibrary($lib_details);
-        }
-        $this->update($new_libs, $version);
     }
 
     private function sort_versions($key) {
@@ -506,7 +546,7 @@ class BoostLibraries
     }
 
     static function filter_released($x) {
-        return $x['boost-version'] && $x['boost-version']->is_release();
+        return $x['boost-version']->is_release();
     }
 
     static function filter_all($x) {

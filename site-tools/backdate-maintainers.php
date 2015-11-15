@@ -51,7 +51,7 @@ function main() {
                 return new BoostLibrary($lib);
             }, $library_details);
 
-            $libraries->update($update, $tag);
+            $libraries->update($tag, $update);
         }
     }
 

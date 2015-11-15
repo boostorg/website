@@ -30,7 +30,6 @@ $libraries = BoostLibraries::from_xml('<?xml version="1.0" encoding="US-ASCII"?>
 $accumulators_details = '{
     "key" : "accumulators",
     "module": "accumulators",
-    "boost-version": "1.36.0",
     "name": "Accumulators",
     "authors": "Eric Niebler",
     "description": "Framework for incremental calculation, and collection of statistical accumulators.",
@@ -38,11 +37,11 @@ $accumulators_details = '{
     "category": [ "math" ]
 }';
 
-$libraries->update(BoostLibrary::read_libraries_json($accumulators_details), '1.36.0');
+$libraries->update('1.36.0', BoostLibrary::read_libraries_json($accumulators_details));
 $r = $libraries->get_history('accumulators');
 assert(count($r) == 1);
 
-$libraries->update(BoostLibrary::read_libraries_json($accumulators_details), 'develop');
+$libraries->update('develop', BoostLibrary::read_libraries_json($accumulators_details));
 $r = $libraries->get_history('accumulators');
 assert(count($r) == 1);
 
@@ -57,7 +56,7 @@ $new_accumulators_details = '{
     "category": [ "Math", "Generic" ]
 }';
 
-$libraries->update(BoostLibrary::read_libraries_json($new_accumulators_details), 'develop');
+$libraries->update('develop', BoostLibrary::read_libraries_json($new_accumulators_details));
 $r = $libraries->get_history('accumulators');
 assert(count($r) == 2);
 assert(isset($r['1.36.0']));
@@ -66,7 +65,7 @@ assert($r['1.36.0']->details['category'] == array('Math'));
 assert($r['develop']->details['category'] == array('Generic', 'Math'));
 assert(!isset($r['master']));
 
-$libraries->update(BoostLibrary::read_libraries_json($new_accumulators_details), 'master');
+$libraries->update('master', BoostLibrary::read_libraries_json($new_accumulators_details));
 $r = $libraries->get_history('accumulators');
 assert(count($r) == 2);
 assert(isset($r['1.36.0']));

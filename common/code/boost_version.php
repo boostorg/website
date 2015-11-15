@@ -113,7 +113,7 @@ class BoostVersion {
             }
         }
         else {
-            die("Can't convert to BoostVersion.");
+            die("Can't convert to BoostVersion.\n");
         }
     }
 

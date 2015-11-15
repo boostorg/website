@@ -68,9 +68,8 @@ function main() {
             update_from_local_clone($libs, $location, $version);
         }
     }
-
-    if ($version && $version->is_numbered_release()) {
-        $libs->update_for_release($version);
+    else {
+        $libs->update($version);
     }
 
     echo "Writing to disk\n";
@@ -118,6 +117,8 @@ function update_from_git($libs, $location, $version) {
         $module_location = "{$location}/{$module['url']}";
         $module_command = "cd '{$module_location}' && git";
 
+        $libs->update_start($branch);
+
         foreach(BoostSuperProject::run_process("{$module_command} ls-tree {$module['hash']} "
                 ."meta/libraries.xml meta/libraries.json") as $entry)
         {
@@ -127,13 +128,15 @@ function update_from_git($libs, $location, $version) {
                     $hash = $matches[1];
                     $filename = $matches[2];
                     $text = implode("\n", (BoostSuperProject::run_process("{$module_command} show {$hash}")));
-                    $libs->update(load_from_text($text, $filename, $name, $module['path']), $branch);
+                    $libs->update_modules($branch, load_from_text($text, $filename, $name, $module['path']));
                 }
             }
             catch (library_decode_exception $e) {
                 echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
             }
         }
+
+        $libs->update_finish($branch);
     }
 }
 
@@ -153,7 +156,7 @@ function update_from_local_clone($libs, $location, $branch = 'latest') {
                 glob("{$location}/{$module_details['path']}/meta/libraries.*")
                 as $path) {
             try {
-                $libs->update(load_from_file($path, $name, $module_details['path']), $branch);
+                $libs->update($branch, load_from_file($path, $name, $module_details['path']));
             }
             catch (library_decode_exception $e) {
                 echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
@@ -216,7 +219,7 @@ function update_from_release($libs, $location, $version) {
                 }
             }
 
-            $libs->update($libraries, $version);
+            $libs->update($version, $libraries);
         } catch (library_decode_exception $e) {
             echo "Error decoding metadata for module at {$json_path}:\n{$e->content()}\n";
         }
