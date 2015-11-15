@@ -205,7 +205,7 @@ function update_from_release($libs, $location, $version) {
         $json_path = "{$location}/{$path}/meta/libraries.json";
         try {
             $libraries = BoostLibrary::read_libraries_json(
-                file_get_contents($json_path), $version);
+                file_get_contents($json_path));
 
             // Get the module for each library.
             foreach($libraries as $lib) {
@@ -216,8 +216,6 @@ function update_from_release($libs, $location, $version) {
                 }
             }
 
-            // TODO:I shouldn't need the version here, since it's already set.
-            // Or maybe I shouldn't have set it before.
             $libs->update($libraries, $version);
         } catch (library_decode_exception $e) {
             echo "Error decoding metadata for module at {$json_path}:\n{$e->content()}\n";
