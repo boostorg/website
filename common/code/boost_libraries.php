@@ -221,11 +221,13 @@ class BoostLibraries
                 $version ? $version : (
                 isset($details['boost-version']) ? $details['boost-version']
                     : null));
-            if (!$update_version) {
+            $update_version = $update_version ?
+                BoostVersion::from($update_version) :
+                BoostVersion::unreleased();
+            if (!$update_version->is_release()) {
                 throw new BoostLibraries_exception(
                         "No version info for {$details['key']}");
             }
-            $update_version = BoostVersion::from($update_version);
             if (isset($details['update-version'])) {
                 unset($details['update-version']);
             }
@@ -325,17 +327,9 @@ class BoostLibraries
             'BoostLibraries::filter_all');
         $new_libs = array();
         foreach($libs as $lib_details) {
-            $update_version = false;
-
-            if (!isset($lib_details['boost-version'])) {
-                $update_version = true;
-            }
-            else if ($lib_details['boost-version'] &&
-                BoostVersion::from($lib_details['boost-version'])->is_beta()) {
-                $update_version = true;
-            }
-
-            if ($update_version) {
+            $current_version = BoostVersion::from($lib_details['boost-version']);
+            if ($current_version->is_unreleased() || $current_version->is_beta())
+            {
                 $lib_details['boost-version'] = $version;
             }
 
@@ -355,11 +349,9 @@ class BoostLibraries
         $last = null;
 
         foreach ($this->db[$key] as $version => $current) {
-            if ($last) {
-                $current->fill_in_details_from_previous_version($last);
-                if ($current->equal_to($last)) {
-                    unset($this->db[$key][$version]);
-                }
+            $current->fill_in_details_from_previous_version($last);
+            if ($last && $current->equal_to($last)) {
+                unset($this->db[$key][$version]);
             }
             $last = $current;
         }
@@ -514,7 +506,7 @@ class BoostLibraries
     }
 
     static function filter_released($x) {
-        return $x['boost-version'];
+        return $x['boost-version'] && $x['boost-version']->is_release();
     }
 
     static function filter_all($x) {

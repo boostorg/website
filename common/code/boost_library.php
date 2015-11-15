@@ -130,10 +130,11 @@ class BoostLibrary
 
     /** Kind of hacky way to fill in details that probably shouldn't be
      *  stored here anyway. */
-    public function fill_in_details_from_previous_version($previous) {
-        if (!isset($this->details['boost-version'])
-                && isset($previous->details['boost-version'])) {
-            $this->details['boost-version'] = $previous->details['boost-version'];
+    public function fill_in_details_from_previous_version($previous = null) {
+        if (empty($this->details['boost-version'])) {
+            $this->details['boost-version'] = isset($previous->details['boost-version']) ?
+                $previous->details['boost-version'] :
+                BoostVersion::unreleased();
         }
     }
 
