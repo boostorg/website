@@ -69,7 +69,7 @@ function main() {
         }
     }
 
-    if ($version && $version->is_numbered_release() && !$version->is_beta()) {
+    if ($version && $version->is_numbered_release()) {
         $libs->update_for_release($version);
     }
 

@@ -325,9 +325,20 @@ class BoostLibraries
             'BoostLibraries::filter_all');
         $new_libs = array();
         foreach($libs as $lib_details) {
+            $update_version = false;
+
             if (!isset($lib_details['boost-version'])) {
+                $update_version = true;
+            }
+            else if ($lib_details['boost-version'] &&
+                BoostVersion::from($lib_details['boost-version'])->is_beta()) {
+                $update_version = true;
+            }
+
+            if ($update_version) {
                 $lib_details['boost-version'] = $version;
             }
+
             $new_libs[] = new BoostLibrary($lib_details);
         }
         $this->update($new_libs, $version);
