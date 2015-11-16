@@ -81,6 +81,35 @@ This change only concerns libraries that use the common Windows API abstraction 
   * In symbol demangling tools, added support for gabi++ ABI implementation used in Android NDK.
   * Added a new `enable_if_has_type` tool for performing SFINAE checks for presence of a nested type.
 
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  ['New Features:]
+    * Added functions [@https://www.boost.org/libs/filesystem/doc/reference.html#lex-normal `lexically_normal`], [@https://www.boost.org/libs/filesystem/doc/reference.html#lex-relative `lexically_relative`], [@https://www.boost.org/libs/filesystem/doc/reference.html#op-relative `relative`], and [@https://www.boost.org/libs/filesystem/doc/reference.html#weakly_canonical `weakly_canonical`]. Many thanks to Jamie Allsop for his help and perseverance. Resolves tickets [@https://svn.boost.org/trac/boost/ticket/1976 #1976], [@https://svn.boost.org/trac/boost/ticket/5897 #5897], [@https://svn.boost.org/trac/boost/ticket/6249 #6249].
+    * Class `path` added types [@https://www.boost.org/libs/filesystem/doc/reference.html#path-iterators `reverse_iterator`] and [@https://www.boost.org/libs/filesystem/doc/reference.html#path-iterators `const_reverse_iterator`], and added functions [@https://www.boost.org/libs/filesystem/doc/reference.html#path-iterators `rbegin()`], and [@https://www.boost.org/libs/filesystem/doc/reference.html#path-iterators `rend()`].
+    * C++11 `noexcept` supplied as specified in the Filesystem TS if supported by the compiler.
+    * C++11 move constructors and move assignments supplied as specified in the Filesystem TS if supported by the compiler. Resolves [@https://svn.boost.org/trac/boost/ticket/10291 #10291].
+    * Existing functions whose names changed in the Filesystem TS are now supported under both the old and new names.
+    * Added [@https://www.boost.org/libs/filesystem/doc/reference.html#path-size `size()`] function to class `path`. Resolves [@https://svn.boost.org/trac/boost/ticket/6874 #6874], Path should have a `size()` member function.
+
+  ['Tickets:]
+    * Fix [@https://svn.boost.org/trac/boost/ticket/11733 #11733], Missing unistd.h include in boost/libs/filesystem/src/unique_path.cpp, by apply a patch from Idar Tollefsen.
+    * Fix [@https://svn.boost.org/trac/boost/ticket/5706 #5706], unique_path Fails on Windows for Temporary User Profiles, by applying [@https://github.com/boostorg/filesystem/pull/15 pull request #15] from Sebastian Redl to fix a race condition in `unique_path`.
+    * Fix [@https://svn.boost.org/trac/boost/ticket/10591 #10591], boost::filesystem does not build on iOS 8, by applying a patch submitted by Daniel Seither.
+    * Fix [@https://svn.boost.org/trac/boost/ticket/9454 #9454], Boost Filesystem [library build] not compiling when BOOST_FILESYSTEM_NO_DEPRECATED is defined, by applying a patch submitted by Makesim.
+    * Fix [@https://svn.boost.org/trac/boost/ticket/11447 #11447], `__OpenBSD__` macro name misspelled, by applying a patch submitted by Jasper Lievisse Adriaanse.
+    * Fix [@https://svn.boost.org/trac/boost/ticket/11288 #11288], A patch to avoid redundant string allocations, by applying a patch submitted by Yevhen Ivannikov.
+    * Resolve [@https://svn.boost.org/trac/boost/ticket/11175 #11175], out-of-date documentation causing users to incorrectly expect that the library could be used with exceptions disabled.
+    * Resolve [@https://svn.boost.org/trac/boost/ticket/11166 #11166], by mitigating (i.e. reducing the likelihood of) a possible external file system race in `remove()`.
+    * Fix [@https://svn.boost.org/trac/boost/ticket/7258 #7258], `create_directories` returns false if the path ends with a slash. Also fix related issues if path contains dot or dot-dot elements, and added test cases to the test suite.
+    * Resolve [@https://svn.boost.org/trac/boost/ticket/10766 #10766], `parent_path()` with redundant separator returns wrong value, by adding examples and notes to the reference documentation to show why the returned value is in fact correct, and to provide rationale for that behavior. See [@https://www.boost.org/libs/filesystem/doc/reference.html#path-iterators path.itr], and [@https://www.boost.org/libs/filesystem/doc/reference.html#path-decomposition path.decompose] `parent_path()` and `filename()` sections of the reference docs.
+    * Close [@https://svn.boost.org/trac/boost/ticket/7607 #7607], path should not infer an invisible "." at the end of a path that ends with a slash, as resolved by [@https://svn.boost.org/trac/boost/ticket/7258 #7258] and [@https://svn.boost.org/trac/boost/ticket/10766 #10766].
+    * Close [@https://svn.boost.org/trac/boost/ticket/11061 #11061],  [@https://svn.boost.org/trac/boost/ticket/11062 #11062], Impossible to traverse the path of the reverse iterator, as effectively resolved by the addition of the class `path` reverse iteration feature. The reference documentation has also been updated with a [@https://www.boost.org/libs/filesystem/doc/reference.html#path-iterators note] warning about the limitations of class `path` iterators.
+  ['Other fixes:]
+    * Clear several spurious GCC warnings.
+    * Fix bug in `file_status` and `recursive_directory_iterator`: C++ turns an explicit constructor with all arguments except first defaulted into non-explicit single argument constructor.
+    * Apply Reference docs editorial cleanups: Use same style sheet as the rest of the documentation. Tweak tab font size. Fix excessively long lines in tables, synopsis.
+    * Minor fixes, including pull requests from Jonathan Wakely and Marcel Raad.
+
+
 * [phrase library..[@/libs/flyweight/index.html Flyweight]:]
   * Maintenance fixes.
   
