@@ -52,33 +52,6 @@
 
 
 
-  <div id="version_1_60_0.notes_for_windows_users">
-    <h3><span class="link">Notes for Windows
-    users</span></h3>
-    <p>
-      This release of Boost will by default compile for Windows Vista/Windows Server
-      2008, if the compiler supports a recent enough Windows SDK, and for Windows
-      XP otherwise. Binaries compiled with default options may not run on the older
-      Windows versions.
-    </p>
-    <p>
-      It is still possible to explicitly specify target Windows version by defining
-      <code><span class="identifier">BOOST_USE_WINAPI_VERSION</span></code> to
-      a numeric version of Windows API. For example, building Boost for Windows XP
-      can be done with the following command:
-    </p>
-<pre>    b2 release define=BOOST_USE_WINAPI_VERSION=0x0501
-</pre>
-    <p>
-      The list of Windows API version numbers can be seen on <a href="https://msdn.microsoft.com/en-us/library/6sehtctf.aspx">this</a>
-      page.
-    </p>
-    <p>
-      This change only concerns libraries that use the common Windows API abstraction
-      layer. Currently, these libraries are: Boost.Chrono, Boost.Dll, Boost.Log,
-      Boost.UUID. This will also affect all dependent libraries.
-    </p>
-  </div>
   <div id="version_1_60_0.new_libraries">
     <h3><span class="link">New Libraries</span></h3>
     <ul>
@@ -650,6 +623,30 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/1_60_0_b1/libs/lexical_cast/">Lexical Cast</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed usage of <code><span class="identifier">lexical_cast</span></code>
+                with move only types <a href="https://svn.boost.org/trac/boost/ticket/11570">#11570</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed crash when <code><span class="identifier">BOOST_LCAST_NO_COMPILE_TIME_PRECISION</span></code>
+                is defined <a href="https://svn.boost.org/trac/boost/ticket/11669">#11669</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                Suppress some of the warning reported in <a href="https://svn.boost.org/trac/boost/ticket/11570">#11570</a> and <a href="https://svn.boost.org/trac/boost/ticket/4946">#4946</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/1_60_0_b1/libs/locale">Locale</a>:</span>
           <ul>
             <li>
@@ -1139,6 +1136,33 @@
   </div>
   <div id="version_1_60_0.news">
     <h3><span class="link">News</span></h3>
+    <div id="version_1_60_0.news.notes_for_windows_users">
+      <h3><span class="link">Notes for
+      Windows users</span></h3>
+      <p>
+        This release of Boost will by default compile for Windows Vista/Windows Server
+        2008, if the compiler supports a recent enough Windows SDK, and for Windows
+        XP otherwise. Binaries compiled with default options may not run on the older
+        Windows versions.
+      </p>
+      <p>
+        It is still possible to explicitly specify target Windows version by defining
+        <code><span class="identifier">BOOST_USE_WINAPI_VERSION</span></code>
+        to a numeric version of Windows API. For example, building Boost for Windows
+        XP can be done with the following command:
+      </p>
+<pre>    b2 release define=BOOST_USE_WINAPI_VERSION=0x0501
+</pre>
+      <p>
+        The list of Windows API version numbers can be seen on <a href="https://msdn.microsoft.com/en-us/library/6sehtctf.aspx">this</a>
+        page.
+      </p>
+      <p>
+        This change only concerns libraries that use the common Windows API abstraction
+        layer. Currently, these libraries are: Boost.Chrono, Boost.Dll, Boost.Log,
+        Boost.UUID. This will also affect all dependent libraries.
+      </p>
+    </div>
     <div id="version_1_60_0.news.release_of_hana_postponed">
       <h3><span class="link">Release
       of Hana postponed</span></h3>
@@ -1148,6 +1172,19 @@
         known issues to be addressed properly before releasing the library officially
         as a part of Boost. More information can be found on the <a href="http://article.gmane.org/gmane.comp.lib.boost.devel/263964">mailing
         list</a>.
+      </p>
+    </div>
+    <div id="version_1_60_0.news.release_of_boost_dll_library_pos">
+      <h3><span class="link">Release
+      of Boost.DLL library postponed</span></h3>
+      <p>
+        In order to provide superior support of uncommon toolsets and platforms,
+        the release of Boost.DLL was postponed to a later release of Boost. This
+        also allows to test better a recently added ability to copy construct and
+        copy assign instances of <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">shared_library</span></code> and provide examples on
+        importing functions with non default calling conventions. Latest version
+        and developer documentation of the library could be found at <a href="https://github.com/boostorg/dll">GitHub
+        repo</a>.
       </p>
     </div>
   </div>
@@ -1371,12 +1408,12 @@
           <ul>
             <li>
               <div>
-                Clang: 3.4.1, 3.7
+                Clang, C++11: 3.4.1, 3.7.0
               </div>
             </li>
             <li>
               <div>
-                GCC: 4.8.5, 5.2.0, 6.0.0
+                GCC, C++11: 4.8.5, 5.2.0, 6.0.0
               </div>
             </li>
           </ul>
