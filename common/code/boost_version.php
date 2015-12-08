@@ -22,6 +22,12 @@ class BoostVersion {
     /** The contents of the latest branch of the super project */
     const latest_stage = 3;
 
+    /** Unreleased libraries (should only be used in 'boost-version' field) */
+    const unreleased_stage = 4;
+
+    /** Hidden libraries (should only be used in 'boost-version' field) */
+    const hidden_stage = 5;
+
     /** The version number */
     private $version = Array(
         'stage' => self::release_stage,
@@ -62,6 +68,14 @@ class BoostVersion {
         return new BoostVersion(Array('stage' => self::latest_stage));
     }
 
+    static function unreleased() {
+        return new BoostVersion(Array('stage' => self::unreleased_stage));
+    }
+
+    static function hidden() {
+        return new BoostVersion(Array('stage' => self::hidden_stage));
+    }
+
     /**
      * Return a BoostVersion representation of value.
      * @return BoostVersion
@@ -77,6 +91,8 @@ class BoostVersion {
                 case 'master': return self::master();
                 case 'develop': return self::develop();
                 case 'latest': return self::latest();
+                case 'unreleased': return self::unreleased();
+                case 'hidden': return self::hidden();
             }
 
             // TODO: Make this stricter by only matching whole string. Might break something?
@@ -97,7 +113,7 @@ class BoostVersion {
             }
         }
         else {
-            die("Can't convert to BoostVersion.");
+            die("Can't convert to BoostVersion.\n");
         }
     }
 
@@ -151,6 +167,17 @@ class BoostVersion {
      */
     function is_numbered_release() {
         return $this->version['stage'] === self::release_stage;
+    }
+
+    /**
+     * Is this a release version (including develop/master/latest).
+     */
+    function is_release() {
+        return $this->version['stage'] <= self::latest_stage;
+    }
+
+    function is_unreleased() {
+        return $this->version['stage'] === self::unreleased_stage;
     }
 
     /**
@@ -212,6 +239,8 @@ class BoostVersion {
             case self::master_stage: return 'master';
             case self::develop_stage: return 'develop';
             case self::latest_stage: return 'latest';
+            case self::unreleased_stage: return 'unreleased';
+            case self::hidden_stage: return 'hidden';
             default: assert(false);
         }
     }

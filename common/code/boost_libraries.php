@@ -221,11 +221,13 @@ class BoostLibraries
                 $version ? $version : (
                 isset($details['boost-version']) ? $details['boost-version']
                     : null));
-            if (!$update_version) {
+            $update_version = $update_version ?
+                BoostVersion::from($update_version) :
+                BoostVersion::unreleased();
+            if (!$update_version->is_release()) {
                 throw new BoostLibraries_exception(
                         "No version info for {$details['key']}");
             }
-            $update_version = BoostVersion::from($update_version);
             if (isset($details['update-version'])) {
                 unset($details['update-version']);
             }
@@ -279,8 +281,28 @@ class BoostLibraries
      * @param array $update
      * @throws BoostLibraries_exception
      */
-    public function update($update, $update_version) {
-        $update_version = BoostVersion::from($update_version);
+    public function update($update_version = null, $update = null) {
+        $this->update_start($update_version);
+        if ($update) { $this->update_modules($update_version, $update); }
+        $this->update_finish($update_version);
+    }
+
+    public function update_start($update_version = null) {
+        if ($update_version) {
+            $update_version = BoostVersion::from($update_version);
+
+            // TODO: Support for deleted libraries:
+            // $deleted_library = ????
+            // foreach(array_keys($this->db) as $key) {
+            //     $this->db[$key][(string) $update_version] = $deleted_library;
+            // }
+        }
+    }
+
+    public function update_modules($update_version, $update) {
+        if ($update_version) {
+            $update_version = BoostVersion::from($update_version);
+        }
 
         foreach($update as $lib) {
             $category = array_key_exists('category', $lib->details)
@@ -304,30 +326,56 @@ class BoostLibraries
                 $valid_categories = array('Miscellaneous');
             }
 
+            // Sort categories to normalize them.
+            // TODO: Shouldn't really be setting this directly from here.
+            sort($valid_categories);
             $lib->details['category'] = $valid_categories;
 
+            if ($update_version) {
+                $lib->update_version = $update_version;
+            }
+
             $key = $lib->details['key'];
-            $lib->update_version = $update_version;
-            $this->db[$key][(string) $update_version] = $lib;
+            $this->db[$key][(string) $lib->update_version] = $lib;
+        }
+    }
+
+    public function update_finish($version) {
+        if ($version) {
+            $version = BoostVersion::from($version);
+        }
+
+        $this->clean_db();
+
+        // If this is a release, then pull all the libraries back out,
+        // and set their version when not available.
+        //
+        // Note: can only do this after 'clean_db' as that copies the
+        // old release details into the new release.
+        if ($version && $version->is_numbered_release()) {
+            $libs = $this->get_for_version($version, null,
+                'BoostLibraries::filter_all');
+            $new_libs = array();
+            foreach($libs as $lib_details) {
+                $current_version = BoostVersion::from($lib_details['boost-version']);
+                if ($current_version->is_unreleased() || $current_version->is_beta())
+                {
+                    $lib_details['boost-version'] = $version;
+                }
+
+                $new_libs[] = new BoostLibrary($lib_details);
+            }
+            $this->update_modules($version, $new_libs);
+            $this->clean_db();
+        }
+    }
+
+    private function clean_db() {
+        foreach(array_keys($this->db) as $key) {
             $this->reduce_versions($key);
         }
 
         ksort($this->db);
-    }
-
-    public function update_for_release($version) {
-        $version = BoostVersion::from($version);
-
-        $libs = $this->get_for_version($version, null,
-            'BoostLibraries::filter_all');
-        $new_libs = array();
-        foreach($libs as $lib_details) {
-            if (!isset($lib_details['boost-version'])) {
-                $lib_details['boost-version'] = $version;
-            }
-            $new_libs[] = new BoostLibrary($lib_details);
-        }
-        $this->update($new_libs, $version);
     }
 
     private function sort_versions($key) {
@@ -341,11 +389,9 @@ class BoostLibraries
         $last = null;
 
         foreach ($this->db[$key] as $version => $current) {
-            if ($last) {
-                $current->fill_in_details_from_previous_version($last);
-                if ($current->equal_to($last)) {
-                    unset($this->db[$key][$version]);
-                }
+            $current->fill_in_details_from_previous_version($last);
+            if ($last && $current->equal_to($last)) {
+                unset($this->db[$key][$version]);
             }
             $last = $current;
         }
@@ -360,10 +406,10 @@ class BoostLibraries
     function to_xml($exclude = array()) {
         $exclude = array_flip($exclude);
 
-        $writer = new XMLWriter();
+        $writer = new BoostLibraries_XMLWriter();
         $writer->openMemory();
-        $writer->setIndent(true);
-        $writer->setIndentString('  ');
+        //$writer->setIndent(true);
+        //$writer->setIndentString('  ');
 
         $writer->startDocument('1.0', 'US-ASCII');
         $writer->startElement('boost');
@@ -500,7 +546,7 @@ class BoostLibraries
     }
 
     static function filter_released($x) {
-        return $x['boost-version'];
+        return $x['boost-version']->is_release();
     }
 
     static function filter_all($x) {
@@ -593,6 +639,100 @@ class BoostLibraries
     }
 
 
+}
+
+// Simple class to write out XML as XMLWriter isn't always available.
+// Implements a very limited subset of the commands.
+class BoostLibraries_XMLWriter {
+    var $text = '';
+    var $in_element = false;
+    var $element_stack = array();
+
+    function openMemory() {
+        $this->text = '';
+    }
+
+    function outputMemory($flush = true) {
+        $x = $this->text;
+        if ($flush) { $this->text = ''; }
+        return $x;
+    }
+
+    function startDocument($version, $encoding) {
+        assert($encoding === 'US-ASCII');
+        assert(!$this->text);
+        assert(!$this->in_element);
+        assert(!$this->element_stack);
+        $this->write("<?xml version=\"{$version}\" encoding=\"{$encoding}\"?".">");
+    }
+
+    function endDocument() {
+        assert(!$this->in_element);
+        assert(!$this->element_stack);
+        $this->write("\n");
+    }
+
+    function startElement($name) {
+        $this->closeElementIfOpen();
+        $this->startLine();
+        $this->write("<{$name}");
+        $this->in_element = true;
+        $this->element_stack[] = $name;
+    }
+
+    function endElement() {
+        if ($this->in_element) {
+            $this->write('/>');
+            $this->in_element = false;
+            array_pop($this->element_stack);
+        } else {
+            assert($this->element_stack);
+            $name = array_pop($this->element_stack);
+            $this->startLine();
+            $this->write("</${name}>");
+        }
+    }
+
+    private function closeElementIfOpen() {
+        if ($this->in_element) {
+            $this->write('>');
+            $this->in_element = false;
+        }
+    }
+
+    function writeElement($name, $value) {
+        $this->closeElementIfOpen();
+        $this->startLine();
+        $this->write("<{$name}>");
+        $this->writeText($value);
+        $this->write("</{$name}>");
+    }
+
+    function writeAttribute($name, $value) {
+        assert($this->in_element);
+        $this->write(" {$name}=\"");
+        $this->writeText($value);
+        $this->write("\"");
+    }
+
+    private function writeText($text) {
+        $text = htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+        // This bizarre text converts all remaining non-ascii characters
+        // to xml entities. There's probably a better way to do this.
+        $text = preg_replace_callback('/[^\0-\x{80}]/u', function ($x) {
+                $decimal_char = hexdec(bin2hex(iconv('utf-8', 'ucs-4', $x[0])));
+                return "&#{$decimal_char};";
+            }, $text);
+        $this->write($text);
+    }
+
+    private function startLine() {
+        $this->write("\n".str_repeat('  ', count($this->element_stack)));
+    }
+
+    private function write($x) {
+        $this->text .= $x;
+    }
 }
 
 class BoostLibraries_exception extends RuntimeException {}

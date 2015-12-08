@@ -49,11 +49,20 @@ class BoostSuperProject {
             }
         }
 
+        foreach ($modules as $name => $settings) {
+            if (empty($settings['url'])) {
+                throw new RuntimeException("Missing URL for {$name}.");
+            }
+            else if (!preg_match('@^\.\./(\w+)\.git$@', $settings['url'])) {
+                throw new RuntimeException("Invalid URL for {$name}.");
+            }
+        }
+
         return $modules;
     }
 
     public function run_git($command) {
-        return self::run_process("git -C \"{$this->location}\" {$command}");
+        return self::run_process("cd \"{$this->location}\" && git {$command}");
     }
 
     // A couple of utility functions that don't really fit, so might move

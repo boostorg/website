@@ -171,6 +171,7 @@ class Page:
         self.download_item = attrs.get('download')
         self.download_basename = attrs.get('download_basename')
         self.documentation = attrs.get('documentation')
+        self.final_documentation = attrs.get('final_documentation')
         self.qbk_hash = attrs.get('qbk_hash')
 
         self.loaded = False
@@ -214,6 +215,7 @@ class Page:
             'download': self.download_item,
             'download_basename': self.download_basename,
             'documentation': self.documentation,
+            'final_documentation': self.final_documentation,
             'qbk_hash': self.qbk_hash
         }
 
@@ -232,6 +234,7 @@ class Page:
         self.download_item = values['download_item']
         self.download_basename = values['download_basename']
         self.documentation = values['documentation']
+        self.final_documentation = values['final_documentation']
         self.id = values['id']
         if not self.id:
             self.id = re.sub('[\W]', '_', self.title_xml).lower()
@@ -251,6 +254,12 @@ class Page:
             boost_site.util.transform_links(values['description_fragment'],
                 lambda x: doc_matcher.match(x) and \
                     doc_prefix + x or x)
+
+            if self.final_documentation:
+                link_pattern = re.compile('^' + self.final_documentation.rstrip('/') + '/')
+                replace = doc_prefix + '/'
+                boost_site.util.transform_links(values['description_fragment'],
+                    lambda x: link_pattern.sub(replace, x, 1))
 
         self.description_xml = boost_site.util.fragment_to_string(values['description_fragment'])
 

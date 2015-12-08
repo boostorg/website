@@ -84,7 +84,7 @@ class LibraryPage {
 
     function filter($lib) {
         if (BoostVersion::page()->is_numbered_release()
-                && !$lib['boost-version']) {
+                && !$lib['boost-version']->is_release()) {
             return false;
         }
 
@@ -193,8 +193,9 @@ class LibraryPage {
     }
 
     function libavailable($lib) {
-        print !empty($lib['boost-version']) ?
-            html_encode($lib['boost-version']) : '<i>unreleased</i>';
+        print $lib['boost-version']->is_release() ?
+            html_encode($lib['boost-version']) :
+            '<i>'.html_encode($lib['boost-version']).'</i>';
     }
 
     function libstandard($lib) {
