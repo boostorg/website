@@ -118,7 +118,7 @@ class BoostArchive
             $check_file = $this->params['archive'];
 
             if (!is_readable($check_file)) {
-                file_not_found($this->params, 'Unable to find zipfile.');
+                error_page($this->params, 'Unable to find zipfile.');
                 return;
             }
         }
@@ -151,7 +151,7 @@ class BoostArchive
                 }
             }
             else if (!is_readable($check_file)) {
-                file_not_found($this->params, 'Unable to find file.');
+                error_page($this->params, 'Unable to find file.');
                 return;
             }
         }
@@ -202,10 +202,10 @@ class BoostArchive
 
         if (!$extractor) {
             if (strpos($_SERVER['HTTP_HOST'], 'www.boost.org') === false) {
-                file_not_found($this->params,
+                error_page($this->params,
                     "No extractor found for filename.");
             } else {
-                file_not_found($this->params);
+                error_page($this->params);
             }
             return;
         }
@@ -224,10 +224,10 @@ class BoostArchive
         else {
             // Read file from hard drive or zipfile
 
-            // Note: this sets $this->params['content'] with either the content or an error
-            // message:
-            if(!extract_file($this->params, $this->params['content'])) {
-                file_not_found($this->params, $this->params['content']);
+            // Note: this sets $this->params['content'] with either the
+            // content or an error message.
+            if(!extract_file($this->params)) {
+                error_page($this->params, $this->params['content']);
                 return;
             }
 
@@ -328,12 +328,15 @@ function display_raw_file($params, $type)
         fpassthru($file_handle);
         $exit_status = pclose($file_handle);
     
+        // Don't display errors for a corrupt zip file, as we seemd to
+        // be getting them for legitimate files.
+
         if($exit_status > 1) {
-            $unzip_error = unzip_error($params, $exit_status);
-            if ($unzip_error[0]) {
-                header("{$_SERVER["SERVER_PROTOCOL"]} {$unzip_error[0]}", true);
+            unzip_error($params, $exit_status);
+            if ($params['error']) {
+                header("{$_SERVER["SERVER_PROTOCOL"]} {$params['error']}", true);
             }
-            echo "Error extracting file: {$unzip_error[1]}";
+            echo "Error extracting file: {$params['content']}";
         }
     }
     else {
@@ -341,7 +344,7 @@ function display_raw_file($params, $type)
     }
 }
 
-function extract_file($params, &$content) {
+function extract_file(&$params) {
     if($params['zipfile']) {
         $file_handle = popen(unzip_command($params),'r');
         $text = '';
@@ -351,21 +354,19 @@ function extract_file($params, &$content) {
         $exit_status = pclose($file_handle);
 
         if($exit_status == 0) {
-            $content = $text;
+            $params['content'] = $text;
             return true;
         }
         else {
-            $content = null;
+            $params['content'] = null;
             if (strstr($_SERVER['HTTP_HOST'], 'beta')) {
-                // TODO: Consider using the error code from unzip_error here.
-                $content = unzip_error($params, $exit_status);
-                $content = $content[1];
+                unzip_error($params, $exit_status);
             }
             return false;
         }
     }
     else {
-        $content = file_get_contents($params['file']);
+        $params['content'] = file_get_contents($params['file']);
         return true;
     }
 }
@@ -393,17 +394,17 @@ function underscore_to_camel_case($name) {
 
 /* File Not Found */
 
-function file_not_found($params, $message = null)
+function error_page($params, $message = null)
 {
-    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-    if (!$params['error']) { $params['error'] = 404; }
+    if (!$params['error']) { $params['error'] = "404 Not Found"; }
+    header("{$_SERVER["SERVER_PROTOCOL"]} {$params['error']}");
 
     $head = <<<HTML
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
   <title>Boost C++ Libraries - 404 Not Found</title>
 HTML;
 
-    $content = '<h1>404 Not Found</h1><p>File "' . $params['file'] . '" not found.</p><p>';
+    $content = '<h1>'.html_encode($params['error']).'</h1><p>File "' . html_encode($params['file']) . '" not found.</p><p>';
     if(!empty($params['zipfile'])) $content .= "Unzip error: ";
     $content .= html_encode($message);
     $content .= '</p>';
@@ -471,9 +472,9 @@ function latest_link($params)
     }
 }
 
-// Return a readable error message for unzip exit state.
+// Updates $params with the appropriate unzip error.
 
-function unzip_error($params, $exit_status) {
+function unzip_error(&$params, $exit_status) {
     $code="500 Internal Server Error";
 
     switch($exit_status) {
@@ -502,5 +503,6 @@ function unzip_error($params, $exit_status) {
     default: $message = 'Unknown unzip error code.'; break;
     }
 
-    return array($code, "Error code ".html_encode($exit_status)." - {$message}");
+    $params['content'] = "Error code ".html_encode($exit_status)." - {$message}";
+    if ($code) { $params['error'] = $code; }
 }
