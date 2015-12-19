@@ -299,7 +299,7 @@ class BoostPages_Page {
         }
 
         if ($this->final_documentation) {
-            $link_pattern = '@^'.rstrip($this->final_documentation, '/').'/@';
+            $link_pattern = '@^'.rtrim($this->final_documentation, '/').'/@';
             $replace = "{$doc_prefix}/";
             BoostSiteTools::transform_links($values['description_fragment'],
                 function($x) use($link_pattern, $replace) {
