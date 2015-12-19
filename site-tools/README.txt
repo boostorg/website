@@ -2,15 +2,15 @@ Boost website generator
 =======================
 
 This site contains several scripts for maintaining the Boost website.
-Most users will just call `update.py` after updating any quickbook files.
+Most users will just call `update.php` after updating any quickbook files.
 
-update.py
----------
+update-pages.php
+----------
 
 Update the html pages and rss feeds for new or updated quickbook files.
 
-refresh.py
-----------
+refresh-pages.php
+-----------
 
 Reconvert all the quickbook files and regenerate the html pages. Does
 not update the rss feeds or add new pages. Useful for when quickbook,

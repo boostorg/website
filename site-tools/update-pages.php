@@ -1,16 +1,16 @@
-#!/usr/bin/env python
+#!/usr/bin/env php
+<?php
 # Copyright 2007 Rene Rivera
-# Copyright 2011 Daniel James
+# Copyright 2011, 2015 Daniel James
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-"""Usage: python update.py
+$usage = <<<EOL
+Usage: php update-pages.php
 
 Update the html pages and rss feeds for new or updated quickbook files.
+EOL;
 
-"""
+require_once(__DIR__.'/../common/code/boost.php');
 
-import boost_site.site_tools
-
-boost_site.site_tools.init()
-boost_site.site_tools.update_quickbook()
+(new BoostSiteTools(__DIR__.'/..'))->update_quickbook();
