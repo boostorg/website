@@ -147,7 +147,7 @@ EOL;
         $rss_xml = new DOMDocument();
         $rss_xml->loadXML(<<<EOL
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:boostbook="urn:boost->org:boostbook">
+<rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
 </rss>
 EOL
         );
