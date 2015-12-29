@@ -64,7 +64,7 @@ class BoostBookParser {
         $final_documentation = null;
         $final_documentation_node = $article_node->getElementsByTagName('final_documentation');
         if ($final_documentation_node->length) {
-            $final_documentation = $this->get_child($final_documentation_node[0])->data;
+            $final_documentation = $this->get_child($final_documentation_node->item(0))->data;
         }
 
         $status_item = null;
