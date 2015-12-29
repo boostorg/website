@@ -179,8 +179,10 @@ EOL
         $description->loadXML('<x>'.$this->encode_for_rss($page->description_xml).'</x>');
 
         BoostSiteTools::base_links($description, $page_link);
-        $node->appendChild($rss_xml->createTextNode(
-            BoostSiteTools::fragment_to_string($description->firstChild)));
+        foreach($description->firstChild->childNodes as $child) {
+            $node->appendChild($rss_xml->createTextNode(
+                $description->saveXML($child)));
+        }
         $item->appendChild($node);
 
         return(array(
