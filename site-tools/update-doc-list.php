@@ -127,7 +127,7 @@ function read_metadata_from_git($location, $version) {
         $module_command = "cd '{$module_location}' && git";
 
         foreach(BoostSuperProject::run_process("{$module_command} ls-tree {$module['hash']} "
-                ."meta/libraries.xml meta/libraries.json") as $entry)
+                ."meta/libraries.xml meta/libraries.json .boost") as $entry)
         {
             try {
                 $entry = trim($entry);
@@ -160,7 +160,8 @@ function read_metadata_from_local_clone($location, $branch = 'latest') {
     $updated_libs = array();
     foreach ($super_project->get_modules() as $name => $module_details) {
         foreach (
-                glob("{$location}/{$module_details['path']}/meta/libraries.*")
+                array_merge(glob("{$location}/{$module_details['path']}/meta/libraries.*"),
+                            glob("{$location}/{$module_details['path']}/.boost"))
                 as $path) {
             try {
                 $updated_libs = array_merge($updated_libs,
@@ -206,7 +207,10 @@ function read_metadata_from_release($location, $version, $libs) {
     {
         if ($info->isDot() && $info->getFilename()=='.') {
             $path = dirname($info->getSubPathname());
-            if (is_file("{$info->getPathname()}/libraries.json")) {
+            if (is_file("{$info->getPathname()}/.boost")) {
+                $module_paths[] = "libs/".$path;
+            }
+            elseif (is_file("{$info->getPathname()}/libraries.json")) {
                 $module_paths[] = "libs/".dirname($path);
             }
         }
@@ -215,7 +219,13 @@ function read_metadata_from_release($location, $version, $libs) {
     $updated_libs = array();
 
     foreach ($module_paths as $path) {
-        $json_path = "{$location}/{$path}/meta/libraries.json";
+        if (is_file("{$location}/{$path}/.boost")) {
+            $json_path = "{$location}/{$path}/.boost";
+        }
+        elseif (is_file("{$location}/{$path}/meta/libraries.json")) {
+            $json_path = "{$location}/{$path}/meta/libraries.json";
+        }
+
         try {
             $libraries = BoostLibrary::read_libraries_json(
                 file_get_contents($json_path));
