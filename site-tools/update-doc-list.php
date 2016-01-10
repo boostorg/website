@@ -14,7 +14,7 @@ function main() {
     $location = null;
     $version = null;
 
-    $positional_args = [];
+    $positional_args = array();
     foreach($args as $arg) {
         if (substr($arg, 0, 2) == '--') {
             switch ($arg) {
