@@ -3,14 +3,37 @@
 
 require_once(__DIR__.'/../common/code/boost.php');
 
+// TODO: Replace with something better.
+global $quiet;
+$quiet = false;
+
 function main() {
+    global $quiet;
+
     $args = $_SERVER['argv'];
     $location = null;
     $version = null;
 
-    switch (count($args)) {
-        case 3: $version = $args[2];
-        case 2: $location = $args[1];
+    $positional_args = [];
+    foreach($args as $arg) {
+        if (substr($arg, 0, 2) == '--') {
+            switch ($arg) {
+            case '--quiet':
+                $quiet = true;
+                break;
+            default:
+                echo "Unknown flag: {$arg}\n";
+                exit(1);
+            }
+        }
+        else {
+            $positional_args[] = $arg;
+        }
+    }
+
+    switch (count($positional_args)) {
+        case 3: $version = $positional_args[2];
+        case 2: $location = $positional_args[1];
         case 1: break;
         default:
             echo "Usage: update-doc-list.php [path] [version]\n";
@@ -80,7 +103,7 @@ function main() {
         $libs->update();
     }
 
-    echo "Writing to disk\n";
+    if (!$quiet) { echo "Writing to disk\n"; }
 
     file_put_contents(dirname(__FILE__) . '/../doc/libraries.xml', $libs->to_xml());
 
@@ -95,8 +118,10 @@ function main() {
  * @throws RuntimeException
  */
 function read_metadata_from_git($location, $version) {
+    global $quiet;
+
     $branch = BoostVersion::from($version)->git_ref();
-    echo "Updating from {$branch}\n";
+    if (!$quiet) { echo "Updating from {$branch}\n"; }
 
     $super_project = new BoostSuperProject($location, $branch);
     $modules = $super_project->get_modules();
@@ -154,7 +179,8 @@ function read_metadata_from_git($location, $version) {
  * @throws RuntimeException
  */
 function read_metadata_from_local_clone($location, $branch = 'latest') {
-    echo "Updating from local checkout/{$branch}\n";
+    global $quiet;
+    if (!$quiet) { echo "Updating from local checkout/{$branch}\n"; }
 
     $super_project = new BoostSuperProject($location);
     $updated_libs = array();
