@@ -48,12 +48,18 @@
 <p>This class consists of common code from all small_vector&lt;T, N&gt; types that don't depend on the "N" template parameter. This class is non-copyable and non-destructible, so this class tipically used as reference argument to functions that read or write small vectors. Since <code class="computeroutput"><a class="link" href="small_vector.html" title="Class template small_vector">small_vector</a>&lt;T, N&gt;</code> derives from <code class="computeroutput"><a class="link" href="small_vector_base.html" title="Class template small_vector_base">small_vector_base</a>&lt;T&gt;</code>, the conversion to <code class="computeroutput"><a class="link" href="small_vector_base.html" title="Class template small_vector_base">small_vector_base</a></code> is implicit </p>
 <pre class="programlisting"><span class="comment">//Clients can pass any small_vector&lt;Foo, N&gt;.</span>
 <span class="keyword">void</span> <span class="identifier">read_any_small_vector_of_foo</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">small_vector_base</span><span class="special">&lt;</span><span class="identifier">Foo</span><span class="special">&gt;</span> <span class="special">&amp;</span><span class="identifier">in_parameter</span><span class="special">)</span><span class="special">;</span>
+
 <span class="keyword">void</span> <span class="identifier">modify_any_small_vector_of_foo</span><span class="special">(</span><span class="identifier">small_vector_base</span><span class="special">&lt;</span><span class="identifier">Foo</span><span class="special">&gt;</span> <span class="special">&amp;</span><span class="identifier">in_out_parameter</span><span class="special">)</span><span class="special">;</span>
+
 <span class="keyword">void</span> <span class="identifier">some_function</span><span class="special">(</span><span class="special">)</span>
 <span class="special">{</span>
+
    <span class="identifier">small_vector</span><span class="special">&lt;</span><span class="identifier">Foo</span><span class="special">,</span> <span class="number">8</span><span class="special">&gt;</span> <span class="identifier">myvector</span><span class="special">;</span>
+
    <span class="identifier">read_any_small_vector_of_foo</span><span class="special">(</span><span class="identifier">myvector</span><span class="special">)</span><span class="special">;</span>   <span class="comment">// Reads myvector</span>
+
    <span class="identifier">modify_any_small_vector_of_foo</span><span class="special">(</span><span class="identifier">myvector</span><span class="special">)</span><span class="special">;</span> <span class="comment">// Modifies myvector</span>
+
 <span class="special">}</span>
 </pre>
 <p>All <code class="computeroutput">boost::container:vector</code> member functions are inherited. See <code class="computeroutput">vector</code> documentation for details. </p>
