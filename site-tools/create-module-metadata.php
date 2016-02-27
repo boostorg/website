@@ -62,16 +62,11 @@ function main() {
     foreach ($libraries_by_module as $module => $libraries) {
         $module_libraries = BoostLibraries::from_array($libraries);
         $module_dir = "{$boost_root}/{$git_submodules[$module]['path']}";
-        $meta_dir = "$module_dir/meta";
-        $meta_file = "$module_dir/meta/libraries.json";
+        $meta_file = "$module_dir/.boost";
 
         if (!is_dir($module_dir)) {
             echo "Module '$module' doesn't exist at '$module_dir'\n";
             continue;
-        }
-
-        if (!is_dir($meta_dir)) {
-            mkdir($meta_dir);
         }
 
         file_put_contents($meta_file, $module_libraries->to_json(
