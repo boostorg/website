@@ -22,7 +22,7 @@ function main() {
 
         echo "[section New Libraries]\n\n";
         foreach($unreleased_libs as $lib) {
-            echo "* [phrase library..[@{$lib['documentation']} {$lib['name']}]:]\n";
+            echo "* [phrase library..[@/{$lib['documentation']} {$lib['name']}]:]\n";
             echo "  {$lib['description']}\n\n";
         }
         echo "[endsection]\n\n";
