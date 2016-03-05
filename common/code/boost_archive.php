@@ -172,6 +172,7 @@ class BoostArchive
             array('','@[.](html|htm)$@i','raw','text/html'),
             array('','@(/|^)(Jamroot|Jamfile|ChangeLog|configure)$@i','text','text/plain'),
             array('','@[.]dtd$@i','raw','application/xml-dtd'),
+            array('','@[.]json$@i','raw','application/json'),
             ));
 
         $preprocess = null;

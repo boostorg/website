@@ -82,7 +82,7 @@ class BoostState {
         }
     }
 
-    function save($state, $file_path) {
+    static function save($state, $file_path) {
         $file = fopen($file_path, "wb");
         ksort($state);
         foreach ($state as $record_key => $record) {

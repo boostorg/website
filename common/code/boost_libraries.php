@@ -316,13 +316,7 @@ class BoostLibraries
                    implode(', ', $invalid_categories), "\n"; 
             }
 
-            // The convention is that Miscellaneous contains libraries that
-            // aren't in any other category. Otherwise Miscellaneous would
-            // contain everything.
-            if (count($valid_categories) > 1 && in_array('Miscellaneous', $valid_categories)) {
-                echo $lib->details['key'], ": In Miscellaneous + other categories.\n";
-                unset($valid_categories[array_search('Miscellaneous', $valid_categories)]);
-            } else if (!$valid_categories) {
+            if (!$valid_categories) {
                 $valid_categories = array('Miscellaneous');
             }
 

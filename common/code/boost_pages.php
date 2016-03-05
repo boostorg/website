@@ -96,10 +96,10 @@ class BoostPages {
                 if ($page_data->type == 'release' && empty($page_data->flags['released']) && empty($page_data->flags['beta'])) {
                     $template_vars['note_xml'] = <<<EOL
                         <div class="section-note"><p>Note: This release is
-                        still under development-> Please don't use this page as
+                        still under development. Please don't use this page as
                         a source of information, it's here for development
-                        purposes only-> Everything is subject to
-                        change-></p></div>
+                        purposes only. Everything is subject to
+                        change.</p></div>
 EOL;
                 }
 
