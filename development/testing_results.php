@@ -7,8 +7,4 @@ $archive = new BoostArchive(array(
     'archive_dir' => RESULTS_DIR,
 ));
 
-$archive->display_from_archive(
-  array(
-  //~ array(path-regex,raw|simple|text|cpp,mime-type),
-  )
-);
+$archive->display_from_archive();

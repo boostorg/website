@@ -20,7 +20,7 @@ class BoostArchive
     function get_archive_location()
     {
         $path_parts = array();
-        preg_match($this->params['pattern'], $this->params['vpath'], $path_parts);
+        preg_match($this->params['pattern'], $_SERVER["PATH_INFO"], $path_parts);
 
         $zipfile_name = $path_parts[1];
         $this->params['key'] = $path_parts[2];
@@ -37,19 +37,15 @@ class BoostArchive
                 str_replace('\\','/', $this->params['archive_dir'] . '/' . $zipfile_name . '.zip');
     }
 
-    function display_from_archive($content_map = array())
+    function display_from_archive()
     {
         // Set default values
 
         $this->params = array_merge(
             array(
                 'pattern' => '@^[/]([^/]+)[/](.*)$@',
-                'vpath' => $_SERVER["PATH_INFO"],
                 'archive_dir' => ARCHIVE_DIR,
                 'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
-                'title' => NULL,
-                'charset' => NULL,
-                'content' => NULL,
                 'error' => false,
             ),
             $this->params
