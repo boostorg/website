@@ -2,13 +2,12 @@
 
 /*
   Copyright 2005-2008 Redshift Software, Inc.
+  Copyright 2016 Daniel James
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
-require_once(dirname(__FILE__) . '/boost.php');
-require_once(dirname(__FILE__) . '/url.php');
 
-define('BOOST_DOCS_MODIFIED_DATE', 'Sat 07 Feb 2015 21:44:00 +0000');
+require_once(dirname(__FILE__) . '/boost.php');
 
 class BoostArchive
 {
