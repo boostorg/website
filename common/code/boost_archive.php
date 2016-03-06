@@ -22,14 +22,7 @@ class BoostArchive
         $path_parts = array();
         preg_match($this->params['pattern'], $this->params['vpath'], $path_parts);
 
-        if (in_array($path_parts[1], array('boost-build', 'regression'))) {
-            $this->params['version'] = null;
-            $version_dir = $path_parts[1];
-        } else {
-            $this->params['version'] = BoostVersion::from($path_parts[1]);
-            $version_dir = is_numeric($path_parts[1][0]) ?
-                "boost_{$path_parts[1]}" : $path_parts[1];
-        }
+        $zipfile_name = $path_parts[1];
         $this->params['key'] = $path_parts[2];
 
         $file = false;
@@ -41,7 +34,7 @@ class BoostArchive
         $this->params['file'] = $file;
 
         $this->params['archive'] =
-                str_replace('\\','/', $this->params['archive_dir'] . '/' . $version_dir . '.zip');
+                str_replace('\\','/', $this->params['archive_dir'] . '/' . $zipfile_name . '.zip');
     }
 
     function display_from_archive($content_map = array())
@@ -63,11 +56,6 @@ class BoostArchive
         );
 
         $this->get_archive_location();
-
-        // Only use a permanent redirect for releases (beta or full).
-
-        $redirect_status_code = $this->params['version'] &&
-            $this->params['version']->is_numbered_release() ? 301 : 302;
 
         // Check file exists.
 
