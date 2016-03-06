@@ -38,17 +38,15 @@ class BoostArchive
         preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts);
 
         $zipfile_name = $path_parts[1];
-        $params['file'] = $params['archive_file_prefix'] . $path_parts[2];
+        $path_in_zipfile = $params['archive_file_prefix'] . $path_parts[2];
 
-        $params['archive'] =
+        $archive_file =
                 str_replace('\\','/', $params['archive_dir'] . '/' . $zipfile_name . '.zip');
 
         // Check file exists.
 
-        $check_file = $params['archive'];
-
-        if (!is_readable($check_file)) {
-            BoostWeb::error_404($params['file'], 'Unable to find zipfile.');
+        if (!is_readable($archive_file)) {
+            BoostWeb::error_404($path_in_zipfile, 'Unable to find zipfile.');
             return;
         }
 
@@ -74,17 +72,17 @@ class BoostArchive
             'json' => 'application/json',
         );
 
-        $extension = pathinfo($params['file'], PATHINFO_EXTENSION);
+        $extension = pathinfo($path_in_zipfile, PATHINFO_EXTENSION);
         $type = array_key_exists($extension, $mime_types) ? $mime_types[$extension] : 'text/plain';
 
         // Handle ETags and Last-Modified HTTP headers.
 
         // Output raw files.
 
-        if (!BoostWeb::http_headers($type, filemtime($check_file)))
+        if (!BoostWeb::http_headers($type, filemtime($archive_file)))
             return;
 
-        display_raw_file($params['archive'], $params['file']);
+        display_raw_file($archive_file, $path_in_zipfile);
     }
 }
 
