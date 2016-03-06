@@ -35,14 +35,7 @@ class BoostArchive
         $file = false;
 
         if (!$file) {
-            if ($this->params['archive_subdir'])
-            {
-                $file = $this->params['archive_file_prefix'] . $version_dir . '/' . $this->params['key'];
-            }
-            else
-            {
-                $file = $this->params['archive_file_prefix'] . $this->params['key'];
-            }
+            $file = $this->params['archive_file_prefix'] . $this->params['key'];
         }
 
         $this->params['file'] = $file;
@@ -59,7 +52,6 @@ class BoostArchive
             array(
                 'pattern' => '@^[/]([^/]+)[/](.*)$@',
                 'vpath' => $_SERVER["PATH_INFO"],
-                'archive_subdir' => true,
                 'archive_dir' => ARCHIVE_DIR,
                 'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
                 'use_http_expire_date' => false,
