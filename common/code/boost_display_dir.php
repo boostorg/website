@@ -6,10 +6,10 @@ class BoostDisplayDir extends BoostFilters
     function display($dir) {
         $handle = opendir($dir);
 
-        $title = html_encode("Index listing for {$this->params['key']}");
+        $title = html_encode("Index listing for {$this->data->key}");
 
         $this->title = $title;
-        $this->params['noindex'] = true;
+        $this->data->noindex = true;
 
         $content = "<h3>$title</h3>\n<ul>\n";
 
@@ -23,7 +23,7 @@ class BoostDisplayDir extends BoostFilters
 
         $content .= "</ul>\n";
 
-        $this->params['content'] = $content;
+        $this->data->content = $content;
 
         $this->display_template($this->template_params($content));
     }

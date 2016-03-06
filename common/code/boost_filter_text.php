@@ -15,7 +15,7 @@ class BoostFilterText extends BoostFilters
 
     function echo_filtered()
     {
-        $this->title = html_encode($this->params['key']);
+        $this->title = html_encode($this->data->path);
 
         $this->display_template(
             $this->template_params($this->text_filter_content()));
@@ -24,7 +24,7 @@ class BoostFilterText extends BoostFilters
     function text_filter_content()
     {
         return
-            "<h3>".html_encode($this->params['key'])."</h3>\n".
+            "<h3>".html_encode($this->data->path)."</h3>\n".
             "<pre>\n".
             $this->encoded_text('text').
             "</pre>\n";
@@ -36,14 +36,14 @@ class BoostFilterText extends BoostFilters
     function encoded_text($type) {
         $text = '';
 
-        $root = dirname(preg_replace('@([^/]+/)@','../',$this->params['key']));
+        $root = dirname(preg_replace('@([^/]+/)@','../',$this->data->path));
 
         // John Gruber's regular expression for finding urls
         // http://daringfireball.net/2009/11/liberal_regex_for_matching_urls
         
         foreach(preg_split(
             '@\b((?:[\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|[^[:punct:]\s]|/))@',
-            $this->params['content'], -1, PREG_SPLIT_DELIM_CAPTURE)
+            $this->data->content, -1, PREG_SPLIT_DELIM_CAPTURE)
             as $index => $part)
         {
             if($index % 2 == 0) {

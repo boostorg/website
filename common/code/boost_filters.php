@@ -13,19 +13,19 @@ class BoostFilters
 {
     static $template = null;
 
-    var $params;
+    var $data;
     var $charset = null;
     var $title = null;
 
     function __construct($params)
     {
-        $this->params = $params;
+        $this->data = new BoostFilterData($params);
     }
 
     function alter_title($text)
     {
-        if (!empty($this->params['version'])) {
-            $version = BoostVersion::from($this->params['version']);
+        if (!empty($this->data->version)) {
+            $version = BoostVersion::from($this->data->version);
             return str_ireplace('</title>', " - $version</title>", $text);
         }
         else {
@@ -35,13 +35,13 @@ class BoostFilters
 
     function html_init()
     {
-        preg_match('@text/html; charset=([^\s"\']+)@i',$this->params['content'],$charset);
+        preg_match('@text/html; charset=([^\s"\']+)@i',$this->data->content,$charset);
         if (isset($charset[1]))
         {
             $this->charset = $charset[1];
         }
 
-        preg_match('@<title>([^<]+)</title>@i',$this->params['content'],$title);
+        preg_match('@<title>([^<]+)</title>@i',$this->data->content,$title);
         if (isset($title[1]))
         {
             $this->title = $title[1];
@@ -144,13 +144,13 @@ class BoostFilters
         $charset = $this->charset ?: 'us-ascii';
         $title = $this->title ?: 'Boost C++ Libraries';
 
-        if (!empty($this->params['version'])) {
-            $title = "{$this->title} - " . BoostVersion::from($this->params['version']);
+        if (!empty($this->data->version)) {
+            $title = "{$this->title} - " . BoostVersion::from($this->data->version);
         }
 
         $head = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
 
-        if (!empty($this->params['noindex']))
+        if (!empty($this->data->noindex))
             $head .= "<meta name=\"robots\" content=\"noindex\">\n";
 
         $head .= "<title>${title}</title>";

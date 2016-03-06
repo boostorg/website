@@ -9,7 +9,7 @@ class BoostFilterBoostBookBasic extends BoostFilters
 {
     function echo_filtered()
     {
-        $text = $this->params['content'];
+        $text = $this->data->content;
 
         $match = null;
 
@@ -22,7 +22,7 @@ class BoostFilterBoostBookBasic extends BoostFilters
         echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"/>';
         echo substr($text, $pos1, $pos3 - $pos1);
         virtual("/common/heading-doc.html");
-        echo latest_link($this->params);
+        echo latest_link($this->data);
 
         $text = preg_replace('@(<div[^>]* )title="[^"]*"([^>]*>)@', '$1$2', substr($text, $pos4));
         echo $this->prepare_html($text);

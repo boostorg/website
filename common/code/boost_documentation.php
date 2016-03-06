@@ -278,13 +278,13 @@ function detect_redirect($content)
     return false;
 }
 
-function latest_link($params)
+function latest_link($filter_data)
 {
-    if (!isset($params['version'])) {
+    if (!isset($filter_data->version)) {
         return;
     }
 
-    $version = BoostVersion::from($params['version']);
+    $version = BoostVersion::from($filter_data->version);
 
     $current = BoostVersion::current();
     switch ($current->compare($version))
@@ -293,9 +293,9 @@ function latest_link($params)
         break;
     case 1:
         echo '<div class="boost-common-header-notice">';
-        if (realpath("{$params['archive_dir']}/{$current->dir()}/$params[key]") !== false)
+        if (realpath("{$filter_data->archive_dir}/{$current->dir()}/{$filter_data->path}") !== false)
         {
-            echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$params['key'],'">',
+            echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$filter_data->path,'">',
                 "Click here to view the latest version of this page.",
                 '</a>';
         }

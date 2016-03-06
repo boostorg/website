@@ -8,7 +8,7 @@
 class BoostFilterCpp extends BoostFilterText
 {
     function echo_filtered() {
-        $this->title = html_encode($this->params['key']);
+        $this->title = html_encode($this->data->path);
 
         $this->display_template(
             $this->template_params($this->cpp_filter_content()));
@@ -17,7 +17,7 @@ class BoostFilterCpp extends BoostFilterText
     function cpp_filter_content()
     {
         return
-            "<h3>".html_encode($this->params['key'])."</h3>\n".
+            "<h3>".html_encode($this->data->path)."</h3>\n".
             "<pre>\n".
             $this->encoded_text('cpp').
             "</pre>\n";

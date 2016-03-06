@@ -9,6 +9,6 @@ class BoostFilterSimple extends BoostFilters
 {
     function echo_filtered()
     {
-        print $this->prepare_html($this->params['content']);
+        print $this->prepare_html($this->data->content);
     }
 }
