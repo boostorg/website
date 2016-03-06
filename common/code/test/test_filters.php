@@ -9,7 +9,7 @@
 
 <?php
 
-require_once(dirname(__FILE__) . '/../boost_archive.php');
+require_once(dirname(__FILE__) . '/../boost_documentation.php');
 
 BoostFilters::$template = __DIR__.'/template.php';
 
