@@ -28,7 +28,6 @@ class BoostDocumentation
 
         $this->params = array_merge(
             array(
-                'override_extractor' => null,
                 'title' => NULL,
                 'charset' => NULL,
                 'content' => NULL,
@@ -177,9 +176,6 @@ class BoostDocumentation
                 break;
             }
         }
-
-        if ($this->params['override_extractor'])
-            $extractor = $this->params['override_extractor'];
 
         if (!$extractor) {
             if (strpos($_SERVER['HTTP_HOST'], 'www.boost.org') === false) {
