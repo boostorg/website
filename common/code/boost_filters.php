@@ -17,9 +17,9 @@ class BoostFilters
     var $charset = null;
     var $title = null;
 
-    function __construct($params)
+    function __construct($data)
     {
-        $this->data = new BoostFilterData($params);
+        $this->data = $data;
     }
 
     function alter_title($text)

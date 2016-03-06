@@ -17,6 +17,11 @@ class BoostDocumentation
         $this->params = $params;
     }
 
+    function get_param($key, $default = null) {
+        return array_key_exists($key, $this->params) ?
+            $this->params[$key] : $default;
+    }
+
     function get_archive_location()
     {
         $path_parts = array();
@@ -239,7 +244,12 @@ class BoostDocumentation
                     $this->params['content'] = call_user_func($preprocess, $this->params['content']);
                 }
 
-                echo_filtered($extractor, $this->params);
+                $data = new BoostFilterData();
+                $data->version = $this->get_param('version');
+                $data->path = $this->get_param('key');
+                $data->content = $this->get_param('content');
+                $data->archive_dir = $this->get_param('archive_dir');
+                echo_filtered($extractor, $data);
             }
         }
     }
@@ -249,9 +259,9 @@ class BoostDocumentation
 // Filters
 //
 
-function echo_filtered($extractor, $params) {
+function echo_filtered($extractor, $data) {
     $name = "BoostFilter".underscore_to_camel_case($extractor);
-    $extractor = new $name($params);
+    $extractor = new $name($data);
     $extractor->echo_filtered();
 }
 

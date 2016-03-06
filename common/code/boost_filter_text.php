@@ -7,8 +7,8 @@
 
 class BoostFilterText extends BoostFilters
 {
-    function __construct($params) {
-        parent::__construct($params);
+    function __construct($data) {
+        parent::__construct($data);
         // TODO: Better support for other character sets?
         $this->charset = 'UTF-8';
     }

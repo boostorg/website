@@ -15,9 +15,9 @@ BoostFilters::$template = __DIR__.'/template.php';
 
 $failure_count = 0;
 
-function filter_test($filter, $params, $expected) {
+function filter_test($filter, $data, $expected) {
     ob_start();
-    echo_filtered($filter, $params);
+    echo_filtered($filter, $data);
     $result = ob_get_clean();
     
     if(trim($result) != trim($expected)) {
@@ -55,12 +55,10 @@ Hello World!</pre>
 </html>
 EOL;
 
-$params = Array(
-    'key' => 'Hello_world_test.txt',
-    'content' => $test_text
-);
-
-filter_test('text', $params, $test_text_expected);
+$data = new BoostFilterData();
+$data->path = 'Hello_world_test.txt';
+$data->content = $test_text;
+filter_test('text', $data, $test_text_expected);
 
 /* UTF-8 Plain Text
  */
@@ -84,12 +82,10 @@ I&ntilde;t&euml;rn&acirc;ti&ocirc;n&agrave;liz&aelig;ti&oslash;n</pre>
 </html>
 EOL;
 
-$params = Array(
-    'key' => 'Hello_world_test.txt',
-    'content' => $test_text
-);
-
-filter_test('text', $params, $test_text_expected);
+$data = new BoostFilterData();
+$data->path = 'Hello_world_test.txt';
+$data->content = $test_text;
+filter_test('text', $data, $test_text_expected);
 
 
 /* Non-UTF-8 Plain Text
@@ -124,12 +120,10 @@ I{$unknown_character}{$unknown_character}t{$unknown_character}{$unknown_characte
 </html>
 EOL;
 
-$params = Array(
-    'key' => 'Hello_world_test.txt',
-    'content' => $test_text
-);
-
-filter_test('text', $params, $test_text_expected);
+$data = new BoostFilterData();
+$data->path = 'Hello_world_test.txt';
+$data->content = $test_text;
+filter_test('text', $data, $test_text_expected);
 
 /* C++ */
 
@@ -156,12 +150,10 @@ int main() {}</pre>
 </html>
 EOL;
 
-$params = Array(
-    'key' => 'foo/test.cpp',
-    'content' => $test_cpp
-);
-
-filter_test('cpp', $params, $test_cpp_expected);
+$data = new BoostFilterData();
+$data->path = 'foo/test.cpp';
+$data->content = $test_cpp;
+filter_test('cpp', $data, $test_cpp_expected);
 
 /* HTML */
 
@@ -182,9 +174,8 @@ $test_doc = <<<EOL
 </html>
 EOL;
 
-$params = Array(
-    'content' => $test_doc
-);
+$data = new BoostFilterData();
+$data->content = $test_doc;
 
 $test_simple_expected = <<<EOL
 <!DOCTYPE html>
@@ -203,10 +194,10 @@ $test_simple_expected = <<<EOL
 </html>
 EOL;
 
-filter_test('simple', $params, $test_simple_expected);
+filter_test('simple', $data, $test_simple_expected);
 // TODO: This doesn't work because the filter calls 'virtual', which breaks
 // out of the buffered output.
-//filter_test('basic', $params, '');
+//filter_test('basic', $data, '');
 
 echo $failure_count > 0 ? "<p>Failure count: $failure_count</p>" : "<p>All passed</p>";
 
