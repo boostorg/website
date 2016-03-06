@@ -9,7 +9,7 @@
  * HTML processing functions
  */
 
-class BoostFilters
+class BoostFilter
 {
     static $template = null;
 

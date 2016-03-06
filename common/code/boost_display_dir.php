@@ -1,7 +1,7 @@
 <?php
 
 // Not strictly a filter, but needs some of the members.
-class BoostDisplayDir extends BoostFilters
+class BoostDisplayDir extends BoostFilter
 {
     function display($dir) {
         $handle = opendir($dir);

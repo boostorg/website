@@ -83,7 +83,7 @@ HTML;
         $content .= html_encode($message);
         $content .= '</p>';
 
-        $filter = new BoostFilters(array());
+        $filter = new BoostFilter(array());
         $filter->display_template(Array('head' => $head, 'content' => $content));
     }
 }

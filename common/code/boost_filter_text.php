@@ -5,7 +5,7 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-class BoostFilterText extends BoostFilters
+class BoostFilterText extends BoostFilter
 {
     function __construct($data) {
         parent::__construct($data);

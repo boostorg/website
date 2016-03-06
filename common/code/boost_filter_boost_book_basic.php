@@ -5,7 +5,7 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-class BoostFilterBoostBookBasic extends BoostFilters
+class BoostFilterBoostBookBasic extends BoostFilter
 {
     function echo_filtered()
     {

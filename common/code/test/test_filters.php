@@ -11,7 +11,7 @@
 
 require_once(dirname(__FILE__) . '/../boost_documentation.php');
 
-BoostFilters::$template = __DIR__.'/template.php';
+BoostFilter::$template = __DIR__.'/template.php';
 
 $failure_count = 0;
 
