@@ -30,7 +30,6 @@ class BoostDocumentation
             array(
                 'pattern' => '@^[/]([^/]+)[/](.*)$@',
                 'vpath' => $_SERVER["PATH_INFO"],
-                'archive_subdir' => true,
                 'fix_dir' => false,
                 'archive_dir' => ARCHIVE_DIR,
                 'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
@@ -72,15 +71,7 @@ class BoostDocumentation
 
         if (!$file) {
             $file = $this->params['archive_dir'] . '/';
-
-            if ($this->params['archive_subdir'])
-            {
-                $file = $file . $this->params['archive_file_prefix'] . $version_dir . '/' . $path;
-            }
-            else
-            {
-                $file = $file . $this->params['archive_file_prefix'] . $path;
-            }
+            $file = $file . $this->params['archive_file_prefix'] . $version_dir . '/' . $path;
         }
 
         $this->params['file'] = $file;
