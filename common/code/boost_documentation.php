@@ -56,12 +56,12 @@ class BoostDocumentation
             $version_dir = is_numeric($path_parts[1][0]) ?
                 "boost_{$path_parts[1]}" : $path_parts[1];
         }
-        $this->params['key'] = $path_parts[2];
+        $path = $path_parts[2];
 
         $file = false;
 
         if ($this->params['fix_dir']) {
-            $fix_path = "{$this->params['fix_dir']}/{$version_dir}/{$this->params['key']}";
+            $fix_path = "{$this->params['fix_dir']}/{$version_dir}/{$path}";
 
             if (is_file($fix_path) ||
                 (is_dir($fix_path) && is_file("{$fix_path}/index.html")))
@@ -75,11 +75,11 @@ class BoostDocumentation
 
             if ($this->params['archive_subdir'])
             {
-                $file = $file . $this->params['archive_file_prefix'] . $version_dir . '/' . $this->params['key'];
+                $file = $file . $this->params['archive_file_prefix'] . $version_dir . '/' . $path;
             }
             else
             {
-                $file = $file . $this->params['archive_file_prefix'] . $this->params['key'];
+                $file = $file . $this->params['archive_file_prefix'] . $path;
             }
         }
 
@@ -132,7 +132,7 @@ class BoostDocumentation
 
             if ($found_file) {
                 $this->params['file'] = $check_file = $check_file.$found_file;
-                $this->params['key'] = $this->params['key'].$found_file;
+                $path = $path.$found_file;
             }
             else {
                 if (!BoostWeb::http_headers('text/html', $last_modified, $expires))
@@ -172,7 +172,7 @@ class BoostDocumentation
 
         foreach ($info_map as $i)
         {
-            if (preg_match($i[1],$this->params['key']))
+            if (preg_match($i[1],$path))
             {
                 if ($i[0]) {
                     $version = BoostVersion::from($i[0]);
@@ -243,7 +243,7 @@ class BoostDocumentation
 
                 $data = new BoostFilterData();
                 $data->version = $this->get_param('version');
-                $data->path = $this->get_param('key');
+                $data->path = $path;
                 $data->content = $this->get_param('content');
                 $data->archive_dir = $this->get_param('archive_dir');
                 echo_filtered($extractor, $data);
