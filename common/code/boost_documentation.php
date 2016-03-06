@@ -114,8 +114,11 @@ class BoostDocumentation
                 if (!BoostWeb::http_headers('text/html', $last_modified, $expires))
                     return;
 
-                // TODO: Oops....
-                $display_dir = new BoostDisplayDir($this->params);
+                $data = new BoostFilterData();
+                $data->version = $version;
+                $data->path = $path;
+                $data->archive_dir = $archive_dir;
+                $display_dir = new BoostDisplayDir($data);
                 return $display_dir->display($file);
             }
         }
