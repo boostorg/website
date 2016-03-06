@@ -28,7 +28,6 @@ class BoostDocumentation
 
         $this->params = array_merge(
             array(
-                'use_http_expire_date' => false,
                 'override_extractor' => null,
                 'title' => NULL,
                 'charset' => NULL,
@@ -39,6 +38,7 @@ class BoostDocumentation
         $pattern = $this->get_param('pattern', '@^[/]([^/]+)[/](.*)$@');
         $fix_dir = $this->get_param('fix_dir');
         $archive_dir = $this->get_param('archive_dir', ARCHIVE_DIR);
+        $use_http_expire_date = $this->get_param('use_http_expire_date', false);
 
         // Get Archive Location
 
@@ -82,7 +82,7 @@ class BoostDocumentation
         // Calculate expiry date if requested.
 
         $expires = null;
-        if ($this->params['use_http_expire_date'])
+        if ($use_http_expire_date)
         {
             if (!$this->params['version']) {
                 $expires = "+1 week";
