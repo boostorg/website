@@ -162,7 +162,7 @@ class BoostFilter
         );
     }
 
-    function display_template($_file) {
+    static function display_template($_file) {
         include(self::$template ?: __DIR__.'/template.php');
     }
 }
