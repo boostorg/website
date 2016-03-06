@@ -10,7 +10,7 @@ if (strpos($_SERVER['REQUEST_URI'], '//') !== FALSE)
 
 require_once(dirname(__FILE__) . '/../common/code/boost.php');
 
-$archive = new BoostArchive(array(
+$archive = new BoostDocumentation(array(
     'zipfile' => false,
 ));
 

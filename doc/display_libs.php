@@ -54,7 +54,7 @@ EOS;
     return str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
-$archive = new BoostArchive(array(
+$archive = new BoostDocumentation(array(
     'fix_dir' => dirname(__FILE__).'/fixes',
     'archive_dir' => STATIC_DIR,
     'use_http_expire_date' => true,
