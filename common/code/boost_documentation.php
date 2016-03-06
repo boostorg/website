@@ -36,14 +36,9 @@ class BoostDocumentation
         $path_parts = array();
         preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts);
 
-        if (in_array($path_parts[1], array('boost-build', 'regression'))) {
-            $version = null;
-            $version_dir = $path_parts[1];
-        } else {
-            $version = BoostVersion::from($path_parts[1]);
-            $version_dir = is_numeric($path_parts[1][0]) ?
-                "boost_{$path_parts[1]}" : $path_parts[1];
-        }
+        $version = BoostVersion::from($path_parts[1]);
+        $version_dir = is_numeric($path_parts[1][0]) ?
+            "boost_{$path_parts[1]}" : $path_parts[1];
         $path = $path_parts[2];
 
         $file = false;
