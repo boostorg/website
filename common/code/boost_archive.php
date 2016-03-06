@@ -1,4 +1,5 @@
 <?php
+
 /*
   Copyright 2005-2008 Redshift Software, Inc.
   Distributed under the Boost Software License, Version 1.0.
@@ -23,7 +24,6 @@ class BoostArchive
 
         $params = array_merge(
             array(
-                'pattern' => '@^[/]([^/]+)[/](.*)$@',
                 'archive_dir' => ARCHIVE_DIR,
                 'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
             ),
@@ -32,8 +32,10 @@ class BoostArchive
 
         // Get the archive location.
 
+        $pattern = array_key_exists('pattern', $this->params) ?
+            $params['pattern'] : '@^[/]([^/]+)[/](.*)$@';
         $path_parts = array();
-        preg_match($params['pattern'], $_SERVER["PATH_INFO"], $path_parts);
+        preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts);
 
         $zipfile_name = $path_parts[1];
         $params['key'] = $path_parts[2];
