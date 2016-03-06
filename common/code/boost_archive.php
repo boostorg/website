@@ -38,15 +38,7 @@ class BoostArchive
         preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts);
 
         $zipfile_name = $path_parts[1];
-        $params['key'] = $path_parts[2];
-
-        $file = false;
-
-        if (!$file) {
-            $file = $params['archive_file_prefix'] . $params['key'];
-        }
-
-        $params['file'] = $file;
+        $params['file'] = $params['archive_file_prefix'] . $path_parts[2];
 
         $params['archive'] =
                 str_replace('\\','/', $params['archive_dir'] . '/' . $zipfile_name . '.zip');
@@ -82,7 +74,7 @@ class BoostArchive
             'json' => 'application/json',
         );
 
-        $extension = pathinfo($params['key'], PATHINFO_EXTENSION);
+        $extension = pathinfo($params['file'], PATHINFO_EXTENSION);
         $type = array_key_exists($extension, $mime_types) ? $mime_types[$extension] : 'text/plain';
 
         // Handle ETags and Last-Modified HTTP headers.
