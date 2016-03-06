@@ -54,7 +54,6 @@ class BoostArchive
                 'vpath' => $_SERVER["PATH_INFO"],
                 'archive_dir' => ARCHIVE_DIR,
                 'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
-                'use_http_expire_date' => false,
                 'title' => NULL,
                 'charset' => NULL,
                 'content' => NULL,
@@ -69,22 +68,6 @@ class BoostArchive
 
         $redirect_status_code = $this->params['version'] &&
             $this->params['version']->is_numbered_release() ? 301 : 302;
-
-        // Calculate expiry date if requested.
-
-        $expires = null;
-        if ($this->params['use_http_expire_date'])
-        {
-            if (!$this->params['version']) {
-                $expires = "+1 week";
-            }
-            else {
-                $compare_version = BoostVersion::from($this->params['version'])->
-                    compare(BoostVersion::current());
-                $expires = $compare_version === -1 ? "+1 year" :
-                    ($compare_version === 0 ? "+1 week" : "+1 day");
-            }
-        }
 
         // Check file exists.
 
@@ -124,7 +107,7 @@ class BoostArchive
 
         // Output raw files.
 
-        if (!http_headers($type, filemtime($check_file), $expires))
+        if (!http_headers($type, filemtime($check_file)))
             return;
 
         display_raw_file($this->params, $_SERVER['REQUEST_METHOD'], $type);
