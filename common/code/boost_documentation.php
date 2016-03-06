@@ -105,6 +105,14 @@ class BoostDocumentation
             }
         }
 
+        // Last modified date
+
+        $last_modified = max(
+            strtotime(BOOST_DOCS_MODIFIED_DATE),        // last manual documenation update
+            filemtime(dirname(__FILE__).'/boost.php'),  // last release (since the version number is updated)
+            filemtime($check_file)                      // when the file was modified
+        );
+
         // Check file exists.
 
         $check_file = $this->params['file'];
@@ -126,7 +134,7 @@ class BoostDocumentation
                 $this->params['key'] = $this->params['key'].$found_file;
             }
             else {
-                if (!http_headers('text/html', filemtime($check_file), $expires))
+                if (!http_headers('text/html', $last_modified, $expires))
                     return;
 
                 $display_dir = new BoostDisplayDir($this->params);
@@ -198,7 +206,7 @@ class BoostDocumentation
         // Output raw files.
 
         if($extractor == 'raw') {
-            if (!http_headers($type, filemtime($check_file), $expires))
+            if (!http_headers($type, $last_modified, $expires))
                 return;
 
             display_raw_file($this->params, $_SERVER['REQUEST_METHOD'], $type);
@@ -224,7 +232,7 @@ class BoostDocumentation
                 }
             }
 
-            if (!http_headers('text/html', filemtime($check_file), $expires))
+            if (!http_headers('text/html', $last_modified, $expires))
                 return;
 
             // Finally process the file and display it.
@@ -264,11 +272,7 @@ function http_headers($type, $last_modified, $expires = null)
             break;
     }
 
-    return conditional_get(max(
-        strtotime(BOOST_DOCS_MODIFIED_DATE),        // last manual documenation update
-        filemtime(dirname(__FILE__).'/boost.php'),  // last release (since the version number is updated)
-        $last_modified                              // when the file was modified
-    ));
+    return conditional_get($last_modified);
 }
 
 function conditional_get($last_modified)

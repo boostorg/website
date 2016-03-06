@@ -126,11 +126,7 @@ function http_headers($type, $last_modified, $expires = null)
             break;
     }
     
-    return conditional_get(max(
-        strtotime(BOOST_DOCS_MODIFIED_DATE),        // last manual documenation update
-        filemtime(dirname(__FILE__).'/boost.php'),  // last release (since the version number is updated)
-        $last_modified                              // when the file was modified
-    ));
+    return conditional_get($last_modified);
 }
 
 function conditional_get($last_modified)
