@@ -22,8 +22,29 @@ class BoostDocumentation
             $this->params[$key] : $default;
     }
 
-    function get_archive_location()
+    function display_from_archive($content_map = array())
     {
+        // Set default values
+
+        $this->params = array_merge(
+            array(
+                'pattern' => '@^[/]([^/]+)[/](.*)$@',
+                'vpath' => $_SERVER["PATH_INFO"],
+                'archive_subdir' => true,
+                'fix_dir' => false,
+                'archive_dir' => ARCHIVE_DIR,
+                'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
+                'use_http_expire_date' => false,
+                'override_extractor' => null,
+                'title' => NULL,
+                'charset' => NULL,
+                'content' => NULL,
+            ),
+            $this->params
+        );
+
+        // Get Archive Location
+
         $path_parts = array();
         preg_match($this->params['pattern'], $this->params['vpath'], $path_parts);
 
@@ -63,30 +84,6 @@ class BoostDocumentation
         }
 
         $this->params['file'] = $file;
-    }
-
-    function display_from_archive($content_map = array())
-    {
-        // Set default values
-
-        $this->params = array_merge(
-            array(
-                'pattern' => '@^[/]([^/]+)[/](.*)$@',
-                'vpath' => $_SERVER["PATH_INFO"],
-                'archive_subdir' => true,
-                'fix_dir' => false,
-                'archive_dir' => ARCHIVE_DIR,
-                'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
-                'use_http_expire_date' => false,
-                'override_extractor' => null,
-                'title' => NULL,
-                'charset' => NULL,
-                'content' => NULL,
-            ),
-            $this->params
-        );
-
-        $this->get_archive_location();
 
         // Only use a permanent redirect for releases (beta or full).
 
