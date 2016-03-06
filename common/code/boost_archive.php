@@ -84,19 +84,21 @@ class BoostArchive
         if (!BoostWeb::http_headers($type, filemtime($check_file)))
             return;
 
-        display_raw_file($params, $_SERVER['REQUEST_METHOD'], $type);
+        display_raw_file($params['archive'], $params['file']);
     }
 }
 
 
-function display_raw_file($params, $method, $type)
+function display_raw_file($archive, $file)
 {
+    $method = $_SERVER['REQUEST_METHOD'];
+
     ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
     if ($method == 'HEAD') {
         $output = null;
-        exec(unzip_command($params).' > /dev/null', $output, $exit_status);
+        exec(unzip_command(archive, $file).' > /dev/null', $output, $exit_status);
     } else {
-        $file_handle = popen(unzip_command($params), 'rb');
+        $file_handle = popen(unzip_command($archive, $file), 'rb');
         fpassthru($file_handle);
         $exit_status = pclose($file_handle);
     }
@@ -105,18 +107,17 @@ function display_raw_file($params, $method, $type)
     // be getting them for legitimate files.
 
     if($exit_status > 1) {
-        unzip_error($exit_status, $params['archive']);
+        unzip_error($exit_status, $archive, $path);
     }
 }
 
-function unzip_command($params) {
-    return
-      UNZIP
-      .' -p '.escapeshellarg($params['archive'])
-      .' '.escapeshellarg($params['file']);
+function unzip_command($archive, $path) {
+    return UNZIP
+      .' -p '.escapeshellarg($archive)
+      .' '.escapeshellarg($path);
 }
 
-function unzip_error($exit_status, $archive) {
+function unzip_error($exit_status, $archive, $path) {
     $code="500 Internal Server Error";
 
     switch($exit_status) {
