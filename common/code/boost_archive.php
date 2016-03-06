@@ -17,8 +17,21 @@ class BoostArchive
         $this->params = $params;
     }
 
-    function get_archive_location()
+    function display_from_archive()
     {
+        // Set default values
+
+        $this->params = array_merge(
+            array(
+                'pattern' => '@^[/]([^/]+)[/](.*)$@',
+                'archive_dir' => ARCHIVE_DIR,
+                'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
+            ),
+            $this->params
+        );
+
+        // Get the archive location.
+
         $path_parts = array();
         preg_match($this->params['pattern'], $_SERVER["PATH_INFO"], $path_parts);
 
@@ -35,22 +48,6 @@ class BoostArchive
 
         $this->params['archive'] =
                 str_replace('\\','/', $this->params['archive_dir'] . '/' . $zipfile_name . '.zip');
-    }
-
-    function display_from_archive()
-    {
-        // Set default values
-
-        $this->params = array_merge(
-            array(
-                'pattern' => '@^[/]([^/]+)[/](.*)$@',
-                'archive_dir' => ARCHIVE_DIR,
-                'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
-            ),
-            $this->params
-        );
-
-        $this->get_archive_location();
 
         // Check file exists.
 
