@@ -28,10 +28,6 @@ class BoostDocumentation
 
         $this->params = array_merge(
             array(
-                'pattern' => '@^[/]([^/]+)[/](.*)$@',
-                'vpath' => $_SERVER["PATH_INFO"],
-                'fix_dir' => false,
-                'archive_dir' => ARCHIVE_DIR,
                 'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
                 'use_http_expire_date' => false,
                 'override_extractor' => null,
@@ -41,11 +37,14 @@ class BoostDocumentation
             ),
             $this->params
         );
+        $pattern = $this->get_param('pattern', '@^[/]([^/]+)[/](.*)$@');
+        $fix_dir = $this->get_param('fix_dir');
+        $archive_dir = $this->get_param('archive_dir', ARCHIVE_DIR);
 
         // Get Archive Location
 
         $path_parts = array();
-        preg_match($this->params['pattern'], $this->params['vpath'], $path_parts);
+        preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts);
 
         if (in_array($path_parts[1], array('boost-build', 'regression'))) {
             $this->params['version'] = null;
@@ -59,8 +58,8 @@ class BoostDocumentation
 
         $file = false;
 
-        if ($this->params['fix_dir']) {
-            $fix_path = "{$this->params['fix_dir']}/{$version_dir}/{$path}";
+        if ($fix_dir) {
+            $fix_path = "{$fix_dir}/{$version_dir}/{$path}";
 
             if (is_file($fix_path) ||
                 (is_dir($fix_path) && is_file("{$fix_path}/index.html")))
@@ -70,7 +69,7 @@ class BoostDocumentation
         }
 
         if (!$file) {
-            $file = $this->params['archive_dir'] . '/';
+            $file = $archive_dir . '/';
             $file = $file . $this->params['archive_file_prefix'] . $version_dir . '/' . $path;
         }
 
@@ -236,7 +235,7 @@ class BoostDocumentation
                 $data->version = $this->get_param('version');
                 $data->path = $path;
                 $data->content = $this->get_param('content');
-                $data->archive_dir = $this->get_param('archive_dir');
+                $data->archive_dir = $archive_dir;
                 echo_filtered($extractor, $data);
             }
         }
