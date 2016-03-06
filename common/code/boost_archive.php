@@ -21,7 +21,7 @@ class BoostArchive
     {
         // Set default values
 
-        $this->params = array_merge(
+        $params = array_merge(
             array(
                 'pattern' => '@^[/]([^/]+)[/](.*)$@',
                 'archive_dir' => ARCHIVE_DIR,
@@ -33,28 +33,28 @@ class BoostArchive
         // Get the archive location.
 
         $path_parts = array();
-        preg_match($this->params['pattern'], $_SERVER["PATH_INFO"], $path_parts);
+        preg_match($params['pattern'], $_SERVER["PATH_INFO"], $path_parts);
 
         $zipfile_name = $path_parts[1];
-        $this->params['key'] = $path_parts[2];
+        $params['key'] = $path_parts[2];
 
         $file = false;
 
         if (!$file) {
-            $file = $this->params['archive_file_prefix'] . $this->params['key'];
+            $file = $params['archive_file_prefix'] . $params['key'];
         }
 
-        $this->params['file'] = $file;
+        $params['file'] = $file;
 
-        $this->params['archive'] =
-                str_replace('\\','/', $this->params['archive_dir'] . '/' . $zipfile_name . '.zip');
+        $params['archive'] =
+                str_replace('\\','/', $params['archive_dir'] . '/' . $zipfile_name . '.zip');
 
         // Check file exists.
 
-        $check_file = $this->params['archive'];
+        $check_file = $params['archive'];
 
         if (!is_readable($check_file)) {
-            BoostWeb::error_404($this->params['file'], 'Unable to find zipfile.');
+            BoostWeb::error_404($params['file'], 'Unable to find zipfile.');
             return;
         }
 
@@ -80,7 +80,7 @@ class BoostArchive
             'json' => 'application/json',
         );
 
-        $extension = pathinfo($this->params['key'], PATHINFO_EXTENSION);
+        $extension = pathinfo($params['key'], PATHINFO_EXTENSION);
         $type = array_key_exists($extension, $mime_types) ? $mime_types[$extension] : 'text/plain';
 
         // Handle ETags and Last-Modified HTTP headers.
@@ -90,7 +90,7 @@ class BoostArchive
         if (!BoostWeb::http_headers($type, filemtime($check_file)))
             return;
 
-        display_raw_file($this->params, $_SERVER['REQUEST_METHOD'], $type);
+        display_raw_file($params, $_SERVER['REQUEST_METHOD'], $type);
     }
 }
 
