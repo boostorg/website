@@ -34,35 +34,21 @@ class BoostArchive
 
         $file = false;
 
-        if ($this->params['fix_dir']) {
-            $fix_path = "{$this->params['fix_dir']}/{$version_dir}/{$this->params['key']}";
-
-            if (is_file($fix_path) ||
-                (is_dir($fix_path) && is_file("{$fix_path}/index.html")))
-            {
-                $this->params['zipfile'] = false;
-                $file = $fix_path;
-            }
-        }
-
         if (!$file) {
-            $file = ($this->params['zipfile'] ? '' : $this->params['archive_dir'] . '/');
-
             if ($this->params['archive_subdir'])
             {
-                $file = $file . $this->params['archive_file_prefix'] . $version_dir . '/' . $this->params['key'];
+                $file = $this->params['archive_file_prefix'] . $version_dir . '/' . $this->params['key'];
             }
             else
             {
-                $file = $file . $this->params['archive_file_prefix'] . $this->params['key'];
+                $file = $this->params['archive_file_prefix'] . $this->params['key'];
             }
         }
 
         $this->params['file'] = $file;
 
-        $this->params['archive'] = $this->params['zipfile'] ?
-                str_replace('\\','/', $this->params['archive_dir'] . '/' . $version_dir . '.zip') :
-                Null;
+        $this->params['archive'] =
+                str_replace('\\','/', $this->params['archive_dir'] . '/' . $version_dir . '.zip');
     }
 
     function display_from_archive($content_map = array())
@@ -74,8 +60,6 @@ class BoostArchive
                 'pattern' => '@^[/]([^/]+)[/](.*)$@',
                 'vpath' => $_SERVER["PATH_INFO"],
                 'archive_subdir' => true,
-                'zipfile' => true,
-                'fix_dir' => false,
                 'archive_dir' => ARCHIVE_DIR,
                 'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
                 'use_http_expire_date' => false,
@@ -113,47 +97,11 @@ class BoostArchive
 
         // Check file exists.
 
-        if ($this->params['zipfile'])
-        {
-            $check_file = $this->params['archive'];
+        $check_file = $this->params['archive'];
 
-            if (!is_readable($check_file)) {
-                error_page($this->params, 'Unable to find zipfile.');
-                return;
-            }
-        }
-        else
-        {
-            $check_file = $this->params['file'];
-
-            if (is_dir($check_file))
-            {
-                if(substr($check_file, -1) != '/') {
-                    $redirect = resolve_url(basename($check_file).'/');
-                    header("Location: $redirect", TRUE, $redirect_status_code);
-                    return;
-                }
-
-                $found_file = NULL;
-                if (is_readable("$check_file/index.html")) $found_file = 'index.html';
-                else if (is_readable("$check_file/index.htm")) $found_file = 'index.htm';
-
-                if ($found_file) {
-                    $this->params['file'] = $check_file = $check_file.$found_file;
-                    $this->params['key'] = $this->params['key'].$found_file;
-                }
-                else {
-                    if (!http_headers('text/html', filemtime($check_file), $expires))
-                        return;
-
-                    $display_dir = new BoostDisplayDir($this->params);
-                    return $display_dir->display($check_file);
-                }
-            }
-            else if (!is_readable($check_file)) {
-                error_page($this->params, 'Unable to find file.');
-                return;
-            }
+        if (!is_readable($check_file)) {
+            error_page($this->params, 'Unable to find zipfile.');
+            return;
         }
 
         // Choose filter to use
@@ -222,7 +170,7 @@ class BoostArchive
             display_raw_file($this->params, $_SERVER['REQUEST_METHOD'], $type);
         }
         else {
-            // Read file from hard drive or zipfile
+            // Read file from zipfile
 
             // Note: this sets $this->params['content'] with either the
             // content or an error message.
@@ -323,56 +271,45 @@ function conditional_get($last_modified)
 function display_raw_file($params, $method, $type)
 {
     ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
-    if($params['zipfile']) {
-        if ($method == 'HEAD') {
-            $output = null;
-            exec(unzip_command($params).' > /dev/null', $output, $exit_status);
-        } else {
-            $file_handle = popen(unzip_command($params), 'rb');
-            fpassthru($file_handle);
-            $exit_status = pclose($file_handle);
-        }
-    
-        // Don't display errors for a corrupt zip file, as we seemd to
-        // be getting them for legitimate files.
-
-        if($exit_status > 1) {
-            unzip_error($params, $exit_status);
-            if ($params['error']) {
-                header("{$_SERVER["SERVER_PROTOCOL"]} {$params['error']}", true);
-            }
-            echo "Error extracting file: {$params['content']}";
-        }
+    if ($method == 'HEAD') {
+        $output = null;
+        exec(unzip_command($params).' > /dev/null', $output, $exit_status);
+    } else {
+        $file_handle = popen(unzip_command($params), 'rb');
+        fpassthru($file_handle);
+        $exit_status = pclose($file_handle);
     }
-    else {
-        if ($method != 'HEAD') { readfile($params['file']); }
+
+    // Don't display errors for a corrupt zip file, as we seemd to
+    // be getting them for legitimate files.
+
+    if($exit_status > 1) {
+        unzip_error($params, $exit_status);
+        if ($params['error']) {
+            header("{$_SERVER["SERVER_PROTOCOL"]} {$params['error']}", true);
+        }
+        echo "Error extracting file: {$params['content']}";
     }
 }
 
 function extract_file(&$params) {
-    if($params['zipfile']) {
-        $file_handle = popen(unzip_command($params),'r');
-        $text = '';
-        while ($file_handle && !feof($file_handle)) {
-            $text .= fread($file_handle,8*1024);
-        }
-        $exit_status = pclose($file_handle);
+    $file_handle = popen(unzip_command($params),'r');
+    $text = '';
+    while ($file_handle && !feof($file_handle)) {
+        $text .= fread($file_handle,8*1024);
+    }
+    $exit_status = pclose($file_handle);
 
-        if($exit_status == 0) {
-            $params['content'] = $text;
-            return true;
-        }
-        else {
-            $params['content'] = null;
-            if (strstr($_SERVER['HTTP_HOST'], 'beta')) {
-                unzip_error($params, $exit_status);
-            }
-            return false;
-        }
+    if($exit_status == 0) {
+        $params['content'] = $text;
+        return true;
     }
     else {
-        $params['content'] = file_get_contents($params['file']);
-        return true;
+        $params['content'] = null;
+        if (strstr($_SERVER['HTTP_HOST'], 'beta')) {
+            unzip_error($params, $exit_status);
+        }
+        return false;
     }
 }
 
@@ -410,7 +347,7 @@ function error_page($params, $message = null)
 HTML;
 
     $content = '<h1>'.html_encode($params['error']).'</h1><p>File "' . html_encode($params['file']) . '" not found.</p><p>';
-    if(!empty($params['zipfile'])) $content .= "Unzip error: ";
+    $content .= "Unzip error: ";
     $content .= html_encode($message);
     $content .= '</p>';
 
