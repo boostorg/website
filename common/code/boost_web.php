@@ -68,21 +68,22 @@ class BoostWeb
         return false;
     }
 
-    static function error_page($params, $message = null)
+    static function error_404($file, $message = null)
     {
-        if (!$params['error']) { $params['error'] = "404 Not Found"; }
-        header("{$_SERVER["SERVER_PROTOCOL"]} {$params['error']}");
+        $error = "404 Not Found";
+
+        header("{$_SERVER["SERVER_PROTOCOL"]} {$error}");
 
         $head = <<<HTML
       <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
       <title>Boost C++ Libraries - 404 Not Found</title>
 HTML;
 
-        $content = '<h1>'.html_encode($params['error']).'</h1><p>File "' . html_encode($params['file']) . '" not found.</p><p>';
+        $content = '<h1>'.html_encode($error).'</h1><p>File "' . html_encode($file) . '" not found.</p><p>';
         $content .= html_encode($message);
         $content .= '</p>';
 
-        $filter = new BoostFilters($params);
+        $filter = new BoostFilters(array());
         $filter->display_template(Array('head' => $head, 'content' => $content));
     }
 }

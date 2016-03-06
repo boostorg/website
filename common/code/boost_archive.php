@@ -57,7 +57,7 @@ class BoostArchive
         $check_file = $this->params['archive'];
 
         if (!is_readable($check_file)) {
-            BoostWeb::error_page($this->params, 'Unable to find zipfile.');
+            BoostWeb::error_404($this->params['file'], 'Unable to find zipfile.');
             return;
         }
 

@@ -77,7 +77,6 @@ class BoostDocumentation
                 'title' => NULL,
                 'charset' => NULL,
                 'content' => NULL,
-                'error' => false,
             ),
             $this->params
         );
@@ -142,7 +141,7 @@ class BoostDocumentation
             }
         }
         else if (!is_readable($check_file)) {
-            BoostWeb::error_page($this->params, 'Unable to find file.');
+            BoostWeb::error_404($this->params['file'], 'Unable to find file.');
             return;
         }
 
@@ -193,10 +192,9 @@ class BoostDocumentation
 
         if (!$extractor) {
             if (strpos($_SERVER['HTTP_HOST'], 'www.boost.org') === false) {
-                BoostWeb::error_page($this->params,
-                    "No extractor found for filename.");
+                BoostWeb::error_404($this->params['file'], 'No extractor found for filename.');
             } else {
-                BoostWeb::error_page($this->params);
+                BoostWeb::error_404($this->params['file']);
             }
             return;
         }
@@ -282,7 +280,7 @@ function detect_redirect($content)
 
 function latest_link($params)
 {
-    if (!isset($params['version']) || $params['error']) {
+    if (!isset($params['version'])) {
         return;
     }
 
