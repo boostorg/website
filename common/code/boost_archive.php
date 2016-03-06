@@ -245,65 +245,6 @@ HTML;
     $filter->display_template(Array('head' => $head, 'content' => $content));
 }
 
-/*
- * HTML processing functions
- */
-
-function detect_redirect($content)
-{
-    // Only check small files, since larger files are never redirects, and are
-    // expensive to search.
-    if(strlen($content) <= 2000 &&
-        preg_match(
-            '@<meta\s+http-equiv\s*=\s*["\']?refresh["\']?\s+content\s*=\s*["\']0;\s*URL=([^"\']*)["\']\s*/?>@i',
-            $content, $redirect))
-    {
-        return resolve_url($redirect[1]);
-    }
-
-    return false;
-}
-
-function latest_link($params)
-{
-    if (!isset($params['version']) || $params['error']) {
-        return;
-    }
-
-    $version = BoostVersion::from($params['version']);
-
-    $current = BoostVersion::current();
-    switch ($current->compare($version))
-    {
-    case 0:
-        break;
-    case 1:
-        echo '<div class="boost-common-header-notice">';
-        if (realpath("{$params['archive_dir']}/{$current->dir()}/$params[key]") !== false)
-        {
-            echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$params['key'],'">',
-                "Click here to view the latest version of this page.",
-                '</a>';
-        }
-        else
-        {
-            echo '<a class="boost-common-header-inner" href="/doc/libs/">',
-                "This is an old version of boost. ",
-                "Click here for the latest version's documentation home page.",
-                '</a>';
-        }
-        echo '</div>', "\n";
-        break;
-    case -1:
-        echo '<div class="boost-common-header-notice">';
-        echo '<span class="boost-common-header-inner">';
-        echo 'This is the documentation for a development version of boost';
-        echo '</span>';
-        echo '</div>', "\n";
-        break;
-    }
-}
-
 // Updates $params with the appropriate unzip error.
 
 function unzip_error(&$params, $exit_status) {
