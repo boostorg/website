@@ -156,6 +156,7 @@ class BoostFilters
         $head .= "<title>${title}</title>";
 
         return Array(
+            'data' => $this->data,
             'head' => $head,
             'content' => $content
         );
