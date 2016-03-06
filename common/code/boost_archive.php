@@ -62,7 +62,7 @@ class BoostArchive
         $check_file = $this->params['archive'];
 
         if (!is_readable($check_file)) {
-            error_page($this->params, 'Unable to find zipfile.');
+            BoostWeb::error_page($this->params, 'Unable to find zipfile.');
             return;
         }
 
@@ -95,70 +95,13 @@ class BoostArchive
 
         // Output raw files.
 
-        if (!http_headers($type, filemtime($check_file)))
+        if (!BoostWeb::http_headers($type, filemtime($check_file)))
             return;
 
         display_raw_file($this->params, $_SERVER['REQUEST_METHOD'], $type);
     }
 }
 
-// HTTP header handling
-
-function http_headers($type, $last_modified, $expires = null)
-{
-    header('Content-type: '.$type);
-    switch($type) {
-        case 'image/png':
-        case 'image/gif':
-        case 'image/jpeg':
-        case 'text/css':
-        case 'application/x-javascript':
-        case 'application/pdf':
-        case 'application/xml-dtd':
-            header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
-            header('Cache-Control: max-age=31556926'); // A year, give or take a day.
-            break;
-        default:
-            if($expires) {
-                header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
-                header('Cache-Control: max-age='.strtotime($expires, 0));
-            }
-            break;
-    }
-    
-    return conditional_get($last_modified);
-}
-
-function conditional_get($last_modified)
-{
-    if(!$last_modified) return true;
-
-    $last_modified_text = date(DATE_RFC2822, $last_modified);
-    $etag = '"'.md5($last_modified).'"';
-
-    header("Last-Modified: $last_modified_text");
-    header("ETag: $etag");
-
-    $checked = false;
-
-    if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
-        $checked = true;
-        $if_modified_since = strtotime(stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']));
-        if(!$if_modified_since || $if_modified_since < $last_modified)
-            return true;
-    }
-
-    if(isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-        $checked = true;
-        if(stripslashes($_SERVER['HTTP_IF_NONE_MATCH'] != $etag))
-            return true;
-    }
-    
-    if(!$checked) return true;
-    
-    header($_SERVER["SERVER_PROTOCOL"].' 304 Not Modified');
-    return false;
-}
 
 function display_raw_file($params, $method, $type)
 {
@@ -189,27 +132,6 @@ function unzip_command($params) {
       UNZIP
       .' -p '.escapeshellarg($params['archive'])
       .' '.escapeshellarg($params['file']);
-}
-
-/* File Not Found */
-
-function error_page($params, $message = null)
-{
-    if (!$params['error']) { $params['error'] = "404 Not Found"; }
-    header("{$_SERVER["SERVER_PROTOCOL"]} {$params['error']}");
-
-    $head = <<<HTML
-  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
-  <title>Boost C++ Libraries - 404 Not Found</title>
-HTML;
-
-    $content = '<h1>'.html_encode($params['error']).'</h1><p>File "' . html_encode($params['file']) . '" not found.</p><p>';
-    $content .= "Unzip error: ";
-    $content .= html_encode($message);
-    $content .= '</p>';
-
-    $filter = new BoostFilters($params);
-    $filter->display_template(Array('head' => $head, 'content' => $content));
 }
 
 // Updates $params with the appropriate unzip error.

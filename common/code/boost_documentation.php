@@ -134,7 +134,7 @@ class BoostDocumentation
                 $this->params['key'] = $this->params['key'].$found_file;
             }
             else {
-                if (!http_headers('text/html', $last_modified, $expires))
+                if (!BoostWeb::http_headers('text/html', $last_modified, $expires))
                     return;
 
                 $display_dir = new BoostDisplayDir($this->params);
@@ -142,7 +142,7 @@ class BoostDocumentation
             }
         }
         else if (!is_readable($check_file)) {
-            error_page($this->params, 'Unable to find file.');
+            BoostWeb::error_page($this->params, 'Unable to find file.');
             return;
         }
 
@@ -193,10 +193,10 @@ class BoostDocumentation
 
         if (!$extractor) {
             if (strpos($_SERVER['HTTP_HOST'], 'www.boost.org') === false) {
-                error_page($this->params,
+                BoostWeb::error_page($this->params,
                     "No extractor found for filename.");
             } else {
-                error_page($this->params);
+                BoostWeb::error_page($this->params);
             }
             return;
         }
@@ -206,7 +206,7 @@ class BoostDocumentation
         // Output raw files.
 
         if($extractor == 'raw') {
-            if (!http_headers($type, $last_modified, $expires))
+            if (!BoostWeb::http_headers($type, $last_modified, $expires))
                 return;
 
             display_raw_file($this->params, $_SERVER['REQUEST_METHOD'], $type);
@@ -217,7 +217,7 @@ class BoostDocumentation
             // Note: this sets $this->params['content'] with either the
             // content or an error message.
             if(!extract_file($this->params)) {
-                error_page($this->params, $this->params['content']);
+                BoostWeb::error_page($this->params, $this->params['content']);
                 return;
             }
 
@@ -225,14 +225,14 @@ class BoostDocumentation
 
             if($type == 'text/html') {
                 if($redirect = detect_redirect($this->params['content'])) {
-                    http_headers('text/html', null, "+1 day");
+                    BoostWeb::http_headers('text/html', null, "+1 day");
                     header("Location: $redirect", TRUE, $redirect_status_code);
                     if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $this->params['content'];
                     return;
                 }
             }
 
-            if (!http_headers('text/html', $last_modified, $expires))
+            if (!BoostWeb::http_headers('text/html', $last_modified, $expires))
                 return;
 
             // Finally process the file and display it.
@@ -246,64 +246,6 @@ class BoostDocumentation
             }
         }
     }
-}
-
-// HTTP header handling
-
-function http_headers($type, $last_modified, $expires = null)
-{
-    header('Content-type: '.$type);
-    switch($type) {
-        case 'image/png':
-        case 'image/gif':
-        case 'image/jpeg':
-        case 'text/css':
-        case 'application/x-javascript':
-        case 'application/pdf':
-        case 'application/xml-dtd':
-            header('Expires: '.date(DATE_RFC2822, strtotime("+1 year")));
-            header('Cache-Control: max-age=31556926'); // A year, give or take a day.
-            break;
-        default:
-            if($expires) {
-                header('Expires: '.date(DATE_RFC2822, strtotime($expires)));
-                header('Cache-Control: max-age='.strtotime($expires, 0));
-            }
-            break;
-    }
-
-    return conditional_get($last_modified);
-}
-
-function conditional_get($last_modified)
-{
-    if(!$last_modified) return true;
-
-    $last_modified_text = date(DATE_RFC2822, $last_modified);
-    $etag = '"'.md5($last_modified).'"';
-
-    header("Last-Modified: $last_modified_text");
-    header("ETag: $etag");
-
-    $checked = false;
-
-    if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
-        $checked = true;
-        $if_modified_since = strtotime(stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']));
-        if(!$if_modified_since || $if_modified_since < $last_modified)
-            return true;
-    }
-
-    if(isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-        $checked = true;
-        if(stripslashes($_SERVER['HTTP_IF_NONE_MATCH'] != $etag))
-            return true;
-    }
-
-    if(!$checked) return true;
-
-    header($_SERVER["SERVER_PROTOCOL"].' 304 Not Modified');
-    return false;
 }
 
 function display_raw_file($params, $method, $type)
@@ -329,26 +271,6 @@ function echo_filtered($extractor, $params) {
 
 function underscore_to_camel_case($name) {
     return str_replace(' ','', ucwords(str_replace('_', ' ', $name)));
-}
-
-/* File Not Found */
-
-function error_page($params, $message = null)
-{
-    if (!$params['error']) { $params['error'] = "404 Not Found"; }
-    header("{$_SERVER["SERVER_PROTOCOL"]} {$params['error']}");
-
-    $head = <<<HTML
-  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
-  <title>Boost C++ Libraries - 404 Not Found</title>
-HTML;
-
-    $content = '<h1>'.html_encode($params['error']).'</h1><p>File "' . html_encode($params['file']) . '" not found.</p><p>';
-    $content .= html_encode($message);
-    $content .= '</p>';
-
-    $filter = new BoostFilters($params);
-    $filter->display_template(Array('head' => $head, 'content' => $content));
 }
 
 /*
