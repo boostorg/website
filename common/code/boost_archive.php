@@ -46,7 +46,6 @@ class BoostArchive
                 'pattern' => '@^[/]([^/]+)[/](.*)$@',
                 'archive_dir' => ARCHIVE_DIR,
                 'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
-                'error' => false,
             ),
             $this->params
         );
@@ -115,11 +114,7 @@ function display_raw_file($params, $method, $type)
     // be getting them for legitimate files.
 
     if($exit_status > 1) {
-        unzip_error($params, $exit_status);
-        if ($params['error']) {
-            header("{$_SERVER["SERVER_PROTOCOL"]} {$params['error']}", true);
-        }
-        echo "Error extracting file: {$params['content']}";
+        unzip_error($exit_status, $params['archive']);
     }
 }
 
@@ -130,9 +125,7 @@ function unzip_command($params) {
       .' '.escapeshellarg($params['file']);
 }
 
-// Updates $params with the appropriate unzip error.
-
-function unzip_error(&$params, $exit_status) {
+function unzip_error($exit_status, $archive) {
     $code="500 Internal Server Error";
 
     switch($exit_status) {
@@ -146,7 +139,7 @@ function unzip_error(&$params, $exit_status) {
     case 7: $message = 'Unzip was unable to allocate memory during in-memory decompression.'; break;
     case 9:
         $message = 'The specified zipfile was not found';
-        if (isset($params['archive']) && is_file($params['archive'])) {
+        if ($archive && is_file($archive)) {
             $message .= ' <i>(the file exists, so this is probably an error reading the file)</i>';
         }
         $message .= '.';
@@ -161,6 +154,9 @@ function unzip_error(&$params, $exit_status) {
     default: $message = 'Unknown unzip error code.'; break;
     }
 
-    $params['content'] = "Error code ".html_encode($exit_status)." - {$message}";
-    if ($code) { $params['error'] = $code; }
+    if ($code) {
+        header("{$_SERVER["SERVER_PROTOCOL"]} {$code}", true);
+    }
+
+    echo "Error extracting file: Error code ".html_encode($exit_status)." - {$message}";
 }
