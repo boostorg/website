@@ -26,14 +26,6 @@ class BoostDocumentation
     {
         // Set default values
 
-        $this->params = array_merge(
-            array(
-                'title' => NULL,
-                'charset' => NULL,
-                'content' => NULL,
-            ),
-            $this->params
-        );
         $pattern = $this->get_param('pattern', '@^[/]([^/]+)[/](.*)$@');
         $fix_dir = $this->get_param('fix_dir');
         $archive_dir = $this->get_param('archive_dir', ARCHIVE_DIR);
@@ -45,10 +37,10 @@ class BoostDocumentation
         preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts);
 
         if (in_array($path_parts[1], array('boost-build', 'regression'))) {
-            $this->params['version'] = null;
+            $version = null;
             $version_dir = $path_parts[1];
         } else {
-            $this->params['version'] = BoostVersion::from($path_parts[1]);
+            $version = BoostVersion::from($path_parts[1]);
             $version_dir = is_numeric($path_parts[1][0]) ?
                 "boost_{$path_parts[1]}" : $path_parts[1];
         }
@@ -71,23 +63,21 @@ class BoostDocumentation
             $file = $file . $version_dir . '/' . $path;
         }
 
-        $this->params['file'] = $file;
-
         // Only use a permanent redirect for releases (beta or full).
 
-        $redirect_status_code = $this->params['version'] &&
-            $this->params['version']->is_numbered_release() ? 301 : 302;
+        $redirect_status_code = $version &&
+            $version->is_numbered_release() ? 301 : 302;
 
         // Calculate expiry date if requested.
 
         $expires = null;
         if ($use_http_expire_date)
         {
-            if (!$this->params['version']) {
+            if (!$version) {
                 $expires = "+1 week";
             }
             else {
-                $compare_version = BoostVersion::from($this->params['version'])->
+                $compare_version = BoostVersion::from($version)->
                     compare(BoostVersion::current());
                 $expires = $compare_version === -1 ? "+1 year" :
                     ($compare_version === 0 ? "+1 week" : "+1 day");
@@ -99,39 +89,38 @@ class BoostDocumentation
         $last_modified = max(
             strtotime(BOOST_DOCS_MODIFIED_DATE),        // last manual documenation update
             filemtime(dirname(__FILE__).'/boost.php'),  // last release (since the version number is updated)
-            filemtime($check_file)                      // when the file was modified
+            filemtime($file)                            // when the file was modified
         );
 
         // Check file exists.
 
-        $check_file = $this->params['file'];
-
-        if (is_dir($check_file))
+        if (is_dir($file))
         {
-            if(substr($check_file, -1) != '/') {
-                $redirect = resolve_url(basename($check_file).'/');
+            if(substr($file, -1) != '/') {
+                $redirect = resolve_url(basename($file).'/');
                 header("Location: $redirect", TRUE, $redirect_status_code);
                 return;
             }
 
             $found_file = NULL;
-            if (is_readable("$check_file/index.html")) $found_file = 'index.html';
-            else if (is_readable("$check_file/index.htm")) $found_file = 'index.htm';
+            if (is_readable("{$file}/index.html")) $found_file = 'index.html';
+            else if (is_readable("{$file}/index.htm")) $found_file = 'index.htm';
 
             if ($found_file) {
-                $this->params['file'] = $check_file = $check_file.$found_file;
+                $file = $file.$found_file;
                 $path = $path.$found_file;
             }
             else {
                 if (!BoostWeb::http_headers('text/html', $last_modified, $expires))
                     return;
 
+                // TODO: Oops....
                 $display_dir = new BoostDisplayDir($this->params);
-                return $display_dir->display($check_file);
+                return $display_dir->display($file);
             }
         }
-        else if (!is_readable($check_file)) {
-            BoostWeb::error_404($this->params['file'], 'Unable to find file.');
+        else if (!is_readable($file)) {
+            BoostWeb::error_404($file, 'Unable to find file.');
             return;
         }
 
@@ -179,9 +168,9 @@ class BoostDocumentation
 
         if (!$extractor) {
             if (strpos($_SERVER['HTTP_HOST'], 'www.boost.org') === false) {
-                BoostWeb::error_404($this->params['file'], 'No extractor found for filename.');
+                BoostWeb::error_404($file, 'No extractor found for filename.');
             } else {
-                BoostWeb::error_404($this->params['file']);
+                BoostWeb::error_404($file);
             }
             return;
         }
@@ -195,23 +184,21 @@ class BoostDocumentation
                 return;
 
             if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-                readfile($this->params['file']);
+                readfile($file);
             }
         }
         else {
             // Read file from hard drive
 
-            // Note: this sets $this->params['content'] with either the
-            // content or an error message.
-            $this->params['content'] = file_get_contents($this->params['file']);
+            $content = file_get_contents($file);
 
             // Check if the file contains a redirect.
 
             if($type == 'text/html') {
-                if($redirect = detect_redirect($this->params['content'])) {
+                if($redirect = detect_redirect($content)) {
                     BoostWeb::http_headers('text/html', null, "+1 day");
                     header("Location: $redirect", TRUE, $redirect_status_code);
-                    if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $this->params['content'];
+                    if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $content;
                     return;
                 }
             }
@@ -223,13 +210,13 @@ class BoostDocumentation
 
             if($_SERVER['REQUEST_METHOD'] != 'HEAD') {
                 if ($preprocess) {
-                    $this->params['content'] = call_user_func($preprocess, $this->params['content']);
+                    $content = call_user_func($preprocess, $content);
                 }
 
                 $data = new BoostFilterData();
-                $data->version = $this->get_param('version');
+                $data->version = $version;
                 $data->path = $path;
-                $data->content = $this->get_param('content');
+                $data->content = $content;
                 $data->archive_dir = $archive_dir;
                 echo_filtered($extractor, $data);
             }
