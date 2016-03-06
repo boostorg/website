@@ -209,17 +209,16 @@ class BoostDocumentation
             if (!BoostWeb::http_headers($type, $last_modified, $expires))
                 return;
 
-            display_raw_file($this->params, $_SERVER['REQUEST_METHOD'], $type);
+            if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+                readfile($this->params['file']);
+            }
         }
         else {
             // Read file from hard drive
 
             // Note: this sets $this->params['content'] with either the
             // content or an error message.
-            if(!extract_file($this->params)) {
-                BoostWeb::error_page($this->params, $this->params['content']);
-                return;
-            }
+            $this->params['content'] = file_get_contents($this->params['file']);
 
             // Check if the file contains a redirect.
 
@@ -246,17 +245,6 @@ class BoostDocumentation
             }
         }
     }
-}
-
-function display_raw_file($params, $method, $type)
-{
-    ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
-    if ($method != 'HEAD') { readfile($params['file']); }
-}
-
-function extract_file(&$params) {
-    $params['content'] = file_get_contents($params['file']);
-    return true;
 }
 
 //
