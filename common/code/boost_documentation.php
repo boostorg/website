@@ -28,7 +28,6 @@ class BoostDocumentation
 
         $this->params = array_merge(
             array(
-                'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
                 'use_http_expire_date' => false,
                 'override_extractor' => null,
                 'title' => NULL,
@@ -70,7 +69,7 @@ class BoostDocumentation
 
         if (!$file) {
             $file = $archive_dir . '/';
-            $file = $file . $this->params['archive_file_prefix'] . $version_dir . '/' . $path;
+            $file = $file . $version_dir . '/' . $path;
         }
 
         $this->params['file'] = $file;
