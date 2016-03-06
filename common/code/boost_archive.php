@@ -63,7 +63,6 @@ class BoostArchive
                 'archive_dir' => ARCHIVE_DIR,
                 'archive_file_prefix' => ARCHIVE_FILE_PREFIX,
                 'use_http_expire_date' => false,
-                'override_extractor' => null,
                 'title' => NULL,
                 'charset' => NULL,
                 'content' => NULL,
@@ -104,105 +103,39 @@ class BoostArchive
             return;
         }
 
-        // Choose filter to use
+        // Choose mime type to use
+        // TODO: Better way to support mime type? Built in PHP functions
+        //       appear to require the actual file, could automatically
+        //       grab an updated list from:
+        //       http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
 
-        $info_map = array_merge($content_map, array(
-            array('','@[.](txt|py|rst|jam|v2|bat|sh|xml|xsl|toyxml)$@i','text','text/plain'),
-            array('','@[.](qbk|quickbook)$@i','qbk','text/plain'),
-            array('','@[.](c|h|cpp|hpp)$@i','cpp','text/plain'),
-            array('','@[.]png$@i','raw','image/png'),
-            array('','@[.]gif$@i','raw','image/gif'),
-            array('','@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
-            array('','@[.]svg$@i','raw','image/svg+xml'),
-            array('','@[.]css$@i','raw','text/css'),
-            array('','@[.]js$@i','raw','application/x-javascript'),
-            array('','@[.]pdf$@i','raw','application/pdf'),
-            array('','@[.](html|htm)$@i','raw','text/html'),
-            array('','@(/|^)(Jamroot|Jamfile|ChangeLog|configure)$@i','text','text/plain'),
-            array('','@[.]dtd$@i','raw','application/xml-dtd'),
-            array('','@[.]json$@i','raw','application/json'),
-            ));
+        $mime_types = array(
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'jpe' => 'image/jpeg',
+            'svg' => 'image/svg+xml',
+            'css' => 'text/css',
+            'js' => 'application/x-javascript',
+            'pdf' => 'application/pdf',
+            'html' => 'text/html',
+            'htm' => 'text/html',
+            'dtd' => 'application/xml-dtd',
+            'json' => 'application/json',
+        );
 
-        $preprocess = null;
-        $extractor = null;
-        $type = null;
-
-        foreach ($info_map as $i)
-        {
-            if (preg_match($i[1],$this->params['key']))
-            {
-                if ($i[0]) {
-                    $version = BoostVersion::from($i[0]);
-                    if ($version->compare(BoostVersion::page()) > 0) {
-                        // This is after the current version.
-                        continue;
-                    }
-                }
-
-                $extractor = $i[2];
-                $type = $i[3];
-                $preprocess = isset($i[4]) ? $i[4] : NULL;
-                break;
-            }
-        }
-
-        if ($this->params['override_extractor'])
-            $extractor = $this->params['override_extractor'];
-
-        if (!$extractor) {
-            if (strpos($_SERVER['HTTP_HOST'], 'www.boost.org') === false) {
-                error_page($this->params,
-                    "No extractor found for filename.");
-            } else {
-                error_page($this->params);
-            }
-            return;
-        }
+        $extension = pathinfo($this->params['key'], PATHINFO_EXTENSION);
+        $type = array_key_exists($extension, $mime_types) ? $mime_types[$extension] : 'text/plain';
 
         // Handle ETags and Last-Modified HTTP headers.
 
         // Output raw files.
 
-        if($extractor == 'raw') {
-            if (!http_headers($type, filemtime($check_file), $expires))
-                return;
+        if (!http_headers($type, filemtime($check_file), $expires))
+            return;
 
-            display_raw_file($this->params, $_SERVER['REQUEST_METHOD'], $type);
-        }
-        else {
-            // Read file from zipfile
-
-            // Note: this sets $this->params['content'] with either the
-            // content or an error message.
-            if(!extract_file($this->params)) {
-                error_page($this->params, $this->params['content']);
-                return;
-            }
-
-            // Check if the file contains a redirect.
-
-            if($type == 'text/html') {
-                if($redirect = detect_redirect($this->params['content'])) {
-                    http_headers('text/html', null, "+1 day");
-                    header("Location: $redirect", TRUE, $redirect_status_code);
-                    if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $this->params['content'];
-                    return;
-                }
-            }
-
-            if (!http_headers('text/html', filemtime($check_file), $expires))
-                return;
-
-            // Finally process the file and display it.
-
-            if($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-                if ($preprocess) {
-                    $this->params['content'] = call_user_func($preprocess, $this->params['content']);
-                }
-
-                echo_filtered($extractor, $this->params);
-            }
-        }
+        display_raw_file($this->params, $_SERVER['REQUEST_METHOD'], $type);
     }
 }
 
@@ -292,46 +225,11 @@ function display_raw_file($params, $method, $type)
     }
 }
 
-function extract_file(&$params) {
-    $file_handle = popen(unzip_command($params),'r');
-    $text = '';
-    while ($file_handle && !feof($file_handle)) {
-        $text .= fread($file_handle,8*1024);
-    }
-    $exit_status = pclose($file_handle);
-
-    if($exit_status == 0) {
-        $params['content'] = $text;
-        return true;
-    }
-    else {
-        $params['content'] = null;
-        if (strstr($_SERVER['HTTP_HOST'], 'beta')) {
-            unzip_error($params, $exit_status);
-        }
-        return false;
-    }
-}
-
 function unzip_command($params) {
     return
       UNZIP
       .' -p '.escapeshellarg($params['archive'])
       .' '.escapeshellarg($params['file']);
-}
-
-//
-// Filters
-//
-
-function echo_filtered($extractor, $params) {
-    $name = "BoostFilter".underscore_to_camel_case($extractor);
-    $extractor = new $name($params);
-    $extractor->echo_filtered();
-}
-
-function underscore_to_camel_case($name) {
-    return str_replace(' ','', ucwords(str_replace('_', ' ', $name)));
 }
 
 /* File Not Found */
