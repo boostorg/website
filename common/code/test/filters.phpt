@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Filter Tests</title>
-</head>
-<body>
-<h1>Filter Tests</h1>
-
 <?php
 
-require_once(dirname(__FILE__) . '/../boost_documentation.php');
+use Tester\Assert;
+
+require_once(__DIR__.'/config/bootstrap.php');
+require_once(__DIR__.'/../boost_documentation.php');
 
 BoostFilter::$template = __DIR__.'/template.php';
 
@@ -19,19 +13,7 @@ function filter_test($filter, $data, $expected) {
     ob_start();
     echo_filtered($filter, $data);
     $result = ob_get_clean();
-    
-    if(trim($result) != trim($expected)) {
-        global $failure_count;
-        ++$failure_count;
-        
-        echo
-            "<h2>Failure for filter {$filter}</h2>",
-            '<p>Expected:</p><pre>',
-            html_encode($expected),
-            '</pre><p>Result:</p><pre>',
-            html_encode($result),
-            '</pre>';
-    }
+    Assert::same(trim($result), trim($expected));
 }
 
 /* Plain Text */
@@ -197,10 +179,4 @@ EOL;
 filter_test('simple', $data, $test_simple_expected);
 // TODO: This doesn't work because the filter calls 'virtual', which breaks
 // out of the buffered output.
-//filter_test('basic', $data, '');
-
-echo $failure_count > 0 ? "<p>Failure count: $failure_count</p>" : "<p>All passed</p>";
-
-?>
-</body>
-</html>
+//filter_test('basic', $params, '');

@@ -1,5 +1,8 @@
 <?php
 
+use Tester\Assert;
+
+require_once(__DIR__.'/config/bootstrap.php');
 require_once(__DIR__.'/../boost.php');
 
 $libraries = BoostLibraries::from_xml('<?xml version="1.0" encoding="US-ASCII"?>
@@ -39,11 +42,11 @@ $accumulators_details = '{
 
 $libraries->update('1.36.0', BoostLibrary::read_libraries_json($accumulators_details));
 $r = $libraries->get_history('accumulators');
-assert(count($r) == 1);
+Assert::same(count($r), 1);
 
 $libraries->update('develop', BoostLibrary::read_libraries_json($accumulators_details));
 $r = $libraries->get_history('accumulators');
-assert(count($r) == 1);
+Assert::same(count($r), 1);
 
 $new_accumulators_details = '{
     "key": "accumulators",
@@ -58,19 +61,19 @@ $new_accumulators_details = '{
 
 $libraries->update('develop', BoostLibrary::read_libraries_json($new_accumulators_details));
 $r = $libraries->get_history('accumulators');
-assert(count($r) == 2);
-assert(isset($r['1.36.0']));
-assert(isset($r['develop']));
-assert($r['1.36.0']->details['category'] == array('Math'));
-assert($r['develop']->details['category'] == array('Generic', 'Math'));
-assert(!isset($r['master']));
+Assert::same(count($r), 2);
+Assert::true(isset($r['1.36.0']));
+Assert::true(isset($r['develop']));
+Assert::same($r['1.36.0']->details['category'], array('Math'));
+Assert::same($r['develop']->details['category'], array('Generic', 'Math'));
+Assert::false(isset($r['master']));
 
 $libraries->update('master', BoostLibrary::read_libraries_json($new_accumulators_details));
 $r = $libraries->get_history('accumulators');
-assert(count($r) == 2);
-assert(isset($r['1.36.0']));
-assert(isset($r['master']));
-assert(!isset($r['develop']));
-assert($r['1.36.0']->details['category'] == array('Math'));
-assert($r['master']->details['category'] == array('Generic', 'Math'));
-assert(!isset($r['develop']));
+Assert::same(count($r), 2);
+Assert::true(isset($r['1.36.0']));
+Assert::true(isset($r['master']));
+Assert::false(isset($r['develop']));
+Assert::same($r['1.36.0']->details['category'], array('Math'));
+Assert::same($r['master']->details['category'], array('Generic', 'Math'));
+Assert::false(isset($r['develop']));
