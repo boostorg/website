@@ -321,15 +321,16 @@ class BoostPages_Page {
 
     function download_table_data() {
         if ($this->download_basename) {
+            $url_base = "{$this->download_item}{$this->download_basename}";
             return array(
-                'unix' => array($this->download_basename.'.tar.bz2', $this->download_basename.'.tar.gz'),
-                'windows' => array($this->download_basename.'.7z', $this->download_basename.'.zip'),
+                'unix' => array("{$url_base}.tar.bz2", "{$url_base}.tar.gz"),
+                'windows' => array("{$url_base}.7z", "{$url_base}.zip"),
             );
         } else if (preg_match('@.*/boost/(\d+)\.(\d+)\.(\d+)/@', $this->download_item, $match)) {
             $major = intval($match[1]);
             $minor = intval($match[2]);
             $point = intval($match[3]);
-            $base_name = "boost_{$match[1]}_{$match[2]}_{$match[3]}";
+            $url_base = "{$this->download_item}boost_{$match[1]}_{$match[2]}_{$match[3]}";
 
             # Pick which files are available by examining the version number.
             # This could possibly be meta-data in the rss feed instead of being
@@ -338,16 +339,16 @@ class BoostPages_Page {
             # TODO: Key order hardcoded later.
 
             $downloads = array(
-                'unix' => array($base_name.'.tar.bz2', $base_name.'.tar.gz'),
+                'unix' => array($url_base.'.tar.bz2', $url_base.'.tar.gz'),
                 'windows' => array()
             );
 
             if ($major == 1 && $minor >= 32 && $minor <= 33) {
-                $downloads['windows'][] = $base_name.'.exe';
+                $downloads['windows'][] = $url_base.'.exe';
             } else if ($major > 1 || $minor > 34 || ($minor == 34 && $point == 1)) {
-                $downloads['windows'][] = $base_name.'.7z';
+                $downloads['windows'][] = $url_base.'.7z';
             }
-            $downloads['windows'][] = $base_name.'.zip';
+            $downloads['windows'][] = $url_base.'.zip';
             return $downloads;
         }
         else {
@@ -387,10 +388,15 @@ class BoostPages_Page {
                     if (!$first) { $output .= '<tr>'; }
                     $first = false;
 
+                    $file_name = basename(parse_url($file, PHP_URL_PATH));
+
                     $output .= '<td><a href="';
-                    $output .= html_encode("{$this->download_item}{$file}/download");
+                    // TODO: Probably shouldn't add '/download' any more,
+                    //       but keeping to minimise changes in generated
+                    //       files for now.
+                    $output .= html_encode("{$file}/download";
                     $output .= '">';
-                    $output .= html_encode($file);
+                    $output .= html_encode($file_name);
                     $output .= '</a></td>';
                     $output .= '</tr>';
                 }
@@ -403,7 +409,7 @@ class BoostPages_Page {
             # then just use the old fashioned link to sourceforge. */
 
             $output = '              <p><span class="news-download"><a href="'.
-                html_encode($this->download_item).'">';
+                html_encode($downloads).'">';
 
             if (!empty($this->flags['beta'])) {
                 $output .= 'Download this beta release.';
