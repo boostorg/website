@@ -323,8 +323,14 @@ class BoostPages_Page {
         if ($this->download_basename) {
             $url_base = "{$this->download_item}{$this->download_basename}";
             return array(
-                'unix' => array("{$url_base}.tar.bz2", "{$url_base}.tar.gz"),
-                'windows' => array("{$url_base}.7z", "{$url_base}.zip"),
+                'unix' => array(
+                    array('url' => "{$url_base}.tar.bz2"),
+                    array('url' => "{$url_base}.tar.gz"),
+                ),
+                'windows' => array(
+                    array('url' => "{$url_base}.7z"),
+                    array('url' => "{$url_base}.zip"),
+                ),
             );
         } else if (preg_match('@.*/boost/(\d+)\.(\d+)\.(\d+)/@', $this->download_item, $match)) {
             $major = intval($match[1]);
@@ -339,16 +345,19 @@ class BoostPages_Page {
             # TODO: Key order hardcoded later.
 
             $downloads = array(
-                'unix' => array($url_base.'.tar.bz2', $url_base.'.tar.gz'),
+                'unix' => array(
+                    array('url' => $url_base.'.tar.bz2'),
+                    array('url' => $url_base.'.tar.gz'),
+                ),
                 'windows' => array()
             );
 
             if ($major == 1 && $minor >= 32 && $minor <= 33) {
-                $downloads['windows'][] = $url_base.'.exe';
+                $downloads['windows'][] = array('url' => $url_base.'.exe');
             } else if ($major > 1 || $minor > 34 || ($minor == 34 && $point == 1)) {
-                $downloads['windows'][] = $url_base.'.7z';
+                $downloads['windows'][] = array('url' => $url_base.'.7z');
             }
-            $downloads['windows'][] = $url_base.'.zip';
+            $downloads['windows'][] = array('url' => $url_base.'.zip');
             return $downloads;
         }
         else {
@@ -376,25 +385,25 @@ class BoostPages_Page {
             $output .= '<tr><th scope="col">Platform</th><th scope="col">File</th></tr>';
 
             foreach (array('unix', 'windows') as $platform) {
-                $files = $downloads[$platform];
+                $platform_downloads = $downloads[$platform];
                 $output .= "\n";
                 $output .= '<tr><th scope="row"';
-                if (count($files) > 1) {
-                    $output .= ' rowspan="'.count($files).'"';
+                if (count($platform_downloads) > 1) {
+                    $output .= ' rowspan="'.count($platform_downloads).'"';
                 }
                 $output .= '>'.html_encode($platform).'</th>';
                 $first = true;
-                foreach ($files as $file) {
+                foreach ($platform_downloads as $download) {
                     if (!$first) { $output .= '<tr>'; }
                     $first = false;
 
-                    $file_name = basename(parse_url($file, PHP_URL_PATH));
+                    $file_name = basename(parse_url($download['url'], PHP_URL_PATH));
 
                     $output .= '<td><a href="';
                     // TODO: Probably shouldn't add '/download' any more,
                     //       but keeping to minimise changes in generated
                     //       files for now.
-                    $output .= html_encode("{$file}/download";
+                    $output .= html_encode("{$download['url']}/download");
                     $output .= '">';
                     $output .= html_encode($file_name);
                     $output .= '</a></td>';
