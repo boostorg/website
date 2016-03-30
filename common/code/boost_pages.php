@@ -12,8 +12,8 @@ class BoostPages {
         $this->root = $root;
         $this->hash_file = "{$root}/{$hash_file}";
 
-        if (is_file($hash_file)) {
-            foreach(BoostState::load($hash_file) as $qbk_file => $record) {
+        if (is_file($this->hash_file)) {
+            foreach(BoostState::load($this->hash_file) as $qbk_file => $record) {
                 $this->pages[$qbk_file]
                     = new BoostPages_Page($qbk_file, $record);
             }
@@ -75,7 +75,7 @@ class BoostPages {
                 $xml_filename = tempnam(sys_get_temp_dir(), 'boost-qbk-');
                 try {
                     echo "Converting ", $page, ":\n";
-                    BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I feed {$this->root}/{$page}");
+                    BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
                     $page_data->load($bb_parser->parse($xml_filename), $refresh);
                 } catch (Exception $e) {
                     unlink($xml_filename);
@@ -124,7 +124,8 @@ EOL;
 EOL;
                 }
 
-                self::write_template($page_data->location,
+                self::write_template(
+                    "{$this->root}/{$page_data->location}",
                     __DIR__."/templates/entry.php",
                     $template_vars);
             }

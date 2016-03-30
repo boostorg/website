@@ -55,7 +55,7 @@ class BoostSiteTools {
 
         foreach (BoostPageSettings::$index_pages as $index_page => $template) {
             BoostPages::write_template(
-                $index_page,
+                "{$this->root}/{$index_page}",
                 __DIR__.'/'.$template,
                 $index_page_variables);
         }
@@ -106,7 +106,10 @@ class BoostSiteTools {
     function scan_for_new_quickbook_pages($pages) {
         foreach (BoostPageSettings::$pages as $location => $pages_data) {
             foreach ($pages_data['src_files'] as $src_file_pattern) {
-                foreach (glob($src_file_pattern) as $qbk_file) {
+                foreach (glob("{$this->root}/{$src_file_pattern}") as $qbk_file) {
+                    assert(strpos($qbk_file, $this->root) === 0);
+                    $qbk_file = substr($qbk_file, strlen($this->root) + 1);
+                    echo $qbk_file, "\n";
                     $pages->add_qbk_file($qbk_file, $location, $pages_data);
                 }
             }
