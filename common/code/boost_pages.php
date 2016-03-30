@@ -319,16 +319,9 @@ class BoostPages_Page {
         }
     }
 
-    function download_table() {
-        if (!$this->download_item) { return ''; }
-        if ($this->type == 'release' && empty($this->flags['beta']) && empty($this->flags['released'])) {
-            return '';
-        }
-
-        $downloads = null;
-
+    function download_table_data() {
         if ($this->download_basename) {
-            $downloads = array(
+            return array(
                 'unix' => array($this->download_basename.'.tar.bz2', $this->download_basename.'.tar.gz'),
                 'windows' => array($this->download_basename.'.7z', $this->download_basename.'.zip'),
             );
@@ -355,9 +348,21 @@ class BoostPages_Page {
                 $downloads['windows'][] = $base_name.'.7z';
             }
             $downloads['windows'][] = $base_name.'.zip';
+            return $downloads;
+        }
+        else {
+            return $this->download_item;
+        }
+    }
+
+    function download_table() {
+        if ($this->type == 'release' && empty($this->flags['beta']) && empty($this->flags['released'])) {
+            return '';
         }
 
-        if ($downloads !== null) {
+        $downloads = $this->download_table_data();
+
+        if (is_array($downloads)) {
             # Print the download table.
 
             $output = '';
@@ -393,7 +398,7 @@ class BoostPages_Page {
 
             $output .= '</table>';
             return $output;
-        } else {
+        } else if (is_string($downloads)) {
             # If the link didn't match the normal version number pattern
             # then just use the old fashioned link to sourceforge. */
 
@@ -409,6 +414,9 @@ class BoostPages_Page {
             $output .= '</a></span></p>';
 
             return $output;
+        }
+        else {
+            return '';
         }
     }
 
