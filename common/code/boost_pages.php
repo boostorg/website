@@ -320,7 +320,31 @@ class BoostPages_Page {
     }
 
     function download_table_data() {
-        if ($this->download_basename) {
+        if (strpos($this->download_basename, 'boost_1_61_0') === 0) {
+            return array(
+                'unix' => array(
+                    array(
+                        'url' => "{$this->download_item}{$this->download_basename}.tar.bz2",
+                        'hash' => 'something',
+                    ),
+                    array(
+                        'url' => "{$this->download_item}{$this->download_basename}.tar.gz",
+                        'hash' => 'something',
+                    ),
+                ),
+                'windows' => array(
+                    array(
+                        'url' => "{$this->download_item}{$this->download_basename}.7z",
+                        'hash' => 'something',
+                    ),
+                    array(
+                        'url' => "{$this->download_item}{$this->download_basename}.zip",
+                        'hash' => 'something',
+                    ),
+                ),
+            );
+        }
+        else if ($this->download_basename) {
             $url_base = "{$this->download_item}{$this->download_basename}";
             return array(
                 'unix' => array(
@@ -375,6 +399,15 @@ class BoostPages_Page {
         if (is_array($downloads)) {
             # Print the download table.
 
+            $hash_column = false;
+            foreach($downloads as $x) {
+                foreach($x as $y) {
+                    if (array_key_exists('hash', $y)) {
+                        $hash_column = true;
+                    }
+                }
+            }
+
             $output = '';
             $output .= '              <table class="download-table">';
             if (!empty($this->flags['beta'])) {
@@ -382,7 +415,11 @@ class BoostPages_Page {
             } else {
                 $output .= '<caption>Downloads</caption>';
             }
-            $output .= '<tr><th scope="col">Platform</th><th scope="col">File</th></tr>';
+            $output .= '<tr><th scope="col">Platform</th><th scope="col">File</th>';
+            if ($hash_column) {
+                $output .= '<th scope="col">Hash</th>';
+            }
+            $output .= '</tr>';
 
             foreach (array('unix', 'windows') as $platform) {
                 $platform_downloads = $downloads[$platform];
@@ -407,6 +444,11 @@ class BoostPages_Page {
                     $output .= '">';
                     $output .= html_encode($file_name);
                     $output .= '</a></td>';
+                    if ($hash_column) {
+                        $output .= '<td>';
+                        $output .= html_encode($this->array_get($download, 'hash'));
+                        $output .= '</td>';
+                    }
                     $output .= '</tr>';
                 }
             }
