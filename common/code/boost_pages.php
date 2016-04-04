@@ -322,31 +322,34 @@ class BoostPages_Page {
     function download_table_data() {
         if (strpos($this->download_basename, 'boost_1_61_0') === 0) {
             return array(
-                'unix' => array(
-                    array(
-                        'url' => "{$this->download_item}{$this->download_basename}.tar.bz2",
-                        'hash' => 'something',
+                'downloads' => array(
+                    'unix' => array(
+                        array(
+                            'url' => "http://boost.cowic.de/rc/boost_1_61_0_b1.tar.bz2",
+                            'sha256' => '866941f0038b27fcc69ced1490b2dc5fa8d20f505d66b939a92a68ef194d1a6c',
+                        ),
+                        array(
+                            'url' => "http://boost.cowic.de/rc/boost_1_61_0_b1.tar.gz",
+                            'sha256' => '0b92c5fb5b91641409b9675b2fd11d3b3fa5f71dd986d3b5fb03da201bf55474',
+                        ),
                     ),
-                    array(
-                        'url' => "{$this->download_item}{$this->download_basename}.tar.gz",
-                        'hash' => 'something',
+                    'windows' => array(
+                        array(
+                            'url' => "http://boost.cowic.de/rc/boost_1_61_0_b1.7z",
+                            'sha256' => '3f8888099ee6f62b412a13be916dead2bacbdd6d69e5afd5b6fea4bb738e5df4',
+                        ),
+                        array(
+                            'url' => "http://boost.cowic.de/rc/boost_1_61_0_b1.zip",
+                            'sha256' => '9dffe5ee7f5f7bf7695f5738c686e44bd266933e3ca68732b0de5520c3c82615',
+                        ),
                     ),
                 ),
-                'windows' => array(
-                    array(
-                        'url' => "{$this->download_item}{$this->download_basename}.7z",
-                        'hash' => 'something',
-                    ),
-                    array(
-                        'url' => "{$this->download_item}{$this->download_basename}.zip",
-                        'hash' => 'something',
-                    ),
-                ),
+                'signature' => 'users/download/signatures/boost_1_61_0_b1.sums.asc',
             );
         }
         else if ($this->download_basename) {
             $url_base = "{$this->download_item}{$this->download_basename}";
-            return array(
+            return array('downloads' => array(
                 'unix' => array(
                     array('url' => "{$url_base}.tar.bz2"),
                     array('url' => "{$url_base}.tar.gz"),
@@ -355,7 +358,7 @@ class BoostPages_Page {
                     array('url' => "{$url_base}.7z"),
                     array('url' => "{$url_base}.zip"),
                 ),
-            );
+            ));
         } else if (preg_match('@.*/boost/(\d+)\.(\d+)\.(\d+)/@', $this->download_item, $match)) {
             $major = intval($match[1]);
             $minor = intval($match[2]);
@@ -382,7 +385,7 @@ class BoostPages_Page {
                 $downloads['windows'][] = array('url' => $url_base.'.7z');
             }
             $downloads['windows'][] = array('url' => $url_base.'.zip');
-            return $downloads;
+            return array('downloads' => $downloads);
         }
         else {
             return $this->download_item;
@@ -390,9 +393,13 @@ class BoostPages_Page {
     }
 
     function download_table() {
-        if ($this->type == 'release' && empty($this->flags['beta']) && empty($this->flags['released'])) {
-            return '';
-        }
+        // TODO: Removing this temporarily so I can add the download links
+        //       without putting the release notes on the front page.
+        //       Might remove this code permananently, I'm not sure if it
+        //       does any good.
+        //if ($this->type == 'release' && empty($this->flags['beta']) && empty($this->flags['released'])) {
+        //    return '';
+        //}
 
         $downloads = $this->download_table_data();
 
@@ -400,9 +407,9 @@ class BoostPages_Page {
             # Print the download table.
 
             $hash_column = false;
-            foreach($downloads as $x) {
+            foreach($downloads['downloads'] as $x) {
                 foreach($x as $y) {
-                    if (array_key_exists('hash', $y)) {
+                    if (array_key_exists('sha256', $y)) {
                         $hash_column = true;
                     }
                 }
@@ -417,12 +424,12 @@ class BoostPages_Page {
             }
             $output .= '<tr><th scope="col">Platform</th><th scope="col">File</th>';
             if ($hash_column) {
-                $output .= '<th scope="col">Hash</th>';
+                $output .= '<th scope="col">SHA256 Hash</th>';
             }
             $output .= '</tr>';
 
             foreach (array('unix', 'windows') as $platform) {
-                $platform_downloads = $downloads[$platform];
+                $platform_downloads = $downloads['downloads'][$platform];
                 $output .= "\n";
                 $output .= '<tr><th scope="row"';
                 if (count($platform_downloads) > 1) {
@@ -446,7 +453,7 @@ class BoostPages_Page {
                     $output .= '</a></td>';
                     if ($hash_column) {
                         $output .= '<td>';
-                        $output .= html_encode($this->array_get($download, 'hash'));
+                        $output .= html_encode($this->array_get($download, 'sha256'));
                         $output .= '</td>';
                     }
                     $output .= '</tr>';
@@ -454,6 +461,12 @@ class BoostPages_Page {
             }
 
             $output .= '</table>';
+
+            if (array_key_exists('signature', $downloads)) {
+                $output .= "<p><a href='/".html_encode($downloads['signature']).
+                    "'>PGP signed list of checksums.</a></p>\n";
+            }
+
             return $output;
         } else if (is_string($downloads)) {
             # If the link didn't match the normal version number pattern
