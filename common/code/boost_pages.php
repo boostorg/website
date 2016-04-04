@@ -325,21 +325,21 @@ class BoostPages_Page {
                 'downloads' => array(
                     'unix' => array(
                         array(
-                            'url' => "http://boost.cowic.de/rc/boost_1_61_0_b1.tar.bz2",
+                            'url' => "https://bintray.com/artifact/download/boostorg/release/boost_1_61_0_b1.tar.bz2",
                             'sha256' => '866941f0038b27fcc69ced1490b2dc5fa8d20f505d66b939a92a68ef194d1a6c',
                         ),
                         array(
-                            'url' => "http://boost.cowic.de/rc/boost_1_61_0_b1.tar.gz",
+                            'url' => "https://bintray.com/artifact/download/boostorg/release/boost_1_61_0_b1.tar.gz",
                             'sha256' => '0b92c5fb5b91641409b9675b2fd11d3b3fa5f71dd986d3b5fb03da201bf55474',
                         ),
                     ),
                     'windows' => array(
                         array(
-                            'url' => "http://boost.cowic.de/rc/boost_1_61_0_b1.7z",
+                            'url' => "https://bintray.com/artifact/download/boostorg/release/boost_1_61_0_b1.7z",
                             'sha256' => '3f8888099ee6f62b412a13be916dead2bacbdd6d69e5afd5b6fea4bb738e5df4',
                         ),
                         array(
-                            'url' => "http://boost.cowic.de/rc/boost_1_61_0_b1.zip",
+                            'url' => "https://bintray.com/artifact/download/boostorg/release/boost_1_61_0_b1.zip",
                             'sha256' => '9dffe5ee7f5f7bf7695f5738c686e44bd266933e3ca68732b0de5520c3c82615',
                         ),
                     ),
@@ -448,10 +448,15 @@ class BoostPages_Page {
                     $file_name = basename(parse_url($download['url'], PHP_URL_PATH));
 
                     $output .= '<td><a href="';
-                    // TODO: Probably shouldn't add '/download' any more,
-                    //       but keeping to minimise changes in generated
-                    //       files for now.
-                    $output .= html_encode("{$download['url']}/download");
+                    if (strpos($download['url'], 'sourceforge') !== false) {
+                        // TODO: Probably shouldn't add '/download' any more,
+                        //       but keeping to minimise changes in generated
+                        //       files for now.
+                        $output .= html_encode("{$download['url']}/download");
+                    }
+                    else {
+                        $output .= html_encode($download['url']);
+                    }
                     $output .= '">';
                     $output .= html_encode($file_name);
                     $output .= '</a></td>';
