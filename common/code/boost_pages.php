@@ -344,7 +344,11 @@ class BoostPages_Page {
                         ),
                     ),
                 ),
-                'signature' => 'users/download/signatures/boost_1_61_0_b1.sums.asc',
+                'signature' => array(
+                    'location' => 'users/download/signatures/boost_1_61_0_b1.sums.asc',
+                    'name' => 'Vladimir Prus',
+                    'key' => 'https://pgp.mit.edu/pks/lookup?op=get&search=0xDA472E8659753BA4',
+                ),
             );
         }
         else if ($this->download_basename) {
@@ -463,8 +467,10 @@ class BoostPages_Page {
             $output .= '</table>';
 
             if (array_key_exists('signature', $downloads)) {
-                $output .= "<p><a href='/".html_encode($downloads['signature']).
-                    "'>PGP signed list of checksums.</a></p>\n";
+                $output .= "<p><a href='/".html_encode($downloads['signature']['location']).
+                    "'>List of checksums</a> signed by ".
+                    "<a href='".html_encode($downloads['signature']['key'])."'>".
+                    html_encode($downloads['signature']['name'])."</a></p>.\n";
             }
 
             return $output;
