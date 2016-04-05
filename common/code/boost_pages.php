@@ -349,6 +349,12 @@ class BoostPages_Page {
                     'name' => 'Vladimir Prus',
                     'key' => 'https://pgp.mit.edu/pks/lookup?op=get&search=0xDA472E8659753BA4',
                 ),
+                'third_party' => array(
+                    array(
+                        'title' => 'Windows Binaries',
+                        'url' => 'https://sourceforge.net/projects/boost/files/boost-binaries/1.61.0_b1',
+                    ),
+                )
             );
         }
         else if ($this->download_basename) {
@@ -476,6 +482,20 @@ class BoostPages_Page {
                     "'>List of checksums</a> signed by ".
                     "<a href='".html_encode($downloads['signature']['key'])."'>".
                     html_encode($downloads['signature']['name'])."</a></p>.\n";
+            }
+
+            if (array_key_exists('third_party', $downloads)) {
+                $output .= "\n";
+                $output .= "<h3>Third Party Downloads</h3>\n";
+                $output .= "<ul>\n";
+                foreach($downloads['third_party'] as $download) {
+                    $output .= '<li>';
+                    $output .= '<a href="'.html_encode($download['url']).'">';
+                    $output .= html_encode($download['title']);
+                    $output .= '</a>';
+                    $output .= "</li>\n";
+                }
+                $output .= "</ul>\n";
             }
 
             return $output;
