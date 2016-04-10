@@ -71,38 +71,33 @@ class BoostSiteTools {
             $rss_items = BoostState::load(
                 "{$this->root}/generated/state/rss-items.txt");
 
-            foreach (BoostPageSettings::$feeds as $feed_file => $feed_data) {
-                $rss_feed = $this->rss_prefix($feed_file, $feed_data);
-
-                $feed_pages = $pages->match_pages($feed_data['matches']);
-                if (isset($feed_data['count'])) {
-                    $feed_pages = array_slice($feed_pages, 0, $feed_data['count']);
-                }
-
-                foreach ($feed_pages as $qbk_page) {
-                    $item_xml = null;
-
-                    if ($qbk_page->loaded) {
-                        $item = $this->generate_rss_item($qbk_page->qbk_file, $qbk_page);
-
-                        $item['item'] = self::fragment_to_string($item['item']);
-                        $rss_items[$qbk_page->qbk_file] = $item;
-                        BoostState::save($rss_items, "{$this->root}/generated/state/rss-items.txt");
-
-                        $rss_feed .= $item['item'];
-                    } else if (isset($rss_items[$qbk_page->qbk_file])) {
-                        $rss_feed .= $rss_items[$qbk_page->qbk_file]['item'];
-                    } else {
-                        echo "Missing entry for {$qbk_page->qbk_file}\n";
-                    }
-                }
-
-                $rss_feed .= $this->rss_postfix($feed_file, $feed_data);
-
-                $output_file = fopen("{$this->root}/{$feed_file}", 'wb');
-                fwrite($output_file, $rss_feed);
-                fclose($output_file);
-            }
+            $this->generate_rss_feed($pages, $rss_items, array(
+                'path' => 'generated/downloads.rss',
+                'link' => 'users/download/',
+                'title' => 'Boost Downloads',
+                'matches' => array('feed/history/*.qbk|released', 'feed/downloads/*.qbk'),
+                'count' => 3
+            ));
+            $this->generate_rss_feed($pages, $rss_items, array(
+                'path' => 'generated/history.rss',
+                'link' => 'users/history/',
+                'title' => 'Boost History',
+                'matches' => array('feed/history/*.qbk|released')
+            ));
+            $this->generate_rss_feed($pages, $rss_items, array(
+                'path' => 'generated/news.rss',
+                'link' => 'users/news/',
+                'title' => 'Boost News',
+                'matches' => array('feed/news/*.qbk', 'feed/history/*.qbk|released'),
+                'count' => 5
+            ));
+            $this->generate_rss_feed($pages, $rss_items, array(
+                'path' => 'generated/dev.rss',
+                'link' => '',
+                'title' => 'Release notes for work in progress boost',
+                'matches' => array('feed/history/*.qbk'),
+                'count' => 5
+            ));
         }
 
         $pages->save();
@@ -137,6 +132,40 @@ class BoostSiteTools {
             }
             return $y;
         }
+    }
+
+    function generate_rss_feed($pages, $rss_items, $feed_data) {
+        $feed_file = $feed_data['path'];
+        $rss_feed = $this->rss_prefix($feed_file, $feed_data);
+
+        $feed_pages = $pages->match_pages($feed_data['matches']);
+        if (isset($feed_data['count'])) {
+            $feed_pages = array_slice($feed_pages, 0, $feed_data['count']);
+        }
+
+        foreach ($feed_pages as $qbk_page) {
+            $item_xml = null;
+
+            if ($qbk_page->loaded) {
+                $item = $this->generate_rss_item($qbk_page->qbk_file, $qbk_page);
+
+                $item['item'] = self::fragment_to_string($item['item']);
+                $rss_items[$qbk_page->qbk_file] = $item;
+                BoostState::save($rss_items, "{$this->root}/generated/state/rss-items.txt");
+
+                $rss_feed .= $item['item'];
+            } else if (isset($rss_items[$qbk_page->qbk_file])) {
+                $rss_feed .= $rss_items[$qbk_page->qbk_file]['item'];
+            } else {
+                echo "Missing entry for {$qbk_page->qbk_file}\n";
+            }
+        }
+
+        $rss_feed .= $this->rss_postfix($feed_file, $feed_data);
+
+        $output_file = fopen("{$this->root}/{$feed_file}", 'wb');
+        fwrite($output_file, $rss_feed);
+        fclose($output_file);
     }
 
 ################################################################################
