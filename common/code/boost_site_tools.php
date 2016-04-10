@@ -22,8 +22,12 @@ class BoostSiteTools {
 
     function update_quickbook($refresh = false) {
         $pages = $this->load_pages();
+
         if (!$refresh) {
-            $this->scan_for_new_quickbook_pages($pages);
+            $this->scan_location_for_new_quickbook_pages($pages, 'users/history/', 'feed/history/*.qbk', 'release');
+            $this->scan_location_for_new_quickbook_pages($pages, 'users/news/', 'feed/news/*.qbk', 'page');
+            $this->scan_location_for_new_quickbook_pages($pages, 'users/download/', 'feed/downloads/*.qbk', 'release');
+            $pages->save();
         }
 
         // Translate new and changed pages
@@ -32,11 +36,10 @@ class BoostSiteTools {
 
         // Generate 'Index' pages
 
-        $downloads = array();
-        $x = $this->get_downloads($pages, 'live', 'Current', 'feed/history/*.qbk|released', 1);
-        if ($x) { $downloads[] = $x; }
-        $x = $this->get_downloads($pages, 'beta', 'Beta', 'feed/history/*.qbk|beta');
-        if ($x) { $downloads[] = $x; }
+        $downloads = array_filter(array(
+            $this->get_downloads($pages, 'live', 'Current', 'feed/history/*.qbk|released', 1),
+            $this->get_downloads($pages, 'beta', 'Beta', 'feed/history/*.qbk|beta'),
+        ));
 
         $index_page_variables = array(
             'pages' => $pages,
@@ -100,13 +103,6 @@ class BoostSiteTools {
         $pages->save();
     }
 
-    function scan_for_new_quickbook_pages($pages) {
-        $this->scan_location_for_new_quickbook_pages($pages, 'users/history/', 'feed/history/*.qbk', 'release');
-        $this->scan_location_for_new_quickbook_pages($pages, 'users/news/', 'feed/news/*.qbk', 'page');
-        $this->scan_location_for_new_quickbook_pages($pages, 'users/download/', 'feed/downloads/*.qbk', 'release');
-        $pages->save();
-    }
-
     function scan_location_for_new_quickbook_pages($pages, $dir_location, $src_file_glob, $type) {
         foreach (glob("{$this->root}/{$src_file_glob}") as $qbk_file) {
             assert(strpos($qbk_file, $this->root) === 0);
@@ -117,9 +113,11 @@ class BoostSiteTools {
 
     function get_downloads($pages, $anchor, $label, $pattern, $count = null) {
         $entries = $pages->match_pages(array($pattern), null, true);
+
         if ($count) {
             $entries = array_slice($entries, 0, $count);
         }
+
         if ($entries) {
             $y = array('anchor' => $anchor, 'entries' => $entries);
             if (count($entries) == 1) {
@@ -128,6 +126,9 @@ class BoostSiteTools {
                 $y['label'] = "{$label} Releases";
             }
             return $y;
+        }
+        else {
+            return null;
         }
     }
 
