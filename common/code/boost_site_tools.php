@@ -34,7 +34,12 @@ class BoostSiteTools {
 
         $pages->convert_quickbook_pages($refresh);
 
-        // Generate 'Index' pages
+        // Extract data for generating site from $pages:
+
+        $released_versions = $pages->match_pages(['feed/history/*.qbk|released']);
+        $all_versions = $pages->match_pages(['feed/history/*.qbk']);
+        $all_downloads = $pages->match_pages(['feed/history/*.qbk|released', 'feed/downloads/*.qbk']);
+        $news = $pages->match_pages(['feed/news/*.qbk', 'feed/history/*.qbk|released']);
 
         $downloads = array_filter(array(
             $this->get_downloads($pages, 'live', 'Current', 'feed/history/*.qbk|released', 1),
@@ -42,9 +47,13 @@ class BoostSiteTools {
         ));
 
         $index_page_variables = array(
-            'pages' => $pages,
+            'released_versions' => $released_versions,
+            'all_versions' => $all_versions,
+            'news' => $news,
             'downloads' => $downloads,
         );
+
+        // Generate 'Index' pages
 
         BoostPages::write_template(
             "{$this->root}/generated/download-items.html",
@@ -75,27 +84,27 @@ class BoostSiteTools {
                 'path' => 'generated/downloads.rss',
                 'link' => 'users/download/',
                 'title' => 'Boost Downloads',
-                'pages' => $pages->match_pages(array('feed/history/*.qbk|released', 'feed/downloads/*.qbk')),
+                'pages' => $all_downloads,
                 'count' => 3
             ));
             $rss->generate_rss_feed(array(
                 'path' => 'generated/history.rss',
                 'link' => 'users/history/',
                 'title' => 'Boost History',
-                'pages' => $pages->match_pages(array('feed/history/*.qbk|released')),
+                'pages' => $released_versions,
             ));
             $rss->generate_rss_feed(array(
                 'path' => 'generated/news.rss',
                 'link' => 'users/news/',
                 'title' => 'Boost News',
-                'pages' => $pages->match_pages(array('feed/news/*.qbk', 'feed/history/*.qbk|released')),
+                'pages' => $news,
                 'count' => 5
             ));
             $rss->generate_rss_feed(array(
                 'path' => 'generated/dev.rss',
                 'link' => '',
                 'title' => 'Release notes for work in progress boost',
-                'pages' => $pages->match_pages(array('feed/history/*.qbk')),
+                'pages' => $all_versions,
                 'count' => 5
             ));
         }

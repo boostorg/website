@@ -1,7 +1,6 @@
 <?php
 
-# TODO: This is duplicated from other places, should only be set once?
-$news = $pages->match_pages(["feed/news/*.qbk", "feed/history/*.qbk|released"], 3);
+$news = array_slice($news, 0, 3);
 
 echo("<div class=\"directory-item\" id=\"important-downloads\">\n");
 echo("<h2>Downloads</h2>\n");
