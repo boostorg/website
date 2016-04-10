@@ -6,22 +6,6 @@
 
 class BoostPageSettings
 {
-    static $downloads = array(
-        array(
-            'anchor' => 'live',
-            'single' => 'Current Release',
-            'plural' => 'Current Releases',
-            'matches' => array('feed/history/*.qbk|released'),
-            'count' => 1
-        ),
-        array(
-            'anchor' => 'beta',
-            'single' => 'Beta Release',
-            'plural' => 'Beta Releases',
-            'matches' => array('feed/history/*.qbk|beta')
-        )
-    );
-
     # See boost_site.pages for matches pattern syntax.
     #
     # glob array( '|' flag )

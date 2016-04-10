@@ -35,21 +35,10 @@ class BoostSiteTools {
         // Generate 'Index' pages
 
         $downloads = array();
-        foreach (BoostPageSettings::$downloads as $x) {
-            $entries = $pages->match_pages($x['matches'], null, true);
-            if (isset($x['count'])) {
-                $entries = array_slice($entries, 0, $x['count']);
-            }
-            if ($entries) {
-                $y = array('anchor' => $x['anchor'], 'entries' => $entries);
-                if (count($entries) == 1) {
-                    $y['label'] = $x['single'];
-                } else {
-                    $y['label'] = $x['plural'];
-                }
-                $downloads[] = $y;
-            }
-        }
+        $x = $this->get_downloads($pages, 'live', 'Current', 'feed/history/*.qbk|released', 1);
+        if ($x) { $downloads[] = $x; }
+        $x = $this->get_downloads($pages, 'beta', 'Beta', 'feed/history/*.qbk|beta');
+        if ($x) { $downloads[] = $x; }
 
         $index_page_variables = array(
             'pages' => $pages,
@@ -131,6 +120,22 @@ class BoostSiteTools {
             assert(strpos($qbk_file, $this->root) === 0);
             $qbk_file = substr($qbk_file, strlen($this->root) + 1);
             $pages->add_qbk_file($qbk_file, $dir_location, $type);
+        }
+    }
+
+    function get_downloads($pages, $anchor, $label, $pattern, $count = null) {
+        $entries = $pages->match_pages(array($pattern), null, true);
+        if ($count) {
+            $entries = array_slice($entries, 0, $count);
+        }
+        if ($entries) {
+            $y = array('anchor' => $anchor, 'entries' => $entries);
+            if (count($entries) == 1) {
+                $y['label'] = "{$label} Release";
+            } else {
+                $y['label'] = "{$label} Releases";
+            }
+            return $y;
         }
     }
 
