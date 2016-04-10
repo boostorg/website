@@ -56,12 +56,25 @@ class BoostSiteTools {
             'downloads' => $downloads,
         );
 
-        foreach (BoostPageSettings::$index_pages as $index_page => $template) {
-            BoostPages::write_template(
-                "{$this->root}/{$index_page}",
-                __DIR__.'/'.$template,
-                $index_page_variables);
-        }
+        BoostPages::write_template(
+            "{$this->root}/generated/download-items.html",
+            __DIR__.'/templates/download.php',
+            $index_page_variables);
+
+        BoostPages::write_template(
+            "{$this->root}/generated/history-items.html",
+            __DIR__.'/templates/history.php',
+            $index_page_variables);
+
+        BoostPages::write_template(
+            "{$this->root}/generated/news-items.html",
+            __DIR__.'/templates/news.php',
+            $index_page_variables);
+
+        BoostPages::write_template(
+            "{$this->root}/generated/home-items.html",
+            __DIR__.'/templates/index.php',
+            $index_page_variables);
 
         # Generate RSS feeds
 

@@ -36,13 +36,6 @@ class BoostPageSettings
         )
     );
 
-    static $index_pages = array(
-        'generated/download-items.html' => 'templates/download.php',
-        'generated/history-items.html' => 'templates/history.php',
-        'generated/news-items.html' => 'templates/news.php',
-        'generated/home-items.html' => 'templates/index.php'
-    );
-
     # See boost_site.pages for matches pattern syntax.
     #
     # glob array( '|' flag )
