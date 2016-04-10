@@ -17,6 +17,11 @@ class BoostPages {
                 $this->pages[$qbk_file]
                     = new BoostPages_Page($qbk_file, $record);
             }
+
+            uasort($this->pages, function($x, $y) {
+                return $x->last_modified == $y->last_modified ? 0 :
+                    ($x->last_modified < $y->last_modified ? 1 : -1);
+            });
         }
     }
 
@@ -136,38 +141,6 @@ EOL;
         $r = ob_get_contents();
         ob_end_clean();
         file_put_contents($_location, $r);
-    }
-
-    /**
-        patterns is a list of strings, containing a glob followed
-        by required flags, separated by '|'. The syntax will probably
-        change in the future.
-    */
-    function match_pages($patterns, $count = null, $sort = true) {
-        $entries = array();
-        foreach ($patterns as $pattern) {
-            $pattern_parts = explode('|', $pattern);
-            foreach ($this->pages as $key => $page) {
-                if (fnmatch($pattern_parts[0], $key)
-                    && $page->is_published(array_slice($pattern_parts, 1)))
-                {
-                    $entries[$key] = $page;
-                }
-            }
-        }
-
-        if ($sort) {
-            uasort($entries, function($x, $y) {
-                return $x->last_modified == $y->last_modified ? 0 :
-                    ($x->last_modified < $y->last_modified ? 1 : -1);
-            });
-        }
-
-        if ($count) {
-            $entries = array_slice($entries, 0, $count);
-        }
-
-        return $entries;
     }
 }
 
@@ -518,7 +491,7 @@ class BoostPages_Page {
         }
     }
 
-    function is_published($flags) {
+    function is_published($flags = array()) {
         if ($this->page_state == 'new') {
             return false;
         }

@@ -36,11 +36,48 @@ class BoostSiteTools {
 
         // Extract data for generating site from $pages:
 
-        $released_versions = $pages->match_pages(['feed/history/*.qbk|released']);
-        $beta_versions = $pages->match_pages(['feed/history/*.qbk|beta']);
-        $all_versions = $pages->match_pages(['feed/history/*.qbk']);
-        $all_downloads = $pages->match_pages(['feed/history/*.qbk|released', 'feed/downloads/*.qbk']);
-        $news = $pages->match_pages(['feed/news/*.qbk', 'feed/history/*.qbk|released']);
+        $released_versions = array();
+        $beta_versions = array();
+        $all_versions = array();
+        $all_downloads = array();
+        $news = array();
+
+        foreach($pages->pages as $page) {
+            switch($page->type) {
+            case 'page':
+                if ($page->is_published()) {
+                    $news[] = $page;
+                }
+                break;
+            case 'release':
+                if (preg_match('@^feed/history/@', $page->qbk_file)) {
+                    if ($page->is_published()) {
+                        $all_versions[] = $page;
+                    }
+
+                    if ($page->is_published(array('released'))) {
+                        $all_downloads[] = $page;
+                        $released_versions[] = $page;
+                        $news[] = $page;
+                    }
+                    else if ($page->is_published(array('beta'))) {
+                        $beta_versions[] = $page;
+                    }
+                }
+                else {
+                    // TODO: Can probably remove this, it's only used for
+                    //       one obsolete file, that doesn't seem to be
+                    //       included anywhere.
+                    if ($page->is_published(array('released'))) {
+                        $all_downloads[] = $page;
+                    }
+                }
+                break;
+            default:
+                echo "Unknown page type: {$page->type}.\n";
+                break;
+            }
+        }
 
         $downloads = array_filter(array(
             $this->get_downloads('live', 'Current', $released_versions, 1),
