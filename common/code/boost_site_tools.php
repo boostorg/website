@@ -51,7 +51,10 @@ class BoostSiteTools {
             }
         }
 
-        $index_page_variables = compact('pages', 'downloads');
+        $index_page_variables = array(
+            'pages' => $pages,
+            'downloads' => $downloads,
+        );
 
         foreach (BoostPageSettings::$index_pages as $index_page => $template) {
             BoostPages::write_template(
