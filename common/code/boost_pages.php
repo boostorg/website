@@ -17,6 +17,11 @@ class BoostPages {
                 $this->pages[$qbk_file]
                     = new BoostPages_Page($qbk_file, $record);
             }
+
+            uasort($this->pages, function($x, $y) {
+                return $x->last_modified == $y->last_modified ? 0 :
+                    ($x->last_modified < $y->last_modified ? 1 : -1);
+            });
         }
     }
 
@@ -26,7 +31,15 @@ class BoostPages {
             $this->hash_file);
     }
 
-    function add_qbk_file($qbk_file, $location, $page_data) {
+    function scan_location_for_new_quickbook_pages($dir_location, $src_file_glob, $type) {
+        foreach (glob("{$this->root}/{$src_file_glob}") as $qbk_file) {
+            assert(strpos($qbk_file, $this->root) === 0);
+            $qbk_file = substr($qbk_file, strlen($this->root) + 1);
+            $this->add_qbk_file($qbk_file, $dir_location, $type);
+        }
+    }
+
+    function add_qbk_file($qbk_file, $dir_location, $type) {
         $qbk_hash = hash('sha256', str_replace("\r\n", "\n",
             file_get_contents("{$this->root}/{$qbk_file}")));
 
@@ -37,7 +50,7 @@ class BoostPages {
         } else {
             $record = $this->pages[$qbk_file];
             if ($record->dir_location) {
-                assert($record->dir_location == $location);
+                assert($record->dir_location == $dir_location);
             }
             if ($record->qbk_hash == $qbk_hash) {
                 return;
@@ -48,12 +61,9 @@ class BoostPages {
         }
 
         $record->qbk_hash = $qbk_hash;
-        $record->dir_location = $location;
-        if (isset($page_data['type'])) {
-            $record->type = $page_data['type'];
-        } else {
-            $record->type = 'page';
-        }
+        $record->dir_location = $dir_location;
+        $record->type = $type;
+
         if (!in_array($record->type, array('release', 'page'))) {
             throw new RuntimeException("Unknown record type: ".$record->type);
         }
@@ -139,38 +149,6 @@ EOL;
         $r = ob_get_contents();
         ob_end_clean();
         file_put_contents($_location, $r);
-    }
-
-    /**
-        patterns is a list of strings, containing a glob followed
-        by required flags, separated by '|'. The syntax will probably
-        change in the future.
-    */
-    function match_pages($patterns, $count = null, $sort = true) {
-        $entries = array();
-        foreach ($patterns as $pattern) {
-            $pattern_parts = explode('|', $pattern);
-            foreach ($this->pages as $key => $page) {
-                if (fnmatch($pattern_parts[0], $key)
-                    && $page->is_published(array_slice($pattern_parts, 1)))
-                {
-                    $entries[$key] = $page;
-                }
-            }
-        }
-
-        if ($sort) {
-            uasort($entries, function($x, $y) {
-                return $x->last_modified == $y->last_modified ? 0 :
-                    ($x->last_modified < $y->last_modified ? 1 : -1);
-            });
-        }
-
-        if ($count) {
-            $entries = array_slice($entries, 0, $count);
-        }
-
-        return $entries;
     }
 }
 
@@ -521,7 +499,7 @@ class BoostPages_Page {
         }
     }
 
-    function is_published($flags) {
+    function is_published($flags = array()) {
         if ($this->page_state == 'new') {
             return false;
         }

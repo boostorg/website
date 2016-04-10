@@ -1,9 +1,8 @@
 <?php
 
 $title = "Boost Version History";
-$entries = $pages->match_pages(["feed/history/*.qbk|released"]);
 
-foreach ($entries as $entry) {
+foreach ($released_versions as $entry) {
     echo("\n");
     echo("              <h2 class=\"news-title\">\n");
     echo("              <a name=\"i{$entry->id}\" id=\"i{$entry->id}\"></a><a href=\"/".

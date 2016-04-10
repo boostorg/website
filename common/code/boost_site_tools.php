@@ -4,8 +4,6 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-require_once(__DIR__.'/url.php');
-
 class BoostSiteTools {
     var $root;
 
@@ -24,180 +22,154 @@ class BoostSiteTools {
 
     function update_quickbook($refresh = false) {
         $pages = $this->load_pages();
+
         if (!$refresh) {
-            $this->scan_for_new_quickbook_pages($pages);
+            $pages->scan_location_for_new_quickbook_pages('users/history/', 'feed/history/*.qbk', 'release');
+            $pages->scan_location_for_new_quickbook_pages('users/news/', 'feed/news/*.qbk', 'page');
+            $pages->scan_location_for_new_quickbook_pages('users/download/', 'feed/downloads/*.qbk', 'release');
+            $pages->save();
         }
 
         // Translate new and changed pages
 
         $pages->convert_quickbook_pages($refresh);
 
+        // Extract data for generating site from $pages:
+
+        $released_versions = array();
+        $beta_versions = array();
+        $all_versions = array();
+        $all_downloads = array();
+        $news = array();
+
+        foreach($pages->pages as $page) {
+            switch($page->type) {
+            case 'page':
+                if ($page->is_published()) {
+                    $news[] = $page;
+                }
+                break;
+            case 'release':
+                if (preg_match('@^feed/history/@', $page->qbk_file)) {
+                    if ($page->is_published()) {
+                        $all_versions[] = $page;
+                    }
+
+                    if ($page->is_published(array('released'))) {
+                        $all_downloads[] = $page;
+                        $released_versions[] = $page;
+                        $news[] = $page;
+                    }
+                    else if ($page->is_published(array('beta'))) {
+                        $beta_versions[] = $page;
+                    }
+                }
+                else {
+                    // TODO: Can probably remove this, it's only used for
+                    //       one obsolete file, that doesn't seem to be
+                    //       included anywhere.
+                    if ($page->is_published(array('released'))) {
+                        $all_downloads[] = $page;
+                    }
+                }
+                break;
+            default:
+                echo "Unknown page type: {$page->type}.\n";
+                break;
+            }
+        }
+
+        $downloads = array_filter(array(
+            $this->get_downloads('live', 'Current', $released_versions, 1),
+            $this->get_downloads('beta', 'Beta', $beta_versions),
+        ));
+
+        $index_page_variables = array(
+            'released_versions' => $released_versions,
+            'all_versions' => $all_versions,
+            'news' => $news,
+            'downloads' => $downloads,
+        );
+
         // Generate 'Index' pages
 
-        $downloads = array();
-        foreach (BoostPageSettings::$downloads as $x) {
-            $entries = $pages->match_pages($x['matches'], null, true);
-            if (isset($x['count'])) {
-                $entries = array_slice($entries, 0, $x['count']);
-            }
-            if ($entries) {
-                $y = array('anchor' => $x['anchor'], 'entries' => $entries);
-                if (count($entries) == 1) {
-                    $y['label'] = $x['single'];
-                } else {
-                    $y['label'] = $x['plural'];
-                }
-                $downloads[] = $y;
-            }
-        }
+        BoostPages::write_template(
+            "{$this->root}/generated/download-items.html",
+            __DIR__.'/templates/download.php',
+            $index_page_variables);
 
-        $index_page_variables = compact('pages', 'downloads');
+        BoostPages::write_template(
+            "{$this->root}/generated/history-items.html",
+            __DIR__.'/templates/history.php',
+            $index_page_variables);
 
-        foreach (BoostPageSettings::$index_pages as $index_page => $template) {
-            BoostPages::write_template(
-                "{$this->root}/{$index_page}",
-                __DIR__.'/'.$template,
-                $index_page_variables);
-        }
+        BoostPages::write_template(
+            "{$this->root}/generated/news-items.html",
+            __DIR__.'/templates/news.php',
+            $index_page_variables);
+
+        BoostPages::write_template(
+            "{$this->root}/generated/home-items.html",
+            __DIR__.'/templates/index.php',
+            $index_page_variables);
 
         # Generate RSS feeds
 
         if (!$refresh) {
-            $rss_items = BoostState::load(
-                "{$this->root}/generated/state/rss-items.txt");
+            $rss = new BoostRss($this->root, "generated/state/rss-items.txt");
 
-            foreach (BoostPageSettings::$feeds as $feed_file => $feed_data) {
-                $rss_feed = $this->rss_prefix($feed_file, $feed_data);
-
-                $feed_pages = $pages->match_pages($feed_data['matches']);
-                if (isset($feed_data['count'])) {
-                    $feed_pages = array_slice($feed_pages, 0, $feed_data['count']);
-                }
-
-                foreach ($feed_pages as $qbk_page) {
-                    $item_xml = null;
-
-                    if ($qbk_page->loaded) {
-                        $item = $this->generate_rss_item($qbk_page->qbk_file, $qbk_page);
-
-                        $item['item'] = self::fragment_to_string($item['item']);
-                        $rss_items[$qbk_page->qbk_file] = $item;
-                        BoostState::save($rss_items, "{$this->root}/generated/state/rss-items.txt");
-
-                        $rss_feed .= $item['item'];
-                    } else if (isset($rss_items[$qbk_page->qbk_file])) {
-                        $rss_feed .= $rss_items[$qbk_page->qbk_file]['item'];
-                    } else {
-                        echo "Missing entry for {$qbk_page->qbk_file}\n";
-                    }
-                }
-
-                $rss_feed .= $this->rss_postfix($feed_file, $feed_data);
-
-                $output_file = fopen("{$this->root}/{$feed_file}", 'wb');
-                fwrite($output_file, $rss_feed);
-                fclose($output_file);
-            }
+            $rss->generate_rss_feed(array(
+                'path' => 'generated/downloads.rss',
+                'link' => 'users/download/',
+                'title' => 'Boost Downloads',
+                'pages' => $all_downloads,
+                'count' => 3
+            ));
+            $rss->generate_rss_feed(array(
+                'path' => 'generated/history.rss',
+                'link' => 'users/history/',
+                'title' => 'Boost History',
+                'pages' => $released_versions,
+            ));
+            $rss->generate_rss_feed(array(
+                'path' => 'generated/news.rss',
+                'link' => 'users/news/',
+                'title' => 'Boost News',
+                'pages' => $news,
+                'count' => 5
+            ));
+            $rss->generate_rss_feed(array(
+                'path' => 'generated/dev.rss',
+                'link' => '',
+                'title' => 'Release notes for work in progress boost',
+                'pages' => $all_versions,
+                'count' => 5
+            ));
         }
 
         $pages->save();
     }
 
-    function scan_for_new_quickbook_pages($pages) {
-        foreach (BoostPageSettings::$pages as $location => $pages_data) {
-            foreach ($pages_data['src_files'] as $src_file_pattern) {
-                foreach (glob("{$this->root}/{$src_file_pattern}") as $qbk_file) {
-                    assert(strpos($qbk_file, $this->root) === 0);
-                    $qbk_file = substr($qbk_file, strlen($this->root) + 1);
-                    echo $qbk_file, "\n";
-                    $pages->add_qbk_file($qbk_file, $location, $pages_data);
-                }
+    function get_downloads($anchor, $label, $entries, $count = null) {
+        if ($count) {
+            $entries = array_slice($entries, 0, $count);
+        }
+
+        if ($entries) {
+            $y = array('anchor' => $anchor, 'entries' => $entries);
+            if (count($entries) == 1) {
+                $y['label'] = "{$label} Release";
+            } else {
+                $y['label'] = "{$label} Releases";
             }
+            return $y;
         }
-
-        $pages->save();
-    }
-
-################################################################################
-
-    function rss_prefix($feed_file, $details) {
-        $title = $this->encode_for_rss($details['title']);
-        $link = $this->encode_for_rss("http://www.boost.org/".$details['link']);
-        $description = '';
-        $language = 'en-us';
-        $copyright = 'Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)';
-        return <<<EOL
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
-  <channel>
-    <generator>Boost Website Site Tools</generator>
-    <title>{$title}</title>
-    <link>{$link}</link>
-    <description>{$description}</description>
-    <language>{$language}</language>
-    <copyright>{$copyright}</copyright>
-
-EOL;
-    }
-
-    function rss_postfix($feed_file, $details) {
-        return "\n  </channel>\n</rss>\n";
-    }
-
-    function generate_rss_item($qbk_file, $page) {
-        assert($page->loaded);
-
-        $rss_xml = new DOMDocument();
-        $rss_xml->loadXML(<<<EOL
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
-</rss>
-EOL
-        );
-
-        $page_link = "http://www.boost.org/{$page->location}";
-
-        $item = $rss_xml->createElement('item');
-
-        $node = new DOMDocument();
-        $node->loadXML('<title>'.$this->encode_for_rss($page->title_xml).'</title>');
-        $item->appendChild($rss_xml->importNode($node->documentElement, true));
-
-        $node = new DOMDocument();
-        $node->loadXML('<link>'.$this->encode_for_rss($page_link).'</link>');
-        $item->appendChild($rss_xml->importNode($node->documentElement, true));
-
-        $node = new DOMDocument();
-        $node->loadXML('<guid>'.$this->encode_for_rss($page_link).'</guid>');
-        $item->appendChild($rss_xml->importNode($node->documentElement, true));
-
-        # TODO: Convert date format?
-        $node = $rss_xml->createElement('pubDate');
-        $node->appendChild($rss_xml->createTextNode($page->pub_date));
-        $item->appendChild($node);
-
-        $node = $rss_xml->createElement('description');
-        # Placing the description in a root element to make it well formed xml->
-        $description = new DOMDocument();
-        $description->loadXML('<x>'.$this->encode_for_rss($page->description_xml).'</x>');
-
-        BoostSiteTools::base_links($description, $page_link);
-        foreach($description->firstChild->childNodes as $child) {
-            $node->appendChild($rss_xml->createTextNode(
-                $description->saveXML($child)));
+        else {
+            return null;
         }
-        $item->appendChild($node);
-
-        return(array(
-            'item' => $item,
-            'quickbook' => $qbk_file,
-            'last_modified' => $page->last_modified,
-        ));
     }
 
-    function encode_for_rss($x) {
-        return $x;
-    }
+    // Some XML processing functions - TODO: find somewhere better to put these.
 
     static function fragment_to_string($x) {
         if ($x) {

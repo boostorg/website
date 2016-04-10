@@ -1,6 +1,6 @@
 <?php
 
-$entries = $pages->match_pages(["feed/news/*.qbk", "feed/history/*.qbk|released"], 5);
+$entries = array_slice($news, 0, 5);
 
 echo("<ul class=\"toc\">\n");
 echo("                ");
