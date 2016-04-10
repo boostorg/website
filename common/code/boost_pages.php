@@ -26,7 +26,7 @@ class BoostPages {
             $this->hash_file);
     }
 
-    function add_qbk_file($qbk_file, $location, $page_data) {
+    function add_qbk_file($qbk_file, $dir_location, $type) {
         $qbk_hash = hash('sha256', str_replace("\r\n", "\n",
             file_get_contents("{$this->root}/{$qbk_file}")));
 
@@ -37,7 +37,7 @@ class BoostPages {
         } else {
             $record = $this->pages[$qbk_file];
             if ($record->dir_location) {
-                assert($record->dir_location == $location);
+                assert($record->dir_location == $dir_location);
             }
             if ($record->qbk_hash == $qbk_hash) {
                 return;
@@ -48,12 +48,9 @@ class BoostPages {
         }
 
         $record->qbk_hash = $qbk_hash;
-        $record->dir_location = $location;
-        if (isset($page_data['type'])) {
-            $record->type = $page_data['type'];
-        } else {
-            $record->type = 'page';
-        }
+        $record->dir_location = $dir_location;
+        $record->type = $type;
+
         if (!in_array($record->type, array('release', 'page'))) {
             throw new RuntimeException("Unknown record type: ".$record->type);
         }

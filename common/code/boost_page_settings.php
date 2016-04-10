@@ -22,20 +22,6 @@ class BoostPageSettings
         )
     );
 
-    static $pages = array(
-        'users/history/' => array(
-            'src_files' => array('feed/history/*.qbk'),
-            'type' => 'release'
-        ),
-        'users/news/' => array(
-            'src_files' => array('feed/news/*.qbk'),
-        ),
-        'users/download/' => array(
-            'src_files' => array('feed/downloads/*.qbk'),
-            'type' => 'release'
-        )
-    );
-
     # See boost_site.pages for matches pattern syntax.
     #
     # glob array( '|' flag )

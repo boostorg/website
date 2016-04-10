@@ -120,18 +120,18 @@ class BoostSiteTools {
     }
 
     function scan_for_new_quickbook_pages($pages) {
-        foreach (BoostPageSettings::$pages as $location => $pages_data) {
-            foreach ($pages_data['src_files'] as $src_file_pattern) {
-                foreach (glob("{$this->root}/{$src_file_pattern}") as $qbk_file) {
-                    assert(strpos($qbk_file, $this->root) === 0);
-                    $qbk_file = substr($qbk_file, strlen($this->root) + 1);
-                    echo $qbk_file, "\n";
-                    $pages->add_qbk_file($qbk_file, $location, $pages_data);
-                }
-            }
-        }
-
+        $this->scan_location_for_new_quickbook_pages($pages, 'users/history/', 'feed/history/*.qbk', 'release');
+        $this->scan_location_for_new_quickbook_pages($pages, 'users/news/', 'feed/news/*.qbk', 'page');
+        $this->scan_location_for_new_quickbook_pages($pages, 'users/download/', 'feed/downloads/*.qbk', 'release');
         $pages->save();
+    }
+
+    function scan_location_for_new_quickbook_pages($pages, $dir_location, $src_file_glob, $type) {
+        foreach (glob("{$this->root}/{$src_file_glob}") as $qbk_file) {
+            assert(strpos($qbk_file, $this->root) === 0);
+            $qbk_file = substr($qbk_file, strlen($this->root) + 1);
+            $pages->add_qbk_file($qbk_file, $dir_location, $type);
+        }
     }
 
 ################################################################################
