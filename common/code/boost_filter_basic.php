@@ -5,11 +5,11 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-class BoostFilterBasic extends BoostFilters
+class BoostFilterBasic extends BoostFilter
 {
     function echo_filtered()
     {
-        $text = $this->params['content'];
+        $text = $this->data->content;
 
         $match = null;
 
@@ -22,7 +22,7 @@ class BoostFilterBasic extends BoostFilters
             echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
             echo $match[0][0];
             virtual("/common/heading-doc.html");
-            echo latest_link($this->params);
+            echo latest_link($this->data);
             echo $this->prepare_html($this->remove_html_banner(substr($text, $match[0][1] + strlen($match[0][0]))));
         }
         else {

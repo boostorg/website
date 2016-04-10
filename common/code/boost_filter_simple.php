@@ -5,10 +5,10 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-class BoostFilterSimple extends BoostFilters
+class BoostFilterSimple extends BoostFilter
 {
     function echo_filtered()
     {
-        print $this->prepare_html($this->params['content']);
+        print $this->prepare_html($this->data->content);
     }
 }
