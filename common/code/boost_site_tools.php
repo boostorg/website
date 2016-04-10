@@ -37,13 +37,14 @@ class BoostSiteTools {
         // Extract data for generating site from $pages:
 
         $released_versions = $pages->match_pages(['feed/history/*.qbk|released']);
+        $beta_versions = $pages->match_pages(['feed/history/*.qbk|beta']);
         $all_versions = $pages->match_pages(['feed/history/*.qbk']);
         $all_downloads = $pages->match_pages(['feed/history/*.qbk|released', 'feed/downloads/*.qbk']);
         $news = $pages->match_pages(['feed/news/*.qbk', 'feed/history/*.qbk|released']);
 
         $downloads = array_filter(array(
-            $this->get_downloads($pages, 'live', 'Current', 'feed/history/*.qbk|released', 1),
-            $this->get_downloads($pages, 'beta', 'Beta', 'feed/history/*.qbk|beta'),
+            $this->get_downloads('live', 'Current', $released_versions, 1),
+            $this->get_downloads('beta', 'Beta', $beta_versions),
         ));
 
         $index_page_variables = array(
@@ -120,9 +121,7 @@ class BoostSiteTools {
         }
     }
 
-    function get_downloads($pages, $anchor, $label, $pattern, $count = null) {
-        $entries = $pages->match_pages(array($pattern), null, true);
-
+    function get_downloads($anchor, $label, $entries, $count = null) {
         if ($count) {
             $entries = array_slice($entries, 0, $count);
         }
