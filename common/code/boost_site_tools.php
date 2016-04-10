@@ -24,9 +24,9 @@ class BoostSiteTools {
         $pages = $this->load_pages();
 
         if (!$refresh) {
-            $this->scan_location_for_new_quickbook_pages($pages, 'users/history/', 'feed/history/*.qbk', 'release');
-            $this->scan_location_for_new_quickbook_pages($pages, 'users/news/', 'feed/news/*.qbk', 'page');
-            $this->scan_location_for_new_quickbook_pages($pages, 'users/download/', 'feed/downloads/*.qbk', 'release');
+            $pages->scan_location_for_new_quickbook_pages('users/history/', 'feed/history/*.qbk', 'release');
+            $pages->scan_location_for_new_quickbook_pages('users/news/', 'feed/news/*.qbk', 'page');
+            $pages->scan_location_for_new_quickbook_pages('users/download/', 'feed/downloads/*.qbk', 'release');
             $pages->save();
         }
 
@@ -148,14 +148,6 @@ class BoostSiteTools {
         }
 
         $pages->save();
-    }
-
-    function scan_location_for_new_quickbook_pages($pages, $dir_location, $src_file_glob, $type) {
-        foreach (glob("{$this->root}/{$src_file_glob}") as $qbk_file) {
-            assert(strpos($qbk_file, $this->root) === 0);
-            $qbk_file = substr($qbk_file, strlen($this->root) + 1);
-            $pages->add_qbk_file($qbk_file, $dir_location, $type);
-        }
     }
 
     function get_downloads($anchor, $label, $entries, $count = null) {
