@@ -2,8 +2,8 @@
 require_once(__DIR__.'/../boost.php');
 if (!isset($version)) { $version = BoostVersion::current(); }
 if (!isset($libs)) { $libs = BoostLibraries::load(); }
-$categorized = $libs->get_categorized_for_version($version);
-$alphabetic = $libs->get_for_version($version);
+$categorized = $libs->get_categorized_for_version($version, 'name');
+$alphabetic = $libs->get_for_version($version, 'name');
 uasort($categorized, function($a, $b) {
     $a = $a['title'];
     $b = $b['title'];
