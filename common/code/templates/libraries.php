@@ -21,6 +21,15 @@ function rewrite_link($link) {
     }
     return preg_replace('@/$@', '/index.html', $link);
 }
+
+function echo_library_item($lib) {
+    echo "    <li><a href=\"".rewrite_link($lib['documentation'])."\">".html_encode($lib['name'])."</a> - ";
+    echo html_encode(rtrim(trim($lib['description']), '.'));
+    if (!empty($lib['authors'])) {
+        #echo ", from ", implode(',', $lib['authors']);
+        echo ", from ".html_encode($lib['authors']);
+    }
+}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
@@ -84,13 +93,7 @@ how to download, build, and install the libraries.</p>
 <ul>
 <?php
     foreach($alphabetic as $lib) {
-        echo "    <li><a href=\"".rewrite_link($lib['documentation'])."\">".html_encode($lib['name'])."</a> - ";
-        echo html_encode(rtrim(trim($lib['description']), '.'));
-        if (!empty($lib['authors'])) {
-            #echo ", from ", implode(',', $lib['authors']);
-            echo ", from ".html_encode($lib['authors']);
-        }
-        echo ".</li>\n";
+        echo_library_item($lib);
     }
 ?>
 </ul>
@@ -105,12 +108,7 @@ how to download, build, and install the libraries.</p>
         echo "<h3><a name=\"{$category['name']}\">{$category['title']}</a></h3>\n\n";
         echo "<ul>\n";
         foreach ($category['libraries'] as $lib) {
-            echo "    <li><a href=\"".rewrite_link($lib['documentation'])."\">".html_encode($lib['name'])."</a> - ";
-            echo html_encode(rtrim(trim($lib['description']), '.'));
-            if (!empty($lib['authors'])) {
-                #echo ", from ", implode(',', $lib['authors']);
-                echo ", from ".html_encode($lib['authors']);
-            }
+            echo_library_item($lib);
         }
         echo "</ul>\n\n";
     }
