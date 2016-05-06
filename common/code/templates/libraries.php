@@ -84,11 +84,11 @@ how to download, build, and install the libraries.</p>
 <ul>
 <?php
     foreach($alphabetic as $lib) {
-        echo "    <li><a href=\"".rewrite_link($lib['documentation'])."\">{$lib['name']}</a> - ";
-        echo rtrim(trim($lib['description']), '.');
+        echo "    <li><a href=\"".rewrite_link($lib['documentation'])."\">".html_encode($lib['name'])."</a> - ";
+        echo html_encode(rtrim(trim($lib['description']), '.'));
         if (!empty($lib['authors'])) {
             #echo ", from ", implode(',', $lib['authors']);
-            echo ", from {$lib['authors']}";
+            echo ", from ".html_encode($lib['authors']);
         }
         echo ".</li>\n";
     }
@@ -105,11 +105,11 @@ how to download, build, and install the libraries.</p>
         echo "<h3><a name=\"{$category['name']}\">{$category['title']}</a></h3>\n\n";
         echo "<ul>\n";
         foreach ($category['libraries'] as $lib) {
-            echo "    <li><a href=\"".rewrite_link($lib['documentation'])."\">{$lib['name']}</a> - ";
-            echo rtrim(trim($lib['description']), '.');
+            echo "    <li><a href=\"".rewrite_link($lib['documentation'])."\">".html_encode($lib['name'])."</a> - ";
+            echo html_encode(rtrim(trim($lib['description']), '.'));
             if (!empty($lib['authors'])) {
                 #echo ", from ", implode(',', $lib['authors']);
-                echo ", from {$lib['authors']}\n";
+                echo ", from ".html_encode($lib['authors']);
             }
         }
         echo "</ul>\n\n";
