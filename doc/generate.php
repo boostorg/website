@@ -93,10 +93,11 @@ class SimpleTemplate {
     }
 
     static function parse_template($template) {
-        preg_match_all('@{{([#/]?)([\w]+)}}([ #t]*\n)?@',
+        preg_match_all('@{{([#/^]?)([\w]+)}}([ #t]*\n)?@',
             $template, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
 
         $template_parts = array();
+        $operator_stack = array();
         $scope_stack = array();
         $template_stack = array();
         $last_offset = 0;
@@ -113,10 +114,12 @@ class SimpleTemplate {
 
             switch($operator) {
             case '#':
-               $scope_stack[] = $symbol;
-               $template_stack[] = $template_parts;
-               $template_parts = array();
-               break;
+            case '^':
+                $operator_stack[] = $operator;
+                $scope_stack[] = $symbol;
+                $template_stack[] = $template_parts;
+                $template_parts = array();
+                break;
             case '/':
                 if (array_pop($scope_stack) !== $symbol) {
                     // TODO: Better error message here.
@@ -125,7 +128,7 @@ class SimpleTemplate {
                 }
                 $parent_template_parts = array_pop($template_stack);
                 $parent_template_parts[] = array(
-                    'type' => '#',
+                    'type' => array_pop($operator_stack),
                     'symbol' => $symbol,
                     'contents' => $template_parts,
                 );
@@ -167,21 +170,30 @@ class SimpleTemplate {
                 $symbol = $template_part['symbol'];
                 $value = array_key_exists($symbol, $params) ?
                     $params[$symbol] : null;
-                if ($value) {
-                    switch($template_part['type']) {
-                    case '$':
+                switch($template_part['type']) {
+                case '$':
+                    if ($value) {
                         $output .= html_encode($value);
-                        break;
-                    case '#':
+                    }
+                    break;
+                case '#':
+                    if ($value) {
                         $output .= self::interpret_nested_content(
                             $template_part['contents'],
                             $params,
                             $value);
-                        break;
-                    default:
-                        assert(false);
-                        exit(1);
                     }
+                    break;
+                case '^':
+                    if (!$value) {
+                        $output .= self::interpret(
+                            $template_part['contents'],
+                            $params);
+                    }
+                    break;
+                default:
+                    assert(false);
+                    exit(1);
                 }
             }
         }
