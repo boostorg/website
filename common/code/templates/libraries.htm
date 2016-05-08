@@ -1,36 +1,3 @@
-<?php
-require_once(__DIR__.'/../boost.php');
-if (!isset($version)) { $version = BoostVersion::current(); }
-if (!isset($libs)) { $libs = BoostLibraries::load(); }
-$categorized = $libs->get_categorized_for_version($version, 'name');
-$alphabetic = $libs->get_for_version($version, 'name');
-uasort($categorized, function($a, $b) {
-    $a = $a['title'];
-    $b = $b['title'];
-    if ($a === 'Miscellaneous') { $a = 'ZZZZZZZZ'; }
-    if ($b === 'Miscellaneous') { $b = 'ZZZZZZZZ'; }
-    return ($a > $b) ?: ($a < $b ? -1 : 0);
-});
-
-function rewrite_link($link) {
-    if(preg_match('@^/?libs/(.*)@', $link, $matches)) {
-        $link = $matches[1];
-    }
-    else {
-        $link = '../'.ltrim($link, '/');
-    }
-    return preg_replace('@/$@', '/index.html', $link);
-}
-
-function echo_library_item($lib) {
-    echo "    <li><a href=\"".rewrite_link($lib['documentation'])."\">".html_encode($lib['name'])."</a> - ";
-    echo html_encode(rtrim(trim($lib['description']), '.'));
-    if (!empty($lib['authors'])) {
-        #echo ", from ", implode(',', $lib['authors']);
-        echo ", from ".html_encode($lib['authors']);
-    }
-}
-?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
 <html>
@@ -74,11 +41,9 @@ content="text/html; charset=iso-8859-1">
   <dt><a href="#Alphabetically">Libraries Listed Alphabetically</a></dt>
   <dt><a href="#Category">Libraries Listed by Category</a></dt>
     <dl>
-<?php
-        foreach($categorized as $category) {
-              echo "      <dt><a href=\"#{$category['name']}\">{$category['title']}</a></dt>\n";
-        }
-?>
+{{#categorized}}
+      <dt><a href="#{{name}}">{{title}}</a></dt>
+{{/categorized}}
     </dl>
   <dt><a href="#Removed">Libraries Retired from Boost</a></dt>
 </dl>
@@ -91,28 +56,25 @@ how to download, build, and install the libraries.</p>
 <h2>Libraries Listed <a name="Alphabetically">Alphabetically</a></h2>
 
 <ul>
-<?php
-    foreach($alphabetic as $lib) {
-        echo_library_item($lib);
-    }
-?>
+{{#alphabetic}}
+    <li><a href="{{link}}">{{name}}</a> - {{description}}{{#authors}}, from {{authors}}{{/authors}}</li>
+{{/alphabetic}}
 </ul>
 
 <hr>
 
 <h2>Libraries Listed by <a name="Category">Category</a></h2>
 
-<?php
+{{#categorized}}
+<h3><a name="{{name}}">{{title}}</a></h3>
 
-    foreach($categorized as $category) {
-        echo "<h3><a name=\"{$category['name']}\">{$category['title']}</a></h3>\n\n";
-        echo "<ul>\n";
-        foreach ($category['libraries'] as $lib) {
-            echo_library_item($lib);
-        }
-        echo "</ul>\n\n";
-    }
-?>
+<ul>
+{{#libraries}}
+    <li><a href="{{link}}">{{name}}</a> - {{description}}{{#authors}}, from {{authors}}{{/authors}}</li>
+{{/libraries}}
+</ul>
+
+{{/categorized}}
 
 <p>[Category suggestions from Aleksey Gurtovoy, Beman Dawes and Vicente J. Botet Escrib&aacute;]</p>
 
