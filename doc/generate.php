@@ -85,6 +85,18 @@ class LibrariesHtm {
     }
 }
 
+/* Simple template library inspired by mustache.
+ * Does not implement:
+ *
+ *    Triple brackets for unescaped output.
+ *    Lambdas
+ *    Comments
+ *    Parials
+ *    Set Delimiter
+ *
+ * Doesn't claim to be at all compatible with Mustache, just that it should be
+ * easy to switch to a proper Mustache implementation in the future.
+ */
 class SimpleTemplate {
     static function render($template, $params) {
         $parsed_template = self::parse_template($template);
