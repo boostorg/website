@@ -27,13 +27,12 @@ class BoostSimpleTemplate {
     static function parse_template($template) {
         preg_match_all('@
             (?P<leading_whitespace>^[ \t]*)?
-            (?P<tag>
-            {{(?:
-                [!].*? |
-                (?P<symbol_operator>[#/^&]?)\s*(?P<symbol>[\w]+)\s* |
-                {\s*(?P<unescaped>[\w]+)\s*}
-            )}}
-            )
+            (?P<tag>{{(?:
+                [!].*?}} |
+                (?P<symbol_operator>[#/^&]?)\s*(?P<symbol>[\w]+)\s*}} |
+                {\s*(?P<unescaped>[\w]+)\s*}}} |
+                (?P<error>)
+            ))
             (?P<trailing_whitespace>[ \t]*(?:\r?\n|\Z))?
             @xsm',
             $template, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
@@ -46,7 +45,10 @@ class BoostSimpleTemplate {
 
         foreach($matches as $match) {
             $operator = null;
-            if (!empty($match['unescaped'][0])) {
+            if (array_key_exists('error', $match) && $match['error'][1] != -1) {
+                throw new BoostSimpleTemplateException("Invalid/unsupported tag", $match['tag'][1]);
+            }
+            else if (!empty($match['unescaped'][0])) {
                 $operator = '&';
                 $symbol = $match['unescaped'][0];
             }
@@ -197,5 +199,14 @@ class BoostSimpleTemplate {
         else {
             return self::interpret($template_array, $params);
         }
+    }
+}
+
+class BoostSimpleTemplateException extends \RuntimeException {
+    var $offset;
+    
+    function __construct($message, $offset = null) {
+        parent::__construct($message);
+        $this->offset = $offset;
     }
 }
