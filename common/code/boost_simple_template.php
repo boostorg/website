@@ -26,8 +26,8 @@ class BoostSimpleTemplate {
         preg_match_all('@
             {{(?:
                 [!].*? |
-                (?P<symbol_operator>[#/^&]?)(?P<symbol>[\w]+) |
-                {(?P<unescaped>[\w]+)}
+                (?P<symbol_operator>[#/^&]?)\s*(?P<symbol>[\w]+)\s* |
+                {\s*(?P<unescaped>[\w]+)\s*}
             )}}
             ([ #t]*\n)?
             @xsm',
