@@ -22,7 +22,12 @@ class BoostSimpleTemplate {
     }
 
     static function parse_template($template) {
-        preg_match_all('@{{([#/^]?)([\w]+)}}([ #t]*\n)?@',
+        preg_match_all('@
+            {{
+                ([#/^]?)([\w]+)
+            }}
+            ([ #t]*\n)?
+            @x',
             $template, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
 
         $template_parts = array();
