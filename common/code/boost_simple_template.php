@@ -25,7 +25,7 @@ class BoostSimpleTemplate {
         preg_match_all('@
             {{(?:
                 [!].*? |
-                ([#/^]?)([\w]+)
+                (?P<symbol_operator>[#/^]?)(?P<symbol>[\w]+)
             )}}
             ([ #t]*\n)?
             @xsm',
@@ -47,9 +47,9 @@ class BoostSimpleTemplate {
             }
 
             $operator = null;
-            if (!empty($match[2][0])) {
-                $operator = $match[1][0] ?: '$';
-                $symbol = $match[2][0];
+            if (!empty($match['symbol'][0])) {
+                $operator = $match['symbol_operator'][0];
+                $symbol = $match['symbol'][0];
             }
 
             switch($operator) {
