@@ -14,9 +14,12 @@ require_once(__DIR__.'/boost.php');
  */
 class BoostSimpleTemplate {
     static function render($template, $params) {
+        echo self::render_to_string($template, $params);
+    }
+
+    static function render_to_string($template, $params) {
         $parsed_template = self::parse_template($template);
-        //print_r($params); exit(0);
-        echo self::interpret($parsed_template, $params);
+        return self::interpret($parsed_template, $params);
     }
 
     static function parse_template($template) {
