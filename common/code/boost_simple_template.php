@@ -8,6 +8,8 @@ require_once(__DIR__.'/boost.php');
  *    Lambdas
  *    Partials
  *    Set Delimiter
+ *    Implicit iterators
+ *    Dotted variables
  *
  * Doesn't claim to be at all compatible with Mustache, just that it should be
  * easy to switch to a proper Mustache implementation in the future.
