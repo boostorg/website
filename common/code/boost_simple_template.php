@@ -8,7 +8,6 @@ require_once(__DIR__.'/boost.php');
  *    Lambdas
  *    Partials
  *    Set Delimiter
- *    Dotted variables
  *
  * Doesn't claim to be at all compatible with Mustache, just that it should be
  * easy to switch to a proper Mustache implementation in the future.
@@ -28,8 +27,8 @@ class BoostSimpleTemplate {
             (?P<leading_whitespace>^[ \t]*)?
             (?P<tag>{{(?:
                 !.*?}} |
-                (?P<symbol_operator>[#/^&]?)\s*(?P<symbol>[\w]+|\.)\s*}} |
-                {\s*(?P<unescaped>[\w]+)\s*}}} |
+                (?P<symbol_operator>[#/^&]?)\s*(?P<symbol>[\w?!\/.-]*)\s*}} |
+                {\s*(?P<unescaped>[\w?!\/.-]+)\s*}}} |
                 (?P<error>)
             ))
             (?P<trailing_whitespace>[ \t]*(?:\r?\n|\Z))?
@@ -123,9 +122,7 @@ class BoostSimpleTemplate {
             if (is_string($template_part)) {
                 $output .= $template_part;
             } else {
-                $symbol = $template_part['symbol'];
-                $value = array_key_exists($symbol, $params) ?
-                    $params[$symbol] : null;
+                $value = self::lookup($params, $template_part['symbol']);
                 switch($template_part['type']) {
                 case '$':
                     if ($value) {
@@ -159,6 +156,33 @@ class BoostSimpleTemplate {
         }
 
         return $output;
+    }
+    
+    static function lookup($params, $symbol) {
+        // Q: What if that symbol starts with a '.'?
+        if ($symbol == '.') {
+            $symbol = array('.');
+        }
+        else {
+            $symbol = explode('.', $symbol);
+        }
+        
+        $value = $params;
+        foreach($symbol as $symbol_part) {
+            if (is_array($value) && array_key_exists($symbol_part, $value)) {
+                $value = $value[$symbol_part];
+            }
+            // TODO: What if the object has a magic property that doesn't actually exist?
+            // Or a function call or some such craziness?
+            else if (is_object($value) && property_exists($value, $symbol_part)) {
+                $value = $value->$symbol_part;
+            }
+            else {
+                return null;
+            }
+        }
+        
+        return $value;
     }
 
     static function interpret_nested_content($template_array, $params, $value) {
