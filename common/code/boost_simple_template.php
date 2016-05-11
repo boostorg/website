@@ -40,14 +40,6 @@ class BoostSimpleTemplate {
         $last_offset = 0;
 
         foreach($matches as $match) {
-            $text_offset = $last_offset;
-            $text_length = $match[0][1] - $text_offset;
-            $last_offset = $match[0][1] + strlen($match[0][0]);
-
-            if ($text_length) {
-                $template_parts[] = substr($template, $text_offset, $text_length);
-            }
-
             $operator = null;
             if (!empty($match['unescaped'][0])) {
                 $operator = '&';
@@ -56,6 +48,14 @@ class BoostSimpleTemplate {
             else if(!empty($match['symbol'][0])) {
                 $operator = $match['symbol_operator'][0] ?: '$';
                 $symbol = $match['symbol'][0];
+            }
+
+            $text_offset = $last_offset;
+            $text_length = $match[0][1] - $text_offset;
+            $last_offset = $match[0][1] + strlen($match[0][0]);
+
+            if ($text_length) {
+                $template_parts[] = substr($template, $text_offset, $text_length);
             }
 
             switch($operator) {
