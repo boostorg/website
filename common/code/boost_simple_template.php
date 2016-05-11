@@ -24,12 +24,15 @@ class BoostSimpleTemplate {
 
     static function parse_template($template) {
         preg_match_all('@
+            (?P<leading_whitespace>^[ \t]*)?
+            (?P<tag>
             {{(?:
                 [!].*? |
                 (?P<symbol_operator>[#/^&]?)\s*(?P<symbol>[\w]+)\s* |
                 {\s*(?P<unescaped>[\w]+)\s*}
             )}}
-            ([ #t]*\n)?
+            )
+            (?P<trailing_whitespace>[ \t]*(?:\r?\n|\Z))?
             @xsm',
             $template, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
 
@@ -50,9 +53,16 @@ class BoostSimpleTemplate {
                 $symbol = $match['symbol'][0];
             }
 
-            $text_offset = $last_offset;
-            $text_length = $match[0][1] - $text_offset;
-            $last_offset = $match[0][1] + strlen($match[0][0]);
+            if ($operator != '&' && $operator != '$' && $match['leading_whitespace'][1] != -1 && array_key_exists('trailing_whitespace', $match) && $match['trailing_whitespace'][1] != -1) {
+                $text_offset = $last_offset;
+                $text_length = $match[0][1] - $text_offset;
+                $last_offset = $match[0][1] + strlen($match[0][0]);
+            }
+            else {
+                $text_offset = $last_offset;
+                $text_length = $match['tag'][1] - $text_offset;
+                $last_offset = $match['tag'][1] + strlen($match['tag'][0]);
+            }
 
             if ($text_length) {
                 $template_parts[] = substr($template, $text_offset, $text_length);
