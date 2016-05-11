@@ -27,7 +27,7 @@ class BoostSimpleTemplate {
                 ([#/^]?)([\w]+)
             }}
             ([ #t]*\n)?
-            @x',
+            @xsm',
             $template, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
 
         $template_parts = array();
