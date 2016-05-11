@@ -13,7 +13,7 @@ function run_tests() {
         if ($test_name[0] === '~') {
             echo "*** Ignoring optional test: {$test_name}\n";
         }
-        else if (in_array($test_name, ['delimiters', 'partials'])) {
+        else if (in_array($test_name, array('delimiters', 'partials'))) {
             echo "*** Checking for failure in supported test: {$test_name}\n";
 
             foreach($test_cases->tests as $test_case) {
