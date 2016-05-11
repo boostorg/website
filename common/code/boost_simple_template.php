@@ -23,9 +23,10 @@ class BoostSimpleTemplate {
 
     static function parse_template($template) {
         preg_match_all('@
-            {{
+            {{(?:
+                [!].*? |
                 ([#/^]?)([\w]+)
-            }}
+            )}}
             ([ #t]*\n)?
             @xsm',
             $template, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
@@ -37,16 +38,23 @@ class BoostSimpleTemplate {
         $last_offset = 0;
 
         foreach($matches as $match) {
-            $new_offset = $match[0][1];
-            $end_offset = $match[0][1] + strlen($match[0][0]);
-            $operator = $match[1][0];
-            $symbol = $match[2][0];
+            $text_offset = $last_offset;
+            $text_length = $match[0][1] - $text_offset;
+            $last_offset = $match[0][1] + strlen($match[0][0]);
 
-            if ($new_offset > $last_offset) {
-                $template_parts[] = substr($template, $last_offset, $new_offset - $last_offset);
+            if ($text_length) {
+                $template_parts[] = substr($template, $text_offset, $text_length);
+            }
+
+            $operator = null;
+            if (!empty($match[2][0])) {
+                $operator = $match[1][0] ?: '$';
+                $symbol = $match[2][0];
             }
 
             switch($operator) {
+            case null:
+                break;
             case '#':
             case '^':
                 $operator_stack[] = $operator;
@@ -68,9 +76,9 @@ class BoostSimpleTemplate {
                 );
                 $template_parts = $parent_template_parts;
                 break;
-            case '':
+            case '$':
                 $template_parts[] = array(
-                    'type' => '$',
+                    'type' => $operator,
                     'symbol' => $symbol,
                 );
                 break;
@@ -78,8 +86,6 @@ class BoostSimpleTemplate {
                 assert(false);
                 exit(1);
             }
-
-            $last_offset = $end_offset;
         }
 
         if ($scope_stack) {
