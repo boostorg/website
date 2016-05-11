@@ -25,7 +25,8 @@ class BoostSimpleTemplate {
         preg_match_all('@
             {{(?:
                 [!].*? |
-                (?P<symbol_operator>[#/^]?)(?P<symbol>[\w]+)
+                (?P<symbol_operator>[#/^&]?)(?P<symbol>[\w]+) |
+                {(?P<unescaped>[\w]+)}
             )}}
             ([ #t]*\n)?
             @xsm',
@@ -47,8 +48,12 @@ class BoostSimpleTemplate {
             }
 
             $operator = null;
-            if (!empty($match['symbol'][0])) {
-                $operator = $match['symbol_operator'][0];
+            if (!empty($match['unescaped'][0])) {
+                $operator = '&';
+                $symbol = $match['unescaped'][0];
+            }
+            else if(!empty($match['symbol'][0])) {
+                $operator = $match['symbol_operator'][0] ?: '$';
                 $symbol = $match['symbol'][0];
             }
 
@@ -77,6 +82,7 @@ class BoostSimpleTemplate {
                 $template_parts = $parent_template_parts;
                 break;
             case '$':
+            case '&':
                 $template_parts[] = array(
                     'type' => $operator,
                     'symbol' => $symbol,
@@ -114,6 +120,11 @@ class BoostSimpleTemplate {
                 case '$':
                     if ($value) {
                         $output .= html_encode($value);
+                    }
+                    break;
+                case '&':
+                    if ($value) {
+                        $output .= $value;
                     }
                     break;
                 case '#':
