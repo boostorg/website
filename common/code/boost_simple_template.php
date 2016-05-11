@@ -84,9 +84,7 @@ class BoostSimpleTemplate {
                 break;
             case '/':
                 if (array_pop($scope_stack) !== $symbol) {
-                    // TODO: Better error message here.
-                    echo "Template error.\n";
-                    exit(1);
+                    throw new BoostSimpleTemplateException("Mismatched close tag", $match['tag'][1]);
                 }
                 $parent_template_parts = array_pop($template_stack);
                 $parent_template_parts[] = array(
@@ -104,15 +102,13 @@ class BoostSimpleTemplate {
                 );
                 break;
             default:
-                assert(false);
-                exit(1);
+                assert(false); exit(1);
             }
         }
 
         if ($scope_stack) {
-            // TODO: Better error message here.
-            echo "Template error.\n";
-            exit(1);
+            // Would probably be better to store the offset of the opening tag.
+            throw new BoostSimpleTemplateException("Unclosed tag: ".end($scope_stack), strlen($template));
         }
 
         $end = substr($template, $last_offset);
@@ -158,8 +154,7 @@ class BoostSimpleTemplate {
                     }
                     break;
                 default:
-                    assert(false);
-                    exit(1);
+                    assert(false); exit(1);
                 }
             }
         }
@@ -186,8 +181,7 @@ class BoostSimpleTemplate {
                     }
                     else {
                         // TODO: Better error?
-                        assert(false);
-                        exit(0);
+                        assert(false); exit(1);
                     }
                 }
                 return $output;
