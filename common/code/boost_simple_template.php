@@ -5,10 +5,8 @@ require_once(__DIR__.'/boost.php');
 /* Simple template library inspired by mustache.
  * Does not implement:
  *
- *    Triple brackets for unescaped output.
  *    Lambdas
- *    Comments
- *    Parials
+ *    Partials
  *    Set Delimiter
  *
  * Doesn't claim to be at all compatible with Mustache, just that it should be
