@@ -27,7 +27,7 @@ class BoostSimpleTemplate {
         preg_match_all('@
             (?P<leading_whitespace>^[ \t]*)?
             (?P<tag>{{(?:
-                [!].*?}} |
+                !.*?}} |
                 (?P<symbol_operator>[#/^&]?)\s*(?P<symbol>[\w]+|\.)\s*}} |
                 {\s*(?P<unescaped>[\w]+)\s*}}} |
                 (?P<error>)
