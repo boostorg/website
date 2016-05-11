@@ -8,7 +8,6 @@ require_once(__DIR__.'/boost.php');
  *    Lambdas
  *    Partials
  *    Set Delimiter
- *    Implicit iterators
  *    Dotted variables
  *
  * Doesn't claim to be at all compatible with Mustache, just that it should be
@@ -29,7 +28,7 @@ class BoostSimpleTemplate {
             (?P<leading_whitespace>^[ \t]*)?
             (?P<tag>{{(?:
                 [!].*?}} |
-                (?P<symbol_operator>[#/^&]?)\s*(?P<symbol>[\w]+)\s*}} |
+                (?P<symbol_operator>[#/^&]?)\s*(?P<symbol>[\w]+|\.)\s*}} |
                 {\s*(?P<unescaped>[\w]+)\s*}}} |
                 (?P<error>)
             ))
@@ -174,15 +173,17 @@ class BoostSimpleTemplate {
                 $output = '';
                 foreach($value as $x) {
                     if (is_object($x)) {
-                        $output .= self::interpret($template_array, array_merge($params, (array) $x));
+                        $child_params = array_merge($params, (array) $x);
                     }
                     else if (is_array($x)) {
-                        $output .= self::interpret($template_array, array_merge($params, $x));
+                        $child_params = array_merge($params, $x);
                     }
                     else {
-                        // TODO: Better error?
-                        assert(false); exit(1);
+                        $child_params = $params;
                     }
+
+                    $child_params['.'] = $x;
+                    $output .= self::interpret($template_array, $child_params);
                 }
                 return $output;
             }
