@@ -302,10 +302,10 @@ class BoostPages_Page {
             return array(
                 'downloads' => array(
                     'unix' => array(
-                        //array(
-                        //    'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.bz2",
-                        //    'sha256' => '866941f0038b27fcc69ced1490b2dc5fa8d20f505d66b939a92a68ef194d1a6c',
-                        //),
+                        array(
+                            'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.bz2",
+                            //'sha256' => '866941f0038b27fcc69ced1490b2dc5fa8d20f505d66b939a92a68ef194d1a6c',
+                        ),
                         array(
                             'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.gz",
                             //'sha256' => '0b92c5fb5b91641409b9675b2fd11d3b3fa5f71dd986d3b5fb03da201bf55474',
