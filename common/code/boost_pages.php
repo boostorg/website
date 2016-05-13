@@ -302,37 +302,37 @@ class BoostPages_Page {
             return array(
                 'downloads' => array(
                     'unix' => array(
+                        //array(
+                        //    'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.bz2",
+                        //    'sha256' => '866941f0038b27fcc69ced1490b2dc5fa8d20f505d66b939a92a68ef194d1a6c',
+                        //),
                         array(
-                            'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0.beta.1/boost_1_61_0_b1.tar.bz2",
-                            'sha256' => '866941f0038b27fcc69ced1490b2dc5fa8d20f505d66b939a92a68ef194d1a6c',
-                        ),
-                        array(
-                            'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0.beta.1/boost_1_61_0_b1.tar.gz",
-                            'sha256' => '0b92c5fb5b91641409b9675b2fd11d3b3fa5f71dd986d3b5fb03da201bf55474',
+                            'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.gz",
+                            //'sha256' => '0b92c5fb5b91641409b9675b2fd11d3b3fa5f71dd986d3b5fb03da201bf55474',
                         ),
                     ),
                     'windows' => array(
                         array(
-                            'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0.beta.1/boost_1_61_0_b1.7z",
-                            'sha256' => '3f8888099ee6f62b412a13be916dead2bacbdd6d69e5afd5b6fea4bb738e5df4',
+                            'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.7z",
+                            //'sha256' => '3f8888099ee6f62b412a13be916dead2bacbdd6d69e5afd5b6fea4bb738e5df4',
                         ),
                         array(
-                            'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0.beta.1/boost_1_61_0_b1.zip",
-                            'sha256' => '9dffe5ee7f5f7bf7695f5738c686e44bd266933e3ca68732b0de5520c3c82615',
+                            'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.zip",
+                            //'sha256' => '9dffe5ee7f5f7bf7695f5738c686e44bd266933e3ca68732b0de5520c3c82615',
                         ),
                     ),
                 ),
-                'signature' => array(
-                    'location' => 'users/download/signatures/boost_1_61_0_b1.sums.asc',
-                    'name' => 'Vladimir Prus',
-                    'key' => 'https://pgp.mit.edu/pks/lookup?op=get&search=0xDA472E8659753BA4',
-                ),
-                'third_party' => array(
-                    array(
-                        'title' => 'Windows Binaries',
-                        'url' => 'https://sourceforge.net/projects/boost/files/boost-binaries/1.61.0_b1',
-                    ),
-                )
+                //'signature' => array(
+                //    'location' => 'users/download/signatures/boost_1_61_0_b1.sums.asc',
+                //    'name' => 'Vladimir Prus',
+                //    'key' => 'https://pgp.mit.edu/pks/lookup?op=get&search=0xDA472E8659753BA4',
+                //),
+                //'third_party' => array(
+                //    array(
+                //        'title' => 'Windows Binaries',
+                //        'url' => 'https://sourceforge.net/projects/boost/files/boost-binaries/1.61.0_b1',
+                //    ),
+                //)
             );
         }
         else if ($this->download_basename) {

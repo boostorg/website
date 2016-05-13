@@ -22,4 +22,4 @@ spl_autoload_register(function($name) {
     if (is_file($file_path)) { require_once($file_path); }
 });
 
-BoostVersion::set_current(1, 60, 0);
+BoostVersion::set_current(1, 61, 0);
