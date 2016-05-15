@@ -304,21 +304,21 @@ class BoostPages_Page {
                     'unix' => array(
                         array(
                             'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.bz2",
-                            //'sha256' => '866941f0038b27fcc69ced1490b2dc5fa8d20f505d66b939a92a68ef194d1a6c',
+                            'sha256' => 'a547bd06c2fd9a71ba1d169d9cf0339da7ebf4753849a8f7d6fdb8feee99b640',
                         ),
                         array(
                             'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.gz",
-                            //'sha256' => '0b92c5fb5b91641409b9675b2fd11d3b3fa5f71dd986d3b5fb03da201bf55474',
+                            'sha256' => 'a77c7cc660ec02704c6884fbb20c552d52d60a18f26573c9cee0788bf00ed7e6',
                         ),
                     ),
                     'windows' => array(
                         array(
                             'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.7z",
-                            //'sha256' => '3f8888099ee6f62b412a13be916dead2bacbdd6d69e5afd5b6fea4bb738e5df4',
+                            'sha256' => 'fa1c34862b7ba8674ed6e064a14667a11830c6252f702d9458451834b74f7815',
                         ),
                         array(
                             'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.zip",
-                            //'sha256' => '9dffe5ee7f5f7bf7695f5738c686e44bd266933e3ca68732b0de5520c3c82615',
+                            'sha256' => '02d420e6908016d4ac74dfc712eec7d9616a7fc0da78b0a1b5b937536b2e01e8',
                         ),
                     ),
                 ),
