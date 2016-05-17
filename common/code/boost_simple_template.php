@@ -2,14 +2,11 @@
 
 require_once(__DIR__.'/boost.php');
 
-/* Simple template library inspired by mustache.
+/* Simple mustache-like template library.
  * Does not implement:
  *
  *    Lambdas
  *    Partials
- *
- * Doesn't claim to be at all compatible with Mustache, just that it should be
- * easy to switch to a proper Mustache implementation in the future.
  */
 class BoostSimpleTemplate {
     static function render($template, $params) {
