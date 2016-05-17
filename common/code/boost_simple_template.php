@@ -7,7 +7,6 @@ require_once(__DIR__.'/boost.php');
  *
  *    Lambdas
  *    Partials
- *    Set Delimiter
  *
  * Doesn't claim to be at all compatible with Mustache, just that it should be
  * easy to switch to a proper Mustache implementation in the future.
@@ -23,25 +22,28 @@ class BoostSimpleTemplate {
     }
 
     static function parse_template($template) {
-        preg_match_all('@
-            (?P<leading_whitespace>^[ \t]*)?
-            (?P<tag>{{(?:
-                !.*?}} |
-                (?P<symbol_operator>[#/^&]?)\s*(?P<symbol>[\w?!\/.-]*)\s*}} |
-                {\s*(?P<unescaped>[\w?!\/.-]+)\s*}}} |
-                (?P<error>)
-            ))
-            (?P<trailing_whitespace>[ \t]*(?:\r?\n|\Z))?
-            @xsm',
-            $template, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
-
         $template_parts = array();
         $operator_stack = array();
         $scope_stack = array();
         $template_stack = array();
         $last_offset = 0;
 
-        foreach($matches as $match) {
+        $open_delim = '{{';
+        $close_delim = '}}';
+
+        while(preg_match("@
+            (?P<leading_whitespace>^[ \\t]*)?
+            (?P<tag>{$open_delim}(?:
+                !.*?{$close_delim} |
+                (?P<symbol_operator>[#/^&]?)\\s*(?P<symbol>[\\w?!/.-]*)\\s*{$close_delim} |
+                {\\s*(?P<unescaped>[\\w?!\\/.-]+)\\s*}{$close_delim} |
+                =\\s*(?P<open_delim>[^=\\s]+?)\\s*(?P<close_delim>[^=\\s]+?)\\s*={$close_delim} |
+                (?P<error>)
+            ))
+            (?P<trailing_whitespace>[ \\t]*(?:\\r?\\n|\\Z))?
+            @xsm",
+            $template, $match, PREG_OFFSET_CAPTURE, $last_offset)) {
+
             $operator = null;
             if (array_key_exists('error', $match) && $match['error'][1] != -1) {
                 throw new BoostSimpleTemplateException("Invalid/unsupported tag", $match['tag'][1]);
@@ -49,6 +51,10 @@ class BoostSimpleTemplate {
             else if (!empty($match['unescaped'][0])) {
                 $operator = '&';
                 $symbol = $match['unescaped'][0];
+            }
+            else if (!empty($match['open_delim'][0])) {
+                $operator = '=';
+                $symbol = null;
             }
             else if(!empty($match['symbol'][0])) {
                 $operator = $match['symbol_operator'][0] ?: '$';
@@ -98,6 +104,10 @@ class BoostSimpleTemplate {
                     'type' => $operator,
                     'symbol' => $symbol,
                 );
+                break;
+            case '=':
+                $open_delim = preg_quote($match['open_delim'][0], '@');
+                $close_delim = preg_quote($match['close_delim'][0], '@');
                 break;
             default:
                 assert(false); exit(1);

@@ -13,8 +13,8 @@ function run_tests() {
         if ($test_name[0] === '~') {
             echo "*** Ignoring optional test: {$test_name}\n";
         }
-        else if (in_array($test_name, array('delimiters', 'partials'))) {
-            echo "*** Checking for failure in supported test: {$test_name}\n";
+        else if (in_array($test_name, array('partials'))) {
+            echo "*** Checking for failure in unsupported test: {$test_name}\n";
 
             foreach($test_cases->tests as $test_case) {
                 echo "{$test_case->name}\n";
@@ -27,6 +27,7 @@ function run_tests() {
             echo "*** Running tests from: {$test_name}\n";
 
             foreach($test_cases->tests as $test_case) {
+                if (property_exists($test_case, 'partials')) { continue; }
                 echo "{$test_case->name}\n";
                 Assert::same($test_case->expected,
                     BoostSimpleTemplate::render_to_string(
