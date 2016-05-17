@@ -19,13 +19,12 @@ class BoostSimpleTemplate {
     }
 
     static function parse_template($template) {
-        $template_parts = array();
+        $nodes = array();
         $stack = array();
-        $last_offset = 0;
-
         $open_delim = '{{';
         $close_delim = '}}';
 
+        $offset = 0;
         while(preg_match("@
             (?P<leading_whitespace>^[ \\t]*)?
             (?P<tag>{$open_delim}(?:
@@ -37,7 +36,7 @@ class BoostSimpleTemplate {
             ))
             (?P<trailing_whitespace>[ \\t]*(?:\\r?\\n|\\Z))?
             @xsm",
-            $template, $match, PREG_OFFSET_CAPTURE, $last_offset)) {
+            $template, $match, PREG_OFFSET_CAPTURE, $offset)) {
 
             $operator = null;
             if (array_key_exists('error', $match) && $match['error'][1] != -1) {
@@ -57,18 +56,14 @@ class BoostSimpleTemplate {
             }
 
             if ($operator != '&' && $operator != '$' && $match['leading_whitespace'][1] != -1 && array_key_exists('trailing_whitespace', $match) && $match['trailing_whitespace'][1] != -1) {
-                $text_offset = $last_offset;
-                $text_length = $match[0][1] - $text_offset;
-                $last_offset = $match[0][1] + strlen($match[0][0]);
+                $text = substr($template, $offset, $match[0][1] - $offset);
+                if ($text) { $nodes[] = $text; }
+                $offset = $match[0][1] + strlen($match[0][0]);
             }
             else {
-                $text_offset = $last_offset;
-                $text_length = $match['tag'][1] - $text_offset;
-                $last_offset = $match['tag'][1] + strlen($match['tag'][0]);
-            }
-
-            if ($text_length) {
-                $template_parts[] = substr($template, $text_offset, $text_length);
+                $text = substr($template, $offset, $match['tag'][1] - $offset);
+                if ($text) { $nodes[] = $text; }
+                $offset = $match['tag'][1] + strlen($match['tag'][0]);
             }
 
             switch($operator) {
@@ -77,29 +72,29 @@ class BoostSimpleTemplate {
             case '#':
             case '^':
                 $stack[] = array(
-                    'template_parts' => $template_parts,
+                    'nodes' => $nodes,
                     'offset' => $match['tag'][1],
-                    'part' => array(
+                    'node' => array(
                         'type' => $operator,
                         'symbol' => $symbol,
                     ),
                     'operator' => $operator,
                 );
-                $template_parts = array();
+                $nodes = array();
                 break;
             case '/':
                 $top = array_pop($stack);
-                if (!$top || $top['part']['symbol'] !== $symbol) {
+                if (!$top || $top['node']['symbol'] !== $symbol) {
                     throw new BoostSimpleTemplateException("Mismatched close tag", $match['tag'][1]);
                 }
-                $part = $top['part'];
-                $part['contents'] = $template_parts;
-                $template_parts = $top['template_parts'];
-                $template_parts[] = $part;
+                $node = $top['node'];
+                $node['contents'] = $nodes;
+                $nodes = $top['nodes'];
+                $nodes[] = $node;
                 break;
             case '$':
             case '&':
-                $template_parts[] = array(
+                $nodes[] = array(
                     'type' => $operator,
                     'symbol' => $symbol,
                 );
@@ -115,24 +110,24 @@ class BoostSimpleTemplate {
 
         if ($stack) {
             $top = end($stack);
-            throw new BoostSimpleTemplateException("Unclosed tag: {$top['part']['symbol']}", $top['offset']);
+            throw new BoostSimpleTemplateException("Unclosed tag: {$top['node']['symbol']}", $top['offset']);
         }
 
-        $end = substr($template, $last_offset);
-        if ($end) { $template_parts[] = $end; }
+        $end = substr($template, $offset);
+        if ($end) { $nodes[] = $end; }
 
-        return $template_parts;
+        return $nodes;
     }
 
-    static function interpret($template_array, $params) {
+    static function interpret($nodes, $params) {
         $output = '';
 
-        foreach($template_array as $template_part) {
-            if (is_string($template_part)) {
-                $output .= $template_part;
+        foreach($nodes as $node) {
+            if (is_string($node)) {
+                $output .= $node;
             } else {
-                $value = self::lookup($params, $template_part['symbol']);
-                switch($template_part['type']) {
+                $value = self::lookup($params, $node['symbol']);
+                switch($node['type']) {
                 case '$':
                     if ($value) {
                         $output .= html_encode($value);
@@ -146,7 +141,7 @@ class BoostSimpleTemplate {
                 case '#':
                     if ($value) {
                         $output .= self::interpret_nested_content(
-                            $template_part['contents'],
+                            $node['contents'],
                             $params,
                             $value);
                     }
@@ -154,7 +149,7 @@ class BoostSimpleTemplate {
                 case '^':
                     if (!$value) {
                         $output .= self::interpret(
-                            $template_part['contents'],
+                            $node['contents'],
                             $params);
                     }
                     break;
@@ -194,9 +189,9 @@ class BoostSimpleTemplate {
         return $value;
     }
 
-    static function interpret_nested_content($template_array, $params, $value) {
+    static function interpret_nested_content($nodes, $params, $value) {
         if (is_object($value)) {
-            return self::interpret($template_array, array_merge($params, (array) $value));
+            return self::interpret($nodes, array_merge($params, (array) $value));
         }
         if (is_array($value)) {
             // Just checking the first key to see if this is a list or object.
@@ -216,16 +211,16 @@ class BoostSimpleTemplate {
                     }
 
                     $child_params['.'] = $x;
-                    $output .= self::interpret($template_array, $child_params);
+                    $output .= self::interpret($nodes, $child_params);
                 }
                 return $output;
             }
             else {
-                return self::interpret($template_array, array_merge($params, $value));
+                return self::interpret($nodes, array_merge($params, $value));
             }
         }
         else {
-            return self::interpret($template_array, $params);
+            return self::interpret($nodes, $params);
         }
     }
 }
