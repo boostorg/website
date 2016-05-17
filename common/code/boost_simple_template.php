@@ -20,9 +20,7 @@ class BoostSimpleTemplate {
 
     static function parse_template($template) {
         $template_parts = array();
-        $operator_stack = array();
-        $scope_stack = array();
-        $template_stack = array();
+        $stack = array();
         $last_offset = 0;
 
         $open_delim = '{{';
@@ -78,22 +76,26 @@ class BoostSimpleTemplate {
                 break;
             case '#':
             case '^':
-                $operator_stack[] = $operator;
-                $scope_stack[] = $symbol;
-                $template_stack[] = $template_parts;
+                $stack[] = array(
+                    'template_parts' => $template_parts,
+                    'offset' => $match['tag'][1],
+                    'part' => array(
+                        'type' => $operator,
+                        'symbol' => $symbol,
+                    ),
+                    'operator' => $operator,
+                );
                 $template_parts = array();
                 break;
             case '/':
-                if (array_pop($scope_stack) !== $symbol) {
+                $top = array_pop($stack);
+                if (!$top || $top['part']['symbol'] !== $symbol) {
                     throw new BoostSimpleTemplateException("Mismatched close tag", $match['tag'][1]);
                 }
-                $parent_template_parts = array_pop($template_stack);
-                $parent_template_parts[] = array(
-                    'type' => array_pop($operator_stack),
-                    'symbol' => $symbol,
-                    'contents' => $template_parts,
-                );
-                $template_parts = $parent_template_parts;
+                $part = $top['part'];
+                $part['contents'] = $template_parts;
+                $template_parts = $top['template_parts'];
+                $template_parts[] = $part;
                 break;
             case '$':
             case '&':
@@ -111,9 +113,9 @@ class BoostSimpleTemplate {
             }
         }
 
-        if ($scope_stack) {
-            // Would probably be better to store the offset of the opening tag.
-            throw new BoostSimpleTemplateException("Unclosed tag: ".end($scope_stack), strlen($template));
+        if ($stack) {
+            $top = end($stack);
+            throw new BoostSimpleTemplateException("Unclosed tag: {$top['part']['symbol']}", $top['offset']);
         }
 
         $end = substr($template, $last_offset);
