@@ -35,7 +35,7 @@ class BoostSimpleTemplate {
         while(preg_match("@
             (?P<leading_whitespace>^[ \\t]*)?
             (?P<tag>{$open_delim}(?:
-                !.*?{$close_delim} |
+                !(?P<comment>.*?){$close_delim} |
                 (?P<symbol_operator>[#/^&>]?)\\s*(?P<symbol>[\\w?!/.-]*)\\s*{$close_delim} |
                 {\\s*(?P<unescaped>[\\w?!\\/.-]+)\\s*}{$close_delim} |
                 =\\s*(?P<open_delim>[^=\\s]+?)\\s*(?P<close_delim>[^=\\s]+?)\\s*={$close_delim} |
@@ -45,90 +45,92 @@ class BoostSimpleTemplate {
             @xsm",
             $template, $match, PREG_OFFSET_CAPTURE, $offset)) {
 
-            $operator = null;
+            $text_node = array(
+                'offset' => $offset,
+                'type' => '(text)',
+                'indent_start' => $offset == 0 || $template[$offset - 1] == "\n",
+            );
+
+            $node = array(
+                'offset' => $match['tag'][1],
+            );
+
             if (array_key_exists('error', $match) && $match['error'][1] != -1) {
                 throw new BoostSimpleTemplateException("Invalid/unsupported tag", $match['tag'][1]);
             }
             else if (!empty($match['unescaped'][0])) {
-                $operator = '&';
-                $symbol = $match['unescaped'][0];
+                $node['type'] = '&';
+                $node['symbol'] = $match['unescaped'][0];
             }
             else if (!empty($match['open_delim'][0])) {
-                $operator = '=';
-                $symbol = null;
+                $node['type'] = '=';
+                $node['open'] = $match['open_delim'][0];
+                $node['close'] = $match['close_delim'][0];
             }
             else if(!empty($match['symbol'][0])) {
-                $operator = $match['symbol_operator'][0] ?: '$';
-                $symbol = $match['symbol'][0];
+                $node['type'] = $match['symbol_operator'][0] ?: '(variable)';
+                $node['symbol'] = $match['symbol'][0];
+            }
+            else if(array_key_exists('comment', $match) && $match['comment'][1] != -1) {
+                $node['type'] = '!';
+                $node['content'] = $match['comment'][0];
+            }
+            else {
+                assert(false);
             }
 
-            $standalone = $operator != '&' && $operator != '$' &&
+            $standalone = $node['type'] != '&' && $node['type'] != '(variable)' &&
                 $match['leading_whitespace'][1] != -1 &&
                 array_key_exists('trailing_whitespace', $match) && $match['trailing_whitespace'][1] != -1;
-            $indent_start = $offset == 0 || $template[$offset - 1] == "\n";
 
             if ($standalone) {
-                $text = substr($template, $offset, $match[0][1] - $offset);
+                $text_node['content'] = substr($template, $offset, $match[0][1] - $offset);
+                $node['indent_start'] = false;
+                $node['indentation'] = $match['leading_whitespace'][0];
                 $offset = $match[0][1] + strlen($match[0][0]);
             }
             else {
-                $text = substr($template, $offset, $match['tag'][1] - $offset);
+                $text_node['content'] = substr($template, $offset, $match['tag'][1] - $offset);
+                $node['indent_start'] = $match['tag'][1] == 0 || $template[$match['tag'][1] - 1] == "\n";
+                $node['indentation'] = '';
                 $offset = $match['tag'][1] + strlen($match['tag'][0]);
             }
 
-            if ($text) {
-                $nodes[] = array(
-                    'type' => '"',
-                    'indent_start' => $indent_start,
-                    'content' => $text,
-                );
+            if ($text_node['content']) {
+                $nodes[] = $text_node;
             }
 
-            switch($operator) {
-            case null:
+            switch($node['type']) {
+            case '!':
                 break;
             case '#':
             case '^':
                 $stack[] = array(
                     'nodes' => $nodes,
-                    'offset' => $match['tag'][1],
-                    'node' => array(
-                        'type' => $operator,
-                        'symbol' => $symbol,
-                        'indent_start' => !$standalone && ($match['tag'][1] == 0 || $template[$match['tag'][1] - 1] == "\n"),
-                    ),
+                    'node' => $node,
                 );
                 $nodes = array();
                 break;
             case '/':
                 $top = array_pop($stack);
-                if (!$top || $top['node']['symbol'] !== $symbol) {
-                    throw new BoostSimpleTemplateException("Mismatched close tag", $match['tag'][1]);
+                if (!$top || $top['node']['symbol'] !== $node['symbol']) {
+                    throw new BoostSimpleTemplateException("Mismatched close tag", $node['offset']);
                 }
                 $node = $top['node'];
                 $node['contents'] = $nodes;
                 $nodes = $top['nodes'];
                 $nodes[] = $node;
                 break;
-            case '$':
+            case '(variable)':
             case '&':
-                $nodes[] = array(
-                    'type' => $operator,
-                    'symbol' => $symbol,
-                    'indent_start' => $match['tag'][1] == 0 || $template[$match['tag'][1] - 1] == "\n",
-                );
+                $nodes[] = $node;
                 break;
             case '=':
-                $open_delim = preg_quote($match['open_delim'][0], '@');
-                $close_delim = preg_quote($match['close_delim'][0], '@');
+                $open_delim = preg_quote($node['open'], '@');
+                $close_delim = preg_quote($node['close'], '@');
                 break;
             case '>':
-                $nodes[] = array(
-                    'type' => $operator,
-                    'symbol' => $symbol,
-                    'indentation' => $standalone ? $match['leading_whitespace'][0] : '',
-                    'indent_start' => !$standalone && ($match['tag'][1] == 0 || $template[$match['tag'][1] - 1] == "\n"),
-                );
+                $nodes[] = $node;
                 break;
             default:
                 assert(false); exit(1);
@@ -137,13 +139,14 @@ class BoostSimpleTemplate {
 
         if ($stack) {
             $top = end($stack);
-            throw new BoostSimpleTemplateException("Unclosed tag: {$top['node']['symbol']}", $top['offset']);
+            throw new BoostSimpleTemplateException("Unclosed tag: {$top['node']['symbol']}", $top['node']['offset']);
         }
 
         $end = substr($template, $offset);
         if ($end || !$nodes) {
             $nodes[] = array(
-                'type' => '"',
+                'offset' => $offset,
+                'type' => '(text)',
                 'indent_start' => $offset == 0 || $template[$offset - 1] == "\n",
                 'content' => $end,
             );
@@ -160,10 +163,10 @@ class BoostSimpleTemplate {
                 $output .= $context->indentation;
             }
                 switch($node['type']) {
-                case '"':
+                case '(text)':
                     $output .= preg_replace('@^(?!\A)@m', $context->indentation, $node['content']);
                     break;
-                case '$':
+                case '(variable)':
                     $value = self::lookup($context, $node['symbol']);
                     if ($value) {
                         $output .= html_encode($value);
