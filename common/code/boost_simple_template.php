@@ -55,23 +55,23 @@ class BoostSimpleTemplate {
                 'offset' => $match['tag'][1],
             );
 
-            if (array_key_exists('error', $match) && $match['error'][1] != -1) {
+            if (self::match_exists($match, 'error')) {
                 throw new BoostSimpleTemplateException("Invalid/unsupported tag", $match['tag'][1]);
             }
-            else if (!empty($match['unescaped'][0])) {
+            else if (self::match_exists($match, 'unescaped')) {
                 $node['type'] = '&';
                 $node['symbol'] = $match['unescaped'][0];
             }
-            else if (!empty($match['open_delim'][0])) {
+            else if (self::match_exists($match, 'open_delim')) {
                 $node['type'] = '=';
                 $node['open'] = $match['open_delim'][0];
                 $node['close'] = $match['close_delim'][0];
             }
-            else if(!empty($match['symbol'][0])) {
+            else if (self::match_exists($match, 'symbol')) {
                 $node['type'] = $match['symbol_operator'][0] ?: '(variable)';
                 $node['symbol'] = $match['symbol'][0];
             }
-            else if(array_key_exists('comment', $match) && $match['comment'][1] != -1) {
+            else if (self::match_exists($match, 'comment')) {
                 $node['type'] = '!';
                 $node['content'] = $match['comment'][0];
             }
@@ -80,8 +80,8 @@ class BoostSimpleTemplate {
             }
 
             $standalone = $node['type'] != '&' && $node['type'] != '(variable)' &&
-                $match['leading_whitespace'][1] != -1 &&
-                array_key_exists('trailing_whitespace', $match) && $match['trailing_whitespace'][1] != -1;
+                self::match_exists($match, 'leading_whitespace') &&
+                self::match_exists($match, 'trailing_whitespace');
 
             if ($standalone) {
                 $text_node['content'] = substr($template, $offset, $match[0][1] - $offset);
@@ -269,6 +269,10 @@ class BoostSimpleTemplate {
         }
 
         return self::interpret($context->create_child_context($value), $nodes);
+    }
+
+    static function match_exists($match, $key) {
+        return array_key_exists($key, $match) && $match[$key][1] != -1;
     }
 }
 
