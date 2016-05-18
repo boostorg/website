@@ -6,23 +6,28 @@ require_once(__DIR__.'/boost.php');
  * Does not implement:
  *
  *    Lambdas
- *    Partials
  */
 class BoostSimpleTemplate {
-    static function render($template, $params) {
-        echo self::render_to_string($template, $params);
+    static function render($template, $params, $partials = null) {
+        echo self::render_to_string($template, $params, $partials);
     }
 
-    static function render_to_string($template, $params) {
+    static function render_to_string($template, $params, $partials = null) {
         $nodes = self::parse_template($template);
+
         $context = new BoostSimpleTemplate_Context();
         $context->params = $params;
+        if ($partials) foreach($partials as $symbol => $partial) {
+            $context->partials[$symbol] = self::parse_template($partial);
+        }
+
         return self::interpret($context, $nodes);
     }
 
     static function parse_template($template) {
         $nodes = array();
         $stack = array();
+
         $open_delim = '{{';
         $close_delim = '}}';
 
@@ -31,7 +36,7 @@ class BoostSimpleTemplate {
             (?P<leading_whitespace>^[ \\t]*)?
             (?P<tag>{$open_delim}(?:
                 !.*?{$close_delim} |
-                (?P<symbol_operator>[#/^&]?)\\s*(?P<symbol>[\\w?!/.-]*)\\s*{$close_delim} |
+                (?P<symbol_operator>[#/^&>]?)\\s*(?P<symbol>[\\w?!/.-]*)\\s*{$close_delim} |
                 {\\s*(?P<unescaped>[\\w?!\\/.-]+)\\s*}{$close_delim} |
                 =\\s*(?P<open_delim>[^=\\s]+?)\\s*(?P<close_delim>[^=\\s]+?)\\s*={$close_delim} |
                 (?P<error>)
@@ -57,15 +62,26 @@ class BoostSimpleTemplate {
                 $symbol = $match['symbol'][0];
             }
 
-            if ($operator != '&' && $operator != '$' && $match['leading_whitespace'][1] != -1 && array_key_exists('trailing_whitespace', $match) && $match['trailing_whitespace'][1] != -1) {
+            $standalone = $operator != '&' && $operator != '$' &&
+                $match['leading_whitespace'][1] != -1 &&
+                array_key_exists('trailing_whitespace', $match) && $match['trailing_whitespace'][1] != -1;
+            $indent_start = $offset == 0 || $template[$offset - 1] == "\n";
+
+            if ($standalone) {
                 $text = substr($template, $offset, $match[0][1] - $offset);
-                if ($text) { $nodes[] = $text; }
                 $offset = $match[0][1] + strlen($match[0][0]);
             }
             else {
                 $text = substr($template, $offset, $match['tag'][1] - $offset);
-                if ($text) { $nodes[] = $text; }
                 $offset = $match['tag'][1] + strlen($match['tag'][0]);
+            }
+
+            if ($text) {
+                $nodes[] = array(
+                    'type' => '"',
+                    'indent_start' => $indent_start,
+                    'content' => $text,
+                );
             }
 
             switch($operator) {
@@ -79,6 +95,7 @@ class BoostSimpleTemplate {
                     'node' => array(
                         'type' => $operator,
                         'symbol' => $symbol,
+                        'indent_start' => !$standalone && ($match['tag'][1] == 0 || $template[$match['tag'][1] - 1] == "\n"),
                     ),
                 );
                 $nodes = array();
@@ -98,11 +115,20 @@ class BoostSimpleTemplate {
                 $nodes[] = array(
                     'type' => $operator,
                     'symbol' => $symbol,
+                    'indent_start' => $match['tag'][1] == 0 || $template[$match['tag'][1] - 1] == "\n",
                 );
                 break;
             case '=':
                 $open_delim = preg_quote($match['open_delim'][0], '@');
                 $close_delim = preg_quote($match['close_delim'][0], '@');
+                break;
+            case '>':
+                $nodes[] = array(
+                    'type' => $operator,
+                    'symbol' => $symbol,
+                    'indentation' => $standalone ? $match['leading_whitespace'][0] : '',
+                    'indent_start' => !$standalone && ($match['tag'][1] == 0 || $template[$match['tag'][1] - 1] == "\n"),
+                );
                 break;
             default:
                 assert(false); exit(1);
@@ -115,7 +141,13 @@ class BoostSimpleTemplate {
         }
 
         $end = substr($template, $offset);
-        if ($end) { $nodes[] = $end; }
+        if ($end || !$nodes) {
+            $nodes[] = array(
+                'type' => '"',
+                'indent_start' => $offset == 0 || $template[$offset - 1] == "\n",
+                'content' => $end,
+            );
+        }
 
         return $nodes;
     }
@@ -124,22 +156,27 @@ class BoostSimpleTemplate {
         $output = '';
 
         foreach($nodes as $node) {
-            if (is_string($node)) {
-                $output .= $node;
-            } else {
-                $value = self::lookup($context, $node['symbol']);
+            if (!empty($node['indent_start'])) {
+                $output .= $context->indentation;
+            }
                 switch($node['type']) {
+                case '"':
+                    $output .= preg_replace('@^(?!\A)@m', $context->indentation, $node['content']);
+                    break;
                 case '$':
+                    $value = self::lookup($context, $node['symbol']);
                     if ($value) {
                         $output .= html_encode($value);
                     }
                     break;
                 case '&':
+                    $value = self::lookup($context, $node['symbol']);
                     if ($value) {
                         $output .= $value;
                     }
                     break;
                 case '#':
+                    $value = self::lookup($context, $node['symbol']);
                     if ($value) {
                         $output .= self::interpret_nested_content(
                             $context,
@@ -148,16 +185,23 @@ class BoostSimpleTemplate {
                     }
                     break;
                 case '^':
+                    $value = self::lookup($context, $node['symbol']);
                     if (!$value) {
                         $output .= self::interpret(
                             $context,
                             $node['contents']);
                     }
                     break;
+                case '>':
+                    if (array_key_exists($node['symbol'], $context->partials)) {
+                        $output .= self::interpret(
+                            $context->create_partial_context($node['indentation']),
+                            $context->partials[$node['symbol']]);
+                    }
+                    break;
                 default:
                     assert(false); exit(1);
                 }
-            }
         }
 
         return $output;
@@ -226,13 +270,21 @@ class BoostSimpleTemplate {
 }
 
 class BoostSimpleTemplate_Context {
+    var $partials = Array();
     var $params = null;
     var $parent = null;
+    var $indentation = '';
 
     function create_child_context($params) {
         $x = clone $this;
         $x->params = is_object($params) ? (array) $params : $params;
         $x->parent = $this;
+        return $x;
+    }
+
+    function create_partial_context($indentation) {
+        $x = clone $this;
+        $x->indentation .= $indentation;
         return $x;
     }
 }

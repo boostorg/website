@@ -13,28 +13,94 @@ function run_tests() {
         if ($test_name[0] === '~') {
             echo "*** Ignoring optional test: {$test_name}\n";
         }
-        else if (in_array($test_name, array('partials'))) {
-            echo "*** Checking for failure in unsupported test: {$test_name}\n";
-
-            foreach($test_cases->tests as $test_case) {
-                echo "{$test_case->name}\n";
-                Assert::Exception(function() use($test_case) {
-                    BoostSimpleTemplate::render_to_string($test_case->template, (array) $test_case->data);
-                }, 'BoostSimpleTemplateException');
-            }
-        }
         else {
             echo "*** Running tests from: {$test_name}\n";
 
             foreach($test_cases->tests as $test_case) {
-                if (property_exists($test_case, 'partials')) { continue; }
                 echo "{$test_case->name}\n";
-                Assert::same($test_case->expected,
-                    BoostSimpleTemplate::render_to_string(
-                        $test_case->template, (array) $test_case->data));
+                if (property_exists($test_case, 'partials')) {
+                    Assert::same($test_case->expected,
+                        BoostSimpleTemplate::render_to_string(
+                            $test_case->template, (array) $test_case->data,
+                            (array) $test_case->partials));
+                }
+                else {
+                    Assert::same($test_case->expected,
+                        BoostSimpleTemplate::render_to_string(
+                            $test_case->template, (array) $test_case->data));
+                }
             }
         }
     }
 }
 
+function indentation_tests() {
+    Assert::same("  ",
+        BoostSimpleTemplate::render_to_string(
+            "  {{> partial}}",
+            array(),
+            array('partial' => "")));
+
+    Assert::same("   ",
+        BoostSimpleTemplate::render_to_string(
+            "  {{> partial}}",
+            array(),
+            array('partial' => " ")));
+
+    Assert::same("  ",
+        BoostSimpleTemplate::render_to_string(
+            "  {{> partial}}",
+            array(),
+            array('partial' => "{{data}}")));
+
+    Assert::same("  Before\n  12\n  After\n",
+        BoostSimpleTemplate::render_to_string(
+            "  {{> partial}}\n",
+            array('list' => array(1,2)),
+            array('partial' => "Before\n{{#list}}{{.}}{{/list}}\nAfter\n")));
+
+    Assert::same("  Before\n    12\n  After\n",
+        BoostSimpleTemplate::render_to_string(
+            "  {{> partial}}\n",
+            array('list' => array(1,2)),
+            array('partial' => "Before\n  {{#list}}{{.}}{{/list}}\nAfter\n")));
+
+    Assert::same("  Before\n  1\n  2\n  After\n",
+        BoostSimpleTemplate::render_to_string(
+            "  {{> partial}}\n",
+            array('list' => array(1,2)),
+            array('partial' => "Before\n{{#list}}\n{{.}}\n{{/list}}\nAfter\n")));
+
+    Assert::same("  Before\n  1\n2\n  After\n",
+        BoostSimpleTemplate::render_to_string(
+            "  {{> partial}}\n",
+            array('list' => array(1,2)),
+            array('partial' => "Before\n{{#list}}{{.}}\n{{/list}}\nAfter\n")));
+
+    Assert::same("  Before\n  1  2\n  After\n",
+        BoostSimpleTemplate::render_to_string(
+            "  {{> partial}}\n",
+            array('list' => array(1,2)),
+            array('partial' => "Before\n{{#list}}\n{{.}}{{/list}}\nAfter\n")));
+
+    Assert::same("  Before\n  (\n  1\n\n  2\n)\n  After\n",
+        BoostSimpleTemplate::render_to_string(
+            "  {{> partial}}\n",
+            array('list' => array(1,2)),
+            array('partial' => "Before\n({{#list}}\n{{.}}\n{{/list}})\nAfter\n")));
+
+    Assert::same("  Before\n  (\n  1\n\n  2\n  After\n",
+        BoostSimpleTemplate::render_to_string(
+            "  {{> partial}}\n",
+            array('list' => array(1,2)),
+            array('partial' => "Before\n({{#list}}\n{{.}}\n{{/list}}\nAfter\n")));
+
+    Assert::same("  Before\n  1\n  2\n)\n  After\n",
+        BoostSimpleTemplate::render_to_string(
+            "  {{> partial}}\n",
+            array('list' => array(1,2)),
+            array('partial' => "Before\n{{#list}}\n{{.}}\n{{/list}})\nAfter\n")));
+}
+
 run_tests();
+indentation_tests();
