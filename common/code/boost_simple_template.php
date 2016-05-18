@@ -24,15 +24,11 @@ class BoostSimpleTemplate {
         return self::interpret($context, $nodes);
     }
 
-    static function parse_template($template) {
-        $nodes = array();
-        $stack = array();
+    static function get_regexp($open_delim, $close_delim) {
+        $open_delim = preg_quote($open_delim, '@');
+        $close_delim = preg_quote($close_delim, '@');
 
-        $open_delim = '{{';
-        $close_delim = '}}';
-
-        $offset = 0;
-        while(preg_match("@
+        return "@
             (?P<leading_whitespace>^[ \\t]*)?
             (?P<tag>{$open_delim}(?:
                 !(?P<comment>.*?){$close_delim} |
@@ -42,9 +38,16 @@ class BoostSimpleTemplate {
                 (?P<error>)
             ))
             (?P<trailing_whitespace>[ \\t]*(?:\\r?\\n|\\Z))?
-            @xsm",
-            $template, $match, PREG_OFFSET_CAPTURE, $offset)) {
+            @xsm";
+    }
 
+    static function parse_template($template) {
+        $nodes = array();
+        $stack = array();
+        $tokenizer = self::get_regexp('{{', '}}');
+
+        $offset = 0;
+        while(preg_match($tokenizer, $template, $match, PREG_OFFSET_CAPTURE, $offset)) {
             $text_node = array(
                 'offset' => $offset,
                 'type' => '(text)',
@@ -126,8 +129,7 @@ class BoostSimpleTemplate {
                 $nodes[] = $node;
                 break;
             case '=':
-                $open_delim = preg_quote($node['open'], '@');
-                $close_delim = preg_quote($node['close'], '@');
+                $tokenizer = self::get_regexp($node['open'], $node['close']);
                 break;
             case '>':
                 $nodes[] = $node;
