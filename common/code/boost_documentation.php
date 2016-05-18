@@ -150,8 +150,8 @@ class BoostDocumentation
             if (preg_match($i[1],$path))
             {
                 if ($i[0]) {
-                    $version = BoostVersion::from($i[0]);
-                    if ($version->compare(BoostVersion::page()) > 0) {
+                    $min_version = BoostVersion::from($i[0]);
+                    if ($min_version->compare(BoostVersion::page()) > 0) {
                         // This is after the current version.
                         continue;
                     }
