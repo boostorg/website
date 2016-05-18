@@ -162,49 +162,50 @@ class BoostSimpleTemplate {
             if (!empty($node['indent_start'])) {
                 $output .= $context->indentation;
             }
-                switch($node['type']) {
-                case '(text)':
-                    $output .= preg_replace('@^(?!\A)@m', $context->indentation, $node['content']);
-                    break;
-                case '(variable)':
-                    $value = self::lookup($context, $node['symbol']);
-                    if ($value) {
-                        $output .= html_encode($value);
-                    }
-                    break;
-                case '&':
-                    $value = self::lookup($context, $node['symbol']);
-                    if ($value) {
-                        $output .= $value;
-                    }
-                    break;
-                case '#':
-                    $value = self::lookup($context, $node['symbol']);
-                    if ($value) {
-                        $output .= self::interpret_nested_content(
-                            $context,
-                            $node['contents'],
-                            $value);
-                    }
-                    break;
-                case '^':
-                    $value = self::lookup($context, $node['symbol']);
-                    if (!$value) {
-                        $output .= self::interpret(
-                            $context,
-                            $node['contents']);
-                    }
-                    break;
-                case '>':
-                    if (array_key_exists($node['symbol'], $context->partials)) {
-                        $output .= self::interpret(
-                            $context->create_partial_context($node['indentation']),
-                            $context->partials[$node['symbol']]);
-                    }
-                    break;
-                default:
-                    assert(false); exit(1);
+
+            switch($node['type']) {
+            case '(text)':
+                $output .= preg_replace('@^(?!\A)@m', $context->indentation, $node['content']);
+                break;
+            case '(variable)':
+                $value = self::lookup($context, $node['symbol']);
+                if ($value) {
+                    $output .= html_encode($value);
                 }
+                break;
+            case '&':
+                $value = self::lookup($context, $node['symbol']);
+                if ($value) {
+                    $output .= $value;
+                }
+                break;
+            case '#':
+                $value = self::lookup($context, $node['symbol']);
+                if ($value) {
+                    $output .= self::interpret_nested_content(
+                        $context,
+                        $node['contents'],
+                        $value);
+                }
+                break;
+            case '^':
+                $value = self::lookup($context, $node['symbol']);
+                if (!$value) {
+                    $output .= self::interpret(
+                        $context,
+                        $node['contents']);
+                }
+                break;
+            case '>':
+                if (array_key_exists($node['symbol'], $context->partials)) {
+                    $output .= self::interpret(
+                        $context->create_partial_context($node['indentation']),
+                        $context->partials[$node['symbol']]);
+                }
+                break;
+            default:
+                assert(false); exit(1);
+            }
         }
 
         return $output;
