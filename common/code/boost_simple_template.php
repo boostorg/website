@@ -78,7 +78,6 @@ class BoostSimpleTemplate {
                         'type' => $operator,
                         'symbol' => $symbol,
                     ),
-                    'operator' => $operator,
                 );
                 $nodes = array();
                 break;
