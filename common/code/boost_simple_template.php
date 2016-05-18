@@ -14,8 +14,10 @@ class BoostSimpleTemplate {
     }
 
     static function render_to_string($template, $params) {
-        $parsed_template = self::parse_template($template);
-        return self::interpret($parsed_template, $params);
+        $nodes = self::parse_template($template);
+        $context = new BoostSimpleTemplate_Context();
+        $context->params = $params;
+        return self::interpret($context, $nodes);
     }
 
     static function parse_template($template) {
@@ -118,14 +120,14 @@ class BoostSimpleTemplate {
         return $nodes;
     }
 
-    static function interpret($nodes, $params) {
+    static function interpret($context, $nodes) {
         $output = '';
 
         foreach($nodes as $node) {
             if (is_string($node)) {
                 $output .= $node;
             } else {
-                $value = self::lookup($params, $node['symbol']);
+                $value = self::lookup($context, $node['symbol']);
                 switch($node['type']) {
                 case '$':
                     if ($value) {
@@ -140,16 +142,16 @@ class BoostSimpleTemplate {
                 case '#':
                     if ($value) {
                         $output .= self::interpret_nested_content(
+                            $context,
                             $node['contents'],
-                            $params,
                             $value);
                     }
                     break;
                 case '^':
                     if (!$value) {
                         $output .= self::interpret(
-                            $node['contents'],
-                            $params);
+                            $context,
+                            $node['contents']);
                     }
                     break;
                 default:
@@ -161,17 +163,33 @@ class BoostSimpleTemplate {
         return $output;
     }
     
-    static function lookup($params, $symbol) {
-        // Q: What if that symbol starts with a '.'?
-        if ($symbol == '.') {
-            $symbol = array('.');
+    static function lookup($context, $symbol) {
+        // Deal with some special cases to make life easier.
+        if (strpos($symbol, '..') !== false) {
+            return null;
+        }
+        else if ($symbol == '.') {
+            return $context->params;
+        }
+
+        // Look up the first part of the symbol from stack.
+        $symbol_parts = explode('.', $symbol);
+        $first_symbol = array_shift($symbol_parts);
+        if (!$first_symbol) {
+            $value = $context->params;
         }
         else {
-            $symbol = explode('.', $symbol);
+            $value = null;
+            for($x = $context; $x; $x = $x->parent) {
+                if (is_array($x->params) && array_key_exists($first_symbol, $x->params)) {
+                    $value = $x->params[$first_symbol];
+                    break;
+                }
+            }
         }
-        
-        $value = $params;
-        foreach($symbol as $symbol_part) {
+
+        // Iterate over the rest of the symbol, looking up members.
+        foreach($symbol_parts as $symbol_part) {
             if (is_array($value) && array_key_exists($symbol_part, $value)) {
                 $value = $value[$symbol_part];
             }
@@ -181,17 +199,15 @@ class BoostSimpleTemplate {
                 $value = $value->$symbol_part;
             }
             else {
-                return null;
+                $value = null;
+                break;
             }
         }
         
         return $value;
     }
 
-    static function interpret_nested_content($nodes, $params, $value) {
-        if (is_object($value)) {
-            return self::interpret($nodes, array_merge($params, (array) $value));
-        }
+    static function interpret_nested_content($context, $nodes, $value) {
         if (is_array($value)) {
             // Just checking the first key to see if this is a list or object.
             // Should probably check every key?
@@ -199,28 +215,25 @@ class BoostSimpleTemplate {
             if (is_int(key($value))) {
                 $output = '';
                 foreach($value as $x) {
-                    if (is_object($x)) {
-                        $child_params = array_merge($params, (array) $x);
-                    }
-                    else if (is_array($x)) {
-                        $child_params = array_merge($params, $x);
-                    }
-                    else {
-                        $child_params = $params;
-                    }
-
-                    $child_params['.'] = $x;
-                    $output .= self::interpret($nodes, $child_params);
+                    $output .= self::interpret($context->create_child_context($x), $nodes);
                 }
                 return $output;
             }
-            else {
-                return self::interpret($nodes, array_merge($params, $value));
-            }
         }
-        else {
-            return self::interpret($nodes, $params);
-        }
+
+        return self::interpret($context->create_child_context($value), $nodes);
+    }
+}
+
+class BoostSimpleTemplate_Context {
+    var $params = null;
+    var $parent = null;
+
+    function create_child_context($params) {
+        $x = clone $this;
+        $x->params = is_object($params) ? (array) $params : $params;
+        $x->parent = $this;
+        return $x;
     }
 }
 
