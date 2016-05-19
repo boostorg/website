@@ -100,6 +100,17 @@ function indentation_tests() {
             "  {{> partial}}\n",
             array('list' => array(1,2)),
             array('partial' => "Before\n{{#list}}\n{{.}}\n{{/list}})\nAfter\n")));
+
+    Assert::same("a/b/c/3",
+        BoostSimpleTemplate::render(
+            "{{>a/1}}",
+            array(),
+            array(
+                'a/1' => '{{>b/c/d/2}}',
+                'a/b/c/d/2' => 'a/b/c/3',//'{{>../3}}',
+                'a/b/c/3' => 'a/b/c/3',
+            )
+        ));
 }
 
 run_tests();

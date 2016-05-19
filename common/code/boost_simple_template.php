@@ -8,13 +8,29 @@ require_once(__DIR__.'/boost.php');
  *    Lambdas
  */
 class BoostSimpleTemplate {
+    static function render_file($path, $params) {
+        $context = new BoostSimpleTemplate_Context();
+        $context->path = $path;
+        $context->params = $params;
+        $context->partial_loader = new BoostSimpleTemplate_PartialLoader();
+
+        $nodes = $context->partial_loader->load($path);
+        if (!$nodes) {
+            throw new BoostSimpleTemplateException("File not found: {$path}");
+        }
+
+        return self::interpret($context, $nodes);
+    }
+
     static function render($template, $params, $partials = null) {
         $nodes = self::parse_template($template);
 
         $context = new BoostSimpleTemplate_Context();
         $context->params = $params;
+        $context->path = '(text_file).mustache';
+        $context->partial_loader = new BoostSimpleTemplate_PartialArray();
         if ($partials) foreach($partials as $symbol => $partial) {
-            $context->partials[$symbol] = self::parse_template($partial);
+            $context->partial_loader->add($symbol, self::parse_template($partial));
         }
 
         return self::interpret($context, $nodes);
@@ -195,10 +211,12 @@ class BoostSimpleTemplate {
                 }
                 break;
             case '>':
-                if (array_key_exists($node['symbol'], $context->partials)) {
+                $new_path = $node['symbol'][0] == '/' ? $node['symbol'] : dirname($context->path).'/'.$node['symbol'];
+                $partial = $context->partial_loader->load($new_path);
+                if ($partial) {
                     $output .= self::interpret(
-                        $context->create_partial_context($node['indentation']),
-                        $context->partials[$node['symbol']]);
+                        $context->create_partial_context($new_path, $node['indentation']),
+                        $partial);
                 }
                 break;
             default:
@@ -275,8 +293,76 @@ class BoostSimpleTemplate {
     }
 }
 
+class BoostSimpleTemplate_PartialArray {
+    var $partials;
+
+    function __construct($partials = null) {
+        $this->partials = Array();
+        $partials ?: Array();
+    }
+
+    function add($path, $x) {
+        $this->partials[self::normalize_path($path)] = $x;
+    }
+
+    function load($path) {
+        $path = $this->normalize_path($path);
+        return array_key_exists($path, $this->partials) ? $this->partials[$path] : null;
+    }
+
+    function normalize_path($path) {
+        $path = preg_replace('@//+@', '/', $path);
+
+        $new_path = array();
+        foreach(explode('/', $path) as $part) {
+            switch($part) {
+            case '':
+            case '.':
+                break;
+            case '..':
+                array_pop($new_path);
+                break;
+            default:
+                $new_path[] = $part;
+                break;
+            }
+        }
+
+        return implode('/', $new_path);
+    }
+}
+
+class BoostSimpleTemplate_PartialLoader {
+    var $cache = array();
+
+    function load($path) {
+        $realpath = $this->normalize_path($path);
+        if ($realpath) {
+            if (array_key_exists($realpath, $this->cache)) {
+                return $this->cache[$realpath];
+            }
+            else if (is_file($realpath)) {
+                return $this->cache[$realpath] = BoostSimpleTemplate::parse_template(file_get_contents($realpath));
+            }
+            else {
+                return $this->cache[$realpath] = null;
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
+    function normalize_path($path) {
+        $realpath = realpath($path);
+        if (!$realpath && !pathinfo($path, PATHINFO_EXTENSION)) { $realpath = realpath("{$path}.mustache"); }
+        return $realpath;
+    }
+}
+
 class BoostSimpleTemplate_Context {
-    var $partials = Array();
+    var $partial_loader = Array();
+    var $path = null;
     var $params = null;
     var $parent = null;
     var $indentation = '';
@@ -288,8 +374,9 @@ class BoostSimpleTemplate_Context {
         return $x;
     }
 
-    function create_partial_context($indentation) {
+    function create_partial_context($path, $indentation) {
         $x = clone $this;
+        $x->path = $path;
         $x->indentation .= $indentation;
         return $x;
     }
