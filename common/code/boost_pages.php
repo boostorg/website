@@ -322,17 +322,17 @@ class BoostPages_Page {
                         ),
                     ),
                 ),
-                //'signature' => array(
-                //    'location' => 'users/download/signatures/boost_1_61_0_b1.sums.asc',
-                //    'name' => 'Vladimir Prus',
-                //    'key' => 'https://pgp.mit.edu/pks/lookup?op=get&search=0xDA472E8659753BA4',
-                //),
-                //'third_party' => array(
-                //    array(
-                //        'title' => 'Windows Binaries',
-                //        'url' => 'https://sourceforge.net/projects/boost/files/boost-binaries/1.61.0_b1',
-                //    ),
-                //)
+                'signature' => array(
+                    'location' => 'users/download/signatures/boost_1_61_0.sums.asc',
+                    'name' => 'Vladimir Prus',
+                    'key' => 'https://pgp.mit.edu/pks/lookup?op=get&search=0xDA472E8659753BA4',
+                ),
+                'third_party' => array(
+                    array(
+                        'title' => 'Windows Binaries',
+                        'url' => 'https://sourceforge.net/projects/boost/files/boost-binaries/1.61.0',
+                    ),
+                )
             );
         }
         else if ($this->download_basename) {
@@ -459,7 +459,7 @@ class BoostPages_Page {
                 $output .= "<p><a href='/".html_encode($downloads['signature']['location']).
                     "'>List of checksums</a> signed by ".
                     "<a href='".html_encode($downloads['signature']['key'])."'>".
-                    html_encode($downloads['signature']['name'])."</a></p>.\n";
+                    html_encode($downloads['signature']['name'])."</a></p>\n";
             }
 
             if (array_key_exists('third_party', $downloads)) {
