@@ -9,10 +9,6 @@ require_once(__DIR__.'/boost.php');
  */
 class BoostSimpleTemplate {
     static function render($template, $params, $partials = null) {
-        echo self::render_to_string($template, $params, $partials);
-    }
-
-    static function render_to_string($template, $params, $partials = null) {
         $nodes = self::parse_template($template);
 
         $context = new BoostSimpleTemplate_Context();

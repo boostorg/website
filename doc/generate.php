@@ -63,7 +63,7 @@ class LibrariesHtm {
             $params['alphabetic'][] = $this->rewrite_library($library);
         }
 
-        BoostSimpleTemplate::render(
+        echo BoostSimpleTemplate::render(
             file_get_contents(__DIR__.'/../common/code/templates/libraries.htm'),
             $params);
     }
