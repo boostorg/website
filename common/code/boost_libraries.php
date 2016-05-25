@@ -7,7 +7,6 @@
 
 // Change this when developing.
 define('USE_SERIALIZED_INFO', true);
-require_once(dirname(__FILE__) . '/url.php');
 
 /**
  * Stores the details of all the boost libraries organised by version.

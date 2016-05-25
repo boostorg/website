@@ -6,8 +6,9 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
+class BoostUrl {
 // Not a full implementation.
-function resolve_url($url, $base = null) {
+static function resolve($url, $base = null) {
     if (!$base) {
         $base_parts = parse_url($_SERVER['REQUEST_URI']);
         $base_parts['host'] = $_SERVER['HTTP_HOST'];
@@ -27,13 +28,13 @@ function resolve_url($url, $base = null) {
 
     if (!isset($url_parts['host'])) {
         if (isset($base_parts['host'])) $url_parts['host'] = $base_parts['host'];
-        $url_parts['path'] = resolve_path($url_parts['path'], $base_parts['path']);
+        $url_parts['path'] = self::resolve_path($url_parts['path'], $base_parts['path']);
     }
 
-    return build_url($url_parts);
+    return self::build_url($url_parts);
 }
 
-function resolve_path($path, $base_path) {
+private static function resolve_path($path, $base_path) {
     if($path[0] == '/') return $path;
 
     $base_path = explode('/', $base_path);
@@ -56,7 +57,7 @@ function resolve_path($path, $base_path) {
     return implode('/', $base_path).'/'.implode('/', $path);
 }
 
-function build_url($url) {
+private static function build_url($url) {
     $result = '';
 
     if (isset($url['scheme'])) {
@@ -74,4 +75,5 @@ function build_url($url) {
     }
 
     return $result;
+}
 }

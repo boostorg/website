@@ -6,8 +6,6 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 
-require_once(dirname(__FILE__) . '/url.php');
-
 /**
  * The basic details about a single library.
  */
@@ -105,7 +103,7 @@ class BoostLibrary
             $this->details['documentation'] : '.';
         $this->details['module'] = $module_name;
         $this->details['documentation'] =
-            ltrim(resolve_url($documentation_url, $module_path), '/');
+            ltrim(BoostUrl::resolve($documentation_url, $module_path), '/');
     }
 
     public function array_for_json($exclude = array()) {

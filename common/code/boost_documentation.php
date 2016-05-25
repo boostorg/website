@@ -5,7 +5,6 @@
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
 require_once(dirname(__FILE__) . '/boost.php');
-require_once(dirname(__FILE__) . '/url.php');
 
 define('BOOST_DOCS_MODIFIED_DATE', 'Sat 07 Feb 2015 21:44:00 +0000');
 
@@ -109,7 +108,7 @@ class BoostDocumentation
         if (is_dir($file))
         {
             if(substr($file, -1) != '/') {
-                $redirect = resolve_url(basename($file).'/');
+                $redirect = BoostUrl::resolve(basename($file).'/');
                 header("Location: $redirect", TRUE, $redirect_status_code);
                 return;
             }
@@ -262,7 +261,7 @@ function detect_redirect($content)
             '@<meta\s+http-equiv\s*=\s*["\']?refresh["\']?\s+content\s*=\s*["\']0;\s*URL=([^"\']*)["\']\s*/?>@i',
             $content, $redirect))
     {
-        return resolve_url($redirect[1]);
+        return BoostUrl::resolve($redirect[1]);
     }
 
     return false;

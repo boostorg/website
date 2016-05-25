@@ -181,7 +181,7 @@ class BoostSiteTools {
 
     static function base_links($node, $base_link) {
         self::transform_links($node, function($x) use ($base_link) {
-            return resolve_url($x, $base_link);
+            return BoostUrl::resolve($x, $base_link);
         });
     }
 
