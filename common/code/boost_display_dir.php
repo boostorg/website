@@ -6,7 +6,7 @@ class BoostDisplayDir extends BoostFilter
     function display($dir) {
         $handle = opendir($dir);
 
-        $title = html_encode("Index listing for {$this->data->key}");
+        $title = html_encode("Index listing for {$this->data->path}");
 
         $this->title = $title;
         $this->data->noindex = true;
