@@ -26,7 +26,7 @@ class BoostArchive
         // Set default values
 
         $pattern = $this->get_param('pattern', '@^[/]([^/]+)[/](.*)$@');
-        $archive_dir = $this->get_param('archive_dir', ARCHIVE_DIR);
+        $archive_dir = $this->get_param('archive_dir', STATIC_DIR);
         $archive_file_prefix = $this->get_param('archive_file_prefix', ARCHIVE_FILE_PREFIX);
 
         // Get the archive location.

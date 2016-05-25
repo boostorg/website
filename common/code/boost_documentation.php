@@ -28,18 +28,30 @@ class BoostDocumentation
 
         $pattern = $this->get_param('pattern', '@^[/]([^/]+)[/](.*)$@');
         $fix_dir = $this->get_param('fix_dir');
-        $archive_dir = $this->get_param('archive_dir', ARCHIVE_DIR);
+        $archive_dir = $this->get_param('archive_dir', STATIC_DIR);
         $use_http_expire_date = $this->get_param('use_http_expire_date', false);
 
         // Get Archive Location
 
-        $path_parts = array();
         preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts);
 
-        $version = BoostVersion::from($path_parts[1]);
-        $version_dir = is_numeric($path_parts[1][0]) ?
-            "boost_{$path_parts[1]}" : $path_parts[1];
-        $path = $path_parts[2];
+        if ($path_parts[1] === 'regression') {
+            $version = null;
+            $version_dir = 'regression';
+            $path = $path_parts[2];
+        }
+        else {
+            try {
+                $version = BoostVersion::from($path_parts[1]);
+            }
+            catch(BoostVersion_Exception $e) {
+                BoostWeb::error_404($_SERVER["PATH_INFO"], 'Unable to find version.');
+                return;
+            }
+            $version_dir = is_numeric($path_parts[1][0]) ?
+                "boost_{$path_parts[1]}" : $path_parts[1];
+            $path = $path_parts[2];
+        }
 
         $file = false;
 
