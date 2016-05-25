@@ -80,7 +80,7 @@ class BoostFilterText extends BoostFilter
     function html_encode_with_fallback($text) {
         // Could probably handle this better with php 5.4 or multibyte
         // extensions.
-        $encoded_text = html_encode($text);
+        $encoded_text = @html_encode($text);
 
         if ($text && !$encoded_text) {
             $encoded_text = html_encode(
