@@ -103,7 +103,7 @@ class BoostPages {
                     'download_table' => $page_data->download_table(),
                     'description_xml' => $page_data->description_xml,
                 );
-                if ($page_data->type == 'release' && empty($page_data->flags['released']) && empty($page_data->flags['beta'])) {
+                if ($page_data->type == 'release' && ($page_data->release_status === 'dev' || !$page_data->release_status)) {
                     $template_vars['note_xml'] = <<<EOL
                         <div class="section-note"><p>Note: This release is
                         still under development. Please don't use this page as
@@ -160,7 +160,6 @@ class BoostPages_Page {
     var $last_modified, $pub_date, $download_item, $download_basename;
     var $documentation, $final_documentation, $qbk_hash;
 
-    var $flags;
     var $full_title_xml;
 
     function __construct($qbk_file, $attrs = array('page_state' => 'new')) {
@@ -190,7 +189,6 @@ class BoostPages_Page {
     }
 
     function initialise() {
-        $this->flags = Array();
         $this->full_title_xml = $this->title_xml;
 
         if ($this->type == 'release') {
@@ -200,17 +198,13 @@ class BoostPages_Page {
             if (!$this->release_status) {
                 $this->release_status = 'dev';
             }
-            $status_parts = explode(' ', $this->release_status, 2);
-            if (!in_array($status_parts[0], array('released', 'beta', 'dev'))) {
+            if (!in_array($this->release_status, array('released', 'beta', 'dev'))) {
                 echo("Error: Unknown release status: " . $this->release_status);
                 $this->release_status = null;
             }
-            if ($this->release_status) {
-                $this->flags[$status_parts[0]] = true;
-            }
-            if (!empty($this->flags['beta'])) {
+            if ($this->release_status === 'beta') {
                 $this->full_title_xml = $this->full_title_xml . ' ' . $this->release_status;
-            } else if (empty($this->flags['released'])) {
+            } else if ($this->release_status !== 'released') {
                 $this->full_title_xml = $this->full_title_xml . ' - work in progress';
             }
         }
@@ -268,7 +262,7 @@ class BoostPages_Page {
 
         $this->initialise();
 
-        if (empty($this->flags['released']) && $this->documentation) {
+        if ($this->release_status !== 'released' && $this->documentation) {
             $doc_prefix = rtrim($this->documentation, '/');
             BoostSiteTools::transform_links($values['description_fragment'],
                 function ($x) use ($doc_prefix) {
@@ -385,7 +379,7 @@ class BoostPages_Page {
         //       without putting the release notes on the front page.
         //       Might remove this code permananently, I'm not sure if it
         //       does any good.
-        //if ($this->type == 'release' && empty($this->flags['beta']) && empty($this->flags['released'])) {
+        //if ($this->type == 'release' && (!$this->release_status || $this->release_status === 'dev')) {
         //    return '';
         //}
 
@@ -405,7 +399,7 @@ class BoostPages_Page {
 
             $output = '';
             $output .= '              <table class="download-table">';
-            if (!empty($this->flags['beta'])) {
+            if ($this->release_status === 'beta') {
                 $output .= '<caption>Beta Downloads</caption>';
             } else {
                 $output .= '<caption>Downloads</caption>';
@@ -484,7 +478,7 @@ class BoostPages_Page {
             $output = '              <p><span class="news-download"><a href="'.
                 html_encode($downloads).'">';
 
-            if (!empty($this->flags['beta'])) {
+            if ($this->release_status == 'beta') {
                 $output .= 'Download this beta release.';
             } else {
                 $output .= 'Download this release.';
@@ -499,14 +493,12 @@ class BoostPages_Page {
         }
     }
 
-    function is_published($flags = array()) {
+    function is_published($state = null) {
         if ($this->page_state == 'new') {
             return false;
         }
-        foreach ($flags as $flag) {
-            if (empty($this->flags[$flag])) {
-                return false;
-            }
+        if (!is_null($state) && $this->release_status !== $state) {
+            return false;
         }
         return true;
     }

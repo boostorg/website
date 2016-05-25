@@ -55,12 +55,12 @@ class BoostSiteTools {
                         $all_versions[] = $page;
                     }
 
-                    if ($page->is_published(array('released'))) {
+                    if ($page->is_published('released')) {
                         $all_downloads[] = $page;
                         $released_versions[] = $page;
                         $news[] = $page;
                     }
-                    else if ($page->is_published(array('beta'))) {
+                    else if ($page->is_published('beta')) {
                         $beta_versions[] = $page;
                     }
                 }
@@ -68,7 +68,7 @@ class BoostSiteTools {
                     // TODO: Can probably remove this, it's only used for
                     //       one obsolete file, that doesn't seem to be
                     //       included anywhere.
-                    if ($page->is_published(array('released'))) {
+                    if ($page->is_published('released')) {
                         $all_downloads[] = $page;
                     }
                 }
