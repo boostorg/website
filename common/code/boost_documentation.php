@@ -93,6 +93,11 @@ class BoostDocumentation
 
         // Last modified date
 
+        if (!is_readable($file)) {
+            BoostWeb::error_404($file, 'Unable to find file.');
+            return;
+        }
+
         $last_modified = max(
             strtotime(BOOST_DOCS_MODIFIED_DATE),        // last manual documenation update
             filemtime(dirname(__FILE__).'/boost.php'),  // last release (since the version number is updated)
@@ -128,10 +133,6 @@ class BoostDocumentation
                 $display_dir = new BoostDisplayDir($data);
                 return $display_dir->display($file);
             }
-        }
-        else if (!is_readable($file)) {
-            BoostWeb::error_404($file, 'Unable to find file.');
-            return;
         }
 
         // Choose filter to use
