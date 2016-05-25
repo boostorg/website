@@ -600,6 +600,10 @@ class BoostLibraries
         $libs = $this->get_for_version($version, $sort, $filter);
         $categories = $this->categories;
 
+        foreach(array_keys($categories) as $category) {
+            $categories[$category]['libraries'] = array();
+        }
+
         foreach($libs as $key => $library) {
             foreach($library['category'] as $category) {
                 if(!isset($this->categories[$category])) {
