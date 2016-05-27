@@ -7,7 +7,7 @@ function main() {
     $libraries = BoostLibraries::load();
     $master = $libraries->get_for_version('master');
 
-    $unreleased_libs = [];
+    $unreleased_libs = array();
     foreach($master as $lib) {
         if ($lib['boost-version']->is_unreleased()) {
             $unreleased_libs[$lib['name']] = $lib;
@@ -29,7 +29,7 @@ function main() {
 
         echo "For root index file:\n\n";
 
-        $library_links = [];
+        $library_links = array();
         foreach ($unreleased_libs as $lib) {
             $library_links[] = "<a href=\"".
                 filesystem_doc_link($lib).

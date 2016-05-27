@@ -208,12 +208,12 @@ class BoostSiteTools {
 }
 
 class BoostSiteTools_Upgrades {
-    static $versions = [
+    static $versions = array(
         1 => 'BoostSiteTools_Upgrades::old_upgrade',
         2 => 'BoostSiteTools_Upgrades::old_upgrade',
         3 => 'BoostSiteTools_Upgrades::old_upgrade',
         4 => 'BoostSiteTools_Upgrades::old_upgrade',
-    ];
+    );
 
     static function upgrade($site_tools) {
         $filename = $site_tools->root.'/generated/state/version.txt';
