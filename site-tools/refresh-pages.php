@@ -15,4 +15,5 @@ EOL;
 
 require_once(__DIR__.'/../common/code/boost.php');
 
-(new BoostSiteTools(__DIR__.'/..'))->update_quickbook(true);
+$site_tools = new BoostSiteTools(__DIR__.'/..');
+$site_tools->update_quickbook(true);

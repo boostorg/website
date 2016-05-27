@@ -1,0 +1,17 @@
+# Copyright (C) 2016 Daniel James.
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+language: php
+php:
+    - '5.3'
+
+install:
+    - cd ${TRAVIS_BUILD_DIR}/common/code/test
+    - composer install
+
+script:
+    - cd ${TRAVIS_BUILD_DIR}/common/code/test
+    - ./vendor/bin/tester -p php -c config/php.ini
+    - cd ${TRAVIS_BUILD_DIR}/
+    - 'find * -name "vendor" -prune -o -name "*.php" -print | xargs -n 1 php -l'
