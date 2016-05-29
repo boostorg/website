@@ -6,16 +6,29 @@
 class BoostPages {
     var $root;
     var $hash_file;
+    var $release_file;
     var $pages = Array();
+    var $release_data = Array();
 
-    function __construct($root, $hash_file) {
+    function __construct($root, $hash_file, $release_file) {
         $this->root = $root;
         $this->hash_file = "{$root}/{$hash_file}";
+        $this->release_file = "{$root}/{$release_file}";
+
+        if (is_file($this->release_file)) {
+            $this->release_data = json_decode(
+                file_get_contents($this->release_file), true);
+            if (is_null($this->release_data)) {
+                // Q: Exception? Fallback?
+                echo "Error decoding release data.\n";
+                exit(0);
+            }
+        }
 
         if (is_file($this->hash_file)) {
             foreach(BoostState::load($this->hash_file) as $qbk_file => $record) {
                 $this->pages[$qbk_file]
-                    = new BoostPages_Page($qbk_file, $record);
+                    = new BoostPages_Page($qbk_file, $this->get_release_data($qbk_file), $record);
             }
 
             uasort($this->pages, function($x, $y) {
@@ -39,14 +52,27 @@ class BoostPages {
         }
     }
 
+    function get_release_data($qbk_file) {
+        foreach($this->release_data as $release) {
+            if ($release['release_notes'] === $qbk_file) {
+                return $release;
+            }
+        }
+        return null;
+    }
+
     function add_qbk_file($qbk_file, $dir_location, $type) {
+        $release_data = $this->get_release_data($qbk_file);
+
+        // TODO: Hash in release data. Not doing it just yet as it will
+        //       force a large rebuild.
         $qbk_hash = hash('sha256', str_replace("\r\n", "\n",
             file_get_contents("{$this->root}/{$qbk_file}")));
 
         $record = null;
 
         if (!isset($this->pages[$qbk_file])) {
-            $this->pages[$qbk_file] = $record = new BoostPages_Page($qbk_file);
+            $this->pages[$qbk_file] = $record = new BoostPages_Page($qbk_file, $release_data);
         } else {
             $record = $this->pages[$qbk_file];
             if ($record->dir_location) {
@@ -155,6 +181,7 @@ EOL;
 class BoostPages_Page {
     var $qbk_file;
 
+    var $release_data;
     var $type, $page_state, $release_status, $dir_location, $location;
     var $id, $title_xml, $purpose_xml, $notice_xml, $notice_url;
     var $last_modified, $pub_date, $download_item, $download_basename;
@@ -162,7 +189,7 @@ class BoostPages_Page {
 
     var $full_title_xml;
 
-    function __construct($qbk_file, $attrs = array('page_state' => 'new')) {
+    function __construct($qbk_file, $release_data = null, $attrs = array('page_state' => 'new')) {
         $this->qbk_file = $qbk_file;
 
         $this->type = $this->array_get($attrs, 'type');
@@ -186,6 +213,7 @@ class BoostPages_Page {
         $this->loaded = false;
 
         $this->initialise();
+        $this->set_release_data($release_data);
     }
 
     function initialise() {
@@ -208,6 +236,10 @@ class BoostPages_Page {
                 $this->full_title_xml = $this->full_title_xml . ' - work in progress';
             }
         }
+    }
+
+    function set_release_data($release_data) {
+        $this->release_data = $release_data;
     }
 
     function state() {
