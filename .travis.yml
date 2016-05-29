@@ -8,10 +8,10 @@ php:
 
 install:
     - cd ${TRAVIS_BUILD_DIR}/common/code/test
-    - composer install
+    - composer install --no-interaction --prefer-source
 
 script:
     - cd ${TRAVIS_BUILD_DIR}/common/code/test
-    - ./vendor/bin/tester -p php -c config/php.ini
+    - ./vendor/bin/tester -p php
     - cd ${TRAVIS_BUILD_DIR}/
     - 'find * -name "vendor" -prune -o -name "*.php" -print | xargs -n 1 php -l'
