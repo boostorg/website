@@ -63,8 +63,11 @@ class LibrariesHtm {
             $params['alphabetic'][] = $this->rewrite_library($library);
         }
 
-        echo BoostSimpleTemplate::render(
-            file_get_contents(__DIR__.'/../common/code/templates/libraries.htm'),
+        // Better support for other branches?
+        $template_dir = BOOST_REPOS_DIR.'/boost-'.
+            ($version == 'develop' ? 'develop' : 'master').
+            '/libs/libraries.htm';
+        echo BoostSimpleTemplate::render(file_get_contents($template_dir),
             $params);
     }
 

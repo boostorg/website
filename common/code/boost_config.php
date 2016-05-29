@@ -31,6 +31,14 @@ ARCHIVE_FILE_PREFIX
 STATIC_DIR
   Path to static copies of boost.
   - Defaults to BOOST_WEBSITE_SHARED_DIR/archives/live
+
+BOOST_REPOS_DIR
+  Loction of local copies for develop and master super projects.
+  Set them up using:
+  git clone https://github.com/boostorg/boost.git -b master --depth=1 boost-master
+  git clone https://github.com/boostorg/boost.git -b develop --depth=1 boost-develop
+  And then git pull regularly.
+  - Defaults to BOOST_WEBSITE_SHARED_DIR/repos
 */
 
 switch (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '')
@@ -68,5 +76,9 @@ if (defined('BOOST_WEBSITE_SHARED_DIR')) {
 
     if (!defined('BOOST_DATA_DIR')) {
         define('BOOST_DATA_DIR', BOOST_WEBSITE_SHARED_DIR.'/data');
+    }
+
+    if (!defined('BOOST_REPOS_DIR')) {
+        define('BOOST_REPOS_DIR', BOOST_WEBSITE_SHARED_DIR.'/repos');
     }
 }
