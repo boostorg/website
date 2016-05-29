@@ -121,7 +121,7 @@ class BoostPages {
 
                 $template_vars = array(
                     'history_style' => '',
-                    'full_title_xml' => $page_data->full_title_xml,
+                    'full_title_xml' => $page_data->full_title_xml(),
                     'title_xml' => $page_data->title_xml,
                     'note_xml' => '',
                     'web_date' => $page_data->web_date(),
@@ -129,7 +129,7 @@ class BoostPages {
                     'download_table' => $page_data->download_table(),
                     'description_xml' => $page_data->description_xml,
                 );
-                if ($page_data->type == 'release' && ($page_data->release_status === 'dev' || !$page_data->release_status)) {
+                if ($page_data->type == 'release' && ($page_data->get_release_status() ?: 'dev') === 'dev') {
                     $template_vars['note_xml'] = <<<EOL
                         <div class="section-note"><p>Note: This release is
                         still under development. Please don't use this page as
@@ -139,8 +139,8 @@ class BoostPages {
 EOL;
                 }
 
-                if ($page_data->documentation) {
-                    $template_vars['documentation_para'] = '              <p><a href="'.html_encode($page_data->documentation).'">Documentation</a>';
+                if ($page_data->array_get($page_data->release_data, 'documentation')) {
+                    $template_vars['documentation_para'] = '              <p><a href="'.html_encode($page_data->array_get($page_data->release_data, 'documentation')).'">Documentation</a>';
                 }
 
                 if (strpos($page_data->location, 'users/history/') === 0) {
@@ -182,19 +182,16 @@ class BoostPages_Page {
     var $qbk_file;
 
     var $release_data;
-    var $type, $page_state, $release_status, $dir_location, $location;
+    var $type, $page_state, $dir_location, $location;
     var $id, $title_xml, $purpose_xml, $notice_xml, $notice_url;
-    var $last_modified, $pub_date, $download_item, $download_basename;
-    var $documentation, $final_documentation, $qbk_hash;
-
-    var $full_title_xml;
+    var $last_modified, $pub_date;
+    var $documentation, $qbk_hash;
 
     function __construct($qbk_file, $release_data = null, $attrs = array('page_state' => 'new')) {
         $this->qbk_file = $qbk_file;
 
         $this->type = $this->array_get($attrs, 'type');
         $this->page_state = $this->array_get($attrs, 'page_state');
-        $this->release_status = $this->array_get($attrs, 'release_status');
         $this->dir_location = $this->array_get($attrs, 'dir_location');
         $this->location = $this->array_get($attrs, 'location');
         $this->id = $this->array_get($attrs, 'id');
@@ -204,41 +201,26 @@ class BoostPages_Page {
         $this->notice_url = $this->array_get($attrs, 'notice_url');
         $this->last_modified = $this->array_get($attrs, 'last_modified');
         $this->pub_date = $this->array_get($attrs, 'pub_date');
-        $this->download_item = $this->array_get($attrs, 'download');
-        $this->download_basename = $this->array_get($attrs, 'download_basename');
-        $this->documentation = $this->array_get($attrs, 'documentation');
-        $this->final_documentation = $this->array_get($attrs, 'final_documentation');
         $this->qbk_hash = $this->array_get($attrs, 'qbk_hash');
 
         $this->loaded = false;
 
-        $this->initialise();
         $this->set_release_data($release_data);
     }
 
-    function initialise() {
-        $this->full_title_xml = $this->title_xml;
+    function set_release_data($release_data) {
+        if ($release_data) {
+            assert($this->type === 'release');
 
-        if ($this->type == 'release') {
-            if (!$this->release_status && $this->pub_date != 'In Progress') {
-                $this->release_status = 'released';
+            if (!array_key_exists('release_status', $release_data)) {
+                $release_data['release_status'] = $this->pub_date == 'In Progress' ? 'dev' : 'released';
             }
-            if (!$this->release_status) {
-                $this->release_status = 'dev';
-            }
-            if (!in_array($this->release_status, array('released', 'beta', 'dev'))) {
-                echo("Error: Unknown release status: " . $this->release_status);
-                $this->release_status = null;
-            }
-            if ($this->release_status === 'beta') {
-                $this->full_title_xml = $this->full_title_xml . ' ' . $this->release_status;
-            } else if ($this->release_status !== 'released') {
-                $this->full_title_xml = $this->full_title_xml . ' - work in progress';
+            if (!in_array($release_data['release_status'], array('released', 'beta', 'dev'))) {
+                echo "Error: Unknown release status: {$this->array_get($release_data, 'release_status')}.\n";
+                exit(0);
             }
         }
-    }
 
-    function set_release_data($release_data) {
         $this->release_data = $release_data;
     }
 
@@ -246,7 +228,6 @@ class BoostPages_Page {
         return array(
             'type' => $this->type,
             'page_state' => $this->page_state,
-            'release_status' => $this->release_status,
             'dir_location' => $this->dir_location,
             'location' => $this->location,
             'id'  => $this->id,
@@ -256,10 +237,6 @@ class BoostPages_Page {
             'notice_url' => $this->notice_url,
             'last_modified' => $this->last_modified,
             'pub_date' => $this->pub_date,
-            'download' => $this->download_item,
-            'download_basename' => $this->download_basename,
-            'documentation' => $this->documentation,
-            'final_documentation' => $this->final_documentation,
             'qbk_hash' => $this->qbk_hash
         );
     }
@@ -275,10 +252,6 @@ class BoostPages_Page {
 
         $this->pub_date = $values['pub_date'];
         $this->last_modified = $values['last_modified'];
-        $this->download_item = $values['download_item'];
-        $this->download_basename = $values['download_basename'];
-        $this->documentation = $values['documentation'];
-        $this->final_documentation = $values['final_documentation'];
         $this->id = $values['id'];
         if (!$this->id) {
             $this->id = strtolower(preg_replace('@[\W]@', '_', $this->title_xml));
@@ -288,14 +261,12 @@ class BoostPages_Page {
             $this->dir_location = null;
             $this->page_state = null;
         }
-        $this->release_status = $values['status_item'];
 
         $this->loaded = true;
 
-        $this->initialise();
-
-        if ($this->release_status !== 'released' && $this->documentation) {
-            $doc_prefix = rtrim($this->documentation, '/');
+        $doc_prefix  = null;
+        if ($this->get_release_status() !== 'released' && $this->get_documentation()) {
+            $doc_prefix = rtrim($this->get_documentation(), '/');
             BoostSiteTools::transform_links($values['description_fragment'],
                 function ($x) use ($doc_prefix) {
                     return preg_match('@^/(?:libs/|doc/html/)@', $x)
@@ -303,8 +274,11 @@ class BoostPages_Page {
                 });
         }
 
-        if ($this->final_documentation) {
-            $link_pattern = '@^'.rtrim($this->final_documentation, '/').'/@';
+        $version = $this->array_get($this->release_data, 'version');
+        if ($version && $doc_prefix) {
+            $version = BoostVersion::from($version);
+            $final_documentation = "/doc/libs/{$version->dir()}";
+            $link_pattern = '@^'.preg_quote($final_documentation, '@').'/@';
             $replace = "{$doc_prefix}/";
             BoostSiteTools::transform_links($values['description_fragment'],
                 function($x) use($link_pattern, $replace) {
@@ -313,6 +287,18 @@ class BoostPages_Page {
         }
 
         $this->description_xml = BoostSiteTools::fragment_to_string($values['description_fragment']);
+    }
+
+    function full_title_xml() {
+        if ($this->type !== 'release') { return $this->title_xml; }
+        switch($this->get_release_status()) {
+        case 'released':
+            return $this->title_xml;
+        case 'beta':
+            return "{$this->title_xml} beta";
+        default:
+            return "{$this->title_xml} - work in progress";
+        }
     }
 
     function web_date() {
@@ -324,86 +310,27 @@ class BoostPages_Page {
     }
 
     function download_table_data() {
-        if (strpos($this->download_basename, 'boost_1_61_0') === 0) {
-            return array(
-                'downloads' => array(
-                    'unix' => array(
-                        array(
-                            'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.bz2",
-                            'sha256' => 'a547bd06c2fd9a71ba1d169d9cf0339da7ebf4753849a8f7d6fdb8feee99b640',
-                        ),
-                        array(
-                            'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.gz",
-                            'sha256' => 'a77c7cc660ec02704c6884fbb20c552d52d60a18f26573c9cee0788bf00ed7e6',
-                        ),
-                    ),
-                    'windows' => array(
-                        array(
-                            'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.7z",
-                            'sha256' => 'fa1c34862b7ba8674ed6e064a14667a11830c6252f702d9458451834b74f7815',
-                        ),
-                        array(
-                            'url' => "https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.zip",
-                            'sha256' => '02d420e6908016d4ac74dfc712eec7d9616a7fc0da78b0a1b5b937536b2e01e8',
-                        ),
-                    ),
-                ),
-                'signature' => array(
-                    'location' => 'users/download/signatures/boost_1_61_0.sums.asc',
-                    'name' => 'Vladimir Prus',
-                    'key' => 'https://pgp.mit.edu/pks/lookup?op=get&search=0xDA472E8659753BA4',
-                ),
-                'third_party' => array(
-                    array(
-                        'title' => 'Windows Binaries',
-                        'url' => 'https://sourceforge.net/projects/boost/files/boost-binaries/1.61.0',
-                    ),
-                )
-            );
+        if (!$this->release_data) { return null; }
+        $downloads = $this->array_get($this->release_data, 'downloads');
+        $signature = $this->array_get($this->release_data, 'signature');
+        $third_party = $this->array_get($this->release_data, 'third_party');
+        if (!$downloads && !$third_party) { return $this->get_download_page(); }
+
+        $tabled_downloads = array();
+        foreach ($downloads as $download) {
+            // Q: Good default here?
+            $line_endings = $this->array_get($download, 'line_endings', 'unix');
+            unset($download['line_endings']);
+            $tabled_downloads[$line_endings][] = $download;
         }
-        else if ($this->download_basename) {
-            $url_base = "{$this->download_item}{$this->download_basename}";
-            return array('downloads' => array(
-                'unix' => array(
-                    array('url' => "{$url_base}.tar.bz2"),
-                    array('url' => "{$url_base}.tar.gz"),
-                ),
-                'windows' => array(
-                    array('url' => "{$url_base}.7z"),
-                    array('url' => "{$url_base}.zip"),
-                ),
-            ));
-        } else if (preg_match('@.*/boost/(\d+)\.(\d+)\.(\d+)/@', $this->download_item, $match)) {
-            $major = intval($match[1]);
-            $minor = intval($match[2]);
-            $point = intval($match[3]);
-            $url_base = "{$this->download_item}boost_{$match[1]}_{$match[2]}_{$match[3]}";
 
-            # Pick which files are available by examining the version number.
-            # This could possibly be meta-data in the rss feed instead of being
-            # hardcoded here.
+        $result = array(
+            'downloads' => $tabled_downloads
+        );
+        if ($signature) { $result['signature'] = $signature; }
+        if ($third_party) { $result['third_party'] = $third_party; }
 
-            # TODO: Key order hardcoded later.
-
-            $downloads = array(
-                'unix' => array(
-                    array('url' => $url_base.'.tar.bz2'),
-                    array('url' => $url_base.'.tar.gz'),
-                ),
-                'windows' => array()
-            );
-
-            if ($major == 1 && $minor >= 32 && $minor <= 33) {
-                $downloads['windows'][] = array('url' => $url_base.'.exe');
-            } else if ($major > 1 || $minor > 34 || ($minor == 34 && $point == 1)) {
-                $downloads['windows'][] = array('url' => $url_base.'.7z');
-            }
-            $downloads['windows'][] = array('url' => $url_base.'.zip');
-            return array('downloads' => $downloads);
-        }
-        else {
-            return $this->download_item;
-        }
+        return $result;
     }
 
     function download_table() {
@@ -431,7 +358,7 @@ class BoostPages_Page {
 
             $output = '';
             $output .= '              <table class="download-table">';
-            if ($this->release_status === 'beta') {
+            if ($this->get_release_status() === 'beta') {
                 $output .= '<caption>Beta Downloads</caption>';
             } else {
                 $output .= '<caption>Downloads</caption>';
@@ -510,7 +437,7 @@ class BoostPages_Page {
             $output = '              <p><span class="news-download"><a href="'.
                 html_encode($downloads).'">';
 
-            if ($this->release_status == 'beta') {
+            if ($this->get_release_status() == 'beta') {
                 $output .= 'Download this beta release.';
             } else {
                 $output .= 'Download this release.';
@@ -529,10 +456,22 @@ class BoostPages_Page {
         if ($this->page_state == 'new') {
             return false;
         }
-        if (!is_null($state) && $this->release_status !== $state) {
+        if (!is_null($state) && $this->get_release_status() !== $state) {
             return false;
         }
         return true;
+    }
+
+    function get_release_status() {
+        return $this->array_get($this->release_data, 'release_status');
+    }
+
+    function get_documentation() {
+        return $this->array_get($this->release_data, 'documentation');
+    }
+
+    function get_download_page() {
+        return $this->array_get($this->release_data, 'download_page');
     }
 
     function array_get($array, $key, $default = null) {

@@ -16,14 +16,14 @@ foreach ($released_versions as $entry) {
     echo("<li>");
     echo("<a href=\"/".html_encode($entry->location)."\">Release Notes</a>");
     echo("</li>\n");
-    if ($entry->download_item) {
+    if ($entry->get_download_page()) {
         echo("<li>");
-        echo("<a href=\"".html_encode($entry->download_item)."\">Download</a>");
+        echo("<a href=\"".html_encode($entry->get_download_page())."\">Download</a>");
         echo("</li>\n");
     }
-    if ($entry->documentation) {
+    if ($entry->get_documentation()) {
         echo("<li>");
-        echo("<a href=\"".html_encode($entry->documentation)."\">Documentation</a>");
+        echo("<a href=\"".html_encode($entry->get_documentation())."\">Documentation</a>");
         echo("</li>\n");
     }
     echo("</ul>\n");

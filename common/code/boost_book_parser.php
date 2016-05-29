@@ -43,34 +43,10 @@ class BoostBookParser {
             $notice_url = $notice_node->item(0)->getAttribute('url');
         }
 
-        $download_item = null;
-        $download_node = $article_node->getElementsByTagName('download');
-        if ($download_node->length) {
-            $download_item = $this->get_child($download_node->item(0))->data;
-        }
-
-        $download_basename = null;
-        $download_basename_node = $article_node->getElementsByTagName('download_basename');
-        if ($download_basename_node->length) {
-            $download_basename = $this->get_child($download_basename_node->item(0))->data;
-        }
-
         $documentation = null;
         $documentation_node = $article_node->getElementsByTagName('documentation');
         if ($documentation_node->length) {
             $documentation = $this->get_child($documentation_node->item(0))->data;
-        }
-
-        $final_documentation = null;
-        $final_documentation_node = $article_node->getElementsByTagName('final_documentation');
-        if ($final_documentation_node->length) {
-            $final_documentation = $this->get_child($final_documentation_node->item(0))->data;
-        }
-
-        $status_item = null;
-        $status_node = $article_node->getElementsByTagName('status');
-        if ($status_node->length) {
-            $status_item = $this->get_child($status_node->item(0))->data;
         }
 
         $pub_date = trim($article_node->getAttribute('last-revision'));
@@ -93,11 +69,7 @@ class BoostBookParser {
             'notice_fragment' => $notice_xhtml,
             'pub_date' => $pub_date,
             'last_modified' => $last_modified,
-            'download_item' => $download_item,
-            'download_basename' => $download_basename,
             'documentation' => $documentation,
-            'final_documentation' => $final_documentation,
-            'status_item' => $status_item
         );
     }
 

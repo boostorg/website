@@ -44,10 +44,10 @@ function main() {
             $entry = array_merge(
                 array(
                     'release_notes' => $path,
-                    'release_status' => $page->release_status,
+                    'release_status' => $page->get_release_status(),
                     'version' => (string) $version,
-                    'documentation' => $page->documentation,
-                    'download_page' => $page->download_item,
+                    'documentation' => $page->get_documentation(),
+                    'download_page' => $page->get_download_page(),
                 ),
                 $download_table_data);
 

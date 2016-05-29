@@ -14,17 +14,17 @@ foreach ($downloads as $x) {
     foreach ($entries as $entry) {
         echo("<li>");
         echo("<div class=\"news-title\">");
-        echo("<a href=\"/".html_encode($entry->location)."\">".$entry->full_title_xml."</a>");
+        echo("<a href=\"/".html_encode($entry->location)."\">".$entry->full_title_xml()."</a>");
         echo("</div>");
         echo("<div class=\"news-date\">");
         echo("<a href=\"/".html_encode($entry->location)."\">Release Notes</a>");
-        if ($entry->download_item) {
+        if ($entry->get_download_page()) {
             echo(" | ");
-            echo("<a href=\"".html_encode($entry->download_item)."\">Download</a>");
+            echo("<a href=\"".html_encode($entry->get_download_page())."\">Download</a>");
         }
-        if ($entry->documentation) {
+        if ($entry->get_documentation()) {
             echo(" | ");
-            echo("<a href=\"".html_encode($entry->documentation)."\">Documentation</a>");
+            echo("<a href=\"".html_encode($entry->get_documentation())."\">Documentation</a>");
         }
         echo("</div>");
         if ($entry->notice_xml) {
@@ -53,7 +53,7 @@ echo("<ul id=\"news\">\n");
 foreach ($news as $entry) {
     echo("\n");
     echo("                    <li><span class=\n");
-    echo("                    \"news-title\"><a href=\"/".html_encode($entry->location)."\">{$entry->full_title_xml}</a></span>\n");
+    echo("                    \"news-title\"><a href=\"/".html_encode($entry->location)."\">{$entry->full_title_xml()}</a></span>\n");
     echo("                    <span class=\n");
     echo("                    \"news-description\"><span class=\"brief\"><span class=\"purpose\">{$entry->purpose_xml}</span></span></span>\n");
     echo("                    <span class=\n");
