@@ -28,7 +28,7 @@ class LibraryPage {
         'boost-version' => 'First Release'
     );
 
-    var $params;
+    var $params = array();
     var $libs;
     var $categories;
 
@@ -40,46 +40,77 @@ class LibraryPage {
     var $attribute_filter = false;
 
     function __construct($params, $libs) {
-        $this->params = $params;
         $this->libs = $libs;
         $this->categories = $libs->get_categories();
 
-        $this->base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
-        if (isset($params['view'])) { $this->view_value = $params['view']; }
+        $base_uri = $_SERVER['REQUEST_URI'];
+        $base_uri = preg_replace('@[#?].*@', '', $base_uri);
+        $base_uri = preg_replace('@//+@', '/', $base_uri);
+        $this->base_uri = $base_uri;
 
-        if (strpos($this->view_value, 'filtered_') === 0) {
-            $this->filter_value = substr($this->view_value, strlen('filtered_'));
-            if (!isset(self::$filter_fields[$this->filter_value])) {
-                echo 'Invalid filter field.'; exit(0);
+        if (array_key_exists('view', $params)) {
+            $view_value = $params['view'];
+            $filter_value = '';
+
+            if (!preg_match('@^[-_a-zA-Z0-9]+$@', $view_value)) {
+                die('Invalid view value.');
             }
-            if (self::$filter_fields[$this->filter_value] == '[old]') {
-                echo 'Filter field no longer supported.'; exit(0);
+
+            if (strpos($view_value, 'filtered_') === 0) {
+                $filter_value = substr($view_value, strlen('filtered_'));
+                if (!array_key_exists($filter_value, self::$filter_fields)) {
+                    echo 'Invalid filter field.'; exit(0);
+                }
+                if (self::$filter_fields[$filter_value] == '[old]') {
+                    echo 'Filter field no longer supported.'; exit(0);
+                }
             }
-        }
-        else if (strpos($this->view_value, 'category_') === 0) {
-            $this->category_value = substr($this->view_value, strlen('category_'));
-            if(!isset($this->categories[$this->category_value])) {
-                echo 'Invalid category: '.html_encode($this->category_value); exit(0);
+            else if (strpos($view_value, 'category_') === 0) {
+                $this->category_value = substr($view_value, strlen('category_'));
+                if(!array_key_exists($this->category_value, $this->categories)) {
+                    echo 'Invalid category: '.html_encode($this->category_value); exit(0);
+                }
             }
-        }
-        else {
-            $this->filter_value = '';
-            if (!isset(self::$view_fields[$this->view_value])) {
-                echo 'Invalid view value.'; exit(0);
+            else {
+                if (!array_key_exists($view_value, self::$view_fields)) {
+                    echo 'Invalid view value.'; exit(0);
+                }
             }
+
+            $this->view_value = $view_value;
+            $this->filter_value = $filter_value;
         }
 
-        if (!empty($params['sort'])) {
-            $this->sort_value = $params['sort'];
+        if (array_key_exists('sort', $params)) {
+            $sort_value = $params['sort'];
 
-            if (!isset(self::$sort_fields[$this->sort_value])) {
+            if (!preg_match('@^[-_a-zA-Z0-9]+$@', $sort_value)) {
+                die('Invalid sort field.');
+            }
+
+            if (!array_key_exists($sort_value, self::$sort_fields)) {
                 echo 'Invalid sort field.'; exit(0);
             }
+
+            $this->sort_value = $sort_value;
         }
 
         if (!empty($params['filter'])) {
-            $this->attribute_filter = $params['filter'];
+            $attribute_filter = $params['filter'];
+
+            if (!preg_match('@^[-_a-zA-Z0-9]+$@', $attribute_filter)) {
+                die('Invalid attribute filter.');
+            }
+
+            $this->attribute_filter = $attribute_filter;
         }
+
+        // Store the sanitized parameters for quickly generating links later.
+        $this->params = array(
+            'view' => $this->view_value,
+            'sort' => $this->sort_value,
+            'sort' => $this->attribute_filter,
+        );
     }
 
     function filter($lib) {
@@ -224,7 +255,10 @@ class LibraryPage {
     }
 
     function option_link($description, $field, $value) {
-        $current_value = isset($this->params[$field]) ? $this->params[$field] : '';
+        if (!array_key_exists($field, $this->params)) {
+            die("Invalid field: ".html_encode($field));
+        }
+        $current_value = $this->params[$field];
 
         if ($current_value == $value) {
             echo '<span>', html_encode($description), '</span>';
@@ -234,7 +268,7 @@ class LibraryPage {
 
             $url_params = '';
             foreach ($params as $k => $v) {
-                if ($v) {
+                if (is_string($v) && $v != '') {
                     $url_params .= $url_params ? '&' : '?';
                     $url_params .= urlencode($k) . '=' . urlencode($v);
                 }
