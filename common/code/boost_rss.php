@@ -31,7 +31,7 @@ class BoostRss {
             if ($qbk_page->loaded) {
                 $item = $this->generate_rss_item($qbk_page->qbk_file, $qbk_page);
 
-                $item['item'] = BoostSiteTools::fragment_to_string($item['item']);
+                $item['item'] = BoostSiteTools::trim_lines($item['item']);
                 $this->rss_items[$qbk_page->qbk_file] = $item;
                 BoostState::save($this->rss_items, $this->rss_state_path);
 
@@ -77,55 +77,32 @@ EOL;
     function generate_rss_item($qbk_file, $page) {
         assert($page->loaded);
 
-        $rss_xml = new DOMDocument();
-        $rss_xml->loadXML(<<<EOL
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
-</rss>
-EOL
-        );
-
+        $xml = '';
         $page_link = "http://www.boost.org/{$page->location}";
 
-        $item = $rss_xml->createElement('item');
+        $xml .= '<item>';
 
-        $node = new DOMDocument();
-        $node->loadXML('<title>'.$this->encode_for_rss($page->title_xml).'</title>');
-        $item->appendChild($rss_xml->importNode($node->documentElement, true));
-
-        $node = new DOMDocument();
-        $node->loadXML('<link>'.$this->encode_for_rss($page_link).'</link>');
-        $item->appendChild($rss_xml->importNode($node->documentElement, true));
-
-        $node = new DOMDocument();
-        $node->loadXML('<guid>'.$this->encode_for_rss($page_link).'</guid>');
-        $item->appendChild($rss_xml->importNode($node->documentElement, true));
+        $xml .= '<title>'.$this->encode_for_rss($page->title_xml).'</title>';
+        $xml .= '<link>'.$this->encode_for_rss($page_link).'</link>';
+        $xml .= '<guid>'.$this->encode_for_rss($page_link).'</guid>';
 
         # TODO: Convert date format?
-        $node = $rss_xml->createElement('pubDate');
-        $node->appendChild($rss_xml->createTextNode($page->pub_date));
-        $item->appendChild($node);
+        $xml .= '<pubDate>'.$this->encode_for_rss($page->pub_date).'</pubDate>';
 
-        $node = $rss_xml->createElement('description');
         # Placing the description in a root element to make it well formed xml->
-        $description = new DOMDocument();
-        $description->loadXML('<x>'.$this->encode_for_rss($page->description_xml).'</x>');
+        $description = BoostSiteTools::base_links($page->description_xml, $page_link);
+        $xml .= '<description>'.$this->encode_for_rss($description).'</description>';
 
-        BoostSiteTools::base_links($description, $page_link);
-        foreach($description->firstChild->childNodes as $child) {
-            $node->appendChild($rss_xml->createTextNode(
-                $description->saveXML($child)));
-        }
-        $item->appendChild($node);
+        $xml .= '</item>';
 
         return(array(
-            'item' => $item,
+            'item' => $xml,
             'quickbook' => $qbk_file,
             'last_modified' => $page->last_modified,
         ));
     }
 
     function encode_for_rss($x) {
-        return $x;
+        return htmlspecialchars($x, ENT_NOQUOTES);
     }
 }
