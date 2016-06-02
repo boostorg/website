@@ -2,8 +2,8 @@
 
 use Tester\Assert;
 
-require_once(__DIR__.'/config/bootstrap.php');
-require_once(__DIR__.'/../boost_documentation.php');
+require_once(__DIR__.'/../config/bootstrap.php');
+require_once(__DIR__.'/../../boost_documentation.php');
 
 BoostFilter::$template = __DIR__.'/template.php';
 

@@ -173,39 +173,71 @@ class BoostSiteTools {
 
     // Some XML processing functions - TODO: find somewhere better to put these.
 
-    static function fragment_to_string($x) {
+    static function trim_lines($x) {
         if ($x) {
-            return preg_replace('@ +$@m', '', $x->ownerDocument->saveXML($x));
+            return preg_replace('@ +$@m', '', $x);
         } else {
             return null;
         }
     }
 
-    static function base_links($node, $base_link) {
-        self::transform_links($node, function($x) use ($base_link) {
+    static function base_links($xhtml, $base_link) {
+        return self::transform_links($xhtml, function($x) use ($base_link) {
             return BoostUrl::resolve($x, $base_link);
         });
     }
 
-    static function transform_links($node, $func) {
-        self::transform_links_impl($node, 'a', 'href', $func);
-        self::transform_links_impl($node, 'img', 'src', $func);
-    }
+    static function transform_links($xhtml, $func) {
+        $result = '';
+        $pos = 0;
 
-    static function transform_links_impl($node, $tag_name, $attribute, $func) {
-        if ($node->nodeType == XML_ELEMENT_NODE ||
-            $node->nodeType == XML_DOCUMENT_NODE)
-        {
-            foreach ($node->getElementsByTagName($tag_name) as $x) {
-                $x->setAttribute($attribute,
-                    call_user_func($func, $x->getAttribute($attribute)));
+        $tag_stuff = '(?:[^<>"\']|\'[^\']*\'|"[^"]*")*';
+        $value_match = '\'[^\']*\'|"[^"]*"|[^\s<>"\']*';
+
+        preg_match_all(
+            "@
+            <
+            (?:
+                # Try to match the link values of 'img' and 'a' tags.
+                (?|
+                    img \b {$tag_stuff} \b src  \s* = \s* ({$value_match})
+                |   a   \b {$tag_stuff} \b href \s* = \s* ({$value_match})
+                )
+                {$tag_stuff}
+                >?
+            |
+                # Ignore CDATA
+                !\[CDATA\[(?:.*?\]\]>|.*)
+            |
+                # Ignore comments
+                !--.*(?:-->)?
+            |
+                # Ignore other <! tags.
+                ![^>]*>?
+            |
+                # Ignore misc tags.
+                [/\w]{$tag_stuff}>?
+            )
+            @xsmi",
+            $xhtml, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+
+        foreach ($matches as $match) {
+            if (!empty($match[1][0])) {
+                $string = $match[1][0];
+                if ($string[0] == '"' || $string[0] == "'") {
+                    $string = substr($string, 1, -1);
+                }
+                $string = html_entity_decode($string);
+                $string = call_user_func($func, $string);
+                $string = htmlspecialchars($string, ENT_COMPAT);
+
+                $result .= substr($xhtml, $pos, $match[1][1] - $pos);
+                $result .= "\"{$string}\"";
+                $pos = $match[1][1] + strlen($match[1][0]);
             }
         }
-        else if ($node->nodeType == XML_DOCUMENT_FRAG_NODE) {
-            foreach ($node->childNodes as $x) {
-                self::transform_links_impl($x, $tag_name, $attribute, $func);
-            }
-        }
+        $result .= substr($xhtml, $pos);
+        return $result;
     }
 }
 

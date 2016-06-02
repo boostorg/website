@@ -66,8 +66,11 @@ class BoostPages {
 
         // TODO: Hash in release data. Not doing it just yet as it will
         //       force a large rebuild.
-        $qbk_hash = hash('sha256', str_replace("\r\n", "\n",
+        $context = hash_init('sha256');
+        hash_update($context, json_encode($release_data));
+        hash_update($context, str_replace("\r\n", "\n",
             file_get_contents("{$this->root}/{$qbk_file}")));
+        $qbk_hash = hash_final($context);
 
         $record = null;
 
@@ -245,9 +248,9 @@ class BoostPages_Page {
         assert($this->dir_location || $refresh);
         assert(!$this->loaded);
 
-        $this->title_xml = BoostSiteTools::fragment_to_string($values['title_fragment']);
-        $this->purpose_xml = BoostSiteTools::fragment_to_string($values['purpose_fragment']);
-        $this->notice_xml = BoostSiteTools::fragment_to_string($values['notice_fragment']);
+        $this->title_xml = BoostSiteTools::trim_lines($values['title_xhtml']);
+        $this->purpose_xml = BoostSiteTools::trim_lines($values['purpose_xhtml']);
+        $this->notice_xml = BoostSiteTools::trim_lines($values['notice_xhtml']);
         $this->notice_url = $values['notice_url'];
 
         $this->pub_date = $values['pub_date'];
@@ -267,7 +270,7 @@ class BoostPages_Page {
         $doc_prefix  = null;
         if ($this->get_release_status() !== 'released' && $this->get_documentation()) {
             $doc_prefix = rtrim($this->get_documentation(), '/');
-            BoostSiteTools::transform_links($values['description_fragment'],
+            $values['description_xhtml'] = BoostSiteTools::transform_links($values['description_xhtml'],
                 function ($x) use ($doc_prefix) {
                     return preg_match('@^/(?:libs/|doc/html/)@', $x)
                         ? $doc_prefix.$x : $x;
@@ -280,13 +283,13 @@ class BoostPages_Page {
             $final_documentation = "/doc/libs/{$version->dir()}";
             $link_pattern = '@^'.preg_quote($final_documentation, '@').'/@';
             $replace = "{$doc_prefix}/";
-            BoostSiteTools::transform_links($values['description_fragment'],
+            $values['description_xhtml'] = BoostSiteTools::transform_links($values['description_xhtml'],
                 function($x) use($link_pattern, $replace) {
                     return preg_replace($link_pattern, $replace, $x);
                 });
         }
 
-        $this->description_xml = BoostSiteTools::fragment_to_string($values['description_fragment']);
+        $this->description_xml = BoostSiteTools::trim_lines($values['description_xhtml']);
     }
 
     function full_title_xml() {
