@@ -66,8 +66,11 @@ class BoostPages {
 
         // TODO: Hash in release data. Not doing it just yet as it will
         //       force a large rebuild.
-        $qbk_hash = hash('sha256', str_replace("\r\n", "\n",
+        $context = hash_init('sha256');
+        hash_update($context, json_encode($release_data));
+        hash_update($context, str_replace("\r\n", "\n",
             file_get_contents("{$this->root}/{$qbk_file}")));
+        $qbk_hash = hash_final($context);
 
         $record = null;
 
