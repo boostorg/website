@@ -2,8 +2,8 @@
 
 use Tester\Assert;
 
-require_once(__DIR__.'/config/bootstrap.php');
-require_once(__DIR__.'/../boost.php');
+require_once(__DIR__.'/../config/bootstrap.php');
+require_once(__DIR__.'/../../boost.php');
 
 # Some of these tests have other correct values.
 # e.g. might quote attributes values differently.
