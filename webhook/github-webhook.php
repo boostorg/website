@@ -24,7 +24,7 @@ function boost_website_webhook() {
     }
 
     $signature = array_key_exists('X_HUB_SIGNATURE', $_SERVER) ?
-        $_SERVER['X_HUB_SIGNATURE'] : false;
+        $_SERVER['HTTP_X_HUB_SIGNATURE'] : false;
 
     require_once(BOOST_TASKS_DIR.'/webhook/webhook.php');
 
