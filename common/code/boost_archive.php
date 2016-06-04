@@ -100,7 +100,7 @@ class BoostArchive
         // be getting them for legitimate files.
 
         if($exit_status > 1) {
-            $this->unzip_error($exit_status, $archive, $path);
+            $this->unzip_error($exit_status, $archive);
         }
     }
 
@@ -110,7 +110,7 @@ class BoostArchive
           .' '.escapeshellarg($path);
     }
 
-    function unzip_error($exit_status, $archive, $path) {
+    function unzip_error($exit_status, $archive) {
         $code="500 Internal Server Error";
 
         switch($exit_status) {
