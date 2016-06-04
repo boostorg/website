@@ -39,6 +39,12 @@ BOOST_REPOS_DIR
   git clone https://github.com/boostorg/boost.git -b develop --depth=1 boost-develop
   And then git pull regularly.
   - Defaults to BOOST_WEBSITE_SHARED_DIR/repos
+
+BOOST_TASKS_DIR
+  Location of 'boost-tasks', a repo containing scripts for various things
+  that the server needs to do. For the website user, the webhook
+  implementation is the only thing of interest.
+  - Defaults to BOOST_WEBSITE_SHARED_DIR/tasks
 */
 
 switch (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '')
@@ -80,5 +86,9 @@ if (defined('BOOST_WEBSITE_SHARED_DIR')) {
 
     if (!defined('BOOST_REPOS_DIR')) {
         define('BOOST_REPOS_DIR', BOOST_WEBSITE_SHARED_DIR.'/repos');
+    }
+
+    if (!defined('BOOST_TASKS_DIR')) {
+        define('BOOST_TASKS_DIR', BOOST_WEBSITE_SHARED_DIR.'/tasks');
     }
 }
