@@ -10,10 +10,7 @@ function boost_website_webhook() {
         die("Unable to find payload.\n");
     }
 
-    $payload = json_decode($_POST['payload']);
-    if (!$payload) {
-        die("Error parsing payload.\n");
-    }
+    $payload = $_POST['payload'];
 
     /* Get github headers */
     $github_headers = array();
