@@ -54,13 +54,21 @@ switch (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '')
 
   default:
   {
-    define('BOOST_CONFIG_FILE',dirname(__FILE__) . '/boost_config_local.php');
+    if (is_file(__DIR__.'/boost_config_local.php')) {
+      define('BOOST_CONFIG_FILE',dirname(__FILE__) . '/boost_config_local.php');
+    }
+    else if (is_file('/home/www/shared/config.php')) {
+      define('BOOST_CONFIG_FILE','/home/www/shared/config.php');
+    }
+    else {
+      define('BOOST_CONFIG_FILE',false);
+    }
   }
 }
 
 define('ARCHIVE_FILE_PREFIX', '');
 
-if (is_file(BOOST_CONFIG_FILE)) { require_once(BOOST_CONFIG_FILE); }
+if (BOOST_CONFIG_FILE) { require_once(BOOST_CONFIG_FILE); }
 
 if(!function_exists('virtual'))
 {
