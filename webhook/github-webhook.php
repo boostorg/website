@@ -23,13 +23,16 @@ function boost_website_webhook() {
         }
     }
 
+    $signature = array_key_exists('X_HUB_SIGNATURE', $_SERVER) ?
+        $_SERVER['X_HUB_SIGNATURE'] : false;
+
     require_once(BOOST_TASKS_DIR.'/webhook/webhook.php');
 
     if (!array_key_exists('event', $github_headers)) {
         die("No event header.\n");
     }
 
-    webhook($github_headers, $payload);
+    webhook($github_headers, $payload, $signature);
 }
 
 boost_website_webhook();
