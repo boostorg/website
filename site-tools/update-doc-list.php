@@ -197,6 +197,8 @@ function read_metadata_from_local_clone($location, $branch = 'latest') {
             }
         }
     }
+
+    return $updated_libs;
 }
 
 /**
