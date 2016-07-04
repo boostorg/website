@@ -212,24 +212,29 @@ function read_metadata_from_release($location, $version) {
     // existing library data.
 
     // Scan release for metadata files.
+    $parent_directories = array("{$location}/libs");
+    foreach (glob("{$location}/libs/*/sublibs") as $path) {
+        $parent_directories[] = dirname($path);
+    }
+
+    // TODO: Not really a module anymore.
     $module_paths = array();
-    foreach (new RecursiveIteratorIterator(
-        new RecursiveDirectoryIterator("{$location}/libs",
-        FilesystemIterator::CURRENT_AS_SELF |
-        FilesystemIterator::UNIX_PATHS)) as $info)
-    {
-        if ($info->isDot() && $info->getFilename()=='.') {
-            $path = dirname($info->getSubPathname());
-            if (is_file("{$info->getPathname()}/libraries.json")) {
-                $module_paths[] = "libs/".dirname($path);
+    $path_pattern = "@^{$location}/(.*)/meta/libraries.json$@";
+    foreach($parent_directories as $parent) {
+        foreach (glob("{$parent}/*/meta/libraries.json") as $path) {
+            if (preg_match($path_pattern, $path, $match)) {
+                $module_paths[] = $match[1];
+            }
+            else {
+                echo "Unexpected path: {$path}.\n";
             }
         }
     }
 
     $updated_libs = array();
-
     foreach ($module_paths as $path) {
         $json_path = "{$location}/{$path}/meta/libraries.json";
+
         try {
             $updated_libs = array_merge($updated_libs, load_from_file($path, $json_path));
         } catch (library_decode_exception $e) {
