@@ -38,6 +38,7 @@ echo_sitemap_url("doc/libs/", '1.0', 'daily');
 // Library 'home pages'
 
 $libs = BoostLibraries::load();
+// TODO: Include hidden libraries? Or not?
 foreach ($libs->get_for_version(BoostVersion::current()) as $lib) {
     echo_sitemap_url("doc/libs/release/$lib[documentation]", '1.0', 'daily');
 }

@@ -19,6 +19,7 @@ if (isset($_GET['version'])) {
 // TODO: This is a bit awkard, should probably have an alternative
 //       to 'get_for_version' which returns a BoostLibraries instance
 //       rather than an array.
+// TODO: Include hidden libraries.
 $version_libs = array_map(function($lib) { return new BoostLibrary($lib); },
     BoostLibraries::load()->get_for_version($version));
 

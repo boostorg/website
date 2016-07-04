@@ -22,6 +22,7 @@ function main() {
     $maintainers = BoostMaintainers::read_from_text(
         file($location.'/libs/maintainers.txt'));
 
+    // TODO: Want to include hidden libraries here.
     $library_details = $libraries->get_for_version($version, null);
 
     $libs_index = array();

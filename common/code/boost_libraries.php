@@ -346,6 +346,7 @@ class BoostLibraries
         // Note: can only do this after 'clean_db' as that copies the
         // old release details into the new release.
         if ($version && $version->is_numbered_release()) {
+            // TODO: Special case for hidden libraries?
             $libs = $this->get_for_version($version, null,
                 'BoostLibraries::filter_all');
             $new_libs = array();
