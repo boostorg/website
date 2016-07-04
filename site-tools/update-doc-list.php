@@ -199,22 +199,18 @@ function read_metadata_from_modules($path, $location, $hash, $subdirs = array('l
  * @throws RuntimeException
  */
 function read_metadata_from_filesystem($location, $version) {
-    // We don't have a list for modules, so have to work it out from the
-    // existing library data.
-
     // Scan release for metadata files.
     $parent_directories = array("{$location}/libs");
     foreach (glob("{$location}/libs/*/sublibs") as $path) {
         $parent_directories[] = dirname($path);
     }
 
-    // TODO: Not really a module anymore.
-    $module_paths = array();
+    $library_paths = array();
     $path_pattern = "@^{$location}/(.*)/meta/libraries.json$@";
     foreach($parent_directories as $parent) {
         foreach (glob("{$parent}/*/meta/libraries.json") as $path) {
             if (preg_match($path_pattern, $path, $match)) {
-                $module_paths[] = $match[1];
+                $library_paths[] = $match[1];
             }
             else {
                 echo "Unexpected path: {$path}.\n";
@@ -223,27 +219,27 @@ function read_metadata_from_filesystem($location, $version) {
     }
 
     $updated_libs = array();
-    foreach ($module_paths as $path) {
+    foreach ($library_paths as $path) {
         $json_path = "{$location}/{$path}/meta/libraries.json";
 
         try {
             $updated_libs = array_merge($updated_libs, load_from_file($path, $json_path));
         } catch (library_decode_exception $e) {
-            echo "Error decoding metadata for module at {$json_path}:\n{$e->content()}\n";
+            echo "Error decoding metadata for library at {$json_path}:\n{$e->content()}\n";
         }
     }
 
     return $updated_libs;
 }
 
-function load_from_file($path, $module_path) {
-    return load_from_text(file_get_contents($path), $path, $module_path);
+function load_from_file($path, $library_path) {
+    return load_from_text(file_get_contents($path), $path, $library_path);
 }
 
-function load_from_text($text, $filename, $module_path = null) {
+function load_from_text($text, $filename, $library_path = null) {
     $libraries = BoostLibrary::read_libraries_json($text);
     foreach($libraries as $lib) {
-        $lib->set_library_path($module_path);
+        $lib->set_library_path($library_path);
     }
     return $libraries;
 }
