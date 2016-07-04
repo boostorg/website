@@ -17,8 +17,8 @@ define('USE_SERIALIZED_INFO', true);
  */
 class BoostLibraries
 {
-    private $categories = array();
-    private $db = array();
+    public $categories = array();
+    public $db = array();
 
     /**
      *
