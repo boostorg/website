@@ -335,7 +335,7 @@ class BoostLibraries
         }
     }
 
-    public function update_finish($version) {
+    public function update_finish($version = null) {
         if ($version) {
             $version = BoostVersion::from($version);
         }
