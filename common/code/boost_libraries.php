@@ -574,6 +574,8 @@ class BoostLibraries
             }
 
             if ($details) {
+                if (array_key_exists('status', $details)
+                    && $details['status'] == 'hidden') { continue; }
                 if ($filter && !call_user_func($filter, $details)) continue;
                 $libs[$key] = $details;
             }

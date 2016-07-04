@@ -61,6 +61,7 @@ class BoostLibrary
             $lib['authors'] = '';
         }
 
+        // Setup the standard flags.
         if (!isset($lib['std'])) {
             $lib['std'] = array();
         }
@@ -90,6 +91,15 @@ class BoostLibrary
         if (!empty($lib['category'])) {
             $lib['category'] = array_map('ucwords', $lib['category']);
             sort($lib['category']);
+        }
+
+        // Check the status.
+        if (isset($lib['status'])) {
+            $lib['status'] = strtolower($lib['status']);
+            if (!in_array($lib['status'], array('hidden', 'deprecated'))) {
+                // TODO: Better exception?
+                throw new BoostLibraries_exception("Invalid status: {$lib['status']}");
+            }
         }
 
         $this->details = $lib;
