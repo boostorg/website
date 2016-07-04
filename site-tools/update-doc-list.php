@@ -69,7 +69,7 @@ function main() {
                 exit(1);
             }
 
-            $updates[(string) $version] = read_metadata_from_release($location, $version);
+            $updates[(string) $version] = read_metadata_from_filesystem($location, $version);
         }
         else if (get_bool_from_array(BoostSuperProject::run_process(
                 "cd '${location}' && git rev-parse --is-bare-repository")))
@@ -90,7 +90,7 @@ function main() {
                 exit(1);
             }
 
-            $updates[(string) $version] = read_metadata_from_local_clone($location, $version);
+            $updates[(string) $version] = read_metadata_from_filesystem($location, $version);
         }
     }
 
@@ -175,39 +175,10 @@ function read_metadata_from_git($location, $version) {
 /**
  *
  * @param string $location The location of the super project in the mirror.
- * @param string $branch The branch to update from.
- * @throws RuntimeException
- */
-function read_metadata_from_local_clone($location, $branch = 'latest') {
-    global $quiet;
-    if (!$quiet) { echo "Updating from local checkout/{$branch}\n"; }
-
-    $super_project = new BoostSuperProject($location);
-    $updated_libs = array();
-    foreach ($super_project->get_modules() as $name => $module_details) {
-        foreach (
-                glob("{$location}/{$module_details['path']}/meta/libraries.*")
-                as $path) {
-            try {
-                $updated_libs = array_merge($updated_libs,
-                    load_from_file($path, $module_details['path']));
-            }
-            catch (library_decode_exception $e) {
-                echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
-            }
-        }
-    }
-
-    return $updated_libs;
-}
-
-/**
- *
- * @param string $location The location of the super project in the mirror.
  * @param BoostVersion $version The version of the release.
  * @throws RuntimeException
  */
-function read_metadata_from_release($location, $version) {
+function read_metadata_from_filesystem($location, $version) {
     // We don't have a list for modules, so have to work it out from the
     // existing library data.
 
