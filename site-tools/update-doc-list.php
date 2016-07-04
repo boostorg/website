@@ -125,7 +125,7 @@ function read_metadata_from_git($location, $version) {
     return read_metadata_from_modules('', $location, $branch);
 }
 
-function read_metadata_from_modules($path, $location, $hash, $subdirs = array('libs' => true)) {
+function read_metadata_from_modules($path, $location, $hash, $sublibs = array('libs' => true)) {
     // echo "Reading from {$path} - {$location} - {$hash}.\n";
 
     $super_project = new BoostSuperProject($location, $hash);
@@ -151,8 +151,8 @@ function read_metadata_from_modules($path, $location, $hash, $subdirs = array('l
             case 'blob':
                 $blob_path = $path ? "{$path}/$matches[4]" : $matches[4];
 
-                if (fnmatch('*/subdir', $blob_path)) {
-                    $subdirs[dirname($blob_path)] = true;
+                if (fnmatch('*/sublibs', $blob_path)) {
+                    $sublibs[dirname($blob_path)] = true;
                 }
                 else if (fnmatch('*/meta/libraries.json', $blob_path)) {
                     $metadata_files[$blob_path] = $matches[3];
@@ -171,7 +171,7 @@ function read_metadata_from_modules($path, $location, $hash, $subdirs = array('l
     // Process metadata files
     $updated_libs = array();
     foreach ($metadata_files as $metadata_path => $metadata_hash) {
-        if (empty($subdirs[dirname(dirname(dirname($metadata_path)))])) {
+        if (empty($sublibs[dirname(dirname(dirname($metadata_path)))])) {
             echo "Ignoring non-library metadata file: {$metadata_path}.\n";
         }
         else {
@@ -186,7 +186,7 @@ function read_metadata_from_modules($path, $location, $hash, $subdirs = array('l
             $path ? "{$path}/{$module['path']}" : $module['path'],
             "{$location}/{$module['url']}",
             $module['hash'],
-            $subdirs));
+            $sublibs));
     }
 
     return $updated_libs;
