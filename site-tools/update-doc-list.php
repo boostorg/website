@@ -129,8 +129,7 @@ function read_metadata_from_modules($path, $location, $hash, $sublibs = array('l
     // echo "Reading from {$path} - {$location} - {$hash}.\n";
 
     $super_project = new BoostSuperProject($location, $hash);
-    // TODO: Make this condition unnecessary:
-    $modules = $path ? array() : $super_project->get_modules();
+    $modules = $super_project->get_modules();
 
     // Used to quickly set submodule hash.
     $modules_by_path = Array();
