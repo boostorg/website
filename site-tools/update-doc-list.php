@@ -222,7 +222,7 @@ function read_metadata_from_filesystem($location, $version) {
         $json_path = "{$location}/{$path}/meta/libraries.json";
 
         try {
-            $updated_libs = array_merge($updated_libs, load_from_file($path, $json_path));
+            $updated_libs = array_merge($updated_libs, load_from_file($json_path, $path));
         } catch (library_decode_exception $e) {
             echo "Error decoding metadata for library at {$json_path}:\n{$e->content()}\n";
         }
