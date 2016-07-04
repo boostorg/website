@@ -122,51 +122,71 @@ function read_metadata_from_git($location, $version) {
 
     $branch = BoostVersion::from($version)->git_ref();
     if (!$quiet) { echo "Updating from {$branch}\n"; }
+    return read_metadata_from_modules('', $location, $branch);
+}
 
-    $super_project = new BoostSuperProject($location, $branch);
-    $modules = $super_project->get_modules();
+function read_metadata_from_modules($path, $location, $hash, $subdirs = array('libs' => true)) {
+    // echo "Reading from {$path} - {$location} - {$hash}.\n";
 
+    $super_project = new BoostSuperProject($location, $hash);
+    // TODO: Make this condition unnecessary:
+    $modules = $path ? array() : $super_project->get_modules();
+
+    // Used to quickly set submodule hash.
     $modules_by_path = Array();
     foreach($modules as $name => $details) {
         $modules_by_path[$details['path']] = $name;
     }
 
-    foreach($super_project->run_git(
-            "ls-tree {$branch} ".implode(' ', array_keys($modules_by_path)))
-        as $line_number => $line)
+    // Store possible metadata files in this array.
+    $metadata_files = array();
+
+    // Get a list of everything that's relevant in the superproject+modules.
+    foreach($super_project->run_git("ls-tree {$hash} -r") as $line_number => $line)
     {
         if (!$line) continue;
 
-        if (preg_match("@^160000 commit ([a-zA-Z0-9]+)\t(.*)$@", $line, $matches)) {
-            $modules[$modules_by_path[$matches[2]]]['hash'] = $matches[1];
+        if (preg_match("@^(\d{6}) (\w+) ([a-zA-Z0-9]+)\t(.*)$@", $line, $matches)) {
+            switch($matches[2]) {
+            case 'blob':
+                $blob_path = $path ? "{$path}/$matches[4]" : $matches[4];
+
+                if (fnmatch('*/subdir', $blob_path)) {
+                    $subdirs[dirname($blob_path)] = true;
+                }
+                else if (fnmatch('*/meta/libraries.json', $blob_path)) {
+                    $metadata_files[$blob_path] = $matches[3];
+                }
+                break;
+            case 'commit':
+                $modules[$modules_by_path[$matches[4]]]['hash'] = $matches[3];
+                break;
+            }
         }
         else {
             throw new RuntimeException("Unmatched submodule line: {$line}");
         }
     }
 
+    // Process metadata files
     $updated_libs = array();
-
-    foreach($modules as $name => $module) {
-        $module_location = "{$location}/{$module['url']}";
-        $module_command = "cd '{$module_location}' && git";
-
-        foreach(BoostSuperProject::run_process("{$module_command} ls-tree {$module['hash']} "
-                ."meta/libraries.xml meta/libraries.json") as $entry)
-        {
-            try {
-                $entry = trim($entry);
-                if (preg_match("@^100644 blob ([a-zA-Z0-9]+)\t(.*)$@", $entry, $matches)) {
-                    $hash = $matches[1];
-                    $filename = $matches[2];
-                    $text = implode("\n", (BoostSuperProject::run_process("{$module_command} show {$hash}")));
-                    $updated_libs = array_merge($updated_libs, load_from_text($text, $filename, $module['path']));
-                }
-            }
-            catch (library_decode_exception $e) {
-                echo "Error decoding metadata for module {$name}:\n{$e->content()}\n";
-            }
+    foreach ($metadata_files as $metadata_path => $metadata_hash) {
+        if (empty($subdirs[dirname(dirname(dirname($metadata_path)))])) {
+            echo "Ignoring non-library metadata file: {$metadata_path}.\n";
         }
+        else {
+            $text = implode("\n", $super_project->run_git("show {$metadata_hash}"));
+            $updated_libs = array_merge($updated_libs, load_from_text($text, $metadata_path, dirname(dirname($metadata_path))));
+        }
+    }
+
+    // Recurse over submodules
+    foreach($modules as $module) {
+        $updated_libs = array_merge($updated_libs, read_metadata_from_modules(
+            $path ? "{$path}/{$module['path']}" : $module['path'],
+            "{$location}/{$module['url']}",
+            $module['hash'],
+            $subdirs));
     }
 
     return $updated_libs;
