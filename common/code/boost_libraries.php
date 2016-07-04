@@ -98,8 +98,6 @@ class BoostLibraries
                     case 'documentation':
                     case 'status':
                     case 'library_path':
-                    // TODO: Remove once modules are fully removed from this metadata.
-                    case 'module':
                     {
                         if (isset($val['value'])) { $lib[$val['tag']] = trim($val['value']); }
                         else { $lib[$val['tag']] = ''; }
@@ -432,8 +430,7 @@ class BoostLibraries
 
                 $writer->startElement('library');
                 $this->write_element($writer, $exclude, $details, 'key');
-                $this->write_optional_element($writer, $exclude, $details, 'module');
-                $this->write_optional_element($writer, $exclude, $details, 'library_path');
+                $this->write_element($writer, $exclude, $details, 'library_path');
                 $this->write_optional_element($writer, $exclude, $details, 'boost-version');
                 $this->write_optional_element($writer, $exclude, $details, 'update-version');
                 $this->write_optional_element($writer, $exclude, $details, 'status');
