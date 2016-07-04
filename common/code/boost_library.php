@@ -95,15 +95,16 @@ class BoostLibrary
         $this->details = $lib;
     }
 
-    public function set_module($module_name, $module_path) {
-        assert(!isset($this->details['module']));
-        $module_path = trim($module_path, '/').'/';
+    // This is basically the parent of the 'meta' directory.
+    public function set_library_path($library_path) {
+        assert(!isset($this->details['library_path']));
+        $library_path = trim($library_path, '/').'/';
         $documentation_url =
             isset($this->details['documentation']) ?
             $this->details['documentation'] : '.';
-        $this->details['module'] = $module_name;
+        $this->details['library_path'] = $library_path;
         $this->details['documentation'] =
-            ltrim(BoostUrl::resolve($documentation_url, $module_path), '/');
+            ltrim(BoostUrl::resolve($documentation_url, $library_path), '/');
     }
 
     public function array_for_json($exclude = array()) {

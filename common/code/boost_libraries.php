@@ -97,6 +97,8 @@ class BoostLibraries
                     case 'description':
                     case 'documentation':
                     case 'status':
+                    case 'library_path':
+                    // TODO: Remove once modules are fully removed from this metadata.
                     case 'module':
                     {
                         if (isset($val['value'])) { $lib[$val['tag']] = trim($val['value']); }
@@ -282,7 +284,7 @@ class BoostLibraries
      */
     public function update($update_version = null, $update = null) {
         $this->update_start($update_version);
-        if ($update) { $this->update_modules($update_version, $update); }
+        if ($update) { $this->update_libraries($update_version, $update); }
         $this->update_finish($update_version);
     }
 
@@ -298,7 +300,7 @@ class BoostLibraries
         }
     }
 
-    public function update_modules($update_version, $update) {
+    public function update_libraries($update_version, $update) {
         if ($update_version) {
             $update_version = BoostVersion::from($update_version);
         }
@@ -358,7 +360,7 @@ class BoostLibraries
 
                 $new_libs[] = new BoostLibrary($lib_details);
             }
-            $this->update_modules($version, $new_libs);
+            $this->update_libraries($version, $new_libs);
             $this->clean_db();
         }
     }
@@ -430,7 +432,8 @@ class BoostLibraries
 
                 $writer->startElement('library');
                 $this->write_element($writer, $exclude, $details, 'key');
-                $this->write_element($writer, $exclude, $details, 'module');
+                $this->write_optional_element($writer, $exclude, $details, 'module');
+                $this->write_optional_element($writer, $exclude, $details, 'library_path');
                 $this->write_optional_element($writer, $exclude, $details, 'boost-version');
                 $this->write_optional_element($writer, $exclude, $details, 'update-version');
                 $this->write_optional_element($writer, $exclude, $details, 'status');

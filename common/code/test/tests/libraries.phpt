@@ -17,7 +17,7 @@ $libraries = BoostLibraries::from_xml('<?xml version="1.0" encoding="US-ASCII"?>
   </categories>
   <library>
     <key>accumulators</key>
-    <module>accumulators</module>
+    <library_path>libs/accumulators</library_path>
     <boost-version>1.36.0</boost-version>
     <name>Accumulators</name>
     <authors>Eric Niebler</authors>
@@ -32,7 +32,7 @@ $libraries = BoostLibraries::from_xml('<?xml version="1.0" encoding="US-ASCII"?>
 
 $accumulators_details = '{
     "key" : "accumulators",
-    "module": "accumulators",
+    "library_path": "libs/accumulators",
     "name": "Accumulators",
     "authors": "Eric Niebler",
     "description": "Framework for incremental calculation, and collection of statistical accumulators.",
@@ -50,7 +50,7 @@ Assert::same(count($r), 1);
 
 $new_accumulators_details = '{
     "key": "accumulators",
-    "module": "accumulators",
+    "library_path": "libs/accumulators",
     "boost-version": "1.36.0",
     "name": "Accumulators",
     "authors": "Eric Niebler",
