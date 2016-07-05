@@ -86,8 +86,12 @@ EOL;
         $xml .= '<link>'.$this->encode_for_rss($page_link).'</link>';
         $xml .= '<guid>'.$this->encode_for_rss($page_link).'</guid>';
 
-        # TODO: Convert date format?
-        $xml .= '<pubDate>'.$this->encode_for_rss($page->pub_date).'</pubDate>';
+        # TODO: Maybe use $page->last_modified as date for 'In Progress'.
+        if ($page->pub_date != 'In Progress') {
+            $rss_date = strtotime($page->pub_date);
+            assert($rss_date != false);
+            $xml .= '<pubDate>'.$this->encode_for_rss(date(DATE_RSS, $rss_date)).'</pubDate>';
+        }
 
         # Placing the description in a root element to make it well formed xml->
         $description = BoostSiteTools::base_links($page->description_xml, $page_link);
