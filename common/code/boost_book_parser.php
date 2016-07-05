@@ -43,11 +43,15 @@ class BoostBookParser {
         $pub_date = $article_node->get_attribute('last-revision');
 
         if (!$pub_date or $pub_date[0] == '$') {
-            $pub_date = 'In Progress';
-            $last_modified = time();
+            $pub_date = null;
         } else {
-            $last_modified = strtotime($pub_date);
+            $pub_date = strtotime($pub_date);
+            assert($pub_date !== false);
         }
+        // TODO: Don't update last_modified when refreshing.
+        //       This should probably be handled by checking for
+        //       hash changes.
+        $last_modified = time();
 
         $description_xhtml = $this->x($state);
 

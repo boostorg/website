@@ -31,9 +31,17 @@ class BoostPages {
                     = new BoostPages_Page($qbk_file, $this->get_release_data($qbk_file), $record);
             }
 
+            // Sort into reverse chronological order, with unpublished
+            // articles coming first.
             uasort($this->pages, function($x, $y) {
-                return $x->last_modified == $y->last_modified ? 0 :
-                    ($x->last_modified < $y->last_modified ? 1 : -1);
+                if (!$x->pub_date || !$y->pub_date) {
+                    $pub_date_order = $x->pub_date - $y->pub_date;
+                }
+                else {
+                    $pub_date_order = -($x->pub_date - $y->pub_date);
+                }
+                return $pub_date_order ?:
+                    -($x->last_modified - $y->last_modified);
             });
         }
     }
@@ -206,6 +214,17 @@ class BoostPages_Page {
 
         $this->loaded = false;
 
+        if (is_string($this->pub_date)) {
+            $this->pub_date = $this->pub_date == 'In Progress' ?
+                null : strtotime($this->pub_date);
+            assert($this->pub_date !== false);
+        }
+
+        if (is_string($this->last_modified)) {
+            $this->last_modified = strtotime($this->last_modified);
+            assert($this->last_modified !== false);
+        }
+
         $this->set_release_data($release_data);
     }
 
@@ -214,7 +233,7 @@ class BoostPages_Page {
             assert($this->type === 'release');
 
             if (!array_key_exists('release_status', $release_data)) {
-                $release_data['release_status'] = $this->pub_date == 'In Progress' ? 'dev' : 'released';
+                $release_data['release_status'] = $this->pub_date ? 'released' : 'dev';
             }
             if (!in_array($release_data['release_status'], array('released', 'beta', 'dev'))) {
                 echo "Error: Unknown release status: {$this->array_get($release_data, 'release_status')}.\n";
@@ -236,8 +255,8 @@ class BoostPages_Page {
             'purpose' => $this->purpose_xml,
             'notice' => $this->notice_xml,
             'notice_url' => $this->notice_url,
-            'last_modified' => $this->last_modified,
-            'pub_date' => $this->pub_date,
+            'last_modified' => $this->last_modified ? gmdate(DATE_RSS, $this->last_modified) : null,
+            'pub_date' => $this->pub_date ? gmdate(DATE_RSS, $this->pub_date) : null,
             'qbk_hash' => $this->qbk_hash
         );
     }
@@ -303,10 +322,10 @@ class BoostPages_Page {
     }
 
     function web_date() {
-        if ($this->pub_date == 'In Progress') {
-            return $this->pub_date;
+        if (!$this->pub_date) {
+            return 'In Progress';
         } else {
-            return gmdate('F jS, Y H:i', $this->last_modified).' GMT';
+            return gmdate('F jS, Y H:i', $this->pub_date).' GMT';
         }
     }
 
