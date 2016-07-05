@@ -64,8 +64,6 @@ class BoostPages {
     function add_qbk_file($qbk_file, $dir_location, $type) {
         $release_data = $this->get_release_data($qbk_file);
 
-        // TODO: Hash in release data. Not doing it just yet as it will
-        //       force a large rebuild.
         $context = hash_init('sha256');
         hash_update($context, json_encode($release_data));
         hash_update($context, str_replace("\r\n", "\n",
