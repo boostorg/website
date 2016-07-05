@@ -14,6 +14,13 @@ class BoostRss {
 
         if (is_file($this->rss_state_path)) {
             $this->rss_items = BoostState::load($this->rss_state_path);
+
+            foreach($this->rss_items as &$item) {
+                if (!empty($item['last_modified']) && is_numeric($item['last_modified'])) {
+                    $item['last_modified'] = new DateTime("@{$item['last_modified']}");
+                }
+            }
+            unset($item);
         }
     }
 
@@ -99,11 +106,10 @@ EOL;
 
         // Q: Should this be using the page last_modified, or when the RSS
         //    feed item was last modified?
-        // Q: Use DateTime for last_modified?
         return(array(
             'item' => $xml,
             'quickbook' => $qbk_file,
-            'last_modified' => $page->last_modified->getTimestamp(),
+            'last_modified' => $page->last_modified,
         ));
     }
 
