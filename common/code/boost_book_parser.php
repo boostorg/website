@@ -45,8 +45,7 @@ class BoostBookParser {
         if (!$pub_date or $pub_date[0] == '$') {
             $pub_date = null;
         } else {
-            $pub_date = strtotime($pub_date);
-            assert($pub_date !== false);
+            $pub_date = new DateTime($pub_date);
         }
 
         $description_xhtml = $this->x($state);

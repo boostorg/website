@@ -88,7 +88,7 @@ EOL;
 
         // Q: Maybe use $page->last_modified when there's no pub_date.
         if ($page->pub_date) {
-            $xml .= '<pubDate>'.$this->encode_for_rss(date(DATE_RSS, $page->pub_date)).'</pubDate>';
+            $xml .= '<pubDate>'.$this->encode_for_rss($page->pub_date->format(DATE_RSS)).'</pubDate>';
         }
 
         # Placing the description in a root element to make it well formed xml->
@@ -99,10 +99,11 @@ EOL;
 
         // Q: Should this be using the page last_modified, or when the RSS
         //    feed item was last modified?
+        // Q: Use DateTime for last_modified?
         return(array(
             'item' => $xml,
             'quickbook' => $qbk_file,
-            'last_modified' => $page->last_modified,
+            'last_modified' => $page->last_modified->getTimestamp(),
         ));
     }
 

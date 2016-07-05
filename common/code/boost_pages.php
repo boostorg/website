@@ -31,18 +31,18 @@ class BoostPages {
                     = new BoostPages_Page($qbk_file, $this->get_release_data($qbk_file), $record);
             }
 
-            // Sort into reverse chronological order, with unpublished
-            // articles coming first.
-            uasort($this->pages, function($x, $y) {
-                if (!$x->pub_date || !$y->pub_date) {
-                    $pub_date_order = $x->pub_date - $y->pub_date;
-                }
-                else {
-                    $pub_date_order = -($x->pub_date - $y->pub_date);
-                }
-                return $pub_date_order ?:
-                    -($x->last_modified - $y->last_modified);
-            });
+            // Sort pages in reverse chronological order.
+            $pub_date_order = array();
+            $last_published_order = array();
+            $unpublished_date = new DateTime("+10 years");
+            foreach($this->pages as $index => $page) {
+                $pub_date_order[$index] = $page->pub_date ?: $unpublished_date;
+                $last_published_order[$index] = $page->last_modified;
+            }
+            array_multisort(
+                $pub_date_order, SORT_DESC,
+                $last_published_order, SORT_DESC,
+                $this->pages);
         }
     }
 
@@ -98,7 +98,7 @@ class BoostPages {
         $record->qbk_hash = $qbk_hash;
         $record->dir_location = $dir_location;
         $record->type = $type;
-        $record->last_modified = time();
+        $record->last_modified = new DateTime();
 
         if (!in_array($record->type, array('release', 'page'))) {
             throw new RuntimeException("Unknown record type: ".$record->type);
@@ -217,13 +217,17 @@ class BoostPages_Page {
 
         if (is_string($this->pub_date)) {
             $this->pub_date = $this->pub_date == 'In Progress' ?
-                null : strtotime($this->pub_date);
-            assert($this->pub_date !== false);
+                null : new DateTime($this->pub_date);
+        }
+        else if (is_numeric($this->pub_date)) {
+            $this->pub_date = new DateTime("@{$this->pub_date}");
         }
 
         if (is_string($this->last_modified)) {
-            $this->last_modified = strtotime($this->last_modified);
-            assert($this->last_modified !== false);
+            $this->last_modified = new DateTime($this->last_modified);
+        }
+        else if (is_numeric($this->last_modified)) {
+            $this->last_modified = new DateTime("@{$this->last_modified}");
         }
 
         $this->set_release_data($release_data);
@@ -256,8 +260,8 @@ class BoostPages_Page {
             'purpose' => $this->purpose_xml,
             'notice' => $this->notice_xml,
             'notice_url' => $this->notice_url,
-            'last_modified' => $this->last_modified ? gmdate(DATE_RSS, $this->last_modified) : null,
-            'pub_date' => $this->pub_date ? gmdate(DATE_RSS, $this->pub_date) : null,
+            'last_modified' => $this->last_modified ? $this->last_modified->format(DATE_RSS) : null,
+            'pub_date' => $this->pub_date ? $this->pub_date->format(DATE_RSS) : null,
             'qbk_hash' => $this->qbk_hash
         );
     }
@@ -325,7 +329,7 @@ class BoostPages_Page {
         if (!$this->pub_date) {
             return 'In Progress';
         } else {
-            return gmdate('F jS, Y H:i', $this->pub_date).' GMT';
+            return gmdate('F jS, Y H:i', $this->pub_date->getTimestamp()).' GMT';
         }
     }
 
