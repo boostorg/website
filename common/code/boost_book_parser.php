@@ -48,10 +48,6 @@ class BoostBookParser {
             $pub_date = strtotime($pub_date);
             assert($pub_date !== false);
         }
-        // TODO: Don't update last_modified when refreshing.
-        //       This should probably be handled by checking for
-        //       hash changes.
-        $last_modified = time();
 
         $description_xhtml = $this->x($state);
 
@@ -63,7 +59,6 @@ class BoostBookParser {
             'notice_url' => $notice_url,
             'notice_xhtml' => $notice_xhtml,
             'pub_date' => $pub_date,
-            'last_modified' => $last_modified,
             'documentation' => $documentation,
         );
     }

@@ -98,6 +98,7 @@ class BoostPages {
         $record->qbk_hash = $qbk_hash;
         $record->dir_location = $dir_location;
         $record->type = $type;
+        $record->last_modified = time();
 
         if (!in_array($record->type, array('release', 'page'))) {
             throw new RuntimeException("Unknown record type: ".$record->type);
@@ -271,7 +272,6 @@ class BoostPages_Page {
         $this->notice_url = $values['notice_url'];
 
         $this->pub_date = $values['pub_date'];
-        $this->last_modified = $values['last_modified'];
         $this->id = $values['id'];
         if (!$this->id) {
             $this->id = strtolower(preg_replace('@[\W]@', '_', $this->title_xml));
