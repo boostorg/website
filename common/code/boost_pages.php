@@ -122,7 +122,7 @@ class BoostPages {
                 try {
                     echo "Converting ", $page, ":\n";
                     BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
-                    $page_data->load($bb_parser->parse($xml_filename), $refresh);
+                    $page_data->load_boostbook_data($bb_parser->parse($xml_filename), $refresh);
                 } catch (Exception $e) {
                     unlink($xml_filename);
                     throw $e;
@@ -262,7 +262,7 @@ class BoostPages_Page {
         );
     }
 
-    function load($values, $refresh = false) {
+    function load_boostbook_data($values, $refresh = false) {
         assert($this->dir_location || $refresh);
         assert(!$this->loaded);
 
