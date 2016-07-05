@@ -260,8 +260,8 @@ class BoostPages_Page {
             'purpose' => $this->purpose_xml,
             'notice' => $this->notice_xml,
             'notice_url' => $this->notice_url,
-            'last_modified' => $this->last_modified ? $this->last_modified->format(DATE_RSS) : null,
-            'pub_date' => $this->pub_date ? $this->pub_date->format(DATE_RSS) : null,
+            'last_modified' => $this->last_modified,
+            'pub_date' => $this->pub_date,
             'qbk_hash' => $this->qbk_hash
         );
     }

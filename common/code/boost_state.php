@@ -76,6 +76,9 @@ class BoostState {
                 }
 
                 $record["$key"] = substr(implode('', $values), 0, -1);
+            } else if ($c == '@') {
+                $record["$key"] = new DateTime(fgets($file));
+                $c = fgetc($file);
             } else {
                 throw new BoostStateParseError();
             }
@@ -112,6 +115,10 @@ class BoostState {
                     } else if (is_float($value)) {
                         fputs($file, '.');
                         fputs($file, $value);
+                        fputs($file, "\n");
+                    } else if ($value instanceof \DateTime || $value instanceof \DateTimeInterface) {
+                        fputs($file, '@');
+                        fputs($file, $value->format(DATE_RSS));
                         fputs($file, "\n");
                     } else {
                         print_r($value);
