@@ -96,7 +96,7 @@ class BoostVersion {
             }
 
             // TODO: Make this stricter by only matching whole string. Might break something?
-            if (preg_match('@(\d+)[._](\d+)[._](\d+)([-._ ]?b(?:eta)?(\d*))?@',
+            if (preg_match('@(?<!\d)(\d+)[._](\d+)[._](\d+)([-._ ]?b(?:eta)?(\d*))?@',
                 $value, $matches))
             {
                 return self::release(

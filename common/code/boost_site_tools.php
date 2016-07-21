@@ -175,7 +175,7 @@ class BoostSiteTools {
 
     static function trim_lines($x) {
         if ($x) {
-            return preg_replace('@ +$@m', '', $x);
+            return preg_replace('@(?<! ) +$@m', '', $x);
         } else {
             return null;
         }

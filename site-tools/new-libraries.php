@@ -45,7 +45,7 @@ function main() {
 
 function filesystem_doc_link($lib) {
     $link = $lib['documentation'];
-    if (preg_match('@/$@', $link)) {
+    if (substr($link, -1) === '/') {
         $link .= 'index.html';
     }
     return $link;
