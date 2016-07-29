@@ -43,10 +43,9 @@ class BoostBookParser {
         $pub_date = $article_node->get_attribute('last-revision');
 
         if (!$pub_date or $pub_date[0] == '$') {
-            $pub_date = 'In Progress';
-            $last_modified = time();
+            $pub_date = null;
         } else {
-            $last_modified = strtotime($pub_date);
+            $pub_date = new DateTime($pub_date);
         }
 
         $description_xhtml = $this->x($state);
@@ -59,7 +58,6 @@ class BoostBookParser {
             'notice_url' => $notice_url,
             'notice_xhtml' => $notice_xhtml,
             'pub_date' => $pub_date,
-            'last_modified' => $last_modified,
             'documentation' => $documentation,
         );
     }

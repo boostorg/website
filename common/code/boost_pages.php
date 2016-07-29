@@ -31,10 +31,18 @@ class BoostPages {
                     = new BoostPages_Page($qbk_file, $this->get_release_data($qbk_file), $record);
             }
 
-            uasort($this->pages, function($x, $y) {
-                return $x->last_modified == $y->last_modified ? 0 :
-                    ($x->last_modified < $y->last_modified ? 1 : -1);
-            });
+            // Sort pages in reverse chronological order.
+            $pub_date_order = array();
+            $last_published_order = array();
+            $unpublished_date = new DateTime("+10 years");
+            foreach($this->pages as $index => $page) {
+                $pub_date_order[$index] = $page->pub_date ?: $unpublished_date;
+                $last_published_order[$index] = $page->last_modified;
+            }
+            array_multisort(
+                $pub_date_order, SORT_DESC,
+                $last_published_order, SORT_DESC,
+                $this->pages);
         }
     }
 
@@ -90,6 +98,7 @@ class BoostPages {
         $record->qbk_hash = $qbk_hash;
         $record->dir_location = $dir_location;
         $record->type = $type;
+        $record->last_modified = new DateTime();
 
         if (!in_array($record->type, array('release', 'page'))) {
             throw new RuntimeException("Unknown record type: ".$record->type);
@@ -113,7 +122,7 @@ class BoostPages {
                 try {
                     echo "Converting ", $page, ":\n";
                     BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
-                    $page_data->load($bb_parser->parse($xml_filename), $refresh);
+                    $page_data->load_boostbook_data($bb_parser->parse($xml_filename), $refresh);
                 } catch (Exception $e) {
                     unlink($xml_filename);
                     throw $e;
@@ -206,6 +215,21 @@ class BoostPages_Page {
 
         $this->loaded = false;
 
+        if (is_string($this->pub_date)) {
+            $this->pub_date = $this->pub_date == 'In Progress' ?
+                null : new DateTime($this->pub_date);
+        }
+        else if (is_numeric($this->pub_date)) {
+            $this->pub_date = new DateTime("@{$this->pub_date}");
+        }
+
+        if (is_string($this->last_modified)) {
+            $this->last_modified = new DateTime($this->last_modified);
+        }
+        else if (is_numeric($this->last_modified)) {
+            $this->last_modified = new DateTime("@{$this->last_modified}");
+        }
+
         $this->set_release_data($release_data);
     }
 
@@ -214,7 +238,7 @@ class BoostPages_Page {
             assert($this->type === 'release');
 
             if (!array_key_exists('release_status', $release_data)) {
-                $release_data['release_status'] = $this->pub_date == 'In Progress' ? 'dev' : 'released';
+                $release_data['release_status'] = $this->pub_date ? 'released' : 'dev';
             }
             if (!in_array($release_data['release_status'], array('released', 'beta', 'dev'))) {
                 echo "Error: Unknown release status: {$this->array_get($release_data, 'release_status')}.\n";
@@ -242,7 +266,7 @@ class BoostPages_Page {
         );
     }
 
-    function load($values, $refresh = false) {
+    function load_boostbook_data($values, $refresh = false) {
         assert($this->dir_location || $refresh);
         assert(!$this->loaded);
 
@@ -252,7 +276,6 @@ class BoostPages_Page {
         $this->notice_url = $values['notice_url'];
 
         $this->pub_date = $values['pub_date'];
-        $this->last_modified = $values['last_modified'];
         $this->id = $values['id'];
         if (!$this->id) {
             $this->id = strtolower(preg_replace('@[\W]@', '_', $this->title_xml));
@@ -303,10 +326,10 @@ class BoostPages_Page {
     }
 
     function web_date() {
-        if ($this->pub_date == 'In Progress') {
-            return $this->pub_date;
+        if (!$this->pub_date) {
+            return 'In Progress';
         } else {
-            return gmdate('F jS, Y H:i', $this->last_modified).' GMT';
+            return gmdate('F jS, Y H:i', $this->pub_date->getTimestamp()).' GMT';
         }
     }
 
