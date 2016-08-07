@@ -53,21 +53,7 @@ class BoostSuperProject {
             }
         }
 
-        $result = array();
-        foreach ($modules as $name => $settings) {
-            if (empty($settings['url'])) {
-                throw new RuntimeException("Missing URL for {$name}.");
-            }
-            else if (!preg_match('@^\.\./(\w+)\.git$@', $settings['url'])) {
-                //throw new RuntimeException("Invalid URL for {$name}.");
-                echo "Ignoring submodule '{$name}' in '{$this->location}'.\n";
-            }
-            else {
-                $result[$name] = $settings;
-            }
-        }
-
-        return $result;
+        return $modules;
     }
 
     public function run_git($command) {

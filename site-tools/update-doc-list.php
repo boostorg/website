@@ -180,9 +180,21 @@ function read_metadata_from_modules($path, $location, $hash, $sublibs = array('l
     }
 
     // Recurse over submodules
-    foreach($modules as $module) {
+    foreach($modules as $name => $module) {
+        global $quiet;
+        $submodule_path = $path ? "{$path}/{$module['path']}" : $module['path'];
+
+        if (!preg_match('@^\.\./(\w+)\.git$@', $module['url'])) {
+            // In quiet mode don't warn about documentation submodules, which
+            // libraries have previously included from remote locations.
+            if (!$quiet || strpos($submodule_path.'/', '/doc/') === false) {
+                echo "Ignoring submodule '{$name}' in '{$location}'.\n";
+            }
+            continue;
+        }
+
         $updated_libs = array_merge($updated_libs, read_metadata_from_modules(
-            $path ? "{$path}/{$module['path']}" : $module['path'],
+            $submodule_path,
             "{$location}/{$module['url']}",
             $module['hash'],
             $sublibs));
