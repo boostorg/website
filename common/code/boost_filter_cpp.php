@@ -7,14 +7,7 @@
 
 class BoostFilterCpp extends BoostFilterText
 {
-    function echo_filtered() {
-        $this->title = html_encode($this->data->path);
-
-        $this->display_template(
-            $this->template_params($this->cpp_filter_content()));
-    }
-
-    function cpp_filter_content()
+    function filter_content()
     {
         return
             "<h3>".html_encode($this->data->path)."</h3>\n".

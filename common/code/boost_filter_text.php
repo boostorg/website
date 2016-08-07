@@ -18,10 +18,10 @@ class BoostFilterText extends BoostFilter
         $this->title = html_encode($this->data->path);
 
         $this->display_template(
-            $this->template_params($this->text_filter_content()));
+            $this->template_params($this->filter_content()));
     }
 
-    function text_filter_content()
+    function filter_content()
     {
         return
             "<h3>".html_encode($this->data->path)."</h3>\n".
