@@ -193,6 +193,11 @@ function read_metadata_from_modules($path, $location, $hash, $sublibs = array('l
             continue;
         }
 
+        if (empty($module['hash'])) {
+            echo "Missing module in .gitmodule: '{$name}' in '{$location}'.\n";
+            continue;
+        }
+
         $updated_libs = array_merge($updated_libs, read_metadata_from_modules(
             $submodule_path,
             "{$location}/{$module['url']}",
