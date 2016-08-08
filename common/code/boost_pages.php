@@ -461,10 +461,18 @@ class BoostPages_Page {
             $output = '              <p><span class="news-download"><a href="'.
                 html_encode($downloads).'">';
 
-            if ($this->get_release_status() == 'beta') {
-                $output .= 'Download this beta release.';
-            } else {
+            switch($this->get_release_status()) {
+            case 'released':
                 $output .= 'Download this release.';
+                break;
+            case 'beta':
+                $output .= 'Download this beta release.';
+                break;
+            case 'dev':
+                $output .= 'Download snapshot.';
+                break;
+            default:
+                assert(false);
             }
 
             $output .= '</a></span></p>';
