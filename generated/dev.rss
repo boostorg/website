@@ -119,11 +119,52 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="http://www.boost.org/doc/libs/master/libs/dll/"&gt;DLL&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Mangled symbols and classes loading was implemented by Klemens Morgenstern
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Suppress a 'unused parameter' warning in detail::aggressive_ptr_cast
+                [https://github.com/apolukhin/Boost.DLL/pull/9 pull-request 9]
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Allowed to query non-existant sections [https://github.com/apolukhin/Boost.DLL/pull/32
+                pull-request 32]
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                More tests and docs
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class="library"&gt;&lt;a href="http://www.boost.org/doc/libs/master/libs/functional/forward/"&gt;Functional/Forward&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
                 Fix C++11 compile error.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="http://www.boost.org/doc/libs/master/libs/lexical_cast/"&gt;Lexical Cast&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix incorrect static assertion &lt;a href="https://svn.boost.org/trac/boost/ticket/11759"&gt;#11759&lt;/a&gt;
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
@@ -407,6 +448,41 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="http://www.boost.org/doc/libs/master/libs/type_index/"&gt;TypeIndex&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;code&gt;&lt;span class="identifier"&gt;ctti_type_index&lt;/span&gt;&lt;/code&gt; was
+                made constexpr in C++14. Now it is possible to retrieve actual name
+                of the type as &lt;code&gt;&lt;span class="keyword"&gt;const&lt;/span&gt; &lt;span class="keyword"&gt;char&lt;/span&gt;&lt;span class="special"&gt;*&lt;/span&gt;&lt;/code&gt;
+                at compile time. So we can do a lot of interesting things at &lt;strong&gt;compile time&lt;/strong&gt;: check namespace of a type, sort
+                types according to their lexical representation, check that type
+                is a template type and so on... A few examples were provided.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed issue with &lt;code&gt;&lt;span class="keyword"&gt;noexcept&lt;/span&gt;&lt;/code&gt;
+                on MSVC in type names and issue with space in type name (pulled from
+                klemens-morgenstern/develop)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed typos [https://github.com/boostorg/type_index/pull/7 pull-request
+                7]
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improved CI testing
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class="library"&gt;&lt;a href="http://www.boost.org/doc/libs/master/libs/unordered/"&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
@@ -424,6 +500,62 @@
               &lt;div&gt;
                 See the &lt;a href="http://www.boost.org/doc/libs/master/doc/html/unordered/changes.html"&gt;changelog&lt;/a&gt;
                 for more details.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="http://www.boost.org/doc/libs/master/libs/variant/"&gt;Variant&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed variant construction from classes derived from variant &lt;a href="https://svn.boost.org/trac/boost/ticket/7120"&gt;#7120&lt;/a&gt;,
+                &lt;a href="https://svn.boost.org/trac/boost/ticket/10278"&gt;#10278&lt;/a&gt;, &lt;a href="https://svn.boost.org/trac/boost/ticket/12155"&gt;#12155&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Variant constructors and assignment operators now do not participate
+                in overload resolutions if variant can not hold the input type &lt;a href="https://svn.boost.org/trac/boost/ticket/5871"&gt;#5871&lt;/a&gt;,
+                &lt;a href="https://svn.boost.org/trac/boost/ticket/11602"&gt;#11602&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed the issue with implicit conversion operator in C++11 &lt;a href="https://svn.boost.org/trac/boost/ticket/8555"&gt;#8555&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed comparisons when variant holds non-const reference &lt;a href="https://svn.boost.org/trac/boost/ticket/11751"&gt;#11751&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed noexcept for variant's move-assignment &lt;a href="https://svn.boost.org/trac/boost/ticket/11696"&gt;#11696&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed double quotes in includes &lt;a href="https://svn.boost.org/trac/boost/ticket/12057"&gt;#12057&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Dropped BOOST_VARIANT_NO_REFERENCE_SUPPORT macro and dropped support
+                for compilers without SFINAE &lt;a href="https://svn.boost.org/trac/boost/ticket/12250"&gt;#12250&lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Suppress implicit instantiation of MPL end iterator
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Multiple minor fixes (typos, missing includes)
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
