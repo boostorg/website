@@ -291,7 +291,8 @@ class LibraryPage {
 
 $library_page = new LibraryPage($_GET, BoostLibraries::load());
 
-if (BoostVersion::page()->compare($library_page->libs->latest_version) > 0) {
+if (BoostVersion::page()->is_numbered_release() &&
+        BoostVersion::page()->compare($library_page->libs->latest_version) > 0) {
     BoostWeb::error_404($_SERVER['REQUEST_URI']);
     return;
 }
