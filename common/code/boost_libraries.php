@@ -19,6 +19,7 @@ class BoostLibraries
 {
     public $categories = array();
     public $db = array();
+    public $latest_version = null;
 
     /**
      *
@@ -64,12 +65,17 @@ class BoostLibraries
         $category = NULL;
         $libs = array();
         $lib = NULL;
+        $latest_version = null;
 
         foreach ( $values as $key => $val )
         {
             if ($val['tag'] == 'boost' || $val['tag'] == 'categories')
             {
                 // Ignore boost tags.
+            }
+            else if ($val['tag'] == 'latest' && $val['type'] == 'complete' && !$lib && !$category)
+            {
+                $latest_version = BoostVersion::from($val['attributes']['version']);
             }
             else if ($val['tag'] == 'category' && $val['type'] == 'open' && !$lib && !$category)
             {
@@ -150,7 +156,7 @@ class BoostLibraries
             }
         }
 
-        return new self($libs, $categories);
+        return new self($libs, $categories, null, $latest_version);
     }
 
     static function from_json($json)
@@ -209,10 +215,11 @@ class BoostLibraries
      *                       is missing.
      */
     private function __construct(array $flat_libs, array $categories,
-            $version = null)
+            $version = null, $latest_version = null)
     {
         $this->db = array();
         $this->categories = $categories;
+        $this->latest_version = $latest_version;
 
         foreach ($flat_libs as $details) {
             $update_version =
@@ -361,6 +368,11 @@ class BoostLibraries
             }
             $this->update_libraries($version, $new_libs);
             $this->clean_db();
+
+            // Also update latest version if appropriate.
+            if (!$this->latest_version || $version->compare($this->latest_version) > 0) {
+                $this->latest_version = $version;
+            }
         }
     }
 
@@ -410,6 +422,11 @@ class BoostLibraries
         $writer->writeAttribute('xmlns:xsi',
                 'http://www.w3.org/2001/XMLSchema-instance');
 
+        if ($this->latest_version) {
+            $writer->startElement('latest');
+            $writer->writeAttribute('version', (string) $this->latest_version);
+            $writer->endElement();
+        }
         if ($this->categories) {
             $writer->startElement('categories');
             foreach ($this->categories as $name => $category) {

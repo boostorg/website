@@ -43,6 +43,7 @@ $accumulators_details = '{
 $libraries->update('1.36.0', BoostLibrary::read_libraries_json($accumulators_details));
 $r = $libraries->get_history('accumulators');
 Assert::same(count($r), 1);
+Assert::same((string) $libraries->latest_version, '1.36.0');
 
 $libraries->update('develop', BoostLibrary::read_libraries_json($accumulators_details));
 $r = $libraries->get_history('accumulators');
@@ -77,3 +78,14 @@ Assert::false(isset($r['develop']));
 Assert::same($r['1.36.0']->details['category'], array('Math'));
 Assert::same($r['master']->details['category'], array('Generic', 'Math'));
 Assert::false(isset($r['develop']));
+
+$libraries2 = BoostLibraries::from_xml($libraries->to_xml());
+$r = $libraries->get_history('accumulators');
+Assert::same(count($r), 2);
+Assert::true(isset($r['1.36.0']));
+Assert::true(isset($r['master']));
+Assert::false(isset($r['develop']));
+Assert::same($r['1.36.0']->details['category'], array('Math'));
+Assert::same($r['master']->details['category'], array('Generic', 'Math'));
+Assert::false(isset($r['develop']));
+Assert::same((string) $libraries->latest_version, '1.36.0');
