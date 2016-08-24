@@ -141,7 +141,7 @@ class BoostPages {
                 );
                 if ($page_data->type == 'release' && ($page_data->get_release_status() ?: 'dev') === 'dev') {
                     $template_vars['note_xml'] = <<<EOL
-                        <div class="section-note"><p>Note: This release is
+                        <div class="section-alert"><p>Note: This release is
                         still under development. Please don't use this page as
                         a source of information, it's here for development
                         purposes only. Everything is subject to
