@@ -230,7 +230,6 @@ class BoostSiteTools {
                 $string = html_entity_decode($string);
                 $string = call_user_func($func, $string);
                 $string = htmlspecialchars($string, ENT_COMPAT);
-
                 $result .= substr($xhtml, $pos, $match[1][1] - $pos);
                 $result .= "\"{$string}\"";
                 $pos = $match[1][1] + strlen($match[1][0]);

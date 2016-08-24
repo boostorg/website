@@ -219,6 +219,14 @@ class BoostVersion {
             ($this->is_beta() ? '_beta'. $this->beta : '');
     }
 
+    /**
+     * The final documentation directory.
+     */
+    function final_doc_dir() {
+        assert(!$this->version['stage']);
+        return implode('_', $this->version_numbers());
+    }
+
     /** Return the git tag/branch for the version */
     function git_ref() {
         return $this->version['stage'] ? $this->stage_name() :

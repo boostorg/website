@@ -301,7 +301,7 @@ class BoostPages_Page {
         $version = $this->array_get($this->release_data, 'version');
         if ($version && $doc_prefix) {
             $version = BoostVersion::from($version);
-            $final_documentation = "/doc/libs/{$version->dir()}";
+            $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
             $link_pattern = '@^'.preg_quote($final_documentation, '@').'/@';
             $replace = "{$doc_prefix}/";
             $values['description_xhtml'] = BoostSiteTools::transform_links($values['description_xhtml'],
