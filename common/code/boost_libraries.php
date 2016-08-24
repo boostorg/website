@@ -368,6 +368,11 @@ class BoostLibraries
             }
             $this->update_libraries($version, $new_libs);
             $this->clean_db();
+
+            // Also update latest version if appropriate.
+            if ($version->compare($this->latest_version) > 0) {
+                $this->latest_version = $version;
+            }
         }
     }
 
