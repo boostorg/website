@@ -49,8 +49,17 @@
   * [ticket 12221] coroutine<>::push_type function starts without pushing
   * do not swallow exceptions thrown at coroutine<>::push_type construction
 
+* [phrase library..[@/libs/dll/ DLL]:]
+  * Mangled symbols and classes loading was implemented by Klemens Morgenstern
+  * Suppress a 'unused parameter' warning in detail::aggressive_ptr_cast [https://github.com/apolukhin/Boost.DLL/pull/9 pull-request 9]
+  * Allowed to query non-existant sections [https://github.com/apolukhin/Boost.DLL/pull/32 pull-request 32]
+  * More tests and docs
+
 * [phrase library..[@/libs/functional/forward/ Functional/Forward]:]
   * Fix C++11 compile error.
+
+* [phrase library..[@/libs/lexical_cast/ Lexical Cast]:]
+  * Fix incorrect static assertion [ticket 11759]
 
 * [phrase library..[@/libs/log/ Log]:]
   * New features:
@@ -112,11 +121,30 @@
   * #96 rename async_func.hpp to invoker.hpp.
   * #97 fix a mistake in sync_timed_queue<>::pull_until()
 
+
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * `ctti_type_index` was made constexpr in C++14. Now it is possible to retrieve actual name of the type as `const char*` at compile time. So we can do a lot of interesting things at *compile time*: check namespace of a type, sort types according to their lexical representation, check that type is a template type and so on... A few examples were provided.
+  * Fixed issue with `noexcept` on MSVC in type names and issue with space in type name (pulled from klemens-morgenstern/develop)
+  * Fixed typos [https://github.com/boostorg/type_index/pull/7 pull-request 7]
+  * Improved CI testing
+
+
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * Remove use of deprecated `boost::iterator`.
   * Fixed an exception safety issue in assignment of `unordered_multiset`
     and `unordered_multimap`.
   * See the [@/doc/html/unordered/changes.html changelog] for more details.
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Fixed variant construction from classes derived from variant [ticket 7120], [ticket 10278], [ticket 12155]
+  * Variant constructors and assignment operators now do not participate in overload resolutions if variant can not hold the input type [ticket 5871], [ticket 11602]
+  * Fixed the issue with implicit conversion operator in C++11 [ticket 8555]
+  * Fixed comparisons when variant holds non-const reference [ticket 11751]
+  * Fixed noexcept for variant's move-assignment [ticket 11696]
+  * Fixed double quotes in includes [ticket 12057]
+  * Dropped BOOST_VARIANT_NO_REFERENCE_SUPPORT macro and dropped support for compilers without SFINAE [ticket 12250]
+  * Suppress implicit instantiation of MPL end iterator
+  * Multiple minor fixes (typos, missing includes)
 
 [endsect]
 
