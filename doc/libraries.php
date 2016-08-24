@@ -290,6 +290,11 @@ class LibraryPage {
 // Page variables
 
 $library_page = new LibraryPage($_GET, BoostLibraries::load());
+
+if (BoostVersion::page()->compare($library_page->libs->latest_version) > 0) {
+    BoostWeb::error_404($_SERVER['REQUEST_URI']);
+    return;
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
