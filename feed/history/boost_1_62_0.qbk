@@ -40,6 +40,26 @@
 * [phrase library..[@/libs/circular_buffer/ Circular Buffer]:]
   * Debug implementation is no longer used by default in debug mode. Debug implementation does not have the same thread safety guarantees as the normal (release) implementation or other containers. As a result of this change `BOOST_CB_DISABLE_DEBUG` macro is no longer used. `BOOST_CB_ENABLE_DEBUG=1` should be defined instead to enable debug support. ([ticket 6277])
 
+* [phrase library..[@/libs/container/ Container]:]
+  * Fixed bugs:
+    * [@https://svn.boost.org/trac/boost/ticket/9481  Trac #9481:  ['"Minor comment typo in Boost.Container"]].
+    * [@https://svn.boost.org/trac/boost/ticket/9689  Trac #9689:  ['"Add piecewise_construct to boost::container"]].
+    * [@https://svn.boost.org/trac/boost/ticket/11170 Trac #11170: ['"Doc slip for index_of"]].
+    * [@https://svn.boost.org/trac/boost/ticket/11802 Trac #11802: ['"Incorrect ordering after using insert() with ordered_range_t on a flat_multiset with a non-default sort order"]].
+    * [@https://svn.boost.org/trac/boost/ticket/12117 Trac #12117: ['"flat_set constructor with ordered_unique_range"]].
+    * [@https://svn.boost.org/trac/boost/ticket/12177 Trac #12177: ['"vector::priv_merge uses unqualified uintptr_t"]].
+    * [@https://svn.boost.org/trac/boost/ticket/12183 Trac #12183: ['"GCC 6.1 thinks boost::container::string violates strict aliasing"]].
+    * [@https://svn.boost.org/trac/boost/ticket/12256 Trac #12256: ['"set<std::pair<int,int>>::insert cause compilation error in debug configuration in Visual Studio 2012"]].
+    * [@https://svn.boost.org/trac/boost/ticket/12273 Trac #12273: ['"static_vector max_size() and capacity() should be constant expressions"]].
+      Added constant `static_vector<>::static_capacity` to use the configured capacity in constant expressions.
+    * [@https://svn.boost.org/trac/boost/ticket/12286 Trac #12286: ['"PMR flat_map from Boost Container does not compile"]].
+    * [@https://svn.boost.org/trac/boost/ticket/12296 Trac #12296: ['"{deque,string} combine for a memory leak"]].
+    * [@https://svn.boost.org/trac/boost/ticket/12319 Trac #12319: ['"flat_set` should be nothrow move constructible"]].
+  * Revised noexcept expressions of default and move constructors in all containers.
+  * Implemented C++17 `insert_or_assign`/`try_emplace` for [classref boost::container::map map] and [classref boost::container::flat_map flat_map].
+  * Implemented C++17 `extract`/`insert(node)` for [classref boost::container::map map], [classref boost::container::multimap multimap],
+     [classref boost::container::set set], [classref boost::container::multiset multiset].
+  
 * [phrase library..[@/libs/context/ Context]:]
   * [ticket 12215] all stack corrupted on Windows using default fixedsize_stack
   * [ticket 12242] build issue with Intel C++ compiler for MacOS
@@ -57,6 +77,18 @@
 
 * [phrase library..[@/libs/functional/forward/ Functional/Forward]:]
   * Fix C++11 compile error.
+
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  * Fixed bug [@https://github.com/boostorg/interprocess/pull/27 GitHub Pull #27 (['"Fix undefined behavior"])].
+   
+* [phrase library..[@/libs/intrusive/ Intrusive]:]
+  *  Fixed bugs:
+    *  [@https://svn.boost.org/trac/boost/ticket/11476 Boost Trac #11476: ['has_member_function_callable_with.hpp is massively broken with BOOST_NO_CXX11_DECLTYPE]]
+    *  [@https://svn.boost.org/trac/boost/ticket/11994 Boost Trac #11994: ['Support intrusive container key extractors that return the key by value]]
+    *  [@https://svn.boost.org/trac/boost/ticket/12184 Boost Trac #12184: ['clang -Wdocumentation warning]]
+    *  [@https://svn.boost.org/trac/boost/ticket/12190 Boost Trac #12190: ['Intrusive List + Flat Map combination crashes]]
+    *  [@https://svn.boost.org/trac/boost/ticket/12229 Boost Trac #12229: ['intrusive::unordered_set<T>::rehash() broken]]
+    *  [@https://svn.boost.org/trac/boost/ticket/12245 Boost Trac #12245: ['bstree uses a shared static size_traits for constant_time_size<false>]]
 
 * [phrase library..[@/libs/lexical_cast/ Lexical Cast]:]
   * Fix incorrect static assertion [ticket 11759]
