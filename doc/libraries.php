@@ -293,10 +293,28 @@ $library_page = new LibraryPage($_GET, BoostLibraries::load());
 
 if (BoostVersion::page()->is_numbered_release() &&
         $library_page->libs->latest_version &&
-        BoostVersion::page()->compare($library_page->libs->latest_version) > 0) {
+        BoostVersion::page()->compare($library_page->libs->latest_version) > 0)
+{
     BoostWeb::error_404($_SERVER['REQUEST_URI']);
     return;
 }
+
+// To avoid confusion, only show this page when there is actual documentation.
+// TODO: Maybe for versions without documentation, could display the list
+//       with no links.
+// TODO: This duplicates the documentation logic.
+$pattern = '@^[/]([^/]+)@';
+$archive_dir = STATIC_DIR;
+preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts);
+$version_dir = BoostVersion::page()->is_numbered_release() ?
+    "boost_{$path_parts[1]}" : $path_parts[1];
+$documentation_dir = $archive_dir.'/'.$version_dir;
+if (!is_dir($documentation_dir))
+{
+    BoostWeb::error_404($_SERVER['REQUEST_URI']);
+    return;
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
