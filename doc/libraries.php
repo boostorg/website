@@ -302,14 +302,14 @@ if (BoostVersion::page()->is_numbered_release() &&
 // To avoid confusion, only show this page when there is actual documentation.
 // TODO: Maybe for versions without documentation, could display the list
 //       with no links.
-// TODO: This duplicates the documentation logic.
-$pattern = '@^[/]([^/]+)@';
-$archive_dir = STATIC_DIR;
-preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts);
-$version_dir = BoostVersion::page()->is_numbered_release() ?
-    "boost_{$path_parts[1]}" : $path_parts[1];
-$documentation_dir = $archive_dir.'/'.$version_dir;
-if (!is_dir($documentation_dir))
+// TODO: This duplicates the BoostDocumentation object in display_libs.
+$archive = new BoostDocumentation(array(
+    'fix_dir' => dirname(__FILE__).'/fixes',
+    'archive_dir' => STATIC_DIR,
+    'use_http_expire_date' => true,
+));
+
+if (!is_dir($archive->documentation_dir()))
 {
     BoostWeb::error_404($_SERVER['REQUEST_URI']);
     return;

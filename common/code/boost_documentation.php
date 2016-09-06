@@ -23,7 +23,7 @@ class BoostDocumentation
 
     function documenation_path_details()
     {
-        $pattern = $this->get_param('pattern', '@^[/]([^/]+)[/](.*)$@');
+        $pattern = $this->get_param('pattern', '@^[/]([^/]+)(?:[/](.*))?$@');
         $archive_dir = $this->get_param('archive_dir', STATIC_DIR);
 
         $this->archive_dir = $archive_dir;
@@ -35,7 +35,6 @@ class BoostDocumentation
         if ($path_parts[1] === 'regression') {
             $version = null;
             $version_dir = 'regression';
-            $path = $path_parts[2];
         }
         else {
             try {
@@ -47,10 +46,16 @@ class BoostDocumentation
             }
             $version_dir = is_numeric($path_parts[1][0]) ?
                 "boost_{$path_parts[1]}" : $path_parts[1];
-            $path = $path_parts[2];
         }
 
+        $path = array_key_exists(2, $path_parts) ? $path_parts[2] : null;
+
         return compact('archive_dir', 'version', 'version_dir', 'path');
+    }
+
+    function documentation_dir() {
+        extract($this->documenation_path_details());
+        return $archive_dir.'/'.$version_dir;
     }
 
     function display_from_archive($content_map = array())
