@@ -21,14 +21,12 @@ class BoostDocumentation
             $this->params[$key] : $default;
     }
 
-    function display_from_archive($content_map = array())
+    function documenation_path_details()
     {
-        // Set default values
-
         $pattern = $this->get_param('pattern', '@^[/]([^/]+)[/](.*)$@');
-        $fix_dir = $this->get_param('fix_dir');
         $archive_dir = $this->get_param('archive_dir', STATIC_DIR);
-        $use_http_expire_date = $this->get_param('use_http_expire_date', false);
+
+        $this->archive_dir = $archive_dir;
 
         // Get Archive Location
 
@@ -51,6 +49,18 @@ class BoostDocumentation
                 "boost_{$path_parts[1]}" : $path_parts[1];
             $path = $path_parts[2];
         }
+
+        return compact('archive_dir', 'version', 'version_dir', 'path');
+    }
+
+    function display_from_archive($content_map = array())
+    {
+        extract($this->documenation_path_details());
+
+        // Set default values
+
+        $fix_dir = $this->get_param('fix_dir');
+        $use_http_expire_date = $this->get_param('use_http_expire_date', false);
 
         $file = false;
 
