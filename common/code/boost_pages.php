@@ -237,13 +237,24 @@ class BoostPages_Page {
         if ($release_data) {
             assert($this->type === 'release');
 
-            if (!array_key_exists('release_status', $release_data)) {
-                $release_data['release_status'] = $this->pub_date ? 'released' : 'dev';
-            }
-            if (!in_array($release_data['release_status'], array('released', 'beta', 'dev'))) {
+            $release_status = array_key_exists('release_status', $release_data)
+                ? strtolower($release_data['release_status'])
+                : ($this->pub_date ? 'released' : 'dev');
+
+            if (!preg_match('@^(released|dev|beta) *(\d*)$@', $release_status, $release_parts)) {
                 echo "Error: Unknown release status: {$this->array_get($release_data, 'release_status')}.\n";
                 exit(0);
             }
+
+            if ($release_parts[2] && $release_parts[1] != 'beta') {
+                // We only do something with beta release numbers, maybe support
+                // release candidates later?
+                echo "Warning: Ignoring release number for {$release_status}\n";
+                $release_parts[2] = '';
+            }
+
+            $release_data['release_status'] = $release_parts[1];
+            $release_data['release_number'] = $release_parts[2];
         }
 
         $this->release_data = $release_data;
@@ -319,7 +330,7 @@ class BoostPages_Page {
         case 'released':
             return $this->title_xml;
         case 'beta':
-            return "{$this->title_xml} beta";
+            return trim("{$this->title_xml} beta {$this->release_data['release_number']}");
         default:
             return "{$this->title_xml} - work in progress";
         }
