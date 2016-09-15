@@ -359,7 +359,7 @@ class BoostLibraries
             $new_libs = array();
             foreach($libs as $lib_details) {
                 $current_version = BoostVersion::from($lib_details['boost-version']);
-                if ($current_version->is_unreleased() || $current_version->is_beta())
+                if ($current_version->is_unreleased() || ($current_version->is_beta() && !$version->is_beta()))
                 {
                     $lib_details['boost-version'] = $version;
                 }
