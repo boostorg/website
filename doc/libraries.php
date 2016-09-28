@@ -36,7 +36,7 @@ class LibraryPage {
     var $view_value = '';
     var $category_value = '';
     var $filter_value = '';
-    var $sort_value = 'name';
+    var $sort_value = '';
     var $attribute_filter = false;
 
     function __construct($params, $libs) {
@@ -92,7 +92,7 @@ class LibraryPage {
                 echo 'Invalid sort field.'; exit(0);
             }
 
-            $this->sort_value = $sort_value;
+            $this->sort_value = $sort_value ?: 'name';
         }
 
         if (!empty($params['filter'])) {
@@ -107,9 +107,9 @@ class LibraryPage {
 
         // Store the sanitized parameters for quickly generating links later.
         $this->params = array(
-            'view' => $this->view_value,
-            'sort' => $this->sort_value,
-            'filter' => $this->attribute_filter,
+            'view' => $view_value,
+            'sort' => $sort_value,
+            'filter' => $attribute_filter,
         );
     }
 
