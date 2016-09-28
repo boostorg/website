@@ -30,25 +30,30 @@ class BoostDocumentation
 
         // Get Archive Location
 
-        preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts);
+        if (preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts)) {
+            if ($path_parts[1] === 'regression') {
+                $version = null;
+                $version_dir = 'regression';
+            }
+            else {
+                try {
+                    $version = BoostVersion::from($path_parts[1]);
+                }
+                catch(BoostVersion_Exception $e) {
+                    BoostWeb::error_404($_SERVER["PATH_INFO"], 'Unable to find version.');
+                    return;
+                }
+                $version_dir = is_numeric($path_parts[1][0]) ?
+                    "boost_{$path_parts[1]}" : $path_parts[1];
+            }
 
-        if ($path_parts[1] === 'regression') {
-            $version = null;
-            $version_dir = 'regression';
+            $path = array_key_exists(2, $path_parts) ? $path_parts[2] : null;
         }
         else {
-            try {
-                $version = BoostVersion::from($path_parts[1]);
-            }
-            catch(BoostVersion_Exception $e) {
-                BoostWeb::error_404($_SERVER["PATH_INFO"], 'Unable to find version.');
-                return;
-            }
-            $version_dir = is_numeric($path_parts[1][0]) ?
-                "boost_{$path_parts[1]}" : $path_parts[1];
+            $version = BoostVersion::current();
+            $version_dir = $version->dir();
+            $path = null;
         }
-
-        $path = array_key_exists(2, $path_parts) ? $path_parts[2] : null;
 
         return compact('archive_dir', 'version', 'version_dir', 'path');
     }
