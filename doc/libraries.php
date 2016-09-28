@@ -109,7 +109,7 @@ class LibraryPage {
         $this->params = array(
             'view' => $this->view_value,
             'sort' => $this->sort_value,
-            'sort' => $this->attribute_filter,
+            'filter' => $this->attribute_filter,
         );
     }
 
