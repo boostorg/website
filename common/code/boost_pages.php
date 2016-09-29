@@ -248,23 +248,28 @@ class BoostPages_Page {
         if ($release_data) {
             assert($this->type === 'release');
 
-            $release_status = array_key_exists('release_status', $release_data)
-                ? strtolower($release_data['release_status'])
-                : ($this->pub_date ? 'released' : 'dev');
+            $release_status = array_key_exists('release_status', $release_data);
+            $release_number = null;
 
-            if (!preg_match('@^(released|dev|beta) *(\d*)$@', $release_status, $release_parts)) {
-                throw new BoostException("Error: Unknown release status: {$this->array_get($release_data, 'release_status')}.");
+            if (!$release_status && !empty($release_data['version'])) {
+                $version = BoostVersion::from($release_data['version']);
+                if ($version->is_numbered_release()) {
+                    if ($version->is_beta()) {
+                        $release_status = 'beta';
+                        $release_number = $version->beta_number();
+                    }
+                    else {
+                        $release_status = 'released';
+                    }
+                }
             }
 
-            if ($release_parts[2] && $release_parts[1] != 'beta') {
-                // We only do something with beta release numbers, maybe support
-                // release candidates later?
-                echo "Warning: Ignoring release number for {$release_status}\n";
-                $release_parts[2] = '';
+            if (!$release_status) {
+                $release_status = 'dev';
             }
 
-            $release_data['release_status'] = $release_parts[1];
-            $release_data['release_number'] = $release_parts[2];
+            $release_data['release_status'] = $release_status;
+            $release_data['release_number'] = $release_number;
         }
 
         $this->release_data = $release_data;

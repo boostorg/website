@@ -161,6 +161,14 @@ class BoostVersion {
     }
 
     /**
+     * Number of the beta release, or false for not a beta.
+     * @return boolean|number
+     */
+    function beta_number() {
+        return $this->beta;
+    }
+
+    /**
      * Is this a numbered release version?
      * (as opposed to a develop branch)
      * @return boolean
