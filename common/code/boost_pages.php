@@ -248,15 +248,18 @@ class BoostPages_Page {
         if ($release_data) {
             assert($this->type === 'release');
 
+            if (array_key_exists('version', $release_data)) {
+                $release_data['version'] = BoostVersion::from($release_data['version']);
+            }
+
             $release_status = array_key_exists('release_status', $release_data);
             $release_number = null;
 
-            if (!$release_status && !empty($release_data['version'])) {
-                $version = BoostVersion::from($release_data['version']);
-                if ($version->is_numbered_release()) {
-                    if ($version->is_beta()) {
+            if (!$release_status && array_key_exists('version', $release_data)) {
+                if ($release_data['version']->is_numbered_release()) {
+                    if ($release_data['version']->is_beta()) {
                         $release_status = 'beta';
-                        $release_number = $version->beta_number();
+                        $release_number = $release_data['version']->beta_number();
                     }
                     else {
                         $release_status = 'released';
@@ -326,7 +329,6 @@ class BoostPages_Page {
 
         $version = $this->array_get($this->release_data, 'version');
         if ($version && $doc_prefix) {
-            $version = BoostVersion::from($version);
             $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
             $link_pattern = '@^'.preg_quote($final_documentation, '@').'/@';
             $replace = "{$doc_prefix}/";
