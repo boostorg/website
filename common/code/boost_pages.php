@@ -116,7 +116,7 @@ class BoostPages {
 
         // Assume old versions are released if there's no data.
         if ($version->compare('1.50.0') < 0) {
-            return array('version' => $version);
+            return array('version' => (string) $version);
         }
 
         // TODO: Maybe assume 'master' for new versions?
@@ -127,7 +127,8 @@ class BoostPages {
         $release_data = $this->get_release_data($type, $qbk_file);
 
         $context = hash_init('sha256');
-        hash_update($context, json_encode($release_data));
+        hash_update($context, json_encode($this->normalize_release_data(
+            $release_data, $qbk_file)));
         hash_update($context, str_replace("\r\n", "\n",
             file_get_contents("{$this->root}/{$qbk_file}")));
         $qbk_hash = hash_final($context);
@@ -157,6 +158,50 @@ class BoostPages {
         if (!in_array($record->type, array('release', 'page'))) {
             throw new BoostException("Unknown record type: ".$record->type);
         }
+    }
+
+    // Make the release data look like it used to look in order to get a consistent
+    // hash value. Pretty expensive, but saves constant messing around with hashes.
+    private function normalize_release_data($release_data, $qbk_file) {
+        if (!$release_data) { return null; }
+
+        $release_data += array(
+                'release_notes' => $qbk_file, 'release_status' => 'released',
+                'version' => '', 'documentation' => null, 'download_page' => null);
+
+        $release_data = $this->arrange_keys($release_data, array(
+            'release_notes', 'release_status', 'version', 'documentation',
+            'download_page', 'downloads', 'signature', 'third_party'));
+
+        // Turn the downloads and third party downloads into numeric arrays.
+        if (array_key_exists('downloads', $release_data)) {
+            $new_downloads = $this->arrange_keys($release_data['downloads'],
+                array('bz2', 'gz', '7z', 'exe', 'zip'));
+            foreach($new_downloads as &$record) { krsort($record); }
+            unset($record);
+            $release_data['downloads'] = array_values($new_downloads);
+        }
+        if ($release_data && array_key_exists('third_party', $release_data)) {
+            $release_data['third_party'] = array_values($release_data['third_party']);
+        }
+        if ($release_data && array_key_exists('signature', $release_data)) {
+            $release_data['signature'] = $this->arrange_keys($release_data['signature'], array(
+                'location', 'name', 'key'));
+        }
+
+        return $release_data;
+    }
+
+    private function arrange_keys($array, $key_order) {
+        $key_order = array_flip($key_order);
+        $key_sort1 = array();
+        $key_sort2 = array();
+        foreach ($array as $key => $data) {
+            $key_sort1[$key] = array_key_exists($key, $key_order) ? $key_order[$key] : 999;
+            $key_sort2[$key] = $key;
+        }
+        array_multisort($key_sort1, SORT_ASC, $key_sort2, SORT_ASC, $array);
+        return $array;
     }
 
     function convert_quickbook_pages($refresh = false) {
