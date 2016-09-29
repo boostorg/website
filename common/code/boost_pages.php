@@ -65,12 +65,19 @@ class BoostPages {
     }
 
     function get_release_data($qbk_file) {
+        $latest_version = null;
+        $release_data = null;
         foreach($this->release_data as $release) {
             if ($release['release_notes'] === $qbk_file) {
-                return $release;
+                $version = array_key_exists('version', $release) ?
+                    BoostVersion::from($release['version']) : null;
+                if (!$latest_version || ($version && $version->compare($latest_version) > 0)) {
+                    $latest_version = $version;
+                    $release_data = $release;
+                }
             }
         }
-        return null;
+        return $release_data;
     }
 
     function add_qbk_file($qbk_file, $dir_location, $type) {
