@@ -16,15 +16,25 @@ class BoostPages {
         $this->release_file = "{$root}/{$release_file}";
 
         if (is_file($this->release_file)) {
-            $this->release_data = json_decode(
+            $release_data = json_decode(
                 file_get_contents($this->release_file), true);
-            if (is_null($this->release_data)) {
+            if (is_null($release_data)) {
                 throw new BoostException("Error decoding release data.");
             }
 
-            foreach(array_keys($this->release_data) as $version) {
-                if ($version != 'unversioned') {
-                    $this->release_data[$version]['version'] = $version;
+            foreach($release_data as $version => $data) {
+                if ($version == 'unversioned') {
+                    $this->release_data[$version]['_'] = $data;
+                }
+                else {
+                    $version_object = BoostVersion::from($version);
+                    $base_version = $version_object->final_doc_dir();
+                    $version = (string) $version_object;
+                    if (isset($this->release_data[$base_version][$version])) {
+                        echo "Duplicate release data for {$version}.\n";
+                    }
+                    $this->release_data[$base_version][$version] =
+                        $data;
                 }
             }
         }
@@ -32,7 +42,9 @@ class BoostPages {
         if (is_file($this->hash_file)) {
             foreach(BoostState::load($this->hash_file) as $qbk_file => $record) {
                 $this->pages[$qbk_file]
-                    = new BoostPages_Page($qbk_file, $this->get_release_data($qbk_file), $record);
+                    = new BoostPages_Page($qbk_file,
+                        $this->get_release_data($record['type'], $qbk_file),
+                        $record);
             }
 
             // Sort pages in reverse chronological order.
@@ -64,24 +76,39 @@ class BoostPages {
         }
     }
 
-    function get_release_data($qbk_file) {
-        $latest_version = null;
-        $release_data = null;
-        foreach($this->release_data as $release) {
-            if ($release['release_notes'] === $qbk_file) {
-                $version = array_key_exists('version', $release) ?
-                    BoostVersion::from($release['version']) : null;
-                if (!$latest_version || ($version && $version->compare($latest_version) > 0)) {
-                    $latest_version = $version;
-                    $release_data = $release;
+    function get_release_data($type, $qbk_file) {
+        if ($type !== 'release') { return null; }
+
+        $basename = pathinfo($qbk_file, PATHINFO_FILENAME);
+        if ($basename == 'unversioned') {
+            return array_key_exists($basename, $this->release_data) ?
+                $this->release_data[$basename]['_'] : null;
+        }
+
+        $version = BoostVersion::from($basename);
+        $base_version = $version->final_doc_dir();
+        if (array_key_exists($base_version, $this->release_data)) {
+            $latest_version = null;
+            $release_data = null;
+
+            foreach ($this->release_data[$base_version] as $version2 => $data) {
+                $version_object = BoostVersion::from($version2);
+                if (!$latest_version || $version_object->compare($latest_version) > 0) {
+                    $latest_version = $version_object;
+                    $release_data = $data;
+                    $release_data['version'] = $version2;
                 }
             }
+
+            return $release_data;
         }
-        return $release_data;
+        else {
+            return null;
+        }
     }
 
     function add_qbk_file($qbk_file, $dir_location, $type) {
-        $release_data = $this->get_release_data($qbk_file);
+        $release_data = $this->get_release_data($type, $qbk_file);
 
         $context = hash_init('sha256');
         hash_update($context, json_encode($release_data));
