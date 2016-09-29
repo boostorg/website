@@ -44,7 +44,7 @@ class BoostSiteTools {
         $all_downloads = array();
         $news = array();
 
-        foreach($pages->pages as $page) {
+        foreach($pages->chronological_pages() as $page) {
             switch($page->type) {
             case 'page':
                 if ($page->is_published()) {
