@@ -3,7 +3,7 @@
 use Tester\Assert;
 
 require_once(__DIR__.'/../config/bootstrap.php');
-require_once(__DIR__.'/../../boost_version.php');
+require_once(__DIR__.'/../../boost.php');
 
 $develop = BoostVersion::develop();
 $master = BoostVersion::master();
