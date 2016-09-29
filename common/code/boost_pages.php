@@ -21,6 +21,12 @@ class BoostPages {
             if (is_null($this->release_data)) {
                 throw new BoostException("Error decoding release data.");
             }
+
+            foreach(array_keys($this->release_data) as $version) {
+                if ($version != 'unversioned') {
+                    $this->release_data[$version]['version'] = $version;
+                }
+            }
         }
 
         if (is_file($this->hash_file)) {
