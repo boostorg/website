@@ -30,19 +30,6 @@ class BoostPages {
                 $this->pages[$qbk_file]
                     = new BoostPages_Page($qbk_file, $this->get_release_data($qbk_file), $record);
             }
-
-            // Sort pages in reverse chronological order.
-            $pub_date_order = array();
-            $last_published_order = array();
-            $unpublished_date = new DateTime("+10 years");
-            foreach($this->pages as $index => $page) {
-                $pub_date_order[$index] = $page->pub_date ?: $unpublished_date;
-                $last_published_order[$index] = $page->last_modified;
-            }
-            array_multisort(
-                $pub_date_order, SORT_DESC,
-                $last_published_order, SORT_DESC,
-                $this->pages);
         }
     }
 
@@ -50,6 +37,24 @@ class BoostPages {
         BoostState::save(
             array_map(function($page) { return $page->state(); }, $this->pages),
             $this->hash_file);
+    }
+
+    function chronological_pages() {
+        $pages = $this->pages;
+
+        $pub_date_order = array();
+        $last_published_order = array();
+        $unpublished_date = new DateTime("+10 years");
+        foreach($pages as $index => $page) {
+            $pub_date_order[$index] = $page->pub_date ?: $unpublished_date;
+            $last_published_order[$index] = $page->last_modified;
+        }
+        array_multisort(
+            $pub_date_order, SORT_DESC,
+            $last_published_order, SORT_DESC,
+            $pages);
+
+        return $pages;
     }
 
     function scan_location_for_new_quickbook_pages($dir_location, $src_file_glob, $type) {
