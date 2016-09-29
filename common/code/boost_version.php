@@ -36,7 +36,7 @@ class BoostVersion {
         'point' => 0
     );
 
-    /** True for beta releases. This is a bit broken */
+    /** Beta release number. False if not beta. */
     private $beta = false;
 
     /** The current release version. */
@@ -181,15 +181,15 @@ class BoostVersion {
     }
 
     /**
-     * Compare this verison with another. Ignores the beta field
-     * (i.e. 1.50.0 beta1 == 1.50.0 beta).
+     * Compare this verison with another.
      * @return int, -1 if less than the other version, 0 if the
      * same, +1 if more
      */
     function compare($x) {
         $x = BoostVersion::from($x);
 
-        // Full releases come after betas.
+        // Full releases come after betas, so give them a very
+        // large beta number.
         $beta = ($this->beta === false) ? 9999 : $this->beta;
         $x_beta = ($x->beta === false) ? 9999 : $x->beta;
 
