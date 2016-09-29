@@ -23,19 +23,14 @@ class BoostPages {
             }
 
             foreach($release_data as $version => $data) {
-                if ($version == 'unversioned') {
-                    $this->release_data[$version]['_'] = $data;
+                $version_object = BoostVersion::from($version);
+                $base_version = $version_object->final_doc_dir();
+                $version = (string) $version_object;
+                if (isset($this->release_data[$base_version][$version])) {
+                    echo "Duplicate release data for {$version}.\n";
                 }
-                else {
-                    $version_object = BoostVersion::from($version);
-                    $base_version = $version_object->final_doc_dir();
-                    $version = (string) $version_object;
-                    if (isset($this->release_data[$base_version][$version])) {
-                        echo "Duplicate release data for {$version}.\n";
-                    }
-                    $this->release_data[$base_version][$version] =
-                        $data;
-                }
+                $this->release_data[$base_version][$version] =
+                    $data;
             }
         }
 
@@ -81,8 +76,7 @@ class BoostPages {
 
         $basename = pathinfo($qbk_file, PATHINFO_FILENAME);
         if ($basename == 'unversioned') {
-            return array_key_exists($basename, $this->release_data) ?
-                $this->release_data[$basename]['_'] : null;
+            return array('release_status' => 'released');
         }
 
         $version = BoostVersion::from($basename);
@@ -102,9 +96,14 @@ class BoostPages {
 
             return $release_data;
         }
-        else {
-            return null;
+
+        // Assume old versions are released if there's no data.
+        if ($version->compare('1.50.0') < 0) {
+            return array('version' => $version);
         }
+
+        // TODO: Maybe assume 'master' for new versions?
+        return array();
     }
 
     function add_qbk_file($qbk_file, $dir_location, $type) {
@@ -536,12 +535,9 @@ class BoostPages_Page {
             if ($this->release_data['version']->is_numbered_release()) {
                 return $this->release_data['version']->is_beta() ? 'beta' : 'released';
             }
-            else {
-                return 'dev';
-            }
         }
 
-        return null;
+        return 'dev';
     }
 
     function get_documentation() {
