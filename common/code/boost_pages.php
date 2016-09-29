@@ -251,28 +251,6 @@ class BoostPages_Page {
             if (array_key_exists('version', $release_data)) {
                 $release_data['version'] = BoostVersion::from($release_data['version']);
             }
-
-            $release_status = array_key_exists('release_status', $release_data);
-            $release_number = null;
-
-            if (!$release_status && array_key_exists('version', $release_data)) {
-                if ($release_data['version']->is_numbered_release()) {
-                    if ($release_data['version']->is_beta()) {
-                        $release_status = 'beta';
-                        $release_number = $release_data['version']->beta_number();
-                    }
-                    else {
-                        $release_status = 'released';
-                    }
-                }
-            }
-
-            if (!$release_status) {
-                $release_status = 'dev';
-            }
-
-            $release_data['release_status'] = $release_status;
-            $release_data['release_number'] = $release_number;
         }
 
         $this->release_data = $release_data;
@@ -347,7 +325,7 @@ class BoostPages_Page {
         case 'released':
             return $this->title_xml;
         case 'beta':
-            return trim("{$this->title_xml} beta {$this->release_data['release_number']}");
+            return trim("{$this->title_xml} beta {$this->release_data['version']->beta_number()}");
         default:
             return "{$this->title_xml} - work in progress";
         }
@@ -523,7 +501,20 @@ class BoostPages_Page {
     }
 
     function get_release_status() {
-        return $this->array_get($this->release_data, 'release_status');
+        if (array_key_exists('release_status', $this->release_data)) {
+            return $this->release_data['release_status'];
+        }
+
+        if (array_key_exists('version', $this->release_data)) {
+            if ($this->release_data['version']->is_numbered_release()) {
+                return $this->release_data['version']->is_beta() ? 'beta' : 'released';
+            }
+            else {
+                return 'dev';
+            }
+        }
+
+        return null;
     }
 
     function get_documentation() {
