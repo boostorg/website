@@ -16,7 +16,7 @@ class BoostSimpleTemplate {
 
         $nodes = $context->partial_loader->load($path);
         if (!$nodes) {
-            throw new BoostSimpleTemplateException("File not found: {$path}");
+            throw new BoostSimpleTemplate_Exception("File not found: {$path}");
         }
 
         return self::interpret($context, $nodes);
@@ -71,7 +71,7 @@ class BoostSimpleTemplate {
             );
 
             if (self::match_exists($match, 'error')) {
-                throw new BoostSimpleTemplateException("Invalid/unsupported tag", $match['tag'][1]);
+                throw new BoostSimpleTemplate_Exception("Invalid/unsupported tag", $match['tag'][1]);
             }
             else if (self::match_exists($match, 'unescaped')) {
                 $node['type'] = '&';
@@ -129,7 +129,7 @@ class BoostSimpleTemplate {
             case '/':
                 $top = array_pop($stack);
                 if (!$top || $top['node']['symbol'] !== $node['symbol']) {
-                    throw new BoostSimpleTemplateException("Mismatched close tag", $node['offset']);
+                    throw new BoostSimpleTemplate_Exception("Mismatched close tag", $node['offset']);
                 }
                 $node = $top['node'];
                 $node['contents'] = $nodes;
@@ -153,7 +153,7 @@ class BoostSimpleTemplate {
 
         if ($stack) {
             $top = end($stack);
-            throw new BoostSimpleTemplateException("Unclosed tag: {$top['node']['symbol']}", $top['node']['offset']);
+            throw new BoostSimpleTemplate_Exception("Unclosed tag: {$top['node']['symbol']}", $top['node']['offset']);
         }
 
         $end = substr($template, $offset);
@@ -382,7 +382,7 @@ class BoostSimpleTemplate_Context {
     }
 }
 
-class BoostSimpleTemplateException extends \RuntimeException {
+class BoostSimpleTemplate_Exception extends BoostException {
     var $offset;
     
     function __construct($message, $offset = null) {

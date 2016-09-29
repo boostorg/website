@@ -49,7 +49,7 @@ class BoostSuperProject {
                 $modules[$matches[1]][$matches[2]] = $matches[3];
             }
             else {
-                throw new RuntimeException("Unsupported config line: {$line}");
+                throw new BoostException("Unsupported config line: {$line}");
             }
         }
 
@@ -88,7 +88,7 @@ class BoostSuperProject {
     }
 }
 
-class ProcessError extends RuntimeException {
+class ProcessError extends BoostException {
     public $error_code;
 
     function __construct($error_code) {

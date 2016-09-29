@@ -10,9 +10,11 @@ function html_encode($text) {
     return htmlentities($text, ENT_COMPAT, 'UTF-8');
 }
 
+class BoostException extends RuntimeException {}
+
 spl_autoload_register(function($name) {
     if (!preg_match('@^[A-Za-z0-9\\\\_]*$@', $name)) {
-        throw new \RuntimeException("Invalid autoload name: {$name}");
+        throw new BoostException("Invalid autoload name: {$name}");
     }
 
     $file_path = __DIR__.'/'

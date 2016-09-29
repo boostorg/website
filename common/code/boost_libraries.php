@@ -55,7 +55,7 @@ class BoostLibraries
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
         if (!xml_parse_into_struct($parser, $xml, $values)) {
-            die("Error parsing XML");
+            throw new BoostLibraries_DecodeException("Error parsing XML", $xml);
         }
         xml_parser_free($parser);
 
@@ -121,9 +121,9 @@ class BoostLibraries
                     {
                         $value = isset($val['value']) ? trim($val['value']) : false;
                         if($value && $value != 'true' && $value != 'false') {
-                            echo 'Invalid value for ',html_encode($val['tag']),
-                                ': ', $value, "\n";
-                            exit(0);
+                            throw new BoostLibraries_DecodeException(
+                                'Invalid value for ',$val['tag'].': '.$value,
+                                $xml);
                         }
                         $lib[$val['tag']] = ($value == 'true');
                     }
@@ -140,8 +140,8 @@ class BoostLibraries
                     }
                     break;
                     default:
-                        echo 'Invalid tag: ', html_encode($val['tag']), "\n";
-                        exit(0);
+                    throw new BoostLibraries_DecodeException(
+                        'Invalid tag: '.$val['tag'], $xml);
                 }
             }
             else if ($val['tag'] == 'library' && $val['type'] == 'close' && $lib)
@@ -151,8 +151,8 @@ class BoostLibraries
             }
             else
             {
-                echo 'Invalid tag: ', html_encode($val['tag']), "\n";
-                exit(0);
+                throw new BoostLibraries_DecodeException(
+                    'Invalid tag: '.$val['tag'], $xml);
             }
         }
 
@@ -167,7 +167,7 @@ class BoostLibraries
 
         $import = json_decode($json, true);
         if (!$import) {
-            throw new library_decode_exception("Error decoding json.", $json);
+            throw new BoostLibraries_DecodeException("Error decoding json.", $json);
         }
 
         if ($json[0] == '{') {
@@ -231,8 +231,7 @@ class BoostLibraries
                 BoostVersion::from($update_version) :
                 BoostVersion::unreleased();
             if (!$update_version->is_release()) {
-                throw new BoostLibraries_exception(
-                        "No version info for {$details['key']}");
+                throw new BoostLibraries_Exception("No version info for {$details['key']}");
             }
             if (isset($details['update-version'])) {
                 unset($details['update-version']);
@@ -285,7 +284,6 @@ class BoostLibraries
      * Update the libraries from an array of BoostLibrary.
      *
      * @param array $update
-     * @throws BoostLibraries_exception
      */
     public function update($update_version = null, $update = null) {
         $this->update_start($update_version);
@@ -626,8 +624,7 @@ class BoostLibraries
         foreach($libs as $key => $library) {
             foreach($library['category'] as $category) {
                 if(!isset($this->categories[$category])) {
-                    echo 'Unknown category: ', html_encode($category), "\n";
-                    exit(0);
+                    throw new BoostLibraries_Exception('Unknown category: '.$category);
                 }
                 $categories[$category]['libraries'][] = $library;
             }
@@ -752,8 +749,8 @@ class BoostLibraries_XMLWriter {
     }
 }
 
-class BoostLibraries_exception extends RuntimeException {}
-class library_decode_exception extends BoostLibraries_exception {
+class BoostLibraries_Exception extends BoostException {}
+class BoostLibraries_DecodeException extends BoostLibraries_Exception {
     private $content = '';
 
     function __construct($message, $content) {

@@ -53,7 +53,7 @@ class LibraryPage {
             $filter_value = '';
 
             if (!preg_match('@^[-_a-zA-Z0-9]+$@', $view_value)) {
-                die('Invalid view value.');
+                throw new BoostException('Invalid view value.');
             }
 
             if (strpos($view_value, 'filtered_') === 0) {

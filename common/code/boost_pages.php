@@ -19,9 +19,7 @@ class BoostPages {
             $this->release_data = json_decode(
                 file_get_contents($this->release_file), true);
             if (is_null($this->release_data)) {
-                // Q: Exception? Fallback?
-                echo "Error decoding release data.\n";
-                exit(0);
+                throw new BoostException("Error decoding release data.");
             }
         }
 
@@ -101,7 +99,7 @@ class BoostPages {
         $record->last_modified = new DateTime();
 
         if (!in_array($record->type, array('release', 'page'))) {
-            throw new RuntimeException("Unknown record type: ".$record->type);
+            throw new BoostException("Unknown record type: ".$record->type);
         }
     }
 
@@ -242,8 +240,7 @@ class BoostPages_Page {
                 : ($this->pub_date ? 'released' : 'dev');
 
             if (!preg_match('@^(released|dev|beta) *(\d*)$@', $release_status, $release_parts)) {
-                echo "Error: Unknown release status: {$this->array_get($release_data, 'release_status')}.\n";
-                exit(0);
+                throw new BoostException("Error: Unknown release status: {$this->array_get($release_data, 'release_status')}.");
             }
 
             if ($release_parts[2] && $release_parts[1] != 'beta') {

@@ -37,8 +37,7 @@ class BoostMaintainers
 
             $matches = null;
             if (!preg_match('@^([^\s]+)\s*(.*)$@', $line, $matches)) {
-                echo "Unable to parse line: {$line}\n";
-                exit(1);
+                throw new BoostException("Unable to parse line: {$line}");
             }
 
             $key = trim($matches[1]);

@@ -113,7 +113,7 @@ class BoostVersion {
             }
         }
         else {
-            die("Can't convert to BoostVersion.\n");
+            throw new BoostVersion_Exception("Can't convert to BoostVersion.");
         }
     }
 
@@ -123,7 +123,7 @@ class BoostVersion {
      */
     static function current() {
         if (BoostVersion::$current == null)
-            die("Version not set.");
+            throw new BoostVersion_Exception("Version not set.");
         return BoostVersion::$current;
     }
 
@@ -255,9 +255,9 @@ class BoostVersion {
 
     static function set_current($major, $minor, $point) {
         if (self::$current != null)
-            die("Setting current version twice.");
+            throw new BoostVersion_Exception("Setting current version twice.");
         self::$current = self::release($major, $minor, $point);
     }
 }
 
-class BoostVersion_Exception extends RuntimeException {}
+class BoostVersion_Exception extends BoostException {}

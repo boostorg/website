@@ -252,7 +252,7 @@ class BoostSiteTools_Upgrades {
         $filename = $site_tools->root.'/generated/state/version.txt';
         $file_contents = trim(file_get_contents($filename));
         if (!preg_match('@^[0-9]+$@', $file_contents)) {
-            throw new RuntimeException("Error reading state version");
+            throw new BoostException("Error reading state version");
         }
         $current_version = intval($file_contents);
         foreach (self::$versions as $version => $upgrade_function) {
@@ -265,6 +265,6 @@ class BoostSiteTools_Upgrades {
     }
 
     static function old_upgrade() {
-        throw new RuntimeException("Old unsupported data version.");
+        throw new BoostException("Old unsupported data version.");
     }
 }
