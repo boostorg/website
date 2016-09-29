@@ -16,21 +16,17 @@ class BoostPages {
         $this->release_file = "{$root}/{$release_file}";
 
         if (is_file($this->release_file)) {
-            $release_data = json_decode(
-                file_get_contents($this->release_file), true);
-            if (is_null($release_data)) {
-                throw new BoostException("Error decoding release data.");
-            }
-
-            foreach($release_data as $version => $data) {
+            $release_data = array();
+            foreach(BoostState::load($this->release_file) as $version => $data) {
+                $data = $this->unflatten_array($data);
                 $version_object = BoostVersion::from($version);
                 $base_version = $version_object->final_doc_dir();
                 $version = (string) $version_object;
+
                 if (isset($this->release_data[$base_version][$version])) {
                     echo "Duplicate release data for {$version}.\n";
                 }
-                $this->release_data[$base_version][$version] =
-                    $data;
+                $this->release_data[$base_version][$version] = $data;
             }
         }
 
@@ -48,6 +44,22 @@ class BoostPages {
         BoostState::save(
             array_map(function($page) { return $page->state(); }, $this->pages),
             $this->hash_file);
+    }
+
+    function unflatten_array($array) {
+        $result = array();
+        foreach ($array as $key => $value) {
+            $reference = &$result;
+            foreach(explode('.', $key) as $key_part) {
+                if (!array_key_exists($key_part, $reference)) {
+                    $reference[$key_part] = array();
+                }
+                $reference = &$reference[$key_part];
+            }
+            $reference = $value;
+            unset($reference);
+        }
+        return $result;
     }
 
     function reverse_chronological_pages() {

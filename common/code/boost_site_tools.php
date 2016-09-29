@@ -15,7 +15,7 @@ class BoostSiteTools {
     function load_pages() {
         return new BoostPages($this->root,
             "generated/state/feed-pages.txt",
-            "feed/history/releases.json");
+            "generated/state/release.txt");
     }
 
     function refresh_quickbook() {
