@@ -50,7 +50,7 @@ class BoostPages {
             $this->hash_file);
     }
 
-    function chronological_pages() {
+    function reverse_chronological_pages() {
         $pages = $this->pages;
 
         $pub_date_order = array();
