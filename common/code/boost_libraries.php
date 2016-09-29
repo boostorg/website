@@ -122,7 +122,7 @@ class BoostLibraries
                         $value = isset($val['value']) ? trim($val['value']) : false;
                         if($value && $value != 'true' && $value != 'false') {
                             throw new BoostLibraries_DecodeException(
-                                'Invalid value for ',$val['tag'].': '.$value,
+                                "Invalid value for {$val['tag']}: {$value}",
                                 $xml);
                         }
                         $lib[$val['tag']] = ($value == 'true');
@@ -141,7 +141,7 @@ class BoostLibraries
                     break;
                     default:
                     throw new BoostLibraries_DecodeException(
-                        'Invalid tag: '.$val['tag'], $xml);
+                        "Invalid tag: {$val['tag']}", $xml);
                 }
             }
             else if ($val['tag'] == 'library' && $val['type'] == 'close' && $lib)
@@ -152,7 +152,7 @@ class BoostLibraries
             else
             {
                 throw new BoostLibraries_DecodeException(
-                    'Invalid tag: '.$val['tag'], $xml);
+                    "Invalid tag: {$val['tag']}", $xml);
             }
         }
 
