@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__) . '/../common/code/boost.php');
+require_once(dirname(__FILE__) . '/../common/code/bootstrap.php');
 
 class LibraryPage {
     static $view_fields = Array(

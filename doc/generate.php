@@ -4,7 +4,7 @@
 //
 //     curl http://www.boost.org/doc/generate.php?page=libs/libraries.htm&version=1.60.0
 
-require_once(__DIR__.'/../common/code/boost.php');
+require_once(__DIR__.'/../common/code/bootstrap.php');
 
 function main($args) {
     if (!array_key_exists('page', $args)) {

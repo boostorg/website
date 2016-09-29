@@ -1,7 +1,7 @@
 <?php
+    require_once(dirname(__FILE__) . '/common/code/bootstrap.php');
     header('Content-Type: application/xml');
     echo '<?xml version="1.0" encoding="UTF-8"?>', "\n";
-    require_once(dirname(__FILE__) . '/common/code/boost.php');
 ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 

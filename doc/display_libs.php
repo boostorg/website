@@ -16,7 +16,7 @@ if (strncmp($_SERVER['REQUEST_URI'], '/doc/libs/1_', 12) == 0  &&
     exit(0);
 }
 
-require_once(dirname(__FILE__) . '/../common/code/boost.php');
+require_once(dirname(__FILE__) . '/../common/code/bootstrap.php');
 
 function add_spirit_analytics($content) {
     $server = $_SERVER['HTTP_HOST'];

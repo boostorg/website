@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__) . '/../common/code/boost.php');
+require_once(dirname(__FILE__) . '/../common/code/bootstrap.php');
 
 $archive = new BoostArchive(array(
     'pattern' => '/^[\/]([^\/]+)[\/](.*)$/',
