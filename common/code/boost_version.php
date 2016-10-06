@@ -152,6 +152,10 @@ class BoostVersion {
         return $boost_version;
     }
 
+    function major() { return $this->version['major']; }
+    function minor() { return $this->version['minor']; }
+    function point() { return $this->version['point']; }
+
     /**
      * Is this a beta version?
      * @return boolean
