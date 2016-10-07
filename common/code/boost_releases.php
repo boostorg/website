@@ -26,6 +26,16 @@ class BoostReleases {
         }
     }
 
+    function save() {
+        $flat_release_data = array();
+        foreach($this->release_data as $base_version => $versions) {
+            foreach($versions as $version => $data) {
+                $flat_release_data[$version] = $this->flatten_array($data);
+            }
+        }
+        BoostState::save($flat_release_data, $this->release_file);
+    }
+
     function unflatten_array($array) {
         $result = array();
         foreach ($array as $key => $value) {
@@ -40,5 +50,22 @@ class BoostReleases {
             unset($reference);
         }
         return $result;
+    }
+
+    function flatten_array($x, $key_base = '') {
+        $flat = array();
+        foreach ($x as $sub_key => $value) {
+            $key = $key_base ? "{$key_base}.{$sub_key}" : $sub_key;
+            if (is_array($value)) {
+                $flat = array_merge($flat, $this->flatten_array($value, $key));
+            }
+            else {
+                $flat[$key] = $value;
+            }
+        }
+        return $flat;
+    }
+
+    function loadReleaseInfo($release_details) {
     }
 }
