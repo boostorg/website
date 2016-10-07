@@ -67,19 +67,26 @@ class BoostPages {
         $version = BoostVersion::from($basename);
         $base_version = $version->final_doc_dir();
         if (array_key_exists($base_version, $this->releases->release_data)) {
-            $latest_version = null;
+            $chosen_is_dev = true;
+            $chosen_version = null;
             $release_data = null;
 
             foreach ($this->releases->release_data[$base_version] as $version2 => $data) {
                 $version_object = BoostVersion::from($version2);
-                if (!$latest_version || $version_object->compare($latest_version) > 0) {
-                    $latest_version = $version_object;
+                $is_dev = array_key_exists('release_status', $data) && $data['release_status'] == 'dev';
+
+                if (!$chosen_version ||
+                    ($chosen_is_dev && !$is_dev) ||
+                    ($chosen_is_dev == $is_dev && $version_object->compare($chosen_version) > 0))
+                {
+                    $chosen_is_dev = $is_dev;
+                    $chosen_version = $version_object;
                     $release_data = $data;
                     $release_data['version'] = $version2;
                 }
             }
 
-            return $release_data;
+            return $release_data ?: $dev_data;
         }
 
         // Assume old versions are released if there's no data.
