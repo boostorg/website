@@ -6,29 +6,13 @@
 class BoostPages {
     var $root;
     var $hash_file;
-    var $release_file;
     var $pages = Array();
-    var $release_data = Array();
+    var $releases = null;
 
     function __construct($root, $hash_file, $release_file) {
         $this->root = $root;
         $this->hash_file = "{$root}/{$hash_file}";
-        $this->release_file = "{$root}/{$release_file}";
-
-        if (is_file($this->release_file)) {
-            $release_data = array();
-            foreach(BoostState::load($this->release_file) as $version => $data) {
-                $data = $this->unflatten_array($data);
-                $version_object = BoostVersion::from($version);
-                $base_version = $version_object->final_doc_dir();
-                $version = (string) $version_object;
-
-                if (isset($this->release_data[$base_version][$version])) {
-                    echo "Duplicate release data for {$version}.\n";
-                }
-                $this->release_data[$base_version][$version] = $data;
-            }
-        }
+        $this->releases = new BoostReleases("{$root}/{$release_file}");
 
         if (is_file($this->hash_file)) {
             foreach(BoostState::load($this->hash_file) as $qbk_file => $record) {
@@ -44,22 +28,6 @@ class BoostPages {
         BoostState::save(
             array_map(function($page) { return $page->state(); }, $this->pages),
             $this->hash_file);
-    }
-
-    function unflatten_array($array) {
-        $result = array();
-        foreach ($array as $key => $value) {
-            $reference = &$result;
-            foreach(explode('.', $key) as $key_part) {
-                if (!array_key_exists($key_part, $reference)) {
-                    $reference[$key_part] = array();
-                }
-                $reference = &$reference[$key_part];
-            }
-            $reference = $value;
-            unset($reference);
-        }
-        return $result;
     }
 
     function reverse_chronological_pages() {
@@ -98,11 +66,11 @@ class BoostPages {
 
         $version = BoostVersion::from($basename);
         $base_version = $version->final_doc_dir();
-        if (array_key_exists($base_version, $this->release_data)) {
+        if (array_key_exists($base_version, $this->releases->release_data)) {
             $latest_version = null;
             $release_data = null;
 
-            foreach ($this->release_data[$base_version] as $version2 => $data) {
+            foreach ($this->releases->release_data[$base_version] as $version2 => $data) {
                 $version_object = BoostVersion::from($version2);
                 if (!$latest_version || $version_object->compare($latest_version) > 0) {
                     $latest_version = $version_object;
