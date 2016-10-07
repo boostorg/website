@@ -133,4 +133,19 @@ class BoostReleases {
         $this->release_data[$base_version][$version_string]['download_page'] = $download_page;
         $this->release_data[$base_version][$version_string]['downloads'] = $downloads;
     }
+
+    function addDocumentation($version, $path) {
+        $base_version = $version->final_doc_dir();
+        $version_string = (string) $version;
+
+        if (!array_key_exists($base_version, $this->release_data)) {
+            $this->release_data[$base_version] = array();
+        }
+        if (!array_key_exists($version_string, $this->release_data[$base_version])) {
+            $this->release_data[$base_version][$version_string] = array(
+                'release_status' => 'dev',
+            );
+        }
+        $this->release_data[$base_version][$version_string]['documentation'] = $path;
+    }
 }
