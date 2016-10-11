@@ -254,7 +254,7 @@ class BoostPages {
                     'download_table' => $page_data->download_table(),
                     'description_xml' => $page_data->description_xml,
                 );
-                if ($page_data->section === 'history' && ($page_data->get_release_status() ?: 'dev') === 'dev') {
+                if ($page_data->get_release_status() === 'dev') {
                     $template_vars['note_xml'] = <<<EOL
                         <div class="section-alert"><p>Note: This release is
                         still under development. Please don't use this page as
@@ -394,7 +394,7 @@ class BoostPages_Page {
         $this->loaded = true;
 
         $doc_prefix  = null;
-        if ($this->get_release_status() !== 'released' && $this->get_documentation()) {
+        if ($this->get_release_status() === 'dev' || $this->get_release_status() === 'beta') {
             $doc_prefix = rtrim($this->get_documentation(), '/');
             $values['description_xhtml'] = BoostSiteTools::transform_links($values['description_xhtml'],
                 function ($x) use ($doc_prefix) {
@@ -595,17 +595,24 @@ class BoostPages_Page {
     }
 
     function get_release_status() {
-        if (array_key_exists('release_status', $this->release_data)) {
-            return $this->release_data['release_status'];
-        }
-
-        if (array_key_exists('version', $this->release_data)) {
-            if ($this->release_data['version']->is_numbered_release()) {
-                return $this->release_data['version']->is_beta() ? 'beta' : 'released';
+        switch ($this->section) {
+        case 'history':
+            if (array_key_exists('release_status', $this->release_data)) {
+                return $this->release_data['release_status'];
             }
-        }
 
-        return 'dev';
+            if (array_key_exists('version', $this->release_data)) {
+                if ($this->release_data['version']->is_numbered_release()) {
+                    return $this->release_data['version']->is_beta() ? 'beta' : 'released';
+                }
+            }
+
+            return 'dev';
+        case 'downloads':
+            return 'released';
+        default:
+            return null;
+        }
     }
 
     function get_documentation() {
