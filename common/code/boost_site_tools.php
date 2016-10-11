@@ -43,38 +43,33 @@ class BoostSiteTools {
         $news = array();
 
         foreach($pages->reverse_chronological_pages() as $page) {
-            switch($page->type) {
-            case 'page':
+            switch($page->section) {
+            case 'news':
                 if ($page->is_published()) {
                     $news[] = $page;
                 }
                 break;
-            case 'release':
-                if (preg_match('@^feed/history/@', $page->qbk_file)) {
-                    if ($page->is_published()) {
-                        $all_versions[] = $page;
-                    }
-
-                    if ($page->is_published('released')) {
-                        $all_downloads[] = $page;
-                        $released_versions[] = $page;
-                        $news[] = $page;
-                    }
-                    else if ($page->is_published('beta')) {
-                        $beta_versions[] = $page;
-                    }
+            case 'history':
+                if ($page->is_published()) {
+                    $all_versions[] = $page;
                 }
-                else {
-                    // TODO: Can probably remove this, it's only used for
-                    //       one obsolete file, that doesn't seem to be
-                    //       included anywhere.
-                    if ($page->is_published('released')) {
-                        $all_downloads[] = $page;
-                    }
+
+                if ($page->is_published('released')) {
+                    $all_downloads[] = $page;
+                    $released_versions[] = $page;
+                    $news[] = $page;
+                }
+                else if ($page->is_published('beta')) {
+                    $beta_versions[] = $page;
+                }
+                break;
+            case 'downloads':
+                if ($page->is_published('released')) {
+                    $all_downloads[] = $page;
                 }
                 break;
             default:
-                echo "Unknown page type: {$page->type}.\n";
+                echo "Unknown website section: {$page->section}.\n";
                 break;
             }
         }

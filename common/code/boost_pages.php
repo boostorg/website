@@ -9,17 +9,17 @@ class BoostPages {
         array(
             'source' => 'feed/history/*.qbk',
             'destination' => 'users/history',
-            'type' => 'release'
+            'section' => 'history'
         ),
         array(
             'source' => 'feed/news/*.qbk',
             'destination' => 'users/news',
-            'type' => 'page',
+            'section' => 'news',
         ),
         array(
             'source' => 'feed/downloads/*.qbk',
             'destination' => 'users/download',
-            'type' => 'release'
+            'section' => 'downloads'
         ),
     );
 
@@ -35,9 +35,13 @@ class BoostPages {
 
         if (is_file($this->hash_file)) {
             foreach(BoostState::load($this->hash_file) as $qbk_file => $record) {
+                if (!isset($record['section'])) {
+                    $location_data = $this->get_page_location_data($qbk_file);
+                    $record['section'] = $location_data['section'];
+                }
                 $this->pages[$qbk_file]
                     = new BoostPages_Page($qbk_file,
-                        $this->get_release_data($record['type'], $qbk_file),
+                        $this->get_release_data($qbk_file, $record['section']),
                         $record);
             }
         }
@@ -68,17 +72,17 @@ class BoostPages {
     }
 
     function scan_for_new_quickbook_pages() {
-        foreach ($this->page_locations as $section => $details) {
+        foreach ($this->page_locations as $details) {
             foreach (glob("{$this->root}/{$details['source']}") as $qbk_file) {
                 assert(strpos($qbk_file, $this->root) === 0);
                 $qbk_file = substr($qbk_file, strlen($this->root) + 1);
-                $this->add_qbk_file($qbk_file, $details['type']);
+                $this->add_qbk_file($qbk_file, $details['section']);
             }
         }
     }
 
     function get_page_location_data($qbk_path) {
-        foreach ($this->page_locations as $section => $details) {
+        foreach ($this->page_locations as $details) {
             if (fnmatch($details['source'], $qbk_path)) {
                 return $details;
             }
@@ -86,8 +90,10 @@ class BoostPages {
         throw new BoostException("Unexpected quickbook file path: {$qbk_path}");
     }
 
-    function get_release_data($type, $qbk_file) {
-        if ($type !== 'release') { return null; }
+    function get_release_data($qbk_file, $section) {
+        if ($section !== 'history' && $section !== 'downloads') {
+            return null;
+        }
 
         $basename = pathinfo($qbk_file, PATHINFO_FILENAME);
         if ($basename == 'unversioned') {
@@ -128,8 +134,8 @@ class BoostPages {
         return array();
     }
 
-    function add_qbk_file($qbk_file, $type) {
-        $release_data = $this->get_release_data($type, $qbk_file);
+    function add_qbk_file($qbk_file, $section) {
+        $release_data = $this->get_release_data($qbk_file, $section);
 
         $context = hash_init('sha256');
         hash_update($context, json_encode($this->normalize_release_data(
@@ -153,12 +159,8 @@ class BoostPages {
         }
 
         $record->qbk_hash = $qbk_hash;
-        $record->type = $type;
+        $record->section = $section;
         $record->last_modified = new DateTime();
-
-        if (!in_array($record->type, array('release', 'page'))) {
-            throw new BoostException("Unknown record type: ".$record->type);
-        }
     }
 
     // Make the release data look like it used to look in order to get a consistent
@@ -252,7 +254,7 @@ class BoostPages {
                     'download_table' => $page_data->download_table(),
                     'description_xml' => $page_data->description_xml,
                 );
-                if ($page_data->type == 'release' && ($page_data->get_release_status() ?: 'dev') === 'dev') {
+                if ($page_data->section === 'history' && ($page_data->get_release_status() ?: 'dev') === 'dev') {
                     $template_vars['note_xml'] = <<<EOL
                         <div class="section-alert"><p>Note: This release is
                         still under development. Please don't use this page as
@@ -307,7 +309,7 @@ class BoostPages_Page {
     var $qbk_file;
 
     var $release_data;
-    var $type, $page_state, $location;
+    var $section, $page_state, $location;
     var $id, $title_xml, $purpose_xml, $notice_xml, $notice_url;
     var $last_modified, $pub_date;
     var $documentation, $qbk_hash;
@@ -315,7 +317,7 @@ class BoostPages_Page {
     function __construct($qbk_file, $release_data = null, $attrs = array('page_state' => 'new')) {
         $this->qbk_file = $qbk_file;
 
-        $this->type = $this->array_get($attrs, 'type');
+        $this->section = $this->array_get($attrs, 'section');
         $this->page_state = $this->array_get($attrs, 'page_state');
         $this->location = $this->array_get($attrs, 'location');
         $this->id = $this->array_get($attrs, 'id');
@@ -349,7 +351,7 @@ class BoostPages_Page {
 
     function set_release_data($release_data) {
         if ($release_data) {
-            assert($this->type === 'release');
+            assert($this->section === 'history' || $this->section === 'downloads');
 
             if (array_key_exists('version', $release_data)) {
                 $release_data['version'] = BoostVersion::from($release_data['version']);
@@ -361,7 +363,7 @@ class BoostPages_Page {
 
     function state() {
         return array(
-            'type' => $this->type,
+            'section' => $this->section,
             'page_state' => $this->page_state,
             'location' => $this->location,
             'id'  => $this->id,
@@ -416,14 +418,18 @@ class BoostPages_Page {
     }
 
     function full_title_xml() {
-        if ($this->type !== 'release') { return $this->title_xml; }
-        switch($this->get_release_status()) {
-        case 'released':
-            return $this->title_xml;
-        case 'beta':
-            return trim("{$this->title_xml} beta {$this->release_data['version']->beta_number()}");
+        switch ($this->section) {
+        case 'history':
+            switch($this->get_release_status()) {
+            case 'released':
+                return $this->title_xml;
+            case 'beta':
+                return trim("{$this->title_xml} beta {$this->release_data['version']->beta_number()}");
+            default:
+                return "{$this->title_xml} - work in progress";
+            }
         default:
-            return "{$this->title_xml} - work in progress";
+            return $this->title_xml;
         }
     }
 
@@ -460,14 +466,6 @@ class BoostPages_Page {
     }
 
     function download_table() {
-        // TODO: Removing this temporarily so I can add the download links
-        //       without putting the release notes on the front page.
-        //       Might remove this code permananently, I'm not sure if it
-        //       does any good.
-        //if ($this->type == 'release' && (!$this->release_status || $this->release_status === 'dev')) {
-        //    return '';
-        //}
-
         $downloads = $this->download_table_data();
 
         if (is_array($downloads)) {
