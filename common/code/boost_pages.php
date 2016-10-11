@@ -118,7 +118,7 @@ class BoostPages {
                     $chosen_is_dev = $is_dev;
                     $chosen_version = $version_object;
                     $release_data = $data;
-                    $release_data['version'] = $version2;
+                    $release_data['version'] = $version_object;
                 }
             }
 
@@ -127,7 +127,7 @@ class BoostPages {
 
         // Assume old versions are released if there's no data.
         if ($version->compare('1.50.0') < 0) {
-            return array('version' => (string) $version);
+            return array('version' => $version);
         }
 
         // TODO: Maybe assume 'master' for new versions?
@@ -175,6 +175,11 @@ class BoostPages {
         $release_data = $this->arrange_keys($release_data, array(
             'release_notes', 'release_status', 'version', 'documentation',
             'download_page', 'downloads', 'signature', 'third_party'));
+
+        // Text verison
+        if (array_key_exists('version', $release_data)) {
+            $release_data['version'] = (string) $release_data['version'];
+        }
 
         // Turn the downloads and third party downloads into numeric arrays.
         if (array_key_exists('downloads', $release_data)) {
@@ -352,10 +357,6 @@ class BoostPages_Page {
     function set_release_data($release_data) {
         if ($release_data) {
             assert($this->section === 'history' || $this->section === 'downloads');
-
-            if (array_key_exists('version', $release_data)) {
-                $release_data['version'] = BoostVersion::from($release_data['version']);
-            }
         }
 
         $this->release_data = $release_data;
