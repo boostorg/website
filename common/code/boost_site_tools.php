@@ -26,9 +26,7 @@ class BoostSiteTools {
         $pages = $this->load_pages();
 
         if (!$refresh) {
-            $pages->scan_location_for_new_quickbook_pages('users/history/', 'feed/history/*.qbk', 'release');
-            $pages->scan_location_for_new_quickbook_pages('users/news/', 'feed/news/*.qbk', 'page');
-            $pages->scan_location_for_new_quickbook_pages('users/download/', 'feed/downloads/*.qbk', 'release');
+            $pages->scan_for_new_quickbook_pages();
             $pages->save();
         }
 

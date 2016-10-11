@@ -4,6 +4,25 @@
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
 class BoostPages {
+    // If you change these values, they will only apply to new pages.
+    var $page_locations = array(
+        array(
+            'source' => 'feed/history/*.qbk',
+            'destination' => 'users/history',
+            'type' => 'release'
+        ),
+        array(
+            'source' => 'feed/news/*.qbk',
+            'destination' => 'users/news',
+            'type' => 'page',
+        ),
+        array(
+            'source' => 'feed/downloads/*.qbk',
+            'destination' => 'users/download',
+            'type' => 'release'
+        ),
+    );
+
     var $root;
     var $hash_file;
     var $pages = Array();
@@ -48,12 +67,23 @@ class BoostPages {
         return $pages;
     }
 
-    function scan_location_for_new_quickbook_pages($dir_location, $src_file_glob, $type) {
-        foreach (glob("{$this->root}/{$src_file_glob}") as $qbk_file) {
-            assert(strpos($qbk_file, $this->root) === 0);
-            $qbk_file = substr($qbk_file, strlen($this->root) + 1);
-            $this->add_qbk_file($qbk_file, $dir_location, $type);
+    function scan_for_new_quickbook_pages() {
+        foreach ($this->page_locations as $section => $details) {
+            foreach (glob("{$this->root}/{$details['source']}") as $qbk_file) {
+                assert(strpos($qbk_file, $this->root) === 0);
+                $qbk_file = substr($qbk_file, strlen($this->root) + 1);
+                $this->add_qbk_file($qbk_file, $details['type']);
+            }
         }
+    }
+
+    function get_page_location_data($qbk_path) {
+        foreach ($this->page_locations as $section => $details) {
+            if (fnmatch($details['source'], $qbk_path)) {
+                return $details;
+            }
+        }
+        throw new BoostException("Unexpected quickbook file path: {$qbk_path}");
     }
 
     function get_release_data($type, $qbk_file) {
@@ -98,7 +128,7 @@ class BoostPages {
         return array();
     }
 
-    function add_qbk_file($qbk_file, $dir_location, $type) {
+    function add_qbk_file($qbk_file, $type) {
         $release_data = $this->get_release_data($type, $qbk_file);
 
         $context = hash_init('sha256');
@@ -114,9 +144,6 @@ class BoostPages {
             $this->pages[$qbk_file] = $record = new BoostPages_Page($qbk_file, $release_data);
         } else {
             $record = $this->pages[$qbk_file];
-            if ($record->dir_location) {
-                assert($record->dir_location == $dir_location);
-            }
             if ($record->qbk_hash == $qbk_hash) {
                 return;
             }
@@ -126,7 +153,6 @@ class BoostPages {
         }
 
         $record->qbk_hash = $qbk_hash;
-        $record->dir_location = $dir_location;
         $record->type = $type;
         $record->last_modified = new DateTime();
 
@@ -192,6 +218,8 @@ class BoostPages {
 
         foreach ($this->pages as $page => $page_data) {
             if ($page_data->page_state || $refresh) {
+                // Convert the page from quickbook.
+
                 $xml_filename = tempnam(sys_get_temp_dir(), 'boost-qbk-');
                 try {
                     echo "Converting ", $page, ":\n";
@@ -202,6 +230,17 @@ class BoostPages {
                     throw $e;
                 }
                 unlink($xml_filename);
+
+                // Set the path where the page should be built.
+                // This can only be done after the quickbook file has been converted,
+                // as the page id is based on the file contents.
+
+                if (!$page_data->location) {
+                    $location_data = $this->get_page_location_data($page_data->qbk_file);
+                    $page_data->location = "{$location_data['destination']}/{$page_data->id}.html";
+                }
+
+                // Generate the various pages.
 
                 $template_vars = array(
                     'history_style' => '',
@@ -248,6 +287,8 @@ EOL;
                     "{$this->root}/{$page_data->location}",
                     __DIR__."/templates/entry.php",
                     $template_vars);
+
+                $page_data->page_state = null;
             }
         }
     }
@@ -266,7 +307,7 @@ class BoostPages_Page {
     var $qbk_file;
 
     var $release_data;
-    var $type, $page_state, $dir_location, $location;
+    var $type, $page_state, $location;
     var $id, $title_xml, $purpose_xml, $notice_xml, $notice_url;
     var $last_modified, $pub_date;
     var $documentation, $qbk_hash;
@@ -276,7 +317,6 @@ class BoostPages_Page {
 
         $this->type = $this->array_get($attrs, 'type');
         $this->page_state = $this->array_get($attrs, 'page_state');
-        $this->dir_location = $this->array_get($attrs, 'dir_location');
         $this->location = $this->array_get($attrs, 'location');
         $this->id = $this->array_get($attrs, 'id');
         $this->title_xml = $this->array_get($attrs, 'title');
@@ -323,7 +363,6 @@ class BoostPages_Page {
         return array(
             'type' => $this->type,
             'page_state' => $this->page_state,
-            'dir_location' => $this->dir_location,
             'location' => $this->location,
             'id'  => $this->id,
             'title' => $this->title_xml,
@@ -337,7 +376,6 @@ class BoostPages_Page {
     }
 
     function load_boostbook_data($values, $refresh = false) {
-        assert($this->dir_location || $refresh);
         assert(!$this->loaded);
 
         $this->title_xml = BoostSiteTools::trim_lines($values['title_xhtml']);
@@ -349,11 +387,6 @@ class BoostPages_Page {
         $this->id = $values['id'];
         if (!$this->id) {
             $this->id = strtolower(preg_replace('@[\W]@', '_', $this->title_xml));
-        }
-        if ($this->dir_location) {
-            $this->location = $this->dir_location . $this->id . '.html';
-            $this->dir_location = null;
-            $this->page_state = null;
         }
 
         $this->loaded = true;
