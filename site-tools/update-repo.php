@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-require_once(__DIR__.'/../common/code/boost.php');
+require_once(__DIR__.'/../common/code/bootstrap.php');
 
 function main() {
     $args = $_SERVER['argv'];

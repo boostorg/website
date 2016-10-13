@@ -1,7 +1,7 @@
 <?php
 
-/* Bootstrap script for boost web pages.
- * Command line/external code should include 'boost.php'
+/* Bootstrap script, only for this repo.
+ * External code should include 'boost.php'.
  */
 
 // Set timezone to UTC.

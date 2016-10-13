@@ -22,7 +22,7 @@ b91c2cda8bee73ea613130e19e72c9589e9ef0357c4c5cc5f7523de82cce11f7  boost_1_62_0.7
 
  */
 
-require_once(__DIR__.'/../common/code/boost.php');
+require_once(__DIR__.'/../common/code/bootstrap.php');
 
 function main() {
     $args = $_SERVER['argv'];
