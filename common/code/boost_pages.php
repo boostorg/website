@@ -25,12 +25,15 @@ class BoostPages {
 
     var $root;
     var $hash_file;
+    var $page_cache_file;
     var $pages = Array();
+    var $page_cache = Array();
     var $releases = null;
 
-    function __construct($root, $hash_file, $release_file) {
+    function __construct($root, $hash_file, $page_cache, $release_file) {
         $this->root = $root;
         $this->hash_file = "{$root}/{$hash_file}";
+        $this->page_cache_file = "{$root}/{$page_cache}";;
         $this->releases = new BoostReleases("{$root}/{$release_file}");
 
         if (is_file($this->hash_file)) {
@@ -45,12 +48,17 @@ class BoostPages {
                         $record);
             }
         }
+
+        if (is_file($this->page_cache_file)) {
+            $this->page_cache = BoostState::load($this->page_cache_file);
+        }
     }
 
     function save() {
         BoostState::save(
             array_map(function($page) { return $page->state(); }, $this->pages),
             $this->hash_file);
+        BoostState::save($this->page_cache,  $this->page_cache_file);
     }
 
     function reverse_chronological_pages() {
@@ -215,28 +223,54 @@ class BoostPages {
     function convert_quickbook_pages($refresh = false) {
         try {
             BoostSuperProject::run_process('quickbook --version');
+            $have_quickbook = true;
         }
         catch(ProcessError $e) {
             echo "Problem running quickbook, will not convert quickbook articles.\n";
-            return;
+            $have_quickbook = false;
         }
 
         $bb_parser = new BoostBookParser();
 
         foreach ($this->pages as $page => $page_data) {
-            if ($page_data->page_state || $refresh) {
-                // Convert the page from quickbook.
 
-                $xml_filename = tempnam(sys_get_temp_dir(), 'boost-qbk-');
-                try {
-                    echo "Converting ", $page, ":\n";
-                    BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
-                    $page_data->load_boostbook_data($bb_parser->parse($xml_filename), $refresh);
-                } catch (Exception $e) {
-                    unlink($xml_filename);
-                    throw $e;
+            if ($page_data->page_state || $refresh) {
+                // Hash the quickbook source
+
+                $hash = hash('sha256', str_replace("\r\n", "\n",
+                    file_get_contents("{$this->root}/{$page}")));
+
+                // Get the page from quickbook/read from cache
+
+                if (array_key_exists($page, $this->page_cache) &&
+                    (!$have_quickbook || $this->page_cache[$page]['hash'] === $hash))
+                {
+                    $description_xhtml = $this->page_cache[$page]['description_xhtml'];
                 }
-                unlink($xml_filename);
+                else if ($have_quickbook)
+                {
+                    $xml_filename = tempnam(sys_get_temp_dir(), 'boost-qbk-');
+                    try {
+                        echo "Converting ", $page, ":\n";
+                        BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
+                        $values = $bb_parser->parse($xml_filename);
+                        $page_data->load_boostbook_data($values, $refresh);
+                        $description_xhtml = $values['description_xhtml'];
+                    } catch (Exception $e) {
+                        unlink($xml_filename);
+                        throw $e;
+                    }
+                    unlink($xml_filename);
+
+                    $this->page_cache[$page] = array(
+                        'hash' => $hash,
+                        'description_xhtml' => $description_xhtml,
+                    );
+                }
+                else {
+                    echo "Unable to generate page for {$page}.\n";
+                    continue;
+                }
 
                 // Set the path where the page should be built.
                 // This can only be done after the quickbook file has been converted,
@@ -246,6 +280,32 @@ class BoostPages {
                     $location_data = $this->get_page_location_data($page_data->qbk_file);
                     $page_data->location = "{$location_data['destination']}/{$page_data->id}.html";
                 }
+
+                // Transform links in description
+
+                $doc_prefix  = null;
+                if ($page_data->get_release_status() === 'dev' || $page_data->get_release_status() === 'beta') {
+                    $doc_prefix = rtrim($page_data->get_documentation(), '/');
+                    $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
+                        function ($x) use ($doc_prefix) {
+                            return preg_match('@^/(?:libs/|doc/html/)@', $x)
+                                ? $doc_prefix.$x : $x;
+                        });
+                }
+
+                $version = BoostWebsite::array_get($page_data->release_data, 'version');
+                if ($version && $doc_prefix) {
+                    $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
+                    $link_pattern = '@^'.preg_quote($final_documentation, '@').'/@';
+                    $replace = "{$doc_prefix}/";
+                    $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
+                        function($x) use($link_pattern, $replace) {
+                            return preg_replace($link_pattern, $replace, $x);
+                        });
+                }
+
+                $description_xhtml = BoostSiteTools::trim_lines($description_xhtml);
+                $page_data->description_xml = $description_xhtml;
 
                 // Generate the various pages.
 
@@ -313,11 +373,14 @@ EOL;
 class BoostPages_Page {
     var $qbk_file;
 
-    var $release_data;
     var $section, $page_state, $location;
     var $id, $title_xml, $purpose_xml, $notice_xml, $notice_url;
     var $last_modified, $pub_date;
-    var $documentation, $qbk_hash;
+    var $qbk_hash;
+
+    // Extra state data that isn't saved.
+    var $description_xml = null; // Page markup, after transforming for current state.
+    var $release_data = null;    // Status of release where appropriate.
 
     function __construct($qbk_file, $release_data = null, $attrs = array('page_state' => 'new')) {
         $this->qbk_file = $qbk_file;
@@ -333,8 +396,6 @@ class BoostPages_Page {
         $this->last_modified = BoostWebsite::array_get($attrs, 'last_modified');
         $this->pub_date = BoostWebsite::array_get($attrs, 'pub_date');
         $this->qbk_hash = BoostWebsite::array_get($attrs, 'qbk_hash');
-
-        $this->loaded = false;
 
         if (is_string($this->pub_date)) {
             $this->pub_date = $this->pub_date == 'In Progress' ?
@@ -379,8 +440,6 @@ class BoostPages_Page {
     }
 
     function load_boostbook_data($values, $refresh = false) {
-        assert(!$this->loaded);
-
         $this->title_xml = BoostSiteTools::trim_lines($values['title_xhtml']);
         $this->purpose_xml = BoostSiteTools::trim_lines($values['purpose_xhtml']);
         $this->notice_xml = BoostSiteTools::trim_lines($values['notice_xhtml']);
@@ -391,31 +450,6 @@ class BoostPages_Page {
         if (!$this->id) {
             $this->id = strtolower(preg_replace('@[\W]@', '_', $this->title_xml));
         }
-
-        $this->loaded = true;
-
-        $doc_prefix  = null;
-        if ($this->get_release_status() === 'dev' || $this->get_release_status() === 'beta') {
-            $doc_prefix = rtrim($this->get_documentation(), '/');
-            $values['description_xhtml'] = BoostSiteTools::transform_links($values['description_xhtml'],
-                function ($x) use ($doc_prefix) {
-                    return preg_match('@^/(?:libs/|doc/html/)@', $x)
-                        ? $doc_prefix.$x : $x;
-                });
-        }
-
-        $version = BoostWebsite::array_get($this->release_data, 'version');
-        if ($version && $doc_prefix) {
-            $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
-            $link_pattern = '@^'.preg_quote($final_documentation, '@').'/@';
-            $replace = "{$doc_prefix}/";
-            $values['description_xhtml'] = BoostSiteTools::transform_links($values['description_xhtml'],
-                function($x) use($link_pattern, $replace) {
-                    return preg_replace($link_pattern, $replace, $x);
-                });
-        }
-
-        $this->description_xml = BoostSiteTools::trim_lines($values['description_xhtml']);
     }
 
     function full_title_xml() {

@@ -35,7 +35,9 @@ class BoostRss {
         foreach ($feed_pages as $qbk_page) {
             $item_xml = null;
 
-            if ($qbk_page->loaded) {
+            // TODO: Need a better way to telll when to update an RSS item.
+            //       Maybe by tracking qbk_hash?
+            if ($qbk_page->description_xml) {
                 $item = $this->generate_rss_item($qbk_page->qbk_file, $qbk_page);
 
                 $item['item'] = BoostSiteTools::trim_lines($item['item']);
@@ -82,7 +84,7 @@ EOL;
     }
 
     function generate_rss_item($qbk_file, $page) {
-        assert($page->loaded);
+        assert(!!$page->description_xml);
 
         $xml = '';
         $page_link = "http://www.boost.org/{$page->location}";
