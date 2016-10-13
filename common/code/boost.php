@@ -6,6 +6,12 @@
 */
 require_once(dirname(__FILE__) . '/boost_config.php');
 
+class BoostWebsite {
+    static function array_get($array, $key, $default = null) {
+        return array_key_exists($key, $array) ? $array[$key] : $default;
+    }
+}
+
 function html_encode($text) {
     return htmlentities($text, ENT_COMPAT, 'UTF-8');
 }

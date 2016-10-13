@@ -269,8 +269,8 @@ class BoostPages {
 EOL;
                 }
 
-                if ($page_data->array_get($page_data->release_data, 'documentation')) {
-                    $template_vars['documentation_para'] = '              <p><a href="'.html_encode($page_data->array_get($page_data->release_data, 'documentation')).'">Documentation</a>';
+                if (BoostWebsite::array_get($page_data->release_data, 'documentation')) {
+                    $template_vars['documentation_para'] = '              <p><a href="'.html_encode(BoostWebsite::array_get($page_data->release_data, 'documentation')).'">Documentation</a>';
                 }
 
                 if (strpos($page_data->location, 'users/history/') === 0) {
@@ -322,17 +322,17 @@ class BoostPages_Page {
     function __construct($qbk_file, $release_data = null, $attrs = array('page_state' => 'new')) {
         $this->qbk_file = $qbk_file;
 
-        $this->section = $this->array_get($attrs, 'section');
-        $this->page_state = $this->array_get($attrs, 'page_state');
-        $this->location = $this->array_get($attrs, 'location');
-        $this->id = $this->array_get($attrs, 'id');
-        $this->title_xml = $this->array_get($attrs, 'title');
-        $this->purpose_xml = $this->array_get($attrs, 'purpose');
-        $this->notice_xml = $this->array_get($attrs, 'notice');
-        $this->notice_url = $this->array_get($attrs, 'notice_url');
-        $this->last_modified = $this->array_get($attrs, 'last_modified');
-        $this->pub_date = $this->array_get($attrs, 'pub_date');
-        $this->qbk_hash = $this->array_get($attrs, 'qbk_hash');
+        $this->section = BoostWebsite::array_get($attrs, 'section');
+        $this->page_state = BoostWebsite::array_get($attrs, 'page_state');
+        $this->location = BoostWebsite::array_get($attrs, 'location');
+        $this->id = BoostWebsite::array_get($attrs, 'id');
+        $this->title_xml = BoostWebsite::array_get($attrs, 'title');
+        $this->purpose_xml = BoostWebsite::array_get($attrs, 'purpose');
+        $this->notice_xml = BoostWebsite::array_get($attrs, 'notice');
+        $this->notice_url = BoostWebsite::array_get($attrs, 'notice_url');
+        $this->last_modified = BoostWebsite::array_get($attrs, 'last_modified');
+        $this->pub_date = BoostWebsite::array_get($attrs, 'pub_date');
+        $this->qbk_hash = BoostWebsite::array_get($attrs, 'qbk_hash');
 
         $this->loaded = false;
 
@@ -404,7 +404,7 @@ class BoostPages_Page {
                 });
         }
 
-        $version = $this->array_get($this->release_data, 'version');
+        $version = BoostWebsite::array_get($this->release_data, 'version');
         if ($version && $doc_prefix) {
             $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
             $link_pattern = '@^'.preg_quote($final_documentation, '@').'/@';
@@ -444,15 +444,15 @@ class BoostPages_Page {
 
     function download_table_data() {
         if (!$this->release_data) { return null; }
-        $downloads = $this->array_get($this->release_data, 'downloads');
-        $signature = $this->array_get($this->release_data, 'signature');
-        $third_party = $this->array_get($this->release_data, 'third_party');
+        $downloads = BoostWebsite::array_get($this->release_data, 'downloads');
+        $signature = BoostWebsite::array_get($this->release_data, 'signature');
+        $third_party = BoostWebsite::array_get($this->release_data, 'third_party');
         if (!$downloads && !$third_party) { return $this->get_download_page(); }
 
         $tabled_downloads = array();
         foreach ($downloads as $download) {
             // Q: Good default here?
-            $line_endings = $this->array_get($download, 'line_endings', 'unix');
+            $line_endings = BoostWebsite::array_get($download, 'line_endings', 'unix');
             unset($download['line_endings']);
             $tabled_downloads[$line_endings][] = $download;
         }
@@ -524,7 +524,7 @@ class BoostPages_Page {
                     $output .= '</a></td>';
                     if ($hash_column) {
                         $output .= '<td>';
-                        $output .= html_encode($this->array_get($download, 'sha256'));
+                        $output .= html_encode(BoostWebsite::array_get($download, 'sha256'));
                         $output .= '</td>';
                     }
                     $output .= '</tr>';
@@ -617,14 +617,10 @@ class BoostPages_Page {
     }
 
     function get_documentation() {
-        return $this->array_get($this->release_data, 'documentation');
+        return BoostWebsite::array_get($this->release_data, 'documentation');
     }
 
     function get_download_page() {
-        return $this->array_get($this->release_data, 'download_page');
-    }
-
-    function array_get($array, $key, $default = null) {
-        return isset($array[$key]) ? $array[$key] : $default;
+        return BoostWebsite::array_get($this->release_data, 'download_page');
     }
 }
