@@ -5,7 +5,7 @@
 
 class BoostReleases {
     var $release_file;
-    var $release_data;
+    var $release_data = array();
 
     function __construct($release_file) {
         $this->release_file = $release_file;
@@ -163,9 +163,11 @@ class BoostReleases {
         assert(in_array($status, array('released', 'dev')));
         if ($status === 'released') {
             unset($this->release_data[$base_version][$version_string]['release_status']);
+            $this->release_data[$base_version][$version_string]['release_date'] = new DateTime();
         }
         else {
             $this->release_data[$base_version][$version_string]['release_status'];
+            unset($this->release_data[$base_version][$version_string]['release_date']);
         }
     }
 }

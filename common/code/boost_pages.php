@@ -52,6 +52,23 @@ class BoostPages {
         if (is_file($this->page_cache_file)) {
             $this->page_cache = BoostState::load($this->page_cache_file);
         }
+
+        // Temporary code to update release data
+        foreach ($this->pages as $qbk_file => $page) {
+            if ($page->release_data &&
+                array_key_exists('version', $page->release_data) &&
+                !array_key_exists('release_date', $page->release_data) &&
+                $page->get_release_status() == 'released' &&
+                $page->pub_date)
+            {
+                $version = $page->release_data['version'];
+                $base_version = $version->final_doc_dir();
+                $this->releases->release_data[$base_version][(string) $version]['release_date'] =
+                    $page->pub_date;
+                $page->release_data['release_date'] = $page->pub_date;
+            }
+        }
+        $this->releases->save();
     }
 
     function save() {
@@ -64,6 +81,7 @@ class BoostPages {
     function reverse_chronological_pages() {
         $pages = $this->pages;
 
+        // TODO: Use release date for release pages?
         $pub_date_order = array();
         $last_published_order = array();
         $unpublished_date = new DateTime("+10 years");
@@ -103,9 +121,15 @@ class BoostPages {
             return null;
         }
 
+        // TODO: This special case is a real pain to handle, maybe it
+        //       shouldn't have release data? It doesn't make much
+        //       sense as it is.
         $basename = pathinfo($qbk_file, PATHINFO_FILENAME);
         if ($basename == 'unversioned') {
-            return array('release_status' => 'released');
+            return array(
+                'release_status' => 'released',
+                'release_date' => new DateTime('Tue, 14 Dec 1999 12:00:00 GMT'),
+            );
         }
 
         $version = BoostVersion::from($basename);
@@ -147,7 +171,7 @@ class BoostPages {
 
         $context = hash_init('sha256');
         hash_update($context, json_encode($this->normalize_release_data(
-            $release_data, $qbk_file)));
+            $release_data, $qbk_file, $section)));
         hash_update($context, str_replace("\r\n", "\n",
             file_get_contents("{$this->root}/{$qbk_file}")));
         $qbk_hash = hash_final($context);
@@ -173,18 +197,30 @@ class BoostPages {
 
     // Make the release data look like it used to look in order to get a consistent
     // hash value. Pretty expensive, but saves constant messing around with hashes.
-    private function normalize_release_data($release_data, $qbk_file) {
+    private function normalize_release_data($release_data, $qbk_file, $section) {
         if (!$release_data) { return null; }
 
+        // Fill in default values.
         $release_data += array(
                 'release_notes' => $qbk_file, 'release_status' => 'released',
                 'version' => '', 'documentation' => null, 'download_page' => null);
 
+        // Release date wasn't originally included in data for old versions,
+        // and shouldn't be changed, so easiest to ignore it.
+        if (array_key_exists('release_date', $release_data) && (
+                $section == 'downloads' ||
+                !$release_data['version'] ||
+                $release_data['version']->compare('1.62.0') <= 0
+            )) {
+            unset($release_data['release_date']);
+        }
+
+        // Arrange the keys in order.
         $release_data = $this->arrange_keys($release_data, array(
             'release_notes', 'release_status', 'version', 'documentation',
             'download_page', 'downloads', 'signature', 'third_party'));
 
-        // Text verison
+        // Replace version object with version string.
         if (array_key_exists('version', $release_data)) {
             $release_data['version'] = (string) $release_data['version'];
         }
@@ -471,11 +507,21 @@ class BoostPages_Page {
     }
 
     function web_date() {
-        if (!$this->pub_date) {
-            return 'In Progress';
-        } else {
-            return gmdate('F jS, Y H:i', $this->pub_date->getTimestamp()).' GMT';
+        $date = null;
+
+        if ($this->release_data) {
+            // For releases, use the release date, not the pub date
+            if (array_key_exists('release_date', $this->release_data)) {
+                $date = $this->release_data['release_date'];
+            } else {
+                return 'In Progress';
+            }
         }
+        else {
+            $date = $this->pub_date;
+        }
+
+        return gmdate('F jS, Y H:i', $date->getTimestamp()).' GMT';
     }
 
     function download_table_data() {
