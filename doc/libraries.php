@@ -48,6 +48,7 @@ class LibraryPage {
         $base_uri = preg_replace('@//+@', '/', $base_uri);
         $this->base_uri = $base_uri;
 
+        $view_value = null;
         if (array_key_exists('view', $params)) {
             $view_value = $params['view'];
             $filter_value = '';
@@ -81,6 +82,7 @@ class LibraryPage {
             $this->filter_value = $filter_value;
         }
 
+        $sort_value = null;
         if (array_key_exists('sort', $params)) {
             $sort_value = $params['sort'];
 
@@ -95,6 +97,7 @@ class LibraryPage {
             $this->sort_value = $sort_value ?: 'name';
         }
 
+        $attribute_filter = null;
         if (!empty($params['filter'])) {
             $attribute_filter = $params['filter'];
 
