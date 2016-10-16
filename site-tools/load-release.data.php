@@ -25,22 +25,22 @@ b91c2cda8bee73ea613130e19e72c9589e9ef0357c4c5cc5f7523de82cce11f7  boost_1_62_0.7
 require_once(__DIR__.'/../common/code/bootstrap.php');
 
 function main() {
-    $args = $_SERVER['argv'];
+    $options = BoostSiteTools\CommandLineOptions::parse('Usage: {} path');
 
-    if (count ($args) != 2) {
-        echo "Usage: load-release-data.php path\n";
+    if (count ($options->positional) != 1) {
+        echo $options->usage_message();
         exit(1);
     }
 
-    $path = realpath($args[1]);
+    $path = realpath($options->positional[0]);
     if (!$path) {
-        echo "Unable to find release file: {$args[1]}\n";
+        echo "Unable to find release file: {$options->positional[0]}\n";
         exit(1);
     }
 
     $release_details = file_get_contents($path);
     if (!$release_details) {
-        echo "Error reading release file: {$args[1]}\n";
+        echo "Error reading release file: {$options->positional[0]}\n";
         exit(1);
     }
 

@@ -7,36 +7,37 @@ require_once(__DIR__.'/../common/code/bootstrap.php');
 global $quiet;
 $quiet = false;
 
+define ('UPDATE_DOC_LIST_USAGE', "
+Usage: {} [path] [version]
+
+Update the documentation list of libraries from metadata files.
+These can be read from a snapshot/release or a mirror of the
+git repositories.
+
+If called with no parameters, updates the serialized cache of
+the documentation list.
+
+Options:
+
+    --quiet
+");
+
 function main() {
     global $quiet;
 
-    $args = $_SERVER['argv'];
+    $options = BoostSiteTools\CommandLineOptions::parse(
+        UPDATE_DOC_LIST_USAGE, array('quiet' => false));
+
+    $quiet = $options->flags['quiet'];
     $location = null;
     $version = null;
 
-    $positional_args = array();
-    foreach($args as $arg) {
-        if (substr($arg, 0, 2) == '--') {
-            switch ($arg) {
-            case '--quiet':
-                $quiet = true;
-                break;
-            default:
-                echo "Unknown flag: {$arg}\n";
-                exit(1);
-            }
-        }
-        else {
-            $positional_args[] = $arg;
-        }
-    }
-
-    switch (count($positional_args)) {
-        case 3: $version = $positional_args[2];
-        case 2: $location = $positional_args[1];
-        case 1: break;
+    switch (count($options->positional)) {
+        case 2: $version = $options->positional[1];
+        case 1: $location = $options->positional[0];
+        case 0: break;
         default:
-            echo "Usage: update-doc-list.php [path] [version]\n";
+            echo $options->usage_message();
             exit(1);
     }
 

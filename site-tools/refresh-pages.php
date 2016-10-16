@@ -6,7 +6,7 @@
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
 $usage = <<<EOL
-Usage: php refresh-pages.php
+Usage: {}
 
 Reconvert all the quickbook files and regenerate the html pages. Does
 not update the rss feeds or add new pages. Useful for when quickbook,
@@ -14,6 +14,8 @@ the scripts or the templates have been updated.
 EOL;
 
 require_once(__DIR__.'/../common/code/bootstrap.php');
+
+BoostSiteTools\CommandLineOptions::parse($usage);
 
 $site_tools = new BoostSiteTools(__DIR__.'/..');
 $site_tools->update_quickbook(true);

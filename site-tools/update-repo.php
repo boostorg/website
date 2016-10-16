@@ -4,15 +4,16 @@
 require_once(__DIR__.'/../common/code/bootstrap.php');
 
 function main() {
-    $args = $_SERVER['argv'];
+    $options = BoostSiteTools\CommandLineOptions::parse(
+        "Usage: {} location version");
 
-    if (count($args) != 3) {
-        echo "Usage: update-maintainers.php location version\n";
+    if (count($options->positional) != 2) {
+        echo $options->usage_message();
         exit(1);
     }
 
-    $location = $args[1];
-    $version = $args[2];
+    $location = $options->positional[0];
+    $version = $options->positional[1];
 
     $libraries =
         BoostLibraries::from_xml_file(__DIR__ . '/../doc/libraries.xml');

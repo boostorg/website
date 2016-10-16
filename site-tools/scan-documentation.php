@@ -15,6 +15,8 @@
 require_once(__DIR__.'/../common/code/boost.php');
 
 function main() {
+    BoostSiteTools\CommandLineOptions::parse();
+
     $path = realpath(STATIC_DIR);
     if (!$path || !is_dir($path)) {
         echo "Unable to find documentation directory\n";
