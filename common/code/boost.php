@@ -23,9 +23,10 @@ spl_autoload_register(function($name) {
         throw new BoostException("Invalid autoload name: {$name}");
     }
 
-    $file_path = __DIR__.'/'
-        .strtolower(preg_replace('@([a-z])([A-Z])@', '$1_$2', $name))
-        .'.php';
+    $path = preg_replace('@([a-z])([A-Z])@', '$1_$2', $name);
+    $path = str_replace('\\', '/', $path);
+    $path = strtolower($path);
+    $file_path = __DIR__.'/'.$path.'.php';
 
     if (is_file($file_path)) { require_once($file_path); }
 });
