@@ -184,6 +184,78 @@ class BoostSiteTools {
         }
         file_put_contents($htaccss_file, $htaccess);
 
+        # Generate documentation list
+
+        $documentation_list = <<<EOL
+  <h4><a href="/doc/" class="internal">Documentation <span class=
+  "link">&gt;</span></a></h4>
+
+  <ul>
+    <li><a href="/doc/libs/release/more/getting_started/">Getting Started
+    <span class="link">&gt;</span></a></li>
+
+    <li>
+      <a href="/doc/libs">Libraries <span class="link">&gt;</span></a>
+
+      <ul>
+EOL;
+        $first = true;
+        foreach($releases_by_version as $page) {
+            if (array_key_exists('documentation', $page->release_data)) {
+                $version = $page->release_data['version'];
+                $documentation_list .= "\n";
+                $documentation_list .= "        <li><a href=\"";
+                $documentation_list .= "/doc/libs/{$version->final_doc_dir()}/";
+                $documentation_list .= "\" rel=\"nofollow\">{$version}";
+                if ($first) {
+                    $documentation_list .= " - Current\n";
+                    $documentation_list .= "        Release <span class=\"link\">&gt;</span></a></li>\n";
+                    $first = false;
+                } else {
+                    $documentation_list .= " <span class=\n";
+                    $documentation_list .= "        \"link\">&gt;</span></a></li>\n";
+                }
+            }
+        }
+
+        $documentation_list .= <<<EOL
+      </ul>
+    </li>
+
+    <li>
+      <a href="/doc/tools.html">Tools <span class="link">&gt;</span></a>
+
+      <ul>
+        <li><a href="/build/">Boost Build <span class=
+        "link">&gt;</span></a></li>
+
+        <li><a href="/tools/regression/">Regression <span class=
+        "link">&gt;</span></a></li>
+
+        <li><a href="/tools/inspect/">Inspect <span class=
+        "link">&gt;</span></a></li>
+
+        <li><a href="/doc/html/boostbook.html">BoostBook <span class=
+        "link">&gt;</span></a></li>
+
+        <li><a href="/tools/quickbook/">QuickBook <span class=
+        "link">&gt;</span></a></li>
+
+        <li><a href="/tools/bcp/">bcp <span class=
+        "link">&gt;</span></a></li>
+
+        <li><a href="/libs/wave/doc/wave_driver.html">Wave <span class=
+        "link">&gt;</span></a></li>
+
+        <li><a href="/tools/auto_index/">AutoIndex <span class=
+        "link">&gt;</span></a></li>
+      </ul>
+    </li>
+  </ul>
+
+EOL;
+        file_put_contents(__DIR__.'/../../generated/menu-doc.html', $documentation_list);
+
         $pages->save();
     }
 
