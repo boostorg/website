@@ -159,6 +159,11 @@ class BoostSiteTools {
         });
         $latest_version = $releases_by_version[0]->release_data['version'];
 
+        # Write out the current version for reference
+
+        file_put_contents(__DIR__.'/../../generated/current_version.txt',
+            $latest_version);
+
         # Update doc/.htaccess
 
         $final_doc_dir = $latest_version->final_doc_dir();

@@ -122,8 +122,10 @@ class BoostVersion {
      * @return BoostVersion
      */
     static function current() {
-        if (BoostVersion::$current == null)
-            throw new BoostVersion_Exception("Version not set.");
+        if (BoostVersion::$current == null) {
+            BoostVersion::$current = BoostVersion::from(file_get_contents(
+                __DIR__.'/../../generated/current_version.txt'));
+        }
         return BoostVersion::$current;
     }
 
