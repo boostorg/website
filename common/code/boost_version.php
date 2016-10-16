@@ -235,6 +235,15 @@ class BoostVersion {
         return implode('_', $this->version_numbers());
     }
 
+    /**
+     * The version number without release stage info
+     * (i.e. no beta info).
+     */
+    function base_version() {
+        return $this->version['stage'] ? $this->stage_name() :
+            implode('.', $this->version_numbers());
+    }
+
     /** Return the git tag/branch for the version */
     function git_ref() {
         return $this->version['stage'] ? $this->stage_name() :

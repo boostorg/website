@@ -62,7 +62,7 @@ class BoostPages {
                 $page->pub_date)
             {
                 $version = $page->release_data['version'];
-                $base_version = $version->final_doc_dir();
+                $base_version = $version->base_version();
                 $this->releases->release_data[$base_version][(string) $version]['release_date'] =
                     $page->pub_date;
                 $page->release_data['release_date'] = $page->pub_date;
@@ -133,7 +133,7 @@ class BoostPages {
         }
 
         $version = BoostVersion::from($basename);
-        $base_version = $version->final_doc_dir();
+        $base_version = $version->base_version();
         if (array_key_exists($base_version, $this->releases->release_data)) {
             $chosen_is_dev = true;
             $chosen_version = null;

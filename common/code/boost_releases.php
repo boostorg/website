@@ -15,7 +15,7 @@ class BoostReleases {
             foreach(BoostState::load($this->release_file) as $version => $data) {
                 $data = $this->unflatten_array($data);
                 $version_object = BoostVersion::from($version);
-                $base_version = $version_object->final_doc_dir();
+                $base_version = $version_object->base_version();
                 $version = (string) $version_object;
 
                 if (isset($this->release_data[$base_version][$version])) {
@@ -91,7 +91,7 @@ class BoostReleases {
         }
 
         $version = BoostVersion::from($download_page);
-        $base_version = $version->final_doc_dir();
+        $base_version = $version->base_version();
         $version_string = (string) $version;
 
         $downloads = array();
@@ -135,7 +135,7 @@ class BoostReleases {
     }
 
     function addDocumentation($version, $path) {
-        $base_version = $version->final_doc_dir();
+        $base_version = $version->base_version();
         $version_string = (string) $version;
 
         if (!array_key_exists($base_version, $this->release_data)) {
@@ -150,7 +150,7 @@ class BoostReleases {
     }
 
     function setReleaseStatus($version, $status) {
-        $base_version = $version->final_doc_dir();
+        $base_version = $version->base_version();
         $version_string = (string) $version;
 
         // TODO: Check for more documentation/downloads?
