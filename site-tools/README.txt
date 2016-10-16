@@ -38,6 +38,10 @@ load-release-data.php:
     After uploading a release to sourceforge, add it to the release
     data using this script.
 
+set-release-status.php:
+
+    Use this script to mark a version as released (including beta versions).
+
 Misc
 ----
 

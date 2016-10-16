@@ -148,4 +148,24 @@ class BoostReleases {
         }
         $this->release_data[$base_version][$version_string]['documentation'] = $path;
     }
+
+    function setReleaseStatus($version, $status) {
+        $base_version = $version->final_doc_dir();
+        $version_string = (string) $version;
+
+        // TODO: Check for more documentation/downloads?
+        //       Not sure how strict this should be, releasing without
+        //       any information should work okay, but is not desirable
+        if (!isset($this->release_data[$base_version][$version_string])) {
+            throw new BoostException("No release info for {$version_string}");
+        }
+
+        assert(in_array($status, array('released', 'dev')));
+        if ($status === 'released') {
+            unset($this->release_data[$base_version][$version_string]['release_status']);
+        }
+        else {
+            $this->release_data[$base_version][$version_string]['release_status'];
+        }
+    }
 }
