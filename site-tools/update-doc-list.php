@@ -10,16 +10,27 @@ $quiet = false;
 define ('UPDATE_DOC_LIST_USAGE', "
 Usage: {} [path] [version]
 
-Update the documentation list of libraries from metadata files.
-These can be read from a snapshot/release or a mirror of the
-git repositories.
-
-If called with no parameters, updates the serialized cache of
-the documentation list.
-
 Options:
 
     --quiet
+
+Updates the library metadata in the documentation list.
+
+The path argument can be either a boost release, or the path of the
+boost super project in a full mirror of the git repositories.
+
+The version argument is the version of boost to update for. If missing
+will update master and develop from a git mirror.
+
+When called with no arguments, just updates the serialized cache.
+Used for manual updates.
+
+Example
+=======
+
+To update from a beta release:
+
+    {} boost_1_62_0_b1 1.62.0.beta1
 ");
 
 function main() {
