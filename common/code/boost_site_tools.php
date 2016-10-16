@@ -143,6 +143,47 @@ class BoostSiteTools {
             ));
         }
 
+        # Create a list of release in reverse version order
+        #
+        # This is normally the default order, but it's possible that a point
+        # release might be released after a later major release.
+
+        $releases_by_version = $released_versions;
+        usort($releases_by_version, function($x, $y) {
+            $x_has_version = array_key_exists('version', $x->release_data);
+            $y_has_version = array_key_exists('version', $y->release_data);
+            if (!$x_has_version) { return $y_has_version ? 1 : 0; }
+            if (!$y_has_version) { return -1; }
+            return $y->release_data['version']->compare(
+                $x->release_data['version']);
+        });
+        $latest_version = $releases_by_version[0]->release_data['version'];
+
+        # Update doc/.htaccess
+
+        $final_doc_dir = $latest_version->final_doc_dir();
+        $redirect_block = "# REDIRECT_UPDATE_START\n";
+        $redirect_block .= "#\n";
+        $redirect_block .= "# This section is automatically updated.\n";
+        $redirect_block .= "# Any edits will be overwritten.\n";
+        $redirect_block .= "#\n";
+        $redirect_block .= "# Redirect from symbolic names to current versions.\n";
+        $redirect_block .= "RewriteRule ^libs/release(/.*)?\\\$ libs/{$final_doc_dir}\\\$1 [R=303]\n";
+        $redirect_block .= "RewriteRule ^libs/development(/.*)?\\\$ libs/{$final_doc_dir}\\\$1 [R=303]\n";
+        $redirect_block .= "#\n";
+        $redirect_block .= "# REDIRECT_UPDATE_END\n";
+
+        $htaccss_file = __DIR__.'/../../doc/.htaccess';
+        $htaccess = file_get_contents($htaccss_file);
+        $count = 0;
+        $htaccess = preg_replace(
+            '@^# REDIRECT_UPDATE_START$.*^# REDIRECT_UPDATE_END$\n@ms',
+            $redirect_block, $htaccess, -1, $count);
+        if ($count != 1) {
+            throw new BoostException("Error updating doc/.htaccess");
+        }
+        file_put_contents($htaccss_file, $htaccess);
+
         $pages->save();
     }
 
