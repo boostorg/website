@@ -397,6 +397,8 @@ class BoostPages_Page {
         $this->pub_date = BoostWebsite::array_get($attrs, 'pub_date');
         $this->qbk_hash = BoostWebsite::array_get($attrs, 'qbk_hash');
 
+        // Ensure that pub_date as last_modified are DateTimes.
+        // TODO: Probably not needed any more.
         if (is_string($this->pub_date)) {
             $this->pub_date = $this->pub_date == 'In Progress' ?
                 null : new DateTime($this->pub_date);
