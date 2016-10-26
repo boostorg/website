@@ -513,15 +513,14 @@ class BoostPages_Page {
             // For releases, use the release date, not the pub date
             if (array_key_exists('release_date', $this->release_data)) {
                 $date = $this->release_data['release_date'];
-            } else {
-                return 'In Progress';
             }
         }
         else {
             $date = $this->pub_date;
         }
 
-        return gmdate('F jS, Y H:i', $date->getTimestamp()).' GMT';
+        return $date ? gmdate('F jS, Y H:i', $date->getTimestamp()).' GMT' :
+            'In Progress';
     }
 
     function download_table_data() {
