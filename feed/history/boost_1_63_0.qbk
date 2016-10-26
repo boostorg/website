@@ -16,9 +16,25 @@
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Added the static constant `atomic<T>::is_always_lock_free` for conformance with C++17. The constant indicates that the given specialization always provides lock-free implementation of atomic operations.
+  * Improved support of Oracle Studio on x86 targets.
+
 * [phrase library..[@/libs/fiber/ Fiber]:]
   * unbounded_channel<> and bounded_channel<> renamed to unbounded_queue<> and bounded_queue<>
   * macro BOOST_FIBERS_SPINLOCK_YIELD to invoke std::this:thread::yield() while busy waiting
+
+* [phrase library..[@/libs/log/ Log]:]
+  * General changes:
+    * Removed the previously deprecated `type_info_wrapper`.
+  * New features:
+    * Added a way to access the current file name from the text file sink backend. The file name can be obtained with the `get_current_file_name` method.
+  * Bug fixes:
+    * Fixed compilation errors for Android API prior to version 21.
+    * Streaming operators now take scalar types and enums by value. This allows to output static constants and bitfields directly into formatting stream and record stream. ([ticket 11998])
+    * In UDP socket based syslog backend implementation, changed the syslog message format for better compliance with RFC3164.
+    * File close handler installed in text file sink backend is no longer called if the file is not open yet.
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
 * /TODO/
 
