@@ -149,6 +149,7 @@ class BoostDocumentation
                 $data->version = $version;
                 $data->path = $path;
                 $data->archive_dir = $archive_dir;
+                $data->fix_dir = $fix_dir;
                 $display_dir = new BoostDisplayDir($data);
                 return $display_dir->display($file);
             }
@@ -248,6 +249,7 @@ class BoostDocumentation
                 $data->path = $path;
                 $data->content = $content;
                 $data->archive_dir = $archive_dir;
+                $data->fix_dir = $fix_dir;
                 echo_filtered($extractor, $data);
             }
         }
@@ -302,7 +304,8 @@ function latest_link($filter_data)
         break;
     case 1:
         echo '<div class="boost-common-header-notice">';
-        if (realpath("{$filter_data->archive_dir}/{$current->dir()}/{$filter_data->path}") !== false)
+        if (realpath("{$filter_data->archive_dir}/{$current->dir()}/{$filter_data->path}") !== false ||
+            realpath("{$filter_data->fix_dir}/{$current->dir()}/{$filter_data->path}") !== false)
         {
             echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$filter_data->path,'">',
                 "Click here to view the latest version of this page.",
