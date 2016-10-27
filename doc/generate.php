@@ -42,7 +42,8 @@ class LibrariesHtm {
         $page = $this->args['page'];
         $libs = BoostLibraries::load();
 
-        $categorized = $libs->get_categorized_for_version($version, 'name');
+        $categorized = $libs->get_categorized_for_version($version, 'name',
+            'BoostLibraries::filter_released');
         // TODO: Shouldn't really have to sort this here.
         uasort($categorized, function($a, $b) {
             $a = $a['title'];
@@ -52,7 +53,8 @@ class LibrariesHtm {
             return ($a > $b) ?: ($a < $b ? -1 : 0);
         });
 
-        $alphabetic = $libs->get_for_version($version, 'name');
+        $alphabetic = $libs->get_for_version($version, 'name',
+            'BoostLibraries::filter_released');
 
         $params = array(
             'categorized' => array(),
@@ -102,7 +104,7 @@ class LibrariesHtm {
             $params);
     }
 
-    function rewrite_library($lib, $index, $path) {
+    function rewrite_library($lib, $index) {
         $lib['index'] = $index;
         $lib['link'] = $this->rewrite_link($lib['documentation']);
         $lib['description'] = rtrim(trim($lib['description']), '.');

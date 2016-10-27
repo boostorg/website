@@ -560,6 +560,11 @@ class BoostLibraries
         return $x['boost-version']->is_release();
     }
 
+    static function filter_visible($x) {
+        return !(array_key_exists('status') && $x['status'] === 'hidden') &&
+            !$x['boost-version']->hidden();
+    }
+
     static function filter_all($x) {
         return true;
     }
