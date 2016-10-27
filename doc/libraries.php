@@ -93,9 +93,8 @@ class LibraryPage {
             if (!array_key_exists($sort_value, self::$sort_fields)) {
                 echo 'Invalid sort field.'; exit(0);
             }
-
-            $this->sort_value = $sort_value ?: 'name';
         }
+        $this->sort_value = $sort_value ?: 'name';
 
         $attribute_filter = null;
         if (!empty($params['filter'])) {
