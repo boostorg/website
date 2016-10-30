@@ -5,7 +5,9 @@
 require_once(__DIR__.'/../common/code/boost_config.php');
 
 if (!defined('BOOST_TASKS_DIR')) {
-    die("Tasks directory not set.");
+    header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+    echo "Tasks directory not set.";
+    exit(1);
 }
 
 require_once(BOOST_TASKS_DIR.'/webhook/webhook.php');

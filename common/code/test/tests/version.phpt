@@ -3,7 +3,7 @@
 use Tester\Assert;
 
 require_once(__DIR__.'/../config/bootstrap.php');
-require_once(__DIR__.'/../../boost_version.php');
+require_once(__DIR__.'/../../boost.php');
 
 $develop = BoostVersion::develop();
 $master = BoostVersion::master();
@@ -50,6 +50,8 @@ Assert::same($boost_1_56_0_b1->compare('boost_1_56_0_beta'), 0);
 Assert::same($boost_1_56_0_b2->compare('boost_1_56_0b2'), 0);
 Assert::same($boost_1_56_0_b2->compare('boost_1_56_0_b2'), 0);
 Assert::same($boost_1_56_0_b2->compare('boost_1_56_0_beta2'), 0);
+Assert::same($boost_1_56_0_b2->compare('boost_1_56_0_beta_2'), 0);
+Assert::same($boost_1_56_0_b2->compare('1.56.0 beta 2'), 0);
 
 Assert::same($boost_1_55_0->git_ref(), 'boost-1.55.0');
 Assert::same($boost_1_56_0_b1->git_ref(), 'boost-1.56.0-beta1');

@@ -1,12 +1,13 @@
 <?php
 
-require_once(__DIR__.'/../common/code/boost.php');
+require_once(__DIR__.'/../common/code/bootstrap.php');
 
 if (isset($_GET['version'])) {
     try {
         $version = BoostVersion::from($_GET['version']);
     }
     catch (BoostVersion_Exception $e) {
+        header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
         echo json_encode(Array(
             'error' => $e->getMessage(),
         ));

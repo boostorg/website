@@ -30,7 +30,8 @@ class BoostDocumentation
 
         // Get Archive Location
 
-        if (preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts)) {
+        if (array_key_exists('PATH_INFO', $_SERVER) &&
+                preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts)) {
             if ($path_parts[1] === 'regression') {
                 $version = null;
                 $version_dir = 'regression';

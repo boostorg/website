@@ -1,9 +1,17 @@
 #!/usr/bin/env php
 <?php
 
-require_once(__DIR__.'/../common/code/boost.php');
+require_once(__DIR__.'/../common/code/bootstrap.php');
+
+define('NEW_LIBRARIES_USAGE', "
+Usage: {}
+
+Writes out new library information for the release notes.
+");
 
 function main() {
+    BoostSiteTools\CommandLineOptions::parse(NEW_LIBRARIES_USAGE);
+
     $libraries = BoostLibraries::load();
     $master = $libraries->get_for_version('master');
 
@@ -26,20 +34,9 @@ function main() {
             echo "  {$lib['description']}\n\n";
         }
         echo "[endsection]\n\n";
-
-        echo "For root index file:\n\n";
-
-        $library_links = array();
-        foreach ($unreleased_libs as $lib) {
-            $library_links[] = "<a href=\"".
-                filesystem_doc_link($lib).
-                "\">{$lib['name']}</a>";
-        }
-
-        echo "  <p>The release includes {$count} new ".
-            ($count === 1 ? "library" : "libraries").
-            "\n";
-        echo "  (".implode(",\n   ", $library_links)."),\n";
+    }
+    else {
+        echo "No new libraries yet.\n";
     }
 }
 

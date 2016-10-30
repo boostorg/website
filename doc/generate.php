@@ -4,10 +4,11 @@
 //
 //     curl http://www.boost.org/doc/generate.php?page=libs/libraries.htm&version=1.60.0
 
-require_once(__DIR__.'/../common/code/boost.php');
+require_once(__DIR__.'/../common/code/bootstrap.php');
 
 function main($args) {
     if (!array_key_exists('page', $args)) {
+        header($_SERVER['SERVER_PROTOCOL'] . ' 400 Missing page argument', true, 400);
         echo "Missing page argument.\n";
         exit(1);
     }
@@ -19,6 +20,7 @@ function main($args) {
         $page->display();
         break;
     default:
+        header($_SERVER['SERVER_PROTOCOL'] . ' 404 Page not found', true, 404);
         echo "Unknown page: ", htmlentities($args['page']), "\n";
         exit(1);
     }

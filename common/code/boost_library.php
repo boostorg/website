@@ -21,7 +21,7 @@ class BoostLibrary
         $json = trim($json);
         $libs = json_decode($json, true);
         if (!is_array($libs)) {
-            throw new library_decode_exception("Error decoding json.", $json);
+            throw new BoostLibraries_DecodeException("Error decoding json.", $json);
         }
         if ($json[0] == '{') {
             $libs = array($libs);

@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__) . '/../common/code/boost.php');
+require_once(dirname(__FILE__) . '/../common/code/bootstrap.php');
 
 class LibraryPage {
     static $view_fields = Array(
@@ -54,7 +54,7 @@ class LibraryPage {
             $filter_value = '';
 
             if (!preg_match('@^[-_a-zA-Z0-9]+$@', $view_value)) {
-                die('Invalid view value.');
+                throw new BoostException('Invalid view value.');
             }
 
             if (strpos($view_value, 'filtered_') === 0) {

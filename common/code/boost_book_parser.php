@@ -11,7 +11,7 @@ class BoostBookParser {
         $state = new BoostBookParser_State();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         if (!xml_parse_into_struct($parser, file_get_contents($filename), $state->values, $state->index)) {
-            die("Error parsing XML");
+            throw new BoostException("Error parsing XML");
         }
         xml_parser_free($parser);
 
@@ -77,7 +77,7 @@ class BoostBookParser {
         if (method_exists($this, $name)) {
             return $this->{$name}($state);
         } else {
-            die("Unknown node type {$state->get_tag()}\n");
+            throw new BoostException("Unknown node type {$state->get_tag()}");
         }
     }
 
@@ -92,11 +92,11 @@ class BoostBookParser {
                 $result .= $this->x($state);
             }
             if ($state->get_tag() != $tag) {
-                die("Parse error\n");
+                throw new BoostException("Parse error");
             }
             return $result;
         default:
-            die("Invalid node in convert_children_to_xhtml: {$state->get_type()}.\n");
+            throw new BoostException("Invalid node in convert_children_to_xhtml: {$state->get_type()}");
         }
     }
 
@@ -108,7 +108,7 @@ class BoostBookParser {
         case 'open':
             break;
         case 'default':
-            die("Error parsing article.\n");
+            throw new BoostException("Error parsing article");
         }
         for(++$state->pos; $state->get_type() != 'close'; ++$state->pos) {
             if (in_array($state->get_tag(), array('title', 'articleinfo'))) {
@@ -283,7 +283,7 @@ class BoostBookParser {
             }
             break;
         default:
-            die("Invalid node in skip_to_end_of_tag.\n");
+            throw new BoostException("Invalid node in skip_to_end_of_tag");
         }
     }
 
@@ -301,7 +301,7 @@ class BoostBookParser {
             }
             return;
         default:
-            die("Invalid node in skip_to_end_of_tag.\n");
+            throw new BoostException("Invalid node in skip_to_end_of_tag");
         }
     }
 
@@ -330,7 +330,7 @@ class BoostBookParser {
             }
             return $found;
         default:
-            die("Invalid node in skip_to_end_of_tag.\n");
+            throw new BoostException("Invalid node in skip_to_end_of_tag");
         }
     }
 

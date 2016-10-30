@@ -35,7 +35,9 @@ class BoostRss {
         foreach ($feed_pages as $qbk_page) {
             $item_xml = null;
 
-            if ($qbk_page->loaded) {
+            // TODO: Need a better way to telll when to update an RSS item.
+            //       Maybe by tracking qbk_hash?
+            if ($qbk_page->description_xml) {
                 $item = $this->generate_rss_item($qbk_page->qbk_file, $qbk_page);
 
                 $item['item'] = BoostSiteTools::trim_lines($item['item']);
@@ -82,7 +84,7 @@ EOL;
     }
 
     function generate_rss_item($qbk_file, $page) {
-        assert($page->loaded);
+        assert(!!$page->description_xml);
 
         $xml = '';
         $page_link = "http://www.boost.org/{$page->location}";
@@ -94,8 +96,14 @@ EOL;
         $xml .= '<guid>'.$this->encode_for_rss($page_link).'</guid>';
 
         // Q: Maybe use $page->last_modified when there's no pub_date.
-        if ($page->pub_date) {
-            $xml .= '<pubDate>'.$this->encode_for_rss($page->pub_date->format(DATE_RSS)).'</pubDate>';
+        $pub_date = null;
+        if ($page->release_data && array_key_exists('release_date', $page->release_data)) {
+            $pub_date = $page->release_data['release_date'];
+        } else {
+            $pub_date = $page->pub_date;
+        }
+        if ($pub_date) {
+            $xml .= '<pubDate>'.$this->encode_for_rss($pub_date->format(DATE_RSS)).'</pubDate>';
         }
 
         # Placing the description in a root element to make it well formed xml->
