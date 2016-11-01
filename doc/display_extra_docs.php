@@ -10,7 +10,9 @@ if (strpos($_SERVER['REQUEST_URI'], '//') !== FALSE)
 
 require_once(dirname(__FILE__) . '/../common/code/bootstrap.php');
 
-$archive = new BoostDocumentation();
+$archive = new BoostDocumentation(array(
+    'boost-root' => '../libs/release/',
+));
 
 $archive->display_from_archive(
   array(

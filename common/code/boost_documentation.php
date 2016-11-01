@@ -151,6 +151,7 @@ class BoostDocumentation
                 $data->path = $path;
                 $data->archive_dir = $archive_dir;
                 $data->fix_dir = $fix_dir;
+                $data->boost_root = $this->get_param('boost-root', '');
                 $display_dir = new BoostDisplayDir($data);
                 return $display_dir->display($file);
             }
@@ -251,6 +252,7 @@ class BoostDocumentation
                 $data->content = $content;
                 $data->archive_dir = $archive_dir;
                 $data->fix_dir = $fix_dir;
+                $data->boost_root = $this->get_param('boost-root', '');
                 echo_filtered($extractor, $data);
             }
         }
