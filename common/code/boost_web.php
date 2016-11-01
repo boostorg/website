@@ -68,6 +68,26 @@ class BoostWeb
         return false;
     }
 
+    static function http_error($status_code, $message, $sub_message = null)
+    {
+        $error = "{$status_code} {$message}";
+        $error_html = html_encode($error);
+
+        header("{$_SERVER["SERVER_PROTOCOL"]} {$error}");
+
+        $head = <<<HTML
+      <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+      <title>Boost C++ Libraries - {$error_html}</title>
+HTML;
+
+        $content = "<h1>{$error_html}</h1>\n";
+        if ($sub_message) {
+            $content .= "<p>".html_encode($sub_message)."</p>";
+        }
+
+        BoostFilter::display_template(Array('head' => $head, 'content' => $content));
+    }
+
     static function error_404($file, $message = null)
     {
         $error = "404 Not Found";

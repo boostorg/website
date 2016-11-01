@@ -3,8 +3,18 @@
 require_once(dirname(__FILE__) . '/../common/code/bootstrap.php');
 
 class LibraryPage {
+    static $param_defaults = Array(
+        'view' => 'all',  // all/categorized
+                          // filtered_std-proposal, filtered_std-tr1
+                          // category_*
+        'sort' => 'name', // Field to sort libraries by.
+        'filter' => null, // Filter by whether an attribute is present.
+                          // Not used for a long time, could probably be
+                          // dropped.
+    );
+
     static $view_fields = Array(
-        '' => 'All',
+        'all' => 'All',
         'categorized' => 'Categorized'
     );
 
@@ -24,20 +34,20 @@ class LibraryPage {
     );
 
     static $display_sort_fields = Array(
-        '' => 'Name',
+        'name' => 'Name',
         'boost-version' => 'First Release'
     );
 
-    var $params = array();
+    var $params;
     var $libs;
     var $categories;
 
-    var $base_uri = '';
-    var $view_value = '';
-    var $category_value = '';
-    var $filter_value = '';
-    var $sort_value = '';
-    var $attribute_filter = false;
+    var $base_uri;
+    var $view_value;
+    var $sort_value;
+    var $attribute_filter;
+    var $category_value;
+    var $filter_value;
 
     function __construct($params, $libs) {
         $this->libs = $libs;
@@ -48,71 +58,59 @@ class LibraryPage {
         $base_uri = preg_replace('@//+@', '/', $base_uri);
         $this->base_uri = $base_uri;
 
-        $view_value = null;
-        if (array_key_exists('view', $params)) {
-            $view_value = $params['view'];
-            $filter_value = '';
-
-            if (!preg_match('@^[-_a-zA-Z0-9]+$@', $view_value)) {
-                throw new BoostException('Invalid view value.');
-            }
-
-            if (strpos($view_value, 'filtered_') === 0) {
-                $filter_value = substr($view_value, strlen('filtered_'));
-                if (!array_key_exists($filter_value, self::$filter_fields)) {
-                    echo 'Invalid filter field.'; exit(0);
-                }
-                if (self::$filter_fields[$filter_value] == '[old]') {
-                    echo 'Filter field no longer supported.'; exit(0);
-                }
-            }
-            else if (strpos($view_value, 'category_') === 0) {
-                $this->category_value = substr($view_value, strlen('category_'));
-                if(!array_key_exists($this->category_value, $this->categories)) {
-                    echo 'Invalid category: '.html_encode($this->category_value); exit(0);
-                }
-            }
-            else {
-                if (!array_key_exists($view_value, self::$view_fields)) {
-                    echo 'Invalid view value.'; exit(0);
-                }
-            }
-
-            $this->view_value = $view_value;
-            $this->filter_value = $filter_value;
+        $this->params = array();
+        foreach (self::$param_defaults as $key => $default) {
+            // Note: Using default for empty values as well as missing values.
+            $this->params[$key] = strtolower(trim(
+                BoostWebsite::array_get($params, $key))) ?: $default;
         }
 
-        $sort_value = null;
-        if (array_key_exists('sort', $params)) {
-            $sort_value = $params['sort'];
+        $this->view_value = $this->params['view'];
+        if (strpos($this->view_value, 'filtered_') === 0) {
+            $this->filter_value = substr($this->view_value, strlen('filtered_'));
 
-            if (!preg_match('@^[-_a-zA-Z0-9]+$@', $sort_value)) {
-                die('Invalid sort field.');
+            if (!array_key_exists($this->filter_value, self::$filter_fields)) {
+                BoostWeb::http_error(400, "Malformed request",
+                    "Invalid filter field: {$this->filter_value}");
+                exit(0);
             }
-
-            if (!array_key_exists($sort_value, self::$sort_fields)) {
-                echo 'Invalid sort field.'; exit(0);
+            if (self::$filter_fields[$this->filter_value] == '[old]') {
+                BoostWeb::http_error(410, 'Filter field no longer supported.',
+                    "Filter field {$this->filter_value} is no longer supported");
+                exit(0);
             }
         }
-        $this->sort_value = $sort_value ?: 'name';
-
-        $attribute_filter = null;
-        if (!empty($params['filter'])) {
-            $attribute_filter = $params['filter'];
-
-            if (!preg_match('@^[-_a-zA-Z0-9]+$@', $attribute_filter)) {
-                die('Invalid attribute filter.');
+        else if (strpos($this->view_value, 'category_') === 0) {
+            $this->category_value = substr($this->view_value, strlen('category_'));
+            if(!array_key_exists($this->category_value, $this->categories)) {
+                BoostWeb::http_error(400, "Invalid category",
+                    "Invalid category: {$this->category_value}");
+                exit(0);
             }
-
-            $this->attribute_filter = $attribute_filter;
+        }
+        else {
+            if (!array_key_exists($this->view_value, self::$view_fields)) {
+                BoostWeb::http_error(400, 'Invalid view value',
+                    "Invalid view value: {$this->view_value}");
+                exit(0);
+            }
         }
 
-        // Store the sanitized parameters for quickly generating links later.
-        $this->params = array(
-            'view' => $view_value,
-            'sort' => $sort_value,
-            'filter' => $attribute_filter,
-        );
+        $this->sort_value = $this->params['sort'];
+        if (!array_key_exists($this->sort_value, self::$sort_fields)) {
+            BoostWeb::http_error(400, 'Invalid sort field',
+                "Invalid sort value: {$this->sort_value}");
+            exit(0);
+        }
+
+        $this->attribute_filter = $this->params['filter'];
+        if ($this->attribute_filter) {
+            if (!preg_match('@^[-_a-zA-Z0-9]+$@', $this->attribute_filter)) {
+                BoostWeb::http_error(400, 'Invalid attribute filter',
+                    "Invalid attribute filter: {$this->attribute_filter}");
+                exit(0);
+            }
+        }
     }
 
     function filter($lib) {
@@ -257,9 +255,6 @@ class LibraryPage {
     }
 
     function option_link($description, $field, $value) {
-        if (!array_key_exists($field, $this->params)) {
-            die("Invalid field: ".html_encode($field));
-        }
         $current_value = $this->params[$field];
 
         if ($current_value == $value) {
@@ -270,7 +265,7 @@ class LibraryPage {
 
             $url_params = '';
             foreach ($params as $k => $v) {
-                if (is_string($v) && $v != '') {
+                if ($v && $v !== self::$param_defaults[$k]) {
                     $url_params .= $url_params ? '&' : '?';
                     $url_params .= urlencode($k) . '=' . urlencode($v);
                 }

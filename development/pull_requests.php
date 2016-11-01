@@ -3,15 +3,21 @@
 require_once(__DIR__.'/../common/code/bootstrap.php');
 
 class PullRequestPage {
+    static $param_defaults = Array(
+        'page_view' => 'lib',
+    );
+
     static $page_view_options = Array(
-        '' => 'By Library',
+        'lib' => 'By Library',
         'date' => 'By Age',
     );
 
+    var $params;
+
     var $pull_requests;
     var $last_updated;
+
     var $base_uri;
-    var $params;
     var $page_view;
 
     function __construct($params) {
@@ -20,9 +26,19 @@ class PullRequestPage {
         $this->pull_requests = $json_data->pull_requests;
         $this->last_updated = $json_data->last_updated;
         $this->base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
-        $this->params = $params;
-        if (isset($params['page_view'])) {
-            $this->page_view =  $params['page_view'];
+
+        $this->params = array();
+        foreach (self::$param_defaults as $key => $default) {
+            // Note: Using default for empty values as well as missing values.
+            $this->params[$key] = strtolower(trim(
+                BoostWebsite::array_get($params, $key))) ?: $default;
+        }
+
+        $this->page_view =  $this->params['page_view'];
+        if (!array_key_exists($this->page_view, self::$page_view_options)) {
+            BoostWeb::http_error(400, 'Invalid view type',
+                "Invalid view type: {$this->page_view}");
+            exit(0);
         }
     }
 
@@ -44,7 +60,7 @@ class PullRequestPage {
             "</p>\n";
 
         switch ($this->page_view) {
-            case '':
+            case 'lib':
                 $this->by_library();
                 break;
             case 'date':
@@ -104,7 +120,7 @@ class PullRequestPage {
     }
 
     function option_link($description, $field, $value) {
-        $current_value = isset($this->params[$field]) ? $this->params[$field] : '';
+        $current_value = $this->params[$field];
 
         if ($current_value == $value) {
             echo '<span>', html_encode($description), '</span>';
@@ -114,7 +130,7 @@ class PullRequestPage {
 
             $url_params = '';
             foreach ($params as $k => $v) {
-                if ($v) {
+                if ($v && $v !== self::$param_defaults[$k]) {
                     $url_params .= $url_params ? '&' : '?';
                     $url_params .= urlencode($k) . '=' . urlencode($v);
                 }
