@@ -321,7 +321,7 @@ class BoostPages {
 
                 $doc_prefix  = null;
                 if ($page_data->get_release_status() === 'dev' || $page_data->get_release_status() === 'beta') {
-                    $doc_prefix = rtrim($page_data->get_documentation(), '/');
+                    $doc_prefix = rtrim($page_data->get_documentation() ?: '/doc/libs/master/', '/');
                     $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
                         function ($x) use ($doc_prefix) {
                             return preg_match('@^/(?:libs/|doc/html/)@', $x)
