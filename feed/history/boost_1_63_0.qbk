@@ -20,6 +20,9 @@
   * Added the static constant `atomic<T>::is_always_lock_free` for conformance with C++17. The constant indicates that the given specialization always provides lock-free implementation of atomic operations.
   * Improved support of Oracle Studio on x86 targets.
 
+* [phrase library..[@/libs/functional/hash Hash]:]
+  * Fixed some warnings.
+
 * [phrase library..[@/libs/log/ Log]:]
   * General changes:
     * Removed the previously deprecated `type_info_wrapper`.
@@ -46,6 +49,15 @@
 * [phrase library..[@/libs/type_index/ TypeIndex]:]
   * Added `runtime_cast` to the library as an emulation of `dynamic_cast`. Thanks to Chris Glover for the implementation. See [@/libstype_index/boost_typeindex_header_reference.html#header.boost.type_index.runtime_cast_hpp runtime_cast reference] for more info.
   * Internals of the CTTI were made more platform independant, due to change of the `std::size_t` type to `unsigned int`.
+
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * Fix an exception safety issue in assignment.
+  * Use `std::allocator_traits` where available, and support modern
+    style rebind ([ticket 12459]).
+  * Add some allocator aware constructors.
+  * Use the hint iterator in `emplace_hint`.
+  * Fixed some warnings.
+  * See the [@/doc/html/unordered/changes.html changelog] for more details.
 
 * /TODO/
 
