@@ -305,6 +305,12 @@ EOL;
         });
     }
 
+    static function transform_links_regex($xhtml, $pattern, $replace) {
+        return self::transform_links($xhtml, function($x) use ($pattern, $replace) {
+            return preg_replace($pattern, $replace, $x);
+        });
+    }
+
     static function transform_links($xhtml, $func) {
         $result = '';
         $pos = 0;

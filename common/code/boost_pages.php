@@ -286,21 +286,14 @@ class BoostPages {
                     $page_data->get_documentation()
                 ) {
                     $doc_prefix = rtrim($page_data->get_documentation(), '/');
-                    $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
-                        function ($x) use ($doc_prefix) {
-                            return preg_match('@^/(?:libs/|doc/html/)@', $x)
-                                ? $doc_prefix.$x : $x;
-                        });
+                    $description_xhtml = BoostSiteTools::transform_links_regex($description_xhtml,
+                        '@^(?=/libs/|/doc/html/)@', $doc_prefix);
 
                     $version = BoostWebsite::array_get($page_data->release_data, 'version');
                     if ($version && $version->is_numbered_release()) {
                         $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
-                        $link_pattern = '@^'.preg_quote($final_documentation, '@').'/@';
-                        $replace = "{$doc_prefix}/";
-                        $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
-                            function($x) use($link_pattern, $replace) {
-                                return preg_replace($link_pattern, $replace, $x);
-                            });
+                        $description_xhtml = BoostSiteTools::transform_links_regex($description_xhtml,
+                            '@^'.preg_quote($final_documentation, '@').'(?=/)@', $doc_prefix);
                     }
                 }
 
