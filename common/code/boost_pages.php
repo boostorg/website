@@ -52,23 +52,6 @@ class BoostPages {
         if (is_file($this->page_cache_file)) {
             $this->page_cache = BoostState::load($this->page_cache_file);
         }
-
-        // Temporary code to update release data
-        foreach ($this->pages as $qbk_file => $page) {
-            if ($page->release_data &&
-                array_key_exists('version', $page->release_data) &&
-                !array_key_exists('release_date', $page->release_data) &&
-                $page->get_release_status() == 'released' &&
-                $page->pub_date)
-            {
-                $version = $page->release_data['version'];
-                $base_version = $version->base_version();
-                $this->releases->release_data[$base_version][(string) $version]['release_date'] =
-                    $page->pub_date;
-                $page->release_data['release_date'] = $page->pub_date;
-            }
-        }
-        $this->releases->save();
     }
 
     function save() {
