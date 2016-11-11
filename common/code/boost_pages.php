@@ -319,25 +319,27 @@ class BoostPages {
 
                 // Transform links in description
 
-                $doc_prefix  = null;
-                if ($page_data->get_release_status() === 'dev' || $page_data->get_release_status() === 'beta') {
-                    $doc_prefix = rtrim($page_data->get_documentation() ?: '/doc/libs/master/', '/');
-                    $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
-                        function ($x) use ($doc_prefix) {
-                            return preg_match('@^/(?:libs/|doc/html/)@', $x)
-                                ? $doc_prefix.$x : $x;
-                        });
-                }
+                if ($page_data->section === 'history') {
+                    $doc_prefix  = null;
+                    if ($page_data->get_release_status() === 'dev' || $page_data->get_release_status() === 'beta') {
+                        $doc_prefix = rtrim($page_data->get_documentation() ?: '/doc/libs/master/', '/');
+                        $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
+                            function ($x) use ($doc_prefix) {
+                                return preg_match('@^/(?:libs/|doc/html/)@', $x)
+                                    ? $doc_prefix.$x : $x;
+                            });
+                    }
 
-                $version = BoostWebsite::array_get($page_data->release_data, 'version');
-                if ($version && $doc_prefix) {
-                    $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
-                    $link_pattern = '@^'.preg_quote($final_documentation, '@').'/@';
-                    $replace = "{$doc_prefix}/";
-                    $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
-                        function($x) use($link_pattern, $replace) {
-                            return preg_replace($link_pattern, $replace, $x);
-                        });
+                    $version = BoostWebsite::array_get($page_data->release_data, 'version');
+                    if ($version && $doc_prefix) {
+                        $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
+                        $link_pattern = '@^'.preg_quote($final_documentation, '@').'/@';
+                        $replace = "{$doc_prefix}/";
+                        $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
+                            function($x) use($link_pattern, $replace) {
+                                return preg_replace($link_pattern, $replace, $x);
+                            });
+                    }
                 }
 
                 $description_xhtml = BoostSiteTools::trim_lines($description_xhtml);
@@ -365,7 +367,7 @@ class BoostPages {
 EOL;
                 }
 
-                if (BoostWebsite::array_get($page_data->release_data, 'documentation')) {
+                if ($page_data->section === 'history' && BoostWebsite::array_get($page_data->release_data, 'documentation')) {
                     $template_vars['documentation_para'] = '              <p><a href="'.html_encode(BoostWebsite::array_get($page_data->release_data, 'documentation')).'">Documentation</a>';
                 }
 
