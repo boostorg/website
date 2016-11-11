@@ -26,7 +26,7 @@ function main() {
     $version = BoostVersion::from($options->positional[0]);
 
     $releases = new BoostReleases(__DIR__.'/../generated/state/release.txt');
-    $releases->setReleaseStatus($version, 'released');
+    $releases->setReleaseStatus('boost', $version, 'released');
     $releases->save();
 }
 

@@ -46,7 +46,7 @@ function main() {
     }
 
     $releases = new BoostReleases(__DIR__.'/../generated/state/release.txt');
-    $releases->loadReleaseInfo($release_details);
+    $releases->loadReleaseInfo('boost', $release_details);
     $releases->save();
 }
 

@@ -12,17 +12,32 @@ class BoostReleases {
 
         if (is_file($this->release_file)) {
             $release_data = array();
-            foreach(BoostState::load($this->release_file) as $version => $data) {
+            foreach(BoostState::load($this->release_file) as $key => $data) {
                 $data = $this->unflatten_array($data);
+
+                if (preg_match('@^([a-zA-Z][^-]*)-(.*)$@', $key, $match)) {
+                    $release_name = $match[1];
+                    $version = $match[2];
+                }
+                else if ($key === '3.1.18') {
+                    $release_name = 'bjam';
+                    $version = $key;
+                }
+                else {
+                    $release_name = 'boost';
+                    $version = $key;
+                }
                 $version_object = BoostVersion::from($version);
-                $base_version = $version_object->base_version();
+
+                $key = "{$release_name}-{$version_object->base_version()}";
                 $version = (string) $version_object;
                 $data['version'] = $version_object;
+                $data['release_name'] = $release_name;
 
-                if (isset($this->release_data[$base_version][$version])) {
-                    echo "Duplicate release data for {$version}.\n";
+                if (isset($this->release_data[$key][$version])) {
+                    echo "Duplicate release data for {$release_name} {$version}.\n";
                 }
-                $this->release_data[$base_version][$version] = $data;
+                $this->release_data[$key][$version] = $data;
             }
         }
     }
@@ -31,8 +46,11 @@ class BoostReleases {
         $flat_release_data = array();
         foreach($this->release_data as $base_version => $versions) {
             foreach($versions as $version => $data) {
+                // Note: Full version number when saving, not base version.
+                $key = "{$data['release_name']}-{$version}";
                 unset($data['version']);
-                $flat_release_data[$version] = $this->flatten_array($data);
+                unset($data['release_name']);
+                $flat_release_data[$key] = $this->flatten_array($data);
             }
         }
         BoostState::save($flat_release_data, $this->release_file);
@@ -68,30 +86,30 @@ class BoostReleases {
         return $flat;
     }
 
-    function set_release_data($version, $fields) {
-        $base_version = $version->base_version();
+    function set_release_data($release_name, $version, $fields) {
+        $key = "{$release_name}-{$version->base_version()}";
         $version_string = (string) $version;
-        if (!array_key_exists($base_version, $this->release_data)) {
-            $this->release_data[$base_version] = array();
+        if (!array_key_exists($key, $this->release_data)) {
+            $this->release_data[$key] = array();
         }
-        if (!array_key_exists($version_string, $this->release_data[$base_version])) {
-            $this->release_data[$base_version][$version_string] = $this->default_release_data($version);
+        if (!array_key_exists($version_string, $this->release_data[$key])) {
+            $this->release_data[$key][$version_string] = $this->default_release_data($release_name, $version);
         }
         foreach ($fields as $name => $value) {
-            $this->release_data[$base_version][$version_string][$name] = $value;
+            $this->release_data[$key][$version_string][$name] = $value;
         }
     }
 
     // Get the latest release data for a version
-    function get_latest_release_data($version) {
+    function get_latest_release_data($release_name, $version) {
         $version = BoostVersion::from($version);
-        $base_version = $version->base_version();
-        if (array_key_exists($base_version, $this->release_data)) {
+        $key = "{$release_name}-{$version->base_version()}";
+        if (array_key_exists($key, $this->release_data)) {
             $chosen_is_dev = true;
             $chosen_version = null;
             $release_data = null;
 
-            foreach ($this->release_data[$base_version] as $version2 => $data) {
+            foreach ($this->release_data[$key] as $version2 => $data) {
                 $version_object = BoostVersion::from($version2);
                 $is_dev = array_key_exists('release_status', $data) && $data['release_status'] == 'dev';
 
@@ -109,12 +127,12 @@ class BoostReleases {
             return $release_data;
         }
         else {
-            return $this->default_release_data($version);
+            return $this->default_release_data($release_name, $version);
         }
     }
 
-    function default_release_data($version) {
-        if ($version->compare('1.50.0') < 0) {
+    function default_release_data($release_name, $version) {
+        if ($release_name == 'boost' && $version->compare('1.50.0') < 0) {
             // Assume old versions are released if there's no data.
             return array(
                 'version' => $version
@@ -125,6 +143,7 @@ class BoostReleases {
             // so default to dev version.
             // TODO: Need pre-beta version.
             return array(
+                'release_name' => $release_name,
                 'version' => BoostVersion::master(),
                 'release_status' => 'dev',
                 'documentation' => '/doc/libs/master/',
@@ -137,7 +156,7 @@ class BoostReleases {
     // URL
     // (blank line)
     // Output of sha256sum
-    function loadReleaseInfo($release_details) {
+    function loadReleaseInfo($release_name, $release_details) {
         if (!preg_match('@
             \A
             \s*([^\s]*)[ \t]*\n
@@ -185,37 +204,37 @@ class BoostReleases {
             );
         }
 
-        $data = $this->set_release_data($version, array(
+        $data = $this->set_release_data($release_name, $version, array(
             'download_page' => $download_page,
             'downloads' => $downloads
         ));
     }
 
-    function addDocumentation($version, $path) {
-        $data = $this->set_release_data($version, array(
+    function addDocumentation($release_name, $version, $path) {
+        $data = $this->set_release_data($release_name, $version, array(
             'documentation' => $path,
         ));
     }
 
-    function setReleaseStatus($version, $status) {
-        $base_version = $version->base_version();
+    function setReleaseStatus($release_name, $version, $status) {
+        $key = "{$release_name}-{$version->base_version()}";
         $version_string = (string) $version;
 
         // TODO: Check for more documentation/downloads?
         //       Not sure how strict this should be, releasing without
         //       any information should work okay, but is not desirable
-        if (!isset($this->release_data[$base_version][$version_string])) {
+        if (!isset($this->release_data[$key][$version_string])) {
             throw new BoostException("No release info for {$version_string}");
         }
 
         assert(in_array($status, array('released', 'dev')));
         if ($status === 'released') {
-            unset($this->release_data[$base_version][$version_string]['release_status']);
-            $this->release_data[$base_version][$version_string]['release_date'] = new DateTime();
+            unset($this->release_data[$key][$version_string]['release_status']);
+            $this->release_data[$key][$version_string]['release_date'] = new DateTime();
         }
         else {
-            $this->release_data[$base_version][$version_string]['release_status'];
-            unset($this->release_data[$base_version][$version_string]['release_date']);
+            $this->release_data[$key][$version_string]['release_status'];
+            unset($this->release_data[$key][$version_string]['release_date']);
         }
     }
 }

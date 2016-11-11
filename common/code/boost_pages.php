@@ -100,7 +100,15 @@ class BoostPages {
     }
 
     function get_release_data($qbk_file, $section) {
-        if ($section !== 'history' && $section !== 'downloads') {
+        // TODO: Encode this into quickbook files?
+        switch ($section) {
+        case 'history':
+            $release_name = 'boost';
+            break;
+        case 'downloads':
+            $release_name = 'bjam';
+            break;
+        default:
             return null;
         }
 
@@ -111,7 +119,7 @@ class BoostPages {
         // a version number?
         if ($basename == 'unversioned') { return null; }
 
-        return $this->releases->get_latest_release_data($basename);
+        return $this->releases->get_latest_release_data($release_name, $basename);
     }
 
     function add_qbk_file($qbk_file, $section) {
@@ -147,6 +155,11 @@ class BoostPages {
     // hash value. Pretty expensive, but saves constant messing around with hashes.
     private function normalize_release_data($release_data, $qbk_file, $section) {
         if (is_null($release_data)) { return null; }
+
+        // Note that this can be determined from the quickbook file, so if
+        // there's someway that it could change, then either qbk_hash or the
+        // path would change anyway.
+        unset($release_data['release_name']);
 
         // Fill in default values.
         $release_data += array(
@@ -188,6 +201,7 @@ class BoostPages {
             $release_data['signature'] = $this->arrange_keys($release_data['signature'], array(
                 'location', 'name', 'key'));
         }
+
 
         return $release_data;
     }
