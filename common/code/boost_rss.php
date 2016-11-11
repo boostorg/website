@@ -42,7 +42,6 @@ class BoostRss {
 
                 $item['item'] = BoostSiteTools::trim_lines($item['item']);
                 $this->rss_items[$qbk_page->qbk_file] = $item;
-                BoostState::save($this->rss_items, $this->rss_state_path);
 
                 $rss_feed .= $item['item'];
             } else if (isset($this->rss_items[$qbk_page->qbk_file])) {
@@ -54,9 +53,8 @@ class BoostRss {
 
         $rss_feed .= $this->rss_postfix($feed_file, $feed_data);
 
-        $output_file = fopen("{$this->root}/{$feed_file}", 'wb');
-        fwrite($output_file, $rss_feed);
-        fclose($output_file);
+        BoostState::save($this->rss_items, $this->rss_state_path);
+        file_put_contents("{$this->root}/{$feed_file}", $rss_feed);
     }
 
     function rss_prefix($feed_file, $details) {
