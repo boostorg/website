@@ -111,48 +111,7 @@ class BoostPages {
         // a version number?
         if ($basename == 'unversioned') { return null; }
 
-        $version = BoostVersion::from($basename);
-        $base_version = $version->base_version();
-        if (array_key_exists($base_version, $this->releases->release_data)) {
-            $chosen_is_dev = true;
-            $chosen_version = null;
-            $release_data = null;
-
-            foreach ($this->releases->release_data[$base_version] as $version2 => $data) {
-                $version_object = BoostVersion::from($version2);
-                $is_dev = array_key_exists('release_status', $data) && $data['release_status'] == 'dev';
-
-                if (!$chosen_version ||
-                    ($chosen_is_dev && !$is_dev) ||
-                    ($chosen_is_dev == $is_dev && $version_object->compare($chosen_version) > 0))
-                {
-                    $chosen_is_dev = $is_dev;
-                    $chosen_version = $version_object;
-                    $release_data = $data;
-                    $release_data['version'] = $version_object;
-                }
-            }
-
-            assert($release_data);
-            return $release_data;
-        }
-
-        if ($version->compare('1.50.0') < 0) {
-            // Assume old versions are released if there's no data.
-            return array(
-                'version' => $version
-            );
-        }
-        else {
-            // For newer versions, release info hasn't been added yet
-            // so default to dev version.
-            // TODO: Need pre-beta version.
-            return array(
-                'version' => BoostVersion::master(),
-                'release_status' => 'dev',
-                'documentation' => '/doc/libs/master/',
-            );
-        }
+        return $this->releases->get_latest_release_data($basename);
     }
 
     function add_qbk_file($qbk_file, $section) {
