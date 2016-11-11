@@ -104,16 +104,12 @@ class BoostPages {
             return null;
         }
 
-        // TODO: This special case is a real pain to handle, maybe it
-        //       shouldn't have release data? It doesn't make much
-        //       sense as it is.
         $basename = pathinfo($qbk_file, PATHINFO_FILENAME);
-        if ($basename == 'unversioned') {
-            return array(
-                'release_status' => 'released',
-                'release_date' => new DateTime('Tue, 14 Dec 1999 12:00:00 GMT'),
-            );
-        }
+
+        // Special case for the old 'unversioned.qbk' file.
+        // Maybe should do this for everything that doesn't look like
+        // a version number?
+        if ($basename == 'unversioned') { return null; }
 
         $version = BoostVersion::from($basename);
         $base_version = $version->base_version();
@@ -137,16 +133,26 @@ class BoostPages {
                 }
             }
 
-            return $release_data ?: $dev_data;
+            assert($release_data);
+            return $release_data;
         }
 
-        // Assume old versions are released if there's no data.
         if ($version->compare('1.50.0') < 0) {
-            return array('version' => $version);
+            // Assume old versions are released if there's no data.
+            return array(
+                'version' => $version
+            );
         }
-
-        // TODO: Maybe assume 'master' for new versions?
-        return array();
+        else {
+            // For newer versions, release info hasn't been added yet
+            // so default to dev version.
+            // TODO: Need pre-beta version.
+            return array(
+                'version' => BoostVersion::master(),
+                'release_status' => 'dev',
+                'documentation' => '/doc/libs/master/',
+            );
+        }
     }
 
     function add_qbk_file($qbk_file, $section) {
@@ -181,7 +187,7 @@ class BoostPages {
     // Make the release data look like it used to look in order to get a consistent
     // hash value. Pretty expensive, but saves constant messing around with hashes.
     private function normalize_release_data($release_data, $qbk_file, $section) {
-        if (!$release_data) { return null; }
+        if (is_null($release_data)) { return null; }
 
         // Fill in default values.
         $release_data += array(
@@ -302,19 +308,19 @@ class BoostPages {
 
                 // Transform links in description
 
-                if ($page_data->section === 'history') {
-                    $doc_prefix  = null;
-                    if ($page_data->get_release_status() === 'dev' || $page_data->get_release_status() === 'beta') {
-                        $doc_prefix = rtrim($page_data->get_documentation() ?: '/doc/libs/master/', '/');
-                        $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
-                            function ($x) use ($doc_prefix) {
-                                return preg_match('@^/(?:libs/|doc/html/)@', $x)
-                                    ? $doc_prefix.$x : $x;
-                            });
-                    }
+                if (($page_data->get_release_status() === 'dev' ||
+                        $page_data->get_release_status() === 'beta') &&
+                    $page_data->get_documentation()
+                ) {
+                    $doc_prefix = rtrim($page_data->get_documentation(), '/');
+                    $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
+                        function ($x) use ($doc_prefix) {
+                            return preg_match('@^/(?:libs/|doc/html/)@', $x)
+                                ? $doc_prefix.$x : $x;
+                        });
 
                     $version = BoostWebsite::array_get($page_data->release_data, 'version');
-                    if ($version && $doc_prefix) {
+                    if ($version && $version->is_numbered_release()) {
                         $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
                         $link_pattern = '@^'.preg_quote($final_documentation, '@').'/@';
                         $replace = "{$doc_prefix}/";
@@ -340,6 +346,7 @@ class BoostPages {
                     'download_table' => $page_data->download_table(),
                     'description_xml' => $page_data->description_xml,
                 );
+
                 if ($page_data->get_release_status() === 'dev') {
                     $template_vars['note_xml'] = <<<EOL
                         <div class="section-alert"><p>Note: This release is
@@ -350,8 +357,8 @@ class BoostPages {
 EOL;
                 }
 
-                if ($page_data->section === 'history' && BoostWebsite::array_get($page_data->release_data, 'documentation')) {
-                    $template_vars['documentation_para'] = '              <p><a href="'.html_encode(BoostWebsite::array_get($page_data->release_data, 'documentation')).'">Documentation</a>';
+                if ($page_data->get_documentation()) {
+                    $template_vars['documentation_para'] = '              <p><a href="'.html_encode($page_data->get_documentation()).'">Documentation</a>';
                 }
 
                 if (strpos($page_data->location, 'users/history/') === 0) {
@@ -405,6 +412,7 @@ class BoostPages_Page {
 
     function __construct($qbk_file, $release_data = null, $attrs = array('page_state' => 'new')) {
         $this->qbk_file = $qbk_file;
+        $this->release_data = $release_data;
 
         $this->section = BoostWebsite::array_get($attrs, 'section');
         $this->page_state = BoostWebsite::array_get($attrs, 'page_state');
@@ -434,16 +442,6 @@ class BoostPages_Page {
         else if (is_numeric($this->last_modified)) {
             $this->last_modified = new DateTime("@{$this->last_modified}");
         }
-
-        $this->set_release_data($release_data);
-    }
-
-    function set_release_data($release_data) {
-        if ($release_data) {
-            assert($this->section === 'history' || $this->section === 'downloads');
-        }
-
-        $this->release_data = $release_data;
     }
 
     function state() {
@@ -476,25 +474,23 @@ class BoostPages_Page {
     }
 
     function full_title_xml() {
-        switch ($this->section) {
-        case 'history':
-            switch($this->get_release_status()) {
-            case 'released':
-                return $this->title_xml;
-            case 'beta':
-                return trim("{$this->title_xml} beta {$this->release_data['version']->beta_number()}");
-            default:
-                return "{$this->title_xml} - work in progress";
-            }
-        default:
+        switch($this->get_release_status()) {
+        case 'beta':
+            return trim("{$this->title_xml} beta {$this->release_data['version']->beta_number()}");
+        case 'dev':
+            return "{$this->title_xml} - work in progress";
+        case 'released':
+        case null:
             return $this->title_xml;
+        default:
+            assert(false);
         }
     }
 
     function web_date() {
         $date = null;
 
-        if ($this->release_data) {
+        if (!is_null($this->release_data)) {
             // For releases, use the release date, not the pub date
             if (array_key_exists('release_date', $this->release_data)) {
                 $date = $this->release_data['release_date'];
@@ -509,7 +505,7 @@ class BoostPages_Page {
     }
 
     function download_table_data() {
-        if (!$this->release_data) { return null; }
+        if (is_null($this->release_data)) { return null; }
         $downloads = BoostWebsite::array_get($this->release_data, 'downloads');
         $signature = BoostWebsite::array_get($this->release_data, 'signature');
         $third_party = BoostWebsite::array_get($this->release_data, 'third_party');
@@ -549,10 +545,18 @@ class BoostPages_Page {
 
             $output = '';
             $output .= '              <table class="download-table">';
-            if ($this->get_release_status() === 'beta') {
-                $output .= '<caption>Beta Downloads</caption>';
-            } else {
+            switch($this->get_release_status()) {
+            case 'released':
                 $output .= '<caption>Downloads</caption>';
+                break;
+            case 'beta':
+                $output .= '<caption>Beta Downloads</caption>';
+                break;
+            case 'dev':
+                $output .= '<caption>Development Downloads</caption>';
+                break;
+            default:
+                assert(false);
             }
             $output .= '<tr><th scope="col">Platform</th><th scope="col">File</th>';
             if ($hash_column) {
@@ -664,6 +668,10 @@ class BoostPages_Page {
     function get_release_status() {
         switch ($this->section) {
         case 'history':
+            if (is_null($this->release_data)) {
+                return null;
+            }
+
             if (array_key_exists('release_status', $this->release_data)) {
                 return $this->release_data['release_status'];
             }
@@ -683,10 +691,10 @@ class BoostPages_Page {
     }
 
     function get_documentation() {
-        return BoostWebsite::array_get($this->release_data, 'documentation');
+        return is_null($this->release_data) ? null : BoostWebsite::array_get($this->release_data, 'documentation');
     }
 
     function get_download_page() {
-        return BoostWebsite::array_get($this->release_data, 'download_page');
+        return is_null($this->release_data) ? null : BoostWebsite::array_get($this->release_data, 'download_page');
     }
 }

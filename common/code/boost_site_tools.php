@@ -37,6 +37,7 @@ class BoostSiteTools {
 
         // Extract data for generating site from $pages:
 
+        $history_pages = array();
         $released_versions = array();
         $beta_versions = array();
         $all_versions = array();
@@ -53,10 +54,16 @@ class BoostSiteTools {
             case 'history':
                 if ($page->is_published()) {
                     $all_versions[] = $page;
+
+                    if (is_null($page->release_data)) {
+                        $history_pages[] = $page;
+                        $news[] = $page;
+                    }
                 }
 
                 if ($page->is_published('released')) {
                     $all_downloads[] = $page;
+                    $history_pages[] = $page;
                     $released_versions[] = $page;
                     $news[] = $page;
                 }
@@ -81,7 +88,7 @@ class BoostSiteTools {
         ));
 
         $index_page_variables = array(
-            'released_versions' => $released_versions,
+            'history_pages' => $history_pages,
             'all_versions' => $all_versions,
             'news' => $news,
             'downloads' => $downloads,
@@ -125,7 +132,7 @@ class BoostSiteTools {
                 'path' => 'generated/history.rss',
                 'link' => 'users/history/',
                 'title' => 'Boost History',
-                'pages' => $released_versions,
+                'pages' => $history_pages,
             ));
             $rss->generate_rss_feed(array(
                 'path' => 'generated/news.rss',
@@ -206,12 +213,11 @@ class BoostSiteTools {
 EOL;
         $first = true;
         foreach($releases_by_version as $page) {
-            if (array_key_exists('documentation', $page->release_data)) {
-                $version = $page->release_data['version'];
+            $documentation = $page->get_documentation();
+            $version = BoostWebsite::array_get($page->release_data, 'version');
+            if ($documentation && $version && $version->is_numbered_release()) {
                 $documentation_list .= "\n";
-                $documentation_list .= "        <li><a href=\"";
-                $documentation_list .= "/doc/libs/{$version->final_doc_dir()}/";
-                $documentation_list .= "\" rel=\"nofollow\">{$version}";
+                $documentation_list .= "        <li><a href=\"{$documentation}\" rel=\"nofollow\">{$version}";
                 if ($first) {
                     $documentation_list .= " - Current\n";
                     $documentation_list .= "        Release <span class=\"link\">&gt;</span></a></li>\n";

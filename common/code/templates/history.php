@@ -2,7 +2,7 @@
 
 $title = "Boost Version History";
 
-foreach ($released_versions as $entry) {
+foreach ($history_pages as $entry) {
     echo("\n");
     echo("              <h2 class=\"news-title\">\n");
     echo("              <a name=\"i{$entry->id}\" id=\"i{$entry->id}\"></a><a href=\"/".
