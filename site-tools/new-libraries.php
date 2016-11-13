@@ -17,7 +17,8 @@ function main() {
 
     $unreleased_libs = array();
     foreach($master as $lib) {
-        if ($lib['boost-version']->is_unreleased()) {
+        if (!$lib['boost-version']->is_final_release() &&
+            !$lib['boost-version']->is_hidden()) {
             $unreleased_libs[$lib['name']] = $lib;
         }
     }

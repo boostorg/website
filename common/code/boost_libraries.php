@@ -230,7 +230,7 @@ class BoostLibraries
             $update_version = $update_version ?
                 BoostVersion::from($update_version) :
                 BoostVersion::unreleased();
-            if (!$update_version->is_release()) {
+            if (!$update_version->is_update_version()) {
                 throw new BoostLibraries_Exception("No version info for {$details['key']}");
             }
             if (isset($details['update-version'])) {
@@ -356,8 +356,8 @@ class BoostLibraries
                 'BoostLibraries::filter_all');
             $new_libs = array();
             foreach($libs as $lib_details) {
-                $current_version = BoostVersion::from($lib_details['boost-version']);
-                if ($current_version->is_unreleased() || ($current_version->is_beta() && !$version->is_beta()))
+                $lib_version = BoostVersion::from($lib_details['boost-version']);
+                if ($version->release_stage() > $lib_version->release_stage())
                 {
                     $lib_details['boost-version'] = $version;
                 }
@@ -554,12 +554,8 @@ class BoostLibraries
             ));
     }
 
-    static function filter_released($x) {
-        return $x['boost-version']->is_release();
-    }
-
     static function filter_visible($x) {
-        if ((string) $x['boost-version'] === 'hidden') { return false; }
+        if ($x['boost-version']->is_hidden()) { return false; }
         if (array_key_exists('status', $x)) {
             if ($x['status'] === 'hidden' || $x['status'] === 'unreleased') {
                 return false;
@@ -586,7 +582,7 @@ class BoostLibraries
 
         if (!$filter) {
             $filter = $version->is_numbered_release() ?
-                'BoostLibraries::filter_released' :
+                'BoostLibraries::filter_visible' :
                 'BoostLibraries::filter_all';
         }
 

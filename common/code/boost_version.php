@@ -30,6 +30,9 @@ class BoostVersion {
     /** release_stage for development stages (master, develop etc.) */
     const release_stage_development = 0;
 
+    /** release_stage for anything that isn't linked to a numbered release */
+    const release_stage_null = 0;
+
     /** release_stage for a version before it has entered into the release
         process */
     const release_stage_prerelease = 1;
@@ -203,7 +206,7 @@ class BoostVersion {
 
     /**
      * Is this a numbered release version?
-     * (as opposed to a develop branch)
+     * Includes prerelease, beta, etc.
      * @return boolean
      */
     function is_numbered_release() {
@@ -211,15 +214,54 @@ class BoostVersion {
     }
 
     /**
-     * Is this a release version (including develop/master/latest).
-     * TODO: Rename this, it's really confusing.
+     * The stage of the release.
+     *
+     * Not sure about this, this value wasn't mean to be public, but it's
+     * needed for updating the documentation list. Maybe would have been better
+     * to supply a comparison method?
+     * @return int
      */
-    function is_release() {
+    function release_stage() {
+        return $this->version['release_stage'];
+
+    }
+
+    /**
+     * Is this a final release?
+     * Not prerelease, beta etc.
+     * @return boolean
+     */
+    function is_final_release() {
+        return $this->version['stage'] === self::release_stage &&
+            $this->version['release_stage'] === self::release_stage_final;
+    }
+
+    /**
+     * Is this a valid update version (including develop/master/latest).
+     * i.e. update-version can't be unreleased or hidden.
+     * @return boolean
+     */
+    function is_update_version() {
         return $this->version['stage'] <= self::latest_stage;
     }
 
+    /**
+     * Is this an unreleased library?
+     *
+     * Perhaps a bit confused, as it does not include prerelease or beta
+     * versions.
+     */
     function is_unreleased() {
         return $this->version['stage'] === self::unreleased_stage;
+    }
+
+    /**
+     * Is this a hidden version? (Used in boost-version for libraries
+     * that shouldn't be publically listed. A bit of a hack that I'm
+     * somewhat regretting).
+     */
+    function is_hidden() {
+        return $this->version['stage'] === self::hidden_stage;
     }
 
     /**

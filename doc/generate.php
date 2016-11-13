@@ -38,6 +38,9 @@ class LibrariesHtm {
         //       new libraries will still have develop/master as their
         //       version. This works for now as version is always
         //       master/develop, but might change in the future.
+        //
+        //       Now that BoostVersion has 'prerelease' versions, could
+        //       possibly use that for new libraries to handle this better.
         $version = BoostVersion::from(
             array_key_exists('version', $this->args) ? $this->args['version'] : 'master'
         );
@@ -45,7 +48,7 @@ class LibrariesHtm {
         $libs = BoostLibraries::load();
 
         $categorized = $libs->get_categorized_for_version($version, 'name',
-            'BoostLibraries::filter_released');
+            'BoostLibraries::filter_visible');
         // TODO: Shouldn't really have to sort this here.
         uasort($categorized, function($a, $b) {
             $a = $a['title'];
@@ -56,7 +59,7 @@ class LibrariesHtm {
         });
 
         $alphabetic = $libs->get_for_version($version, 'name',
-            'BoostLibraries::filter_released');
+            'BoostLibraries::filter_visible');
 
         $params = array(
             'categorized' => array(),
@@ -78,11 +81,11 @@ class LibrariesHtm {
             $params['alphabetic'][] = $this->rewrite_library($library, $index);
         }
 
-        if ($version->is_unreleased()) {
+        if (!$version->is_numbered_release()) {
             $index = 0;
             foreach ($alphabetic as $library) {
-                if ($library['boost-version']->is_unreleased() ||
-                    $library['boost-version']->is_beta())
+                if (!$library['boost-version']->is_final_release() &&
+                    !$library['boost-version']->is_hidden())
                 {
                     $params['unreleased_libs'][] = $this->rewrite_library($library, $index++);
                 }
@@ -90,8 +93,8 @@ class LibrariesHtm {
         } else {
             $index = 0;
             foreach ($alphabetic as $library) {
-                if ($library['boost-version']->major() == $version->major() &&
-                    $library['boost-version']->minor() == $version->minor())
+                // Q: Also match point version?
+                if ($library['boost-version']->base_version() == $version->base_version())
                 {
                     $params['unreleased_libs'][] = $this->rewrite_library($library, $index++);
                 }
