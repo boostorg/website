@@ -12,6 +12,7 @@ $boost_1_54_0 = BoostVersion::release(1, 54, 0);
 $boost_1_56_0 = BoostVersion::release(1, 56, 0);
 $boost_1_56_0_b1 = BoostVersion::release(1, 56, 0, 1);
 $boost_1_56_0_b2 = BoostVersion::release(1, 56, 0, 2);
+$boost_1_56_0_pre = BoostVersion::prerelease(1, 56, 0);
 
 Assert::true($develop->compare($master) > 0);
 Assert::true($master->compare($develop) < 0);
@@ -29,17 +30,28 @@ Assert::same($master->dir(), 'master');
 Assert::same($boost_1_55_0->dir(), 'boost_1_55_0');
 Assert::same((string) $boost_1_55_0, '1.55.0');
 
+Assert::same($boost_1_56_0_pre->compare($boost_1_56_0_pre), 0);
+Assert::true($boost_1_56_0_pre->compare($boost_1_56_0_b1) < 0);
+Assert::true($boost_1_56_0_pre->compare($boost_1_56_0_b2) < 0);
+Assert::true($boost_1_56_0_pre->compare($boost_1_56_0) < 0);
+
+Assert::true($boost_1_56_0_b1->compare($boost_1_56_0_pre) > 0);
 Assert::same($boost_1_56_0_b1->compare($boost_1_56_0_b1), 0);
 Assert::true($boost_1_56_0_b1->compare($boost_1_56_0_b2) < 0);
 Assert::true($boost_1_56_0_b1->compare($boost_1_56_0) < 0);
 
+Assert::true($boost_1_56_0_b2->compare($boost_1_56_0_pre) > 0);
 Assert::true($boost_1_56_0_b2->compare($boost_1_56_0_b1) > 0);
 Assert::same($boost_1_56_0_b2->compare($boost_1_56_0_b2), 0);
 Assert::true($boost_1_56_0_b2->compare($boost_1_56_0) < 0);
 
+Assert::true($boost_1_56_0->compare($boost_1_56_0_pre) > 0);
 Assert::true($boost_1_56_0->compare($boost_1_56_0_b1) > 0);
 Assert::true($boost_1_56_0->compare($boost_1_56_0_b2) > 0);
 Assert::same($boost_1_56_0->compare($boost_1_56_0), 0);
+
+Assert::same($boost_1_56_0_pre->compare('boost_1_56_0 prerelease'), 0);
+Assert::same($boost_1_56_0_pre->compare('boost_1.56.0prerelease'), 0);
 
 Assert::same($boost_1_56_0_b1->compare('boost_1_56_0beta'), 0);
 Assert::same($boost_1_56_0_b1->compare('boost_1_56_0b1'), 0);

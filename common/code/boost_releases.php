@@ -127,7 +127,8 @@ class BoostReleases {
             return $release_data;
         }
         else {
-            return $this->default_release_data($release_name, $version);
+            return $this->default_release_data($release_name,
+                BoostVersion::from("{$version->base_version()} prerelease"));
         }
     }
 
@@ -141,10 +142,9 @@ class BoostReleases {
         else {
             // For newer versions, release info hasn't been added yet
             // so default to dev version.
-            // TODO: Need pre-beta version.
             return array(
                 'release_name' => $release_name,
-                'version' => BoostVersion::master(),
+                'version' => $version,
                 'release_status' => 'dev',
                 'documentation' => '/doc/libs/master/',
             );
