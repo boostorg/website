@@ -100,26 +100,19 @@ class BoostPages {
     }
 
     function get_release_data($qbk_file, $section) {
-        // TODO: Encode this into quickbook files?
-        switch ($section) {
-        case 'history':
-            $release_name = 'boost';
-            break;
-        case 'downloads':
-            $release_name = 'bjam';
-            break;
-        default:
+        if ($section != 'history' && $section != 'downloads') {
             return null;
         }
 
         $basename = pathinfo($qbk_file, PATHINFO_FILENAME);
 
-        // Special case for the old 'unversioned.qbk' file.
-        // Maybe should do this for everything that doesn't look like
-        // a version number?
-        if ($basename == 'unversioned') { return null; }
+        if (preg_match('@^([a-z](?:_[a-z]|[a-z0-9])*)_([0-9][0-9_]*)$@i', $basename, $match)) {
+            return $this->releases->get_latest_release_data($match[1], $match[2]);
+        }
+        else {
+            return null;
+        }
 
-        return $this->releases->get_latest_release_data($release_name, $basename);
     }
 
     function add_qbk_file($qbk_file, $section) {
