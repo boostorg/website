@@ -36,9 +36,8 @@ class PullRequestPage {
 
         $this->page_view =  $this->params['page_view'];
         if (!array_key_exists($this->page_view, self::$page_view_options)) {
-            BoostWeb::http_error(400, 'Invalid view type',
+            BoostWeb::throw_http_error(400, 'Invalid view type',
                 "Invalid view type: {$this->page_view}");
-            exit(0);
         }
     }
 

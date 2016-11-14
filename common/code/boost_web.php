@@ -68,9 +68,19 @@ class BoostWeb
         return false;
     }
 
-    static function http_error($status_code, $message, $sub_message = null)
+    static function throw_http_error($status_code, $message, $sub_message = null)
     {
-        $error = "{$status_code} {$message}";
+        throw new BoostWeb_HttpError($status_code, $message, $sub_message, null);
+    }
+
+    static function throw_error_404($file, $message = null)
+    {
+        throw new BoostWeb_HttpError(404, 'Not Found', $message, $file);
+    }
+
+
+    static function return_error($e) {
+        $error = "{$e->status_code} {$e->status_message}";
         $error_html = html_encode($error);
 
         header("{$_SERVER["SERVER_PROTOCOL"]} {$error}");
@@ -81,28 +91,28 @@ class BoostWeb
 HTML;
 
         $content = "<h1>{$error_html}</h1>\n";
-        if ($sub_message) {
-            $content .= "<p>".html_encode($sub_message)."</p>";
+        if ($e->file) {
+            $content .= '<p>File "' . html_encode($e->file) . '" not found.</p>';
+        }
+        if ($e->sub_message) {
+            $content .= "<p>".html_encode($e->sub_message)."</p>";
         }
 
         BoostFilter::display_template(Array('head' => $head, 'content' => $content));
     }
+}
 
-    static function error_404($file, $message = null)
-    {
-        $error = "404 Not Found";
+class BoostWeb_HttpError extends BoostException {
+    var $status_code;
+    var $status_message;
+    var $sub_message;
+    var $file;
 
-        header("{$_SERVER["SERVER_PROTOCOL"]} {$error}");
-
-        $head = <<<HTML
-      <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
-      <title>Boost C++ Libraries - 404 Not Found</title>
-HTML;
-
-        $content = '<h1>'.html_encode($error).'</h1><p>File "' . html_encode($file) . '" not found.</p><p>';
-        $content .= html_encode($message);
-        $content .= '</p>';
-
-        BoostFilter::display_template(Array('head' => $head, 'content' => $content));
+    function __construct($status_code, $status_message, $sub_message, $file) {
+        $this->status_code = $status_code;
+        $this->status_message = $status_message;
+        $this->sub_message = $sub_message;
+        $this->file = $file;
+        parent::__construct("HTTP error: {$this->status_code} {$this->status_message}");
     }
 }

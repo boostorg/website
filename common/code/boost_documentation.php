@@ -58,8 +58,7 @@ class BoostDocumentation
                     $documentation_page->version = BoostVersion::from($path_parts[1]);
                 }
                 catch(BoostVersion_Exception $e) {
-                    BoostWeb::error_404($_SERVER["PATH_INFO"], 'Unable to find version.');
-                    exit(0);
+                    BoostWeb::throw_error_404($_SERVER["PATH_INFO"], 'Unable to find version.');
                 }
                 $documentation_page->file_doc_dir = is_numeric($path_parts[1][0]) ?
                     "boost_{$path_parts[1]}" : $path_parts[1];
@@ -130,8 +129,7 @@ class BoostDocumentation
         // Last modified date
 
         if (!is_readable($file)) {
-            BoostWeb::error_404($file, 'Unable to find file.');
-            return;
+            BoostWeb::throw_error_404($file, 'Unable to find file.');
         }
 
         $last_modified = max(
@@ -212,11 +210,10 @@ class BoostDocumentation
 
         if (!$extractor) {
             if (strpos($_SERVER['HTTP_HOST'], 'www.boost.org') === false) {
-                BoostWeb::error_404($file, 'No extractor found for filename.');
+                BoostWeb::throw_error_404($file, 'No extractor found for filename.');
             } else {
-                BoostWeb::error_404($file);
+                BoostWeb::throw_error_404($file);
             }
-            return;
         }
 
         // Handle ETags and Last-Modified HTTP headers.

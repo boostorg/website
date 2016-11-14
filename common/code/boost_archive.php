@@ -43,8 +43,7 @@ class BoostArchive
         // Check file exists.
 
         if (!is_readable($archive_file)) {
-            BoostWeb::error_404($path_in_zipfile, 'Unable to find zipfile.');
-            return;
+            BoostWeb::throw_error_404($path_in_zipfile, 'Unable to find zipfile.');
         }
 
         // Choose mime type to use

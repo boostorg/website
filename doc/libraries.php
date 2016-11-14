@@ -59,10 +59,8 @@ class LibraryPage {
         // To avoid confusion, only show this page when there is actual documentation.
         // TODO: Maybe for versions without documentation, could display the list
         //       with no links.
-        if (!is_dir($this->documentation_page->documentation_dir()))
-        {
-            BoostWeb::error_404($_SERVER['REQUEST_URI']);
-            exit(0);
+        if (!is_dir($this->documentation_page->documentation_dir())) {
+            BoostWeb::throw_error_404($_SERVER['REQUEST_URI']);
         }
 
         $base_uri = $_SERVER['REQUEST_URI'];
@@ -82,45 +80,39 @@ class LibraryPage {
             $this->filter_value = substr($this->view_value, strlen('filtered_'));
 
             if (!array_key_exists($this->filter_value, self::$filter_fields)) {
-                BoostWeb::http_error(400, "Malformed request",
+                BoostWeb::throw_http_error(400, "Malformed request",
                     "Invalid filter field: {$this->filter_value}");
-                exit(0);
             }
             if (self::$filter_fields[$this->filter_value] == '[old]') {
-                BoostWeb::http_error(410, 'Filter field no longer supported.',
+                BoostWeb::throw_http_error(410, 'Filter field no longer supported.',
                     "Filter field {$this->filter_value} is no longer supported");
-                exit(0);
             }
         }
         else if (strpos($this->view_value, 'category_') === 0) {
             $this->category_value = substr($this->view_value, strlen('category_'));
             if(!array_key_exists($this->category_value, $this->categories)) {
-                BoostWeb::http_error(400, "Invalid category",
+                BoostWeb::throw_http_error(400, "Invalid category",
                     "Invalid category: {$this->category_value}");
-                exit(0);
             }
         }
         else {
             if (!array_key_exists($this->view_value, self::$view_fields)) {
-                BoostWeb::http_error(400, 'Invalid view value',
+                BoostWeb::throw_http_error(400, 'Invalid view value',
                     "Invalid view value: {$this->view_value}");
-                exit(0);
             }
         }
 
         $this->sort_value = $this->params['sort'];
         if (!array_key_exists($this->sort_value, self::$sort_fields)) {
-            BoostWeb::http_error(400, 'Invalid sort field',
+            BoostWeb::throw_http_error(400, 'Invalid sort field',
                 "Invalid sort value: {$this->sort_value}");
-            exit(0);
         }
 
         $this->attribute_filter = $this->params['filter'];
         if ($this->attribute_filter) {
             if (!preg_match('@^[-_a-zA-Z0-9]+$@', $this->attribute_filter)) {
-                BoostWeb::http_error(400, 'Invalid attribute filter',
+                BoostWeb::throw_http_error(400, 'Invalid attribute filter',
                     "Invalid attribute filter: {$this->attribute_filter}");
-                exit(0);
             }
         }
 
@@ -128,8 +120,7 @@ class LibraryPage {
                 $this->libs->latest_version &&
                 $this->documentation_page->version->compare($this->libs->latest_version) > 0)
         {
-            BoostWeb::error_404($_SERVER['REQUEST_URI']);
-            return;
+            BoostWeb::throw_error_404($_SERVER['REQUEST_URI']);
         }
     }
 
