@@ -55,7 +55,7 @@ EOS;
 }
 
 $archive = new BoostDocumentation(array(
-    'fix_dir' => dirname(__FILE__).'/fixes',
+    'fix_dir' => BOOST_FIX_DIR,
     'archive_dir' => STATIC_DIR,
     'use_http_expire_date' => true,
 ));

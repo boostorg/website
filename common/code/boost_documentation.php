@@ -307,8 +307,8 @@ function latest_link($filter_data)
         break;
     case 1:
         echo '<div class="boost-common-header-notice">';
-        if (realpath("{$filter_data->archive_dir}/{$current->dir()}/{$filter_data->path}") !== false ||
-            realpath("{$filter_data->fix_dir}/{$current->dir()}/{$filter_data->path}") !== false)
+        if (($filter_data->archive_dir && realpath("{$filter_data->archive_dir}/{$current->dir()}/{$filter_data->path}") !== false) ||
+            ($filter_data->fix_dir && realpath("{$filter_data->fix_dir}/{$current->dir()}/{$filter_data->path}") !== false))
         {
             echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$filter_data->path,'">',
                 "Click here to view the latest version of this page.",

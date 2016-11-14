@@ -32,6 +32,10 @@ STATIC_DIR
   Path to static copies of boost.
   - Defaults to BOOST_WEBSITE_SHARED_DIR/archives/live
 
+BOOST_FIX_DIR
+  Path to documentation fixes, this is a directory containing replacements
+  for faulty or missing documentation.
+
 BOOST_REPOS_DIR
   Loction of local copies for develop and master super projects.
   Set them up using:
@@ -99,4 +103,9 @@ if (defined('BOOST_WEBSITE_SHARED_DIR')) {
     if (!defined('BOOST_TASKS_DIR')) {
         define('BOOST_TASKS_DIR', BOOST_WEBSITE_SHARED_DIR.'/tasks');
     }
+}
+
+// TODO: I'm going to move the fix directory to a separate repo
+if (!defined('BOOST_FIX_DIR')) {
+    define('BOOST_FIX_DIR', __DIR__.'/../../doc/fixes');
 }
