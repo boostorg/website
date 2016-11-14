@@ -559,8 +559,13 @@ class BoostLibraries
     }
 
     static function filter_visible($x) {
-        return !(array_key_exists('status') && $x['status'] === 'hidden') &&
-            !$x['boost-version']->hidden();
+        if ($x['boost-version']->hidden()) { return false; }
+        if (array_key_exists('status', $x)) {
+            if ($x['status'] === 'hidden' || $x['status'] === 'unreleased') {
+                return false;
+            }
+        }
+        return true;
     }
 
     static function filter_all($x) {
@@ -595,8 +600,11 @@ class BoostLibraries
             }
 
             if ($details) {
-                if (array_key_exists('status', $details)
-                    && $details['status'] == 'hidden') { continue; }
+                if (array_key_exists('status', $details) &&
+                    ($details['status'] === 'hidden' || $details['status'] === 'unreleased')
+                ) {
+                    continue;
+                }
                 if ($filter && !call_user_func($filter, $details)) continue;
                 $libs[$key] = $details;
             }
