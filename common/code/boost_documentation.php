@@ -134,7 +134,8 @@ class BoostDocumentation
 
         $last_modified = max(
             strtotime(BOOST_DOCS_MODIFIED_DATE),        // last manual documenation update
-            filemtime(dirname(__FILE__).'/boost.php'),  // last release (since the version number is updated)
+            filemtime(dirname(__FILE__).'/../../generated/current_version.txt'),
+                                                        // last release)
             filemtime($file)                            // when the file was modified
         );
 
