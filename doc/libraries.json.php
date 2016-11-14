@@ -7,7 +7,8 @@ if (isset($_GET['version'])) {
         $version = BoostVersion::from($_GET['version']);
     }
     catch (BoostVersion_Exception $e) {
-        header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+        header('Content-type: application/json');
+        header($_SERVER['SERVER_PROTOCOL'] . ' 400 Malformed request', true, 400);
         echo json_encode(Array(
             'error' => $e->getMessage(),
         ));
