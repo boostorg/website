@@ -39,6 +39,7 @@ class LibraryPage {
     );
 
     var $params;
+    var $version;
     var $libs;
     var $categories;
 
@@ -49,8 +50,9 @@ class LibraryPage {
     var $category_value;
     var $filter_value;
 
-    function __construct($params, $libs) {
+    function __construct($params, $version, $libs) {
         $this->libs = $libs;
+        $this->version = $version;
         $this->categories = $libs->get_categories();
 
         $base_uri = $_SERVER['REQUEST_URI'];
@@ -135,7 +137,8 @@ class LibraryPage {
     }
 
     function title() {
-        $page_title = BoostVersion::page_title().' Library Documentation';
+        // TODO: Don't include the version number when at http://www.boost.org/doc/libs/
+        $page_title = "Boost {$this->version} Library Documentation";
         if ($this->category_value) {
             $page_title.= ' - '. $this->categories[$this->category_value]['title'];
         }
@@ -178,13 +181,15 @@ class LibraryPage {
     }
 
     function filtered_libraries() {
-        return $this->libs->get_for_version(BoostVersion::page(),
+        return $this->libs->get_for_version(
+                $this->version,
                 $this->sort_value,
                 array($this, 'filter'));
     }
 
     function categorized_libraries() {
-        return $this->libs->get_categorized_for_version(BoostVersion::page(),
+        return $this->libs->get_categorized_for_version(
+                $this->version,
                 $this->sort_value,
                 array($this, 'filter'));
     }
@@ -285,20 +290,26 @@ class LibraryPage {
 
 // Page variables
 
-$library_page = new LibraryPage($_GET, BoostLibraries::load());
+$documentation_dir = BoostDocumentation::library_documentation()->documentation_dir();
 
-if (BoostVersion::page()->is_numbered_release() &&
-        $library_page->libs->latest_version &&
-        BoostVersion::page()->compare($library_page->libs->latest_version) > 0)
+// To avoid confusion, only show this page when there is actual documentation.
+// TODO: Maybe for versions without documentation, could display the list
+//       with no links.
+if (!is_dir($documentation_dir))
 {
     BoostWeb::error_404($_SERVER['REQUEST_URI']);
     return;
 }
 
-// To avoid confusion, only show this page when there is actual documentation.
-// TODO: Maybe for versions without documentation, could display the list
-//       with no links.
-if (!is_dir(BoostDocumentation::library_documentation()->documentation_dir()))
+// TODO: Improve BoostDocumentation so that it's easy to get the version number.
+$version = array_pop(explode('/', $documentation_dir));
+$version = $version ? BoostVersion::from($version) : BostVersion::current();
+
+$library_page = new LibraryPage($_GET, $version, BoostLibraries::load());
+
+if ($version->is_numbered_release() &&
+        $library_page->libs->latest_version &&
+        $version->compare($library_page->libs->latest_version) > 0)
 {
     BoostWeb::error_404($_SERVER['REQUEST_URI']);
     return;

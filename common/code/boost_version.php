@@ -101,7 +101,10 @@ class BoostVersion {
     }
 
     /**
-     * Return a BoostVersion representation of value.
+     * Returns a BoostVersion representation of the argument.
+     * If the argument is a BoostVersion, returns it (not a clone).
+     * If it's a valid version string, parse it.
+     * Otherwise throws BoostVersion_Exception.
      * @return BoostVersion
      */
     static function from($value) {
@@ -119,9 +122,8 @@ class BoostVersion {
                 case 'hidden': return self::hidden();
             }
 
-            // TODO: Make this stricter by only matching whole string. Might break something?
-            if (preg_match('@(?<!\d)(\d+)[._](\d+)[._](\d+)[-._ ]?(?:(b(?:eta)?[- _]*)(\d*)|(prerelease))?@',
-                $value, $matches))
+            if (preg_match('@^(\d+)[._](\d+)[._](\d+)[-._ ]?(?:(b(?:eta)?[- _]*)(\d*)|(prerelease))?$@',
+                trim(strtolower($value)), $matches))
             {
                 return new BoostVersion(Array(
                     'major' => (int) $matches[1],
@@ -156,31 +158,6 @@ class BoostVersion {
                 __DIR__.'/../../generated/current_version.txt'));
         }
         return BoostVersion::$current;
-    }
-
-    /**
-     * The version the current page is displaying.
-     * @return BoostVersion
-     */
-    static function page() {
-        return self::page_version() ?: self::current();
-    }
-
-    static function page_title() {
-        $version = self::page_version();
-        return $version ? "Boost {$version}" : "Boost";
-    }
-
-    static private function page_version() {
-        static $boost_version;
-
-        if ($boost_version == null) {
-            $boost_version = isset($_SERVER["PATH_INFO"]) ?
-                BoostVersion::from(strtok($_SERVER["PATH_INFO"], '/')) :
-                false;
-        }
-
-        return $boost_version;
     }
 
     function major() { return $this->version['major']; }

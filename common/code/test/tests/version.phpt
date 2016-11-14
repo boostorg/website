@@ -21,9 +21,9 @@ Assert::true($boost_1_55_0->compare($develop) < 0);
 Assert::true($boost_1_55_0->compare($boost_1_54_0) > 0);
 Assert::true($boost_1_54_0->compare($boost_1_55_0) < 0);
 
-Assert::same($boost_1_55_0->compare('boost_1_55_0'), 0);
-Assert::true($boost_1_55_0->compare('boost_1_54_0') > 0);
-Assert::true($boost_1_55_0->compare('boost_1_56_0') < 0);
+Assert::same($boost_1_55_0->compare('1_55_0'), 0);
+Assert::true($boost_1_55_0->compare('1_54_0') > 0);
+Assert::true($boost_1_55_0->compare('1_56_0') < 0);
 
 Assert::same($develop->dir(), 'develop');
 Assert::same($master->dir(), 'master');
@@ -50,19 +50,19 @@ Assert::true($boost_1_56_0->compare($boost_1_56_0_b1) > 0);
 Assert::true($boost_1_56_0->compare($boost_1_56_0_b2) > 0);
 Assert::same($boost_1_56_0->compare($boost_1_56_0), 0);
 
-Assert::same($boost_1_56_0_pre->compare('boost_1_56_0 prerelease'), 0);
-Assert::same($boost_1_56_0_pre->compare('boost_1.56.0prerelease'), 0);
+Assert::same($boost_1_56_0_pre->compare('1_56_0 prerelease'), 0);
+Assert::same($boost_1_56_0_pre->compare('1.56.0prerelease'), 0);
 
-Assert::same($boost_1_56_0_b1->compare('boost_1_56_0beta'), 0);
-Assert::same($boost_1_56_0_b1->compare('boost_1_56_0b1'), 0);
-Assert::same($boost_1_56_0_b1->compare('boost_1_56_0_b1'), 0);
-Assert::same($boost_1_56_0_b1->compare('boost_1_56_0_beta1'), 0);
-Assert::same($boost_1_56_0_b1->compare('boost_1_56_0_beta'), 0);
+Assert::same($boost_1_56_0_b1->compare('1_56_0beta'), 0);
+Assert::same($boost_1_56_0_b1->compare('1_56_0b1'), 0);
+Assert::same($boost_1_56_0_b1->compare('1_56_0_b1'), 0);
+Assert::same($boost_1_56_0_b1->compare('1_56_0_beta1'), 0);
+Assert::same($boost_1_56_0_b1->compare('1_56_0_beta'), 0);
 
-Assert::same($boost_1_56_0_b2->compare('boost_1_56_0b2'), 0);
-Assert::same($boost_1_56_0_b2->compare('boost_1_56_0_b2'), 0);
-Assert::same($boost_1_56_0_b2->compare('boost_1_56_0_beta2'), 0);
-Assert::same($boost_1_56_0_b2->compare('boost_1_56_0_beta_2'), 0);
+Assert::same($boost_1_56_0_b2->compare('1_56_0b2'), 0);
+Assert::same($boost_1_56_0_b2->compare('1_56_0_b2'), 0);
+Assert::same($boost_1_56_0_b2->compare('1_56_0_beta2'), 0);
+Assert::same($boost_1_56_0_b2->compare('1_56_0_beta_2'), 0);
 Assert::same($boost_1_56_0_b2->compare('1.56.0 beta 2'), 0);
 
 Assert::same($boost_1_55_0->git_ref(), 'boost-1.55.0');

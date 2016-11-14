@@ -201,7 +201,7 @@ class BoostDocumentation
             {
                 if ($i[0]) {
                     $min_version = BoostVersion::from($i[0]);
-                    if ($min_version->compare(BoostVersion::page()) > 0) {
+                    if ($min_version->compare($version) > 0) {
                         // This is after the current version.
                         continue;
                     }

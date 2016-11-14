@@ -51,7 +51,7 @@ function main() {
     }
 
     if ($version) {
-        // BoostVersion dies if version is invalid.
+        // BoostVersion throws an exception if version is invalid.
         $version = BoostVersion::from($version);
     }
 
