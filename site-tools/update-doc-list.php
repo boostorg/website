@@ -3,10 +3,6 @@
 
 require_once(__DIR__.'/../common/code/bootstrap.php');
 
-// TODO: Replace with something better.
-global $quiet;
-$quiet = false;
-
 define ('UPDATE_DOC_LIST_USAGE', "
 Usage: {} [path] [version]
 
@@ -33,13 +29,15 @@ To update from a beta release:
     {} boost_1_62_0_b1 1.62.0.beta1
 ");
 
-function main() {
-    global $quiet;
+class UpdateDocListSettings {
+    static $quiet = false;
+}
 
+function main() {
     $options = BoostSiteTools\CommandLineOptions::parse(
         UPDATE_DOC_LIST_USAGE, array('quiet' => false));
 
-    $quiet = $options->flags['quiet'];
+    UpdateDocListSettings::$quiet = $options->flags['quiet'];
     $location = null;
     $version = null;
 
@@ -115,7 +113,7 @@ function main() {
         $libs->update();
     }
 
-    if (!$quiet) { echo "Writing to disk\n"; }
+    if (!UpdateDocListSettings::$quiet) { echo "Writing to disk\n"; }
 
     file_put_contents(dirname(__FILE__) . '/../doc/libraries.xml', $libs->to_xml());
 
@@ -130,10 +128,8 @@ function main() {
  * @throws RuntimeException
  */
 function read_metadata_from_git($location, $version) {
-    global $quiet;
-
     $branch = BoostVersion::from($version)->git_ref();
-    if (!$quiet) { echo "Updating from {$branch}\n"; }
+    if (!UpdateDocListSettings::$quiet) { echo "Updating from {$branch}\n"; }
     return read_metadata_from_modules('', $location, $branch);
 }
 
@@ -193,13 +189,12 @@ function read_metadata_from_modules($path, $location, $hash, $sublibs = array('l
 
     // Recurse over submodules
     foreach($modules as $name => $module) {
-        global $quiet;
         $submodule_path = $path ? "{$path}/{$module['path']}" : $module['path'];
 
         if (!preg_match('@^\.\./(\w+)\.git$@', $module['url'])) {
             // In quiet mode don't warn about documentation submodules, which
             // libraries have previously included from remote locations.
-            if (!$quiet || strpos($submodule_path.'/', '/doc/') === false) {
+            if (!UpdateDocListSettings::$quiet || strpos($submodule_path.'/', '/doc/') === false) {
                 echo "Ignoring submodule '{$name}' in '{$location}'.\n";
             }
             continue;
