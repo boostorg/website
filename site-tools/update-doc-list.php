@@ -69,11 +69,12 @@ function main() {
 
         $location = $real_location;
 
-        // If this is not a git repo.
         // TODO: Don't output stderr.
         exec("cd \"{$location}\" && git rev-parse --git-dir", $output, $return_var);
         if ($return_var != 0)
         {
+            // If this is not a git repo.
+
             if (!$version || !$version->is_numbered_release()) {
                 echo "Error: Release version required for release.\n";
                 exit(1);
@@ -84,6 +85,8 @@ function main() {
         else if (get_bool_from_array(BoostSuperProject::run_process(
                 "cd '${location}' && git rev-parse --is-bare-repository")))
         {
+            // If this is a bare repository, assume it's part of a mirror.
+
             if ($version) {
                 $updates[(string) $version] = read_metadata_from_git($location, $version);
             }
@@ -94,7 +97,10 @@ function main() {
         }
         else
         {
+            // Otherwise, it's a local git clone. I'm not sure is this is
+            // a valid use of the script.
             // TODO: Could get version from the branch in a git checkout.
+
             if (!$version) {
                 echo "Error: Version required for local tree.\n";
                 exit(1);
