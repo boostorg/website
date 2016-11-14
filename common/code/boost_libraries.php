@@ -559,7 +559,7 @@ class BoostLibraries
     }
 
     static function filter_visible($x) {
-        if ($x['boost-version']->hidden()) { return false; }
+        if ((string) $x['boost-version'] === 'hidden') { return false; }
         if (array_key_exists('status', $x)) {
             if ($x['status'] === 'hidden' || $x['status'] === 'unreleased') {
                 return false;
