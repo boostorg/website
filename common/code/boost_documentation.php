@@ -15,6 +15,7 @@ class BoostDocumentation
     var $archive_dir;
     var $version;
     var $version_dir;
+    var $version_title; // Version string to use in title, or null for default pages.
     var $path;
 
     static function library_documentation() {
@@ -44,32 +45,30 @@ class BoostDocumentation
         if (array_key_exists('PATH_INFO', $_SERVER) &&
                 preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts)) {
             if ($path_parts[1] === 'regression') {
-                $version = null;
-                $version_dir = 'regression';
+                $this->version_dir = 'regression';
             }
             else {
                 try {
-                    $version = BoostVersion::from($path_parts[1]);
+                    $this->version = BoostVersion::from($path_parts[1]);
                 }
                 catch(BoostVersion_Exception $e) {
                     BoostWeb::error_404($_SERVER["PATH_INFO"], 'Unable to find version.');
-                    return;
+                    exit(0);
                 }
-                $version_dir = is_numeric($path_parts[1][0]) ?
+                $this->version_dir = is_numeric($path_parts[1][0]) ?
                     "boost_{$path_parts[1]}" : $path_parts[1];
+                $this->version_title = (string) $this->version;
             }
 
             $path = array_key_exists(2, $path_parts) ? $path_parts[2] : null;
         }
         else {
-            $version = BoostVersion::current();
-            $version_dir = $version->dir();
+            $this->version = BoostVersion::current();
+            $this->version_dir = $version->dir();
             $path = null;
         }
 
         $this->archive_dir = $archive_dir;
-        $this->version = $version;
-        $this->version_dir = $version_dir;
         $this->path = $path;
     }
 

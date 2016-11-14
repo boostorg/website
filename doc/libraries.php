@@ -39,8 +39,8 @@ class LibraryPage {
     );
 
     var $params;
-    var $version;
     var $libs;
+    var $documentation_page;
     var $categories;
 
     var $base_uri;
@@ -50,10 +50,20 @@ class LibraryPage {
     var $category_value;
     var $filter_value;
 
-    function __construct($params, $version, $libs) {
+    function __construct($params, $libs) {
         $this->libs = $libs;
-        $this->version = $version;
         $this->categories = $libs->get_categories();
+
+        $this->documentation_page = BoostDocumentation::library_documentation();
+
+        // To avoid confusion, only show this page when there is actual documentation.
+        // TODO: Maybe for versions without documentation, could display the list
+        //       with no links.
+        if (!is_dir($this->documentation_page->documentation_dir()))
+        {
+            BoostWeb::error_404($_SERVER['REQUEST_URI']);
+            exit(0);
+        }
 
         $base_uri = $_SERVER['REQUEST_URI'];
         $base_uri = preg_replace('@[#?].*@', '', $base_uri);
@@ -113,6 +123,14 @@ class LibraryPage {
                 exit(0);
             }
         }
+
+        if ($this->documentation_page->version->is_numbered_release() &&
+                $this->libs->latest_version &&
+                $this->documentation_page->version->compare($this->libs->latest_version) > 0)
+        {
+            BoostWeb::error_404($_SERVER['REQUEST_URI']);
+            return;
+        }
     }
 
     function filter($lib) {
@@ -137,8 +155,11 @@ class LibraryPage {
     }
 
     function title() {
-        // TODO: Don't include the version number when at http://www.boost.org/doc/libs/
-        $page_title = "Boost {$this->version} Library Documentation";
+        $page_title = "Boost";
+        if ($this->documentation_page->version_title) {
+            $page_title .= " {$this->documentation_page->version_title}";
+        }
+        $page_title .= " Library Documentation";
         if ($this->category_value) {
             $page_title.= ' - '. $this->categories[$this->category_value]['title'];
         }
@@ -182,14 +203,14 @@ class LibraryPage {
 
     function filtered_libraries() {
         return $this->libs->get_for_version(
-                $this->version,
+                $this->documentation_page->version,
                 $this->sort_value,
                 array($this, 'filter'));
     }
 
     function categorized_libraries() {
         return $this->libs->get_categorized_for_version(
-                $this->version,
+                $this->documentation_page->version,
                 $this->sort_value,
                 array($this, 'filter'));
     }
@@ -288,28 +309,7 @@ class LibraryPage {
     }
 }
 
-// Page variables
-
-$documentation = BoostDocumentation::library_documentation();
-
-// To avoid confusion, only show this page when there is actual documentation.
-// TODO: Maybe for versions without documentation, could display the list
-//       with no links.
-if (!is_dir($documentation->documentation_dir()))
-{
-    BoostWeb::error_404($_SERVER['REQUEST_URI']);
-    return;
-}
-
-$library_page = new LibraryPage($_GET, $documentation->version, BoostLibraries::load());
-
-if ($documentation->version->is_numbered_release() &&
-        $library_page->libs->latest_version &&
-        $documentation->version->compare($library_page->libs->latest_version) > 0)
-{
-    BoostWeb::error_404($_SERVER['REQUEST_URI']);
-    return;
-}
+$library_page = new LibraryPage($_GET, BoostLibraries::load());
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
