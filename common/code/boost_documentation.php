@@ -12,6 +12,11 @@ class BoostDocumentation
 {
     var $params;
 
+    var $archive_dir;
+    var $version;
+    var $version_dir;
+    var $path;
+
     static function library_documentation() {
         return new BoostDocumentation(array(
             'fix_dir' => BOOST_FIX_DIR,
@@ -28,15 +33,7 @@ class BoostDocumentation
 
     function __construct($params = Array()) {
         $this->params = $params;
-    }
 
-    function get_param($key, $default = null) {
-        return array_key_exists($key, $this->params) ?
-            $this->params[$key] : $default;
-    }
-
-    function documenation_path_details()
-    {
         $pattern = $this->get_param('pattern', '@^[/]([^/]+)(?:[/](.*))?$@');
         $archive_dir = $this->get_param('archive_dir', STATIC_DIR);
 
@@ -70,18 +67,23 @@ class BoostDocumentation
             $path = null;
         }
 
-        return compact('archive_dir', 'version', 'version_dir', 'path');
+        $this->archive_dir = $archive_dir;
+        $this->version = $version;
+        $this->version_dir = $version_dir;
+        $this->path = $path;
+    }
+
+    function get_param($key, $default = null) {
+        return array_key_exists($key, $this->params) ?
+            $this->params[$key] : $default;
     }
 
     function documentation_dir() {
-        extract($this->documenation_path_details());
-        return $archive_dir.'/'.$version_dir;
+        return "{$this->archive_dir}/{$this->version_dir}";
     }
 
     function display_from_archive($content_map = array())
     {
-        extract($this->documenation_path_details());
-
         // Set default values
 
         $fix_dir = $this->get_param('fix_dir');
@@ -90,7 +92,7 @@ class BoostDocumentation
         $file = false;
 
         if ($fix_dir) {
-            $fix_path = "{$fix_dir}/{$version_dir}/{$path}";
+            $fix_path = "{$fix_dir}/{$this->version_dir}/{$this->path}";
 
             if (is_file($fix_path) ||
                 (is_dir($fix_path) && is_file("{$fix_path}/index.html")))
@@ -100,25 +102,24 @@ class BoostDocumentation
         }
 
         if (!$file) {
-            $file = $archive_dir . '/';
-            $file = $file . $version_dir . '/' . $path;
+            $file = "{$this->archive_dir}/{$this->version_dir}/{$this->path}";
         }
 
         // Only use a permanent redirect for releases (beta or full).
 
-        $redirect_status_code = $version &&
-            $version->is_numbered_release() ? 301 : 302;
+        $redirect_status_code = $this->version &&
+            $this->version->is_numbered_release() ? 301 : 302;
 
         // Calculate expiry date if requested.
 
         $expires = null;
         if ($use_http_expire_date)
         {
-            if (!$version) {
+            if (!$this->version) {
                 $expires = "+1 week";
             }
             else {
-                $compare_version = BoostVersion::from($version)->
+                $compare_version = BoostVersion::from($this->version)->
                     compare(BoostVersion::current());
                 $expires = $compare_version === -1 ? "+1 year" :
                     ($compare_version === 0 ? "+1 week" : "+1 day");
@@ -155,16 +156,16 @@ class BoostDocumentation
 
             if ($found_file) {
                 $file = $file.$found_file;
-                $path = $path.$found_file;
+                $this->path = $this->path.$found_file;
             }
             else {
                 if (!BoostWeb::http_headers('text/html', $last_modified, $expires))
                     return;
 
                 $data = new BoostFilterData();
-                $data->version = $version;
-                $data->path = $path;
-                $data->archive_dir = $archive_dir;
+                $data->version = $this->version;
+                $data->path = $this->path;
+                $data->archive_dir = $this->archive_dir;
                 $data->fix_dir = $fix_dir;
                 $data->boost_root = $this->get_param('boost-root', '');
                 $display_dir = new BoostDisplayDir($data);
@@ -197,11 +198,11 @@ class BoostDocumentation
 
         foreach ($info_map as $i)
         {
-            if (preg_match($i[1],$path))
+            if (preg_match($i[1],$this->path))
             {
                 if ($i[0]) {
                     $min_version = BoostVersion::from($i[0]);
-                    if ($min_version->compare($version) > 0) {
+                    if ($min_version->compare($this->version) > 0) {
                         // This is after the current version.
                         continue;
                     }
@@ -262,10 +263,10 @@ class BoostDocumentation
                 }
 
                 $data = new BoostFilterData();
-                $data->version = $version;
-                $data->path = $path;
+                $data->version = $this->version;
+                $data->path = $this->path;
                 $data->content = $content;
-                $data->archive_dir = $archive_dir;
+                $data->archive_dir = $this->archive_dir;
                 $data->fix_dir = $fix_dir;
                 $data->boost_root = $this->get_param('boost-root', '');
                 echo_filtered($extractor, $data);

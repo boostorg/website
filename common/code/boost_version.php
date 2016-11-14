@@ -242,7 +242,7 @@ class BoostVersion {
     }
 
     /**
-     * Compare this verison with another.
+     * Compare this version with another.
      * @return int, -1 if less than the other version, 0 if the
      * same, +1 if more
      */

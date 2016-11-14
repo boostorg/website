@@ -290,26 +290,22 @@ class LibraryPage {
 
 // Page variables
 
-$documentation_dir = BoostDocumentation::library_documentation()->documentation_dir();
+$documentation = BoostDocumentation::library_documentation();
 
 // To avoid confusion, only show this page when there is actual documentation.
 // TODO: Maybe for versions without documentation, could display the list
 //       with no links.
-if (!is_dir($documentation_dir))
+if (!is_dir($documentation->documentation_dir()))
 {
     BoostWeb::error_404($_SERVER['REQUEST_URI']);
     return;
 }
 
-// TODO: Improve BoostDocumentation so that it's easy to get the version number.
-$version = array_pop(explode('/', $documentation_dir));
-$version = $version ? BoostVersion::from($version) : BostVersion::current();
+$library_page = new LibraryPage($_GET, $documentation->version, BoostLibraries::load());
 
-$library_page = new LibraryPage($_GET, $version, BoostLibraries::load());
-
-if ($version->is_numbered_release() &&
+if ($documentation->version->is_numbered_release() &&
         $library_page->libs->latest_version &&
-        $version->compare($library_page->libs->latest_version) > 0)
+        $documentation->version->compare($library_page->libs->latest_version) > 0)
 {
     BoostWeb::error_404($_SERVER['REQUEST_URI']);
     return;
