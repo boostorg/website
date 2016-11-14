@@ -12,6 +12,20 @@ class BoostDocumentation
 {
     var $params;
 
+    static function library_documentation() {
+        return new BoostDocumentation(array(
+            'fix_dir' => BOOST_FIX_DIR,
+            'archive_dir' => STATIC_DIR,
+            'use_http_expire_date' => true,
+        ));
+    }
+
+    static function extra_documentation() {
+        return new BoostDocumentation(array(
+            'boost-root' => '../libs/release/',
+        ));
+    }
+
     function __construct($params = Array()) {
         $this->params = $params;
     }
