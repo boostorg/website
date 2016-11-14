@@ -7,8 +7,8 @@
 
 class BoostFilterText extends BoostFilter
 {
-    function __construct($data) {
-        parent::__construct($data);
+    function __construct($data, $content) {
+        parent::__construct($data, $content);
         // TODO: Better support for other character sets?
         $this->charset = 'UTF-8';
     }
@@ -44,7 +44,7 @@ class BoostFilterText extends BoostFilter
         
         foreach(preg_split(
             '@\b((?:[\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|[^[:punct:]\s]|/))@',
-            $this->data->content, -1, PREG_SPLIT_DELIM_CAPTURE)
+            $this->content, -1, PREG_SPLIT_DELIM_CAPTURE)
             as $index => $part)
         {
             if($index % 2 == 0) {

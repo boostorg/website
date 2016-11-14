@@ -219,12 +219,7 @@ class LibraryPage {
 
     function libref($lib) {
         if (!empty($lib['documentation'])) {
-            $path_info = filter_input(INPUT_SERVER, 'PATH_INFO', FILTER_SANITIZE_URL);
-            if ($path_info && $path_info != '/') {
-                $docref = '/doc/libs' . $path_info . '/' . $lib['documentation'];
-            } else {
-                $docref = '/doc/libs/release/' . $lib['documentation'];
-            }
+            $docref = "/doc/libs/{$this->documentation_page->url_doc_dir}/{$lib['documentation']}";
             print '<a href="' . html_encode($docref) . '">' .
                     html_encode(!empty($lib['name']) ? $lib['name'] : $lib['key']) .
                     '</a>';

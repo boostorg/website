@@ -9,7 +9,7 @@ class BoostFilterBoostBookBasic extends BoostFilter
 {
     function echo_filtered()
     {
-        $text = $this->data->content;
+        $text = $this->content;
 
         $match = null;
 

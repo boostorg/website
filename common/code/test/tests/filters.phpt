@@ -9,9 +9,9 @@ BoostFilter::$template = __DIR__.'/template.php';
 
 $failure_count = 0;
 
-function filter_test($filter, $data, $expected) {
+function filter_test($filter, $data, $content, $expected) {
     ob_start();
-    echo_filtered($filter, $data);
+    echo_filtered($filter, $data, $content);
     $result = ob_get_clean();
     Assert::same(trim($result), trim($expected));
 }
@@ -37,10 +37,9 @@ Hello World!</pre>
 </html>
 EOL;
 
-$data = new BoostFilterData();
+$data = new BoostDocumentation();
 $data->path = 'Hello_world_test.txt';
-$data->content = $test_text;
-filter_test('text', $data, $test_text_expected);
+filter_test('text', $data, $test_text, $test_text_expected);
 
 /* UTF-8 Plain Text
  */
@@ -64,10 +63,9 @@ I&ntilde;t&euml;rn&acirc;ti&ocirc;n&agrave;liz&aelig;ti&oslash;n</pre>
 </html>
 EOL;
 
-$data = new BoostFilterData();
+$data = new BoostDocumentation();
 $data->path = 'Hello_world_test.txt';
-$data->content = $test_text;
-filter_test('text', $data, $test_text_expected);
+filter_test('text', $data, $test_text, $test_text_expected);
 
 
 /* Non-UTF-8 Plain Text
@@ -102,10 +100,9 @@ I{$unknown_character}{$unknown_character}t{$unknown_character}{$unknown_characte
 </html>
 EOL;
 
-$data = new BoostFilterData();
+$data = new BoostDocumentation();
 $data->path = 'Hello_world_test.txt';
-$data->content = $test_text;
-filter_test('text', $data, $test_text_expected);
+filter_test('text', $data, $test_text, $test_text_expected);
 
 /* C++ */
 
@@ -132,10 +129,9 @@ int main() {}</pre>
 </html>
 EOL;
 
-$data = new BoostFilterData();
+$data = new BoostDocumentation();
 $data->path = 'foo/test.cpp';
-$data->content = $test_cpp;
-filter_test('cpp', $data, $test_cpp_expected);
+filter_test('cpp', $data, $test_cpp, $test_cpp_expected);
 
 /* HTML */
 
@@ -156,9 +152,6 @@ $test_doc = <<<EOL
 </html>
 EOL;
 
-$data = new BoostFilterData();
-$data->content = $test_doc;
-
 $test_simple_expected = <<<EOL
 <!DOCTYPE html>
 <html>
@@ -176,7 +169,8 @@ $test_simple_expected = <<<EOL
 </html>
 EOL;
 
-filter_test('simple', $data, $test_simple_expected);
+$data = new BoostDocumentation();
+filter_test('simple', $data, $test_doc, $test_simple_expected);
 // TODO: This doesn't work because the filter calls 'virtual', which breaks
 // out of the buffered output.
 //filter_test('basic', $params, '');
