@@ -64,12 +64,15 @@ class BoostPages {
     function reverse_chronological_pages() {
         $pages = $this->pages;
 
-        // TODO: Use release date for release pages?
         $pub_date_order = array();
         $last_published_order = array();
         $unpublished_date = new DateTime("+10 years");
         foreach($pages as $index => $page) {
-            $pub_date_order[$index] = $page->pub_date ?: $unpublished_date;
+            $pub_date_order[$index] =
+                ($page->release_data ?
+                    BoostWebsite::array_get($page->release_data, 'release_date') :
+                    null) ?:
+                $page->pub_date ?: $unpublished_date;
             $last_published_order[$index] = $page->last_modified;
         }
         array_multisort(
