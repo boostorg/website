@@ -45,8 +45,8 @@ class BoostSuperProject {
         {
             if (!$line) continue;
 
-            if (preg_match('@^submodule\.([\w/]+)\.(\w+)=(.*)$@', trim($line), $matches)) {
-                $modules[$matches[1]][$matches[2]] = $matches[3];
+            if (preg_match('@^submodule\.([^.=]+)\.([^.=]+)=(.*)$@i', trim($line), $matches)) {
+                $modules[$matches[1]][strtolower($matches[2])] = $matches[3];
             }
             else {
                 throw new BoostException("Unsupported config line: {$line}");
