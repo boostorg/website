@@ -360,16 +360,6 @@ class BoostLibraries
                 }
 
                 $lib_version = BoostVersion::from($lib_details['boost-version']);
-
-                // TODO: Remove this temporary code to avoid releasing hidden
-                //       libraries once they're all properly marked up.
-                if ($lib_version->is_hidden() ||
-                    BoostWebsite::array_get($lib_details, 'status') === 'hidden'
-                ) {
-                    continue;
-                }
-
-
                 if ($version->release_stage() > $lib_version->release_stage())
                 {
                     $lib_details['boost-version'] = $version;
