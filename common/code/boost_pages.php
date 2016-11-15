@@ -236,12 +236,15 @@ class BoostPages {
 
                 // Get the page from quickbook/read from cache
 
-                if (array_key_exists($page, $this->page_cache) &&
-                    (!$have_quickbook || $this->page_cache[$page]['hash'] === $hash))
+                $fresh_cache = false;
+
+                if (array_key_exists($page, $this->page_cache))
                 {
                     $description_xhtml = $this->page_cache[$page]['description_xhtml'];
+                    $fresh_cache = $this->page_cache[$page]['hash'] === $hash;
                 }
-                else if ($have_quickbook)
+
+                if ($have_quickbook && !$fresh_cache)
                 {
                     $xml_filename = tempnam(sys_get_temp_dir(), 'boost-qbk-');
                     try {
@@ -260,10 +263,20 @@ class BoostPages {
                         'hash' => $hash,
                         'description_xhtml' => $description_xhtml,
                     );
+                    $fresh_cache = true;
                 }
-                else {
+
+                if (!$description_xhtml) {
                     echo "Unable to generate page for {$page}.\n";
                     continue;
+                }
+
+                if (!$fresh_cache) {
+                    // If we have a dated cache entry, and aren't able to
+                    // rebuild it, continue using the current entry, but
+                    // don't change the page state - it will try
+                    // again on the next run.
+                    echo "Using old cached entry for {$page}.\n";
                 }
 
                 // Set the path where the page should be built.
@@ -345,7 +358,9 @@ EOL;
                     __DIR__."/templates/entry.php",
                     $template_vars);
 
-                $page_data->page_state = null;
+                if ($fresh_cache) {
+                    $page_data->page_state = null;
+                }
             }
         }
     }
