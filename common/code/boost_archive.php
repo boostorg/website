@@ -47,10 +47,8 @@ class BoostArchive
         }
 
         // Choose mime type to use
-        // TODO: Better way to support mime type? Built in PHP functions
-        //       appear to require the actual file, could automatically
-        //       grab an updated list from:
-        //       http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
+        // For reference, list of apache's default mime types:
+        // http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
 
         $mime_types = array(
             'png' => 'image/png',

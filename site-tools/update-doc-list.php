@@ -99,8 +99,6 @@ function main() {
         {
             // Otherwise, it's a local git clone. I'm not sure is this is
             // a valid use of the script.
-            // TODO: Could get version from the branch in a git checkout.
-
             if (!$version) {
                 echo "Error: Version required for local tree.\n";
                 exit(1);

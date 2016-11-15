@@ -57,8 +57,6 @@ class LibraryPage {
         $this->documentation_page = BoostDocumentation::library_documentation();
 
         // To avoid confusion, only show this page when there is actual documentation.
-        // TODO: Maybe for versions without documentation, could display the list
-        //       with no links.
         if (!is_dir($this->documentation_page->documentation_dir())) {
             BoostWeb::throw_error_404($_SERVER['REQUEST_URI']);
         }

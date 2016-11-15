@@ -543,9 +543,6 @@ class BoostPages_Page {
 
                     $output .= '<td><a href="';
                     if (strpos($download['url'], 'sourceforge') !== false) {
-                        // TODO: I used to add '/download' to source links,
-                        //       but that doesn't seem to be needed any more...
-                        //$output .= html_encode("{$download['url']}/download");
                         $output .= html_encode($download['url']);
                     }
                     else {

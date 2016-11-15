@@ -9,7 +9,6 @@ class BoostFilterText extends BoostFilter
 {
     function __construct($data, $content) {
         parent::__construct($data, $content);
-        // TODO: Better support for other character sets?
         $this->charset = 'UTF-8';
     }
 
