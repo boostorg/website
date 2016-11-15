@@ -351,12 +351,25 @@ class BoostLibraries
         // Note: can only do this after 'clean_db' as that copies the
         // old release details into the new release.
         if ($version && $version->is_numbered_release()) {
-            // TODO: Special case for hidden libraries?
             $libs = $this->get_for_version($version, null,
                 'BoostLibraries::filter_all');
             $new_libs = array();
             foreach($libs as $lib_details) {
+                if (BoostWebsite::array_get($lib_details, 'status') === 'unreleased') {
+                    continue;
+                }
+
                 $lib_version = BoostVersion::from($lib_details['boost-version']);
+
+                // TODO: Remove this temporary code to avoid releasing hidden
+                //       libraries once they're all properly marked up.
+                if ($lib_version->is_hidden() ||
+                    BoostWebsite::array_get($lib_details, 'status') === 'hidden'
+                ) {
+                    continue;
+                }
+
+
                 if ($version->release_stage() > $lib_version->release_stage())
                 {
                     $lib_details['boost-version'] = $version;
@@ -596,11 +609,6 @@ class BoostLibraries
             }
 
             if ($details) {
-                if (array_key_exists('status', $details) &&
-                    ($details['status'] === 'hidden' || $details['status'] === 'unreleased')
-                ) {
-                    continue;
-                }
                 if ($filter && !call_user_func($filter, $details)) continue;
                 $libs[$key] = $details;
             }
