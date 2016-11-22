@@ -136,7 +136,8 @@ class BoostReleases {
         if ($release_name == 'boost' && $version->compare('1.50.0') < 0) {
             // Assume old versions are released if there's no data.
             return array(
-                'version' => $version
+                'release_name' => 'boost',
+                'version' => $version,
             );
         }
         else {
