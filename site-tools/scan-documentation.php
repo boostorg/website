@@ -34,7 +34,7 @@ function main() {
             // Store this somewhere?
         }
         else if (preg_match('@^(boost)_([0-9_]+)$@', $name, $match)) {
-            $releases->addDocumentation($match[1], BoostVersion::from($match[2]), "/doc/libs/{$name}");
+            $releases->addDocumentation($match[1], BoostVersion::from($match[2]), "/doc/libs/{$match[2]}/");
         }
     }
 
