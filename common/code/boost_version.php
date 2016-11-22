@@ -122,7 +122,7 @@ class BoostVersion {
                 case 'hidden': return self::hidden();
             }
 
-            if (preg_match('@^(\d+)[._](\d+)[._](\d+)[-._ ]?(?:(b(?:eta)?[- _]*)(\d*)|(prerelease))?$@',
+            if (preg_match('@^(\d+)[._](\d+)[._](\d+)[-._ ]?(?:(b(?:eta)?[- _.]*)(\d*)|(prerelease))?$@',
                 trim(strtolower($value)), $matches))
             {
                 return new BoostVersion(Array(
