@@ -133,7 +133,7 @@ class BoostReleases {
     }
 
     function default_release_data($release_name, $version) {
-        if ($release_name == 'boost' && $version->compare('1.50.0') < 0) {
+        if ($release_name == 'boost' && $version->compare('1.61.0') < 0) {
             // Assume old versions are released if there's no data.
             return array(
                 'release_name' => 'boost',
