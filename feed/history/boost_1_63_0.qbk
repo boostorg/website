@@ -54,7 +54,9 @@
 
 * [phrase library..[@/libs/optional/ Optional]:]
   * Added two new in-place constructors. They work similarly to `emplace()` functions: they initialize the contained value by perfect-forwarding the obtained arguments. One constructor always initializes the contained value, the other based on a boolean condition.
-  * Fixed `optional<optional<T>&>` initialization. ([ticket 12203]) 
+  * Syntax `o = {}` now correctly un-initializes an `optional`, just like in `std::optional`. 
+  * Fixed `optional<optional<T>&>` initialization. ([ticket 12203])
+  * Optional constructors are sfinae-friendly. This fixes interaction with `std::tuple`. ([ticket 12563])
   
 * [phrase library..[@/libs/phoenix/ Phoenix]:]
   * Most of modules now support C++11 variadic templates.
