@@ -235,7 +235,9 @@ class BoostReleases {
         assert(in_array($status, array('released', 'dev')));
         if ($status === 'released') {
             unset($this->release_data[$key][$version_string]['release_status']);
-            $this->release_data[$key][$version_string]['release_date'] = new DateTime();
+            if (empty($this->release_data[$key][$version_string]['release_date'])) {
+                $this->release_data[$key][$version_string]['release_date'] = new DateTime();
+            }
         }
         else {
             $this->release_data[$key][$version_string]['release_status'];
