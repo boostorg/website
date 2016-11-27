@@ -240,117 +240,117 @@ class BoostPages {
     function convert_quickbook_page($page, $page_data, $have_quickbook) {
         $bb_parser = new BoostBookParser();
 
-                // Hash the quickbook source
+        // Hash the quickbook source
 
-                $hash = hash('sha256', str_replace("\r\n", "\n",
-                    file_get_contents("{$this->root}/{$page}")));
+        $hash = hash('sha256', str_replace("\r\n", "\n",
+            file_get_contents("{$this->root}/{$page}")));
 
-                // Get the page from quickbook/read from cache
+        // Get the page from quickbook/read from cache
 
-                $fresh_cache = false;
+        $fresh_cache = false;
 
-                if (array_key_exists($page, $this->page_cache))
-                {
-                    $description_xhtml = $this->page_cache[$page]['description_xhtml'];
-                    $fresh_cache = $this->page_cache[$page]['hash'] === $hash;
-                }
+        if (array_key_exists($page, $this->page_cache))
+        {
+            $description_xhtml = $this->page_cache[$page]['description_xhtml'];
+            $fresh_cache = $this->page_cache[$page]['hash'] === $hash;
+        }
 
-                if ($have_quickbook && !$fresh_cache)
-                {
-                    $xml_filename = tempnam(sys_get_temp_dir(), 'boost-qbk-');
-                    try {
-                        echo "Converting ", $page, ":\n";
-                        BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
-                        $values = $bb_parser->parse($xml_filename);
-                        $page_data->load_boostbook_data($values);
-                        $description_xhtml = $values['description_xhtml'];
-                    } catch (Exception $e) {
-                        unlink($xml_filename);
-                        throw $e;
-                    }
-                    unlink($xml_filename);
+        if ($have_quickbook && !$fresh_cache)
+        {
+            $xml_filename = tempnam(sys_get_temp_dir(), 'boost-qbk-');
+            try {
+                echo "Converting ", $page, ":\n";
+                BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
+                $values = $bb_parser->parse($xml_filename);
+                $page_data->load_boostbook_data($values);
+                $description_xhtml = $values['description_xhtml'];
+            } catch (Exception $e) {
+                unlink($xml_filename);
+                throw $e;
+            }
+            unlink($xml_filename);
 
-                    $this->page_cache[$page] = array(
-                        'hash' => $hash,
-                        'description_xhtml' => $description_xhtml,
-                    );
-                    $fresh_cache = true;
-                }
+            $this->page_cache[$page] = array(
+                'hash' => $hash,
+                'description_xhtml' => $description_xhtml,
+            );
+            $fresh_cache = true;
+        }
 
-                if (!$description_xhtml) {
-                    echo "Unable to generate page for {$page}.\n";
-                    return false;
-                }
+        if (!$description_xhtml) {
+            echo "Unable to generate page for {$page}.\n";
+            return false;
+        }
 
-                if (!$fresh_cache) {
-                    // If we have a dated cache entry, and aren't able to
-                    // rebuild it, continue using the current entry, but
-                    // don't change the page state - it will try
-                    // again on the next run.
-                    echo "Using old cached entry for {$page}.\n";
-                }
+        if (!$fresh_cache) {
+            // If we have a dated cache entry, and aren't able to
+            // rebuild it, continue using the current entry, but
+            // don't change the page state - it will try
+            // again on the next run.
+            echo "Using old cached entry for {$page}.\n";
+        }
 
-                // Set the path where the page should be built.
-                // This can only be done after the quickbook file has been converted,
-                // as the page id is based on the file contents.
+        // Set the path where the page should be built.
+        // This can only be done after the quickbook file has been converted,
+        // as the page id is based on the file contents.
 
-                if (!$page_data->location) {
-                    $location_data = $this->get_page_location_data($page_data->qbk_file);
-                    $page_data->location = "{$location_data['destination']}/{$page_data->id}.html";
-                }
+        if (!$page_data->location) {
+            $location_data = $this->get_page_location_data($page_data->qbk_file);
+            $page_data->location = "{$location_data['destination']}/{$page_data->id}.html";
+        }
 
-                // Transform links in description
+        // Transform links in description
 
-                if (($page_data->get_release_status() === 'dev' ||
-                        $page_data->get_release_status() === 'beta') &&
-                    $page_data->get_documentation()
-                ) {
-                    $doc_prefix = rtrim($page_data->get_documentation(), '/');
-                    $description_xhtml = BoostSiteTools::transform_links_regex($description_xhtml,
-                        '@^(?=/libs/|/doc/html/)@', $doc_prefix);
+        if (($page_data->get_release_status() === 'dev' ||
+            $page_data->get_release_status() === 'beta') &&
+            $page_data->get_documentation()
+        ) {
+            $doc_prefix = rtrim($page_data->get_documentation(), '/');
+            $description_xhtml = BoostSiteTools::transform_links_regex($description_xhtml,
+                '@^(?=/libs/|/doc/html/)@', $doc_prefix);
 
-                    $version = BoostWebsite::array_get($page_data->release_data, 'version');
-                    if ($version && $version->is_numbered_release()) {
-                        $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
-                        $description_xhtml = BoostSiteTools::transform_links_regex($description_xhtml,
-                            '@^'.preg_quote($final_documentation, '@').'(?=/)@', $doc_prefix);
-                    }
-                }
+            $version = BoostWebsite::array_get($page_data->release_data, 'version');
+            if ($version && $version->is_numbered_release()) {
+                $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
+                $description_xhtml = BoostSiteTools::transform_links_regex($description_xhtml,
+                    '@^'.preg_quote($final_documentation, '@').'(?=/)@', $doc_prefix);
+            }
+        }
 
-                $description_xhtml = BoostSiteTools::trim_lines($description_xhtml);
-                $page_data->fresh_cache = $fresh_cache;
-                $page_data->description_xml = $description_xhtml;
-                return true;
+        $description_xhtml = BoostSiteTools::trim_lines($description_xhtml);
+        $page_data->fresh_cache = $fresh_cache;
+        $page_data->description_xml = $description_xhtml;
+        return true;
     }
 
     function generate_quickbook_page($page, $page_data) {
-                $template_vars = array(
-                    'history_style' => '',
-                    'full_title_xml' => $page_data->full_title_xml(),
-                    'title_xml' => $page_data->title_xml,
-                    'note_xml' => '',
-                    'web_date' => $page_data->web_date(),
-                    'documentation_para' => '',
-                    'download_table' => $page_data->download_table(),
-                    'description_xml' => $page_data->description_xml,
-                );
+        $template_vars = array(
+            'history_style' => '',
+            'full_title_xml' => $page_data->full_title_xml(),
+            'title_xml' => $page_data->title_xml,
+            'note_xml' => '',
+            'web_date' => $page_data->web_date(),
+            'documentation_para' => '',
+            'download_table' => $page_data->download_table(),
+            'description_xml' => $page_data->description_xml,
+        );
 
-                if ($page_data->get_release_status() === 'dev') {
-                    $template_vars['note_xml'] = <<<EOL
+        if ($page_data->get_release_status() === 'dev') {
+            $template_vars['note_xml'] = <<<EOL
                         <div class="section-alert"><p>Note: This release is
                         still under development. Please don't use this page as
                         a source of information, it's here for development
                         purposes only. Everything is subject to
                         change.</p></div>
 EOL;
-                }
+        }
 
-                if ($page_data->get_documentation()) {
-                    $template_vars['documentation_para'] = '              <p><a href="'.html_encode($page_data->get_documentation()).'">Documentation</a>';
-                }
+        if ($page_data->get_documentation()) {
+            $template_vars['documentation_para'] = '              <p><a href="'.html_encode($page_data->get_documentation()).'">Documentation</a>';
+        }
 
-                if (strpos($page_data->location, 'users/history/') === 0) {
-                    $template_vars['history_style'] = <<<EOL
+        if (strpos($page_data->location, 'users/history/') === 0) {
+            $template_vars['history_style'] = <<<EOL
 
   <style type="text/css">
 /*<![CDATA[*/
@@ -364,12 +364,12 @@ EOL;
   </style>
 
 EOL;
-                }
+        }
 
-                self::write_template(
-                    "{$this->root}/{$page_data->location}",
-                    __DIR__."/templates/entry.php",
-                    $template_vars);
+        self::write_template(
+            "{$this->root}/{$page_data->location}",
+            __DIR__."/templates/entry.php",
+            $template_vars);
     }
 
     static function write_template($_location, $_template, $_vars) {
