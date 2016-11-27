@@ -224,11 +224,22 @@ class BoostPages {
             $have_quickbook = false;
         }
 
+        foreach ($this->pages as $page => $page_data) {
+            if ($page_data->page_state || $refresh) {
+                if ($this->convert_quickbook_page($page, $page_data, $have_quickbook)) {
+                    $this->generate_quickbook_page($page, $page_data);
+
+                    if ($page_data->fresh_cache) {
+                        $page_data->page_state = null;
+                    }
+                }
+            }
+        }
+    }
+
+    function convert_quickbook_page($page, $page_data, $have_quickbook) {
         $bb_parser = new BoostBookParser();
 
-        foreach ($this->pages as $page => $page_data) {
-
-            if ($page_data->page_state || $refresh) {
                 // Hash the quickbook source
 
                 $hash = hash('sha256', str_replace("\r\n", "\n",
@@ -251,7 +262,7 @@ class BoostPages {
                         echo "Converting ", $page, ":\n";
                         BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
                         $values = $bb_parser->parse($xml_filename);
-                        $page_data->load_boostbook_data($values, $refresh);
+                        $page_data->load_boostbook_data($values);
                         $description_xhtml = $values['description_xhtml'];
                     } catch (Exception $e) {
                         unlink($xml_filename);
@@ -268,7 +279,7 @@ class BoostPages {
 
                 if (!$description_xhtml) {
                     echo "Unable to generate page for {$page}.\n";
-                    continue;
+                    return false;
                 }
 
                 if (!$fresh_cache) {
@@ -307,10 +318,12 @@ class BoostPages {
                 }
 
                 $description_xhtml = BoostSiteTools::trim_lines($description_xhtml);
+                $page_data->fresh_cache = $fresh_cache;
                 $page_data->description_xml = $description_xhtml;
+                return true;
+    }
 
-                // Generate the various pages.
-
+    function generate_quickbook_page($page, $page_data) {
                 $template_vars = array(
                     'history_style' => '',
                     'full_title_xml' => $page_data->full_title_xml(),
@@ -357,12 +370,6 @@ EOL;
                     "{$this->root}/{$page_data->location}",
                     __DIR__."/templates/entry.php",
                     $template_vars);
-
-                if ($fresh_cache) {
-                    $page_data->page_state = null;
-                }
-            }
-        }
     }
 
     static function write_template($_location, $_template, $_vars) {
@@ -384,6 +391,7 @@ class BoostPages_Page {
     var $qbk_hash;
 
     // Extra state data that isn't saved.
+    var $fresh_cache = false; // Is the page markup in the cache up to date.
     var $description_xml = null; // Page markup, after transforming for current state.
     var $release_data = null;    // Status of release where appropriate.
 
@@ -437,7 +445,7 @@ class BoostPages_Page {
         );
     }
 
-    function load_boostbook_data($values, $refresh = false) {
+    function load_boostbook_data($values) {
         $this->title_xml = BoostSiteTools::trim_lines($values['title_xhtml']);
         $this->purpose_xml = BoostSiteTools::trim_lines($values['purpose_xhtml']);
         $this->notice_xml = BoostSiteTools::trim_lines($values['notice_xhtml']);
