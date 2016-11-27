@@ -119,32 +119,49 @@ class BoostPages {
     }
 
     function add_qbk_file($qbk_file, $section) {
-        $release_data = $this->get_release_data($qbk_file, $section);
+        $record = null;
 
+        if (!isset($this->pages[$qbk_file])) {
+            $release_data = $this->get_release_data($qbk_file, $section);
+            $record = new BoostPages_Page($qbk_file, $release_data);
+            $record->section = $section;
+            $this->pages[$qbk_file] = $record;
+        } else {
+            $record = $this->pages[$qbk_file];
+        }
+
+        // Note: The release data is a bit off for 'in progress' pages.
         $context = hash_init('sha256');
         hash_update($context, json_encode($this->normalize_release_data(
-            $release_data, $qbk_file, $section)));
+            $record->release_data, $qbk_file, $section)));
         hash_update($context, str_replace("\r\n", "\n",
             file_get_contents("{$this->root}/{$qbk_file}")));
         $qbk_hash = hash_final($context);
 
-        $record = null;
-
-        if (!isset($this->pages[$qbk_file])) {
-            $this->pages[$qbk_file] = $record = new BoostPages_Page($qbk_file, $release_data);
-        } else {
-            $record = $this->pages[$qbk_file];
-            if ($record->qbk_hash == $qbk_hash) {
-                return;
-            }
-            if ($record->page_state != 'new') {
+        switch($record->get_release_status()) {
+        case 'released':
+        case null:
+            if ($record->qbk_hash != $qbk_hash && $record->page_state != 'new') {
                 $record->page_state = 'changed';
             }
+            break;
+        case 'beta':
+        case 'dev':
+            // Beta release notes are only rebuilt when explicitly asked for.
+            // TODO: Rebuild beta notes when release data changes?
+            //       Maybe store snapshot of beta release note in
+            //       page cache.
+            break;
+        default:
+            // Unknown release status.
+            assert(false);
         }
 
-        $record->qbk_hash = $qbk_hash;
-        $record->section = $section;
-        $record->last_modified = new DateTime();
+        if ($record->page_state) {
+            $record->qbk_hash = $qbk_hash;
+            $record->section = $section;
+            $record->last_modified = new DateTime();
+        }
     }
 
     // Make the release data look like it used to look in order to get a consistent
@@ -224,7 +241,33 @@ class BoostPages {
             $have_quickbook = false;
         }
 
+        $in_progress_release_notes = array();
+        $in_progress_failed = false;
         foreach ($this->pages as $page => $page_data) {
+            // TODO: There's a bug here, when rebuilding using the page cache
+            // it takes the page details already stored in dev_page_data,
+            // but those are the details from the release, which might not
+            // exist. Solution is either to store more data in the cache,
+            // or to store the values generated here.
+            if ($page_data->dev_data) {
+                $dev_page_data = clone($page_data);
+                $dev_page_data->release_data = $dev_page_data->dev_data;
+
+                if (!$this->convert_quickbook_page($page, $dev_page_data, $have_quickbook)) {
+                    echo "Unable to generate In Progress release notes\n";
+                    $in_progress_failed = true;
+                }
+                else {
+                    $in_progress_release_notes[] = array(
+                        'full_title_xml' => $dev_page_data->title_xml,
+                        'web_date' => 'In Progress',
+                        'download_table' => $dev_page_data->download_table(),
+                        'description_xml' => $dev_page_data->description_xml,
+                    );
+                }
+            }
+
+            // TODO: Refresh should ignore beta/dev releases?
             if ($page_data->page_state || $refresh) {
                 if ($this->convert_quickbook_page($page, $page_data, $have_quickbook)) {
                     $this->generate_quickbook_page($page, $page_data);
@@ -234,6 +277,16 @@ class BoostPages {
                     }
                 }
             }
+        }
+
+        if (!$in_progress_failed) {
+            $template_vars = array(
+                'releases' => $in_progress_release_notes,
+            );
+            self::write_template(
+                "{$this->root}/users/history/in_progress.html",
+                __DIR__."/templates/in_progress.php",
+                $template_vars);
         }
     }
 
@@ -335,16 +388,6 @@ class BoostPages {
             'description_xml' => $page_data->description_xml,
         );
 
-        if ($page_data->get_release_status() === 'dev') {
-            $template_vars['note_xml'] = <<<EOL
-                        <div class="section-alert"><p>Note: This release is
-                        still under development. Please don't use this page as
-                        a source of information, it's here for development
-                        purposes only. Everything is subject to
-                        change.</p></div>
-EOL;
-        }
-
         if ($page_data->get_documentation()) {
             $template_vars['documentation_para'] = '              <p><a href="'.html_encode($page_data->get_documentation()).'">Documentation</a>';
         }
@@ -393,11 +436,17 @@ class BoostPages_Page {
     // Extra state data that isn't saved.
     var $fresh_cache = false; // Is the page markup in the cache up to date.
     var $description_xml = null; // Page markup, after transforming for current state.
+    var $is_release = false;     // Is this a relase?
     var $release_data = null;    // Status of release where appropriate.
+    var $dev_data = null; // Status of release in development.
 
-    function __construct($qbk_file, $release_data = null, $attrs = array('page_state' => 'new')) {
+    function __construct($qbk_file, $release_data = null, $attrs = array()) {
         $this->qbk_file = $qbk_file;
-        $this->release_data = $release_data;
+        if ($release_data) {
+            $this->is_release = true;
+            $this->release_data = BoostWebsite::array_get($release_data, 'release');
+            $this->dev_data = BoostWebsite::array_get($release_data, 'dev');
+        }
 
         $this->section = BoostWebsite::array_get($attrs, 'section');
         $this->page_state = BoostWebsite::array_get($attrs, 'page_state');
@@ -641,6 +690,9 @@ class BoostPages_Page {
         if ($this->page_state == 'new') {
             return false;
         }
+        if ($this->is_release && !$this->release_data) {
+            return false;
+        }
         if (!is_null($state) && $this->get_release_status() !== $state) {
             return false;
         }
@@ -650,21 +702,24 @@ class BoostPages_Page {
     function get_release_status() {
         switch ($this->section) {
         case 'history':
-            if (is_null($this->release_data)) {
+            if (!$this->is_release) {
                 return null;
+            }
+
+            if (!$this->release_data) {
+                return 'dev';
             }
 
             if (array_key_exists('release_status', $this->release_data)) {
                 return $this->release_data['release_status'];
             }
 
-            if (array_key_exists('version', $this->release_data)) {
-                if ($this->release_data['version']->is_numbered_release()) {
-                    return $this->release_data['version']->is_beta() ? 'beta' : 'released';
-                }
+            if ($this->release_data['version']->is_numbered_release()) {
+                return $this->release_data['version']->is_beta() ? 'beta' : 'released';
             }
-
-            return 'dev';
+            else {
+                return 'dev';
+            }
         case 'downloads':
             return 'released';
         default:

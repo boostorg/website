@@ -28,6 +28,17 @@ function main() {
     $releases = new BoostReleases(__DIR__.'/../generated/state/release.txt');
     $releases->setReleaseStatus('boost', $version, 'released');
     $releases->save();
+
+    // Trigger a rebuild of existing release notes.
+    $boost_site_tools = new BoostSiteTools(__DIR__.'/..');
+    $pages = $boost_site_tools->load_pages();
+    foreach ($pages->pages as $page) {
+        if (!$page->release_data) { continue; }
+        if ($page->release_data['version']->base_version() === $version->base_version()) {
+            $page->page_state = 'changed';
+        }
+    }
+    $pages->save();
 }
 
 main();

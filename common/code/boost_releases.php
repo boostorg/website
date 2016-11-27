@@ -104,32 +104,46 @@ class BoostReleases {
     function get_latest_release_data($release_name, $version) {
         $version = BoostVersion::from($version);
         $key = "{$release_name}-{$version->base_version()}";
-        if (array_key_exists($key, $this->release_data)) {
-            $chosen_is_dev = true;
-            $chosen_version = null;
-            $release_data = null;
 
-            foreach ($this->release_data[$key] as $version2 => $data) {
-                $version_object = BoostVersion::from($version2);
-                $is_dev = array_key_exists('release_status', $data) && $data['release_status'] == 'dev';
+        $dev_data = null;
+        $dev_version = null;
+        $release_data = null;
+        $release_version = null;
 
-                if (!$chosen_version ||
-                    ($chosen_is_dev && !$is_dev) ||
-                    ($chosen_is_dev == $is_dev && $version_object->compare($chosen_version) > 0))
-                {
-                    $chosen_is_dev = $is_dev;
-                    $chosen_version = $version_object;
+        // Search for the latest dev and release that matches this page.
+        // Q: I don't think there should ever be more than one dev
+        //    version, but if there is, does it make any sense to use
+        //    the last one?
+        foreach (BoostWebsite::array_get($this->release_data, $key, array()) as $version2 => $data) {
+            $version_object = BoostVersion::from($version2);
+
+            if (array_key_exists('release_status', $data) && $data['release_status'] == 'dev') {
+                if (!$dev_version || $version_object->compare($dev_version) > 0) {
+                    $dev_version = $version_object;
+                    $dev_data = $data;
+                }
+            }
+            else {
+                if (!$release_version || $version_object->compare($release_version) > 0) {
+                    $release_version = $version_object;
                     $release_data = $data;
                 }
             }
+        }
 
-            assert($release_data);
-            return $release_data;
+        // If there is going to be another release of this base version, then
+        // create dev data if we don't already have any.
+        // TODO: prerelease is wrong after a beta. Maybe just use the base
+        // version?
+        if (!$dev_data && (!$release_version || !$release_version->is_final_release())) {
+            $dev_data = $this->default_release_data($release_name,
+                    BoostVersion::from("{$version->base_version()} prerelease"));
         }
-        else {
-            return $this->default_release_data($release_name,
-                BoostVersion::from("{$version->base_version()} prerelease"));
-        }
+
+        $result = array();
+        if ($dev_data) { $result['dev'] = $dev_data; }
+        if ($release_data) { $result['release'] = $release_data; }
+        return $result;
     }
 
     function default_release_data($release_name, $version) {

@@ -55,21 +55,23 @@ class BoostSiteTools {
                 if ($page->is_published()) {
                     $all_versions[] = $page;
 
-                    if (is_null($page->release_data)) {
+                    if (!$page->is_release) {
                         $history_pages[] = $page;
                         $news[] = $page;
                     }
+                    else {
+                        if ($page->is_published('released')) {
+                            $all_downloads[] = $page;
+                            $history_pages[] = $page;
+                            $released_versions[] = $page;
+                            $news[] = $page;
+                        }
+                        else if ($page->is_published('beta')) {
+                            $beta_versions[] = $page;
+                        }
+                    }
                 }
 
-                if ($page->is_published('released')) {
-                    $all_downloads[] = $page;
-                    $history_pages[] = $page;
-                    $released_versions[] = $page;
-                    $news[] = $page;
-                }
-                else if ($page->is_published('beta')) {
-                    $beta_versions[] = $page;
-                }
                 break;
             case 'downloads':
                 if ($page->is_published('released')) {
