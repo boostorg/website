@@ -244,11 +244,6 @@ class BoostPages {
         $in_progress_release_notes = array();
         $in_progress_failed = false;
         foreach ($this->pages as $page => $page_data) {
-            // TODO: There's a bug here, when rebuilding using the page cache
-            // it takes the page details already stored in dev_page_data,
-            // but those are the details from the release, which might not
-            // exist. Solution is either to store more data in the cache,
-            // or to store the values generated here.
             if ($page_data->dev_data) {
                 $dev_page_data = clone($page_data);
                 $dev_page_data->release_data = $dev_page_data->dev_data;
@@ -301,10 +296,15 @@ class BoostPages {
         // Get the page from quickbook/read from cache
 
         $fresh_cache = false;
+        $boostbook_values = null;
 
         if (array_key_exists($page, $this->page_cache))
         {
-            $description_xhtml = $this->page_cache[$page]['description_xhtml'];
+            $boostbook_values = $this->page_cache[$page];
+            $description_xhtml = $boostbook_values['description_xhtml'];
+            if (array_key_exists('title_xml', $boostbook_values)) {
+                $page_data->load_boostbook_data($boostbook_values);
+            }
             $fresh_cache = $this->page_cache[$page]['hash'] === $hash;
         }
 
@@ -315,18 +315,25 @@ class BoostPages {
                 echo "Converting ", $page, ":\n";
                 BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
                 $values = $bb_parser->parse($xml_filename);
-                $page_data->load_boostbook_data($values);
-                $description_xhtml = $values['description_xhtml'];
+                $boostbook_values = array(
+                    'hash' => $hash,
+                    'title_xml' => BoostSiteTools::trim_lines($values['title_xhtml']),
+                    'purpose_xml' => BoostSiteTools::trim_lines($values['purpose_xhtml']),
+                    'notice_xml' => BoostSiteTools::trim_lines($values['notice_xhtml']),
+                    'notice_url' => $values['notice_url'],
+                    'pub_date' => $values['pub_date'],
+                    'id' => $values['id'],
+                    'description_xhtml' => BoostSiteTools::trim_lines($values['description_xhtml']),
+                );
+                $page_data->load_boostbook_data($boostbook_values);
+                $description_xhtml = $boostbook_values['description_xhtml'];
             } catch (Exception $e) {
                 unlink($xml_filename);
                 throw $e;
             }
             unlink($xml_filename);
 
-            $this->page_cache[$page] = array(
-                'hash' => $hash,
-                'description_xhtml' => $description_xhtml,
-            );
+            $this->page_cache[$page] = $boostbook_values;
             $fresh_cache = true;
         }
 
@@ -495,11 +502,10 @@ class BoostPages_Page {
     }
 
     function load_boostbook_data($values) {
-        $this->title_xml = BoostSiteTools::trim_lines($values['title_xhtml']);
-        $this->purpose_xml = BoostSiteTools::trim_lines($values['purpose_xhtml']);
-        $this->notice_xml = BoostSiteTools::trim_lines($values['notice_xhtml']);
+        $this->title_xml = $values['title_xml'];
+        $this->purpose_xml = $values['purpose_xml'];
+        $this->notice_xml = $values['notice_xml'];
         $this->notice_url = $values['notice_url'];
-
         $this->pub_date = $values['pub_date'];
         $this->id = $values['id'];
         if (!$this->id) {
