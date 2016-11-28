@@ -298,14 +298,20 @@ class BoostPages {
         $fresh_cache = false;
         $boostbook_values = null;
 
-        if (array_key_exists($page, $this->page_cache))
+        // Key for the page cache
+        $page_cache_key = $page;
+        if ($page_data->get_release_status() === 'beta') {
+            $page_cache_key = "{$page}:{$page_data->release_data['version']}";
+        }
+
+        if (array_key_exists($page_cache_key, $this->page_cache))
         {
-            $boostbook_values = $this->page_cache[$page];
+            $boostbook_values = $this->page_cache[$page_cache_key];
             $description_xhtml = $boostbook_values['description_xhtml'];
             if (array_key_exists('title_xml', $boostbook_values)) {
                 $page_data->load_boostbook_data($boostbook_values);
             }
-            $fresh_cache = $this->page_cache[$page]['hash'] === $hash;
+            $fresh_cache = $this->page_cache[$page_cache_key]['hash'] === $hash;
         }
 
         if ($have_quickbook && !$fresh_cache)
@@ -333,7 +339,7 @@ class BoostPages {
             }
             unlink($xml_filename);
 
-            $this->page_cache[$page] = $boostbook_values;
+            $this->page_cache[$page_cache_key] = $boostbook_values;
             $fresh_cache = true;
         }
 
