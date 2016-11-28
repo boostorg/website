@@ -130,27 +130,35 @@ class BoostPages {
             $record = $this->pages[$qbk_file];
         }
 
-        // Note: The release data is a bit off for 'in progress' pages.
-        $context = hash_init('sha256');
-        hash_update($context, json_encode($this->normalize_release_data(
-            $record->release_data, $qbk_file, $section)));
-        hash_update($context, str_replace("\r\n", "\n",
-            file_get_contents("{$this->root}/{$qbk_file}")));
-        $qbk_hash = hash_final($context);
-
         switch($record->get_release_status()) {
         case 'released':
         case null:
+            $context = hash_init('sha256');
+            hash_update($context, json_encode($this->normalize_release_data(
+                $record->release_data, $qbk_file, $section)));
+            hash_update($context, str_replace("\r\n", "\n",
+                file_get_contents("{$this->root}/{$qbk_file}")));
+            $qbk_hash = hash_final($context);
+
             if ($record->qbk_hash != $qbk_hash && $record->page_state != 'new') {
                 $record->page_state = 'changed';
             }
             break;
         case 'beta':
+            // For beta files, don't hash the page source as we don't want to
+            // rebuild when it updates.
+            $context = hash_init('sha256');
+            hash_update($context, json_encode($this->normalize_release_data(
+                $record->release_data, $qbk_file, $section)));
+            $qbk_hash = hash_final($context);
+
+            if ($record->qbk_hash != $qbk_hash && !$record->page_state) {
+                $record->page_state = 'release-data-changed';
+            }
+            break;
         case 'dev':
-            // Beta release notes are only rebuilt when explicitly asked for.
-            // TODO: Rebuild beta notes when release data changes?
-            //       Maybe store snapshot of beta release note in
-            //       page cache.
+            // Not building anything for dev entries (TODO: Maybe delete a page
+            // if it exists??? Not sure how that would happen).
             break;
         default:
             // Unknown release status.
@@ -247,6 +255,7 @@ class BoostPages {
             if ($page_data->dev_data) {
                 $dev_page_data = clone($page_data);
                 $dev_page_data->release_data = $dev_page_data->dev_data;
+                $dev_page_data->page_state = 'changed';
 
                 if (!$this->convert_quickbook_page($page, $dev_page_data, $have_quickbook)) {
                     echo "Unable to generate In Progress release notes\n";
@@ -289,29 +298,34 @@ class BoostPages {
         $bb_parser = new BoostBookParser();
 
         // Hash the quickbook source
-
         $hash = hash('sha256', str_replace("\r\n", "\n",
             file_get_contents("{$this->root}/{$page}")));
 
         // Get the page from quickbook/read from cache
-
         $fresh_cache = false;
         $boostbook_values = null;
 
-        // Key for the page cache
-        $page_cache_key = $page;
-        if ($page_data->get_release_status() === 'beta') {
+        switch ($page_data->get_release_status()) {
+        case 'beta':
             $page_cache_key = "{$page}:{$page_data->release_data['version']}";
-        }
-
-        if (array_key_exists($page_cache_key, $this->page_cache))
-        {
-            $boostbook_values = $this->page_cache[$page_cache_key];
-            $description_xhtml = $boostbook_values['description_xhtml'];
-            if (array_key_exists('title_xml', $boostbook_values)) {
-                $page_data->load_boostbook_data($boostbook_values);
+            list($boostbook_values, $fresh_cache) = $this->load_from_cache($page_cache_key, $hash);
+            // For page state 'release data changed' we want to use the cached page regardless,
+            // so mark it as fresh.
+            if ($boostbook_values && $page_data->page_state === 'release-data-changed') { $fresh_cache = true; }
+            // If the cached beta notes aren't fresh, then use the dev notes which might be,
+            // and should at least be more up to date.
+            if (!$fresh_cache) {
+                list($alt_boostbook_values, $alt_fresh_cache) = $this->load_from_cache($page, $hash);
+                if ($alt_boostbook_values) {
+                    $boostbook_values = $alt_boostbook_values;
+                    $fresh_cache = $alt_fresh_cache;
+                    $this->page_cache[$page_cache_key] = $alt_boostbook_values;
+                }
             }
-            $fresh_cache = $this->page_cache[$page_cache_key]['hash'] === $hash;
+            break;
+        default:
+            $page_cache_key = $page;
+            list($boostbook_values, $fresh_cache) = $this->load_from_cache($page_cache_key, $hash);
         }
 
         if ($have_quickbook && !$fresh_cache)
@@ -331,8 +345,6 @@ class BoostPages {
                     'id' => $values['id'],
                     'description_xhtml' => BoostSiteTools::trim_lines($values['description_xhtml']),
                 );
-                $page_data->load_boostbook_data($boostbook_values);
-                $description_xhtml = $boostbook_values['description_xhtml'];
             } catch (Exception $e) {
                 unlink($xml_filename);
                 throw $e;
@@ -343,7 +355,13 @@ class BoostPages {
             $fresh_cache = true;
         }
 
-        if (!$description_xhtml) {
+        if ($boostbook_values) {
+            $description_xhtml = $boostbook_values['description_xhtml'];
+            if (array_key_exists('title_xml', $boostbook_values)) {
+                $page_data->load_boostbook_data($boostbook_values);
+            }
+        }
+        else {
             echo "Unable to generate page for {$page}.\n";
             return false;
         }
@@ -387,6 +405,17 @@ class BoostPages {
         $page_data->fresh_cache = $fresh_cache;
         $page_data->description_xml = $description_xhtml;
         return true;
+    }
+
+    function load_from_cache($page_cache_key, $hash) {
+        if (array_key_exists($page_cache_key, $this->page_cache)) {
+            return array(
+                $this->page_cache[$page_cache_key],
+                $this->page_cache[$page_cache_key]['hash'] === $hash);
+        }
+        else {
+            return array(null, false);
+        }
     }
 
     function generate_quickbook_page($page, $page_data) {
