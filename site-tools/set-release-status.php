@@ -36,6 +36,10 @@ function main() {
         if (!$page->release_data) { continue; }
         if ($page->release_data['version']->base_version() === $version->base_version()) {
             $page->page_state = 'changed';
+            // Set qbk_hash to null to ensure this definitely looks like an
+            // actual change on the next run. Might be unnecessary, certainly
+            // would be if beta releases had a better hash.
+            $page->qbk_hash = null;
         }
     }
     $pages->save();

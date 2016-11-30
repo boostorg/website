@@ -166,9 +166,11 @@ class BoostPages {
         }
 
         if ($record->page_state) {
-            $record->qbk_hash = $qbk_hash;
             $record->section = $section;
-            $record->last_modified = new DateTime();
+            if ($record->qbk_hash != $qbk_hash) {
+                $record->qbk_hash = $qbk_hash;
+                $record->last_modified = new DateTime();
+            }
         }
     }
 
