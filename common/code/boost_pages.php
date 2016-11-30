@@ -257,11 +257,15 @@ class BoostPages {
                 $dev_page_data->release_data = $dev_page_data->dev_data;
                 $dev_page_data->page_state = 'changed';
 
-                if (!$this->convert_quickbook_page($page, $dev_page_data, $have_quickbook)) {
-                    echo "Unable to generate In Progress release notes\n";
+                list($boostbook_values, $fresh_cache) = $this->load_quickbook_page($page, $dev_page_data, $have_quickbook);
+
+                if (!$boostbook_values) {
+                    echo "Unable to generate 'In Progress' entry for {$page}.\n";
                     $in_progress_failed = true;
                 }
                 else {
+                    // Note: Don't really care if cache entry is fresh.
+                    $this->update_page_data_from_boostbook_values($page, $dev_page_data, $boostbook_values);
                     $in_progress_release_notes[] = array(
                         'full_title_xml' => $dev_page_data->title_xml,
                         'web_date' => 'In Progress',
@@ -273,10 +277,22 @@ class BoostPages {
 
             // TODO: Refresh should ignore beta/dev releases?
             if ($page_data->page_state || $refresh) {
-                if ($this->convert_quickbook_page($page, $page_data, $have_quickbook)) {
-                    $this->generate_quickbook_page($page, $page_data);
+                list($boostbook_values, $fresh_cache) = $this->load_quickbook_page($page, $page_data, $have_quickbook);
 
-                    if ($page_data->fresh_cache) {
+                if (!$boostbook_values) {
+                    echo "Unable to generate page for {$page}.\n";
+                }
+                else {
+                    if (!$fresh_cache) {
+                        // If we have a dated cache entry, and aren't able to
+                        // rebuild it, continue using the current entry, but
+                        // don't change the page state - it will try
+                        // again on the next run.
+                        echo "Using old cached entry for {$page}.\n";
+                    }
+                    $this->update_page_data_from_boostbook_values($page, $page_data, $boostbook_values);
+                    $this->generate_quickbook_page($page, $page_data);
+                    if ($fresh_cache) {
                         $page_data->page_state = null;
                     }
                 }
@@ -292,27 +308,6 @@ class BoostPages {
                 __DIR__."/templates/in_progress.php",
                 $template_vars);
         }
-    }
-
-    function convert_quickbook_page($page, $page_data, $have_quickbook) {
-        list($boostbook_values, $fresh_cache) = $this->load_quickbook_page($page, $page_data, $have_quickbook);
-
-        if (!$boostbook_values) {
-            echo "Unable to generate page for {$page}.\n";
-            return false;
-        }
-
-        if (!$fresh_cache) {
-            // If we have a dated cache entry, and aren't able to
-            // rebuild it, continue using the current entry, but
-            // don't change the page state - it will try
-            // again on the next run.
-            echo "Using old cached entry for {$page}.\n";
-        }
-
-        $this->update_page_data_from_boostbook_values($page, $page_data, $boostbook_values);
-        $page_data->fresh_cache = $fresh_cache;
-        return true;
     }
 
     function load_quickbook_page($page, $page_data, $have_quickbook) {
@@ -485,7 +480,6 @@ class BoostPages_Page {
     var $qbk_hash;
 
     // Extra state data that isn't saved.
-    var $fresh_cache = false; // Is the page markup in the cache up to date.
     var $description_xml = null; // Page markup, after transforming for current state.
     var $is_release = false;     // Is this a relase?
     var $release_data = null;    // Status of release where appropriate.
