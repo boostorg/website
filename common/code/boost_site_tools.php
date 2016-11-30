@@ -123,27 +123,27 @@ class BoostSiteTools {
         if (!$refresh) {
             $rss = new BoostRss($this->root, "generated/state/rss-items.txt");
 
-            $rss->generate_rss_feed(array(
+            $rss->generate_rss_feed($pages, array(
                 'path' => 'generated/downloads.rss',
                 'link' => 'users/download/',
                 'title' => 'Boost Downloads',
                 'pages' => $all_downloads,
                 'count' => 3
             ));
-            $rss->generate_rss_feed(array(
+            $rss->generate_rss_feed($pages, array(
                 'path' => 'generated/history.rss',
                 'link' => 'users/history/',
                 'title' => 'Boost History',
                 'pages' => $history_pages,
             ));
-            $rss->generate_rss_feed(array(
+            $rss->generate_rss_feed($pages, array(
                 'path' => 'generated/news.rss',
                 'link' => 'users/news/',
                 'title' => 'Boost News',
                 'pages' => $news,
                 'count' => 5
             ));
-            $rss->generate_rss_feed(array(
+            $rss->generate_rss_feed($pages, array(
                 'path' => 'generated/dev.rss',
                 'link' => '',
                 'title' => 'Release notes for work in progress boost',

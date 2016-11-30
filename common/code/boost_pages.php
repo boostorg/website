@@ -318,6 +318,7 @@ class BoostPages {
                     $this->update_page_data_from_boostbook_values($page, $page_data, $boostbook_values);
                     $this->generate_quickbook_page($page, $page_data);
                     $page_data->page_state = null;
+                    ++$page_data->update_count;
                 }
             }
             else if ($page_data->page_state) {
@@ -338,6 +339,7 @@ class BoostPages {
                     $this->generate_quickbook_page($page, $page_data);
                     if ($fresh_cache) {
                         $page_data->page_state = null;
+                        ++$page_data->update_count;
                         if ($page_data->get_release_status() == 'beta') {
                             $this->page_cache["{$page}:{$page_data->release_data['version']}"] =
                                 $boostbook_values;
@@ -505,7 +507,7 @@ class BoostPages_Page {
     var $section, $page_state, $location;
     var $id, $title_xml, $purpose_xml, $notice_xml, $notice_url;
     var $last_modified, $pub_date;
-    var $qbk_hash;
+    var $qbk_hash, $update_count;
 
     // Extra state data that isn't saved.
     var $description_xml = null; // Page markup, after transforming for current state.
@@ -532,6 +534,7 @@ class BoostPages_Page {
         $this->last_modified = BoostWebsite::array_get($attrs, 'last_modified');
         $this->pub_date = BoostWebsite::array_get($attrs, 'pub_date');
         $this->qbk_hash = BoostWebsite::array_get($attrs, 'qbk_hash');
+        $this->update_count = BoostWebsite::array_get($attrs, 'update_count', 0);
 
         // Ensure that pub_date as last_modified are DateTimes.
         // TODO: Probably not needed any more.
@@ -563,7 +566,8 @@ class BoostPages_Page {
             'notice_url' => $this->notice_url,
             'last_modified' => $this->last_modified,
             'pub_date' => $this->pub_date,
-            'qbk_hash' => $this->qbk_hash
+            'qbk_hash' => $this->qbk_hash,
+            'update_count' => $this->update_count,
         );
     }
 

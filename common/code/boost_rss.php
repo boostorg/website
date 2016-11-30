@@ -15,6 +15,7 @@ class BoostRss {
         if (is_file($this->rss_state_path)) {
             $this->rss_items = BoostState::load($this->rss_state_path);
 
+            // Temporary code to convert last_modified to date.
             foreach($this->rss_items as &$item) {
                 if (!empty($item['last_modified']) && is_numeric($item['last_modified'])) {
                     $item['last_modified'] = new DateTime("@{$item['last_modified']}");
@@ -24,7 +25,7 @@ class BoostRss {
         }
     }
 
-    function generate_rss_feed($feed_data) {
+    function generate_rss_feed($pages, $feed_data) {
         $feed_file = $feed_data['path'];
         $feed_pages = $feed_data['pages'];
         $rss_feed = $this->rss_prefix($feed_file, $feed_data);
@@ -33,21 +34,29 @@ class BoostRss {
         }
 
         foreach ($feed_pages as $qbk_page) {
-            $item_xml = null;
+            $rss_item = BoostWebsite::array_get($this->rss_items, $qbk_page->qbk_file);
+            if (!$rss_item || BoostWebsite::array_get($rss_item, 'update_count', 0) < $qbk_page->update_count) {
+                // This can happen if an item is added to a feed separately
+                // from being built.
+                if (!$qbk_page->description_xml) {
+                    $boostbook_values = BoostWebsite::array_get($pages->page_cache, $qbk_page->qbk_file);
+                    if ($boostbook_values) {
+                        $pages->update_page_data_from_boostbook_values($qbk_page->qbk_file, $qbk_page, $boostbook_values);
+                    }
+                }
 
-            // TODO: Need a better way to telll when to update an RSS item.
-            //       Maybe by tracking qbk_hash?
-            if ($qbk_page->description_xml) {
-                $item = $this->generate_rss_item($qbk_page->qbk_file, $qbk_page);
+                if ($qbk_page->description_xml) {
+                    $rss_item = $this->generate_rss_item($qbk_page->qbk_file, $qbk_page);
+                    $rss_item['item'] = BoostSiteTools::trim_lines($rss_item['item']);
+                    $this->rss_items[$qbk_page->qbk_file] = $rss_item;
+                }
+                else {
+                    echo "No page contents for {$qbk_page->qbk_file}\n";
+                }
+            }
 
-                $item['item'] = BoostSiteTools::trim_lines($item['item']);
-                $this->rss_items[$qbk_page->qbk_file] = $item;
-
-                $rss_feed .= $item['item'];
-            } else if (isset($this->rss_items[$qbk_page->qbk_file])) {
-                $rss_feed .= $this->rss_items[$qbk_page->qbk_file]['item'];
-            } else {
-                echo "Missing entry for {$qbk_page->qbk_file}\n";
+            if ($rss_item) {
+                $rss_feed .= $rss_item['item'];
             }
         }
 
@@ -116,6 +125,7 @@ EOL;
             'item' => $xml,
             'quickbook' => $qbk_file,
             'last_modified' => $page->last_modified,
+            'update_count' => $page->update_count,
         ));
     }
 
