@@ -311,8 +311,6 @@ class BoostPages {
     }
 
     function load_quickbook_page($page, $page_data, $have_quickbook) {
-        $bb_parser = new BoostBookParser();
-
         // Hash the quickbook source
         $hash = hash('sha256', str_replace("\r\n", "\n",
             file_get_contents("{$this->root}/{$page}")));
@@ -346,32 +344,44 @@ class BoostPages {
 
         if ($have_quickbook && !$fresh_cache)
         {
-            $xml_filename = tempnam(sys_get_temp_dir(), 'boost-qbk-');
-            try {
-                echo "Converting ", $page, ":\n";
-                BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
-                $values = $bb_parser->parse($xml_filename);
-                $boostbook_values = array(
-                    'hash' => $hash,
-                    'title_xml' => BoostSiteTools::trim_lines($values['title_xhtml']),
-                    'purpose_xml' => BoostSiteTools::trim_lines($values['purpose_xhtml']),
-                    'notice_xml' => BoostSiteTools::trim_lines($values['notice_xhtml']),
-                    'notice_url' => $values['notice_url'],
-                    'pub_date' => $values['pub_date'],
-                    'id' => $values['id'],
-                    'description_xhtml' => BoostSiteTools::trim_lines($values['description_xhtml']),
-                );
-            } catch (Exception $e) {
-                unlink($xml_filename);
-                throw $e;
-            }
-            unlink($xml_filename);
-
-            $this->page_cache[$page_cache_key] = $boostbook_values;
+            $boostbook_values = $this->load_quickbook_page_impl($page, $page_data, $hash);
             $fresh_cache = true;
+            $this->page_cache[$page_cache_key] = $boostbook_values;
         }
 
         return array($boostbook_values, $fresh_cache);
+    }
+
+    function load_quickbook_page_impl($page, $page_data, $hash = null) {
+        // Hash the quickbook source
+        if (is_null($hash)) {
+            $hash = hash('sha256', str_replace("\r\n", "\n",
+                file_get_contents("{$this->root}/{$page}")));
+        }
+
+        $bb_parser = new BoostBookParser();
+
+        $xml_filename = tempnam(sys_get_temp_dir(), 'boost-qbk-');
+        try {
+            echo "Converting ", $page, ":\n";
+            BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
+            $values = $bb_parser->parse($xml_filename);
+            $boostbook_values = array(
+                'hash' => $hash,
+                'title_xml' => BoostSiteTools::trim_lines($values['title_xhtml']),
+                'purpose_xml' => BoostSiteTools::trim_lines($values['purpose_xhtml']),
+                'notice_xml' => BoostSiteTools::trim_lines($values['notice_xhtml']),
+                'notice_url' => $values['notice_url'],
+                'pub_date' => $values['pub_date'],
+                'id' => $values['id'],
+                'description_xhtml' => BoostSiteTools::trim_lines($values['description_xhtml']),
+            );
+        } catch (Exception $e) {
+            unlink($xml_filename);
+            throw $e;
+        }
+        unlink($xml_filename);
+        return $boostbook_values;
     }
 
     function update_page_data_from_boostbook_values($page, $page_data, $boostbook_values) {
