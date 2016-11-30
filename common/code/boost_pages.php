@@ -277,7 +277,37 @@ class BoostPages {
                 }
             }
 
-            if ($page_data->page_state === 'release-data-changed') {
+            if ($refresh) {
+                // Refresh: Rebuild pages.
+                $boostbook_values = null;
+                switch ($page_data->get_release_status()) {
+                case 'released':
+                case null:
+                    $boostbook_values = BoostWebsite::array_get($this->page_cache, $page);
+                    if (!$boostbook_values && $have_quickbook) {
+                        $boostbook_values = $this->load_quickbook_page_impl($page);
+                    }
+                    break;
+                case 'beta':
+                    $boostbook_values = BoostWebsite::array_get($this->page_cache, "{$page}:{$page_data->release_data['version']}");
+                    break;
+                case 'dev':
+                    break;
+                default:
+                    assert(false);
+                }
+
+                if (!$boostbook_values) {
+                    echo "Unable to generate page for {$page}.\n";
+                }
+                else {
+                    $this->update_page_data_from_boostbook_values($page, $page_data, $boostbook_values);
+                    $this->generate_quickbook_page($page, $page_data);
+                }
+            }
+            else if ($page_data->page_state === 'release-data-changed') {
+                // Release data changed: Update only the release data,
+                // otherwise use existing data.
                 assert($page_data->get_release_status() == 'beta');
                 $boostbook_values = BoostWebsite::array_get($this->page_cache,
                     "{$page}:{$page_data->release_data['version']}");
@@ -290,8 +320,7 @@ class BoostPages {
                     $page_data->page_state = null;
                 }
             }
-            // TODO: Refresh should ignore beta/dev releases?
-            else if ($page_data->page_state || $refresh) {
+            else if ($page_data->page_state) {
                 list($boostbook_values, $fresh_cache) = $this->load_quickbook_page($page, $have_quickbook);
 
                 if (!$boostbook_values) {
@@ -381,6 +410,8 @@ class BoostPages {
     }
 
     function update_page_data_from_boostbook_values($page, $page_data, $boostbook_values) {
+        // This is only ever false from older cached data which didn't
+        // store all the values.
         if (array_key_exists('title_xml', $boostbook_values)) {
             $page_data->load_boostbook_data($boostbook_values);
         }
