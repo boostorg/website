@@ -295,6 +295,27 @@ class BoostPages {
     }
 
     function convert_quickbook_page($page, $page_data, $have_quickbook) {
+        list($boostbook_values, $fresh_cache) = $this->load_quickbook_page($page, $page_data, $have_quickbook);
+
+        if (!$boostbook_values) {
+            echo "Unable to generate page for {$page}.\n";
+            return false;
+        }
+
+        if (!$fresh_cache) {
+            // If we have a dated cache entry, and aren't able to
+            // rebuild it, continue using the current entry, but
+            // don't change the page state - it will try
+            // again on the next run.
+            echo "Using old cached entry for {$page}.\n";
+        }
+
+        $this->update_page_data_from_boostbook_values($page, $page_data, $boostbook_values);
+        $page_data->fresh_cache = $fresh_cache;
+        return true;
+    }
+
+    function load_quickbook_page($page, $page_data, $have_quickbook) {
         $bb_parser = new BoostBookParser();
 
         // Hash the quickbook source
@@ -355,23 +376,13 @@ class BoostPages {
             $fresh_cache = true;
         }
 
-        if ($boostbook_values) {
-            $description_xhtml = $boostbook_values['description_xhtml'];
-            if (array_key_exists('title_xml', $boostbook_values)) {
-                $page_data->load_boostbook_data($boostbook_values);
-            }
-        }
-        else {
-            echo "Unable to generate page for {$page}.\n";
-            return false;
-        }
+        return array($boostbook_values, $fresh_cache);
+    }
 
-        if (!$fresh_cache) {
-            // If we have a dated cache entry, and aren't able to
-            // rebuild it, continue using the current entry, but
-            // don't change the page state - it will try
-            // again on the next run.
-            echo "Using old cached entry for {$page}.\n";
+    function update_page_data_from_boostbook_values($page, $page_data, $boostbook_values) {
+        $description_xhtml = $boostbook_values['description_xhtml'];
+        if (array_key_exists('title_xml', $boostbook_values)) {
+            $page_data->load_boostbook_data($boostbook_values);
         }
 
         // Set the path where the page should be built.
@@ -402,9 +413,7 @@ class BoostPages {
         }
 
         $description_xhtml = BoostSiteTools::trim_lines($description_xhtml);
-        $page_data->fresh_cache = $fresh_cache;
         $page_data->description_xml = $description_xhtml;
-        return true;
     }
 
     function load_from_cache($page_cache_key, $hash) {
