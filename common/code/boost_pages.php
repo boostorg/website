@@ -379,7 +379,6 @@ class BoostPages {
     }
 
     function update_page_data_from_boostbook_values($page, $page_data, $boostbook_values) {
-        $description_xhtml = $boostbook_values['description_xhtml'];
         if (array_key_exists('title_xml', $boostbook_values)) {
             $page_data->load_boostbook_data($boostbook_values);
         }
@@ -393,6 +392,10 @@ class BoostPages {
             $page_data->location = "{$location_data['destination']}/{$page_data->id}.html";
         }
 
+        $page_data->description_xml = $this->transform_page_html($page, $page_data, $boostbook_values['description_xhtml']);
+    }
+
+    function transform_page_html($page, $page_data, $description_xhtml) {
         // Transform links in description
 
         if (($page_data->get_release_status() === 'dev' ||
@@ -411,8 +414,7 @@ class BoostPages {
             }
         }
 
-        $description_xhtml = BoostSiteTools::trim_lines($description_xhtml);
-        $page_data->description_xml = $description_xhtml;
+        return BoostSiteTools::trim_lines($description_xhtml);
     }
 
     function generate_quickbook_page($page, $page_data) {
