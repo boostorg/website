@@ -257,7 +257,7 @@ class BoostPages {
                 $dev_page_data->release_data = $dev_page_data->dev_data;
                 $dev_page_data->page_state = 'changed';
 
-                list($boostbook_values, $fresh_cache) = $this->load_quickbook_page($page, $dev_page_data, $have_quickbook);
+                list($boostbook_values, $fresh_cache) = $this->load_quickbook_page($page, $have_quickbook);
 
                 if (!$boostbook_values) {
                     echo "Unable to generate 'In Progress' entry for {$page}.\n";
@@ -275,9 +275,22 @@ class BoostPages {
                 }
             }
 
+            if ($page_data->page_state === 'release-data-changed') {
+                assert($page_data->get_release_status() == 'beta');
+                $boostbook_values = BoostWebsite::array_get($this->page_cache,
+                    "{$page}:{$page_data->release_data['version']}");
+                if (!$boostbook_values) {
+                    echo "No beta cache entry for {$page}.\n";
+                }
+                else {
+                    $this->update_page_data_from_boostbook_values($page, $page_data, $boostbook_values);
+                    $this->generate_quickbook_page($page, $page_data);
+                    $page_data->page_state = null;
+                }
+            }
             // TODO: Refresh should ignore beta/dev releases?
-            if ($page_data->page_state || $refresh) {
-                list($boostbook_values, $fresh_cache) = $this->load_quickbook_page($page, $page_data, $have_quickbook);
+            else if ($page_data->page_state || $refresh) {
+                list($boostbook_values, $fresh_cache) = $this->load_quickbook_page($page, $have_quickbook);
 
                 if (!$boostbook_values) {
                     echo "Unable to generate page for {$page}.\n";
@@ -294,6 +307,10 @@ class BoostPages {
                     $this->generate_quickbook_page($page, $page_data);
                     if ($fresh_cache) {
                         $page_data->page_state = null;
+                        if ($page_data->get_release_status() == 'beta') {
+                            $this->page_cache["{$page}:{$page_data->release_data['version']}"] =
+                                $boostbook_values;
+                        }
                     }
                 }
             }
@@ -310,49 +327,26 @@ class BoostPages {
         }
     }
 
-    function load_quickbook_page($page, $page_data, $have_quickbook) {
+    function load_quickbook_page($page, $have_quickbook) {
         // Hash the quickbook source
         $hash = hash('sha256', str_replace("\r\n", "\n",
             file_get_contents("{$this->root}/{$page}")));
 
         // Get the page from quickbook/read from cache
-        $fresh_cache = false;
-        $boostbook_values = null;
-
-        switch ($page_data->get_release_status()) {
-        case 'beta':
-            $page_cache_key = "{$page}:{$page_data->release_data['version']}";
-            list($boostbook_values, $fresh_cache) = $this->load_from_cache($page_cache_key, $hash);
-            // For page state 'release data changed' we want to use the cached page regardless,
-            // so mark it as fresh.
-            if ($boostbook_values && $page_data->page_state === 'release-data-changed') { $fresh_cache = true; }
-            // If the cached beta notes aren't fresh, then use the dev notes which might be,
-            // and should at least be more up to date.
-            if (!$fresh_cache) {
-                list($alt_boostbook_values, $alt_fresh_cache) = $this->load_from_cache($page, $hash);
-                if ($alt_boostbook_values) {
-                    $boostbook_values = $alt_boostbook_values;
-                    $fresh_cache = $alt_fresh_cache;
-                    $this->page_cache[$page_cache_key] = $alt_boostbook_values;
-                }
-            }
-            break;
-        default:
-            $page_cache_key = $page;
-            list($boostbook_values, $fresh_cache) = $this->load_from_cache($page_cache_key, $hash);
-        }
+        $boostbook_values = BoostWebsite::array_get($this->page_cache, $page);
+        $fresh_cache = $boostbook_values && $boostbook_values['hash'] === $hash;
 
         if ($have_quickbook && !$fresh_cache)
         {
-            $boostbook_values = $this->load_quickbook_page_impl($page, $page_data, $hash);
+            $boostbook_values = $this->load_quickbook_page_impl($page, $hash);
             $fresh_cache = true;
-            $this->page_cache[$page_cache_key] = $boostbook_values;
+            $this->page_cache[$page] = $boostbook_values;
         }
 
         return array($boostbook_values, $fresh_cache);
     }
 
-    function load_quickbook_page_impl($page, $page_data, $hash = null) {
+    function load_quickbook_page_impl($page, $hash = null) {
         // Hash the quickbook source
         if (is_null($hash)) {
             $hash = hash('sha256', str_replace("\r\n", "\n",
@@ -419,17 +413,6 @@ class BoostPages {
 
         $description_xhtml = BoostSiteTools::trim_lines($description_xhtml);
         $page_data->description_xml = $description_xhtml;
-    }
-
-    function load_from_cache($page_cache_key, $hash) {
-        if (array_key_exists($page_cache_key, $this->page_cache)) {
-            return array(
-                $this->page_cache[$page_cache_key],
-                $this->page_cache[$page_cache_key]['hash'] === $hash);
-        }
-        else {
-            return array(null, false);
-        }
     }
 
     function generate_quickbook_page($page, $page_data) {
