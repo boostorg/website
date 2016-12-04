@@ -91,7 +91,6 @@ class BoostSiteTools {
 
         $index_page_variables = array(
             'history_pages' => $history_pages,
-            'all_versions' => $all_versions,
             'news' => $news,
             'downloads' => $downloads,
         );
