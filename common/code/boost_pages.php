@@ -72,7 +72,7 @@ class BoostPages {
                 ($page->release_data ?
                     BoostWebsite::array_get($page->release_data, 'release_date') :
                     null) ?:
-                $page->pub_date ?: $unpublished_date;
+                $page->index_info()->pub_date ?: $unpublished_date;
             $last_published_order[$index] = $page->last_modified;
         }
         array_multisort(
@@ -266,10 +266,8 @@ class BoostPages {
                     $in_progress_failed = true;
                 }
                 else {
-                    // Note: Don't really care if cache entry is fresh.
-                    $this->update_page_data_from_boostbook_values($dev_page_data, $boostbook_values);
                     $in_progress_release_notes[] = array(
-                        'full_title_xml' => $dev_page_data->title_xml,
+                        'full_title_xml' => $boostbook_values['title_xml'],
                         'web_date' => 'In Progress',
                         'download_table' => $dev_page_data->download_table(),
                         'description_xml' => $this->transform_page_html($dev_page_data, $boostbook_values['description_xhtml']),
@@ -301,7 +299,6 @@ class BoostPages {
                     echo "Unable to generate page for {$page}.\n";
                 }
                 else {
-                    $this->update_page_data_from_boostbook_values($page_data, $boostbook_values);
                     $this->generate_quickbook_page($page_data, $boostbook_values);
                 }
             }
@@ -315,7 +312,6 @@ class BoostPages {
                     echo "No beta cache entry for {$page}.\n";
                 }
                 else {
-                    $this->update_page_data_from_boostbook_values($page_data, $boostbook_values);
                     $this->generate_quickbook_page($page_data, $boostbook_values);
                     $page_data->page_state = null;
                     ++$page_data->update_count;
@@ -335,8 +331,8 @@ class BoostPages {
                         // again on the next run.
                         echo "Using old cached entry for {$page}.\n";
                     }
-                    $this->update_page_data_from_boostbook_values($page_data, $boostbook_values);
                     $this->generate_quickbook_page($page_data, $boostbook_values);
+                    $this->update_page_data_from_boostbook_values($page_data, $boostbook_values);
                     if ($fresh_cache) {
                         $page_data->page_state = null;
                         ++$page_data->update_count;
@@ -453,10 +449,10 @@ class BoostPages {
     function generate_quickbook_page($page_data, $boostbook_values) {
         $template_vars = array(
             'history_style' => '',
-            'full_title_xml' => $page_data->full_title_xml(),
-            'title_xml' => $page_data->title_xml,
+            'full_title_xml' => $page_data->full_title_xml($boostbook_values['title_xml']),
+            'title_xml' => $boostbook_values['title_xml'],
             'note_xml' => '',
-            'web_date' => $page_data->web_date(),
+            'web_date' => $page_data->web_date($boostbook_values['pub_date']),
             'documentation_para' => '',
             'download_table' => $page_data->download_table(),
             'description_xml' => $this->transform_page_html($page_data, $boostbook_values['description_xhtml']),
@@ -508,7 +504,9 @@ class BoostPages_Page {
     var $qbk_hash, $update_count;
 
     // Boostbook data stored for use in indexes etc.
-    var $title_xml, $purpose_xml, $notice_xml, $notice_url, $pub_date;
+    // These members should only be used when generating index pages,
+    // otherwise use the boostbook data directly.
+    private $title_xml, $purpose_xml, $notice_xml, $notice_url, $pub_date;
 
     // Extra state data that isn't saved.
     var $is_release = false;  // Is this a release?
@@ -583,21 +581,37 @@ class BoostPages_Page {
         }
     }
 
-    function full_title_xml() {
+    function index_info() {
+        return (object) array(
+            'id' => $this->id,
+            'location' => $this->location,
+            'full_title_xml' => $this->full_title_xml($this->title_xml),
+            'web_date' => $this->web_date($this->pub_date),
+            'download_page' => $this->get_download_page(),
+            'documentation' => $this->get_documentation(),
+            'title_xml' => $this->title_xml,
+            'purpose_xml' => $this->purpose_xml,
+            'notice_xml' => $this->notice_xml,
+            'notice_url' => $this->notice_url,
+            'pub_date' => $this->pub_date,
+        );
+    }
+
+    function full_title_xml($title_xml) {
         switch($this->get_release_status()) {
         case 'beta':
-            return trim("{$this->title_xml} beta {$this->release_data['version']->beta_number()}");
+            return trim("{$title_xml} beta {$this->release_data['version']->beta_number()}");
         case 'dev':
-            return "{$this->title_xml} - work in progress";
+            return "{$title_xml} - work in progress";
         case 'released':
         case null:
-            return $this->title_xml;
+            return $title_xml;
         default:
             assert(false);
         }
     }
 
-    function web_date() {
+    function web_date($pub_date) {
         $date = null;
 
         if (!is_null($this->release_data)) {
@@ -607,7 +621,7 @@ class BoostPages_Page {
             }
         }
         else {
-            $date = $this->pub_date;
+            $date = $pub_date;
         }
 
         return $date ? gmdate('F jS, Y H:i', $date->getTimestamp()).' GMT' :

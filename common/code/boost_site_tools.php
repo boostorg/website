@@ -84,14 +84,19 @@ class BoostSiteTools {
             }
         }
 
+        $released_versions_entries = array_map(function ($x) { return $x->index_info(); }, $released_versions);
+        $beta_versions_entries = array_map(function ($x) { return $x->index_info(); }, $beta_versions);
+        $history_pages_entries = array_map(function ($x) { return $x->index_info(); }, $history_pages);
+        $news_entries = array_map(function ($x) { return $x->index_info(); }, $news);
+
         $downloads = array_filter(array(
-            $this->get_downloads('live', 'Current', $released_versions, 1),
-            $this->get_downloads('beta', 'Beta', $beta_versions),
+            $this->get_downloads('live', 'Current', $released_versions_entries, 1),
+            $this->get_downloads('beta', 'Beta', $beta_versions_entries),
         ));
 
         $index_page_variables = array(
-            'history_pages' => $history_pages,
-            'news' => $news,
+            'history_pages' => $history_pages_entries,
+            'news' => $news_entries,
             'downloads' => $downloads,
         );
 

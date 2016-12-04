@@ -84,8 +84,6 @@ EOL;
     }
 
     function generate_rss_item($page, $values, $description) {
-        assert(!!$page->description_xml);
-
         $xml = '';
         $page_link = "http://www.boost.org/{$page->location}";
 
