@@ -36,17 +36,10 @@ class BoostRss {
         foreach ($feed_pages as $qbk_page) {
             $rss_item = BoostWebsite::array_get($this->rss_items, $qbk_page->qbk_file);
             if (!$rss_item || BoostWebsite::array_get($rss_item, 'update_count', 0) < $qbk_page->update_count) {
-                // This can happen if an item is added to a feed separately
-                // from being built.
-                if (!$qbk_page->description_xml) {
-                    $boostbook_values = BoostWebsite::array_get($pages->page_cache, $qbk_page->qbk_file);
-                    if ($boostbook_values) {
-                        $pages->update_page_data_from_boostbook_values($qbk_page->qbk_file, $qbk_page, $boostbook_values);
-                    }
-                }
-
-                if ($qbk_page->description_xml) {
-                    $rss_item = $this->generate_rss_item($qbk_page->qbk_file, $qbk_page);
+                $boostbook_values = BoostWebsite::array_get($pages->page_cache, $qbk_page->qbk_file);
+                if ($boostbook_values) {
+                    $rss_item = $this->generate_rss_item($qbk_page, $boostbook_values,
+                        $pages->transform_page_html($qbk_page->qbk_file, $qbk_page, $boostbook_values['description_xhtml']));
                     $rss_item['item'] = BoostSiteTools::trim_lines($rss_item['item']);
                     $this->rss_items[$qbk_page->qbk_file] = $rss_item;
                 }
@@ -90,7 +83,7 @@ EOL;
         return "\n  </channel>\n</rss>\n";
     }
 
-    function generate_rss_item($qbk_file, $page) {
+    function generate_rss_item($page, $values, $description) {
         assert(!!$page->description_xml);
 
         $xml = '';
@@ -98,7 +91,8 @@ EOL;
 
         $xml .= '<item>';
 
-        $xml .= '<title>'.$this->encode_for_rss($page->title_xml).'</title>';
+        $xml .= '<title>'.$this->encode_for_rss($values['title_xml']).'</title>';
+        // TODO: guid and link for beta/dev pages
         $xml .= '<link>'.$this->encode_for_rss($page_link).'</link>';
         $xml .= '<guid>'.$this->encode_for_rss($page_link).'</guid>';
 
@@ -107,14 +101,14 @@ EOL;
         if ($page->release_data && array_key_exists('release_date', $page->release_data)) {
             $pub_date = $page->release_data['release_date'];
         } else {
-            $pub_date = $page->pub_date;
+            $pub_date = $values['pub_date'];
         }
         if ($pub_date) {
             $xml .= '<pubDate>'.$this->encode_for_rss($pub_date->format(DATE_RSS)).'</pubDate>';
         }
 
         # Placing the description in a root element to make it well formed xml->
-        $description = BoostSiteTools::base_links($page->description_xml, $page_link);
+        $description = BoostSiteTools::base_links($description, $page_link);
         $xml .= '<description>'.$this->encode_for_rss($description).'</description>';
 
         $xml .= '</item>';
@@ -123,7 +117,7 @@ EOL;
         //    feed item was last modified?
         return(array(
             'item' => $xml,
-            'quickbook' => $qbk_file,
+            'quickbook' => $page->qbk_file,
             'last_modified' => $page->last_modified,
             'update_count' => $page->update_count,
         ));

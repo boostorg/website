@@ -272,7 +272,7 @@ class BoostPages {
                         'full_title_xml' => $dev_page_data->title_xml,
                         'web_date' => 'In Progress',
                         'download_table' => $dev_page_data->download_table(),
-                        'description_xml' => $dev_page_data->description_xml,
+                        'description_xml' => $this->transform_page_html($page, $dev_page_data, $boostbook_values['description_xhtml']),
                     );
                 }
             }
@@ -302,7 +302,7 @@ class BoostPages {
                 }
                 else {
                     $this->update_page_data_from_boostbook_values($page, $page_data, $boostbook_values);
-                    $this->generate_quickbook_page($page, $page_data);
+                    $this->generate_quickbook_page($page, $page_data, $boostbook_values);
                 }
             }
             else if ($page_data->page_state === 'release-data-changed') {
@@ -316,7 +316,7 @@ class BoostPages {
                 }
                 else {
                     $this->update_page_data_from_boostbook_values($page, $page_data, $boostbook_values);
-                    $this->generate_quickbook_page($page, $page_data);
+                    $this->generate_quickbook_page($page, $page_data, $boostbook_values);
                     $page_data->page_state = null;
                     ++$page_data->update_count;
                 }
@@ -336,7 +336,7 @@ class BoostPages {
                         echo "Using old cached entry for {$page}.\n";
                     }
                     $this->update_page_data_from_boostbook_values($page, $page_data, $boostbook_values);
-                    $this->generate_quickbook_page($page, $page_data);
+                    $this->generate_quickbook_page($page, $page_data, $boostbook_values);
                     if ($fresh_cache) {
                         $page_data->page_state = null;
                         ++$page_data->update_count;
@@ -426,8 +426,6 @@ class BoostPages {
             $location_data = $this->get_page_location_data($page_data->qbk_file);
             $page_data->location = "{$location_data['destination']}/{$page_data->id}.html";
         }
-
-        $page_data->description_xml = $this->transform_page_html($page, $page_data, $boostbook_values['description_xhtml']);
     }
 
     function transform_page_html($page, $page_data, $description_xhtml) {
@@ -452,7 +450,7 @@ class BoostPages {
         return BoostSiteTools::trim_lines($description_xhtml);
     }
 
-    function generate_quickbook_page($page, $page_data) {
+    function generate_quickbook_page($page, $page_data, $boostbook_values) {
         $template_vars = array(
             'history_style' => '',
             'full_title_xml' => $page_data->full_title_xml(),
@@ -461,7 +459,7 @@ class BoostPages {
             'web_date' => $page_data->web_date(),
             'documentation_para' => '',
             'download_table' => $page_data->download_table(),
-            'description_xml' => $page_data->description_xml,
+            'description_xml' => $this->transform_page_html($page, $page_data, $boostbook_values['description_xhtml']),
         );
 
         if ($page_data->get_documentation()) {
@@ -510,7 +508,6 @@ class BoostPages_Page {
     var $qbk_hash, $update_count;
 
     // Extra state data that isn't saved.
-    var $description_xml = null; // Page markup, after transforming for current state.
     var $is_release = false;     // Is this a relase?
     var $release_data = null;    // Status of release where appropriate.
     var $dev_data = null; // Status of release in development.
