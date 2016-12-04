@@ -39,7 +39,7 @@ class BoostRss {
                 $boostbook_values = BoostWebsite::array_get($pages->page_cache, $qbk_page->qbk_file);
                 if ($boostbook_values) {
                     $rss_item = $this->generate_rss_item($qbk_page, $boostbook_values,
-                        $pages->transform_page_html($qbk_page->qbk_file, $qbk_page, $boostbook_values['description_xhtml']));
+                        $pages->transform_page_html($qbk_page, $boostbook_values['description_xhtml']));
                     $rss_item['item'] = BoostSiteTools::trim_lines($rss_item['item']);
                     $this->rss_items[$qbk_page->qbk_file] = $rss_item;
                 }

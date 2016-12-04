@@ -267,12 +267,12 @@ class BoostPages {
                 }
                 else {
                     // Note: Don't really care if cache entry is fresh.
-                    $this->update_page_data_from_boostbook_values($page, $dev_page_data, $boostbook_values);
+                    $this->update_page_data_from_boostbook_values($dev_page_data, $boostbook_values);
                     $in_progress_release_notes[] = array(
                         'full_title_xml' => $dev_page_data->title_xml,
                         'web_date' => 'In Progress',
                         'download_table' => $dev_page_data->download_table(),
-                        'description_xml' => $this->transform_page_html($page, $dev_page_data, $boostbook_values['description_xhtml']),
+                        'description_xml' => $this->transform_page_html($dev_page_data, $boostbook_values['description_xhtml']),
                     );
                 }
             }
@@ -301,8 +301,8 @@ class BoostPages {
                     echo "Unable to generate page for {$page}.\n";
                 }
                 else {
-                    $this->update_page_data_from_boostbook_values($page, $page_data, $boostbook_values);
-                    $this->generate_quickbook_page($page, $page_data, $boostbook_values);
+                    $this->update_page_data_from_boostbook_values($page_data, $boostbook_values);
+                    $this->generate_quickbook_page($page_data, $boostbook_values);
                 }
             }
             else if ($page_data->page_state === 'release-data-changed') {
@@ -315,8 +315,8 @@ class BoostPages {
                     echo "No beta cache entry for {$page}.\n";
                 }
                 else {
-                    $this->update_page_data_from_boostbook_values($page, $page_data, $boostbook_values);
-                    $this->generate_quickbook_page($page, $page_data, $boostbook_values);
+                    $this->update_page_data_from_boostbook_values($page_data, $boostbook_values);
+                    $this->generate_quickbook_page($page_data, $boostbook_values);
                     $page_data->page_state = null;
                     ++$page_data->update_count;
                 }
@@ -335,8 +335,8 @@ class BoostPages {
                         // again on the next run.
                         echo "Using old cached entry for {$page}.\n";
                     }
-                    $this->update_page_data_from_boostbook_values($page, $page_data, $boostbook_values);
-                    $this->generate_quickbook_page($page, $page_data, $boostbook_values);
+                    $this->update_page_data_from_boostbook_values($page_data, $boostbook_values);
+                    $this->generate_quickbook_page($page_data, $boostbook_values);
                     if ($fresh_cache) {
                         $page_data->page_state = null;
                         ++$page_data->update_count;
@@ -411,7 +411,7 @@ class BoostPages {
         return $boostbook_values;
     }
 
-    function update_page_data_from_boostbook_values($page, $page_data, $boostbook_values) {
+    function update_page_data_from_boostbook_values($page_data, $boostbook_values) {
         // This is only ever false from older cached data which didn't
         // store all the values.
         if (array_key_exists('title_xml', $boostbook_values)) {
@@ -428,7 +428,7 @@ class BoostPages {
         }
     }
 
-    function transform_page_html($page, $page_data, $description_xhtml) {
+    function transform_page_html($page_data, $description_xhtml) {
         // Transform links in description
 
         if (($page_data->get_release_status() === 'dev' ||
@@ -450,7 +450,7 @@ class BoostPages {
         return BoostSiteTools::trim_lines($description_xhtml);
     }
 
-    function generate_quickbook_page($page, $page_data, $boostbook_values) {
+    function generate_quickbook_page($page_data, $boostbook_values) {
         $template_vars = array(
             'history_style' => '',
             'full_title_xml' => $page_data->full_title_xml(),
@@ -459,7 +459,7 @@ class BoostPages {
             'web_date' => $page_data->web_date(),
             'documentation_para' => '',
             'download_table' => $page_data->download_table(),
-            'description_xml' => $this->transform_page_html($page, $page_data, $boostbook_values['description_xhtml']),
+            'description_xml' => $this->transform_page_html($page_data, $boostbook_values['description_xhtml']),
         );
 
         if ($page_data->get_documentation()) {
