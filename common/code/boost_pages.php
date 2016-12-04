@@ -500,17 +500,20 @@ EOL;
 }
 
 class BoostPages_Page {
+    // Path to quickbook file
     var $qbk_file;
 
-    var $section, $page_state, $location;
-    var $id, $title_xml, $purpose_xml, $notice_xml, $notice_url;
-    var $last_modified, $pub_date;
+    // Page state
+    var $section, $page_state, $location, $id, $last_modified;
     var $qbk_hash, $update_count;
 
+    // Boostbook data stored for use in indexes etc.
+    var $title_xml, $purpose_xml, $notice_xml, $notice_url, $pub_date;
+
     // Extra state data that isn't saved.
-    var $is_release = false;     // Is this a relase?
-    var $release_data = null;    // Status of release where appropriate.
-    var $dev_data = null; // Status of release in development.
+    var $is_release = false;  // Is this a release?
+    var $release_data = null; // Status of release where appropriate.
+    var $dev_data = null;     // Status of release in development.
 
     function __construct($qbk_file, $release_data = null, $attrs = array()) {
         $this->qbk_file = $qbk_file;
