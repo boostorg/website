@@ -21,6 +21,12 @@ class BoostSiteTools {
         $this->update_quickbook(true);
     }
 
+    function update_in_progress_pages() {
+        $pages = $this->load_pages();
+        $pages->convert_quickbook_pages('in_progress');
+        $pages->save();
+    }
+
     function update_quickbook($refresh = false) {
         $pages = $this->load_pages();
 
@@ -31,7 +37,7 @@ class BoostSiteTools {
 
         // Translate new and changed pages
 
-        $pages->convert_quickbook_pages($refresh);
+        $pages->convert_quickbook_pages($refresh ? 'refresh' : 'update');
 
         // Extract data for generating site from $pages:
 

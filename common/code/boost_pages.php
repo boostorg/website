@@ -263,7 +263,7 @@ class BoostPages {
         return $array;
     }
 
-    function convert_quickbook_pages($refresh = false) {
+    function convert_quickbook_pages($mode = 'update') {
         try {
             BoostSuperProject::run_process('quickbook --version');
             $have_quickbook = true;
@@ -276,7 +276,7 @@ class BoostPages {
         $in_progress_release_notes = array();
         $in_progress_failed = false;
         foreach ($this->pages as $page => $page_data) {
-            if ($page_data->dev_data) {
+            if ($mode != 'refresh' && $page_data->dev_data) {
                 $dev_page_data = clone($page_data);
                 $dev_page_data->release_data = $dev_page_data->dev_data;
                 $dev_page_data->page_state = 'changed';
@@ -297,7 +297,7 @@ class BoostPages {
                 }
             }
 
-            if ($refresh) {
+            if ($mode == 'refresh') {
                 // Refresh: Rebuild pages.
                 $boostbook_values = null;
                 switch ($page_data->get_release_status()) {
@@ -324,7 +324,7 @@ class BoostPages {
                     $this->generate_quickbook_page($page_data, $boostbook_values);
                 }
             }
-            else if ($page_data->page_state === 'release-data-changed') {
+            else if ($mode == 'update' && $page_data->page_state === 'release-data-changed') {
                 // Release data changed: Update only the release data,
                 // otherwise use existing data.
                 assert($page_data->get_release_status() == 'beta');
@@ -339,7 +339,7 @@ class BoostPages {
                     ++$page_data->update_count;
                 }
             }
-            else if ($page_data->page_state) {
+            else if ($mode == 'update' && $page_data->page_state) {
                 list($boostbook_values, $fresh_cache) = $this->load_quickbook_page($page, $have_quickbook);
 
                 if (!$boostbook_values) {
@@ -367,7 +367,7 @@ class BoostPages {
             }
         }
 
-        if (!$in_progress_failed) {
+        if ($mode != 'refresh' && !$in_progress_failed) {
             $template_vars = array(
                 'releases' => $in_progress_release_notes,
             );
