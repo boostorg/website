@@ -30,7 +30,12 @@ class BoostPages {
     var $page_cache = Array();
     var $releases = null;
 
-    function __construct($root, $hash_file, $page_cache, $release_file) {
+    function __construct($root = null, $paths = array()) {
+        if (!$root) { $root = BOOST_WEBSITE_DATA_ROOT_DIR; }
+        $hash_file = BoostWebsite::array_get($paths, 'hash_file', "generated/state/feed-pages.txt");
+        $page_cache = BoostWebsite::array_get($paths, 'page_cache', "generated/state/page-cache.txt");
+        $release_file = BoostWebsite::array_get($paths, 'release_file', "generated/state/release.txt");
+
         $this->root = $root;
         $this->hash_file = "{$root}/{$hash_file}";
         $this->page_cache_file = "{$root}/{$page_cache}";;

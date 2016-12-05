@@ -14,10 +14,7 @@ class BoostSiteTools {
     }
 
     function load_pages() {
-        return new BoostPages($this->root,
-            "generated/state/feed-pages.txt",
-            "generated/state/page-cache.txt",
-            "generated/state/release.txt");
+        return new BoostPages($this->root);
     }
 
     function refresh_quickbook() {
