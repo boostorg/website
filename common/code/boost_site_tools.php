@@ -376,6 +376,7 @@ class BoostSiteTools_Upgrades {
         2 => 'BoostSiteTools_Upgrades::old_upgrade',
         3 => 'BoostSiteTools_Upgrades::old_upgrade',
         4 => 'BoostSiteTools_Upgrades::old_upgrade',
+        5 => 'BoostSiteTools_Upgrades::update_unversioned_hash',
     );
 
     static function upgrade($site_tools) {
@@ -396,5 +397,18 @@ class BoostSiteTools_Upgrades {
 
     static function old_upgrade() {
         throw new BoostException("Old unsupported data version.");
+    }
+
+    // unversioned.qbk used to have release data, but now it doesn't, so
+    // rehash it to avoid rebuilding it.
+    static function update_unversioned_hash($site_tools) {
+        $pages = $site_tools->load_pages();
+        $unversioned = BoostWebsite::array_get($pages->pages,
+            'feed/history/unversioned.qbk');
+        if ($unversioned) {
+            $unversioned->qbk_hash =
+                $pages->calculate_qbk_hash($unversioned, 'downloads');
+            $pages->save();
+        }
     }
 }
