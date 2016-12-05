@@ -88,7 +88,7 @@ class BoostPages {
             foreach (glob("{$this->root}/{$details['source']}") as $qbk_file) {
                 assert(strpos($qbk_file, $this->root) === 0);
                 $qbk_file = substr($qbk_file, strlen($this->root) + 1);
-                $this->add_qbk_file($qbk_file, $details['section']);
+                $this->update_qbk_file($qbk_file, $details['section']);
             }
         }
     }
@@ -118,7 +118,7 @@ class BoostPages {
 
     }
 
-    function add_qbk_file($qbk_file, $section) {
+    function update_qbk_file($qbk_file, $section) {
         $record = null;
 
         if (!isset($this->pages[$qbk_file])) {
