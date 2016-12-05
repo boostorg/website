@@ -133,24 +133,14 @@ class BoostPages {
         switch($record->get_release_status()) {
         case 'released':
         case null:
-            $context = hash_init('sha256');
-            hash_update($context, json_encode($this->normalize_release_data(
-                $record->release_data, $qbk_file, $section)));
-            hash_update($context, str_replace("\r\n", "\n",
-                file_get_contents("{$this->root}/{$qbk_file}")));
-            $qbk_hash = hash_final($context);
+            $qbk_hash = $this->calculate_qbk_hash($record, $section);
 
             if ($record->qbk_hash != $qbk_hash && $record->page_state != 'new') {
                 $record->page_state = 'changed';
             }
             break;
         case 'beta':
-            // For beta files, don't hash the page source as we don't want to
-            // rebuild when it updates.
-            $context = hash_init('sha256');
-            hash_update($context, json_encode($this->normalize_release_data(
-                $record->release_data, $qbk_file, $section)));
-            $qbk_hash = hash_final($context);
+            $qbk_hash = $this->calculate_qbk_hash($record, $section);
 
             if ($record->qbk_hash != $qbk_hash && !$record->page_state) {
                 $record->page_state = 'release-data-changed';
@@ -171,6 +161,25 @@ class BoostPages {
                 $record->qbk_hash = $qbk_hash;
                 $record->last_modified = new DateTime();
             }
+        }
+    }
+
+    function calculate_qbk_hash($record, $section) {
+        switch($record->get_release_status()) {
+        case 'beta':
+            // For beta files, don't hash the page source as we don't want to
+            // rebuild when it updates.
+            $context = hash_init('sha256');
+            hash_update($context, json_encode($this->normalize_release_data(
+                $record->release_data, $record->qbk_file, $section)));
+            return hash_final($context);
+        default:
+            $context = hash_init('sha256');
+            hash_update($context, json_encode($this->normalize_release_data(
+                $record->release_data, $record->qbk_file, $section)));
+            hash_update($context, str_replace("\r\n", "\n",
+                file_get_contents("{$this->root}/{$record->qbk_file}")));
+            return hash_final($context);
         }
     }
 
