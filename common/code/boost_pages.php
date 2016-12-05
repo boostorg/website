@@ -26,19 +26,23 @@ class BoostPages {
     var $root;
     var $hash_file;
     var $page_cache_file;
+    var $beta_release_notes_file;
     var $pages = Array();
     var $page_cache = Array();
+    var $beta_release_notes = Array();
     var $releases = null;
 
     function __construct($root = null, $paths = array()) {
         if (!$root) { $root = BOOST_WEBSITE_DATA_ROOT_DIR; }
         $hash_file = BoostWebsite::array_get($paths, 'hash_file', "generated/state/feed-pages.txt");
         $page_cache = BoostWebsite::array_get($paths, 'page_cache', "generated/state/page-cache.txt");
+        $beta_release_notes = BoostWebsite::array_get($paths, 'beta_release_notes', "generated/state/beta_release_notes.txt");
         $release_file = BoostWebsite::array_get($paths, 'release_file', "generated/state/release.txt");
 
         $this->root = $root;
         $this->hash_file = "{$root}/{$hash_file}";
         $this->page_cache_file = "{$root}/{$page_cache}";;
+        $this->beta_release_notes_file = "{$root}/{$beta_release_notes}";;
         $this->releases = new BoostReleases("{$root}/{$release_file}");
 
         if (is_file($this->hash_file)) {
@@ -57,6 +61,9 @@ class BoostPages {
         if (is_file($this->page_cache_file)) {
             $this->page_cache = BoostState::load($this->page_cache_file);
         }
+        if (is_file($this->beta_release_notes_file)) {
+            $this->beta_release_notes = BoostState::load($this->beta_release_notes_file);
+        }
     }
 
     function save() {
@@ -64,6 +71,7 @@ class BoostPages {
             array_map(function($page) { return $page->state(); }, $this->pages),
             $this->hash_file);
         BoostState::save($this->page_cache,  $this->page_cache_file);
+        BoostState::save($this->beta_release_notes,  $this->beta_release_notes_file);
     }
 
     function reverse_chronological_pages() {
@@ -301,7 +309,7 @@ class BoostPages {
                     }
                     break;
                 case 'beta':
-                    $boostbook_values = BoostWebsite::array_get($this->page_cache, "{$page}:{$page_data->release_data['version']}");
+                    $boostbook_values = BoostWebsite::array_get($this->beta_release_notes, "{$page}:{$page_data->release_data['version']}");
                     break;
                 case 'dev':
                     break;
@@ -320,7 +328,7 @@ class BoostPages {
                 // Release data changed: Update only the release data,
                 // otherwise use existing data.
                 assert($page_data->get_release_status() == 'beta');
-                $boostbook_values = BoostWebsite::array_get($this->page_cache,
+                $boostbook_values = BoostWebsite::array_get($this->beta_release_notes,
                     "{$page}:{$page_data->release_data['version']}");
                 if (!$boostbook_values) {
                     echo "No beta cache entry for {$page}.\n";
@@ -351,7 +359,7 @@ class BoostPages {
                         $page_data->page_state = null;
                         ++$page_data->update_count;
                         if ($page_data->get_release_status() == 'beta') {
-                            $this->page_cache["{$page}:{$page_data->release_data['version']}"] =
+                            $this->beta_release_notes["{$page}:{$page_data->release_data['version']}"] =
                                 $boostbook_values;
                         }
                     }
