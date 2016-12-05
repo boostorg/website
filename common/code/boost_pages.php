@@ -430,11 +430,7 @@ class BoostPages {
     }
 
     function update_page_data_from_boostbook_values($page_data, $boostbook_values) {
-        // This is only ever false from older cached data which didn't
-        // store all the values.
-        if (array_key_exists('title_xml', $boostbook_values)) {
-            $page_data->load_boostbook_data($boostbook_values);
-        }
+        $page_data->load_boostbook_data($boostbook_values);
 
         // Set the path where the page should be built.
         // This can only be done after the quickbook file has been converted,
