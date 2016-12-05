@@ -7,7 +7,8 @@
 class BoostSiteTools {
     var $root;
 
-    function __construct($path) {
+    function __construct($path = null) {
+        if (is_null($path)) { $path = BOOST_WEBSITE_DATA_ROOT_DIR; }
         $this->root = $path;
         BoostSiteTools_Upgrades::upgrade($this);
     }

@@ -10,6 +10,11 @@
 BOOST_CONFIG_FILE
   Path to local configuration, as a PHP source file.
 
+BOOST_WEBSITE_DATA_ROOT_DIR
+  Path to the root of this repo.  Don't use this to include php files, it
+  should only be used for data. Shouldn't need to set this for anything other
+  than testing purposes.
+
 BOOST_WEBSITE_SHARED_DIR
   The root directory for some of these constants, not needed if you
   set them explicitly.
@@ -35,6 +40,7 @@ STATIC_DIR
 BOOST_FIX_DIR
   Path to documentation fixes, this is a directory containing replacements
   for faulty or missing documentation.
+  - Defaults to BOOST_WEBSITE_DATA_ROOT_DIR/doc/fixes
 
 BOOST_REPOS_DIR
   Loction of local copies for develop and master super projects.
@@ -87,6 +93,10 @@ if(!function_exists('virtual'))
     }
 }
 
+if (!defined('BOOST_WEBSITE_DATA_ROOT_DIR')) {
+    define('BOOST_WEBSITE_DATA_ROOT_DIR', realpath(__DIR__.'/../..'));
+}
+
 if (defined('BOOST_WEBSITE_SHARED_DIR')) {
     if (!defined('STATIC_DIR')) {
         define('STATIC_DIR', BOOST_WEBSITE_SHARED_DIR.'/archives/live');
@@ -107,5 +117,5 @@ if (defined('BOOST_WEBSITE_SHARED_DIR')) {
 
 // TODO: I'm going to move the fix directory to a separate repo
 if (!defined('BOOST_FIX_DIR')) {
-    define('BOOST_FIX_DIR', __DIR__.'/../../doc/fixes');
+    define('BOOST_FIX_DIR', BOOST_WEBSITE_DATA_ROOT_DIR.'/doc/fixes');
 }

@@ -30,7 +30,7 @@ function main() {
     $releases->save();
 
     // Trigger a rebuild of existing release notes.
-    $boost_site_tools = new BoostSiteTools(__DIR__.'/..');
+    $boost_site_tools = new BoostSiteTools();
     $pages = $boost_site_tools->load_pages();
     foreach ($pages->pages as $page) {
         if (!$page->release_data) { continue; }

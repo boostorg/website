@@ -17,5 +17,5 @@ require_once(__DIR__.'/../common/code/bootstrap.php');
 
 BoostSiteTools\CommandLineOptions::parse($usage);
 
-$site_tools = new BoostSiteTools(__DIR__.'/..');
+$site_tools = new BoostSiteTools();
 $site_tools->update_quickbook(true);
