@@ -375,6 +375,7 @@ class BoostSiteTools_Upgrades {
         3 => 'BoostSiteTools_Upgrades::old_upgrade',
         4 => 'BoostSiteTools_Upgrades::old_upgrade',
         5 => 'BoostSiteTools_Upgrades::update_unversioned_hash',
+        6 => 'BoostSiteTools_Upgrades::clear_page_cache',
     );
 
     static function upgrade($site_tools) {
@@ -408,5 +409,11 @@ class BoostSiteTools_Upgrades {
                 $pages->calculate_qbk_hash($unversioned, 'downloads');
             $pages->save();
         }
+    }
+
+    static function clear_page_cache($site_tools) {
+        $pages = $site_tools->load_pages();
+        $pages->page_cache = array();
+        $pages->save();
     }
 }
