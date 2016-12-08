@@ -2,16 +2,41 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-language: php
-php:
-    - '5.3'
-
-install:
-    - cd ${TRAVIS_BUILD_DIR}/common/code/test
-    - composer install --no-interaction --prefer-source
-
-script:
-    - cd ${TRAVIS_BUILD_DIR}/common/code/test
-    - ./vendor/bin/tester -p php tests
-    - cd ${TRAVIS_BUILD_DIR}/
-    - 'find * -name "vendor" -prune -o -name "*.php" -print | xargs -n 1 php -l'
+matrix:
+    include:
+      # First configuration runs the php unit tests using php 5.3
+      # (not available on recent version of ubuntu)
+      #
+      # The site update scripts won't entirely work as they don't
+      # have quickbook available.
+      - env: LABEL="Test using php 5.3"
+        language: php
+        php:
+            '5.3'
+        install:
+            - cd ${TRAVIS_BUILD_DIR}/common/code/test
+            - composer install --no-interaction --prefer-source
+        script:
+            - cd ${TRAVIS_BUILD_DIR}/common/code/test
+            - ./vendor/bin/tester -p php tests
+            - cd ${TRAVIS_BUILD_DIR}/
+            - 'find * -name "vendor" -prune -o -name "*.php" -print | xargs -n 1 php -l'
+            - ./site-tools/update-doc-list.php
+            - ./site-tools/update-pages.php
+            - git status
+      # Second configuration tries running the site update scripts
+      # using a more recent version of the boost tools.
+      - env: LABEL="Test building documentation"
+        sudo: required
+        dist: trusty
+        addons:
+            apt:
+                packages:
+                    - libboost-tools-dev
+        # Not really, but more appropriate than 'ruby', and helps
+        # distinguish from 'php'.
+        language: c++
+        script:
+            - ./site-tools/update-doc-list.php
+            - ./site-tools/update-pages.php
+            - git status
