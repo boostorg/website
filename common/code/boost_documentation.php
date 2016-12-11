@@ -313,14 +313,15 @@ function latest_link($filter_data)
             ($filter_data->fix_dir && realpath("{$filter_data->fix_dir}/{$current->dir()}/{$filter_data->path}") !== false))
         {
             echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$filter_data->path,'">',
-                "Click here to view the latest version of this page.",
+                "This is the documentation for an old version of Boost.
+                Click here to view this page for the latest version.",
                 '</a>';
         }
         else
         {
             echo '<a class="boost-common-header-inner" href="/doc/libs/">',
-                "This is an old version of boost. ",
-                "Click here for the latest version's documentation home page.",
+                "This is an the documentation for an old version of boost.
+                Click here for the latest Boost documentation.",
                 '</a>';
         }
         echo '</div>', "\n";
