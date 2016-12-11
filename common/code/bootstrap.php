@@ -15,7 +15,6 @@ function error_handler($message) {
     }
     else if (defined('STDERR')) {
         fputs(STDERR, "{$message}\n");
-        fputs(STDERR, print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true));
     }
     else {
         echo "{$message}\n";

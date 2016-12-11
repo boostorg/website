@@ -4,14 +4,28 @@
 
 language: php
 php:
-    - '5.3'
-
+    '5.3'
 install:
+    # Install quickbook
+    - mkdir $HOME/bin
+    - wget -O $HOME/bin/quickbook https://github.com/boostorg/quickbook/releases/download/linux-binary/quickbook
+    - chmod a+x $HOME/bin/quickbook
+    - export PATH=$PATH:$HOME/bin
+
+    # Install php dependencies
     - cd ${TRAVIS_BUILD_DIR}/common/code/test
     - composer install --no-interaction --prefer-source
-
 script:
+    # Run the tests
     - cd ${TRAVIS_BUILD_DIR}/common/code/test
     - ./vendor/bin/tester -p php tests
+
+    # Check php files are valid php 5.3
     - cd ${TRAVIS_BUILD_DIR}/
     - 'find * -name "vendor" -prune -o -name "*.php" -print | xargs -n 1 php -l'
+
+    # Try running the site tools to check if the change has introduced any errors
+    # into their source and data files
+    - ./site-tools/update-doc-list.php
+    - ./site-tools/update-pages.php
+    - git status

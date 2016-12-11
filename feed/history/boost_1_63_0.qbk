@@ -2,10 +2,10 @@
     [quickbook 1.6]
     [source-mode c++]
     [purpose
-        New Libraries:
         Updated Libraries:
-        [/ Please don't add updated libraries yet, it
-           can create unnecessary merge conflicts.]
+        Atomic, Container, Context, Fiber, Fusion, Hash, Interprocess,
+        Intrusive, LexicalCast, Log, Metaparse, Move, Optional, Phoenix,
+        Python, TypeIndex, Units, Unordered.
     ]
     [authors [Dawes, Beman]]
     [/ last-revision is used for the final release date]
@@ -18,7 +18,23 @@
 
 * [phrase library..[@/libs/atomic/ Atomic]:]
   * Added the static constant `atomic<T>::is_always_lock_free` for conformance with C++17. The constant indicates that the given specialization always provides lock-free implementation of atomic operations.
-  * Improved support of Oracle Studio on x86 targets.
+  * Improved support of Oracle Studio on x86 targets. 
+  
+* [phrase library..[@/libs/container/ Container]:]
+  * Fixed bugs:
+     * [@https://svn.boost.org/trac/boost/ticket/12534 Trac #12534:  ['"flat_map fails to compile if included after type_traits is instantiated under gcc"]].
+     * [@https://svn.boost.org/trac/boost/ticket/12577 Trac #12577:  ['"Null reference in pair.hpp triggers runtime warning with -fsanitize=undefined"]].
+     * [@https://github.com/boostorg/container/pull/40 GitHub #40: ['Fix parameter types in copy_move_algo.hpp: iterator_traits::difference_type -> allocator_traits::size_type]].
+     * [@https://github.com/boostorg/container/pull/41 GitHub #41: ['Avoid -Wunreachable-code in do_allocate()]].
+  
+* [phrase library..[@/libs/context/ Context]:]
+  * [ticket 11687] Xcode (Apple clang) and thread_local
+  * [ticket 12114] context does not preserve fpu context on ios arm64 devices (fixed for other architecturs too)
+  * [ticket 12411] fpu registers not preserved with O2 optimizations in Visual Studio (fixed for other architecturs too)
+  * [ticket 12551] building boost on arm64 causes error: unknown directive
+  * reduced signatur for ontop-functions
+  * unit-test for private fcontext-API
+  * performance-test for ucontext and fcontext fixed
   
 * [phrase library..[@/libs/fiber/ Fiber]:]
   * unbounded_channel and bounded_channel marked as deprecated
@@ -34,6 +50,19 @@
 
 * [phrase library..[@/libs/functional/hash Hash]:]
   * Fixed some warnings.
+  
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  * Fixed bugs:
+    * [@https://svn.boost.org/trac/boost/ticket/12499 Trac #12499 (['"Memory allocation fails"])].
+    * [@https://github.com/boostorg/interprocess/pull/30 GitHub Pull #30 (['"Provide extension point so library user can provide default temp folder"])].
+    * [@https://github.com/boostorg/interprocess/pull/31 GitHub Pull #31 (['"Add xsi_key(key_t) constructor"])].
+
+* [phrase library..[@/libs/intrusive/ Intrusive]:]
+  * Fixed bugs:
+    * [@https://svn.boost.org/trac/boost/ticket/12556 Boost Trac #12556: ['member_value_traits.hpp has a missing #include]]
+
+* [phrase library..[@/libs/lexical_cast/ Lexical Cast]:]
+  * Fixed issue found by `-fsanitize=undefined` [@https://github.com/boostorg/lexical_cast/issues/21 #21]
 
 * [phrase library..[@/libs/log/ Log]:]
   * General changes:
@@ -43,6 +72,7 @@
   * Bug fixes:
     * Fixed compilation errors for Android API prior to version 21.
     * Streaming operators now take scalar types and enums by value. This allows to output static constants and bitfields directly into formatting stream and record stream. ([ticket 11998])
+    * Fixed auto-detection of native syslog API. ([ticket 12600])
     * In UDP socket based syslog backend implementation, changed the syslog message format for better compliance with RFC3164.
     * File close handler installed in text file sink backend is no longer called if the file is not open yet.
   * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
@@ -53,6 +83,16 @@
     * The maximal string length limit can be extended beyond 2048 by regenerating some of the Boost headers using a script (part of the library)
     * The string length limit can be changed within a compilation unit
 
+* [phrase library..[@/libs/move/ Move]:]
+  * Improved experimental adaptive sort algorithm performance
+  * Activate BOOST_MOVE_FORCEINLINE
+
+* [phrase library..[@/libs/optional/ Optional]:]
+  * Added two new in-place constructors. They work similarly to `emplace()` functions: they initialize the contained value by perfect-forwarding the obtained arguments. One constructor always initializes the contained value, the other based on a boolean condition.
+  * Syntax `o = {}` now correctly un-initializes an `optional`, just like in `std::optional`. 
+  * Fixed `optional<optional<T>&>` initialization. ([ticket 12203])
+  * Optional constructors are sfinae-friendly. This fixes interaction with `std::tuple`. ([ticket 12563])
+  
 * [phrase library..[@/libs/phoenix/ Phoenix]:]
   * Most of modules now support C++11 variadic templates.
   * Fixed type deduction failure with result type.
@@ -82,8 +122,6 @@
   * Use the hint iterator in `emplace_hint`.
   * Fixed some warnings.
   * See the [@/doc/html/unordered/changes.html changelog] for more details.
-
-* /TODO/
 
 [endsect]
 
