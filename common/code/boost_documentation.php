@@ -21,7 +21,7 @@ class BoostDocumentation
     var $path;
     var $use_http_expire_date;
 
-    static function library_documentation() {
+    static function library_documentation_page() {
         return static::documentation_page(array(
             'fix_dir' => BOOST_FIX_DIR,
             'archive_dir' => STATIC_DIR,
@@ -29,7 +29,7 @@ class BoostDocumentation
         ));
     }
 
-    static function extra_documentation() {
+    static function extra_documentation_page() {
         return static::documentation_page(array(
             'boost-root' => '../libs/release/',
         ));

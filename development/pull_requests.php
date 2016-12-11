@@ -12,20 +12,20 @@ class PullRequestPage {
         'date' => 'By Age',
     );
 
-    var $params;
+    var $params;            // Normalised URL parameters
 
     var $pull_requests;
     var $last_updated;
 
-    var $base_uri;
-    var $page_view;
+    var $page_url_path;     // URL path for this page
+    var $page_view;         // Grouped by library, or sorted by age.
 
     function __construct($params) {
         $json_data = json_decode(
                 file_get_contents(BOOST_DATA_DIR.'/pull-requests.json'));
         $this->pull_requests = $json_data->pull_requests;
         $this->last_updated = $json_data->last_updated;
-        $this->base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
+        $this->page_url_path = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
 
         $this->params = array();
         foreach (self::$param_defaults as $key => $default) {
@@ -135,7 +135,7 @@ class PullRequestPage {
                 }
             }
 
-            echo '<a href="' . html_encode($this->base_uri . $url_params) . '">',
+            echo '<a href="' . html_encode($this->page_url_path . $url_params) . '">',
             html_encode($description), '</a>';
         }
     }

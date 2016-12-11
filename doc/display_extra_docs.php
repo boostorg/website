@@ -10,7 +10,7 @@ if (strpos($_SERVER['REQUEST_URI'], '//') !== FALSE)
 
 require_once(dirname(__FILE__) . '/../common/code/bootstrap.php');
 
-BoostDocumentation::extra_documentation()->display_from_archive(
+BoostDocumentation::extra_documentation_page()->display_from_archive(
   array(
   array('', '@[.](html|htm)$@i','basic','text/html')
   )

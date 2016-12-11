@@ -38,12 +38,12 @@ class LibraryPage {
         'boost-version' => 'First Release'
     );
 
-    var $params;
+    var $params;            // Normalised URL parameters
     var $libs;
     var $documentation_page;
     var $categories;
 
-    var $base_uri;
+    var $page_url_path;     // URL path for this page
     var $view_value;
     var $sort_value;
     var $attribute_filter;
@@ -54,17 +54,17 @@ class LibraryPage {
         $this->libs = $libs;
         $this->categories = $libs->get_categories();
 
-        $this->documentation_page = BoostDocumentation::library_documentation();
+        $this->documentation_page = BoostDocumentation::library_documentation_page();
 
         // To avoid confusion, only show this page when there is actual documentation.
         if (!is_dir($this->documentation_page->documentation_dir())) {
             BoostWeb::throw_error_404($_SERVER['REQUEST_URI']);
         }
 
-        $base_uri = $_SERVER['REQUEST_URI'];
-        $base_uri = preg_replace('@[#?].*@', '', $base_uri);
-        $base_uri = preg_replace('@//+@', '/', $base_uri);
-        $this->base_uri = $base_uri;
+        $page_url_path = $_SERVER['REQUEST_URI'];
+        $page_url_path = preg_replace('@[#?].*@', '', $page_url_path);
+        $page_url_path = preg_replace('@//+@', '/', $page_url_path);
+        $this->page_url_path = $page_url_path;
 
         $this->params = array();
         foreach (self::$param_defaults as $key => $default) {
@@ -280,7 +280,7 @@ class LibraryPage {
                 }
             }
 
-            echo '<a href="' . html_encode($this->base_uri . $url_params) . '">',
+            echo '<a href="' . html_encode($this->page_url_path . $url_params) . '">',
             html_encode($description), '</a>';
         }
     }
