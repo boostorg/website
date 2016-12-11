@@ -62,7 +62,7 @@ class BoostDocumentation
                 }
                 $documentation_page->file_doc_dir = is_numeric($path_parts[1][0]) ?
                     "boost_{$path_parts[1]}" : $path_parts[1];
-                $documentation_page->url_doc_dir = $documentation_page->file_doc_dir;
+                $documentation_page->url_doc_dir = $path_parts[1];
                 $documentation_page->version_title = ucwords($documentation_page->version);
             }
 
