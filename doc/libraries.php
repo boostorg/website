@@ -294,7 +294,6 @@ class LibraryPage {
 }
 
 $library_page = new LibraryPage($_GET, BoostLibraries::load());
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -312,6 +311,7 @@ $library_page = new LibraryPage($_GET, BoostLibraries::load());
   <div id="heading">
     <?php virtual("/common/heading.html"); ?>
   </div>
+  <?php latest_link($library_page->documentation_page); ?>
 
   <div id="body">
     <div id="body-inner">
