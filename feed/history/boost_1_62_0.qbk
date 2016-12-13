@@ -6,7 +6,7 @@
         Fiber, QVM
         Updated Libraries:
         Chrono, Circular Buffer, Container, Context, Coroutine2,
-        DLL, Functional/Forward, Interprocess, Intrusive,
+        DLL, Functional/Forward, Geometry, Interprocess, Intrusive,
         Lexical Cast, Log, Math, Phoenix, Regex, Test,
         Thread, TypeIndex, Unordered, Variant.
     ]
@@ -86,6 +86,17 @@
 
 * [phrase library..[@/libs/functional/forward/ Functional/Forward]:]
   * Fix C++11 compile error.
+
+* [phrase library..[@/libs/geometry Geometry]:]
+  * ['Improvements:]
+    * Union: take care that output is valid (with some exceptions), also with self-tangent polygons or shared edges
+    * SVG: support boost::variant of geometries
+    * SVG: coordinates are now written as double (by default) to svg
+    * Rename namespace concept to concepts to avoid conflicts with the newest compilers
+    * New spherical intersection strategy used in relational and set operations for spherical and geographic Geometries (previously cartesian intersection strategy was used for all coordinate systems).
+  * ['Solved tickets:]
+    * [@https://svn.boost.org/trac/boost/ticket/12189 #12189] Relational operations not compiling when point types of inputs are different
+    * [@https://svn.boost.org/trac/boost/ticket/12287 #12287] Invalid result of rtree.query() for contains() predicate
 
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
   * Fixed bug [@https://github.com/boostorg/interprocess/pull/27 GitHub Pull #27 (['"Fix undefined behavior"])].

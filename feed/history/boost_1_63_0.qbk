@@ -3,9 +3,9 @@
     [source-mode c++]
     [purpose
         Updated Libraries:
-        Atomic, Container, Context, Fiber, Fusion, Hash, Interprocess,
+        Atomic, Container, Context, Fiber, Fusion, Geometry, Hash, Interprocess,
         Intrusive, LexicalCast, Log, Metaparse, Move, Optional, Phoenix,
-        Python, TypeIndex, Units, Unordered.
+        Python, Test, TypeIndex, Units, Unordered.
     ]
     [authors [Dawes, Beman]]
     [/ last-revision is used for the final release date]
@@ -47,6 +47,14 @@
   * `BOOST_FUSION_DEFINE*` allows move constructor and assignment. ([ticket 10099])
   * Adaptor for `std::array` (Thanks to Mateusz Łoskot). ([ticket 8241])
   * Fixed returning temporary variable warnings on MSVC.
+
+* [phrase library..[@/libs/geometry Geometry]:]
+  * ['Improvements:]
+    * Intersection: take care that output is valid (work in progres, not yet finished - but more is valid)
+  * ['Solved tickets:]
+    * [@https://svn.boost.org/trac/boost/ticket/12289 #12289] Avoid warning/compilation error for std::cout
+    * [@https://svn.boost.org/trac/boost/ticket/12412 #12412] Invalid result of covered_by() with geographic Points and Boxes
+    * [@https://svn.boost.org/trac/boost/ticket/12413 #12413] rtree::remove() not working properly with geographic Points
 
 * [phrase library..[@/libs/functional/hash Hash]:]
   * Fixed some warnings.
@@ -104,6 +112,18 @@
   * Added (basic) support for C++11 (std::shared_ptr, std::unique_ptr)
   * Incorporated an extension API to wrap [@http://www.numpy.org/ NumPy]
   * Removed obsolete bits and pieces
+
+* [phrase library..[@/libs/test/ Test]:]
+  * Boost.test v3.4 see the
+    [@/doc/libs/1_63_0/libs/test/doc/html/boost_test/change_log.html Change log]
+    section for more details.
+  * New feature: `per_element` and `lexicographic` modifiers of `BOOST_TEST` can also be applied to string
+    comparison
+  * Breaking change: colons that appear in test case names are replaced with underscores
+  * Bug fixes
+    * Trac tickets [ticket 11756], [ticket 11907], [ticket 12339], [ticket 12506], [ticket 12507], [ticket 12530],
+    * Trac tickets [ticket 12531]
+    * Pull request [@https://github.com/boostorg/test/pull/103 PR103], [@https://github.com/boostorg/test/pull/104 PR104]
 
 * [phrase library..[@/libs/type_index/ TypeIndex]:]
   * Added `runtime_cast` to the library as an emulation of `dynamic_cast`. Thanks to Chris Glover for the implementation. See [@/doc/html/boost_typeindex_header_reference.html#header.boost.type_index.runtime_cast_hpp runtime_cast reference] for more info.
