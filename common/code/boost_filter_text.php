@@ -80,14 +80,14 @@ class BoostFilterText extends BoostFilter
     function html_encode_with_fallback($text) {
         // Could probably handle this better with php 5.4 or multibyte
         // extensions.
-        $encoded_text = @html_encode($text);
-
-        if ($text && !$encoded_text) {
-            $encoded_text = html_encode(
+        if (defined('ENT_SUBSTITUTE')) {
+            return htmlentities($text, ENT_SUBSTITUTE, 'UTF-8');
+        } else if (preg_match('//u', $text)) {
+            return htmlentities($text, ENT_COMPAT, 'UTF-8');
+        } else {
+            return html_encode(
                 preg_replace('/[\x80-\xFF]/', "\xef\xbf\xbd", $text));
         }
-
-        return $encoded_text;
     }
 
     function process_absolute_url($url, $root = null) {
