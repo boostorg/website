@@ -69,13 +69,13 @@ class LibraryPage {
         $this->params = array();
         foreach (self::$param_defaults as $key => $default) {
             // Note: Using default for empty values as well as missing values.
-            $this->params[$key] = strtolower(trim(
-                BoostWebsite::array_get($params, $key))) ?: $default;
+            $this->params[$key] = trim(
+                BoostWebsite::array_get($params, $key)) ?: $default;
         }
 
         $this->view_value = $this->params['view'];
-        if (strpos($this->view_value, 'filtered_') === 0) {
-            $this->filter_value = substr($this->view_value, strlen('filtered_'));
+        if (stripos($this->view_value, 'filtered_') === 0) {
+            $this->filter_value = strtolower(substr($this->view_value, strlen('filtered_')));
 
             if (!array_key_exists($this->filter_value, self::$filter_fields)) {
                 BoostWeb::throw_http_error(400, "Malformed request",
@@ -86,7 +86,7 @@ class LibraryPage {
                     "Filter field {$this->filter_value} is no longer supported");
             }
         }
-        else if (strpos($this->view_value, 'category_') === 0) {
+        else if (stripos($this->view_value, 'category_') === 0) {
             $this->category_value = substr($this->view_value, strlen('category_'));
             if(!array_key_exists($this->category_value, $this->categories)) {
                 BoostWeb::throw_http_error(400, "Invalid category",
@@ -94,19 +94,20 @@ class LibraryPage {
             }
         }
         else {
+            $this->view_value = strtolower($this->view_value);
             if (!array_key_exists($this->view_value, self::$view_fields)) {
                 BoostWeb::throw_http_error(400, 'Invalid view value',
                     "Invalid view value: {$this->view_value}");
             }
         }
 
-        $this->sort_value = $this->params['sort'];
+        $this->sort_value = strtolower($this->params['sort']);
         if (!array_key_exists($this->sort_value, self::$sort_fields)) {
             BoostWeb::throw_http_error(400, 'Invalid sort field',
                 "Invalid sort value: {$this->sort_value}");
         }
 
-        $this->attribute_filter = $this->params['filter'];
+        $this->attribute_filter = strtolower($this->params['filter']);
         if ($this->attribute_filter) {
             if (!preg_match('@^[-_a-zA-Z0-9]+$@', $this->attribute_filter)) {
                 BoostWeb::throw_http_error(400, 'Invalid attribute filter',
