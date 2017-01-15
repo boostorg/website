@@ -68,21 +68,51 @@ class BoostWeb
         return false;
     }
 
-    static function error_404($file, $message = null)
+    static function throw_http_error($status_code, $message, $sub_message = null)
     {
-        $error = "404 Not Found";
+        throw new BoostWeb_HttpError($status_code, $message, $sub_message, null);
+    }
+
+    static function throw_error_404($file, $message = null)
+    {
+        throw new BoostWeb_HttpError(404, 'Not Found', $message, $file);
+    }
+
+
+    static function return_error($e) {
+        $error = "{$e->status_code} {$e->status_message}";
+        $error_html = html_encode($error);
 
         header("{$_SERVER["SERVER_PROTOCOL"]} {$error}");
 
         $head = <<<HTML
       <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
-      <title>Boost C++ Libraries - 404 Not Found</title>
+      <title>Boost C++ Libraries - {$error_html}</title>
 HTML;
 
-        $content = '<h1>'.html_encode($error).'</h1><p>File "' . html_encode($file) . '" not found.</p><p>';
-        $content .= html_encode($message);
-        $content .= '</p>';
+        $content = "<h1>{$error_html}</h1>\n";
+        if ($e->file) {
+            $content .= '<p>File "' . html_encode($e->file) . '" not found.</p>';
+        }
+        if ($e->sub_message) {
+            $content .= "<p>".html_encode($e->sub_message)."</p>";
+        }
 
         BoostFilter::display_template(Array('head' => $head, 'content' => $content));
+    }
+}
+
+class BoostWeb_HttpError extends BoostException {
+    var $status_code;
+    var $status_message;
+    var $sub_message;
+    var $file;
+
+    function __construct($status_code, $status_message, $sub_message, $file) {
+        $this->status_code = $status_code;
+        $this->status_message = $status_message;
+        $this->sub_message = $sub_message;
+        $this->file = $file;
+        parent::__construct("HTTP error: {$this->status_code} {$this->status_message}");
     }
 }

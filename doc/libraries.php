@@ -3,8 +3,18 @@
 require_once(dirname(__FILE__) . '/../common/code/bootstrap.php');
 
 class LibraryPage {
+    static $param_defaults = Array(
+        'view' => 'all',  // all/categorized
+                          // filtered_std-proposal, filtered_std-tr1
+                          // category_*
+        'sort' => 'name', // Field to sort libraries by.
+        'filter' => null, // Filter by whether an attribute is present.
+                          // Not used for a long time, could probably be
+                          // dropped.
+    );
+
     static $view_fields = Array(
-        '' => 'All',
+        'all' => 'All',
         'categorized' => 'Categorized'
     );
 
@@ -24,100 +34,97 @@ class LibraryPage {
     );
 
     static $display_sort_fields = Array(
-        '' => 'Name',
+        'name' => 'Name',
         'boost-version' => 'First Release'
     );
 
-    var $params = array();
+    var $params;            // Normalised URL parameters
     var $libs;
+    var $documentation_page;
     var $categories;
 
-    var $base_uri = '';
-    var $view_value = '';
-    var $category_value = '';
-    var $filter_value = '';
-    var $sort_value = '';
-    var $attribute_filter = false;
+    var $page_url_path;     // URL path for this page
+    var $view_value;
+    var $sort_value;
+    var $attribute_filter;
+    var $category_value;
+    var $filter_value;
 
     function __construct($params, $libs) {
         $this->libs = $libs;
         $this->categories = $libs->get_categories();
 
-        $base_uri = $_SERVER['REQUEST_URI'];
-        $base_uri = preg_replace('@[#?].*@', '', $base_uri);
-        $base_uri = preg_replace('@//+@', '/', $base_uri);
-        $this->base_uri = $base_uri;
+        $this->documentation_page = BoostDocumentation::library_documentation_page();
 
-        $view_value = null;
-        if (array_key_exists('view', $params)) {
-            $view_value = $params['view'];
-            $filter_value = '';
-
-            if (!preg_match('@^[-_a-zA-Z0-9]+$@', $view_value)) {
-                throw new BoostException('Invalid view value.');
-            }
-
-            if (strpos($view_value, 'filtered_') === 0) {
-                $filter_value = substr($view_value, strlen('filtered_'));
-                if (!array_key_exists($filter_value, self::$filter_fields)) {
-                    echo 'Invalid filter field.'; exit(0);
-                }
-                if (self::$filter_fields[$filter_value] == '[old]') {
-                    echo 'Filter field no longer supported.'; exit(0);
-                }
-            }
-            else if (strpos($view_value, 'category_') === 0) {
-                $this->category_value = substr($view_value, strlen('category_'));
-                if(!array_key_exists($this->category_value, $this->categories)) {
-                    echo 'Invalid category: '.html_encode($this->category_value); exit(0);
-                }
-            }
-            else {
-                if (!array_key_exists($view_value, self::$view_fields)) {
-                    echo 'Invalid view value.'; exit(0);
-                }
-            }
-
-            $this->view_value = $view_value;
-            $this->filter_value = $filter_value;
+        // To avoid confusion, only show this page when there is actual documentation.
+        if (!is_dir($this->documentation_page->documentation_dir())) {
+            BoostWeb::throw_error_404($_SERVER['REQUEST_URI']);
         }
 
-        $sort_value = null;
-        if (array_key_exists('sort', $params)) {
-            $sort_value = $params['sort'];
+        $page_url_path = $_SERVER['REQUEST_URI'];
+        $page_url_path = preg_replace('@[#?].*@', '', $page_url_path);
+        $page_url_path = preg_replace('@//+@', '/', $page_url_path);
+        $this->page_url_path = $page_url_path;
 
-            if (!preg_match('@^[-_a-zA-Z0-9]+$@', $sort_value)) {
-                die('Invalid sort field.');
-            }
-
-            if (!array_key_exists($sort_value, self::$sort_fields)) {
-                echo 'Invalid sort field.'; exit(0);
-            }
-        }
-        $this->sort_value = $sort_value ?: 'name';
-
-        $attribute_filter = null;
-        if (!empty($params['filter'])) {
-            $attribute_filter = $params['filter'];
-
-            if (!preg_match('@^[-_a-zA-Z0-9]+$@', $attribute_filter)) {
-                die('Invalid attribute filter.');
-            }
-
-            $this->attribute_filter = $attribute_filter;
+        $this->params = array();
+        foreach (self::$param_defaults as $key => $default) {
+            // Note: Using default for empty values as well as missing values.
+            $this->params[$key] = trim(
+                BoostWebsite::array_get($params, $key)) ?: $default;
         }
 
-        // Store the sanitized parameters for quickly generating links later.
-        $this->params = array(
-            'view' => $view_value,
-            'sort' => $sort_value,
-            'filter' => $attribute_filter,
-        );
+        $this->view_value = $this->params['view'];
+        if (stripos($this->view_value, 'filtered_') === 0) {
+            $this->filter_value = strtolower(substr($this->view_value, strlen('filtered_')));
+
+            if (!array_key_exists($this->filter_value, self::$filter_fields)) {
+                BoostWeb::throw_http_error(400, "Malformed request",
+                    "Invalid filter field: {$this->filter_value}");
+            }
+            if (self::$filter_fields[$this->filter_value] == '[old]') {
+                BoostWeb::throw_http_error(410, 'Filter field no longer supported.',
+                    "Filter field {$this->filter_value} is no longer supported");
+            }
+        }
+        else if (stripos($this->view_value, 'category_') === 0) {
+            $this->category_value = substr($this->view_value, strlen('category_'));
+            if(!array_key_exists($this->category_value, $this->categories)) {
+                BoostWeb::throw_http_error(400, "Invalid category",
+                    "Invalid category: {$this->category_value}");
+            }
+        }
+        else {
+            $this->view_value = strtolower($this->view_value);
+            if (!array_key_exists($this->view_value, self::$view_fields)) {
+                BoostWeb::throw_http_error(400, 'Invalid view value',
+                    "Invalid view value: {$this->view_value}");
+            }
+        }
+
+        $this->sort_value = strtolower($this->params['sort']);
+        if (!array_key_exists($this->sort_value, self::$sort_fields)) {
+            BoostWeb::throw_http_error(400, 'Invalid sort field',
+                "Invalid sort value: {$this->sort_value}");
+        }
+
+        $this->attribute_filter = strtolower($this->params['filter']);
+        if ($this->attribute_filter) {
+            if (!preg_match('@^[-_a-zA-Z0-9]+$@', $this->attribute_filter)) {
+                BoostWeb::throw_http_error(400, 'Invalid attribute filter',
+                    "Invalid attribute filter: {$this->attribute_filter}");
+            }
+        }
+
+        if ($this->documentation_page->version->is_numbered_release() &&
+                $this->libs->latest_version &&
+                $this->documentation_page->version->compare($this->libs->latest_version) > 0)
+        {
+            BoostWeb::throw_error_404($_SERVER['REQUEST_URI']);
+        }
     }
 
     function filter($lib) {
-        if (BoostVersion::page()->is_numbered_release()
-                && !$lib['boost-version']->is_release()) {
+        if (!BoostLibraries::filter_visible($lib)) {
             return false;
         }
 
@@ -138,7 +145,11 @@ class LibraryPage {
     }
 
     function title() {
-        $page_title = BoostVersion::page_title().' Library Documentation';
+        $page_title = "Boost";
+        if ($this->documentation_page->version_title) {
+            $page_title .= " {$this->documentation_page->version_title}";
+        }
+        $page_title .= " Library Documentation";
         if ($this->category_value) {
             $page_title.= ' - '. $this->categories[$this->category_value]['title'];
         }
@@ -181,13 +192,15 @@ class LibraryPage {
     }
 
     function filtered_libraries() {
-        return $this->libs->get_for_version(BoostVersion::page(),
+        return $this->libs->get_for_version(
+                $this->documentation_page->version,
                 $this->sort_value,
                 array($this, 'filter'));
     }
 
     function categorized_libraries() {
-        return $this->libs->get_categorized_for_version(BoostVersion::page(),
+        return $this->libs->get_categorized_for_version(
+                $this->documentation_page->version,
                 $this->sort_value,
                 array($this, 'filter'));
     }
@@ -196,12 +209,7 @@ class LibraryPage {
 
     function libref($lib) {
         if (!empty($lib['documentation'])) {
-            $path_info = filter_input(INPUT_SERVER, 'PATH_INFO', FILTER_SANITIZE_URL);
-            if ($path_info && $path_info != '/') {
-                $docref = '/doc/libs' . $path_info . '/' . $lib['documentation'];
-            } else {
-                $docref = '/doc/libs/release/' . $lib['documentation'];
-            }
+            $docref = "/doc/libs/{$this->documentation_page->url_doc_dir}/{$lib['documentation']}";
             print '<a href="' . html_encode($docref) . '">' .
                     html_encode(!empty($lib['name']) ? $lib['name'] : $lib['key']) .
                     '</a>';
@@ -226,7 +234,7 @@ class LibraryPage {
     }
 
     function libavailable($lib) {
-        print $lib['boost-version']->is_release() ?
+        print $lib['boost-version']->is_update_version() ?
             html_encode($lib['boost-version']) :
             '<i>'.html_encode($lib['boost-version']).'</i>';
     }
@@ -257,9 +265,6 @@ class LibraryPage {
     }
 
     function option_link($description, $field, $value) {
-        if (!array_key_exists($field, $this->params)) {
-            die("Invalid field: ".html_encode($field));
-        }
         $current_value = $this->params[$field];
 
         if ($current_value == $value) {
@@ -270,13 +275,13 @@ class LibraryPage {
 
             $url_params = '';
             foreach ($params as $k => $v) {
-                if (is_string($v) && $v != '') {
+                if ($v && $v !== self::$param_defaults[$k]) {
                     $url_params .= $url_params ? '&' : '?';
                     $url_params .= urlencode($k) . '=' . urlencode($v);
                 }
             }
 
-            echo '<a href="' . html_encode($this->base_uri . $url_params) . '">',
+            echo '<a href="' . html_encode($this->page_url_path . $url_params) . '">',
             html_encode($description), '</a>';
         }
     }
@@ -289,34 +294,7 @@ class LibraryPage {
     }
 }
 
-// Page variables
-
 $library_page = new LibraryPage($_GET, BoostLibraries::load());
-
-if (BoostVersion::page()->is_numbered_release() &&
-        $library_page->libs->latest_version &&
-        BoostVersion::page()->compare($library_page->libs->latest_version) > 0)
-{
-    BoostWeb::error_404($_SERVER['REQUEST_URI']);
-    return;
-}
-
-// To avoid confusion, only show this page when there is actual documentation.
-// TODO: Maybe for versions without documentation, could display the list
-//       with no links.
-// TODO: This duplicates the BoostDocumentation object in display_libs.
-$archive = new BoostDocumentation(array(
-    'fix_dir' => dirname(__FILE__).'/fixes',
-    'archive_dir' => STATIC_DIR,
-    'use_http_expire_date' => true,
-));
-
-if (!is_dir($archive->documentation_dir()))
-{
-    BoostWeb::error_404($_SERVER['REQUEST_URI']);
-    return;
-}
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -334,6 +312,7 @@ if (!is_dir($archive->documentation_dir()))
   <div id="heading">
     <?php virtual("/common/heading.html"); ?>
   </div>
+  <?php latest_link($library_page->documentation_page); ?>
 
   <div id="body">
     <div id="body-inner">

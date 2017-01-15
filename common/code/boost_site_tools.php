@@ -7,20 +7,24 @@
 class BoostSiteTools {
     var $root;
 
-    function __construct($path) {
+    function __construct($path = null) {
+        if (is_null($path)) { $path = BOOST_WEBSITE_DATA_ROOT_DIR; }
         $this->root = $path;
         BoostSiteTools_Upgrades::upgrade($this);
     }
 
     function load_pages() {
-        return new BoostPages($this->root,
-            "generated/state/feed-pages.txt",
-            "generated/state/page-cache.txt",
-            "generated/state/release.txt");
+        return new BoostPages($this->root);
     }
 
     function refresh_quickbook() {
         $this->update_quickbook(true);
+    }
+
+    function update_in_progress_pages() {
+        $pages = $this->load_pages();
+        $pages->convert_quickbook_pages('in_progress');
+        $pages->save();
     }
 
     function update_quickbook($refresh = false) {
@@ -33,10 +37,11 @@ class BoostSiteTools {
 
         // Translate new and changed pages
 
-        $pages->convert_quickbook_pages($refresh);
+        $pages->convert_quickbook_pages($refresh ? 'refresh' : 'update');
 
         // Extract data for generating site from $pages:
 
+        $history_pages = array();
         $released_versions = array();
         $beta_versions = array();
         $all_versions = array();
@@ -53,16 +58,24 @@ class BoostSiteTools {
             case 'history':
                 if ($page->is_published()) {
                     $all_versions[] = $page;
+
+                    if (!$page->is_release) {
+                        $history_pages[] = $page;
+                        $news[] = $page;
+                    }
+                    else {
+                        if ($page->is_published('released')) {
+                            $all_downloads[] = $page;
+                            $history_pages[] = $page;
+                            $released_versions[] = $page;
+                            $news[] = $page;
+                        }
+                        else if ($page->is_published('beta')) {
+                            $beta_versions[] = $page;
+                        }
+                    }
                 }
 
-                if ($page->is_published('released')) {
-                    $all_downloads[] = $page;
-                    $released_versions[] = $page;
-                    $news[] = $page;
-                }
-                else if ($page->is_published('beta')) {
-                    $beta_versions[] = $page;
-                }
                 break;
             case 'downloads':
                 if ($page->is_published('released')) {
@@ -75,15 +88,19 @@ class BoostSiteTools {
             }
         }
 
+        $released_versions_entries = array_map(function ($x) { return $x->index_info(); }, $released_versions);
+        $beta_versions_entries = array_map(function ($x) { return $x->index_info(); }, $beta_versions);
+        $history_pages_entries = array_map(function ($x) { return $x->index_info(); }, $history_pages);
+        $news_entries = array_map(function ($x) { return $x->index_info(); }, $news);
+
         $downloads = array_filter(array(
-            $this->get_downloads('live', 'Current', $released_versions, 1),
-            $this->get_downloads('beta', 'Beta', $beta_versions),
+            $this->get_downloads('live', 'Current', $released_versions_entries, 1),
+            $this->get_downloads('beta', 'Beta', $beta_versions_entries),
         ));
 
         $index_page_variables = array(
-            'released_versions' => $released_versions,
-            'all_versions' => $all_versions,
-            'news' => $news,
+            'history_pages' => $history_pages_entries,
+            'news' => $news_entries,
             'downloads' => $downloads,
         );
 
@@ -114,27 +131,27 @@ class BoostSiteTools {
         if (!$refresh) {
             $rss = new BoostRss($this->root, "generated/state/rss-items.txt");
 
-            $rss->generate_rss_feed(array(
+            $rss->generate_rss_feed($pages, array(
                 'path' => 'generated/downloads.rss',
                 'link' => 'users/download/',
                 'title' => 'Boost Downloads',
                 'pages' => $all_downloads,
                 'count' => 3
             ));
-            $rss->generate_rss_feed(array(
+            $rss->generate_rss_feed($pages, array(
                 'path' => 'generated/history.rss',
                 'link' => 'users/history/',
                 'title' => 'Boost History',
-                'pages' => $released_versions,
+                'pages' => $history_pages,
             ));
-            $rss->generate_rss_feed(array(
+            $rss->generate_rss_feed($pages, array(
                 'path' => 'generated/news.rss',
                 'link' => 'users/news/',
                 'title' => 'Boost News',
                 'pages' => $news,
                 'count' => 5
             ));
-            $rss->generate_rss_feed(array(
+            $rss->generate_rss_feed($pages, array(
                 'path' => 'generated/dev.rss',
                 'link' => '',
                 'title' => 'Release notes for work in progress boost',
@@ -206,12 +223,11 @@ class BoostSiteTools {
 EOL;
         $first = true;
         foreach($releases_by_version as $page) {
-            if (array_key_exists('documentation', $page->release_data)) {
-                $version = $page->release_data['version'];
+            $documentation = $page->get_documentation();
+            $version = BoostWebsite::array_get($page->release_data, 'version');
+            if ($documentation && $version && $version->is_numbered_release()) {
                 $documentation_list .= "\n";
-                $documentation_list .= "        <li><a href=\"";
-                $documentation_list .= "/doc/libs/{$version->final_doc_dir()}/";
-                $documentation_list .= "\" rel=\"nofollow\">{$version}";
+                $documentation_list .= "        <li><a href=\"{$documentation}\" rel=\"nofollow\">{$version}";
                 if ($first) {
                     $documentation_list .= " - Current\n";
                     $documentation_list .= "        Release <span class=\"link\">&gt;</span></a></li>\n";
@@ -299,6 +315,12 @@ EOL;
         });
     }
 
+    static function transform_links_regex($xhtml, $pattern, $replace) {
+        return self::transform_links($xhtml, function($x) use ($pattern, $replace) {
+            return preg_replace($pattern, $replace, $x);
+        });
+    }
+
     static function transform_links($xhtml, $func) {
         $result = '';
         $pos = 0;
@@ -358,6 +380,8 @@ class BoostSiteTools_Upgrades {
         2 => 'BoostSiteTools_Upgrades::old_upgrade',
         3 => 'BoostSiteTools_Upgrades::old_upgrade',
         4 => 'BoostSiteTools_Upgrades::old_upgrade',
+        5 => 'BoostSiteTools_Upgrades::update_unversioned_hash',
+        6 => 'BoostSiteTools_Upgrades::clear_page_cache',
     );
 
     static function upgrade($site_tools) {
@@ -378,5 +402,24 @@ class BoostSiteTools_Upgrades {
 
     static function old_upgrade() {
         throw new BoostException("Old unsupported data version.");
+    }
+
+    // unversioned.qbk used to have release data, but now it doesn't, so
+    // rehash it to avoid rebuilding it.
+    static function update_unversioned_hash($site_tools) {
+        $pages = $site_tools->load_pages();
+        $unversioned = BoostWebsite::array_get($pages->pages,
+            'feed/history/unversioned.qbk');
+        if ($unversioned) {
+            $unversioned->qbk_hash =
+                $pages->calculate_qbk_hash($unversioned, 'downloads');
+            $pages->save();
+        }
+    }
+
+    static function clear_page_cache($site_tools) {
+        $pages = $site_tools->load_pages();
+        $pages->page_cache = array();
+        $pages->save();
     }
 }

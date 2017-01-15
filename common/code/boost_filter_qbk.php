@@ -7,9 +7,9 @@
 
 class BoostFilterQbk extends BoostFilterText
 {
-    function __construct($data) {
-        parent::__construct($data);
-        $this->data->noindex = true;
+    function __construct($data, $content) {
+        parent::__construct($data, $content);
+        $this->noindex = true;
     }
 
     function filter_content()

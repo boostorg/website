@@ -61,7 +61,6 @@ fi
 
 echo "- Update beta from origin/master"
 
-#TODO: Should I also merge changes from local master?
 git_ff_merge origin/master beta
 git push origin beta
 git checkout beta

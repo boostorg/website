@@ -10,73 +10,89 @@ define('BOOST_DOCS_MODIFIED_DATE', 'Sat 07 Feb 2015 21:44:00 +0000');
 
 class BoostDocumentation
 {
-    var $params;
+    var $archive_dir;
+    var $fix_dir;
+    var $version;         // Version of boost to show documentation for.
+                          // Empty when not boost.
+    var $file_doc_dir;    // Directory to use when checking file system.
+    var $url_doc_dir;     // Directory to use in links.
+    var $version_title;   // Version string to use in title, or null for default pages.
+    var $boost_root;      // Path to root of current version.
+    var $path;
+    var $use_http_expire_date;
 
-    function __construct($params = Array()) {
-        $this->params = $params;
+    static function library_documentation_page() {
+        return static::documentation_page(array(
+            'fix_dir' => BOOST_FIX_DIR,
+            'archive_dir' => STATIC_DIR,
+            'use_http_expire_date' => true,
+        ));
     }
 
-    function get_param($key, $default = null) {
-        return array_key_exists($key, $this->params) ?
-            $this->params[$key] : $default;
+    static function extra_documentation_page() {
+        return static::documentation_page(array(
+            'boost-root' => '../libs/release/',
+        ));
     }
 
-    function documenation_path_details()
-    {
-        $pattern = $this->get_param('pattern', '@^[/]([^/]+)(?:[/](.*))?$@');
-        $archive_dir = $this->get_param('archive_dir', STATIC_DIR);
+    static function documentation_page($params) {
+        $documentation_page = new BoostDocumentation();
 
-        $this->archive_dir = $archive_dir;
+        $documentation_page->archive_dir = BoostWebsite::array_get($params, 'archive_dir', STATIC_DIR);
+        $documentation_page->fix_dir = BoostWebsite::array_get($params, 'fix_dir');
+        $documentation_page->boost_root = BoostWebsite::array_get($params, 'boost-root', '');
+        $documentation_page->use_http_expire_date = BoostWebsite::array_get($params, 'use_http_expire_date', false);
+
+        $pattern = BoostWebsite::array_get($params, 'pattern', '@^[/]([^/]+)(?:[/](.*))?$@');
 
         // Get Archive Location
 
         if (array_key_exists('PATH_INFO', $_SERVER) &&
                 preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts)) {
             if ($path_parts[1] === 'regression') {
-                $version = null;
-                $version_dir = 'regression';
+                $documentation_page->url_doc_dir = 'regression';
+                $documentation_page->file_doc_dir = 'regression';
             }
             else {
                 try {
-                    $version = BoostVersion::from($path_parts[1]);
+                    $documentation_page->version = BoostVersion::from($path_parts[1]);
                 }
                 catch(BoostVersion_Exception $e) {
-                    BoostWeb::error_404($_SERVER["PATH_INFO"], 'Unable to find version.');
-                    return;
+                    BoostWeb::throw_error_404($_SERVER["PATH_INFO"], 'Unable to find version.');
                 }
-                $version_dir = is_numeric($path_parts[1][0]) ?
+                $documentation_page->file_doc_dir = is_numeric($path_parts[1][0]) ?
                     "boost_{$path_parts[1]}" : $path_parts[1];
+                $documentation_page->url_doc_dir = $path_parts[1];
+                $documentation_page->version_title = ucwords($documentation_page->version);
             }
 
             $path = array_key_exists(2, $path_parts) ? $path_parts[2] : null;
         }
         else {
-            $version = BoostVersion::current();
-            $version_dir = $version->dir();
+            $documentation_page->version = BoostVersion::current();
+            $documentation_page->file_doc_dir = $documentation_page->version->dir();
+            $documentation_page->url_doc_dir = 'release';
             $path = null;
         }
 
-        return compact('archive_dir', 'version', 'version_dir', 'path');
+        $documentation_page->path = $path;
+
+        return $documentation_page;
     }
 
+    // The root of the documentation on the filesystem.
     function documentation_dir() {
-        extract($this->documenation_path_details());
-        return $archive_dir.'/'.$version_dir;
+        return "{$this->archive_dir}/{$this->file_doc_dir}";
     }
 
     function display_from_archive($content_map = array())
     {
-        extract($this->documenation_path_details());
-
         // Set default values
-
-        $fix_dir = $this->get_param('fix_dir');
-        $use_http_expire_date = $this->get_param('use_http_expire_date', false);
 
         $file = false;
 
-        if ($fix_dir) {
-            $fix_path = "{$fix_dir}/{$version_dir}/{$path}";
+        if ($this->fix_dir) {
+            $fix_path = "{$this->fix_dir}/{$this->file_doc_dir}/{$this->path}";
 
             if (is_file($fix_path) ||
                 (is_dir($fix_path) && is_file("{$fix_path}/index.html")))
@@ -86,25 +102,24 @@ class BoostDocumentation
         }
 
         if (!$file) {
-            $file = $archive_dir . '/';
-            $file = $file . $version_dir . '/' . $path;
+            $file = "{$this->archive_dir}/{$this->file_doc_dir}/{$this->path}";
         }
 
         // Only use a permanent redirect for releases (beta or full).
 
-        $redirect_status_code = $version &&
-            $version->is_numbered_release() ? 301 : 302;
+        $redirect_status_code = $this->version &&
+            $this->version->is_numbered_release() ? 301 : 302;
 
         // Calculate expiry date if requested.
 
         $expires = null;
-        if ($use_http_expire_date)
+        if ($this->use_http_expire_date)
         {
-            if (!$version) {
+            if (!$this->version) {
                 $expires = "+1 week";
             }
             else {
-                $compare_version = BoostVersion::from($version)->
+                $compare_version = BoostVersion::from($this->version)->
                     compare(BoostVersion::current());
                 $expires = $compare_version === -1 ? "+1 year" :
                     ($compare_version === 0 ? "+1 week" : "+1 day");
@@ -114,13 +129,13 @@ class BoostDocumentation
         // Last modified date
 
         if (!is_readable($file)) {
-            BoostWeb::error_404($file, 'Unable to find file.');
-            return;
+            BoostWeb::throw_error_404($file, 'Unable to find file.');
         }
 
         $last_modified = max(
             strtotime(BOOST_DOCS_MODIFIED_DATE),        // last manual documenation update
-            filemtime(dirname(__FILE__).'/boost.php'),  // last release (since the version number is updated)
+            filemtime(dirname(__FILE__).'/../../generated/current_version.txt'),
+                                                        // last release)
             filemtime($file)                            // when the file was modified
         );
 
@@ -140,19 +155,14 @@ class BoostDocumentation
 
             if ($found_file) {
                 $file = $file.$found_file;
-                $path = $path.$found_file;
+                $this->path = $this->path.$found_file;
             }
             else {
                 if (!BoostWeb::http_headers('text/html', $last_modified, $expires))
                     return;
 
-                $data = new BoostFilterData();
-                $data->version = $version;
-                $data->path = $path;
-                $data->archive_dir = $archive_dir;
-                $data->fix_dir = $fix_dir;
-                $display_dir = new BoostDisplayDir($data);
-                return $display_dir->display($file);
+                $display_dir = new BoostDisplayDir($this, $file);
+                return $display_dir->display();
             }
         }
 
@@ -181,11 +191,11 @@ class BoostDocumentation
 
         foreach ($info_map as $i)
         {
-            if (preg_match($i[1],$path))
+            if (preg_match($i[1],$this->path))
             {
                 if ($i[0]) {
                     $min_version = BoostVersion::from($i[0]);
-                    if ($min_version->compare(BoostVersion::page()) > 0) {
+                    if ($min_version->compare($this->version) > 0) {
                         // This is after the current version.
                         continue;
                     }
@@ -200,11 +210,10 @@ class BoostDocumentation
 
         if (!$extractor) {
             if (strpos($_SERVER['HTTP_HOST'], 'www.boost.org') === false) {
-                BoostWeb::error_404($file, 'No extractor found for filename.');
+                BoostWeb::throw_error_404($file, 'No extractor found for filename.');
             } else {
-                BoostWeb::error_404($file);
+                BoostWeb::throw_error_404($file);
             }
-            return;
         }
 
         // Handle ETags and Last-Modified HTTP headers.
@@ -245,13 +254,7 @@ class BoostDocumentation
                     $content = call_user_func($preprocess, $content);
                 }
 
-                $data = new BoostFilterData();
-                $data->version = $version;
-                $data->path = $path;
-                $data->content = $content;
-                $data->archive_dir = $archive_dir;
-                $data->fix_dir = $fix_dir;
-                echo_filtered($extractor, $data);
+                echo_filtered($extractor, $this, $content);
             }
         }
     }
@@ -261,9 +264,9 @@ class BoostDocumentation
 // Filters
 //
 
-function echo_filtered($extractor, $data) {
+function echo_filtered($extractor, $data, $content) {
     $name = "BoostFilter".underscore_to_camel_case($extractor);
-    $extractor = new $name($data);
+    $extractor = new $name($data, $content);
     $extractor->echo_filtered();
 }
 
@@ -305,18 +308,20 @@ function latest_link($filter_data)
         break;
     case 1:
         echo '<div class="boost-common-header-notice">';
-        if (realpath("{$filter_data->archive_dir}/{$current->dir()}/{$filter_data->path}") !== false ||
-            realpath("{$filter_data->fix_dir}/{$current->dir()}/{$filter_data->path}") !== false)
+        if (!$filter_data->path ||
+            ($filter_data->archive_dir && realpath("{$filter_data->archive_dir}/{$current->dir()}/{$filter_data->path}") !== false) ||
+            ($filter_data->fix_dir && realpath("{$filter_data->fix_dir}/{$current->dir()}/{$filter_data->path}") !== false))
         {
             echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$filter_data->path,'">',
-                "Click here to view the latest version of this page.",
+                "This is the documentation for an old version of Boost.
+                Click here to view this page for the latest version.",
                 '</a>';
         }
         else
         {
             echo '<a class="boost-common-header-inner" href="/doc/libs/">',
-                "This is an old version of boost. ",
-                "Click here for the latest version's documentation home page.",
+                "This is an the documentation for an old version of boost.
+                Click here for the latest Boost documentation.",
                 '</a>';
         }
         echo '</div>', "\n";

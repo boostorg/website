@@ -7,9 +7,8 @@
 
 class BoostFilterText extends BoostFilter
 {
-    function __construct($data) {
-        parent::__construct($data);
-        // TODO: Better support for other character sets?
+    function __construct($data, $content) {
+        parent::__construct($data, $content);
         $this->charset = 'UTF-8';
     }
 
@@ -36,14 +35,15 @@ class BoostFilterText extends BoostFilter
     function encoded_text($type) {
         $text = '';
 
-        $root = dirname(preg_replace('@([^/]+/)@','../',$this->data->path));
+        $root = dirname(preg_replace('@([^/]+/)@','../',$this->data->path))."/";
+        $boost_root = "{$root}{$this->data->boost_root}";
 
         // John Gruber's regular expression for finding urls
         // http://daringfireball.net/2009/11/liberal_regex_for_matching_urls
         
         foreach(preg_split(
             '@\b((?:[\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|[^[:punct:]\s]|/))@',
-            $this->data->content, -1, PREG_SPLIT_DELIM_CAPTURE)
+            $this->content, -1, PREG_SPLIT_DELIM_CAPTURE)
             as $index => $part)
         {
             if($index % 2 == 0) {
@@ -52,11 +52,11 @@ class BoostFilterText extends BoostFilter
                 if($type == 'cpp') {
                     $html = preg_replace(
                         '@(#[ ]*include[ ]+&lt;)(boost[^&]+)@Ssm',
-                        '${1}<a href="'.$root.'/${2}">${2}</a>',
+                        '${1}<a href="'.$boost_root.'${2}">${2}</a>',
                         $html );
                     $html = preg_replace(
                         '@(#[ ]*include[ ]+&quot;)(boost[^&]+)@Ssm',
-                        '${1}<a href="'.$root.'/${2}">${2}</a>',
+                        '${1}<a href="'.$boost_root.'${2}">${2}</a>',
                         $html );
                 }
 
@@ -128,10 +128,9 @@ class BoostFilterText extends BoostFilter
 
         if($root &&
             ($host == 'boost.org' || $host == 'www.boost.org') &&
-            strpos($relative, '/lib') === 0 &&
-            strpos($relative, '.') === 0)
+            strpos($relative, '/lib') === 0)
         {
-            $url = $root.$relative;
+            $url = $root.substr($relative, 1);
         }
         else
         {

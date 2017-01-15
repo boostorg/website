@@ -3,13 +3,10 @@
 // Not strictly a filter, but needs some of the members.
 class BoostDisplayDir extends BoostFilter
 {
-    function display($dir) {
+    function __construct($data, $dir) {
         $handle = opendir($dir);
 
-        $title = html_encode("Index listing for {$this->data->path}");
-
-        $this->title = $title;
-        $this->data->noindex = true;
+        $title = html_encode("Index listing for {$data->path}");
 
         $content = "<h3>$title</h3>\n<ul>\n";
 
@@ -23,8 +20,12 @@ class BoostDisplayDir extends BoostFilter
 
         $content .= "</ul>\n";
 
-        $this->data->content = $content;
+        parent::__construct($data, $content);
+        $this->title = $title;
+        $this->noindex = true;
+    }
 
-        $this->display_template($this->template_params($content));
+    function display() {
+        $this->display_template($this->template_params($this->content));
     }
 }

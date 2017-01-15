@@ -26,14 +26,23 @@ class BoostPages {
     var $root;
     var $hash_file;
     var $page_cache_file;
+    var $beta_release_notes_file;
     var $pages = Array();
     var $page_cache = Array();
+    var $beta_release_notes = Array();
     var $releases = null;
 
-    function __construct($root, $hash_file, $page_cache, $release_file) {
+    function __construct($root = null, $paths = array()) {
+        if (!$root) { $root = BOOST_WEBSITE_DATA_ROOT_DIR; }
+        $hash_file = BoostWebsite::array_get($paths, 'hash_file', "generated/state/feed-pages.txt");
+        $page_cache = BoostWebsite::array_get($paths, 'page_cache', "generated/state/page-cache.txt");
+        $beta_release_notes = BoostWebsite::array_get($paths, 'beta_release_notes', "generated/state/beta_release_notes.txt");
+        $release_file = BoostWebsite::array_get($paths, 'release_file', "generated/state/release.txt");
+
         $this->root = $root;
         $this->hash_file = "{$root}/{$hash_file}";
         $this->page_cache_file = "{$root}/{$page_cache}";;
+        $this->beta_release_notes_file = "{$root}/{$beta_release_notes}";;
         $this->releases = new BoostReleases("{$root}/{$release_file}");
 
         if (is_file($this->hash_file)) {
@@ -52,23 +61,9 @@ class BoostPages {
         if (is_file($this->page_cache_file)) {
             $this->page_cache = BoostState::load($this->page_cache_file);
         }
-
-        // Temporary code to update release data
-        foreach ($this->pages as $qbk_file => $page) {
-            if ($page->release_data &&
-                array_key_exists('version', $page->release_data) &&
-                !array_key_exists('release_date', $page->release_data) &&
-                $page->get_release_status() == 'released' &&
-                $page->pub_date)
-            {
-                $version = $page->release_data['version'];
-                $base_version = $version->base_version();
-                $this->releases->release_data[$base_version][(string) $version]['release_date'] =
-                    $page->pub_date;
-                $page->release_data['release_date'] = $page->pub_date;
-            }
+        if (is_file($this->beta_release_notes_file)) {
+            $this->beta_release_notes = BoostState::load($this->beta_release_notes_file);
         }
-        $this->releases->save();
     }
 
     function save() {
@@ -76,17 +71,21 @@ class BoostPages {
             array_map(function($page) { return $page->state(); }, $this->pages),
             $this->hash_file);
         BoostState::save($this->page_cache,  $this->page_cache_file);
+        BoostState::save($this->beta_release_notes,  $this->beta_release_notes_file);
     }
 
     function reverse_chronological_pages() {
         $pages = $this->pages;
 
-        // TODO: Use release date for release pages?
         $pub_date_order = array();
         $last_published_order = array();
         $unpublished_date = new DateTime("+10 years");
         foreach($pages as $index => $page) {
-            $pub_date_order[$index] = $page->pub_date ?: $unpublished_date;
+            $pub_date_order[$index] =
+                ($page->release_data ?
+                    BoostWebsite::array_get($page->release_data, 'release_date') :
+                    null) ?:
+                $page->index_info()->pub_date ?: $unpublished_date;
             $last_published_order[$index] = $page->last_modified;
         }
         array_multisort(
@@ -102,7 +101,7 @@ class BoostPages {
             foreach (glob("{$this->root}/{$details['source']}") as $qbk_file) {
                 assert(strpos($qbk_file, $this->root) === 0);
                 $qbk_file = substr($qbk_file, strlen($this->root) + 1);
-                $this->add_qbk_file($qbk_file, $details['section']);
+                $this->update_qbk_file($qbk_file, $details['section']);
             }
         }
     }
@@ -117,88 +116,95 @@ class BoostPages {
     }
 
     function get_release_data($qbk_file, $section) {
-        if ($section !== 'history' && $section !== 'downloads') {
+        if ($section != 'history' && $section != 'downloads') {
             return null;
         }
 
-        // TODO: This special case is a real pain to handle, maybe it
-        //       shouldn't have release data? It doesn't make much
-        //       sense as it is.
         $basename = pathinfo($qbk_file, PATHINFO_FILENAME);
-        if ($basename == 'unversioned') {
-            return array(
-                'release_status' => 'released',
-                'release_date' => new DateTime('Tue, 14 Dec 1999 12:00:00 GMT'),
-            );
+
+        if (preg_match('@^([a-z](?:_[a-z]|[a-z0-9])*)_([0-9][0-9_]*)$@i', $basename, $match)) {
+            return $this->releases->get_latest_release_data($match[1], $match[2]);
+        }
+        else {
+            return null;
         }
 
-        $version = BoostVersion::from($basename);
-        $base_version = $version->base_version();
-        if (array_key_exists($base_version, $this->releases->release_data)) {
-            $chosen_is_dev = true;
-            $chosen_version = null;
-            $release_data = null;
-
-            foreach ($this->releases->release_data[$base_version] as $version2 => $data) {
-                $version_object = BoostVersion::from($version2);
-                $is_dev = array_key_exists('release_status', $data) && $data['release_status'] == 'dev';
-
-                if (!$chosen_version ||
-                    ($chosen_is_dev && !$is_dev) ||
-                    ($chosen_is_dev == $is_dev && $version_object->compare($chosen_version) > 0))
-                {
-                    $chosen_is_dev = $is_dev;
-                    $chosen_version = $version_object;
-                    $release_data = $data;
-                    $release_data['version'] = $version_object;
-                }
-            }
-
-            return $release_data ?: $dev_data;
-        }
-
-        // Assume old versions are released if there's no data.
-        if ($version->compare('1.50.0') < 0) {
-            return array('version' => $version);
-        }
-
-        // TODO: Maybe assume 'master' for new versions?
-        return array();
     }
 
-    function add_qbk_file($qbk_file, $section) {
-        $release_data = $this->get_release_data($qbk_file, $section);
-
-        $context = hash_init('sha256');
-        hash_update($context, json_encode($this->normalize_release_data(
-            $release_data, $qbk_file, $section)));
-        hash_update($context, str_replace("\r\n", "\n",
-            file_get_contents("{$this->root}/{$qbk_file}")));
-        $qbk_hash = hash_final($context);
-
+    function update_qbk_file($qbk_file, $section) {
         $record = null;
 
         if (!isset($this->pages[$qbk_file])) {
-            $this->pages[$qbk_file] = $record = new BoostPages_Page($qbk_file, $release_data);
+            $release_data = $this->get_release_data($qbk_file, $section);
+            $record = new BoostPages_Page($qbk_file, $release_data);
+            $record->section = $section;
+            $this->pages[$qbk_file] = $record;
         } else {
             $record = $this->pages[$qbk_file];
-            if ($record->qbk_hash == $qbk_hash) {
-                return;
-            }
-            if ($record->page_state != 'new') {
-                $record->page_state = 'changed';
-            }
         }
 
-        $record->qbk_hash = $qbk_hash;
-        $record->section = $section;
-        $record->last_modified = new DateTime();
+        switch($record->get_release_status()) {
+        case 'released':
+        case null:
+            $qbk_hash = $this->calculate_qbk_hash($record, $section);
+
+            if ($record->qbk_hash != $qbk_hash && $record->page_state != 'new') {
+                $record->page_state = 'changed';
+            }
+            break;
+        case 'beta':
+            $qbk_hash = $this->calculate_qbk_hash($record, $section);
+
+            if ($record->qbk_hash != $qbk_hash && !$record->page_state) {
+                $record->page_state = 'release-data-changed';
+            }
+            break;
+        case 'dev':
+            // Not building anything for dev entries (TODO: Maybe delete a page
+            // if it exists??? Not sure how that would happen).
+            break;
+        default:
+            // Unknown release status.
+            assert(false);
+        }
+
+        if ($record->page_state) {
+            $record->section = $section;
+            if ($record->qbk_hash != $qbk_hash) {
+                $record->qbk_hash = $qbk_hash;
+                $record->last_modified = new DateTime();
+            }
+        }
+    }
+
+    function calculate_qbk_hash($record, $section) {
+        switch($record->get_release_status()) {
+        case 'beta':
+            // For beta files, don't hash the page source as we don't want to
+            // rebuild when it updates.
+            $context = hash_init('sha256');
+            hash_update($context, json_encode($this->normalize_release_data(
+                $record->release_data, $record->qbk_file, $section)));
+            return hash_final($context);
+        default:
+            $context = hash_init('sha256');
+            hash_update($context, json_encode($this->normalize_release_data(
+                $record->release_data, $record->qbk_file, $section)));
+            hash_update($context, str_replace("\r\n", "\n",
+                file_get_contents("{$this->root}/{$record->qbk_file}")));
+            return hash_final($context);
+        }
     }
 
     // Make the release data look like it used to look in order to get a consistent
     // hash value. Pretty expensive, but saves constant messing around with hashes.
     private function normalize_release_data($release_data, $qbk_file, $section) {
-        if (!$release_data) { return null; }
+        if (is_null($release_data)) { return null; }
+
+        // Note that this can be determined from the quickbook file, so if
+        // there's someway that it could change, then either qbk_hash or the
+        // path would change anyway.
+        unset($release_data['release_name']);
 
         // Fill in default values.
         $release_data += array(
@@ -241,6 +247,7 @@ class BoostPages {
                 'location', 'name', 'key'));
         }
 
+
         return $release_data;
     }
 
@@ -256,7 +263,7 @@ class BoostPages {
         return $array;
     }
 
-    function convert_quickbook_pages($refresh = false) {
+    function convert_quickbook_pages($mode = 'update') {
         try {
             BoostSuperProject::run_process('quickbook --version');
             $have_quickbook = true;
@@ -266,113 +273,215 @@ class BoostPages {
             $have_quickbook = false;
         }
 
-        $bb_parser = new BoostBookParser();
-
+        $in_progress_release_notes = array();
+        $in_progress_failed = false;
         foreach ($this->pages as $page => $page_data) {
+            if ($mode != 'refresh' && $page_data->dev_data) {
+                $dev_page_data = clone($page_data);
+                $dev_page_data->release_data = $dev_page_data->dev_data;
+                $dev_page_data->page_state = 'changed';
 
-            if ($page_data->page_state || $refresh) {
-                // Hash the quickbook source
+                list($boostbook_values, $fresh_cache) = $this->load_quickbook_page($page, $have_quickbook);
 
-                $hash = hash('sha256', str_replace("\r\n", "\n",
-                    file_get_contents("{$this->root}/{$page}")));
-
-                // Get the page from quickbook/read from cache
-
-                if (array_key_exists($page, $this->page_cache) &&
-                    (!$have_quickbook || $this->page_cache[$page]['hash'] === $hash))
-                {
-                    $description_xhtml = $this->page_cache[$page]['description_xhtml'];
-                }
-                else if ($have_quickbook)
-                {
-                    $xml_filename = tempnam(sys_get_temp_dir(), 'boost-qbk-');
-                    try {
-                        echo "Converting ", $page, ":\n";
-                        BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
-                        $values = $bb_parser->parse($xml_filename);
-                        $page_data->load_boostbook_data($values, $refresh);
-                        $description_xhtml = $values['description_xhtml'];
-                    } catch (Exception $e) {
-                        unlink($xml_filename);
-                        throw $e;
-                    }
-                    unlink($xml_filename);
-
-                    $this->page_cache[$page] = array(
-                        'hash' => $hash,
-                        'description_xhtml' => $description_xhtml,
-                    );
+                if (!$boostbook_values) {
+                    echo "Unable to generate 'In Progress' entry for {$page}.\n";
+                    $in_progress_failed = true;
                 }
                 else {
+                    $in_progress_release_notes[] = array(
+                        'full_title_xml' => $boostbook_values['title_xml'],
+                        'web_date' => 'In Progress',
+                        'download_table' => $dev_page_data->download_table(),
+                        'description_xml' => $this->transform_page_html($dev_page_data, $boostbook_values['description_xhtml']),
+                    );
+                }
+            }
+
+            if ($mode == 'refresh') {
+                // Refresh: Rebuild pages.
+                $boostbook_values = null;
+                switch ($page_data->get_release_status()) {
+                case 'released':
+                case null:
+                    $boostbook_values = BoostWebsite::array_get($this->page_cache, $page);
+                    if (!$boostbook_values && $have_quickbook) {
+                        $boostbook_values = $this->load_quickbook_page_impl($page);
+                    }
+                    break;
+                case 'beta':
+                    $boostbook_values = BoostWebsite::array_get($this->beta_release_notes, "{$page}:{$page_data->release_data['version']}");
+                    break;
+                case 'dev':
+                    break;
+                default:
+                    assert(false);
+                }
+
+                if (!$boostbook_values) {
                     echo "Unable to generate page for {$page}.\n";
-                    continue;
                 }
-
-                // Set the path where the page should be built.
-                // This can only be done after the quickbook file has been converted,
-                // as the page id is based on the file contents.
-
-                if (!$page_data->location) {
-                    $location_data = $this->get_page_location_data($page_data->qbk_file);
-                    $page_data->location = "{$location_data['destination']}/{$page_data->id}.html";
+                else {
+                    $this->generate_quickbook_page($page_data, $boostbook_values);
                 }
+            }
+            else if ($mode == 'update' && $page_data->page_state === 'release-data-changed') {
+                // Release data changed: Update only the release data,
+                // otherwise use existing data.
+                assert($page_data->get_release_status() == 'beta');
+                $boostbook_values = BoostWebsite::array_get($this->beta_release_notes,
+                    "{$page}:{$page_data->release_data['version']}");
+                if (!$boostbook_values) {
+                    echo "No beta cache entry for {$page}.\n";
+                }
+                else {
+                    $this->generate_quickbook_page($page_data, $boostbook_values);
+                    $page_data->page_state = null;
+                    ++$page_data->update_count;
+                }
+            }
+            else if ($mode == 'update' && $page_data->page_state) {
+                list($boostbook_values, $fresh_cache) = $this->load_quickbook_page($page, $have_quickbook);
 
-                // Transform links in description
-
-                if ($page_data->section === 'history') {
-                    $doc_prefix  = null;
-                    if ($page_data->get_release_status() === 'dev' || $page_data->get_release_status() === 'beta') {
-                        $doc_prefix = rtrim($page_data->get_documentation() ?: '/doc/libs/master/', '/');
-                        $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
-                            function ($x) use ($doc_prefix) {
-                                return preg_match('@^/(?:libs/|doc/html/)@', $x)
-                                    ? $doc_prefix.$x : $x;
-                            });
+                if (!$boostbook_values) {
+                    echo "Unable to generate page for {$page}.\n";
+                }
+                else {
+                    if (!$fresh_cache) {
+                        // If we have a dated cache entry, and aren't able to
+                        // rebuild it, continue using the current entry, but
+                        // don't change the page state - it will try
+                        // again on the next run.
+                        echo "Using old cached entry for {$page}.\n";
                     }
-
-                    $version = BoostWebsite::array_get($page_data->release_data, 'version');
-                    if ($version && $doc_prefix) {
-                        $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
-                        $link_pattern = '@^'.preg_quote($final_documentation, '@').'/@';
-                        $replace = "{$doc_prefix}/";
-                        $description_xhtml = BoostSiteTools::transform_links($description_xhtml,
-                            function($x) use($link_pattern, $replace) {
-                                return preg_replace($link_pattern, $replace, $x);
-                            });
+                    $this->generate_quickbook_page($page_data, $boostbook_values);
+                    $this->update_page_data_from_boostbook_values($page_data, $boostbook_values);
+                    if ($fresh_cache) {
+                        $page_data->page_state = null;
+                        ++$page_data->update_count;
+                        if ($page_data->get_release_status() == 'beta') {
+                            $this->beta_release_notes["{$page}:{$page_data->release_data['version']}"] =
+                                $boostbook_values;
+                        }
                     }
                 }
+            }
+        }
 
-                $description_xhtml = BoostSiteTools::trim_lines($description_xhtml);
-                $page_data->description_xml = $description_xhtml;
+        if ($mode != 'refresh' && !$in_progress_failed) {
+            $template_vars = array(
+                'releases' => $in_progress_release_notes,
+            );
+            self::write_template(
+                "{$this->root}/users/history/in_progress.html",
+                __DIR__."/templates/in_progress.php",
+                $template_vars);
+        }
+    }
 
-                // Generate the various pages.
+    function load_quickbook_page($page, $have_quickbook) {
+        // Hash the quickbook source
+        $hash = hash('sha256', str_replace("\r\n", "\n",
+            file_get_contents("{$this->root}/{$page}")));
 
-                $template_vars = array(
-                    'history_style' => '',
-                    'full_title_xml' => $page_data->full_title_xml(),
-                    'title_xml' => $page_data->title_xml,
-                    'note_xml' => '',
-                    'web_date' => $page_data->web_date(),
-                    'documentation_para' => '',
-                    'download_table' => $page_data->download_table(),
-                    'description_xml' => $page_data->description_xml,
-                );
-                if ($page_data->get_release_status() === 'dev') {
-                    $template_vars['note_xml'] = <<<EOL
-                        <div class="section-alert"><p>Note: This release is
-                        still under development. Please don't use this page as
-                        a source of information, it's here for development
-                        purposes only. Everything is subject to
-                        change.</p></div>
-EOL;
-                }
+        // Get the page from quickbook/read from cache
+        $boostbook_values = BoostWebsite::array_get($this->page_cache, $page);
+        $fresh_cache = $boostbook_values && $boostbook_values['hash'] === $hash;
 
-                if ($page_data->section === 'history' && BoostWebsite::array_get($page_data->release_data, 'documentation')) {
-                    $template_vars['documentation_para'] = '              <p><a href="'.html_encode(BoostWebsite::array_get($page_data->release_data, 'documentation')).'">Documentation</a>';
-                }
+        if ($have_quickbook && !$fresh_cache)
+        {
+            $boostbook_values = $this->load_quickbook_page_impl($page, $hash);
+            $fresh_cache = true;
+            $this->page_cache[$page] = $boostbook_values;
+        }
 
-                if (strpos($page_data->location, 'users/history/') === 0) {
-                    $template_vars['history_style'] = <<<EOL
+        return array($boostbook_values, $fresh_cache);
+    }
+
+    function load_quickbook_page_impl($page, $hash = null) {
+        // Hash the quickbook source
+        if (is_null($hash)) {
+            $hash = hash('sha256', str_replace("\r\n", "\n",
+                file_get_contents("{$this->root}/{$page}")));
+        }
+
+        $bb_parser = new BoostBookParser();
+
+        $xml_filename = tempnam(sys_get_temp_dir(), 'boost-qbk-');
+        try {
+            echo "Converting ", $page, ":\n";
+            BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
+            $values = $bb_parser->parse($xml_filename);
+            $boostbook_values = array(
+                'hash' => $hash,
+                'title_xml' => BoostSiteTools::trim_lines($values['title_xhtml']),
+                'purpose_xml' => BoostSiteTools::trim_lines($values['purpose_xhtml']),
+                'notice_xml' => BoostSiteTools::trim_lines($values['notice_xhtml']),
+                'notice_url' => $values['notice_url'],
+                'pub_date' => $values['pub_date'],
+                'id' => $values['id'],
+                'description_xhtml' => BoostSiteTools::trim_lines($values['description_xhtml']),
+            );
+        } catch (Exception $e) {
+            unlink($xml_filename);
+            throw $e;
+        }
+        unlink($xml_filename);
+        return $boostbook_values;
+    }
+
+    function update_page_data_from_boostbook_values($page_data, $boostbook_values) {
+        $page_data->load_boostbook_data($boostbook_values);
+
+        // Set the path where the page should be built.
+        // This can only be done after the quickbook file has been converted,
+        // as the page id is based on the file contents.
+
+        if (!$page_data->location) {
+            $location_data = $this->get_page_location_data($page_data->qbk_file);
+            $page_data->location = "{$location_data['destination']}/{$page_data->id}.html";
+        }
+    }
+
+    function transform_page_html($page_data, $description_xhtml) {
+        // Transform links in description
+
+        if (($page_data->get_release_status() === 'dev' ||
+            $page_data->get_release_status() === 'beta') &&
+            $page_data->get_documentation()
+        ) {
+            $doc_prefix = rtrim($page_data->get_documentation(), '/');
+            $description_xhtml = BoostSiteTools::transform_links_regex($description_xhtml,
+                '@^(?=/libs/|/doc/html/)@', $doc_prefix);
+
+            $version = BoostWebsite::array_get($page_data->release_data, 'version');
+            if ($version && $version->is_numbered_release()) {
+                $final_documentation = "/doc/libs/{$version->final_doc_dir()}";
+                $description_xhtml = BoostSiteTools::transform_links_regex($description_xhtml,
+                    '@^'.preg_quote($final_documentation, '@').'(?=/)@', $doc_prefix);
+            }
+        }
+
+        return BoostSiteTools::trim_lines($description_xhtml);
+    }
+
+    function generate_quickbook_page($page_data, $boostbook_values) {
+        $template_vars = array(
+            'history_style' => '',
+            'full_title_xml' => $page_data->full_title_xml($boostbook_values['title_xml']),
+            'title_xml' => $boostbook_values['title_xml'],
+            'note_xml' => '',
+            'web_date' => $page_data->web_date($boostbook_values['pub_date']),
+            'documentation_para' => '',
+            'download_table' => $page_data->download_table(),
+            'description_xml' => $this->transform_page_html($page_data, $boostbook_values['description_xhtml']),
+        );
+
+        if ($page_data->get_documentation()) {
+            $template_vars['documentation_para'] = '              <p><a href="'.html_encode($page_data->get_documentation()).'">Documentation</a>';
+        }
+
+        if (strpos($page_data->location, 'users/history/') === 0) {
+            $template_vars['history_style'] = <<<EOL
 
   <style type="text/css">
 /*<![CDATA[*/
@@ -386,16 +495,12 @@ EOL;
   </style>
 
 EOL;
-                }
-
-                self::write_template(
-                    "{$this->root}/{$page_data->location}",
-                    __DIR__."/templates/entry.php",
-                    $template_vars);
-
-                $page_data->page_state = null;
-            }
         }
+
+        self::write_template(
+            "{$this->root}/{$page_data->location}",
+            __DIR__."/templates/entry.php",
+            $template_vars);
     }
 
     static function write_template($_location, $_template, $_vars) {
@@ -409,19 +514,30 @@ EOL;
 }
 
 class BoostPages_Page {
+    // Path to quickbook file
     var $qbk_file;
 
-    var $section, $page_state, $location;
-    var $id, $title_xml, $purpose_xml, $notice_xml, $notice_url;
-    var $last_modified, $pub_date;
-    var $qbk_hash;
+    // Page state
+    var $section, $page_state, $location, $id, $last_modified;
+    var $qbk_hash, $update_count;
+
+    // Boostbook data stored for use in indexes etc.
+    // These members should only be used when generating index pages,
+    // otherwise use the boostbook data directly.
+    private $title_xml, $purpose_xml, $notice_xml, $notice_url, $pub_date;
 
     // Extra state data that isn't saved.
-    var $description_xml = null; // Page markup, after transforming for current state.
-    var $release_data = null;    // Status of release where appropriate.
+    var $is_release = false;  // Is this a release?
+    var $release_data = null; // Status of release where appropriate.
+    var $dev_data = null;     // Status of release in development.
 
-    function __construct($qbk_file, $release_data = null, $attrs = array('page_state' => 'new')) {
+    function __construct($qbk_file, $release_data = null, $attrs = array()) {
         $this->qbk_file = $qbk_file;
+        if ($release_data) {
+            $this->is_release = true;
+            $this->release_data = BoostWebsite::array_get($release_data, 'release');
+            $this->dev_data = BoostWebsite::array_get($release_data, 'dev');
+        }
 
         $this->section = BoostWebsite::array_get($attrs, 'section');
         $this->page_state = BoostWebsite::array_get($attrs, 'page_state');
@@ -434,6 +550,7 @@ class BoostPages_Page {
         $this->last_modified = BoostWebsite::array_get($attrs, 'last_modified');
         $this->pub_date = BoostWebsite::array_get($attrs, 'pub_date');
         $this->qbk_hash = BoostWebsite::array_get($attrs, 'qbk_hash');
+        $this->update_count = BoostWebsite::array_get($attrs, 'update_count', 0);
 
         // Ensure that pub_date as last_modified are DateTimes.
         // TODO: Probably not needed any more.
@@ -451,16 +568,6 @@ class BoostPages_Page {
         else if (is_numeric($this->last_modified)) {
             $this->last_modified = new DateTime("@{$this->last_modified}");
         }
-
-        $this->set_release_data($release_data);
-    }
-
-    function set_release_data($release_data) {
-        if ($release_data) {
-            assert($this->section === 'history' || $this->section === 'downloads');
-        }
-
-        $this->release_data = $release_data;
     }
 
     function state() {
@@ -475,16 +582,16 @@ class BoostPages_Page {
             'notice_url' => $this->notice_url,
             'last_modified' => $this->last_modified,
             'pub_date' => $this->pub_date,
-            'qbk_hash' => $this->qbk_hash
+            'qbk_hash' => $this->qbk_hash,
+            'update_count' => $this->update_count,
         );
     }
 
-    function load_boostbook_data($values, $refresh = false) {
-        $this->title_xml = BoostSiteTools::trim_lines($values['title_xhtml']);
-        $this->purpose_xml = BoostSiteTools::trim_lines($values['purpose_xhtml']);
-        $this->notice_xml = BoostSiteTools::trim_lines($values['notice_xhtml']);
+    function load_boostbook_data($values) {
+        $this->title_xml = $values['title_xml'];
+        $this->purpose_xml = $values['purpose_xml'];
+        $this->notice_xml = $values['notice_xml'];
         $this->notice_url = $values['notice_url'];
-
         $this->pub_date = $values['pub_date'];
         $this->id = $values['id'];
         if (!$this->id) {
@@ -492,33 +599,47 @@ class BoostPages_Page {
         }
     }
 
-    function full_title_xml() {
-        switch ($this->section) {
-        case 'history':
-            switch($this->get_release_status()) {
-            case 'released':
-                return $this->title_xml;
-            case 'beta':
-                return trim("{$this->title_xml} beta {$this->release_data['version']->beta_number()}");
-            default:
-                return "{$this->title_xml} - work in progress";
-            }
+    function index_info() {
+        return (object) array(
+            'id' => $this->id,
+            'location' => $this->location,
+            'full_title_xml' => $this->full_title_xml($this->title_xml),
+            'web_date' => $this->web_date($this->pub_date),
+            'download_page' => $this->get_download_page(),
+            'documentation' => $this->get_documentation(),
+            'title_xml' => $this->title_xml,
+            'purpose_xml' => $this->purpose_xml,
+            'notice_xml' => $this->notice_xml,
+            'notice_url' => $this->notice_url,
+            'pub_date' => $this->pub_date,
+        );
+    }
+
+    function full_title_xml($title_xml) {
+        switch($this->get_release_status()) {
+        case 'beta':
+            return trim("{$title_xml} beta {$this->release_data['version']->beta_number()}");
+        case 'dev':
+            return "{$title_xml} - work in progress";
+        case 'released':
+        case null:
+            return $title_xml;
         default:
-            return $this->title_xml;
+            assert(false);
         }
     }
 
-    function web_date() {
+    function web_date($pub_date) {
         $date = null;
 
-        if ($this->release_data) {
+        if (!is_null($this->release_data)) {
             // For releases, use the release date, not the pub date
             if (array_key_exists('release_date', $this->release_data)) {
                 $date = $this->release_data['release_date'];
             }
         }
         else {
-            $date = $this->pub_date;
+            $date = $pub_date;
         }
 
         return $date ? gmdate('F jS, Y H:i', $date->getTimestamp()).' GMT' :
@@ -526,7 +647,7 @@ class BoostPages_Page {
     }
 
     function download_table_data() {
-        if (!$this->release_data) { return null; }
+        if (is_null($this->release_data)) { return null; }
         $downloads = BoostWebsite::array_get($this->release_data, 'downloads');
         $signature = BoostWebsite::array_get($this->release_data, 'signature');
         $third_party = BoostWebsite::array_get($this->release_data, 'third_party');
@@ -566,10 +687,18 @@ class BoostPages_Page {
 
             $output = '';
             $output .= '              <table class="download-table">';
-            if ($this->get_release_status() === 'beta') {
-                $output .= '<caption>Beta Downloads</caption>';
-            } else {
+            switch($this->get_release_status()) {
+            case 'released':
                 $output .= '<caption>Downloads</caption>';
+                break;
+            case 'beta':
+                $output .= '<caption>Beta Downloads</caption>';
+                break;
+            case 'dev':
+                $output .= '<caption>Development Downloads</caption>';
+                break;
+            default:
+                assert(false);
             }
             $output .= '<tr><th scope="col">Platform</th><th scope="col">File</th>';
             if ($hash_column) {
@@ -594,9 +723,6 @@ class BoostPages_Page {
 
                     $output .= '<td><a href="';
                     if (strpos($download['url'], 'sourceforge') !== false) {
-                        // TODO: I used to add '/download' to source links,
-                        //       but that doesn't seem to be needed any more...
-                        //$output .= html_encode("{$download['url']}/download");
                         $output .= html_encode($download['url']);
                     }
                     else {
@@ -672,6 +798,9 @@ class BoostPages_Page {
         if ($this->page_state == 'new') {
             return false;
         }
+        if ($this->is_release && !$this->release_data) {
+            return false;
+        }
         if (!is_null($state) && $this->get_release_status() !== $state) {
             return false;
         }
@@ -681,17 +810,24 @@ class BoostPages_Page {
     function get_release_status() {
         switch ($this->section) {
         case 'history':
+            if (!$this->is_release) {
+                return null;
+            }
+
+            if (!$this->release_data) {
+                return 'dev';
+            }
+
             if (array_key_exists('release_status', $this->release_data)) {
                 return $this->release_data['release_status'];
             }
 
-            if (array_key_exists('version', $this->release_data)) {
-                if ($this->release_data['version']->is_numbered_release()) {
-                    return $this->release_data['version']->is_beta() ? 'beta' : 'released';
-                }
+            if ($this->release_data['version']->is_numbered_release()) {
+                return $this->release_data['version']->is_beta() ? 'beta' : 'released';
             }
-
-            return 'dev';
+            else {
+                return 'dev';
+            }
         case 'downloads':
             return 'released';
         default:
@@ -700,10 +836,10 @@ class BoostPages_Page {
     }
 
     function get_documentation() {
-        return BoostWebsite::array_get($this->release_data, 'documentation');
+        return is_null($this->release_data) ? null : BoostWebsite::array_get($this->release_data, 'documentation');
     }
 
     function get_download_page() {
-        return BoostWebsite::array_get($this->release_data, 'download_page');
+        return is_null($this->release_data) ? null : BoostWebsite::array_get($this->release_data, 'download_page');
     }
 }

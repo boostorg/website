@@ -97,7 +97,6 @@ class BoostLibrary
         if (isset($lib['status'])) {
             $lib['status'] = strtolower($lib['status']);
             if (!in_array($lib['status'], array('hidden', 'unreleased', 'deprecated'))) {
-                // TODO: Better exception?
                 throw new BoostLibraries_exception("Invalid status: {$lib['status']}");
             }
         }

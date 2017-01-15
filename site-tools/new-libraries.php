@@ -13,13 +13,16 @@ function main() {
     BoostSiteTools\CommandLineOptions::parse(NEW_LIBRARIES_USAGE);
 
     $libraries = BoostLibraries::load();
-    $master = $libraries->get_for_version('master');
+    $libs = $libraries->get_for_version('master', null, function($lib) {
+        return !$lib['boost-version']->is_final_release() &&
+            !$lib['boost-version']->is_hidden() &&
+            BoostWebsite::array_get($lib, 'status') != 'hidden' &&
+            BoostWebsite::array_get($lib, 'status') != 'unreleased';
+    });
 
     $unreleased_libs = array();
-    foreach($master as $lib) {
-        if ($lib['boost-version']->is_unreleased()) {
-            $unreleased_libs[$lib['name']] = $lib;
-        }
+    foreach($libs as $lib) {
+        $unreleased_libs[$lib['name']] = $lib;
     }
 
     if ($unreleased_libs) {

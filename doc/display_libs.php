@@ -54,13 +54,7 @@ EOS;
     return str_ireplace('</head>', $analytics.'</head>', $content);
 }
 
-$archive = new BoostDocumentation(array(
-    'fix_dir' => dirname(__FILE__).'/fixes',
-    'archive_dir' => STATIC_DIR,
-    'use_http_expire_date' => true,
-));
-
-$archive->display_from_archive(
+BoostDocumentation::library_documentation_page()->display_from_archive(
   array(
   //~ special cases that can't be processed at all (some redirects)
   array('','@^libs/gil/doc/.*(html|htm)$@i','raw','text/html'),

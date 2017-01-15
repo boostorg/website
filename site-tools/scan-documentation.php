@@ -33,8 +33,8 @@ function main() {
         if ($name == 'develop' || $name == 'master') {
             // Store this somewhere?
         }
-        else if (preg_match('@^boost_[0-9_]+$@', $name)) {
-            $releases->addDocumentation(BoostVersion::from($name), "/doc/libs/{$name}");
+        else if (preg_match('@^(boost)_([0-9_]+(?:b(?:eta)?[0-9_]*)?)$@', $name, $match)) {
+            $releases->addDocumentation($match[1], BoostVersion::from($match[2]), "/doc/libs/{$match[2]}/");
         }
     }
 

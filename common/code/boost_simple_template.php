@@ -257,8 +257,6 @@ class BoostSimpleTemplate {
             if (is_array($value) && array_key_exists($symbol_part, $value)) {
                 $value = $value[$symbol_part];
             }
-            // TODO: What if the object has a magic property that doesn't actually exist?
-            // Or a function call or some such craziness?
             else if (is_object($value) && property_exists($value, $symbol_part)) {
                 $value = $value->$symbol_part;
             }

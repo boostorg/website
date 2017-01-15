@@ -14,12 +14,15 @@ class BoostFilter
     static $template = null;
 
     var $data;
+    var $content = null;
     var $charset = null;
     var $title = null;
+    var $noindex = false;
 
-    function __construct($data)
+    function __construct($data, $content)
     {
         $this->data = $data;
+        $this->content = $content;
     }
 
     function alter_title($text)
@@ -35,13 +38,13 @@ class BoostFilter
 
     function html_init()
     {
-        preg_match('@text/html; charset=([^\s"\']+)@i',$this->data->content,$charset);
+        preg_match('@text/html; charset=([^\s"\']+)@i',$this->content,$charset);
         if (isset($charset[1]))
         {
             $this->charset = $charset[1];
         }
 
-        preg_match('@<title>([^<]+)</title>@i',$this->data->content,$title);
+        preg_match('@<title>([^<]+)</title>@i',$this->content,$title);
         if (isset($title[1]))
         {
             $this->title = $title[1];
@@ -150,7 +153,7 @@ class BoostFilter
 
         $head = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
 
-        if (!empty($this->data->noindex))
+        if (!empty($this->noindex))
             $head .= "<meta name=\"robots\" content=\"noindex\">\n";
 
         $head .= "<title>${title}</title>";

@@ -2,28 +2,40 @@
 
 require_once(__DIR__.'/../common/code/bootstrap.php');
 
-if (isset($_GET['version'])) {
-    try {
-        $version = BoostVersion::from($_GET['version']);
+function libraries_json($params) {
+    if (isset($params['version'])) {
+        $version = BoostVersion::from($params['version']);
+    } else {
+        $version = BoostVersion::current();
     }
-    catch (BoostVersion_Exception $e) {
-        header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
-        echo json_encode(Array(
-            'error' => $e->getMessage(),
-        ));
-        exit(0);
-    }
-} else {
-    $version = BoostVersion::current();
+
+    $version_libs = array_map(
+        function($lib) {
+            // TODO: Better handling of hidden libraries.
+            if (!empty($lib['boost-version']) &&
+                $lib['boost-version']->is_hidden() &&
+                empty($lib['status'])
+            ) {
+                $lib['status'] = 'hidden';
+                unset($lib['boost-version']);
+            }
+
+            $r = new BoostLibrary($lib);
+            return $r;
+        },
+        BoostLibraries::load()->get_for_version($version, null,
+            'BoostLibraries::filter_all'));
+
+    return BoostLibrary::get_libraries_json($version_libs);
 }
 
-// TODO: This is a bit awkard, should probably have an alternative
-//       to 'get_for_version' which returns a BoostLibraries instance
-//       rather than an array.
-// TODO: Include hidden libraries.
-$version_libs = array_map(function($lib) { return new BoostLibrary($lib); },
-    BoostLibraries::load()->get_for_version($version));
-
 header('Content-type: application/json');
-echo BoostLibrary::get_libraries_json($version_libs);
-echo $version_libs->to_json();
+try {
+    echo libraries_json($_GET);
+}
+catch (BoostVersion_Exception $e) {
+    header($_SERVER['SERVER_PROTOCOL'] . ' 400 Malformed request', true, 400);
+    echo json_encode(Array(
+        'error' => $e->getMessage(),
+    ));
+}

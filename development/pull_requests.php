@@ -3,26 +3,41 @@
 require_once(__DIR__.'/../common/code/bootstrap.php');
 
 class PullRequestPage {
+    static $param_defaults = Array(
+        'page_view' => 'lib',
+    );
+
     static $page_view_options = Array(
-        '' => 'By Library',
+        'lib' => 'By Library',
         'date' => 'By Age',
     );
 
+    var $params;            // Normalised URL parameters
+
     var $pull_requests;
     var $last_updated;
-    var $base_uri;
-    var $params;
-    var $page_view;
+
+    var $page_url_path;     // URL path for this page
+    var $page_view;         // Grouped by library, or sorted by age.
 
     function __construct($params) {
         $json_data = json_decode(
                 file_get_contents(BOOST_DATA_DIR.'/pull-requests.json'));
         $this->pull_requests = $json_data->pull_requests;
         $this->last_updated = $json_data->last_updated;
-        $this->base_uri = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
-        $this->params = $params;
-        if (isset($params['page_view'])) {
-            $this->page_view =  $params['page_view'];
+        $this->page_url_path = preg_replace('![#?].*!', '', $_SERVER['REQUEST_URI']);
+
+        $this->params = array();
+        foreach (self::$param_defaults as $key => $default) {
+            // Note: Using default for empty values as well as missing values.
+            $this->params[$key] = strtolower(trim(
+                BoostWebsite::array_get($params, $key))) ?: $default;
+        }
+
+        $this->page_view =  $this->params['page_view'];
+        if (!array_key_exists($this->page_view, self::$page_view_options)) {
+            BoostWeb::throw_http_error(400, 'Invalid view type',
+                "Invalid view type: {$this->page_view}");
         }
     }
 
@@ -44,7 +59,7 @@ class PullRequestPage {
             "</p>\n";
 
         switch ($this->page_view) {
-            case '':
+            case 'lib':
                 $this->by_library();
                 break;
             case 'date':
@@ -104,7 +119,7 @@ class PullRequestPage {
     }
 
     function option_link($description, $field, $value) {
-        $current_value = isset($this->params[$field]) ? $this->params[$field] : '';
+        $current_value = $this->params[$field];
 
         if ($current_value == $value) {
             echo '<span>', html_encode($description), '</span>';
@@ -114,13 +129,13 @@ class PullRequestPage {
 
             $url_params = '';
             foreach ($params as $k => $v) {
-                if ($v) {
+                if ($v && $v !== self::$param_defaults[$k]) {
                     $url_params .= $url_params ? '&' : '?';
                     $url_params .= urlencode($k) . '=' . urlencode($v);
                 }
             }
 
-            echo '<a href="' . html_encode($this->base_uri . $url_params) . '">',
+            echo '<a href="' . html_encode($this->page_url_path . $url_params) . '">',
             html_encode($description), '</a>';
         }
     }
