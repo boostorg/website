@@ -320,7 +320,7 @@ function latest_link($filter_data)
         else
         {
             echo '<a class="boost-common-header-inner" href="/doc/libs/">',
-                "This is an the documentation for an old version of boost.
+                "This is the documentation for an old version of boost.
                 Click here for the latest Boost documentation.",
                 '</a>';
         }
