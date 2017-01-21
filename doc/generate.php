@@ -44,8 +44,24 @@ class LibrariesHtm {
         $version = BoostVersion::from(
             array_key_exists('version', $this->args) ? $this->args['version'] : 'master'
         );
+        $version_string = (string) $version;
         $page = $this->args['page'];
         $libs = BoostLibraries::load();
+
+        // Better support for other branches?
+        $repo_dir = BOOST_REPOS_DIR.'/boost-'.
+            ($version_string == 'develop' ? 'develop' : 'master').'/';
+
+        if ($version->is_numbered_release()) {
+            $source_version = $version;
+        }
+        else {
+            $jamroot = file_get_contents("{$repo_dir}/Jamroot");
+            if (!preg_match('@constant BOOST_VERSION : (.*) ;@', $jamroot, $match)) {
+                throw new RuntimeException("Unable to find version in Jamroot");
+            }
+            $source_version = BoostVersion::from($match[1]);
+        }
 
         $categorized = $libs->get_categorized_for_version($version, 'name',
             'BoostLibraries::filter_visible');
@@ -62,6 +78,8 @@ class LibrariesHtm {
             'BoostLibraries::filter_visible');
 
         $params = array(
+            'version' => (string) $source_version,
+            'release_notes_url' => "http://www.boost.org/users/history/version_{$source_version->final_doc_dir()}.html",
             'categorized' => array(),
             'alphabetic' => array(),
             'unreleased_libs' => array(),
@@ -102,9 +120,7 @@ class LibrariesHtm {
         }
         $params['unreleased_lib_count'] = count($params['unreleased_libs']);
 
-        // Better support for other branches?
-        $template_dir = BOOST_REPOS_DIR.'/boost-'.
-            ((string) $version == 'develop' ? 'develop' : 'master').'/'.$page;
+        $template_dir = "{$repo_dir}/{$page}";
         echo BoostSimpleTemplate::render(file_get_contents($template_dir),
             $params);
     }
