@@ -19,13 +19,11 @@ class BoostDocumentation
     var $version_title;   // Version string to use in title, or null for default pages.
     var $boost_root;      // Path to root of current version.
     var $path;
-    var $use_http_expire_date;
 
     static function library_documentation_page() {
         return static::documentation_page(array(
             'fix_dir' => BOOST_FIX_DIR,
             'archive_dir' => STATIC_DIR,
-            'use_http_expire_date' => true,
         ));
     }
 
@@ -41,7 +39,6 @@ class BoostDocumentation
         $documentation_page->archive_dir = BoostWebsite::array_get($params, 'archive_dir', STATIC_DIR);
         $documentation_page->fix_dir = BoostWebsite::array_get($params, 'fix_dir');
         $documentation_page->boost_root = BoostWebsite::array_get($params, 'boost-root', '');
-        $documentation_page->use_http_expire_date = BoostWebsite::array_get($params, 'use_http_expire_date', false);
 
         $pattern = BoostWebsite::array_get($params, 'pattern', '@^[/]([^/]+)(?:[/](.*))?$@');
 
@@ -112,18 +109,14 @@ class BoostDocumentation
 
         // Calculate expiry date if requested.
 
-        $expires = null;
-        if ($this->use_http_expire_date)
-        {
-            if (!$this->version) {
-                $expires = "+1 week";
-            }
-            else {
-                $compare_version = BoostVersion::from($this->version)->
-                    compare(BoostVersion::current());
-                $expires = $compare_version === -1 ? "+1 year" :
-                    ($compare_version === 0 ? "+1 week" : "+1 day");
-            }
+        if (!$this->version) {
+            $expires = "+1 week";
+        }
+        else {
+            $compare_version = BoostVersion::from($this->version)->
+                compare(BoostVersion::current());
+            $expires = $compare_version === -1 ? "+1 year" :
+                ($compare_version === 0 ? "+1 week" : "+1 day");
         }
 
         // Last modified date
