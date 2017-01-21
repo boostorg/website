@@ -63,7 +63,7 @@ class BoostState {
                 $record["$key"] = floatval(trim(fgets($file)));
                 $c = fgetc($file);
             } else if ($c == '!') {
-                $record["$key"] = boolval(trim(fgets($file)));
+                $record["$key"] = trim(fgets($file)) ? true : false;
                 $c = fgetc($file);
             } else if ($c == '=') {
                 $record["$key"] = intval(trim(fgets($file)));
