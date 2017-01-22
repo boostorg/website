@@ -293,7 +293,7 @@ function detect_redirect($content)
     // expensive to search.
     if(strlen($content) <= 2000 &&
         preg_match(
-            '@<meta\s+http-equiv\s*=\s*["\']?refresh["\']?\s+content\s*=\s*["\']0;\s*URL=([^"\']*)["\']\s*/?>@i',
+            '@<meta\s+http-equiv\s*=\s*["\']?refresh["\']?\s+content\s*=\s*["\']0;\s*URL=([^"\']*)["\']\s*/?\>@i',
             $content, $redirect))
     {
         return BoostUrl::resolve($redirect[1]);
