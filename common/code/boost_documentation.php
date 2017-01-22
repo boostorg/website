@@ -82,8 +82,24 @@ class BoostDocumentation
         return "{$this->archive_dir}/{$this->file_doc_dir}";
     }
 
+    // Call to redirect if appropriate before rendering the page
+    function redirect_if_appropriate()
+    {
+        if ($this->version && $this->version->is_beta() &&
+            BoostVersion::current()->compare($this->version) > 0)
+        {
+            header("Location: /doc/libs/{$this->version->final_doc_dir()}/{$this->path}");
+            return true;
+        }
+        return false;
+    }
+
     function display_from_archive($content_map = array())
     {
+        if ($this->redirect_if_appropriate()) {
+            return;
+        }
+
         // Set default values
 
         $file = false;

@@ -56,11 +56,6 @@ class LibraryPage {
 
         $this->documentation_page = BoostDocumentation::library_documentation_page();
 
-        // To avoid confusion, only show this page when there is actual documentation.
-        if (!is_dir($this->documentation_page->documentation_dir())) {
-            BoostWeb::throw_error_404($_SERVER['REQUEST_URI']);
-        }
-
         $page_url_path = $_SERVER['REQUEST_URI'];
         $page_url_path = preg_replace('@[#?].*@', '', $page_url_path);
         $page_url_path = preg_replace('@//+@', '/', $page_url_path);
@@ -295,6 +290,16 @@ class LibraryPage {
 }
 
 $library_page = new LibraryPage($_GET, BoostLibraries::load());
+
+if ($library_page->documentation_page->redirect_if_appropriate()) {
+    return;
+}
+
+// To avoid confusion, only show this page when there is actual documentation.
+if (!is_dir($library_page->documentation_page->documentation_dir())) {
+    BoostWeb::throw_error_404($_SERVER['REQUEST_URI']);
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
