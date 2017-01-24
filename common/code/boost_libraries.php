@@ -218,7 +218,7 @@ class BoostLibraries
             $version = null, $latest_version = null)
     {
         $this->db = array();
-        $this->categories = $categories;
+        $this->categories = array_change_key_case($categories);
         $this->latest_version = $latest_version;
 
         foreach ($flat_libs as $details) {
@@ -310,7 +310,7 @@ class BoostLibraries
 
         foreach($update as $lib) {
             $category = array_key_exists('category', $lib->details)
-                ? $lib->details['category'] : array();
+                ? array_map('strtolower', $lib->details['category']) : array();
             $invalid_categories = array_diff($category,
                 array_keys($this->categories));
             $valid_categories = array_intersect($category,
@@ -321,7 +321,7 @@ class BoostLibraries
             }
 
             if (!$valid_categories) {
-                $valid_categories = array('Miscellaneous');
+                $valid_categories = array('miscellaneous');
             }
 
             // Sort categories to normalize them.
@@ -432,7 +432,7 @@ class BoostLibraries
             $writer->startElement('categories');
             foreach ($this->categories as $name => $category) {
                 $writer->startElement('category');
-                $writer->writeAttribute('name', $name);
+                $writer->writeAttribute('name', $category['name']);
                 $writer->writeElement('title', $category['title']);
                 $writer->endElement();
             }
@@ -459,7 +459,7 @@ class BoostLibraries
                 $this->write_optional_element($writer, $exclude, $details, 'description');
                 $this->write_optional_element($writer, $exclude, $details, 'documentation');
                 $this->write_many_elements($writer, $exclude, $details, 'std');
-                $this->write_many_elements($writer, $exclude, $details, 'category');
+                $this->write_category_elements($writer, $exclude, $details, 'category');
                 $writer->endElement();
             }
         }
@@ -488,6 +488,32 @@ class BoostLibraries
                 $writer->writeElement($name, $lib[$name]);
             }
         }
+    }
+
+    /**
+     * Write an array of categories.
+     *
+     * @param XMLWriter $writer
+     * @param array $exclude
+     * @param string $lib
+     * @param string $name
+     */
+    private function write_category_elements($writer, $exclude, $lib, $name) {
+        if (isset($lib[$name]) && !isset($exclude[$name])) {
+            if (is_array($lib[$name])) {
+                foreach($lib[$name] as $value) {
+                    $this->write_category_element($writer, $name, $value);
+                }
+            }
+            else {
+                $this->write_category_element($writer, $name, $lib[$name]);
+            }
+        }
+    }
+
+    private function write_category_element($writer, $name, $value) {
+        $writer->writeElement($name,
+            $this->categories[strtolower($value)]['name']);
     }
 
     /**

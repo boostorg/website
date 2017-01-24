@@ -19,13 +19,11 @@ class BoostDocumentation
     var $version_title;   // Version string to use in title, or null for default pages.
     var $boost_root;      // Path to root of current version.
     var $path;
-    var $use_http_expire_date;
 
     static function library_documentation_page() {
         return static::documentation_page(array(
             'fix_dir' => BOOST_FIX_DIR,
             'archive_dir' => STATIC_DIR,
-            'use_http_expire_date' => true,
         ));
     }
 
@@ -41,7 +39,6 @@ class BoostDocumentation
         $documentation_page->archive_dir = BoostWebsite::array_get($params, 'archive_dir', STATIC_DIR);
         $documentation_page->fix_dir = BoostWebsite::array_get($params, 'fix_dir');
         $documentation_page->boost_root = BoostWebsite::array_get($params, 'boost-root', '');
-        $documentation_page->use_http_expire_date = BoostWebsite::array_get($params, 'use_http_expire_date', false);
 
         $pattern = BoostWebsite::array_get($params, 'pattern', '@^[/]([^/]+)(?:[/](.*))?$@');
 
@@ -85,8 +82,24 @@ class BoostDocumentation
         return "{$this->archive_dir}/{$this->file_doc_dir}";
     }
 
+    // Call to redirect if appropriate before rendering the page
+    function redirect_if_appropriate()
+    {
+        if ($this->version && $this->version->is_beta() &&
+            BoostVersion::current()->compare($this->version) > 0)
+        {
+            header("Location: /doc/libs/{$this->version->final_doc_dir()}/{$this->path}");
+            return true;
+        }
+        return false;
+    }
+
     function display_from_archive($content_map = array())
     {
+        if ($this->redirect_if_appropriate()) {
+            return;
+        }
+
         // Set default values
 
         $file = false;
@@ -112,18 +125,14 @@ class BoostDocumentation
 
         // Calculate expiry date if requested.
 
-        $expires = null;
-        if ($this->use_http_expire_date)
-        {
-            if (!$this->version) {
-                $expires = "+1 week";
-            }
-            else {
-                $compare_version = BoostVersion::from($this->version)->
-                    compare(BoostVersion::current());
-                $expires = $compare_version === -1 ? "+1 year" :
-                    ($compare_version === 0 ? "+1 week" : "+1 day");
-            }
+        if (!$this->version) {
+            $expires = "+1 week";
+        }
+        else {
+            $compare_version = BoostVersion::from($this->version)->
+                compare(BoostVersion::current());
+            $expires = $compare_version === -1 ? "+1 year" :
+                ($compare_version === 0 ? "+1 week" : "+1 day");
         }
 
         // Last modified date
@@ -284,7 +293,7 @@ function detect_redirect($content)
     // expensive to search.
     if(strlen($content) <= 2000 &&
         preg_match(
-            '@<meta\s+http-equiv\s*=\s*["\']?refresh["\']?\s+content\s*=\s*["\']0;\s*URL=([^"\']*)["\']\s*/?>@i',
+            '@<meta\s+http-equiv\s*=\s*["\']?refresh["\']?\s+content\s*=\s*["\']0;\s*URL=([^"\']*)["\']\s*/?\>@i',
             $content, $redirect))
     {
         return BoostUrl::resolve($redirect[1]);
@@ -327,11 +336,30 @@ function latest_link($filter_data)
         echo '</div>', "\n";
         break;
     case -1:
-        echo '<div class="boost-common-header-notice">';
-        echo '<span class="boost-common-header-inner">';
-        echo 'This is the documentation for a development version of boost';
-        echo '</span>';
-        echo '</div>', "\n";
+        if ($version->release_stage() === BoostVersion::release_stage_development) {
+            $hash_path = realpath("{$filter_data->documentation_dir()}/.bintray-version");
+            $hash = $hash_path ? trim(file_get_contents($hash_path)) : null;
+                echo '<div class="boost-common-header-notice">';
+                echo '<span class="boost-common-header-inner">';
+                echo "This is the documentation for a snapshot of the {$version} branch";
+                if ($hash) {
+                    echo ", built from commit <a href='";
+                    echo "https://github.com/boostorg/boost/commit/{$hash}";
+                    echo "'>";
+                    echo substr($hash, 0, 10);
+                    echo "</a>";
+                }
+                echo ".";
+                echo '</span>';
+                echo '</div>', "\n";
+        }
+        else {
+            echo '<div class="boost-common-header-notice">';
+            echo '<span class="boost-common-header-inner">';
+            echo 'This is the documentation for a development version of boost.';
+            echo '</span>';
+            echo '</div>', "\n";
+        }
         break;
     }
 }

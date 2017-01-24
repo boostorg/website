@@ -60,13 +60,13 @@ class BoostState {
                 # be dealt with in the next loop.
                 $record["$key"] = null;
             } else if ($c == '.') {
-                $record["$key"] = floatval(fgets($file));
+                $record["$key"] = floatval(trim(fgets($file)));
                 $c = fgetc($file);
             } else if ($c == '!') {
-                $record["$key"] = boolval(fgets($file));
+                $record["$key"] = trim(fgets($file)) ? true : false;
                 $c = fgetc($file);
             } else if ($c == '=') {
-                $record["$key"] = intval(fgets($file));
+                $record["$key"] = intval(trim(fgets($file)));
                 $c = fgetc($file);
             } else if ($c == '"') {
                 $values = Array();

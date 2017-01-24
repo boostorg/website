@@ -89,7 +89,7 @@ class BoostLibrary
             }
         }
         if (!empty($lib['category'])) {
-            $lib['category'] = array_map('ucwords', $lib['category']);
+            $lib['category'] = array_map('strtolower', $lib['category']);
             sort($lib['category']);
         }
 

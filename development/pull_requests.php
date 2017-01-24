@@ -119,6 +119,7 @@ class PullRequestPage {
     }
 
     function option_link($description, $field, $value) {
+        $value = strtolower($value);
         $current_value = $this->params[$field];
 
         if ($current_value == $value) {
