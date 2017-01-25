@@ -93,6 +93,14 @@ class BoostLibrary
             sort($lib['category']);
         }
 
+        // Capitilize the names
+        if (!empty($lib['name'])) {
+            // Not using ucwords because it messes up uBLAS.
+            $lib['name'] = preg_replace_callback('@\b[a-z](?![A-Z])@',
+                function($matches) { return strtoupper($matches[0]); },
+                $lib['name']);
+        }
+
         // Check the status.
         if (isset($lib['status'])) {
             $lib['status'] = strtolower($lib['status']);
