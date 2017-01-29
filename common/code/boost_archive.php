@@ -108,7 +108,7 @@ class BoostArchive
     }
 
     function unzip_error($exit_status, $archive) {
-        $code="500 Internal Server Error";
+        $code=500;
 
         switch($exit_status) {
         case 0: $message = 'No error.'; $code = null; break;
@@ -127,7 +127,7 @@ class BoostArchive
             $message .= '.';
             break;
         case 10: $message = 'Invalid options were specified on the command line.'; break;
-        case 11: $message = 'No matching files were found.'; $code="404 Not Found"; break;
+        case 11: $message = 'No matching files were found.'; $code=404; break;
         case 50: $message = 'The disk is (or was) full during extraction.'; break;
         case 51: $message = 'The end of the ZIP archive was encountered prematurely.'; break;
         case 80: $message = 'The user aborted unzip prematurely with control-C (or similar).'; break;
@@ -137,7 +137,7 @@ class BoostArchive
         }
 
         if ($code) {
-            header("{$_SERVER["SERVER_PROTOCOL"]} {$code}", true);
+            http_response_code($code);
         }
 
         echo "Error extracting file: Error code ".html_encode($exit_status)." - {$message}";

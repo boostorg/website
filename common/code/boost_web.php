@@ -64,7 +64,7 @@ class BoostWeb
 
         if(!$checked) return true;
 
-        header($_SERVER["SERVER_PROTOCOL"].' 304 Not Modified');
+        http_response_code(304);
         return false;
     }
 
