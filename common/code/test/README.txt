@@ -15,3 +15,6 @@ You should now be able to run individual tests directly:
 Or run all the tests using something like:
 
     ./vendor/bin/tester -p php -c config/php.ini tests
+
+Although for a full test including things like http headers, should try to use
+a `php-cgi` executable.
