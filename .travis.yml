@@ -22,7 +22,7 @@ script:
 
     # Check php files are valid php 5.3
     - cd ${TRAVIS_BUILD_DIR}/
-    - 'find * -name "vendor" -prune -o -name "*.php" -print | xargs -n 1 php -l'
+    - 'find * -name "vendor" -prune -o -name "*.php" -print | xargs grep -L "CONTAINS_SYNTAX_ERROR" | xargs -n 1 php -l'
 
     # Try running the site tools to check if the change has introduced any errors
     # into their source and data files
