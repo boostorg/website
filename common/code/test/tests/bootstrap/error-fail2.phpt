@@ -4,7 +4,7 @@
  * Check that the error reporter catches a fatal error
  *
  * @httpCode 500
- * @exitCode 1
+ * @exitCode 255
  */
 
 // Note: Turn off all error reporting as it is printed before the error code

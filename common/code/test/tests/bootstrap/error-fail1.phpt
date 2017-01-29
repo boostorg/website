@@ -4,7 +4,7 @@
  * Check that the error reporter catches an error
  *
  * @httpCode 500
- * @exitCode 1
+ * @exitCode 255
  */
 
 error_reporting(0);

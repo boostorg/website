@@ -4,7 +4,7 @@
  * Check that error reporting works for a weak error_reporting.
  *
  * @httpCode 500
- * @exitCode 1
+ * @exitCode 255
  */
 
 error_reporting(0);

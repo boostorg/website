@@ -20,7 +20,7 @@ function error_handler($message) {
         echo "{$message}\n";
     }
 
-    exit(1);
+    exit(255);
 }
 
 set_error_handler(function($errno, $errstr, $errfile, $errline) {
