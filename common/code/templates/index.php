@@ -63,5 +63,3 @@ echo("</ul>\n\n");
 
 echo("<p><a href=\"/users/news/\">More News...</a> (<a href=\"feed/news.rss\">RSS</a>)</p>\n");
 echo("</div>\n\n");
-
-echo("<div class=\"clear\"></div>\n");
