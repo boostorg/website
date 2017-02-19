@@ -5,6 +5,10 @@
 language: php
 php:
     '5.3'
+addons:
+    apt:
+        packages:
+            - php5-cgi
 install:
     # Install quickbook
     - mkdir $HOME/bin
@@ -19,6 +23,7 @@ script:
     # Run the tests
     - cd ${TRAVIS_BUILD_DIR}/common/code/test
     - ./vendor/bin/tester -p php tests
+    - ./vendor/bin/tester -p php5-cgi tests
 
     # Check php files are valid php 5.3
     - cd ${TRAVIS_BUILD_DIR}/
