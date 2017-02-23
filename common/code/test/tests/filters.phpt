@@ -13,7 +13,7 @@ function filter_test($filter, $data, $content, $expected) {
     ob_start();
     echo_filtered($filter, $data, $content);
     $result = ob_get_clean();
-    Assert::same(trim($result), trim($expected));
+    Assert::same(trim($expected), trim($result));
 }
 
 /* Plain Text */
@@ -84,7 +84,8 @@ $test_text = <<<EOL
 Iñtërnâtiônàlizætiøn
 EOL;
 
-$test_text_expected = <<<EOL
+if (version_compare(PHP_VERSION, '5.4.0') < 0) {
+    $test_text_expected = <<<EOL
 <!DOCTYPE html>
 
 <html>
@@ -99,6 +100,23 @@ I{$unknown_character}{$unknown_character}t{$unknown_character}{$unknown_characte
 </body>
 </html>
 EOL;
+} else {
+    $test_text_expected = <<<EOL
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Hello_world_test.txt</title></head>
+<body>
+<h3>Hello_world_test.txt</h3>
+<pre>
+{$unknown_character}
+I&ntilde;t&euml;rn&acirc;ti&ocirc;n&agrave;liz&aelig;ti&oslash;n</pre>
+</body>
+</html>
+EOL;
+}
 
 $data = new BoostDocumentation();
 $data->path = 'Hello_world_test.txt';

@@ -9,8 +9,10 @@ date_default_timezone_set('UTC');
 
 // Die on all errors.
 function error_handler($message) {
-    if (array_key_exists('SERVER_PROTOCOL', $_SERVER)) {
-        @header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+    if (php_sapi_name() !== 'cli') {
+        $protocol = array_key_exists('SERVER_PROTOCOL', $_SERVER) ?
+            $_SERVER('SERVER_PROTOCOL') : 'HTTP';
+        @header($protocol.' 500 Internal Server Error', true, 500);
         echo htmlentities($message),"\n";
     }
     else if (defined('STDERR')) {
@@ -20,11 +22,13 @@ function error_handler($message) {
         echo "{$message}\n";
     }
 
-    exit(1);
+    exit(255);
 }
 
 set_error_handler(function($errno, $errstr, $errfile, $errline) {
-    error_handler("{$errfile}:{$errline}: {$errstr}");
+    if (error_reporting() & $errno) {
+        error_handler("{$errfile}:{$errline}: {$errstr}");
+    }
 });
 
 set_exception_handler(function($e) {

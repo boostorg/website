@@ -84,14 +84,9 @@ class BoostArchive
         $method = $_SERVER['REQUEST_METHOD'];
 
         ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
-        if ($method == 'HEAD') {
-            $output = null;
-            exec($this->unzip_command(archive, $file).' > /dev/null', $output, $exit_status);
-        } else {
-            $file_handle = popen($this->unzip_command($archive, $file), 'rb');
-            fpassthru($file_handle);
-            $exit_status = pclose($file_handle);
-        }
+        $file_handle = popen($this->unzip_command($archive, $file), 'rb');
+        fpassthru($file_handle);
+        $exit_status = pclose($file_handle);
 
         // Don't display errors for a corrupt zip file, as we seemd to
         // be getting them for legitimate files.
