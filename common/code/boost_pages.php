@@ -216,8 +216,8 @@ class BoostPages {
         if (array_key_exists('release_date', $release_data) && (
                 $section == 'downloads' ||
                 !$release_data['version'] ||
-                $release_data['version']->compare('1.62.0') <= 0
-            )) {
+                $release_data['version']->compare('1.62.0') <= 0))
+        {
             unset($release_data['release_date']);
         }
 
@@ -247,6 +247,16 @@ class BoostPages {
                 'location', 'name', 'key'));
         }
 
+        // Normalize fields with special value types.
+        foreach ($release_data as $key => $value) {
+            if (is_object($value)) {
+                if ($value instanceof DateTime || $value instanceof DateTimeInterface) {
+                    $release_data[$key] = $value->format(DateTime::ATOM);
+                } else {
+                    assert(false);
+                }
+            }
+        }
 
         return $release_data;
     }
