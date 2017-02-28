@@ -27,9 +27,6 @@ BOOST_DATA_DIR
   Path to directory containing data files and repos from cron jobs.
   - Defaults to BOOST_WEBSITE_SHARED_DIR/data
 
-UNZIP
-  Unzip program to use to extract files from ZIPs.
-
 ARCHIVE_FILE_PREFIX
   Prefix for the root directory in the Boost ZIP archives.
 
@@ -55,6 +52,15 @@ BOOST_TASKS_DIR
   that the server needs to do. For the website user, the webhook
   implementation is the only thing of interest.
   - Defaults to BOOST_WEBSITE_SHARED_DIR/tasks
+
+EXECUTABLES
+===========
+
+UNZIP
+  Unzip program to use to extract files from ZIPs.
+
+BOOST_QUICKBOOK_EXECUTABLE
+  Quickbook executable. Set to false if quickbook isn't available.
 */
 
 switch (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '')
@@ -118,4 +124,8 @@ if (defined('BOOST_WEBSITE_SHARED_DIR')) {
 // TODO: I'm going to move the fix directory to a separate repo
 if (!defined('BOOST_FIX_DIR')) {
     define('BOOST_FIX_DIR', BOOST_WEBSITE_DATA_ROOT_DIR.'/doc/fixes');
+}
+
+if (!defined('BOOST_QUICKBOOK_EXECUTABLE')) {
+    define('BOOST_QUICKBOOK_EXECUTABLE', 'quickbook');
 }

@@ -264,13 +264,18 @@ class BoostPages {
     }
 
     function convert_quickbook_pages($mode = 'update') {
-        try {
-            BoostSuperProject::run_process('quickbook --version');
-            $have_quickbook = true;
-        }
-        catch(ProcessError $e) {
-            echo "Problem running quickbook, will not convert quickbook articles.\n";
-            $have_quickbook = false;
+        $have_quickbook = false;
+
+        if (BOOST_QUICKBOOK_EXECUTABLE) {
+            try {
+                BoostSuperProject::run_process(BOOST_QUICKBOOK_EXECUTABLE.' --version');
+                $have_quickbook = true;
+            }
+            catch(ProcessError $e) {
+                echo "Problem running quickbook, will not convert quickbook articles.\n";
+            }
+        } else {
+            echo "BOOST_QUICKBOOK_EXECUTABLE is empty, will not convert quickbook articles.\n";
         }
 
         $in_progress_release_notes = array();
@@ -409,7 +414,7 @@ class BoostPages {
         $xml_filename = tempnam(sys_get_temp_dir(), 'boost-qbk-');
         try {
             echo "Converting ", $page, ":\n";
-            BoostSuperProject::run_process("quickbook --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
+            BoostSuperProject::run_process(BOOST_QUICKBOOK_EXECUTABLE." --output-file {$xml_filename} -I {$this->root}/feed {$this->root}/{$page}");
             $values = $bb_parser->parse($xml_filename);
             $boostbook_values = array(
                 'hash' => $hash,
