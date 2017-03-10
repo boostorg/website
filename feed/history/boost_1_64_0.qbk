@@ -15,6 +15,13 @@
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/any/ Any]:]
+    * Suppressed false warnings about returning reference to temporary
+    * `boost::addressof` is now used instead of directly taking the address [ticket 12615]
+    * Headers are not included using double quotes any more [ticket 12053]
+    * CI tests now run with `address`, `leak`, and `undefined` sanitizers
+    * Added more test
+
 * [phrase library..[@/libs/atomic/ Atomic]:]
     * Fixed possible incorrect code generation in 64-bit atomic operations on 32-bit x86 with gcc versions older than 4.7 and compatible compilers.
 
@@ -25,6 +32,11 @@
     * #38: context_entry() crashes on macOS
     * #39: Unknown directive .cpu on aarch64 with Clang 3.8 on Android
 
+* [phrase library..[@/libs/conversion/ Conversion]:]
+    * Docs were ported to Quickbook (thanks to Mikhail Maksimov for the port)
+    * Fixed a memory leak in test (thanks to Mikhail Maksimov for the fix)
+    * CI tests now run with `address`, `leak`, and `undefined` sanitizers
+
 * [phrase library..[@/libs/core/ Core]:]
     * Implemented `constexpr` `addressof` on compilers that support C++11 `constexpr` and SFINAE expressions. `BOOST_CORE_NO_CONSTEXPR_ADDRESSOF` macro indicates when `constexpr` `addressof` is not available.
     * In `lightweight_test.hpp`, added new macros `BOOST_TEST_ALL_EQ` and `BOOST_TEST_ALL_WITH` for testing container contents.
@@ -32,11 +44,23 @@
 * [phrase library..[@/libs/coroutine2/ Coroutine2]:]
     * #4: coroutine2<> does not accept std::bind
 
+* [phrase library..[@/libs/dll/ DLL]:]
+    * Fixed WinCE compilation
+    * Added `boost:dll::symbol_location_ptr` function for getting location of a symbol by pointer that could not be dereferenced (`void` pointer for example)
+    * Fixed UB in `detail::aggressive_ptr_cast` for member pointers
+    * Fixed leaks in experimental smart imports
+    * Fixed warnings
+    * CI tests now run with `address` and `leak` sanitizers
+
 * [phrase library..[@/libs/fiber/ Fiber]:]
     * #100: ASIO: unbuffered_channel / scheduler notify issue
     * #106: Passing a fixed_stack allocator to async/packaged_task doesn't compile
     * #111: endless-loop in buffered_channel::try_value_pop()
     * (un)bounded_channel<> removed
+
+* [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
+    * Fixed multiple warnings [ticket 11842]
+    * CI tests now run with `address`, `leak`, and `undefined` sanitizers
     
 * [phrase library..[@/libs/math/ Math]:]
     * Big push to ensure all functions in also in C99 are compatible with Annex F.
@@ -71,8 +95,20 @@
     optimal and more maintainable implementation (Glen Fernandes)
   * Pointer cast functions with move semantics (Chris Glover)
 
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+    * Added `BOOST_TYPE_INDEX_IMPLEMENT_RUNTIME_CAST`, which implements the functionality for `runtime_cast` but does not include the `BOOST_TYPE_INDEX_REGISTER_CLASS` macro (thanks to Chris Glover for imlpementing it)
+    * Fixed undefined macro warning in stl_type_index.hpp [ticket 12739]
+    * CI tests now run with `address`, `leak`, and `undefined` sanitizers
+
 * [phrase library..[@/libs/type_traits/ TypeTraits]:]
   * Added new trait `make_void`.
+
+* [phrase library..[@/libs/variant/ Variant]:]
+    * Fixed construction of variant from `recursive_variant_` (thanks to Mikhail Maksimov for the fix) [ticket 12508], [ticket 12645]
+    * Do not enable variadic templates for MSVC2015Upade1 as it still has issues [ticket 12236]
+    * Workaround GCC6 crash (thanks to Mikhail Maksimov for the workaround) [ticket 12680], [ticket 7120]
+    * Made `boost::polymorphic_*get` to work as `boost::*get` in undocumented border cases and fixed tests [ticket 11950]
+    * CI tests now run with `address`, `leak`, and `undefined` sanitizers
 
 
 * /TODO/
