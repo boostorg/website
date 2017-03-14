@@ -25,6 +25,12 @@
 * [phrase library..[@/libs/atomic/ Atomic]:]
     * Fixed possible incorrect code generation in 64-bit atomic operations on 32-bit x86 with gcc versions older than 4.7 and compatible compilers.
 
+* [phrase library..[@/libs/container/ Container]:]
+    * Fixed bugs:
+        * [@https://svn.boost.org/trac/boost/ticket/12749 Trac #12749: ['"container::pmr::polymorphic_allocator compilation error"]].
+        * [@https://svn.boost.org/trac/boost/ticket/11333 Trac #11333: ['"boost::basic_string_ref should interop with boost::container::basic_string"]].
+        * [@https://github.com/boostorg/container/pull/45 GitHub #45: ['"emplace_back must return reference to back(), not to *end()"]].
+
 * [phrase library..[@/libs/context/ Context]:]
     * new API: call/cc
     * deprecated API:execution-context
@@ -57,6 +63,24 @@
     * #106: Passing a fixed_stack allocator to async/packaged_task doesn't compile
     * #111: endless-loop in buffered_channel::try_value_pop()
     * (un)bounded_channel<> removed
+
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+    *  Fixed bugs:
+        * [@https://svn.boost.org/trac/boost/ticket/12617 Trac #12617 (['"clock_gettime not available on OS X 10.11"])].
+        * [@https://svn.boost.org/trac/boost/ticket/12744 Trac #12744 (['"winapi::set_timer_resolution inadvertently changes timer resolution (Windows)"])].
+        * [@https://github.com/boostorg/interprocess/pull/32 GitHub Pull #32 (['"Conform to std::pointer_traits requirements"])].
+        * [@https://github.com/boostorg/interprocess/pull/33 GitHub Pull #33 (['"explicit cast to derived class" and "64/32 bit processes sharing"])].
+        * [@https://github.com/boostorg/interprocess/pull/34 GitHub Pull #34 (['"Update example to use multi_index::member instead of BOOST_MULTI_INDEX_MEMBER"])].
+        * [@https://github.com/boostorg/interprocess/pull/35 GitHub Pull #35 (['"Fixed options for cross-compilation"])].
+
+    * New experimental option `BOOST_INTERPROCESS_BOOTSTAMP_IS_SESSION_MANAGER_BASED` from Windows systems.
+      This option derives the unique booststamp used to name the folder where shared memory is placed from registry values associated
+      with the session manager. This option only works on Vista and later systems and might be more stable than the default version.
+
+* [phrase library..[@/libs/intrusive/ Intrusive]:]
+    *  Fixed bugs:
+        *  [@https://svn.boost.org/trac/boost/ticket/12745 Boost Trac #12745: ['key_nodeptr_comp broken if the key type is void*]]
+        *  [@https://svn.boost.org/trac/boost/ticket/12761 Boost Trac #12761: ['intrusive::set::swap doesn't swap the comparison function*]]
 
 * [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
     * Fixed multiple warnings [ticket 11842]
