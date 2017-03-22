@@ -190,7 +190,7 @@ class BoostReleases {
             throw new BoostException("Release details needs to start with a directory URL");
         }
 
-        if (!preg_match('@/boost/([0-9][^/]*)/@', $download_page, $match)) {
+        if (!preg_match('@/(?:boost|boostorg/beta)/([0-9][^/]*)/@', $download_page, $match)) {
             throw new BoostException("Error extracting boost version from download page URL");
         }
 
