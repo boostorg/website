@@ -3,8 +3,11 @@
     [source-mode c++]
     [purpose
         Updated Libraries:
-        [/ Please don't add updated libraries yet, it
-           can create unnecessary merge conflicts.]
+        Any, Atomic, Config, Container, Context, Conversion,
+        Core, Coroutine2, DLL, Fiber, Hash, Interprocess,
+        Intrusive, LexicalCast, Math, Multiprecision, Predef,
+        Program Options, Regex, Smart Pointers, Test, TypeIndex,
+        TypeTraits, Unordered, Variant.
     ]
     [authors [Dawes, Beman]]
     [/ last-revision is used for the final release date]
@@ -68,7 +71,8 @@
     * (un)bounded_channel<> removed
 
 * [phrase library..[@/libs/functional/hash/ Hash]:]
-    * Stop using removed function objects in new versions of Visual C++.
+    * Stop using `std::unary_function` and `std::binary_function` when they're
+      not available.
 
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
     *  Fixed bugs:
@@ -110,6 +114,13 @@
     * Fix bug in left shift of `cpp_int` which would result in bit-loss, see [@https://svn.boost.org/trac/boost/ticket/12790 #12790].
     * Fixed bugs in bounded but variable precision `cpp_int`'s caused by over-aggressive constexpr optimization, see [@https://svn.boost.org/trac/boost/ticket/12798 #12798].
 
+* [phrase library..[@/libs/predef/ Predef]:]
+  * Fix Intel C/C++ compiler version specification.
+  * Add `BOOST_VERSION_NUMBER_MAJOR`, `BOOST_VERSION_NUMBER_MINOR`,
+    `BOOST_VERSION_NUMBER_PATCH` macros to extract components from valid version
+    numbers.
+  * Change VS version numbering. Versions after VS2015 will use the compiler
+    version instead of the varied product versions.
 
 * [phrase library..[@/libs/program_options/ Program Options]:]
   * Support for storing values into `boost::optional`, thanks to Ed Catmur
@@ -125,6 +136,18 @@
     optimal and more maintainable implementation (Glen Fernandes)
   * Pointer cast functions with move semantics (Chris Glover)
 
+* [phrase library..[@/libs/test/ Test]:]
+  * Boost.test v3.5 see the
+    [@/doc/libs/1_64_0/libs/test/doc/html/boost_test/change_log.html Change log]
+    section for more details.
+  * New feature:
+    * Now Boost.Test provides *customization points* for logging user defined types
+    * JUnit output format can now have a /log-level/
+    * JUnit output format has not better performances when the test modules have a lot of checks
+  * Bug fixes
+    * Trac tickets [ticket 11756], [ticket 12540], [ticket 12712], [ticket 12748], [ticket 12778]
+    * Pull request [@https://github.com/boostorg/test/pull/107 PR107], [@https://github.com/boostorg/test/pull/108 PR108]
+
 * [phrase library..[@/libs/type_index/ TypeIndex]:]
     * Added `BOOST_TYPE_INDEX_IMPLEMENT_RUNTIME_CAST`, which implements the functionality for `runtime_cast` but does not include the `BOOST_TYPE_INDEX_REGISTER_CLASS` macro (thanks to Chris Glover for imlpementing it)
     * Fixed undefined macro warning in stl_type_index.hpp [ticket 12739]
@@ -135,7 +158,8 @@
 
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * Initial support for new C++17 member functions:
-    `insert_or_assign`, `try_emplace`, `merge` and `extract`.
+    `insert_or_assign` and `try_emplace` in `unordered_map`,
+    `merge` and `extract` in all containers.
 
 * [phrase library..[@/libs/variant/ Variant]:]
     * Fixed construction of variant from `recursive_variant_` (thanks to Mikhail Maksimov for the fix) [ticket 12508], [ticket 12645]
@@ -203,7 +227,7 @@ Boost's additional test compilers include:
   * Apple Clang: 7.0.2
 * Windows:
   * GCC, C++03, mingw: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0
-  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.10
+  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
 * Android:
   * Clang: 3.6, 3.7, 3.8
   * GCC: 4.9, 5.4, 6.2
