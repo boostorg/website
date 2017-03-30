@@ -119,6 +119,7 @@ class LibrariesHtm {
             }
         }
         $params['unreleased_lib_count'] = count($params['unreleased_libs']);
+        $params['unreleased_library_plural'] = !!($params['unreleased_lib_count'] != 1);
 
         $template_dir = "{$repo_dir}/{$page}";
         echo BoostSimpleTemplate::render(file_get_contents($template_dir),
