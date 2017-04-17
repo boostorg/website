@@ -8,7 +8,7 @@ Loads the release data from the file specified by 'path'.
 
 File format is:
 
-    Download page URL
+    Download page URL [version]
 
     Output of sha256sum
 
@@ -28,25 +28,35 @@ function main() {
     $options = BoostSiteTools\CommandLineOptions::parse(
         LOAD_RELEASE_DATA_USAGE);
 
-    if (count ($options->positional) != 1) {
+    $path = null;
+    $version = null;
+
+    switch (count ($options->positional)) {
+    case 2:
+        $version = $options->positional[1];
+        // Fallthrough
+    case 1: 
+        $path = $options->positional[0];
+        break;
+    default:
         echo $options->usage_message();
         exit(1);
     }
 
-    $path = realpath($options->positional[0]);
-    if (!$path) {
-        echo "Unable to find release file: {$options->positional[0]}\n";
+    $realpath = realpath($path);
+    if (!$realpath) {
+        echo "Unable to find release file: {$path}\n";
         exit(1);
     }
 
-    $release_details = file_get_contents($path);
+    $release_details = file_get_contents($realpath);
     if (!$release_details) {
-        echo "Error reading release file: {$options->positional[0]}\n";
+        echo "Error reading release file: {$path}\n";
         exit(1);
     }
 
     $releases = new BoostReleases(__DIR__.'/../generated/state/release.txt');
-    $releases->loadReleaseInfo('boost', $release_details);
+    $releases->loadReleaseInfo($release_details, 'boost', $version);
     $releases->save();
 }
 

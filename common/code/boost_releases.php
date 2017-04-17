@@ -171,7 +171,7 @@ class BoostReleases {
     // URL
     // (blank line)
     // Output of sha256sum
-    function loadReleaseInfo($release_name, $release_details) {
+    function loadReleaseInfo($release_details, $release_name, $release_version = null) {
         if (!preg_match('@
             \A
             \s*([^\s]*)[ \t]*\n
@@ -190,11 +190,16 @@ class BoostReleases {
             throw new BoostException("Release details needs to start with a directory URL");
         }
 
-        if (!preg_match('@/(?:boost|boostorg/beta)/([0-9][^/]*)/@', $download_page, $match)) {
-            throw new BoostException("Error extracting boost version from download page URL");
+        if (!is_null($release_version)) {
+            $version = BoostVersion::from($release_version);
+        } else {
+            if (!preg_match('@/(?:boost|boostorg/beta)/([0-9][^/]*)/@', $download_page, $match)) {
+                throw new BoostException("Error extracting boost version from download page URL");
+            }
+
+            $version = BoostVersion::from($match[1]);
         }
 
-        $version = BoostVersion::from($match[1]);
         $version_string = (string) $version;
 
         $downloads = array();
