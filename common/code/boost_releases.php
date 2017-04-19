@@ -193,7 +193,7 @@ class BoostReleases {
         if (!is_null($release_version)) {
             $version = BoostVersion::from($release_version);
         } else {
-            if (!preg_match('@/(?:boost|boostorg/beta)/([0-9][^/]*)/@', $download_page, $match)) {
+            if (!preg_match('@/(?:boost|boostorg/beta|boostorg/release)/([0-9][^/]*)/@', $download_page, $match)) {
                 throw new BoostException("Error extracting boost version from download page URL");
             }
 
