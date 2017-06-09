@@ -23,6 +23,7 @@ class BoostSiteTools {
 
     function update_in_progress_pages() {
         $pages = $this->load_pages();
+        $pages->scan_for_new_quickbook_pages();
         $pages->convert_quickbook_pages('in_progress');
         $pages->save();
     }
