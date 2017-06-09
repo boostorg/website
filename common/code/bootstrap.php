@@ -11,7 +11,7 @@ date_default_timezone_set('UTC');
 function error_handler($message) {
     if (php_sapi_name() !== 'cli') {
         $protocol = array_key_exists('SERVER_PROTOCOL', $_SERVER) ?
-            $_SERVER('SERVER_PROTOCOL') : 'HTTP';
+            $_SERVER['SERVER_PROTOCOL'] : 'HTTP';
         @header($protocol.' 500 Internal Server Error', true, 500);
         echo htmlentities($message),"\n";
     }
