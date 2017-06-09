@@ -34,16 +34,10 @@ class LibrariesHtm {
     }
 
     function display() {
-        // TODO: Specifying the version only works *after* a release, as
-        //       new libraries will still have develop/master as their
-        //       version. This works for now as version is always
-        //       master/develop, but might change in the future.
-        //
-        //       Now that BoostVersion has 'prerelease' versions, could
-        //       possibly use that for new libraries to handle this better.
-        $version = BoostVersion::from(
-            array_key_exists('version', $this->args) ? $this->args['version'] : 'master'
-        );
+        $version =
+            BoostVersion::parseVersion(
+                BoostWebsite::array_get($this->args, 'version')) ?:
+            BoostVersion::master();
         $version_string = (string) $version;
         $page = $this->args['page'];
         $libs = BoostLibraries::load();
