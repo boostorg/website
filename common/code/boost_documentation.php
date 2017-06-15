@@ -339,6 +339,10 @@ function latest_link($filter_data)
         if ($version->release_stage() === BoostVersion::release_stage_development) {
             $hash_path = realpath("{$filter_data->documentation_dir()}/.bintray-version");
             $hash = $hash_path ? trim(file_get_contents($hash_path)) : null;
+            if (is_string($hash) && $hash[0] == '{') {
+                $hash = json_decode($hash);
+                $hash = $hash['hash'];
+            }
                 echo '<div class="boost-common-header-notice">';
                 echo '<span class="boost-common-header-inner">';
                 echo "This is the documentation for a snapshot of the {$version} branch";
