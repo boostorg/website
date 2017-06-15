@@ -343,19 +343,20 @@ function latest_link($filter_data)
                 $hash = json_decode($hash);
                 $hash = $hash['hash'];
             }
-                echo '<div class="boost-common-header-notice">';
-                echo '<span class="boost-common-header-inner">';
-                echo "This is the documentation for a snapshot of the {$version} branch";
-                if ($hash) {
-                    echo ", built from commit <a href='";
-                    echo "https://github.com/boostorg/boost/commit/{$hash}";
-                    echo "'>";
-                    echo substr($hash, 0, 10);
-                    echo "</a>";
-                }
-                echo ".";
-                echo '</span>';
-                echo '</div>', "\n";
+
+            echo '<div class="boost-common-header-notice">';
+            echo '<span class="boost-common-header-inner">';
+            echo "This is the documentation for a snapshot of the {$version} branch";
+            if ($hash) {
+                echo ", built from commit <a href='";
+                echo "https://github.com/boostorg/boost/commit/{$hash}";
+                echo "'>";
+                echo substr($hash, 0, 10);
+                echo "</a>";
+            }
+            echo ".";
+            echo '</span>';
+            echo '</div>', "\n";
         }
         else {
             echo '<div class="boost-common-header-notice">';
