@@ -341,7 +341,7 @@ function latest_link($filter_data)
             $hash = $hash_path ? trim(file_get_contents($hash_path)) : null;
             if (is_string($hash) && $hash[0] == '{') {
                 $hash = json_decode($hash);
-                $hash = $hash['hash'];
+                $hash = $hash->hash;
             }
 
             echo '<div class="boost-common-header-notice">';
