@@ -17,9 +17,17 @@ class BoostFilterBasic extends BoostFilter
             $is_xhtml = preg_match('@<!DOCTYPE[^>]*xhtml@i', $match[0][0]);
             $tag_end = $is_xhtml ? '/>' : '>';
 
-            echo $this->alter_title(substr($text, 0, $match[0][1]));
+            $head = substr($text, 0, $match[0][1]);
+            $is_asciidoctor = strpos($head, '<meta name="generator" content="Asciidoctor') !== false;
+            echo $this->alter_title($head);
             echo '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
             echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
+            if ($is_asciidoctor) {
+                echo '<style>';
+                echo '#boost-common-heading-doc { position: static; }';
+                echo '#boost-common-heading-doc-spacer { display: none; }';
+                echo '</style>';
+            }
             echo $match[0][0];
             virtual("/common/heading-doc.html");
             echo latest_link($this->data);
