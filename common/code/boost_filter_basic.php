@@ -27,8 +27,10 @@ class BoostFilterBasic extends BoostFilter
                 echo '#boost-common-heading-doc { position: static; }';
                 echo '#boost-common-heading-doc-spacer { display: none; }';
                 echo '</style>';
+                echo str_replace('class="', 'class="boost-asciidoctor ', $match[0][0]);
+            } else {
+                echo $match[0][0];
             }
-            echo $match[0][0];
             virtual("/common/heading-doc.html");
             echo latest_link($this->data);
             echo $this->prepare_html($this->remove_html_banner(substr($text, $match[0][1] + strlen($match[0][0]))));
