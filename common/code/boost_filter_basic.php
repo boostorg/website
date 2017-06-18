@@ -23,10 +23,6 @@ class BoostFilterBasic extends BoostFilter
             echo '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
             echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
             if ($is_asciidoctor) {
-                echo '<style>';
-                echo '#boost-common-heading-doc { position: static; }';
-                echo '#boost-common-heading-doc-spacer { display: none; }';
-                echo '</style>';
                 echo str_replace('class="', 'class="boost-asciidoctor ', $match[0][0]);
             } else {
                 echo $match[0][0];
