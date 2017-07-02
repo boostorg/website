@@ -484,7 +484,7 @@ class BoostLibraries
                     $writer->writeElement($name, $value);
                 }
             }
-            else {
+            else if ($lib[$name]) {
                 $writer->writeElement($name, $lib[$name]);
             }
         }
