@@ -111,7 +111,7 @@ class BoostLibrary
         // Check the status.
         if (isset($lib['status'])) {
             $lib['status'] = strtolower($lib['status']);
-            if (!in_array($lib['status'], array('hidden', 'unreleased', 'deprecated'))) {
+            if (!in_array($lib['status'], array('hidden', 'unreleased', 'deprecated', 'removed'))) {
                 throw new BoostLibraries_exception("Invalid status: {$lib['status']}");
             }
         }
@@ -154,7 +154,9 @@ class BoostLibrary
     /** Kind of hacky way to fill in details that probably shouldn't be
      *  stored here anyway. */
     public function fill_in_details_from_previous_version($previous = null) {
-        if (empty($this->details['boost-version'])) {
+        if (empty($this->details['boost-version']) &&
+            BoostWebsite::array_get($this->details, 'status') != 'removed')
+        {
             $this->details['boost-version'] = isset($previous->details['boost-version']) ?
                 $previous->details['boost-version'] :
                 BoostVersion::unreleased();

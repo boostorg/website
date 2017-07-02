@@ -449,7 +449,7 @@ class BoostLibraries
 
                 $writer->startElement('library');
                 $this->write_element($writer, $exclude, $details, 'key');
-                $this->write_element($writer, $exclude, $details, 'library_path');
+                $this->write_optional_element($writer, $exclude, $details, 'library_path');
                 $this->write_optional_element($writer, $exclude, $details, 'boost-version');
                 $this->write_optional_element($writer, $exclude, $details, 'update-version');
                 $this->write_optional_element($writer, $exclude, $details, 'status');
@@ -585,10 +585,10 @@ class BoostLibraries
 
     static function filter_visible($x) {
         if ($x['boost-version']->is_hidden()) { return false; }
-        if (array_key_exists('status', $x)) {
-            if ($x['status'] === 'hidden' || $x['status'] === 'unreleased') {
-                return false;
-            }
+        if (in_array(BoostWebsite::array_get($x, 'status'),
+                array('hidden', 'unreleased', 'removed')))
+        {
+            return false;
         }
         return true;
     }
@@ -624,7 +624,7 @@ class BoostLibraries
                 }
             }
 
-            if ($details) {
+            if ($details && BoostWebsite::array_get($details, 'status') != 'removed') {
                 if ($filter && !call_user_func($filter, $details)) continue;
                 $libs[$key] = $details;
             }
