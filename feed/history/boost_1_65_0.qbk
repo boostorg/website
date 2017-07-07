@@ -34,6 +34,19 @@
     * [ticket 12719]: context test cases and examples segmentation fault when built with mingw-w64 toolchain 
     * #52: Failing to build callcc test with g++-4.9
 
+* [phrase library..[@/libs/config/ Config]:]
+  * Added `BOOST_NO_CXX11_POINTER_TRAITS`, `BOOST_NO_CXX17_FOLD_EXPRESSIONS`,
+    `BOOST_NO_CXX17_INLINE_VARIABLES`, `BOOST_NO_CXX17_STRUCTURED_BINDINGS`
+    defect detection.
+  * BOOST_FALLTHROUGH support for GCC 7 and above. (Glen Fernandes)
+
+* [phrase library..[@/libs/core/ Core]:]
+    * Implemented `pointer_traits` for C++03 and higher, that implements
+      [P0653r0](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0653r0.html)
+      (Glen Fernandes). This implementation is now used by Align, Circular
+      Buffer, Fiber, Geometry, among other libraries.
+    * Added `BOOST_TEST_GT` and `BOOST_TEST_GE` to Lightweight Test.
+
 * [phrase library..[@/libs/coroutine2/ Coroutine2]:]
     * supports ucontext-API (swapcontext)
     * supports Windows-Fiber-API
@@ -73,6 +86,15 @@
     itself, the implicit value was used. That proved inconvenient, and now we again
     check the next token and use it as value if it's not an option itself.
     ([@https://github.com/boostorg/program_options/issues/25 #25])
+
+* [phrase library..[@/libs/smart_ptr/ Smart Pointers]:]
+  * New class template`atomic_shared_ptr`, that provides thread-safe atomic
+    pointer operations over `shared_ptr`. (Peter Dimov)
+  * New class template `local_shared_ptr`, where the reference count is
+    updated with non-atomic operations. (Peter Dimov)
+  * More optimizations in `allocate_shared` and `make_shared` for arrays.
+    (Glen Fernandes)
+  * Documentation has been completely rewritten in Asciidoc format.
 
 [endsect]
 
