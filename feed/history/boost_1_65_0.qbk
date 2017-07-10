@@ -64,6 +64,9 @@
     * #125: erratic crashes in testsuite
     * #126: incorrect std::memory_order value in compare_exchange_strong?
 
+* [phrase library..[@/libs/functional/hash/ Hash]:]
+  * Support for `char16_t`, `char32_t`, `u16string`, `u32string`.
+
 * [phrase library..[@/libs/log/ Log]:]
   * General changes:
     * Improved compatibility with Solaris.
@@ -96,6 +99,18 @@
   * More optimizations in `allocate_shared` and `make_shared` for arrays.
     (Glen Fernandes)
   * Documentation has been completely rewritten in Asciidoc format.
+
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * Use the same data structure for `unordered_set` and `unordered_multiset`,
+    and for`unordered_map` and `unordered_multimap`. This is required for
+    C++17, so that nodes can be merged and extracted between compatible
+    containers.
+  * Add deprecated attributes to long deprecated functions.
+  * Improved use of `allocator_traits` `construct` and `destroy`
+    on C++11 compilers, using piecewise pair construction when appropriate.
+  * Fewer workarounds on newer Oracle compilers.
+  * Avoid dereferencing pointers to uninitialized memory
+    ([@https://github.com/boostorg/unordered/pull/5 PR #5]).
 
 [endsect]
 
