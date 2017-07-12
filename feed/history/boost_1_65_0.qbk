@@ -23,8 +23,11 @@
 
 * [phrase library..[@/libs/stacktrace/ Stacktrace]:]
   Gather, store, copy and print backtraces, from Antony Polukhin.
+  * Note: Library has [@https://github.com/boostorg/stacktrace/issues/14 issue with MinGW] and
+  may produce empty backtraces with that compiler.
 
 [endsect]
+
 
 [section Updated Libraries]
 
@@ -52,6 +55,9 @@
     * supports ucontext-API (swapcontext)
     * supports Windows-Fiber-API
     * [ticket 13064]: different behavior coroutine and coroutine2 
+
+* [phrase library..[@/libs/dll/ DLL]:]
+    * Fix PE parsing on non Windows platforms.
 
  * [phrase library..[@/libs/fiber/ Fiber]:] 
     * hardware transactional memory (Intel TSX) supported
@@ -100,6 +106,10 @@
     (Glen Fernandes)
   * Documentation has been completely rewritten in Asciidoc format.
 
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * Include <boost/functional/hash.hpp> if required, thanks to Ed Catmur [ticket 13009].
+  * Use native `hash_code()` when possible on GCC-like compilers [ticket 13027].
+
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * Use the same data structure for `unordered_set` and `unordered_multiset`,
     and for`unordered_map` and `unordered_multimap`. This is required for
@@ -111,6 +121,10 @@
   * Fewer workarounds on newer Oracle compilers.
   * Avoid dereferencing pointers to uninitialized memory
     ([@https://github.com/boostorg/unordered/pull/5 PR #5]).
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * r-value overload for `boost::get` was added by Albert Sverdlov [ticket 13018].
+  * Missing include fro `<boost/variant/polymorphic_get.hpp>` header was added by Adam Badura [ticket 13037].
 
 [endsect]
 
