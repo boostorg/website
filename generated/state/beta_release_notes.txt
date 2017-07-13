@@ -2239,3 +2239,827 @@
 -title_xml
 "Version 1.64.0
 )
+(feed/history/boost_1_65_0.qbk:1.65.0 beta1
+-description_xhtml
+"
+"
+"
+"  <div id="version_1_65_0.new_libraries">
+"    <h3><span class="link">New Libraries</span></h3>
+"    <ul>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/poly_collection/">PolyCollection</a>:</span>
+"  Fast
+"          containers of polymorphic objects, from Joaquín M López Muñoz.
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/stacktrace/">Stacktrace</a>:</span>
+"  Gather, store,
+"          copy and print backtraces, from Antony Polukhin.
+"          <ul>
+"            <li>
+"              <div>
+"                Note: Library has <a href="https://github.com/boostorg/stacktrace/issues/14">issue
+"                with MinGW</a> and may produce empty backtraces with that compiler.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
+"  <div id="version_1_65_0.updated_libraries">
+"    <h3><span class="link">Updated Libraries</span></h3>
+"    <ul>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/context/">Context</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                call/cc supports ucontext-API (swapcontext)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                call/cc supports Windows-Fiber-API
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                call/cc supports on demand growing (segmented/split) stacks
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <a href="https://svn.boost.org/trac/boost/ticket/12719">#12719</a>: context test cases and examples segmentation fault when
+"                built with mingw-w64 toolchain
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                #52: Failing to build callcc test with g++-4.9
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/config/">Config</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">BOOST_NO_CXX11_POINTER_TRAITS</span></code>,
+"                <code><span class="identifier">BOOST_NO_CXX17_FOLD_EXPRESSIONS</span></code>,
+"                <code><span class="identifier">BOOST_NO_CXX17_INLINE_VARIABLES</span></code>,
+"                <code><span class="identifier">BOOST_NO_CXX17_STRUCTURED_BINDINGS</span></code>
+"                defect detection.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                BOOST_FALLTHROUGH support for GCC 7 and above. (Glen Fernandes)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/core/">Core</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Implemented <code><span class="identifier">pointer_traits</span></code>
+"                for C++03 and higher, that implements <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0653r0.html">P0653r0</a>
+"                (Glen Fernandes). This implementation is now used by Align, Circular
+"                Buffer, Fiber, Geometry, among other libraries.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">BOOST_TEST_GT</span></code>
+"                and <code><span class="identifier">BOOST_TEST_GE</span></code>
+"                to Lightweight Test.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/coroutine2/">Coroutine2</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                supports ucontext-API (swapcontext)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                supports Windows-Fiber-API
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <a href="https://svn.boost.org/trac/boost/ticket/13064">#13064</a>: different behavior coroutine and coroutine2
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/dll/">DLL</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fix PE parsing on non Windows platforms.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/fiber/">Fiber</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                hardware transactional memory (Intel TSX) supported
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                NUMA supported
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                ucontext-API (swapcontext) supported
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Windows-Fiber-API supported
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                on demand growing stacks
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                #121: failing to build static lib with GCC 4.8 and C++11
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                #123: assertion failure in schedule_from_remote
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                #125: erratic crashes in testsuite
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                #126: incorrect std::memory_order value in compare_exchange_strong?
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/functional/hash/">Hash</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Support for <code><span class="keyword">char16_t</span></code>,
+"                <code><span class="keyword">char32_t</span></code>, <code><span class="identifier">u16string</span></code>, <code><span class="identifier">u32string</span></code>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/log/">Log</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                General changes:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Improved compatibility with Solaris.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                See <a href="/libs/log/doc/html/log/changelog.html">changelog</a>
+"                for more details.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/predef/">Predef</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fix Intel C/C++ version 9999 detection to be 12.1.0.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Addition of <code><span class="identifier">BOOST_PREDEF_WORKAROUND</span></code>
+"                and <code><span class="identifier">BOOST_PREDEF_TESTED_AT</span></code>
+"                macros for defect workarounds and detection.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Add ARM64 MSVC SIMD detection. (from Minmin Gong)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Add detection of iOS simulator vs device as a platform choice. (from
+"                Ruslan Baratov)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix MinGW incorrect header guard. (from Ruslan Baratov)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/program_options/">Program Options</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Support for storing values into <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span></code>,
+"                thanks to Ed Catmur (<a href="https://svn.boost.org/trac/boost/ticket/7495">#7495</a>,
+"                <a href="https://github.com/boostorg/program_options/pull/18">PR#18</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Parsing of implicit options can now use the value from the next token.
+"                Since 1.59, unless the value of implicit option was specified in
+"                the same token as the option itself, the implicit value was used.
+"                That proved inconvenient, and now we again check the next token and
+"                use it as value if it's not an option itself. (<a href="https://github.com/boostorg/program_options/issues/25">#25</a>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/smart_ptr/">Smart Pointers</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                New class template<code><span class="identifier">atomic_shared_ptr</span></code>,
+"                that provides thread-safe atomic pointer operations over <code><span class="identifier">shared_ptr</span></code>. (Peter Dimov)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                New class template <code><span class="identifier">local_shared_ptr</span></code>,
+"                where the reference count is updated with non-atomic operations.
+"                (Peter Dimov)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                More optimizations in <code><span class="identifier">allocate_shared</span></code>
+"                and <code><span class="identifier">make_shared</span></code> for
+"                arrays. (Glen Fernandes)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Documentation has been completely rewritten in Asciidoc format.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/type_index/">TypeIndex</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Include &lt;boost/functional/hash.hpp&gt; if required, thanks to
+"                Ed Catmur <a href="https://svn.boost.org/trac/boost/ticket/13009">#13009</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Use native <code><span class="identifier">hash_code</span><span class="special">()</span></code> when possible on GCC-like compilers
+"                <a href="https://svn.boost.org/trac/boost/ticket/13027">#13027</a>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/unordered/">Unordered</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Use the same data structure for <code><span class="identifier">unordered_set</span></code>
+"                and <code><span class="identifier">unordered_multiset</span></code>,
+"                and for<code><span class="identifier">unordered_map</span></code>
+"                and <code><span class="identifier">unordered_multimap</span></code>.
+"                This is required for C++17, so that nodes can be merged and extracted
+"                between compatible containers.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Add deprecated attributes to long deprecated functions.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Improved use of <code><span class="identifier">allocator_traits</span></code>
+"                <code><span class="identifier">construct</span></code> and <code><span class="identifier">destroy</span></code> on C++11 compilers, using
+"                piecewise pair construction when appropriate.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fewer workarounds on newer Oracle compilers.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Avoid dereferencing pointers to uninitialized memory (<a href="https://github.com/boostorg/unordered/pull/5">PR
+"                #5</a>).
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/variant/">Variant</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                r-value overload for <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">get</span></code>
+"                was added by Albert Sverdlov <a href="https://svn.boost.org/trac/boost/ticket/13018">#13018</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Missing include fro <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">variant</span><span class="special">/</span><span class="identifier">polymorphic_get</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+"                header was added by Adam Badura <a href="https://svn.boost.org/trac/boost/ticket/13037">#13037</a>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
+"  <div id="version_1_65_0.compilers_tested">
+"    <h3><span class="link">Compilers Tested</span></h3>
+"    <p>
+"      Boost's primary test compilers are:
+"    </p>
+"    <ul>
+"      <li>
+"        <div>
+"          Linux:
+"          <ul>
+"            <li>
+"              <div>
+"                Clang: 3.0, 3.8.1
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 3.8.1
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.8.1, 3.9.1, 4.0.1
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++1z: 4.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC: 4.4.7, 4.5.3, 4.6.3, 4.7.2, 5.4.0, 7.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++11: 4.4.7, 4.7.2, 4.7.3, 4.8.5, 4.9.4, 5.4.0, 7.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++14: 5.4.0, 5.4.1, 6.3.0, 7.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++17: 7.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++1z: 6.3.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Intel: 16.0, 17.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Intel, C++11: 16.0, 17.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Intel, C++14: 16.0
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          OS X:
+"          <ul>
+"            <li>
+"              <div>
+"                Clang: 8.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++11: 8.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++14: 8.1.0
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          Windows:
+"          <ul>
+"            <li>
+"              <div>
+"                GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++11: 4.6.4, 4.7.3, 4.8.1
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++14: 4.9.3, 5.1.0, 5.2.0, 5.3.0, 6.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          Android:
+"          <ul>
+"            <li>
+"              <div>
+"                Clang: 3.6, 3.7, 3.8
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC: 4.9, 5.4
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++14: 6.2
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          FreeBSD:
+"          <ul>
+"            <li>
+"              <div>
+"                Clang: 3.8.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++11: 3.8.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++14: 3.8.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++1z: 3.8.0
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          QNX:
+"          <ul>
+"            <li>
+"              <div>
+"                QCC, C++11: 4.7.3
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          SunOS:
+"          <ul>
+"            <li>
+"              <div>
+"                Oracle Solaris Studio: 12.5_next, 12.5
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Oracle Solaris Studio, C++11: 12.5_next, 12.5
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"    </ul>
+"    <p>
+"      Boost's additional test compilers include:
+"    </p>
+"    <ul>
+"      <li>
+"        <div>
+"          Linux:
+"          <ul>
+"            <li>
+"              <div>
+"                Clang: 3.0, 3.8.1
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 3.8.1
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.8.1, 3.9.1, 4.0.1
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++1z: 4.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC: 4.4.7, 4.5.3, 4.6.3, 4.7.2, 5.4.0, 7.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++11: 4.4.7, 4.7.2, 4.7.3, 4.8.5, 4.9.4, 5.4.0, 7.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++14: 5.4.1, 6.2.0, 6.3.0, 7.1.0, 8.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++17: 7.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++1z: 6.3.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Intel: 17.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Intel, C++11: 16.0, 17.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Intel, C++14: 16.0
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          OS X:
+"          <ul>
+"            <li>
+"              <div>
+"                Clang: 8.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++11: 8.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++14: 8.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++1z: 8.1.0
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          Windows:
+"          <ul>
+"            <li>
+"              <div>
+"                GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++11: 4.6.4, 4.7.3, 4.8.1
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++14: 4.9.3, 5.1.0, 5.2.0, 5.3.0, 6.1.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          Android:
+"          <ul>
+"            <li>
+"              <div>
+"                Clang: 3.6, 3.7, 3.8
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC: 4.9, 5.4
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++14: 6.2
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          FreeBSD:
+"          <ul>
+"            <li>
+"              <div>
+"                Clang: 3.8.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++11: 3.8.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++14: 3.8.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++1z: 3.8.0
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          SunOS:
+"          <ul>
+"            <li>
+"              <div>
+"                Oracle Solaris Studio: 12.5_next, 12.5
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Oracle Solaris Studio, C++11: 12.5_next, 12.5
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
+"  <div id="version_1_65_0.acknowledgements">
+"    <h3><span class="link">Acknowledgements</span></h3>
+"    <p>
+"      <a href="/users/people/beman_dawes.html">Beman Dawes</a>, Eric Niebler,
+"      <a href="/users/people/rene_rivera.html">Rene Rivera</a>, Daniel James,
+"      Vladimir Prus and Marshall Clow managed this release.
+"    </p>
+"  </div>
+"
+-hash
+"fdee2d49102d052157a230156b445cf88b8533eb28688b4787ec02f3a3ca1f05
+-id
+"version_1_65_0
+-notice_url
+-notice_xml
+-pub_date
+-purpose_xml
+"
+"      New Libraries: PolyCollection, Stacktrace. Updated Libraries: Context, Config,
+"      Core, Coroutine2, DLL, Fiber, Hash, Log, Predef, Program Options, Smart Pointers,
+"      TypeIndex, Unordered, Variant.
+"
+-title_xml
+"Version 1.65.0
+)
