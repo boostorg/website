@@ -368,8 +368,8 @@ class BoostPages {
                         // again on the next run.
                         echo "Using old cached entry for {$page}.\n";
                     }
-                    $this->generate_quickbook_page($page_data, $boostbook_values);
                     $this->update_page_data_from_boostbook_values($page_data, $boostbook_values);
+                    $this->generate_quickbook_page($page_data, $boostbook_values);
                     if ($fresh_cache) {
                         $page_data->page_state = null;
                         ++$page_data->update_count;
