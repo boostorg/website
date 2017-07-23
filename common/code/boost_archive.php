@@ -13,14 +13,27 @@ class BoostArchive
 {
     var $params;
 
+    /**
+     * @param array $params
+     */
     function __construct($params = Array()) {
         $this->params = $params;
     }
 
+    /**
+     * Get a value by key in params, or return a default value if it doesn't exist.
+     *
+     * @param string $key Key to find in params.
+     * @param mixed $default Default value to return if key is not present.
+     * @return mixed
+     */
     function get_param($key, $default) {
         return array_key_exists($key, $this->params) ? $this->params[$key] : $default;
     }
 
+    /**
+     * Serve a file from the zipfile archive.
+     */
     function display_from_archive()
     {
         // Set default values
@@ -79,6 +92,12 @@ class BoostArchive
         $this->display_raw_file($archive_file, $path_in_zipfile);
     }
 
+    /**
+     * Write out the content of a file from a zipfile.
+     *
+     * @param string $archive Path of the archive file
+     * @param string $file Path of the file in the archive
+     */
     function display_raw_file($archive, $file)
     {
         $file_handle = popen($this->unzip_command($archive, $file), 'rb');
@@ -91,12 +110,24 @@ class BoostArchive
         }
     }
 
+    /**
+     * Get the shell command for running unzip.
+     *
+     * @param string $archive Path to the zip file.
+     * @param string $path Path of the file in the archive.
+     * @return string Returns the shell command.
     function unzip_command($archive, $path) {
         return UNZIP
           .' -p '.escapeshellarg($archive)
           .' '.escapeshellarg($path);
     }
 
+    /**
+     * Write out error for a failed unzip.
+     *
+     * @param int $exit_status
+     * @param string $archive Path to the zip file.
+     */
     function unzip_error($exit_status, $archive) {
         $code="500 Internal Server Error";
 
