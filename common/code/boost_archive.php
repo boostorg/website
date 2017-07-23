@@ -81,16 +81,11 @@ class BoostArchive
 
     function display_raw_file($archive, $file)
     {
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
         $file_handle = popen($this->unzip_command($archive, $file), 'rb');
         fpassthru($file_handle);
         $exit_status = pclose($file_handle);
 
-        // Don't display errors for a corrupt zip file, as we seemd to
-        // be getting them for legitimate files.
-
+        // $exit_status of 1 is a warning.
         if($exit_status > 1) {
             $this->unzip_error($exit_status, $archive);
         }
