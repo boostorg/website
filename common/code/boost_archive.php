@@ -11,24 +11,17 @@ require_once(dirname(__FILE__) . '/boost.php');
 
 class BoostArchive
 {
-    var $params;
+    var $pattern;
+    var $archive_dir;
+    var $archive_file_prefix;
 
     /**
      * @param array $params
      */
     function __construct($params = Array()) {
-        $this->params = $params;
-    }
-
-    /**
-     * Get a value by key in params, or return a default value if it doesn't exist.
-     *
-     * @param string $key Key to find in params.
-     * @param mixed $default Default value to return if key is not present.
-     * @return mixed
-     */
-    function get_param($key, $default) {
-        return array_key_exists($key, $this->params) ? $this->params[$key] : $default;
+        $this->pattern = BoostWebsite::array_get($params, 'pattern', '@^[/]([^/]+)[/](.*)$@');
+        $this->archive_dir = BoostWebsite::array_get($params, 'archive_dir', STATIC_DIR);
+        $this->archive_file_prefix = BoostWebsite::array_get($params, 'archive_file_prefix', ARCHIVE_FILE_PREFIX);
     }
 
     /**
@@ -36,22 +29,16 @@ class BoostArchive
      */
     function display_from_archive()
     {
-        // Set default values
-
-        $pattern = $this->get_param('pattern', '@^[/]([^/]+)[/](.*)$@');
-        $archive_dir = $this->get_param('archive_dir', STATIC_DIR);
-        $archive_file_prefix = $this->get_param('archive_file_prefix', ARCHIVE_FILE_PREFIX);
-
         // Get the archive location.
 
         $path_parts = array();
-        preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts);
+        preg_match($this->pattern, $_SERVER["PATH_INFO"], $path_parts);
 
         $zipfile_name = $path_parts[1];
-        $path_in_zipfile = $archive_file_prefix . $path_parts[2];
+        $path_in_zipfile = $this->archive_file_prefix . $path_parts[2];
 
         $archive_file =
-                str_replace('\\','/', $archive_dir . '/' . $zipfile_name . '.zip');
+                str_replace('\\','/', $this->archive_dir . '/' . $zipfile_name . '.zip');
 
         // Check file exists.
 
