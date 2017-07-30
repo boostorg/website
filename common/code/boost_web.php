@@ -86,6 +86,7 @@ class BoostWeb
         header("{$_SERVER["SERVER_PROTOCOL"]} {$error}");
 
         $head = <<<HTML
+      <meta name="viewport" content="width=device-width" />
       <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
       <title>Boost C++ Libraries - {$error_html}</title>
 HTML;

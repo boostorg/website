@@ -312,6 +312,7 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <title><?php echo html_encode($library_page->title()); ?></title>
+  <meta name="viewport" content="width=device-width"/>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-doc.css" />
