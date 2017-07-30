@@ -33,5 +33,6 @@ foreach ($downloads as $x) {
             echo("</li>\n");
         }
         echo("</ul>\n");
+        echo "{$entry->download_table}\n";
     }
 }
