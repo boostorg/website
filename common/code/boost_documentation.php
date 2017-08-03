@@ -131,8 +131,8 @@ class BoostDocumentation
         else {
             $compare_version = BoostVersion::from($this->version)->
                 compare(BoostVersion::current());
-            $expires = $compare_version === -1 ? "+1 year" :
-                ($compare_version === 0 ? "+1 week" : "+1 day");
+            $expires = $compare_version === -1 ? "+1 month" :
+                ($compare_version === 0 ? "+1 week" : "+5 minutes");
         }
 
         // Last modified date
@@ -246,7 +246,7 @@ class BoostDocumentation
 
             if($type == 'text/html') {
                 if($redirect = detect_redirect($content)) {
-                    BoostWeb::http_headers('text/html', null, "+1 day");
+                    BoostWeb::http_headers('text/html', null, "+5 minutes");
                     header("Location: $redirect", TRUE, $redirect_status_code);
                     if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $content;
                     return;
