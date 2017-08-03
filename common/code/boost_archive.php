@@ -103,6 +103,7 @@ class BoostArchive
      * @param string $archive Path to the zip file.
      * @param string $path Path of the file in the archive.
      * @return string Returns the shell command.
+     */
     function unzip_command($archive, $path) {
         return UNZIP
           .' -p '.escapeshellarg($archive)
