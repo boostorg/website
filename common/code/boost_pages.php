@@ -621,6 +621,7 @@ class BoostPages_Page {
             'full_title_xml' => $this->full_title_xml($this->title_xml),
             'web_date' => $this->web_date($this->pub_date),
             'download_page' => $this->get_download_page(),
+            'download_table' => $this->download_table(),
             'documentation' => $this->get_documentation(),
             'title_xml' => $this->title_xml,
             'purpose_xml' => $this->purpose_xml,
