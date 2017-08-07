@@ -167,7 +167,7 @@ class BoostDocumentation
                 $this->path = $this->path.$found_file;
             }
             else {
-                if (!BoostWeb::http_headers('text/html', $last_modified, $expires))
+                if (!BoostWeb::http_headers('text/html', null, $expires))
                     return;
 
                 $display_dir = new BoostDisplayDir($this, $file);
