@@ -16,6 +16,27 @@
 
 [import ext.qbk]
 
+[section Known Issues]
+
+These are patches from library authors which were found too
+late to be fixed in the release. Be careful as they have
+not been through the normal testing process.
+
+Combined patch for fixes to issues:
+[@/patches/1_65_0/boost_1_65_0.patch boost_1_65_0.patch].
+Use `patch -p1 < boost_1_65_0.patch` from the root of the boost repo to
+apply. Or you can apply the patches individually below.
+
+* Context and Fiber don't return continuations when they should.
+  Patches:
+  * [@/patches/1_65_0/0001-context-function-executed-by-resume_with-has-to-retu.patch Context]
+  * [@/patches/1_65_0/0002-fiber-resume_with-requires-tor-return-a-continuation.patch Fiber]
+* Thread: Bug in `boost::condition_variable` on Windows. Patches:
+  * [@/patches/1_65_0/0003-thread-130-Bug-in-boost-condition_variable-on-Window.patch Thread 1]
+  * [@/patches/1_65_0/0004-thread-130-Bug-in-boost-condition_variable-on-Window.patch Thread 2]
+
+[endsect]
+
 [section New Libraries]
 
 * [phrase library..[@/libs/poly_collection/ PolyCollection]:]
@@ -28,7 +49,6 @@
   may produce empty backtraces with that compiler.
 
 [endsect]
-
 
 [section Updated Libraries]
 
