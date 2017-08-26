@@ -1,0 +1,35 @@
+From 0784374dbb383de25ccef75ddb6435405f11236b Mon Sep 17 00:00:00 2001
+From: "Vicente J. Botet Escriba" <vicente.botet@wanadoo.fr>
+Date: Thu, 24 Aug 2017 08:45:36 +0200
+Subject: [PATCH 3/4] [thread] #130 - Bug in boost::condition_variable on
+ Windows.
+
+---
+ boost/thread/win32/condition_variable.hpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/boost/thread/win32/condition_variable.hpp b/boost/thread/win32/condition_variable.hpp
+index f4b535f..9c2bf83 100644
+--- a/boost/thread/win32/condition_variable.hpp
++++ b/boost/thread/win32/condition_variable.hpp
+@@ -211,7 +211,7 @@ namespace boost
+                 {}
+ #endif
+ 
+-                void remove_waiter()
++                void remove_waiter_and_reset()
+                 {
+                   if (entry) {
+                     boost::lock_guard<boost::mutex> internal_lock(internal_mutex);
+@@ -250,7 +250,7 @@ namespace boost
+                   woken=entry->woken();
+               }
+               // do it here to avoid throwing on the destructor
+-              entry->remove_waiter();
++              entry.remove_waiter_and_reset();
+               locker.lock();
+               return woken;
+             }
+-- 
+2.11.0
+
