@@ -76,6 +76,7 @@ class LibrariesHtm {
         $params = array(
             'is_develop' => $version_string == "develop",
             'version' => (string) $source_version,
+            'base_version' => $source_version->base_version(),
             'release_notes_url' => "http://www.boost.org/users/history/version_{$source_version->final_doc_dir()}.html",
             'categorized' => array(),
             'alphabetic' => array(),
