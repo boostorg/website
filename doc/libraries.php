@@ -317,7 +317,7 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
   <div id="heading">
     <?php virtual("/common/heading.html"); ?>
   </div>
-  <?php latest_link($library_page->documentation_page); ?>
+  <?php echo latest_link($library_page->documentation_page); ?>
 
   <div id="body">
     <div id="body-inner">

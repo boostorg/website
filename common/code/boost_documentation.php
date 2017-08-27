@@ -304,8 +304,10 @@ function detect_redirect($content)
 
 function latest_link($filter_data)
 {
+    $result = '';
+
     if (!isset($filter_data->version)) {
-        return;
+        return $result;
     }
 
     $version = BoostVersion::from($filter_data->version);
@@ -316,24 +318,24 @@ function latest_link($filter_data)
     case 0:
         break;
     case 1:
-        echo '<div class="boost-common-header-notice">';
+        $result .= '<div class="boost-common-header-notice">';
         if (!$filter_data->path ||
             ($filter_data->archive_dir && realpath("{$filter_data->archive_dir}/{$current->dir()}/{$filter_data->path}") !== false) ||
             ($filter_data->fix_dir && realpath("{$filter_data->fix_dir}/{$current->dir()}/{$filter_data->path}") !== false))
         {
-            echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$filter_data->path,'">',
+            $result .= '<a class="boost-common-header-inner" href="/doc/libs/release/'.$filter_data->path.'">'.
                 "This is the documentation for an old version of Boost.
-                Click here to view this page for the latest version.",
+                Click here to view this page for the latest version.".
                 '</a>';
         }
         else
         {
-            echo '<a class="boost-common-header-inner" href="/doc/libs/">',
+            $result .= '<a class="boost-common-header-inner" href="/doc/libs/">'.
                 "This is the documentation for an old version of boost.
-                Click here for the latest Boost documentation.",
+                Click here for the latest Boost documentation.".
                 '</a>';
         }
-        echo '</div>', "\n";
+        $result .= '</div>'. "\n";
         break;
     case -1:
         if ($version->release_stage() === BoostVersion::release_stage_development) {
@@ -344,27 +346,29 @@ function latest_link($filter_data)
                 $hash = $hash->hash;
             }
 
-            echo '<div class="boost-common-header-notice">';
-            echo '<span class="boost-common-header-inner">';
-            echo "This is the documentation for a snapshot of the {$version} branch";
+            $result .= '<div class="boost-common-header-notice">';
+            $result .= '<span class="boost-common-header-inner">';
+            $result .= "This is the documentation for a snapshot of the {$version} branch";
             if ($hash) {
-                echo ", built from commit <a href='";
-                echo "https://github.com/boostorg/boost/commit/{$hash}";
-                echo "'>";
-                echo substr($hash, 0, 10);
-                echo "</a>";
+                $result .= ", built from commit <a href='";
+                $result .= "https://github.com/boostorg/boost/commit/{$hash}";
+                $result .= "'>";
+                $result .= substr($hash, 0, 10);
+                $result .= "</a>";
             }
-            echo ".";
-            echo '</span>';
-            echo '</div>', "\n";
+            $result .= ".";
+            $result .= '</span>';
+            $result .= '</div>'. "\n";
         }
         else {
-            echo '<div class="boost-common-header-notice">';
-            echo '<span class="boost-common-header-inner">';
-            echo 'This is the documentation for a development version of boost.';
-            echo '</span>';
-            echo '</div>', "\n";
+            $result .= '<div class="boost-common-header-notice">';
+            $result .= '<span class="boost-common-header-inner">';
+            $result .= 'This is the documentation for a development version of boost.';
+            $result .= '</span>';
+            $result .= '</div>'. "\n";
         }
         break;
     }
+
+    return $result;
 }

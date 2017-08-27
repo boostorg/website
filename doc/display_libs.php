@@ -87,6 +87,8 @@ BoostDocumentation::library_documentation_page()->display_from_archive(
   array('','@^tools.*(html|htm)$@i','basic','text/html'),
   array('','@^doc/html/.*html$@i','boost_book_basic','text/html'),
   array('','@^more/.*html$@i','basic','text/html'),
+  //~ Add the development box to some of the plain html files
+  array('','@^index.html$@i', 'develop_box', 'text/html'),
   //~ the headers are text files displayed in an embeded page
   array('','@^boost/.*$@i','cpp','text/plain')
   )
