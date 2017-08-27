@@ -85,24 +85,20 @@ class LibrariesHtm {
 
         foreach($categorized as $category) {
             $template_value = $category;
-            $template_value['libraries'] = array();
-            foreach($category['libraries'] as $index => $library) {
-                $template_value['libraries'][] = $this->rewrite_library($library, $index);
-            }
+            $template_value['libraries'] = $this->rewrite_libraries($category['libraries']);
             $params['categorized'][] = $template_value;
         }
 
-        foreach($alphabetic as $index => $library) {
-            $params['alphabetic'][] = $this->rewrite_library($library, $index);
-        }
 
+        $params['alphabetic'] = $this->rewrite_libraries($alphabetic);
+
+        $unreleased_libs = array();
         if (!$version->is_numbered_release()) {
-            $index = 0;
             foreach ($alphabetic as $library) {
-                if (!$library['boost-version']->is_final_release() &&
-                    !$library['boost-version']->is_hidden())
+                if ((!$library['boost-version']->is_final_release() &&
+                    !$library['boost-version']->is_hidden()))
                 {
-                    $params['unreleased_libs'][] = $this->rewrite_library($library, $index++);
+                    $unreleased_libs[] = $library;
                 }
             }
         } else {
@@ -111,11 +107,12 @@ class LibrariesHtm {
                 // Q: Also match point version?
                 if ($library['boost-version']->base_version() == $version->base_version())
                 {
-                    $params['unreleased_libs'][] = $this->rewrite_library($library, $index++);
+                    $unreleased_libs[] = $library;
                 }
             }
         }
-        $params['unreleased_lib_count'] = count($params['unreleased_libs']);
+        $params['unreleased_libs'] = $this->rewrite_libraries($unreleased_libs);
+        $params['unreleased_lib_count'] = count($unreleased_libs);
         $params['unreleased_library_plural'] = !!($params['unreleased_lib_count'] != 1);
 
         $template_dir = "{$repo_dir}/{$page}";
@@ -123,11 +120,15 @@ class LibrariesHtm {
             $params);
     }
 
-    function rewrite_library($lib, $index) {
-        $lib['index'] = $index;
-        $lib['link'] = $this->rewrite_link($lib['documentation']);
-        $lib['description'] = rtrim(trim($lib['description']), '.');
-        return $lib;
+    function rewrite_libraries($libraries) {
+        $rewritten = array();
+        foreach($libraries as $index => $lib) {
+            $lib['index'] = $index;
+            $lib['link'] = $this->rewrite_link($lib['documentation']);
+            $lib['description'] = rtrim(trim($lib['description']), '.');
+            $rewritten[$index] = $lib;
+        }
+        return $rewritten;
     }
 
     function rewrite_link($link) {
