@@ -314,6 +314,15 @@ class BoostVersion {
             implode('.', $this->version_numbers());
     }
 
+    /**
+     * The version number without release stage info or point versions
+     * (e.g. 1.65 for 1.65 betas and point releases)
+     */
+    function minor_release() {
+        return $this->version['stage'] ? $this->stage_name() :
+            implode('.', array_slice($this->version, 1, 2));
+    }
+
     /** Return the git tag/branch for the version.
         Doesn't work for prerelease stage as it doesn't have a tag */
     function git_ref() {

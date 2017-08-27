@@ -76,7 +76,7 @@ class LibrariesHtm {
         $params = array(
             'is_develop' => $version_string == "develop",
             'version' => (string) $source_version,
-            'base_version' => $source_version->base_version(),
+            'minor_release' => $source_version->minor_release(),
             'release_notes_url' => "http://www.boost.org/users/history/version_{$source_version->final_doc_dir()}.html",
             'categorized' => array(),
             'alphabetic' => array(),
@@ -98,7 +98,7 @@ class LibrariesHtm {
             foreach ($alphabetic as $library) {
                 if ((!$library['boost-version']->is_final_release() &&
                     !$library['boost-version']->is_hidden()) ||
-                    $library['boost-version']->base_version() == $source_version->base_version())
+                    $library['boost-version']->minor_release() == $source_version->minor_release())
                 {
                     $unreleased_libs[] = $library;
                 }
@@ -107,7 +107,7 @@ class LibrariesHtm {
             $index = 0;
             foreach ($alphabetic as $library) {
                 // Q: Also match point version?
-                if ($library['boost-version']->base_version() == $version->base_version())
+                if ($library['boost-version']->minor_release() == $version->minor_release())
                 {
                     $unreleased_libs[] = $library;
                 }
