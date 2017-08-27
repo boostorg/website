@@ -72,7 +72,7 @@ class LibrariesHtm {
             'BoostLibraries::filter_visible');
 
         $params = array(
-            'version' => (string) $source_version,
+            'version' => $version_string == "develop" ? "\"{$version_string}\"" : (string) $source_version,
             'release_notes_url' => "http://www.boost.org/users/history/version_{$source_version->final_doc_dir()}.html",
             'categorized' => array(),
             'alphabetic' => array(),
