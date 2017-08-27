@@ -96,7 +96,8 @@ class LibrariesHtm {
         if (!$version->is_numbered_release()) {
             foreach ($alphabetic as $library) {
                 if ((!$library['boost-version']->is_final_release() &&
-                    !$library['boost-version']->is_hidden()))
+                    !$library['boost-version']->is_hidden()) ||
+                    $library['boost-version']->base_version() == $source_version->base_version())
                 {
                     $unreleased_libs[] = $library;
                 }
