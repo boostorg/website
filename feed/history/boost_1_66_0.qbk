@@ -33,6 +33,32 @@
   * `shared_ptr` is movable and supports aliasing ([ticket 1234]).
 ]
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Implemented a set of experimental extended atomic operations for integral types:
+    * `fetch_negate`, `fetch_complement` - atomically replaces the value with a negated or binary complemented value and returns the original value
+    * `opaque_<op>` - equivalent to `fetch_<op>` except that it doesn't return the original value
+    * `<op>_and_test` - atomically applies `<op>` and returns `true` if the result is zero
+    * `bit_test_and_set`, `bit_test_and_reset`, `bit_test_and_complement` - atomically sets, resets or complements the specified bit and returns the original value of the bit
+  * Following C++17 ([@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0558r1.pdf P0558R1]), arithmetic operations for pointers to non-object types are no longer provided.
+  * Also following C++17 exposed `atomic<T>::value_type` and `atomic<T>::difference_type` member typedefs, where applicable, to the user's code.
+  * Improved compatibility with gcc 7. In particular, using 128-bit operations on x86-64 should no longer require linking with libatomic (the compiler-supplied library).
+
+* [phrase library..[@/libs/date_time/ DateTime]:]
+  * The library has been converted to use Boost.WinAPI as the abstraction layer for Windows SDK.
+  * Fixed an integral overflow that could cause incorrect results when adding or subtracting many years from a date (see [@https://stackoverflow.com/questions/45537280/boost-datetime-issue-with-adding-long-year-durations here]).
+
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * `next()`/`prior()` functions now support user's iterators that don't specify nested types such as `iterator_category`, `difference_type`, etc. and instead specialize `std::iterator_traits` to define those types. The compiler must support C++17-compatible `std::iterator_traits` for this to work.
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Bug fixes:
+    * Fixed a bug in `file_collector::scan_for_files` that could cause incorrectly named log files in the target directory after the user's application restart.
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * `boost/next_prior.hpp` has been moved to Boost.Iterator. No changes needed to the user's code.
+
+
 * /TODO/
 
 [endsect]
