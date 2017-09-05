@@ -877,6 +877,19 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/1_65_1/libs/typeof/">Typeof</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fix compilation error with clang-cl <a href="https://svn.boost.org/trac10/ticket/11821">ticket
+                11821</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/1_65_1/libs/unordered/">Unordered</a>:</span>
           <ul>
             <li>
@@ -1189,6 +1202,151 @@
   <div id="version_1_66_0.updated_libraries">
     <h3><span class="link">Updated Libraries</span></h3>
     <ul>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/atomic/">Atomic</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Implemented a set of experimental extended atomic operations for
+                integral types:
+                <ul>
+                  <li>
+                    <div>
+                      <code><span class="identifier">fetch_negate</span></code>,
+                      <code><span class="identifier">fetch_complement</span></code>
+                      - atomically replaces the value with a negated or binary complemented
+                      value and returns the original value
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">opaque_</span><span class="special">&lt;</span><span class="identifier">op</span><span class="special">&gt;</span></code>
+                      - equivalent to <code><span class="identifier">fetch_</span><span class="special">&lt;</span><span class="identifier">op</span><span class="special">&gt;</span></code> except that it doesn't
+                      return the original value
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="special">&lt;</span><span class="identifier">op</span><span class="special">&gt;</span><span class="identifier">_and_test</span></code>
+                      - atomically applies <code><span class="special">&lt;</span><span class="identifier">op</span><span class="special">&gt;</span></code>
+                      and returns <code><span class="keyword">true</span></code>
+                      if the result is zero
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">bit_test_and_set</span></code>,
+                      <code><span class="identifier">bit_test_and_reset</span></code>,
+                      <code><span class="identifier">bit_test_and_complement</span></code>
+                      - atomically sets, resets or complements the specified bit
+                      and returns the original value of the bit
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Following C++17 (<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0558r1.pdf">P0558R1</a>),
+                arithmetic operations for pointers to non-object types are no longer
+                provided.
+              </div>
+            </li>
+            <li>
+              <div>
+                Also following C++17 exposed <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value_type</span></code>
+                and <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">difference_type</span></code> member typedefs,
+                where applicable, to the user's code.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improved compatibility with gcc 7. In particular, using 128-bit operations
+                on x86-64 should no longer require linking with libatomic (the compiler-supplied
+                library).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/date_time/">DateTime</a>:</span>
+          <ul>
+            <li>
+              <div>
+                The library has been converted to use Boost.WinAPI as the abstraction
+                layer for Windows SDK.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed an integral overflow that could cause incorrect results when
+                adding or subtracting many years from a date (see <a href="https://stackoverflow.com/questions/45537280/boost-datetime-issue-with-adding-long-year-durations">here</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/iterator/">Iterator</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <code><span class="identifier">next</span><span class="special">()</span></code>/<code><span class="identifier">prior</span><span class="special">()</span></code>
+                functions now support user's iterators that don't specify nested
+                types such as <code><span class="identifier">iterator_category</span></code>,
+                <code><span class="identifier">difference_type</span></code>,
+                etc. and instead specialize <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">iterator_traits</span></code>
+                to define those types. The compiler must support C++17-compatible
+                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">iterator_traits</span></code> for this to work.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/log/">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Bug fixes:
+                <ul>
+                  <li>
+                    <div>
+                      Fixed a bug in <code><span class="identifier">file_collector</span><span class="special">::</span><span class="identifier">scan_for_files</span></code>
+                      that could cause incorrectly named log files in the target
+                      directory after the user's application restart.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                See <a href="/doc/libs/master/libs/log/doc/html/log/changelog.html">changelog</a>
+                for more details.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/utility/">Utility</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">next_prior</span><span class="special">.</span><span class="identifier">hpp</span></code> has been moved to Boost.Iterator.
+                No changes needed to the user's code.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
       <li>
         <div>
           <em>TODO</em>
