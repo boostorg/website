@@ -3,8 +3,7 @@
     [source-mode c++]
     [purpose
         Bug fixes:
-        [/ Please don't add updated libraries yet, it
-           can create unnecessary merge conflicts.]
+        Config, Context, Fiber, Smart Pointers, Stacktrace, Thread
     ]
     [authors [James, Daniel]]
     [/ last-revision is used for the final release date]
@@ -15,13 +14,30 @@
 
 [section Fixes in 1.65.1]
 
-[/ Example:
-* [phrase library..[@/libs/interprocess/ Interprocess]:]
-  * Added anonymous shared memory for UNIX systems.
-  * `shared_ptr` is movable and supports aliasing ([ticket 1234]).
-]
+* [phrase library..[@/libs/config/ Config]:]
+  * Version macro changes for CUDA.
+  * Update last know MSVC version.
+  * MSVC 14.11 supports structured bindings.
 
-* /TODO/
+* [phrase library..[@/libs/context/ Context]:]
+  * Return a continuation from functions executed by `resume_with`.
+
+* [phrase library..[@/libs/fiber/ Fiber]:]
+  * Return a continuation from functions executed by `resume_with`.
+
+* [phrase library..[@/libs/smart_ptr/ Smart Pointers]:]
+  * Fix Visual C++ version checks.
+  * Fix compilation for NVCC with host compiler clang.
+
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * Update build testing file to detail with a MinGW issue.
+  * Change preprocessor file extensions to work with the installation system.
+  * Support FreeBSD and other OSs that do not define `_GNU_SOURCE` but have
+    `_Unwind_Backtrace` function.
+
+* [phrase library..[@/libs/thread/ Thread]:]
+  * Fix bug in `boost::condition_variable` on Windows
+    ([@https://github.com/boostorg/thread/issues/130 #130]).
 
 [endsect]
 
