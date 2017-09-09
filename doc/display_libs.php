@@ -67,6 +67,7 @@ BoostDocumentation::library_documentation_page()->display_from_archive(
   array('','@^libs/fusion/.*(html|htm)$@i','basic','text/html', 'add_spirit_analytics'),
   array('','@^libs/wave/.*(html|htm)$@i','raw','text/html'),
   array('','@^libs/range/doc/.*(html|htm)$@i','raw','text/html'),
+  array('1.65.0','@^libs/assert/doc/html/.*(html|htm)$@i','basic','text/html'),
   array('','@^libs/assert/doc/html/.*(html|htm)$@i','simple','text/html'),
   //~ special cases that can't be embeded in the standard frame
   array('','@^libs/locale/doc/.*(html|htm)$@i','raw','text/html'),
