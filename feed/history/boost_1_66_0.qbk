@@ -55,6 +55,17 @@
     * Fixed a bug in `file_collector::scan_for_files` that could cause incorrectly named log files in the target directory after the user's application restart.
   * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
+* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+  * Made `modify` and `modify_key` more robust so that the modified element
+    is erased if the modifier throws or the rollback functor does not properly
+    restore the element (full discussion at ticket [ticket 12542]). This is
+    technically backwards incompatible; for instance, the following code:
+    ```
+    c.modify(c.begin(),[](auto&){throw 0;});
+    ```
+    keeps the container `c` untouched in former versions of Boost whereas now
+    `c.begin()` is erased. Thanks to Jon Kalb for raising the issue.
+   
 * [phrase library..[@/libs/utility/ Utility]:]
   * `boost/next_prior.hpp` has been moved to Boost.Iterator. No changes needed to the user's code.
 
