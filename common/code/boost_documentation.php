@@ -118,6 +118,15 @@ class BoostDocumentation
             $file = "{$this->archive_dir}/{$this->file_doc_dir}/{$this->path}";
         }
 
+        if (!is_readable($file)) {
+            $tmp_file = "{$this->fix_dir}/fallback/{$this->path}";
+            if (is_readable($tmp_file)) {
+                $file = $tmp_file;
+            } else {
+                BoostWeb::throw_error_404($file, 'Unable to find file.');
+            }
+        }
+
         // Only use a permanent redirect for releases (beta or full).
 
         $redirect_status_code = $this->version &&
@@ -137,9 +146,6 @@ class BoostDocumentation
 
         // Last modified date
 
-        if (!is_readable($file)) {
-            BoostWeb::throw_error_404($file, 'Unable to find file.');
-        }
 
         $last_modified = max(
             strtotime(BOOST_DOCS_MODIFIED_DATE),        // last manual documenation update
@@ -321,7 +327,8 @@ function latest_link($filter_data)
         $result .= '<div class="boost-common-header-notice">';
         if (!$filter_data->path ||
             ($filter_data->archive_dir && realpath("{$filter_data->archive_dir}/{$current->dir()}/{$filter_data->path}") !== false) ||
-            ($filter_data->fix_dir && realpath("{$filter_data->fix_dir}/{$current->dir()}/{$filter_data->path}") !== false))
+            ($filter_data->fix_dir && realpath("{$filter_data->fix_dir}/{$current->dir()}/{$filter_data->path}") !== false) ||
+            ($filter_data->fix_dir && realpath("{$filter_data->fix_dir}/fallback/{$filter_data->path}") !== false))
         {
             $result .= '<a class="boost-common-header-inner" href="/doc/libs/release/'.$filter_data->path.'">'.
                 "This is the documentation for an old version of Boost.
