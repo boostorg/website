@@ -4123,6 +4123,30 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/multi_index/index.html">Multi-index Containers</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Made <code><span class="identifier">modify</span></code> and
+"                <code><span class="identifier">modify_key</span></code> more robust
+"                so that the modified element is erased if the modifier throws or
+"                the rollback functor does not properly restore the element (full
+"                discussion at ticket <a href="https://svn.boost.org/trac/boost/ticket/12542">#12542</a>). This is technically backwards
+"                incompatible; for instance, the following code:
+"              </div>
+"<pre><span class="identifier">c</span><span class="special">.</span><span class="identifier">modify</span><span class="special">(</span><span class="identifier">c</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),[](</span><span class="keyword">auto</span><span class="special">&amp;){</span><span class="keyword">throw</span> <span class="number">0</span><span class="special">;});</span>
+"</pre>
+"              <div>
+"                keeps the container <code><span class="identifier">c</span></code>
+"                untouched in former versions of Boost whereas now <code><span class="identifier">c</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span></code> is erased. Thanks to Jon Kalb for
+"                raising the issue.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/utility/">Utility</a>:</span>
 "          <ul>
 "            <li>
@@ -4172,7 +4196,7 @@
 "  </div>
 "
 -hash
-"8bea7c6bc0cf6acd46b433939fe389efa8390040328f794b7a0aef51862a9cb8
+"de7dea37721e414833cc275c732df106f44e8ce4ef99267fa8762707859ee872
 -id
 "version_1_66_0
 -notice_url
