@@ -145,7 +145,7 @@ class BoostArchive
         default: $message = 'Unknown unzip error code.'; break;
         }
 
-        if ($code) {
+        if ($code && !headers_sent()) {
             header("{$_SERVER["SERVER_PROTOCOL"]} {$code}", true);
         }
 
