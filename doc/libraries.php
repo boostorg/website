@@ -202,7 +202,8 @@ class LibraryPage {
     // Library display functions:
 
     function libid($lib) {
-        echo "lib-", html_encode($lib['key']);
+        $id = trim(preg_replace('@[^a-zA-Z0-9]+@', '-', $lib['key']), '-');
+        echo "lib-{$id}";
     }
 
     function libref($lib) {
