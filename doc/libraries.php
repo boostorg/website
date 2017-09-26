@@ -201,6 +201,10 @@ class LibraryPage {
 
     // Library display functions:
 
+    function libid($lib) {
+        echo "lib-", html_encode($lib['key']);
+    }
+
     function libref($lib) {
         if (!empty($lib['documentation'])) {
             $docref = "/doc/libs/{$this->documentation_page->url_doc_dir}/{$lib['documentation']}";
@@ -349,7 +353,7 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
               <?php $library_page->category_subtitle(); ?>
               <dl>
               <?php foreach ($library_page->filtered_libraries() as $lib): ?>
-                <dt><?php $library_page->libref($lib); ?></dt>
+                <dt id="<?php echo $library_page->libid($lib); ?>"><?php $library_page->libref($lib); ?></dt>
                 <dd>
                   <p><?php $library_page->libdescription($lib); ?></p>
                   <dl class="fields">
