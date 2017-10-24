@@ -393,9 +393,7 @@ http://www.boost.org/development/website_updating.html
                   requirements</a> above the following integration is required:
               </p>
 
-              <dl>
-                <dt>Building Sources</dt>
-                <dd>
+                <h4>Building Sources</h4>
                   <p>The library needs to provide a Boost Build project that
                     the user, and the top level Boost project, can use to build
                     the library if it has sources to build. The Jamfile for the
@@ -409,57 +407,51 @@ lib boost_my_lib : a.cpp ;
 
 boost-install boost_my_lib ;</pre>
                   </p>
-                </dd>
-                <dt>Testing</dt>
-                <dd>
+                <h4>Testing</h4>
                   <p>
                     The library needs to provide a Boost Build project that the
                     user, and the root Boost test script, can use to build and
                     run the tests for the library. The testing build project
-                    must be buildable from the
-                    <tt>project-root/test</tt>
-                    directory. And must contain the following targets:
-                  </p>
-                  <ul>
-                    <li><tt>minimal</tt> - Tests that are quick to perform.
-                      They are only run durgin the continuous integration
-                      testing.</li>
-                    <li><tt>full</tt> - The <tt>minimal</tt> tests, plus
-                      additional tests to do resonably full coverave for full
-                      regression testing. These are run on the non-CI dedicated
-                      testing machines (and possible on some CI setups).</li>
-                    <li><tt>extra</tt> - Additional tests, not including
-                      the <tt>full</tt> tests, that provide testing for optional
-                      features, or relevant to particular users.</li>
-                  </ul>
-                  <p>
-                    You can also define additional targets as you see fit. For
-                    example you might define a
-                    <tt>performance</tt>
-                    target to run performance measurement tests.
+                    must reside in the <tt>project-root/test</tt> directory and
+                    must be buildable from this or another directory (for example,
+                    <tt>b2 libs/<em>library</em>/test</tt> from the Boost root must
+                    work.)
                   </p>
                   <p>
-                    Note, we recommend that the
-                    <tt>full</tt>
-                    target be the default. For example:
+                    An example <tt>test/Jamfile</tt> is given below:
                   </p>
-                  <pre>using testing ;
+                  <pre>import testing ;
 
-project test ;
-
-test-suite minimal : [ run a.cpp ] ;
-test-suite full : minimal [ compile b.cpp ] ;
-test-suite extra : [ run c.cpp ] ;
-
-explicit minimal ;
-explicit extra ;</pre>
-                  <p>WARNING: This is the only location considered for
+run default_constructor.cpp ;
+run copy_constructor.cpp ;
+compile nested_value_type.cpp ;
+compile-fail invalid_conversion_1.cpp ;
+</pre>
+                  <p><em>WARNING:</em> This is the only location considered for
                     testing by the top level testing script. If you want to test
                     additional locations you must declare such that they are
-                    built as dependencies to the above targets.</p>
-                </dd>
-                <dt>Building Documentation</dt>
-                <dd>
+                    built as dependencies or by using <tt>build-project</tt>.</p>
+                  <p>
+                    If the library requires a level of C++ conformance that precludes
+                    certain compilers or configurations from working, it's possible
+                    (and recommended) to declare these requirements in the test
+                    <tt>Jamfile</tt> so that the tests aren't run, to conserve test
+                    resources, as given in the example below:
+                  </p>
+                  <pre>import testing ;
+import ../../config/checks/config : requires ;
+
+project : requirements [ requires cxx11_variadic_templates cxx11_template_aliases ] ;
+
+run cpp11_test.cpp ;
+</pre>
+                  <p>
+                    For more information, see the
+                    <a href="../libs/config/doc/html/boost_config/build_config.html">documentation
+                    of Boost.Config</a>.
+                  </p>
+
+                <h4>Building Documentation</h4>
                   <p>
                     The library needs to provide a Boost Build project for
                     building the documentation for the library. The
@@ -481,8 +473,6 @@ explicit extra ;</pre>
                       this default so as to guarantee all projects have up to
                       date documentation.</li>
                   </ol>
-                </dd>
-              </dl>
 
               <h2>
                 <a name="Guidelines" id="Guidelines"></a>Guidelines
