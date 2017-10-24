@@ -47,6 +47,32 @@
   * The library has been converted to use Boost.WinAPI as the abstraction layer for Windows SDK.
   * Fixed an integral overflow that could cause incorrect results when adding or subtracting many years from a date (see [@https://stackoverflow.com/questions/45537280/boost-datetime-issue-with-adding-long-year-durations here]).
 
+* [phrase library..[@/libs/format/ Format]:]
+  * Improvements:
+    * Accept new conversion specifiers:
+      * [@https://github.com/boostorg/format/pull/41 `a`]: sets flags `fixed | scientific` (i.e. `hexfloat`)
+      * [@https://github.com/boostorg/format/pull/43 `b`]: sets flag `boolalpha`
+      * [@https://github.com/boostorg/format/pull/41 `A`]: same as `a` plus flag `uppercase`
+      * [@https://github.com/boostorg/format/pull/41 `F`]: same as `f` plus flag `uppercase`
+    * [@https://github.com/boostorg/format/pull/42 42]
+      Accept new argument types `j` and `z` from ISO C99 (parsed and ignored like all others).
+    * [@https://github.com/boostorg/format/pull/44 44]
+      Accept new argument types `I`, `I32`, `I64`, and `w` from Microsoft (parsed and ignored like all others).
+    * [@https://github.com/boostorg/format/issues/33 33]
+      Added a development tool called `format_matrix` that exercises as many different
+      combinations of format strings as possible and logs them to a file:
+      * helps prevent regressions in between boost releases
+      * allows for comparison against `snprintf`
+  * Bugfixes:
+    * [@https://svn.boost.org/trac10/ticket/4636 4636]
+      Explicit clamping provided to allow MSVC /RTCc to succeed
+    * [@https://svn.boost.org/trac10/ticket/7477 7477]
+      Fix compatibility with MSVC /Za
+    * [@https://svn.boost.org/trac10/ticket/10324 10324]
+      Const-correct cast issue resolved
+    * [@https://svn.boost.org/trac10/ticket/11632 11632]
+      Fix `-fsanitize=undefined` issue in `alt_sstream.hpp`
+
 * [phrase library..[@/libs/iterator/ Iterator]:]
   * `next()`/`prior()` functions now support user's iterators that don't specify nested types such as `iterator_category`, `difference_type`, etc. and instead specialize `std::iterator_traits` to define those types. The compiler must support C++17-compatible `std::iterator_traits` for this to work.
 
