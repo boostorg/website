@@ -79,6 +79,29 @@
 * [phrase library..[@/libs/utility/ Utility]:]
   * `boost/next_prior.hpp` has been moved to Boost.Iterator. No changes needed to the user's code.
 
+* [phrase library..[@/libs/uuid/ Uuid]:]
+  * Improvements:
+    * [@https://github.com/boostorg/uuid/issues/26 26]
+      Refactored `name_generator` to support a configurable hash provider
+      concept and provide an optional MD5 hash implementation per RFC-4122.
+      This will make it easier to support whatever becomes the next
+      standard hash algorithm.
+    * [@https://github.com/boostorg/uuid/issues/34 34]
+      Added RFC-4122 namespaces in `boost::uuids::ns`.
+  * Bugfixes:
+    * [@https://svn.boost.org/trac10/ticket/8630 8630]
+      [@https://svn.boost.org/trac10/ticket/11482 11482]
+      [@https://svn.boost.org/trac10/ticket/12253 12253]
+      Various deficiencies in `string_generator` were resolved.
+    * [@https://svn.boost.org/trac10/ticket/11483 11483]
+       Invalid `string_generator` inputs now throw
+      `std::invalid_argument` instead of `std::runtime_error`.
+    * [@https://svn.boost.org/trac10/ticket/10665 10665]
+      `name_generator::operator()` is now const, matching docs.
+    * Detail headers were moved into the detail subdirectory.
+      No changes needed to user's code, however you may get
+      build warnings if you use the old header location.
+
 
 * /TODO/
 
