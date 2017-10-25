@@ -38,7 +38,7 @@ function main() {
             echo "* [phrase library..[@/{$lib['documentation']} {$lib['name']}]:]\n";
             echo "  {$description}, from {$authors}.\n\n";
         }
-        echo "[endsection]\n\n";
+        echo "[endsect]\n\n";
     }
     else {
         echo "No new libraries yet.\n";
