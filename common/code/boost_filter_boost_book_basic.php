@@ -22,7 +22,7 @@ class BoostFilterBoostBookBasic extends BoostFilter
         echo '<link rel="icon" href="/favicon.ico" type="image/ico"/>';
         echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"/>';
         if (!preg_match('@<meta\b[^<>]*\bname\s*=\s*["\']?viewport\b@', $head)) {
-            echo '<meta name="viewport" content="width=device-width"/>';
+            echo '<meta name="viewport" content="width=device-width,initial-scale=1.0"/>';
         }
         echo substr($text, $pos1, $pos3 - $pos1);
         virtual("/common/heading-doc.html");

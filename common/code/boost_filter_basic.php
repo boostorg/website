@@ -26,7 +26,7 @@ class BoostFilterBasic extends BoostFilter
                 echo str_replace('class="', 'class="boost-asciidoctor ', $match[0][0]);
             } else {
                 if (!preg_match('@<meta\b[^<>]*\bname\s*=\s*["\']?viewport\b@', $head)) {
-                    echo '<meta name="viewport" content="width=device-width"/>';
+                    echo '<meta name="viewport" content="width=device-width,initial-scale=1.0"/>';
                 }
                 echo $match[0][0];
             }

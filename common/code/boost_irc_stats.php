@@ -45,7 +45,7 @@ HTML
     function _init_html()
     {
         preg_match('@text/html; charset=([^\s"]+)@i',$this->content_,$charset);
-        $this->head_content_ .= "  <meta name=\"viewport\" content=\"width=device-width\" />\n";
+        $this->head_content_ .= "  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\" />\n";
         if (isset($charset[1]))
         {
             $this->head_content_ .= <<<HTML
