@@ -197,7 +197,7 @@ function get_test_links($branch, $url_path) {
         }
     }
 
-    $test_links = [];
+    $test_links = array();
     foreach ($config_info_columns as $index => $link) {
         if ($link && $os_columns[$index]) {
             $test_links[] = array(
