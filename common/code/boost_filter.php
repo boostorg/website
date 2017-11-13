@@ -151,7 +151,8 @@ class BoostFilter
             $title = "{$this->title} - " . BoostVersion::from($this->data->version);
         }
 
-        $head = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
+        $head = "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\" />\n";
+        $head .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
 
         if (!empty($this->noindex))
             $head .= "<meta name=\"robots\" content=\"noindex\">\n";
