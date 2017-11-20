@@ -39,6 +39,25 @@
   * `shared_ptr` is movable and supports aliasing ([ticket 1234]).
 ]
 
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Implemented interface changes to reflect the Networking TS
+    ([@www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/n4656.pdf N4656]).
+    * List of changes TBD.
+    * Functions and classes that have been superseded by Networking TS
+      functionality have been deprecated.
+    * The service template parameters, and the corresponding classes, are disabled
+      by default. For example, instead of `basic_socket<Protocol, SocketService>` we
+      now have simply `basic_socket<Protocol>`. The old interface can be enabled by
+      defining the `BOOST_ASIO_ENABLE_OLD_SERVICES` macro.
+  * Removed previously deprecated functions.
+  * Added support for customised handler tracking.
+  * Added reactor-related (i.e. descriptor readiness) events to handler tracking.
+  * Added special "concurrency hint" values that may be used to disable locking
+    on a per `io_context` basis.
+  * Enabled perfect forwarding for the first `ssl::stream<>` constructor argument.
+  * Added ability to release ownership of the underlying native socket. (Requires
+    Windows 8.1 or later when using the I/O completion port backend.)
+
 * [phrase library..[@/libs/atomic/ Atomic]:]
   * Implemented a set of experimental extended atomic operations for integral types:
     * `fetch_negate`, `fetch_complement` - atomically replaces the value with a negated or binary complemented value and returns the original value
