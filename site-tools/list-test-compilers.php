@@ -64,6 +64,7 @@ function load_testers($branch) {
         'GNU C++' => 'GCC',
         'Microsoft Visual C++' => 'Visual C++',
         'Intel C++ C++0x mode' => 'Intel',
+        'Intel C++' => 'Intel',
         'Clang' => 'Clang',
     );
     $url_path = "/development/tests/{$branch}/developer/config_.html";
@@ -80,59 +81,65 @@ function load_testers($branch) {
             continue;
         }
 
-        $test_results = explode('*********************************************************************', $test_results);
-        $compiler_info = trim($test_results[0]);
-        if (!preg_match('@^(.*)version[ \t]*([0-9.]+)(?:[- ]+.*)?$@m', $compiler_info, $match)) {
-            throw new RuntimeException("Unable to match compiler + version: $compiler_info");
-        }
-        $compiler = trim($match[1]);
-        if (array_key_exists($compiler, $compiler_conversion)) {
-            $compiler = $compiler_conversion[$compiler];
-        } else {
-            echo "Unknown Compiler: {$compiler}\n";
-        }
-        $compiler_version = trim($match[2]);
-        $variables = substr($compiler_info, strlen($match[0]));
-        if (preg_match_all('@^[ \t]*(\w*)[ \t]*=(.*)$@m', $variables, $matches, PREG_SET_ORDER)) {
-            $variables = array();
-            foreach ($matches as $match) {
-                $variables[$match[1]] = $match[2];
+        foreach($test_results as $test_result) {
+            $test_result_parts = explode('*********************************************************************', $test_result);
+            $compiler_info = trim($test_result_parts[0]);
+            if (!preg_match('@^(.*)version[ \t]*([0-9.]+)(?:[- ]+.*)?$@m', $compiler_info, $match)) {
+                throw new RuntimeException("Unable to match compiler + version: $compiler_info");
             }
+            $compiler = trim($match[1]);
+            if (array_key_exists($compiler, $compiler_conversion)) {
+                $compiler = $compiler_conversion[$compiler];
+            } else {
+                echo "Unknown Compiler: {$compiler}\n";
+            }
+            $compiler_version = trim($match[2]);
+            if (strtolower($compiler) == 'intel' && $compiler_version > 1000) {
+                $compiler_version = $compiler_version / 100;
+                if (is_int($compiler_version)) { $compiler_version .= ".0"; }
+            }
+            $variables = substr($compiler_info, strlen($match[0]));
+            if (preg_match_all('@^[ \t]*(\w*)[ \t]*=(.*)$@m', $variables, $matches, PREG_SET_ORDER)) {
+                $variables = array();
+                foreach ($matches as $match) {
+                    $variables[$match[1]] = $match[2];
+                }
 
-            if (array_key_exists('__QNX__', $variables)) {
-                $compiler = 'QCC';
-            }
-            $language_version = false;
-            if (array_key_exists('__cplusplus', $variables)) {
-                if (preg_match('@^(\d{6})L?$@', $variables['__cplusplus'], $match)) {
-                    if ($match[1] < 201103) {
-                        $language_version = 'C++03';
-                    } else if ($match[1] < 201402) {
-                        $language_version = 'C++11';
-                    } else if ($match[1] < 201406) {
-                        $language_version = 'C++14';
-                    } else if ($match[1] < 201703) {
-                        $language_version = 'C++1z';
-                    } else {
-                        $language_version = 'C++17';
+                if (array_key_exists('__QNX__', $variables)) {
+                    $compiler = 'QCC';
+                }
+                $language_version = false;
+                if (array_key_exists('__cplusplus', $variables)) {
+                    if (preg_match('@^(\d{6})L?$@', $variables['__cplusplus'], $match)) {
+                        if ($match[1] < 201103) {
+                            $language_version = 'C++03';
+                        } else if ($match[1] < 201402) {
+                            $language_version = 'C++11';
+                        } else if ($match[1] < 201406) {
+                            $language_version = 'C++14';
+                        } else if ($match[1] < 201703) {
+                            $language_version = 'C++1z';
+                        } else {
+                            $language_version = 'C++17';
+                        }
                     }
                 }
-            }
-            if (!$language_version) {
-                if (array_key_exists('__GXX_EXPERIMENTAL_CXX0X__', $variables)) {
-                    $language_version = 'C++0x';
-                } else if ($compiler == 'GCC' || $compiler == 'Clang') {
+                if (!$language_version) {
+                    if (array_key_exists('__GXX_EXPERIMENTAL_CXX0X__', $variables)) {
+                        $language_version = 'C++0x';
+                    } else if ($compiler == 'GCC' || $compiler == 'Clang') {
+                        $language_version = 'C++03';
+                    }
+                }
+                if (!$language_version) {
+                    echo "No language version for: {$compiler}\n";
+                    print_r($variables);
                     $language_version = 'C++03';
                 }
             }
-            if (!$language_version) {
-                echo "No language version for: {$compiler}\n";
-                print_r($variables);
-                $language_version = 'C++03';
-            }
-        }
 
-        $test_compilers[$link_details['os']][$compiler][$language_version][$compiler_version] = true;
+            $test_compilers[$link_details['os']][$compiler][$language_version][$compiler_version] = true;
+        }
     }
 
     return $test_compilers;
@@ -237,24 +244,33 @@ function get_test_results_from_frame($url_path) {
         throw new RuntimeException("Error downloading test results");
     }
 
-    // If $page has links to multiple test results, use the first one.
     $a_nodes = $page->getElementsByTagName('a');
     if ($a_nodes->length) {
-        $page = DOMDocument::loadHTML(download_page(
-            resolve_url_path($a_nodes->item(0)->getAttribute('href'), $url_path)));
-        if (!$page) {
-            throw new RuntimeException("Error downloading test results");
+        $pages = array();
+        foreach($a_nodes as $a_node) {
+            $page = DOMDocument::loadHTML(download_page(
+                resolve_url_path($a_node->getAttribute('href'), $url_path)));
+            if (!$page) {
+                throw new RuntimeException("Error downloading test results");
+            }
+            $pages[] = $page;
         }
+    } else {
+        $pages = array($page);
     }
 
-    $xpath = new DOMXPath($page);
-    foreach($xpath->query("//div[@class='log-linker-output-title']") as $node) {
-        if (preg_match('@^Run \[.*\]: (.*)@', trim($node->textContent), $match)) {
-            do { $node = $node->nextSibling; } while($node && $node->nodeType != XML_ELEMENT_NODE);
-            if (!$node) { return null; }
-            return $node->textContent;
+    $results = array();
+    foreach ($pages as $page) {
+        $xpath = new DOMXPath($page);
+        foreach($xpath->query("//div[@class='log-linker-output-title']") as $node) {
+            if (preg_match('@^Run \[.*\]: (.*)@', trim($node->textContent), $match)) {
+                do { $node = $node->nextSibling; } while($node && $node->nodeType != XML_ELEMENT_NODE);
+                if ($node) { $results[] = $node->textContent; }
+                break;
+            }
         }
     }
+    return $results;
 }
 
 function download_page($url_path) {
