@@ -195,7 +195,7 @@ function read_metadata_from_modules($path, $location, $hash, $sublibs = array('l
     foreach($modules as $name => $module) {
         $submodule_path = $path ? "{$path}/{$module['path']}" : $module['path'];
 
-        if (!preg_match('@^\.\./(\w+)\.git$@', $module['url'])) {
+        if (!preg_match('@^\.\./(\w+)(\.git)?$@', $module['url'])) {
             // In quiet mode don't warn about documentation submodules, which
             // libraries have previously included from remote locations.
             if (!UpdateDocListSettings::$quiet || strpos($submodule_path.'/', '/doc/') === false) {
