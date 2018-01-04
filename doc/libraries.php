@@ -15,7 +15,8 @@ class LibraryPage {
 
     static $view_fields = Array(
         'all' => 'All',
-        'categorized' => 'Categorized'
+        'categorized' => 'Categorized',
+        'condensed' => 'Condensed',
     );
 
     static $filter_fields = Array(
@@ -349,7 +350,7 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
                   </div>
               </div>
 
-              <?php if ($library_page->view_value != 'categorized'): ?>
+              <?php if ($library_page->view_value == 'all'): ?>
 
               <?php $library_page->category_subtitle(); ?>
               <dl>
@@ -370,6 +371,21 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
                 </dd>
               <?php endforeach; ?>
               </dl>
+
+              <?php elseif ($library_page->view_value == 'condensed'): ?>
+
+              <?php $library_page->category_subtitle(); ?>
+              <ul>
+              <?php foreach ($library_page->filtered_libraries() as $lib): ?>
+                <li id="<?php echo $library_page->libid($lib); ?>">
+                <?php
+                  $library_page->libref($lib);
+                  echo ': ';
+                  $library_page->libdescription($lib);
+                ?>
+                </li>
+              <?php endforeach; ?>
+              </ul>
 
               <?php else: ?>
 
