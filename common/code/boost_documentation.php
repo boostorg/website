@@ -235,7 +235,7 @@ class BoostDocumentation
 
         // Output raw files.
 
-        if($extractor == 'raw') {
+        if($extractor == 'raw' || BoostWebsite::array_get($_GET, 'format') == 'raw') {
             if (!BoostWeb::http_headers($type, $last_modified, $expires))
                 return;
 
