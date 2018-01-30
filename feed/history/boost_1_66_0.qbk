@@ -64,7 +64,7 @@ Visual Studio 15.5 was released too late for us to test this release with it.
   * Implemented a set of experimental extended atomic operations for integral types:
     * `fetch_negate`, `fetch_complement` - atomically replaces the value with a negated or binary complemented value and returns the original value
     * `opaque_<op>` - equivalent to `fetch_<op>` except that it doesn't return the original value
-    * `<op>_and_test` - atomically applies `<op>` and returns `true` if the result is zero
+    * `<op>_and_test` - atomically applies `<op>` and returns `true` if the result is zero. *Note:* The result of these operations will change to the opposite in Boost 1.67. The code that uses these functions will need to be updated.
     * `bit_test_and_set`, `bit_test_and_reset`, `bit_test_and_complement` - atomically sets, resets or complements the specified bit and returns the original value of the bit
   * Following C++17 ([@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0558r1.pdf P0558R1]), arithmetic operations for pointers to non-object types are no longer provided.
   * Also following C++17 exposed `atomic<T>::value_type` and `atomic<T>::difference_type` member typedefs, where applicable, to the user's code.
