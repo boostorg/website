@@ -81,6 +81,7 @@ class LibraryPage {
                 BoostWeb::throw_http_error(410, 'Filter field no longer supported.',
                     "Filter field {$this->filter_value} is no longer supported");
             }
+            $this->view_value = 'all';
         }
         else if (strpos($this->view_value, 'category_') === 0) {
             $this->category_value = substr($this->view_value, strlen('category_')) ?: '';
@@ -88,6 +89,7 @@ class LibraryPage {
                 BoostWeb::throw_http_error(400, "Invalid category",
                     "Invalid category: {$this->category_value}");
             }
+            $this->view_value = 'all';
         }
         else {
             if (!array_key_exists($this->view_value, self::$view_fields)) {
