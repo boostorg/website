@@ -71,7 +71,7 @@ class LibraryPage {
 
         $this->view_value = $this->params['view'];
         if (strpos($this->view_value, 'filtered_') === 0) {
-            $this->filter_value = substr($this->view_value, strlen('filtered_'));
+            $this->filter_value = substr($this->view_value, strlen('filtered_')) ?: '';
 
             if (!array_key_exists($this->filter_value, self::$filter_fields)) {
                 BoostWeb::throw_http_error(400, "Malformed request",
@@ -83,7 +83,7 @@ class LibraryPage {
             }
         }
         else if (strpos($this->view_value, 'category_') === 0) {
-            $this->category_value = substr($this->view_value, strlen('category_'));
+            $this->category_value = substr($this->view_value, strlen('category_')) ?: '';
             if(!array_key_exists($this->category_value, $this->categories)) {
                 BoostWeb::throw_http_error(400, "Invalid category",
                     "Invalid category: {$this->category_value}");
