@@ -396,6 +396,7 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
               foreach ($library_page->categorized_libraries() as $name => $category) {
                 if(count($category['libraries'])) {
                   echo '<h3>';
+                  echo "\n";
                   $library_page->category_link($name);
                   echo '</h3>';
                   echo '<ul>';
@@ -405,8 +406,10 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
                     echo ': ';
                     $library_page->libdescription($lib);
                     echo '</li>';
+                    echo "\n";
                   }
                   echo '</ul>';
+                  echo "\n";
                 }
               }
               ?>
