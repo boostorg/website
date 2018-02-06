@@ -12,7 +12,7 @@ class BoostReleases {
 
         if (is_file($this->release_file)) {
             $release_data = array();
-            foreach(BoostState::load($this->release_file) as $key => $data) {
+            foreach(BoostState::load_json($this->release_file) as $key => $data) {
                 $data = $this->unflatten_array($data);
 
                 if (preg_match('@^([a-zA-Z][^-]*)-(.*)$@', $key, $match)) {
@@ -33,6 +33,9 @@ class BoostReleases {
                 $version = (string) $version_object;
                 $data['version'] = $version_object;
                 $data['release_name'] = $release_name;
+                if (array_key_exists('release_date', $data) && is_string($data['release_date'])) {
+                    $data['release_date'] = new DateTime($data['release_date']);
+                }
 
                 if (isset($this->release_data[$key][$version])) {
                     echo "Duplicate release data for {$release_name} {$version}.\n";
@@ -53,7 +56,7 @@ class BoostReleases {
                 $flat_release_data[$key] = $this->flatten_array($data);
             }
         }
-        BoostState::save($flat_release_data, $this->release_file);
+        BoostState::save_json($flat_release_data, $this->release_file);
     }
 
     function unflatten_array($array) {
