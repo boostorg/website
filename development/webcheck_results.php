@@ -4,7 +4,7 @@
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 */
-$p=substr($_SERVER["PATH_INFO"],1);
+$p=substr($_SERVER["ORIG_PATH_INFO"],1);
 if ($p)
 {
   if (preg_match('@[.](html|htm)$@i',$p)) { header('Content-type: text/html'); }
