@@ -27,6 +27,19 @@
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * [*Breaking change:] Changed the result of the `(op)_and_test` operations added in Boost 1.66 to the opposite - the functions now return `true` if the operation result is non-zero. This is consistent with other `test` methods in Boost.Atomic and the C++ standard library. Users can define `BOOST_ATOMIC_DETAIL_HIGHLIGHT_OP_AND_TEST` when compiling their code to emit warnings on every use of the changed functions. This way users can locate the code that needs to be updated. ([github atomic 11])
+  * Update for C++2a. On C++11 compilers that support scoped enums, the `memory_order` enumeration is now scoped and contains constants with shorter names like `acquire`, `release` or `seq_cst` (i.e. users can use `memory_order::acquire` instead of `memory_order_acquire`). The old constants are also provided for backward compatibility. ([@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0439r0.html P0439R0])
+  * Update for C++2a. Added experimental support for atomic operations on floating point types. In addition to general operations, `add`, `sub`, `negate` operations and their `fetch_(op)` and `opaque_(op)` versions are supported. Lock-free property can be tested with the new macros `BOOST_ATOMIC_FLOAT/DOUBLE/LONG_DOUBLE_LOCK_FREE`. The support for floating point types is optional and can be disabled by defining `BOOST_ATOMIC_NO_FLOATING_POINT`. ([@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0020r6.html P0020R6])
+  * Added new experimental operations:
+    * `negate_and_test` and `complement_and_test` which perform negation or bitwise complement and return `true` if the result is not zero.
+    * `add`, `sub`, `negate`, `bitwise_and`, `bitwise_or`, `bitwise_xor`, `bitwise_complement` operations which perform the operation and return its result.
+  * For generic `atomic<T>` specialization, the default constructor is now trivial if `T`'s default constructor is.
+  * The internal implementation of `atomic<T>` has been updated to avoid undefined behavior that stems from signed integer overflows. As required by the C++ standard, the library uses two's complement representation of signed integers internally and accroding rules of overflow. Currently, the library requires the native signed integer types to also use two's complement representation (but no defined overflow semantics).
+  * Improved Clang support. In particular, fixed DCAS not being lock-free and fixed possible incorrect code generated on 32-bit x86.
+  * Improved MinGW support. For gcc versions up to 4.6, fixed compilation of DCAS on x86.
+  * In x86 PIE code, asm blocks now preserve `ebx` value.
+
 * [phrase library..[@/libs/date_time/ DateTime]:]
   * Fixed various year 2038 (32-bit) issues
     ([ticket 2818]) ([ticket 2819]) ([ticket 3487]) ([ticket 4543]) ([ticket 8450]) ([ticket 9158]) ([ticket 9489]) ([ticket 10570]) ([ticket 12609])
@@ -52,6 +65,11 @@
     ([github_pr date_time 52]) ([github_pr date_time 72])
   * Fixed various compiler warnings
     ([ticket 3606]) ([ticket 9882]) ([github_pr date_time 62])
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Improved compatibility with C++17: use `allocator_traits` to work with allocators instead of directly accessing its members.
+  * Improved compatibility with gcc 7 and later by updating library ABI namespace definition.
+  * Added documentation for the "Append" config file parameter for "TextFile" sinks. The parameter was supported previously, only the documentation was missing.
 
 * [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
   * Elements with overloaded `operator&` are now fully accepted (ticket [ticket 13307]).
