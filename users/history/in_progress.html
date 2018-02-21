@@ -59,6 +59,109 @@
     <ul>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/atomic/">Atomic</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <strong>Breaking change:</strong> Changed the result
+                of the <code><span class="special">(</span><span class="identifier">op</span><span class="special">)</span><span class="identifier">_and_test</span></code>
+                operations added in Boost 1.66 to the opposite - the functions now
+                return <code><span class="keyword">true</span></code> if the operation
+                result is non-zero. This is consistent with other <code><span class="identifier">test</span></code>
+                methods in Boost.Atomic and the C++ standard library. Users can define
+                <code><span class="identifier">BOOST_ATOMIC_DETAIL_HIGHLIGHT_OP_AND_TEST</span></code>
+                when compiling their code to emit warnings on every use of the changed
+                functions. This way users can locate the code that needs to be updated.
+                (<a href="https://github.com/boostorg/atomic/issues/11">#11</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Update for C++2a. On C++11 compilers that support scoped enums, the
+                <code><span class="identifier">memory_order</span></code> enumeration
+                is now scoped and contains constants with shorter names like <code><span class="identifier">acquire</span></code>, <code><span class="identifier">release</span></code>
+                or <code><span class="identifier">seq_cst</span></code> (i.e.
+                users can use <code><span class="identifier">memory_order</span><span class="special">::</span><span class="identifier">acquire</span></code>
+                instead of <code><span class="identifier">memory_order_acquire</span></code>).
+                The old constants are also provided for backward compatibility. (<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0439r0.html">P0439R0</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Update for C++2a. Added experimental support for atomic operations
+                on floating point types. In addition to general operations, <code><span class="identifier">add</span></code>, <code><span class="identifier">sub</span></code>,
+                <code><span class="identifier">negate</span></code> operations
+                and their <code><span class="identifier">fetch_</span><span class="special">(</span><span class="identifier">op</span><span class="special">)</span></code> and <code><span class="identifier">opaque_</span><span class="special">(</span><span class="identifier">op</span><span class="special">)</span></code> versions are supported. Lock-free
+                property can be tested with the new macros <code><span class="identifier">BOOST_ATOMIC_FLOAT</span><span class="special">/</span><span class="identifier">DOUBLE</span><span class="special">/</span><span class="identifier">LONG_DOUBLE_LOCK_FREE</span></code>.
+                The support for floating point types is optional and can be disabled
+                by defining <code><span class="identifier">BOOST_ATOMIC_NO_FLOATING_POINT</span></code>.
+                (<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0020r6.html">P0020R6</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Added new experimental operations:
+                <ul>
+                  <li>
+                    <div>
+                      <code><span class="identifier">negate_and_test</span></code>
+                      and <code><span class="identifier">complement_and_test</span></code>
+                      which perform negation or bitwise complement and return <code><span class="keyword">true</span></code> if the result is not zero.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">add</span></code>, <code><span class="identifier">sub</span></code>, <code><span class="identifier">negate</span></code>,
+                      <code><span class="identifier">bitwise_and</span></code>,
+                      <code><span class="identifier">bitwise_or</span></code>,
+                      <code><span class="identifier">bitwise_xor</span></code>,
+                      <code><span class="identifier">bitwise_complement</span></code>
+                      operations which perform the operation and return its result.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                For generic <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> specialization, the default constructor
+                is now trivial if <code><span class="identifier">T</span></code>'s
+                default constructor is.
+              </div>
+            </li>
+            <li>
+              <div>
+                The internal implementation of <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> has been updated to avoid undefined
+                behavior that stems from signed integer overflows. As required by
+                the C++ standard, the library uses two's complement representation
+                of signed integers internally and accroding rules of overflow. Currently,
+                the library requires the native signed integer types to also use
+                two's complement representation (but no defined overflow semantics).
+              </div>
+            </li>
+            <li>
+              <div>
+                Improved Clang support. In particular, fixed DCAS not being lock-free
+                and fixed possible incorrect code generated on 32-bit x86.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improved MinGW support. For gcc versions up to 4.6, fixed compilation
+                of DCAS on x86.
+              </div>
+            </li>
+            <li>
+              <div>
+                In x86 PIE code, asm blocks now preserve <code><span class="identifier">ebx</span></code>
+                value.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/beast/">Beast</a>:</span>
           <ul>
             <li>
@@ -150,6 +253,32 @@
             <li>
               <div>
                 Fixed various compiler warnings (<a href="https://svn.boost.org/trac/boost/ticket/3606">#3606</a>) (<a href="https://svn.boost.org/trac/boost/ticket/9882">#9882</a>) (<a href="https://github.com/boostorg/date_time/pull/62">PR#62</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/log/">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Improved compatibility with C++17: use <code><span class="identifier">allocator_traits</span></code>
+                to work with allocators instead of directly accessing its members.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improved compatibility with gcc 7 and later by updating library ABI
+                namespace definition.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added documentation for the "Append" config file parameter
+                for "TextFile" sinks. The parameter was supported previously,
+                only the documentation was missing.
               </div>
             </li>
           </ul>
