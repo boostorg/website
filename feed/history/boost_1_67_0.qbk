@@ -89,6 +89,59 @@
 * [phrase library..[@/libs/poly_collection/ PolyCollection]:]
   * Maintenance fixes.
 
+* [phrase library..[@/libs/spirit/ Spirit]:]
+  * Spirit.X3:
+    * [*Breaking change:] Removed `with_context` ([github spirit 239])
+    * Added noexcept to `x3::variant` and `forward_ast` ([github spirit 241])
+    * CR+LF lines wrongly counted in `error_handler::position()` ([github spirit 248])
+    * Fixed `unused_type` attribute case in `parse_into_container` ([github spirit 266])
+    * Fixed parsing into associative containers ([github spirit 289])
+    * Fixed overflow problem in `uint_parser<signed T>` ([github spirit 297])
+    * Added VS2015 Update 3 support by using workarounds ([github spirit 308])
+    * Fixed include guard names collision with Qi ([github spirit 313])
+    * Added parsing into range ([github spirit 316]) ([ticket 12928])
+    * Changed iterator concept static assert from `ForwardIterator` to `ReadableIteratorConcept` && `ForwardTraversalConcept` ([github spirit 320])
+    * Reenabled `fusion::map` support ([github spirit 330])
+    * Fixed `string("...")` and `attr("...")` to single item sequence ([github spirit 337])
+    * Dereference a single item view instead of unwrapping sequence ([github spirit 340])
+    * Prevent `parse_nan` from dereferencing out of range iterator ([github spirit 351])
+    * Use traits to test if container is empty ([github spirit 355])
+
+  * Spirit V2
+    * Fixed keyword directives compilation on C++11 ([github spirit 256]) ([ticket 11493])
+    * Fixed subrules compilation ([github spirit 279]) ([github spirit 259])
+    * Fixed subrules use after scope bug ([github spirit 284]) ([ticket 5270])
+    * Fixed undefined behavior in sequential or operator. Underlying parsers order of execution was dependent on compiler ([github spirit 310])
+    * Spirit was accidentally relaying on `types` typedef of `boost::optional`. The typedef was removed in the new optional implementation ([github spirit 271]) ([ticket 12349])
+    * Fixed problems with `BOOST_SPIRIT_NO_PREDEFINED_TERMINALS` (`attr_cast`, `confix`, `distinct`, `keywords`, and `flush_multi_pass`) ([github spirit 314]) ([ticket 13311])
+    * Added missing copy assignment operator to `hold_any` ([github spirit 361]) ([ticket 8268])
+  
+  * Spirit.Qi:
+    * Fixed alternate operator ([github spirit 201]) ([github spirit 271]) ([ticket 12349])
+    * Fixed signed integer overflow in real parser ([ticket 245])
+    * Fixed overflow problem in `uint_parser<signed T>` ([github spirit 297])
+    * Fixed `get_current_line`, `get_line_start`, and added `get_line_end` ([github spirit 304])
+    * Permutations parser were always initializing optionals ([github spirit 319]) ([ticket 12473])
+    * Changed iterator concept static assert from `ForwardIterator` to `ReadableIteratorConcept` && `ForwardTraversalConcept` ([github spirit 320])
+    * Added assertations to real parsers to ensure that the `parse_frac_n` from user defined real policy does not return negative values and also to prevent static analyzers false-positives ([github spirit 358])
+  
+  * Spirit.Karma:
+    * Fixed alternate operator ([github spirit 271])
+    * Fixed `no_buffering_policy` missing copy constructor ([github spirit 261])
+    * The `ostream_iterator` was inheriting `std::iterator` which is deprecated in C++17 ([github spirit 345])
+  
+  * Spirit.Lex:
+    * Store id as promoted type to allow out-of-enum values ([github spirit 247])
+    * Fixed C2001 'newline in constant' warning in generated lexers ([github spirit 324]) ([ticket 11540])
+  
+  * Spirit.Classic:
+    * Fixed `remove_reference` usage without a namespace in Phoenix ([github spirit 274])
+    * Fixed `std::complex` usage without the include ([github spirit 273])
+    * Fixed compilation of `match<T &>` ([github spirit 275])
+    * Fixed compilation with `BOOST_DISABLE_THREADS` defined ([github spirit 323]) ([ticket 12639])
+    * Increment scanner through iterator policy ([github spirit 336]) #7371
+    * Removed deprecated in C++17 `std::iterator` usage ([github spirit 345])
+
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * Iterators no longer inherit from `std::iterator`, as it's deprecated
     ([github_pr unordered 7])
