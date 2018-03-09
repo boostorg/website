@@ -50,6 +50,15 @@
   * For a complete list of changes, please view the official
     [@/libs/beast/doc/html/beast/release_notes.html Release Notes].
 
+* [phrase library..[@/libs/container_hash/ ContainerHash]:]
+  * Extracted from the functional module to simplify the dependency diagram.
+  * Moved headers to new location to reflect name change, the old include paths
+    will still work.
+  * Added support for `std::string_view`, `std::error_code`, `std::error_condition`
+    `std::optional`, `std::variant`, `std::monostate` where available.
+  * Nore detail in the
+    [@/doc/html/hash/changes.html#hash.changes.boost_1_67_0 library change log].
+
  * [phrase library..[@/libs/context/ Context]:]
   * #62/#64: fix i386/macho routines to correctly return transfer_t in EAX/EDX
   * #65: `__sanitizer_finish_switch_fiber` should be called directly after context switch
@@ -170,8 +179,19 @@
     * Removed deprecated in C++17 `std::iterator` usage ([github spirit 345])
 
 * [phrase library..[@/libs/unordered/ Unordered]:]
+  * Template deduction guides.
+  * Standard conforming `noexcept` specifications for `swap`, `operator=`
+    and node handles.
+  * Add `element_type` to iterators, so that `std::pointer_traits`
+    will work.
+  * Support `std::piecewise_construct` on recent Visual C++ and Dinkumware libraries.
+  * Use `std::iterator_traits` rather than the boost iterator traits
+    in order to remove dependency on Boost.Iterator.
   * Iterators no longer inherit from `std::iterator`, as it's deprecated
-    ([github_pr unordered 7])
+    ([github_pr unordered 7]).
+  * More detail in the
+    [@/doc/html/unordered/changes.html#unordered.changes.boost_1_67_0 library change log].
+
 
 * [phrase library..[@/libs/uuid/ Uuid]:]
   * Optimized random_generator to use OS-provided entropy directly ([github_pr uuid 53])
