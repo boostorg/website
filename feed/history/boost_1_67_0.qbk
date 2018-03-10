@@ -94,6 +94,9 @@
   * Fixed various compiler warnings
     ([ticket 3606]) ([ticket 9882]) ([github_pr date_time 62])
 
+* [phrase library..[@/libs/dll/ DLL]:]
+  * Fixes for calling functions on dirty `GetLastError()` [github dll 16].
+
 * [phrase library..[@/libs/fiber/ Fiber]:]
   * #128: Assertion "! ctx->ready_is_linked()" when using condition_variable::wait_for
   * #132: fatal error: 'stdexception' file not found
@@ -178,6 +181,15 @@
     * Increment scanner through iterator policy ([github spirit 336]) #7371
     * Removed deprecated in C++17 `std::iterator` usage ([github spirit 345])
 
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * Async safe dumping into files on Windows OS was causing hangs on some platforms and now is disabled [github stacktrace 33]. Users are encouraged to update to the latest Boost release.
+  * [@/libs/container_hash/ ContainerHash] library is now used to reduce dependencies.
+  * Minor fixes (including [github stacktrace 31], [github stacktrace 38], [github stacktrace 39], [github stacktrace 40], [github stacktrace 42]).
+
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * [@/libs/container_hash/ ContainerHash] library is now used to reduce dependencies.
+  * Minor fixes (including [github type_index 17])
+
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * Template deduction guides.
   * Standard conforming `noexcept` specifications for `swap`, `operator=`
@@ -199,6 +211,11 @@
   * Handle entropy acquisition errors instead of ignoring them
   * Support for Windows UWP ([github uuid 24])
   * Support for CloudABI
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Substitute function arguments on compilers with variadic templates support and do not generate substitution metafunctions using preprocessor [github variant 42], [github variant 46]. Many thanks to Nikita Kniazev for providing an initial fix.
+  * Perfect forwarding for passing visitor in apply_visitor [github variant 40], [ticket 13288]. Many thanks to Paweł Dac!
+  * Minor fixes (including [github variant 41], [github variant 44])
 
 [endsect]
 
