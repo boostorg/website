@@ -8,7 +8,7 @@
         Asio, Atomic, Beast, Container Hash, Context, Coroutine2,
         DateTime, DLL, Fiber, Fusion, Log, Multi-index Containers,
         Optional, Phoenix, PolyCollection, Spirit, Stacktrace,
-        Test, TypeIndex, Unordered, Units, Uuid, Variant.
+        Test, TypeIndex, Unordered, Units, Uuid, Utility, Variant.
     ]
     [authors [James, Daniel]]
     [/ last-revision is used for the final release date]
@@ -143,10 +143,10 @@
   * Avoided usage of `std::allocator` members deprecated in C++17.
     Contributed by Daniela Engert.
   * Maintenance fixes.
-  
+
 * [phrase library..[@/libs/optional/index.html Optional]:]
   * Fixed issue [github optional 46]
-  * Fixed `-Wzero-as-null-pointer-constant` warnings. 
+  * Fixed `-Wzero-as-null-pointer-constant` warnings.
 
 * [phrase library..[@/libs/phoenix/ Phoenix]:]
   * Correct documentation and example code. ([ticket 8187], [github_pr phoenix 56], [github_pr phoenix 57])
@@ -235,6 +235,13 @@
 * [phrase library..[@/libs/type_index/ TypeIndex]:]
   * [@/libs/container_hash/ ContainerHash] library is now used to reduce dependencies.
   * Minor fixes (including [github type_index 17])
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * [*Breaking change:]
+    `<boost/utility.hpp>` header no longer includes `boost::next` and `boost::prior`
+    as they have been moved to the iterator module. Instead include `<boost/next_prior.hpp>`.
+    Other uses of `<boost/utility.hpp>` are discouraged, it's better to use the header for the
+    specific functionality instead.
 
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * Template deduction guides.
