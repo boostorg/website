@@ -15,13 +15,13 @@ to classify, decompose and synthesize function-, function pointer-,
 function reference- and member function pointer types.
 
 March 22, 2006 -- Asio Accepted
-Announcement: http://lists.boost.org/Archives/boost/2006/03/102287.php
+Announcement: https://lists.boost.org/Archives/boost/2006/03/102287.php
 
 February 17, 2006 - Shared Memory Library Accepted
-Announcement: http://lists.boost.org/boost-announce/2006/02/0083.php
+Announcement: https://lists.boost.org/boost-announce/2006/02/0083.php
 
 February 5, 2006 - Fixed String Library Rejected
-Announcement: http://lists.boost.org/boost-announce/2006/02/0081.php
+Announcement: https://lists.boost.org/boost-announce/2006/02/0081.php
 
 We need experienced review managers.  Please take a look at
 the list of libraries in need of managers and check out their

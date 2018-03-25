@@ -6,7 +6,7 @@ News
 ====
 
 August 17, 2007 -- Time Series Accepted.
- Announcement: http://lists.boost.org/boost-announce/2007/08/0142.php
+ Announcement: https://lists.boost.org/boost-announce/2007/08/0142.php
 
 July 24, 2007 -- Boost Version 1.34.1 Released.
  This is a bug fix release addressing many problems with the 1.34.0 release.
