@@ -90,7 +90,7 @@ class BoostFilter
 
     function prepare_html($text, $full = false) {
         $text = preg_replace(
-            '@href="?http://(?:www.)?boost.org/?([^"\s>]*)"?@i',
+            '@href="?https?://(?:www.)?boost.org/?([^"\s>]*)"?@i',
             'href="/${1}"',
             $text );
 
