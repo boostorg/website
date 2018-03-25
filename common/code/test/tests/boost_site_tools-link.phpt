@@ -15,6 +15,13 @@ Assert::same(
         '<a href="../b/c.txt">',
         'http://www.boost.org/a/d/e.html'));
 
+# HTTPS base
+Assert::same(
+    '<a href="https://www.boost.org/a/b/c.txt">',
+    BoostSiteTools::base_links(
+        '<a href="../b/c.txt">',
+        'https://www.boost.org/a/d/e.html'));
+
 # Absolute link
 Assert::same(
     '<A hReF="http://svn.boost.org/trac/wiki">',
