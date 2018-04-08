@@ -582,6 +582,23 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="http://www.boost.org/doc/libs/1_67_0_beta1/libs/math/index.html"&gt;Math&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Add naive Monte Carlo integration support.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Add Chebyshev interpolation routines.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
           &lt;span class="library"&gt;&lt;a href="http://www.boost.org/doc/libs/1_67_0_beta1/libs/multi_index/index.html"&gt;Multi-index Containers&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
@@ -600,6 +617,61 @@
             &lt;li&gt;
               &lt;div&gt;
                 Maintenance fixes.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="http://www.boost.org/doc/libs/1_67_0_beta1/libs/multiprecision/index.html"&gt;Multiprecision&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;Breaking Change:&lt;/strong&gt; When converting
+                a multiprecision integer to a narrower type, if the value is too
+                large (or negative) to fit in the smaller type, then the result is
+                either the maximum (or minimum) value of the target type. This was
+                always the intended behaviour, but was somewhat haphazardly enforced
+                before. If you really do want just the low order N bits of a value,
+                then you will need to mask these out prior to the case, for example:
+                &lt;code&gt;&lt;span class="keyword"&gt;static_cast&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&lt;/span&gt;&lt;span class="keyword"&gt;unsigned&lt;/span&gt;&lt;span class="special"&gt;&amp;gt;(~&lt;/span&gt;&lt;span class="keyword"&gt;static_cast&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&lt;/span&gt;&lt;span class="keyword"&gt;unsigned&lt;/span&gt;&lt;span class="special"&gt;&amp;gt;(&lt;/span&gt;&lt;span class="number"&gt;0&lt;/span&gt;&lt;span class="special"&gt;)&lt;/span&gt; &lt;span class="special"&gt;&amp;amp;&lt;/span&gt; &lt;span class="identifier"&gt;my_value&lt;/span&gt;&lt;span class="special"&gt;)&lt;/span&gt;&lt;/code&gt;. Note that technically (to avoid
+                undefined behaviour) you should do the same thing with built in integer
+                types too. See &lt;a href="https://svn.boost.org/trac/boost/ticket/13109"&gt;#13109&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix bug in conversion of decimal to rational types (zero needs special
+                handling), see &lt;a href="https://svn.boost.org/trac/boost/ticket/13148"&gt;#13148&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix conversion from cpp_bin_float to a wider built in integer type,
+                see &lt;a href="https://svn.boost.org/trac/boost/ticket/13301"&gt;#13301&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improve performance heurists used in cpp_bin_float exp function.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix bug in floor/ceil and cpp_bin_float when the exponent type is
+                wider than an int, see &lt;a href="https://svn.boost.org/trac/boost/ticket/13264"&gt;#13264&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Disable explicit conversion operator when the target type is already
+                constructible from this type, see &lt;a href="https://github.com/boostorg/multiprecision/issues/30"&gt;#30&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix support for changes new to MPIR-3.0, see &lt;a href="https://svn.boost.org/trac/boost/ticket/13124"&gt;#13124&lt;/a&gt;.
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
@@ -1091,6 +1163,63 @@
             &lt;li&gt;
               &lt;div&gt;
                 Minor fixes (including &lt;a href="https://github.com/boostorg/type_index/issues/17"&gt;#17&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="http://www.boost.org/doc/libs/1_67_0_beta1/libs/type_traits/"&gt;TypeTraits&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added new traits &lt;code&gt;&lt;span class="identifier"&gt;detected&lt;/span&gt;&lt;/code&gt;,
+                &lt;code&gt;&lt;span class="identifier"&gt;detected_or&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;is_detected&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;is_detected_convertible&lt;/span&gt;&lt;/code&gt;,
+                &lt;code&gt;&lt;span class="identifier"&gt;is_detected_exact&lt;/span&gt;&lt;/code&gt;,
+                &lt;code&gt;&lt;span class="identifier"&gt;is_complete&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added greatly improved code for detecting binary operators.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Add assertions for completeness to traits which require complete
+                types as arguments: this prevents various traits from giving eroneous
+                results from incomplete types.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix minor issue with mpl compatibility, see &lt;a href="https://svn.boost.org/trac/boost/ticket/12212"&gt;#12212&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Add macro to indicate when &lt;code&gt;&lt;span class="identifier"&gt;is_constructible&lt;/span&gt;&lt;/code&gt;
+                is fully implemented, see &lt;a href="https://svn.boost.org/trac/boost/ticket/12003"&gt;#12003&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Update &lt;code&gt;&lt;span class="identifier"&gt;is_function&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class="identifier"&gt;is_member_function_pointer&lt;/span&gt;&lt;/code&gt;
+                to work correctly with C++17 noexcept specifications.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Add workaround for &lt;code&gt;&lt;span class="identifier"&gt;is_default_constructible&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class="identifier"&gt;std&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;pair&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added fallback for &lt;code&gt;&lt;span class="identifier"&gt;is_nothrow_swappable&lt;/span&gt;&lt;/code&gt;
+                on pre-C++11 compilers.
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
