@@ -611,6 +611,23 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/math/index.html">Math</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Add naive Monte Carlo integration support.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add Chebyshev interpolation routines.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/multi_index/index.html">Multi-index Containers</a>:</span>
           <ul>
             <li>
@@ -629,6 +646,61 @@
             <li>
               <div>
                 Maintenance fixes.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/multiprecision/index.html">Multiprecision</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <strong>Breaking Change:</strong> When converting
+                a multiprecision integer to a narrower type, if the value is too
+                large (or negative) to fit in the smaller type, then the result is
+                either the maximum (or minimum) value of the target type. This was
+                always the intended behaviour, but was somewhat haphazardly enforced
+                before. If you really do want just the low order N bits of a value,
+                then you will need to mask these out prior to the case, for example:
+                <code><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">unsigned</span><span class="special">&gt;(~</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">unsigned</span><span class="special">&gt;(</span><span class="number">0</span><span class="special">)</span> <span class="special">&amp;</span> <span class="identifier">my_value</span><span class="special">)</span></code>. Note that technically (to avoid
+                undefined behaviour) you should do the same thing with built in integer
+                types too. See <a href="https://svn.boost.org/trac/boost/ticket/13109">#13109</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix bug in conversion of decimal to rational types (zero needs special
+                handling), see <a href="https://svn.boost.org/trac/boost/ticket/13148">#13148</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix conversion from cpp_bin_float to a wider built in integer type,
+                see <a href="https://svn.boost.org/trac/boost/ticket/13301">#13301</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improve performance heurists used in cpp_bin_float exp function.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix bug in floor/ceil and cpp_bin_float when the exponent type is
+                wider than an int, see <a href="https://svn.boost.org/trac/boost/ticket/13264">#13264</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Disable explicit conversion operator when the target type is already
+                constructible from this type, see <a href="https://github.com/boostorg/multiprecision/issues/30">#30</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix support for changes new to MPIR-3.0, see <a href="https://svn.boost.org/trac/boost/ticket/13124">#13124</a>.
               </div>
             </li>
           </ul>
@@ -1120,6 +1192,63 @@
             <li>
               <div>
                 Minor fixes (including <a href="https://github.com/boostorg/type_index/issues/17">#17</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/type_traits/">TypeTraits</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added new traits <code><span class="identifier">detected</span></code>,
+                <code><span class="identifier">detected_or</span></code>, <code><span class="identifier">is_detected</span></code>, <code><span class="identifier">is_detected_convertible</span></code>,
+                <code><span class="identifier">is_detected_exact</span></code>,
+                <code><span class="identifier">is_complete</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added greatly improved code for detecting binary operators.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add assertions for completeness to traits which require complete
+                types as arguments: this prevents various traits from giving eroneous
+                results from incomplete types.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix minor issue with mpl compatibility, see <a href="https://svn.boost.org/trac/boost/ticket/12212">#12212</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add macro to indicate when <code><span class="identifier">is_constructible</span></code>
+                is fully implemented, see <a href="https://svn.boost.org/trac/boost/ticket/12003">#12003</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Update <code><span class="identifier">is_function</span></code>
+                and <code><span class="identifier">is_member_function_pointer</span></code>
+                to work correctly with C++17 noexcept specifications.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add workaround for <code><span class="identifier">is_default_constructible</span></code>
+                and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added fallback for <code><span class="identifier">is_nothrow_swappable</span></code>
+                on pre-C++11 compilers.
               </div>
             </li>
           </ul>
