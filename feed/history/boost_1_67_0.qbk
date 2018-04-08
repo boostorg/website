@@ -152,6 +152,10 @@
   * Improved compatibility with gcc 7 and later by updating library ABI namespace definition.
   * Added documentation for the "Append" config file parameter for "TextFile" sinks. The parameter was supported previously, only the documentation was missing.
 
+* [phrase library..[@/libs/math/index.html Math]:]
+  * Add naive Monte Carlo integration support.
+  * Add Chebyshev interpolation routines.
+
 * [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
   * Elements with overloaded `operator&` are now fully accepted (ticket [ticket 13307]).
     Thanks to Daniel Frey for his updating
@@ -159,6 +163,20 @@
   * Avoided usage of `std::allocator` members deprecated in C++17.
     Contributed by Daniela Engert.
   * Maintenance fixes.
+  
+* [phrase library..[@/libs/multiprecision/index.html Multiprecision]:]
+  * [*Breaking Change:] When converting a multiprecision integer to a narrower type, if the value is too large (or negative) to
+    fit in the smaller type, then the result is either the maximum (or minimum) value of the target type.  This was always the intended
+    behaviour, but was somewhat haphazardly enforced before.  If you really do want just the low order N bits of a value, then you will
+    need to mask these out prior to the case, for example: `static_cast<unsigned>(~static_cast<unsigned>(0) & my_value)`.  Note that
+    technically (to avoid undefined behaviour) you should do the same thing with built in integer types too.
+    See [@https://svn.boost.org/trac/boost/ticket/13109 #13109].
+  * Fix bug in conversion of decimal to rational types (zero needs special handling), see [@https://svn.boost.org/trac/boost/ticket/13148 #13148].
+  * Fix conversion from cpp_bin_float to a wider built in integer type, see [@https://svn.boost.org/trac/boost/ticket/13301 #13301].
+  * Improve performance heurists used in cpp_bin_float exp function.
+  * Fix bug in floor/ceil and cpp_bin_float when the exponent type is wider than an int, see [@https://svn.boost.org/trac/boost/ticket/13264 #13264].
+  * Disable explicit conversion operator when the target type is already constructible from this type, see  [@https://github.com/boostorg/multiprecision/issues/30 #30].
+  * Fix support for changes new to MPIR-3.0, see [@https://svn.boost.org/trac/boost/ticket/13124 #13124].
 
 * [phrase library..[@/libs/optional/index.html Optional]:]
   * Fixed issue [github optional 46]
@@ -258,6 +276,17 @@
 * [phrase library..[@/libs/type_index/ TypeIndex]:]
   * [@/libs/container_hash/ ContainerHash] library is now used to reduce dependencies.
   * Minor fixes (including [github type_index 17])
+
+* [phrase library..[@/libs/type_traits/ TypeTraits]:]
+  * Added new traits `detected`, `detected_or`, `is_detected`, `is_detected_convertible`, `is_detected_exact`, `is_complete`.
+  * Added greatly improved code for detecting binary operators.
+  * Add assertions for completeness to traits which require complete types as arguments: this prevents various traits from giving eroneous results from incomplete types.
+  * Fix minor issue with mpl compatibility, see [@https://svn.boost.org/trac/boost/ticket/12212 #12212].
+  * Add macro to indicate when `is_constructible` is fully implemented, see [@https://svn.boost.org/trac/boost/ticket/12003 #12003].
+  * Update `is_function` and `is_member_function_pointer` to work correctly with C++17 noexcept specifications.
+  * Add workaround for `is_default_constructible` and `std::pair`.
+  * Added fallback for `is_nothrow_swappable` on pre-C++11 compilers.
+
 
 * [phrase library..[@/libs/utility/ Utility]:]
   * [*Breaking change:]
