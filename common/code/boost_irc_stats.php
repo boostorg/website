@@ -82,7 +82,7 @@ HTML
         $text = $this->content_;
         
         $text = preg_replace(
-            '@href="?http://www.boost.org/?([^"\s]*)"?@i',
+            '@href="?https?://www.boost.org/?([^"\s]*)"?@i',
             'href="/${1}"',
             $text );
         $text = preg_replace(

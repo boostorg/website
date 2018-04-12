@@ -2,7 +2,7 @@
 
 // Call using something like:
 //
-//     curl http://www.boost.org/doc/generate.php?page=libs/libraries.htm&version=1.60.0
+//     curl https://www.boost.org/doc/generate.php?page=libs/libraries.htm&version=1.60.0
 
 require_once(__DIR__.'/../common/code/bootstrap.php');
 
@@ -77,7 +77,7 @@ class LibrariesHtm {
             'is_develop' => $version_string == "develop",
             'version' => (string) $source_version,
             'minor_release' => $source_version->minor_release(),
-            'release_notes_url' => "http://www.boost.org/users/history/version_{$source_version->final_doc_dir()}.html",
+            'release_notes_url' => "https://www.boost.org/users/history/version_{$source_version->final_doc_dir()}.html",
             'categorized' => array(),
             'alphabetic' => array(),
             'unreleased_libs' => array(),
