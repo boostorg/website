@@ -183,7 +183,7 @@ $page = new PullRequestPage($_GET);
   <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
 </head><!--
 Note: Editing website content is documented at:
-http://www.boost.org/development/website_updating.html
+https://www.boost.org/development/website_updating.html
 -->
 
 <body>

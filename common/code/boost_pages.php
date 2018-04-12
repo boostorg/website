@@ -1,7 +1,7 @@
 <?php
 # Copyright 2011, 2015 Daniel James
 # Distributed under the Boost Software License, Version 1.0.
-# (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+# (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 
 class BoostPages {
     // If you change these values, they will only apply to new pages.
