@@ -68,7 +68,7 @@ class BoostRss {
         $copyright = 'Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)';
         return <<<EOL
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:boostbook="urn:boost-org:boostbook" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <generator>Boost Website Site Tools</generator>
     <title>{$title}</title>
