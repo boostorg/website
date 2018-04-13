@@ -4400,7 +4400,149 @@
 "                      facility for integration with the coroutines technical specification.
 "                    </div>
 "                  </li>
+"                  <li>
+"                    <div>
+"                      Updated timeout examples to use latest features.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Used <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">steady_timer</span></code> rather than
+"                      <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">deadline_timer</span></code>.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Used <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">dynamic_buffer</span></code> rather than
+"                      <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">streambuf</span></code>.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Used timed <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">io_context</span><span class="special">::</span><span class="identifier">run_for</span><span class="special">()</span></code> function for blocking clients.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Added example showing a custom completion token for blocking
+"                      with timeouts.
+"                    </div>
+"                  </li>
 "                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed unit tests to compile when <code><span class="identifier">BOOST_ASIO_NO_DEPRECATED</span></code>
+"                is defined.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed socket iostreams to use chrono by default, to fix compatibility
+"                with the Networking TS. Define <code><span class="identifier">BOOST_ASIO_USE_BOOST_DATE_TIME_FOR_SOCKET_IOSTREAM</span></code>
+"                to enable the old Boost.Date_Time interface in <code><span class="identifier">basic_socket_streambuf</span></code>
+"                and <code><span class="identifier">basic_socket_iostream</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Updated examples to use chrono rather than Boost.Date_Time.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed an incorrect member function detector in the <code><span class="identifier">is_dynamic_buffer</span></code> trait.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed an <code><span class="identifier">async_result</span></code>
+"                incompatibility with deprecated <code><span class="identifier">handler_type</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a missing move optimisation in the SSL stream implementation.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed incorrect <code><span class="identifier">basic_resolver_results</span><span class="special">::</span><span class="identifier">value_type</span></code>
+"                typedef.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a compile error with some OpenSSL versions when <code><span class="identifier">SSL_OP_NO_COMPRESSION</span></code> is defined.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed <code><span class="identifier">add_certificate_authority</span></code>
+"                to process multiple certificates in a bundle.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Eliminated deprecation warning with MSVC by using <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">invoke_result</span></code>
+"                rather than <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">result_of</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed to use <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">string_view</span></code>
+"                for C++17 or later, and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">string_view</span></code>
+"                for C++14. Define the preprocessor macro <code><span class="identifier">BOOST_ASIO_DISABLE_STD_STRING_VIEW</span></code>
+"                to force the use of std::experimental::string_view (assuming it is
+"                available) when compiling in C++17 mode.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Ensured <code><span class="identifier">DynamicBuffer</span></code>
+"                template arguments are decayed before using in <code><span class="identifier">enable_if</span></code>
+"                tests.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed documentation to distinguish legacy completion handlers (which
+"                are still required to be CopyConstructible) from new MoveConstructible
+"                handlers.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Suppressed a discarded return value warning in the buffer debugging
+"                support.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">basic_yield_context</span></code>
+"                to work with completion signatures containing reference parameters.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Ensured that stackful coroutines launched using <code><span class="identifier">spawn</span><span class="special">()</span></code> correctly store decayed copies
+"                of their function and handler arguments.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed some compatibility issues with Android.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added cross-compilation support to Jamfiles.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed some minor portability issues in examples.
 "              </div>
 "            </li>
 "          </ul>
@@ -4591,6 +4733,21 @@
 "              <div>
 "                known bug: including all.hpp + &lt;context-impl&gt;ucontext/winfib
 "                causes error 'forced_unwind: is not a member of boost::context::detail'
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/core/">Core</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Updated <code><span class="identifier">to_address</span></code>
+"                and <code><span class="identifier">pointer_traits</span></code>
+"                to reflect the design adopted for C++2a in <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0653r2.html">P0653R2</a>
+"                (Glen Fernandes).
 "              </div>
 "            </li>
 "          </ul>
@@ -6002,7 +6159,7 @@
 "  </div>
 "
 -hash
-"808e772df89b5b17f8bd47a5f32143a7d97d29142973ea04a707abdaebac1c79
+"470d77b64aa5be6d1799e5f92facd74da0c502690c4e25b93c974e88286f837a
 -id
 "version_1_67_0
 -notice_url
@@ -6011,10 +6168,10 @@
 -purpose_xml
 "
 "      New Libraries: Contract, HOF. Updated Libraries: Asio, Atomic, Beast, Container
-"      Hash, Context, Coroutine2, DateTime, DLL, Fiber, Filesystem, Fusion, Locale,
-"      Log, Math, Multi-index Containers, Multiprecision, Optional, Phoenix, PolyCollection,
-"      Python, Spirit, Stacktrace, Test, TypeIndex, TypeTraits, Unordered, Units,
-"      Uuid, Utility, Variant.
+"      Hash, Context, Core, Coroutine2, DateTime, DLL, Fiber, Filesystem, Fusion,
+"      Locale, Log, Math, Multi-index Containers, Multiprecision, Optional, Phoenix,
+"      PolyCollection, Python, Spirit, Stacktrace, Test, TypeIndex, TypeTraits, Unordered,
+"      Units, Uuid, Utility, Variant.
 "
 -title_xml
 "Version 1.67.0
