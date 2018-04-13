@@ -92,7 +92,7 @@ EOL;
         $xml .= '<title>'.$this->encode_for_rss($values['title_xml']).'</title>';
         // TODO: guid and link for beta/dev pages
         $xml .= '<link>'.$this->encode_for_rss($page_link).'</link>';
-        $xml .= '<guid>'.$this->encode_for_rss($page_link).'</guid>';
+        $xml .= '<guid>'.$this->encode_for_rss($page->guid).'</guid>';
 
         // Q: Maybe use $page->last_modified when there's no pub_date.
         $pub_date = null;
