@@ -1,0 +1,76 @@
+From 225b0d75d1f2cdc62809c8572e933f9875b87893 Mon Sep 17 00:00:00 2001
+From: Jan Beich <jbeich@FreeBSD.org>
+Date: Tue, 10 Apr 2018 14:55:02 +0000
+Subject: [PATCH] Use pthread_setaffinity_np() on FreeBSD as well
+
+libs/fiber/src/numa/freebsd/pin_thread.cpp:13:10: fatal error: 'sys/thread.h' file not found
+ #include <sys/thread.h>
+          ^~~~~~~~~~~~~~
+
+libs/fiber/src/numa/freebsd/pin_thread.cpp:28:35: error: too few arguments to function call, single argument 'id' was not specified
+    pin_thread( cpuid, ::thr_self() );
+                       ~~~~~~~~~~ ^
+/usr/include/sys/thr.h:77:1: note: 'thr_self' declared here
+int thr_self(long *id);
+^
+
+libs/fiber/src/numa/freebsd/pin_thread.cpp:36:85: error: cannot initialize a parameter of type 'id_t' (aka 'long') with an lvalue of type 'std::thread::native_handle_type' (aka 'pthread *')
+    if ( BOOST_UNLIKELY( 0 != ::cpuset_setaffinity( CPU_LEVEL_WHICH, CPU_WHICH_TID, h, sizeof( mask), & mask) ) ) {
+                                                                                    ^
+./boost/config/compiler/clang.hpp:67:44: note: expanded from macro 'BOOST_UNLIKELY'
+ #define BOOST_UNLIKELY(x) __builtin_expect(x, 0)
+                                            ^
+/usr/include/sys/cpuset.h:156:52: note: passing argument to parameter here
+int     cpuset_setaffinity(cpulevel_t, cpuwhich_t, id_t, size_t, const cpuset_t *);
+                                                       ^
+---
+ libs/fiber/src/numa/freebsd/pin_thread.cpp | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
+diff --git a/libs/fiber/src/numa/freebsd/pin_thread.cpp b/libs/fiber/src/numa/freebsd/pin_thread.cpp
+index 28a45a1..0ff03d0 100644
+--- a/libs/fiber/src/numa/freebsd/pin_thread.cpp
++++ b/libs/fiber/src/numa/freebsd/pin_thread.cpp
+@@ -7,10 +7,8 @@
+ #include "boost/fiber/numa/pin_thread.hpp"
+ 
+ extern "C" {
+-#include <errno.h>
+-#include <sys/param.h>
+-#include <sys/cpuset.h>
+-#include <sys/thread.h>
++#include <pthread.h>
++#include <pthread_np.h>
+ }
+ 
+ #include <system_error>
+@@ -25,18 +23,19 @@ namespace numa {
+ 
+ BOOST_FIBERS_DECL
+ void pin_thread( std::uint32_t cpuid) {
+-    pin_thread( cpuid, ::thr_self() );
++    pin_thread( cpuid, ::pthread_self() );
+ }
+ 
+ BOOST_FIBERS_DECL
+ void pin_thread( std::uint32_t cpuid, std::thread::native_handle_type h) {
+-	cpuset_t mask;
+-	CPU_ZERO( & mask);
+-	CPU_SET( cpuid, & mask);
+-    if ( BOOST_UNLIKELY( 0 != ::cpuset_setaffinity( CPU_LEVEL_WHICH, CPU_WHICH_TID, h, sizeof( mask), & mask) ) ) {
++    cpuset_t set;
++    CPU_ZERO( & set);
++    CPU_SET( cpuid, & set);
++    int err = 0;
++    if ( BOOST_UNLIKELY( 0 != ( err = ::pthread_setaffinity_np( h, sizeof( set), & set) ) ) ) {
+         throw std::system_error(
+-                std::error_code( errno, std::system_category() ),
+-                "::cpuset_setaffinity() failed");
++                std::error_code( err, std::system_category() ),
++                "pthread_setaffinity_np() failed");
+     }
+ }
+ 
+-- 
+2.16.2
+

@@ -1,0 +1,37 @@
+From 24313709a78c694af4ae29116cd06ea86585aa95 Mon Sep 17 00:00:00 2001
+From: Stefan Seefeld <stefan@seefeld.name>
+Date: Thu, 12 Apr 2018 23:39:22 -0400
+Subject: [PATCH] Fix auto-linking logic (Windows only).
+
+---
+ boost/python/detail/config.hpp | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/boost/python/detail/config.hpp b/boost/python/detail/config.hpp
+index acf58831..8dce9b74 100644
+--- a/boost/python/detail/config.hpp
++++ b/boost/python/detail/config.hpp
+@@ -105,7 +105,9 @@
+ // Set the name of our library, this will get undef'ed by auto_link.hpp
+ // once it's done with it:
+ //
+-#define BOOST_LIB_NAME boost_python##PY_MAJOR_VERSION##PY_MINOR_VERSION
++#define _BOOST_PYTHON_CONCAT(N, M, m) N ## M ## m
++#define BOOST_PYTHON_CONCAT(N, M, m) _BOOST_PYTHON_CONCAT(N, M, m)
++#define BOOST_LIB_NAME BOOST_PYTHON_CONCAT(boost_python, PY_MAJOR_VERSION, PY_MINOR_VERSION)
+ //
+ // If we're importing code from a dll, then tell auto_link.hpp about it:
+ //
+@@ -118,6 +120,9 @@
+ #include <boost/config/auto_link.hpp>
+ #endif  // auto-linking disabled
+ 
++#undef BOOST_PYTHON_CONCAT
++#undef _BOOST_PYTHON_CONCAT
++
+ #ifndef BOOST_PYTHON_NO_PY_SIGNATURES
+ #define BOOST_PYTHON_SUPPORTS_PY_SIGNATURES // enables smooth transition
+ #endif
+-- 
+2.16.2
+
