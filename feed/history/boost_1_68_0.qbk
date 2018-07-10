@@ -16,6 +16,9 @@
 
 [section New Libraries]
 
+* [phrase library..[@/libs/yap/ YAP]:] An expression template library
+  for C++14 and later, from Zach Laine.
+
 [/ Example:
 * [phrase library..[@/libs/accumulators/ Accumulators]:] Framework for
   incremental calculation, and collection of statistical accumulators, from Eric Niebler.
@@ -33,6 +36,20 @@
     * [github fiber 175]: throw exception "Operation not permitted" 
     * NUMA support moved to extra library (fiber-numa); enabled via property numa (numa=on)
 
+* [phrase library..[@/libs/coroutine2/ Coroutine2]:]
+    * [github coroutine2 14]: crash while stack unwinding
+    * [github coroutine2 18]: some guidance on why to use coroutine2
+    * [github coroutine2 20]: failes to compile test in due to the error C2039
+    * [github coroutine2 22]: undefined behaviour documentation
+
+* [phrase library..[@/libs/context/ Context]:]
+    * [github context 78]: Linker error with `context-impl=ucontext`: multiple definition of `boost::context::detail::current_rec`
+
+* [phrase library..[@/libs/gil/ GIL]:]
+  * The I/O extensions have been entirely rewritten.
+  * The library now requires a C++11-compliant compiler.
+  * Documentation has been reformatted and updated.
+
 * [phrase library..[@/libs/graph/ Graph]:]
   * Conditionally replace deprecated/removed C++98 `std::bind1st` by
     `std::bind`, `std::auto_ptr` by `std::unique_ptr`, and
@@ -46,6 +63,36 @@
     ([github_pr graph 88], [github_pr graph 98], [github_pr graph 102])
   * Fix some issues in tests and examples
     ([github_pr graph 85], [github_pr graph 105])
+    
+* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+  * Containers of moveable but non-copyable elements can now be serialized
+    (ticket [ticket 13478]). Thanks to S'''&#233;'''bastien Paris for the report.
+  * `multi_index_container`'s default constructor is no longer `explicit`
+    (ticket [ticket 13518]). 
+
+* [phrase library..[@/libs/optional/ Optional]:]
+  * Added member function `has_value()` for compatibility with `std::optional` ([@https://github.com/boostorg/optional/issues/52 issue #52]).
+  * Added member function `map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> U`.
+  * Added member function `flat_map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> optonal<U>`.
+  
+* [phrase library..[@/libs/program_options/ Program Options]:]
+  * Support for multiple long names for an option, thanks to Eyal Rozenberg
+    ([@https://github.com/boostorg/program_options/pull/53 PR#53])
+
+* [phrase library..[@/libs/python/ Python]:]
+  * Bug fixes to correct autolink support (Windows) ([github python 193])
+
+* [phrase library..[@/libs/rational/ Rational]:]
+  * Fixed undefined behavior in normalize() ([github_pr rational 19]).
+  * Added pow method ([github_pr rational 21]).
+
+* [phrase library..[@/libs/uuid/ Uuid]:]
+  * [*Breaking change:] sha1 detail namespace header redirection
+    for backwards compatibility was removed ([github_pr uuid 69]).
+  * Added support for std::hash ([github_pr uuid 67]).
+  * Added support for move semantics on random generators ([github_pr uuid 74]).
+  * Properly handle EINTR when acquiring entropy ([github_pr uuid 74]).
+  * Use getrandom(2) instead of getentropy(3) on linux ([github_pr uuid 75]).
 
 [/ Example:
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
