@@ -72,12 +72,32 @@
 * [phrase library..[@/libs/log/ Log]:]
   * Improved support for VxWorks. ([github_pr log 39])
   * Save and restore `ebx` register on x86 PIE targets in the `dump` stream manipulator implementation.
+    
+* [phrase library..[@/libs/math/index.html Math]:]
+  * Continue to improve numerical integration routines, and in particular add support for contour integrals.
+  * Improve accuracy of erfc function's rational approximations.
 
 * [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
   * Containers of moveable but non-copyable elements can now be serialized
     (ticket [ticket 13478]). Thanks to S'''&#233;'''bastien Paris for the report.
   * `multi_index_container`'s default constructor is no longer `explicit`
     (ticket [ticket 13518]). 
+
+* [phrase library..[@/libs/multiprecision/index.html Multiprecision]:]
+  * Support added for complex multiprecision numbers.
+  * Changed conversion to unsigned integer types to be truncating to match standard defined behaviour.
+  * Correct bug in MPFR string formatting.
+  * Fix undefined behaviour in cpp_dec_float conversion from long long.
+  * Add support for Eigen interoperability.
+  * float128.hpp: Fix Intel on Windows build.
+  * Fix type used in temporaries when expanding expression templates containing mixed expressions.
+  * Fix infinite loop in gmp_float to fixed-point string conversion.
+  * Update the expression templates to issue static_asserts with better error messages when you try and do something unsupported.
+  * Fix bug in cpp_int where incrementing to zero doesn't set the sign correctly.
+  * Remove erroneous use of std::move, and rely on NVRO instead.
+  * Fix up support for changes to MPIR-3.0.
+  * Fix various conversion errors in cpp_bin_float when the exponent type is a `long long`, or else we're converting to an integer that is wider than we are.
+  * Fix compatibility issue with GCC-8 caused by the introduction of `std::byte`.
 
 * [phrase library..[@/libs/optional/ Optional]:]
   * Added member function `has_value()` for compatibility with `std::optional` ([@https://github.com/boostorg/optional/issues/52 issue #52]).
