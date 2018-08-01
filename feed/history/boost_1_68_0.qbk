@@ -55,11 +55,8 @@ The list of Windows API version numbers can be seen on
   * For a complete list of changes, please view the official
     [@/libs/beast/doc/html/beast/release_notes.html Release Notes].
 
-* [phrase library..[@/libs/fiber/ Fiber]:]
-    * [github fiber 170]: buffered_channel::try_push has incorrect documentation
-    * [github fiber 172: WIN64]: 'invalid conversion from 'HANDLE' to 'std::thread::native_handle_type' errors for builds using mingw-w64
-    * [github fiber 175]: throw exception "Operation not permitted" 
-    * NUMA support moved to extra library (fiber-numa); enabled via property numa (numa=on)
+* [phrase library..[@/libs/context/ Context]:]
+    * [github context 78]: Linker error with `context-impl=ucontext`: multiple definition of `boost::context::detail::current_rec`
 
 * [phrase library..[@/libs/coroutine2/ Coroutine2]:]
     * [github coroutine2 14]: crash while stack unwinding
@@ -67,8 +64,11 @@ The list of Windows API version numbers can be seen on
     * [github coroutine2 20]: failes to compile test in due to the error C2039
     * [github coroutine2 22]: undefined behaviour documentation
 
-* [phrase library..[@/libs/context/ Context]:]
-    * [github context 78]: Linker error with `context-impl=ucontext`: multiple definition of `boost::context::detail::current_rec`
+* [phrase library..[@/libs/fiber/ Fiber]:]
+    * [github fiber 170]: buffered_channel::try_push has incorrect documentation
+    * [github fiber 172: WIN64]: 'invalid conversion from 'HANDLE' to 'std::thread::native_handle_type' errors for builds using mingw-w64
+    * [github fiber 175]: throw exception "Operation not permitted" 
+    * NUMA support moved to extra library (fiber-numa); enabled via property numa (numa=on)
 
 * [phrase library..[@/libs/fusion/ Fusion]:]
   * Added a workaround for ambiguous call of `fusion::deque` constructor on GCC 4.4/c++0x
@@ -101,10 +101,17 @@ The list of Windows API version numbers can be seen on
   * Fix some issues in tests and examples
     ([github_pr graph 85], [github_pr graph 105])
 
+* [phrase library..[@/libs/lexical_cast/ Lexical Cast]:]
+  * Fixes for clang-tidy warnings [ticket 12092]
+
 * [phrase library..[@/libs/log/ Log]:]
   * Improved support for VxWorks. ([github_pr log 39])
   * Save and restore `ebx` register on x86 PIE targets in the `dump` stream manipulator implementation.
     
+* [phrase library..[@/libs/math/ Math]:]
+  * Support for arbitrary precision complex valued quadrature and hence contour integration
+  * Improve performance of polynomial addition
+
 * [phrase library..[@/libs/math/index.html Math]:]
   * Continue to improve numerical integration routines, and in particular add support for contour integrals.
   * Improve accuracy of erfc function's rational approximations.
@@ -114,6 +121,9 @@ The list of Windows API version numbers can be seen on
     (ticket [ticket 13478]). Thanks to S'''&#233;'''bastien Paris for the report.
   * `multi_index_container`'s default constructor is no longer `explicit`
     (ticket [ticket 13518]). 
+
+* [phrase library..[@/libs/multiprecision Multiprecision]:]
+  * Support for multiprecision complex numbers
 
 * [phrase library..[@/libs/multiprecision/index.html Multiprecision]:]
   * Support added for complex multiprecision numbers.
@@ -136,18 +146,17 @@ The list of Windows API version numbers can be seen on
   * Added member function `map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> U`.
   * Added member function `flat_map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> optonal<U>`.
   
+* [phrase library..[@/libs/predef/ Predef]:]
+  * Add support for __ARM_ARCH macro. (from Tim Blechmann)
+  * Add detection for PTX architecture. (from Benjamin Worpitz)
+  * Add nvcc compiler detection. (from Benjamin Worpitz)
+  * Add support for detecting CUDA. (from Benjamin Worpitz)
+  * Remove reference to obsolete BOOST_ARCH_AMD64. (from Peter Kolbus)
+
 * [phrase library..[@/libs/program_options/ Program Options]:]
   * Support for multiple long names for an option, thanks to Eyal Rozenberg
     ([@https://github.com/boostorg/program_options/pull/53 PR#53])
     
-* [phrase library..[@/libs/math/ Math]:]
-  * Support for arbitrary precision complex valued quadrature and hence contour integration
-  * Improve performance of polynomial addition
-
-* [phrase library..[@/libs/multiprecision Multiprecision]:]
-  * Support for multiprecision complex numbers
-
-
 * [phrase library..[@/libs/python/ Python]:]
   * Bug fixes to correct autolink support (Windows) ([github python 193])
 
@@ -162,20 +171,9 @@ The list of Windows API version numbers can be seen on
     Boost.Signals was deprecated in version 1.54.0.  Transition to Boost.Signals2
     now to avoid disruption.
 
-* [phrase library..[@/libs/uuid/ Uuid]:]
-  * [*Breaking change:] sha1 detail namespace header redirection
-    for backwards compatibility was removed ([github_pr uuid 69]).
-  * Added support for std::hash ([github_pr uuid 67]).
-  * Added support for move semantics on random generators ([github_pr uuid 74]).
-  * Properly handle EINTR when acquiring entropy ([github_pr uuid 74]).
-  * Use getrandom(2) instead of getentropy(3) on linux ([github_pr uuid 75]).
-
-* [phrase library..[@/libs/predef/ Predef]:]
-  * Add support for __ARM_ARCH macro. (from Tim Blechmann)
-  * Add detection for PTX architecture. (from Benjamin Worpitz)
-  * Add nvcc compiler detection. (from Benjamin Worpitz)
-  * Add support for detecting CUDA. (from Benjamin Worpitz)
-  * Remove reference to obsolete BOOST_ARCH_AMD64. (from Peter Kolbus)
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * Fixed compilation on Solaris and other platforms that do qualify address as const in `dladdr` function (github 54).
+  * Dropped dependency on Boost.LexicalCast.
 
 * [phrase library..[@/libs/test/ Test]:]
   * Boost.test v3.8 see the
@@ -188,6 +186,17 @@ The list of Windows API version numbers can be seen on
   * Bug fixes and pull requests:
     * Trac tickets: [ticket 12095], [ticket 12953], [ticket 13504], [ticket 13525], [ticket 13528]
     * Pull requests: [github test 143], [github test 145]
+
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * Dropped dependency on Boost.MPL.
+
+* [phrase library..[@/libs/uuid/ Uuid]:]
+  * [*Breaking change:] sha1 detail namespace header redirection
+    for backwards compatibility was removed ([github_pr uuid 69]).
+  * Added support for std::hash ([github_pr uuid 67]).
+  * Added support for move semantics on random generators ([github_pr uuid 74]).
+  * Properly handle EINTR when acquiring entropy ([github_pr uuid 74]).
+  * Use getrandom(2) instead of getentropy(3) on linux ([github_pr uuid 75]).
 
 [/ Example:
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
