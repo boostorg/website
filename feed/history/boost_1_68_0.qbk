@@ -70,6 +70,18 @@ The list of Windows API version numbers can be seen on
 * [phrase library..[@/libs/context/ Context]:]
     * [github context 78]: Linker error with `context-impl=ucontext`: multiple definition of `boost::context::detail::current_rec`
 
+* [phrase library..[@/libs/fusion/ Fusion]:]
+  * Added a workaround for ambiguous call of `fusion::deque` constructor on GCC 4.4/c++0x
+    ([github_pr fusion 178], [@https://github.com/boostorg/fusion/pull/178/commits/9de32721749b635ff3e04e690da89cf06602c122 commit]).
+  * Fixed a bug with C-style array ([github_pr fusion 177]).
+  * Fixed a `fusion::for_each` signature to take functor by value ([ticket 4427]).
+    * This may break existing code with non-copyable (non-movable) functor, but the implementation
+      wasn't correct for a long time; the documantation was correct from the first. So, please
+      make sure your usage.
+  * Fixed unintentional MPL placeholder substituion bug on `fusion::transform` ([ticket 5490]).
+  * Moved description, how to conform Fusion sequence as MPL sequence, to mpl section ([ticket 4029]).
+  * Added notes regarding IO facility for adapted type ([ticket 6091]).
+
 * [phrase library..[@/libs/gil/ GIL]:]
   * The I/O extensions have been entirely rewritten.
   * The library now requires a C++11-compliant compiler.
