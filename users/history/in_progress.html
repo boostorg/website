@@ -39,6 +39,28 @@
                 <div class="description">
 
 
+  <div id="version_1_68_0.notes_for_windows_users">
+    <h3><span class="link">Notes for Windows
+    users</span></h3>
+    <p>
+      Boost.WinAPI has been updated to target Windows 7 by default, where possible.
+      In previous releases Windows Vista was the default.
+    </p>
+    <p>
+      Boost.WinAPI is used internally as the Windows SDK abstraction layer in a number
+      of Boost libraries, including Boost.Beast, Boost.Chrono, Boost.DateTime, Boost.Dll,
+      Boost.Log, Boost.Process, Boost.Stacktrace, Boost.System, Boost.Thread and
+      Boost.UUID. To select the target Windows version define <code><span class="identifier">BOOST_USE_WINAPI_VERSION</span></code>
+      to the numeric version similar to <code><span class="identifier">_WIN32_WINNT</span></code>
+      while compiling Boost and user's code. For example:
+    </p>
+<pre>    b2 release define=BOOST_USE_WINAPI_VERSION=0x0501 stage
+</pre>
+    <p>
+      The list of Windows API version numbers can be seen on <a href="https://msdn.microsoft.com/en-us/library/6sehtctf.aspx">this</a>
+      page.
+    </p>
+  </div>
   <div id="version_1_68_0.new_libraries">
     <h3><span class="link">New Libraries</span></h3>
     <ul>
@@ -76,28 +98,12 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/master/libs/fiber/">Fiber</a>:</span>
+          <span class="library"><a href="/doc/libs/master/libs/context/">Context</a>:</span>
           <ul>
             <li>
               <div>
-                <a href="https://github.com/boostorg/fiber/issues/170">#170</a>: buffered_channel::try_push has incorrect documentation
-              </div>
-            </li>
-            <li>
-              <div>
-                <a href="https://github.com/boostorg/fiber/issues/172: WIN64">#172: WIN64</a>: 'invalid conversion from 'HANDLE' to
-                'std::thread::native_handle_type' errors for builds using mingw-w64
-              </div>
-            </li>
-            <li>
-              <div>
-                <a href="https://github.com/boostorg/fiber/issues/175">#175</a>: throw exception "Operation not permitted"
-              </div>
-            </li>
-            <li>
-              <div>
-                NUMA support moved to extra library (fiber-numa); enabled via property
-                numa (numa=on)
+                <a href="https://github.com/boostorg/context/issues/78">#78</a>: Linker error with <code><span class="identifier">context</span><span class="special">-</span><span class="identifier">impl</span><span class="special">=</span><span class="identifier">ucontext</span></code>:
+                multiple definition of <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">context</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">current_rec</span></code>
               </div>
             </li>
           </ul>
@@ -132,12 +138,164 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/master/libs/context/">Context</a>:</span>
+          <span class="library"><a href="/doc/libs/master/libs/fiber/">Fiber</a>:</span>
           <ul>
             <li>
               <div>
-                <a href="https://github.com/boostorg/context/issues/78">#78</a>: Linker error with <code><span class="identifier">context</span><span class="special">-</span><span class="identifier">impl</span><span class="special">=</span><span class="identifier">ucontext</span></code>:
-                multiple definition of <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">context</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">current_rec</span></code>
+                <a href="https://github.com/boostorg/fiber/issues/170">#170</a>: buffered_channel::try_push has incorrect documentation
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://github.com/boostorg/fiber/issues/172: WIN64">#172: WIN64</a>: 'invalid conversion from 'HANDLE' to
+                'std::thread::native_handle_type' errors for builds using mingw-w64
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://github.com/boostorg/fiber/issues/175">#175</a>: throw exception "Operation not permitted"
+              </div>
+            </li>
+            <li>
+              <div>
+                NUMA support moved to extra library (fiber-numa); enabled via property
+                numa (numa=on)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/fusion/">Fusion</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added a workaround for ambiguous call of <code><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">deque</span></code>
+                constructor on GCC 4.4/c++0x (<a href="https://github.com/boostorg/fusion/pull/178">PR#178</a>, <a href="https://github.com/boostorg/fusion/pull/178/commits/9de32721749b635ff3e04e690da89cf06602c122">commit</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a bug with C-style array (<a href="https://github.com/boostorg/fusion/pull/177">PR#177</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a <code><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">for_each</span></code> signature to take functor
+                by value (<a href="https://svn.boost.org/trac/boost/ticket/4427">#4427</a>).
+                <ul>
+                  <li>
+                    <div>
+                      This may break existing code with non-copyable (non-movable)
+                      functor, but the implementation wasn't correct for a long time;
+                      the documantation was correct from the first. So, please make
+                      sure your usage.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed unintentional MPL placeholder substituion bug on <code><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">transform</span></code> (<a href="https://svn.boost.org/trac/boost/ticket/5490">#5490</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Moved description, how to conform Fusion sequence as MPL sequence,
+                to mpl section (<a href="https://svn.boost.org/trac/boost/ticket/4029">#4029</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                Added notes regarding IO facility for adapted type (<a href="https://svn.boost.org/trac/boost/ticket/6091">#6091</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/geometry/">Geometry</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Improvements
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/pull/469">469</a>
+                      Horizontal grid shift (nadgrids) in SRS transformations (undocumented
+                      for now due to potential interface changes).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/pull/478">478</a>
+                      Box-Segment distance for spherical and geographic coordinate
+                      systems.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/pull/487">487</a>
+                      Missing combinations of geometries in distance for spherical
+                      and geographic cs
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/pull/489">489</a>
+                      Additional direct geodesic problem formulas for internal use
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Solved issues
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/issues/470">470</a>
+                      Assertion failure with short spherical and geographic segments.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/issues/471">471</a>
+                      Invalid envelope of spherical polygon
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/issues/498">498</a>
+                      Unexpected results with expand() and make_inverse() for spherical
+                      and geographic CS
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Bugfixes
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/pull/488">488</a>
+                      Handle non-true-references in closing_iterator and ever_circling_range_iterator
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/pull/495">495</a>
+                      VxWorks 7 cross-compilation issue.
+                    </div>
+                  </li>
+                </ul>
               </div>
             </li>
           </ul>
@@ -217,6 +375,73 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/lexical_cast/">Lexical Cast</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixes for clang-tidy warnings <a href="https://svn.boost.org/trac/boost/ticket/12092">#12092</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/log/">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Improved support for VxWorks. (<a href="https://github.com/boostorg/log/pull/39">PR#39</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Save and restore <code><span class="identifier">ebx</span></code>
+                register on x86 PIE targets in the <code><span class="identifier">dump</span></code>
+                stream manipulator implementation.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/math/">Math</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Support for arbitrary precision complex valued quadrature and hence
+                contour integration
+              </div>
+            </li>
+            <li>
+              <div>
+                Improve performance of polynomial addition
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/math/index.html">Math</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Continue to improve numerical integration routines, and in particular
+                add support for contour integrals.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improve accuracy of erfc function's rational approximations.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/multi_index/index.html">Multi-index Containers</a>:</span>
           <ul>
             <li>
@@ -230,6 +455,102 @@
                 <code><span class="identifier">multi_index_container</span></code>'s
                 default constructor is no longer <code><span class="keyword">explicit</span></code>
                 (ticket <a href="https://svn.boost.org/trac/boost/ticket/13518">#13518</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/multiprecision">Multiprecision</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Support for multiprecision complex numbers
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/multiprecision/index.html">Multiprecision</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Support added for complex multiprecision numbers.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed conversion to unsigned integer types to be truncating to
+                match standard defined behaviour.
+              </div>
+            </li>
+            <li>
+              <div>
+                Correct bug in MPFR string formatting.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix undefined behaviour in cpp_dec_float conversion from long long.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add support for Eigen interoperability.
+              </div>
+            </li>
+            <li>
+              <div>
+                float128.hpp: Fix Intel on Windows build.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix type used in temporaries when expanding expression templates
+                containing mixed expressions.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix infinite loop in gmp_float to fixed-point string conversion.
+              </div>
+            </li>
+            <li>
+              <div>
+                Update the expression templates to issue static_asserts with better
+                error messages when you try and do something unsupported.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix bug in cpp_int where incrementing to zero doesn't set the sign
+                correctly.
+              </div>
+            </li>
+            <li>
+              <div>
+                Remove erroneous use of std::move, and rely on NVRO instead.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix up support for changes to MPIR-3.0.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix various conversion errors in cpp_bin_float when the exponent
+                type is a <code><span class="keyword">long</span> <span class="keyword">long</span></code>,
+                or else we're converting to an integer that is wider than we are.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix compatibility issue with GCC-8 caused by the introduction of
+                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">byte</span></code>.
               </div>
             </li>
           </ul>
@@ -266,42 +587,44 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/predef/">Predef</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Add support for __ARM_ARCH macro. (from Tim Blechmann)
+              </div>
+            </li>
+            <li>
+              <div>
+                Add detection for PTX architecture. (from Benjamin Worpitz)
+              </div>
+            </li>
+            <li>
+              <div>
+                Add nvcc compiler detection. (from Benjamin Worpitz)
+              </div>
+            </li>
+            <li>
+              <div>
+                Add support for detecting CUDA. (from Benjamin Worpitz)
+              </div>
+            </li>
+            <li>
+              <div>
+                Remove reference to obsolete BOOST_ARCH_AMD64. (from Peter Kolbus)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/program_options/">Program Options</a>:</span>
           <ul>
             <li>
               <div>
                 Support for multiple long names for an option, thanks to Eyal Rozenberg
                 (<a href="https://github.com/boostorg/program_options/pull/53">PR#53</a>)
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/doc/libs/master/libs/math/">Math</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Support for arbitrary precision complex valued quadrature and hence
-                contour integration
-              </div>
-            </li>
-            <li>
-              <div>
-                Improve performance of polynomial addition
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/doc/libs/master/libs/multiprecision">Multiprecision</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Support for multiprecision complex numbers
               </div>
             </li>
           </ul>
@@ -328,9 +651,118 @@
                 Fixed undefined behavior in normalize() (<a href="https://github.com/boostorg/rational/pull/19">PR#19</a>).
               </div>
             </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/system/">System</a>:</span>
+          <ul>
             <li>
               <div>
-                Added pow method (<a href="https://github.com/boostorg/rational/pull/21">PR#21</a>).
+                Add constexpr to error_code and error_condition members under C++14
+                and above (<a href="https://github.com/boostorg/system/pull/23">PR#23</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/signals/">Signals</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <strong>Removal Notice:</strong> Boost.Signals will
+                be removed in the next release. Boost.Signals was deprecated in version
+                1.54.0. Transition to Boost.Signals2 now to avoid disruption.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/stacktrace/">Stacktrace</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed compilation on Solaris and other platforms that do qualify
+                address as const in <code><span class="identifier">dladdr</span></code>
+                function (github 54).
+              </div>
+            </li>
+            <li>
+              <div>
+                Dropped dependency on Boost.LexicalCast.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/test/">Test</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Boost.test v3.8 see the <a href="libs/test/doc/html/boost_test/change_log.html">Changes
+                log</a> for more details.
+              </div>
+            </li>
+            <li>
+              <div>
+                Breaking changes
+                <ul>
+                  <li>
+                    <div>
+                      The <code><span class="identifier">master_test_suite_t</span></code>
+                      object is no more copyable
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                New feature:
+                <ul>
+                  <li>
+                    <div>
+                      Dataset test case can now use command line parameters
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Bug fixes and pull requests:
+                <ul>
+                  <li>
+                    <div>
+                      Trac tickets: <a href="https://svn.boost.org/trac/boost/ticket/12095">#12095</a>, <a href="https://svn.boost.org/trac/boost/ticket/12953">#12953</a>, <a href="https://svn.boost.org/trac/boost/ticket/13504">#13504</a>, <a href="https://svn.boost.org/trac/boost/ticket/13525">#13525</a>,
+                      <a href="https://svn.boost.org/trac/boost/ticket/13528">#13528</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Pull requests: <a href="https://github.com/boostorg/test/issues/143">#143</a>, <a href="https://github.com/boostorg/test/issues/145">#145</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/type_index/">TypeIndex</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Dropped dependency on Boost.MPL.
               </div>
             </li>
           </ul>
@@ -364,38 +796,6 @@
             <li>
               <div>
                 Use getrandom(2) instead of getentropy(3) on linux (<a href="https://github.com/boostorg/uuid/pull/75">PR#75</a>).
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
-          <span class="library"><a href="/doc/libs/master/libs/predef/">Predef</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Add support for __ARM_ARCH macro. (from Tim Blechmann)
-              </div>
-            </li>
-            <li>
-              <div>
-                Add detection for PTX architecture. (from Benjamin Worpitz)
-              </div>
-            </li>
-            <li>
-              <div>
-                Add nvcc compiler detection. (from Benjamin Worpitz)
-              </div>
-            </li>
-            <li>
-              <div>
-                Add support for detecting CUDA. (from Benjamin Worpitz)
-              </div>
-            </li>
-            <li>
-              <div>
-                Remove reference to obsolete BOOST_ARCH_AMD64. (from Peter Kolbus)
               </div>
             </li>
           </ul>
