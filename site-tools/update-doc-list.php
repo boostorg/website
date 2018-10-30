@@ -187,7 +187,11 @@ function read_metadata_from_modules($path, $location, $hash, $sublibs = array('l
         }
         else {
             $text = implode("\n", $super_project->run_git("show {$metadata_hash}"));
-            $updated_libs = array_merge($updated_libs, load_from_text($text, $metadata_path, dirname(dirname($metadata_path))));
+            try {
+                $updated_libs = array_merge($updated_libs, load_from_text($text, $metadata_path, dirname(dirname($metadata_path))));
+            } catch (BoostLibraries_DecodeException $e) {
+                echo "Error decoding metadata for library at {$metadata_path}:\n{$e->content()}\n";
+            }
         }
     }
 
