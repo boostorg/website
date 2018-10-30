@@ -251,7 +251,7 @@ function read_metadata_from_filesystem($location, $version) {
 
         try {
             $updated_libs = array_merge($updated_libs, load_from_file($json_path, $path));
-        } catch (library_decode_exception $e) {
+        } catch (BoostLibraries_DecodeException $e) {
             echo "Error decoding metadata for library at {$json_path}:\n{$e->content()}\n";
         }
     }
