@@ -14,6 +14,16 @@
 
 [import ext.qbk]
 
+[section Notes for users on UNIX-like systems]
+
+Boost libraries are now built with hidden visibility by default. Users can explicitly request global visibility (a.k.a. "default" in gcc documentation) by specifying it in the command line:
+
+[pre
+    b2 release visibility=global stage
+]
+
+[endsect]
+
 [section New Libraries]
 
 [/ Example:
@@ -32,6 +42,27 @@
   * Added anonymous shared memory for UNIX systems.
   * `shared_ptr` is movable and supports aliasing ([ticket 1234]).
 ]
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Don't use `readdir_r` on Linux and Android since the `readdir` function is already thread-safe. ([github_pr filesystem 68], [github filesystem 72])
+  * Fixed crashes in `boost::filesystem::copy` due to undefined behavior in the implementation. ([github_pr filesystem 71])
+  * Fixed undefined behavior in `boost::filesystem::directory_iterator` implementation. ([github_pr filesystem 77])
+  * Fixed compilation errors when using directory iterators with `BOOST_FOREACH`.
+  * Removed workarounds for older PGI C++ compiler versions to fix compilation on the newer ones. ([github_pr filesystem 49])
+  * Fixed MSVC warnings about narrowing conversions. ([github_pr filesystem 44])
+
+* [phrase library..[@/libs/integer/ Integer]:]
+  * `boost/pending/integer_log2.hpp` header is deprecated and will be removed in future releases. Use `boost/integer/integer_log2.hpp` instead.
+
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * Fixed compation problems with ambiguous unqualified calls to `advance` and `distance` on iterators whose types involve types in the namespace `boost`. ([github iterator 43])
+
+* [phrase library..[@/libs/log/ Log]:]
+  * General changes:
+    * Updated syslog sink backend to avoid using deprecated Boost.ASIO interfaces. ([github log 59])
+  * Bug fixes:
+    * Fixed a possible incorrect estimation of the total size of rotated files in the target directory of a text file sink in some cases.
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
 * /TODO/
 
