@@ -33,6 +33,35 @@
   * `shared_ptr` is movable and supports aliasing ([ticket 1234]).
 ]
 
+* [phrase library..[@/libs/circular_buffer/ CircularBuffer]:]
+  * Use the empty base optimization for storing allocators that are empty and
+    not final (Glen Fernandes).
+
+* [phrase library..[@/libs/core/ Core]:]
+  * Implemented `boost::empty_value`, for library authors to conveniently
+    leverage the Empty Base Optimization to store objects of potentially empty
+    types (Glen Fernandes). This facility is now used in Boost.Beast,
+    Boost.CircularBuffer, Boost.MultiArray, and more.
+  * Implemented `boost::quick_exit` to provide the C++11 standard library
+    facility `std::quick_exit` functionality (Peter Dimov).
+  * Reduced the number of statics in Lightweight Test, and employ lighter abort
+    behavior for MSVC compilers upon failure to call `boost::report_errors`
+    (Glen Fernandes).
+
+* [phrase library..[@/libs/mp11/ Mp11]:]
+  * Implemented the `mp_starts_with` facility (Glen Fernandes).
+
+* [phrase library..[@/libs/multi_array/ MultiArray]:]
+  * Improve C++11 allocator model support including: Support for C++11 minimal
+    allocators, support for stateful allocators, using the allocator for
+    construction and destruction of the value type, and using the empty base
+    optimization for storing empty or stateless allocators (Glen Fernandes).
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * Added support for non-inheritance types to `boost::compressed_pair` by
+    avoiding the empty base optimization for types which are declared as final
+    (Glen Fernandes).
+
 * /TODO/
 
 [endsect]
