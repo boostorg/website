@@ -82,6 +82,7 @@ function load_testers($branch) {
         }
 
         foreach($test_results as $test_result) {
+            $test_result = preg_replace('@\r\n?@', "\n", $test_result);
             $test_result_parts = explode('*********************************************************************', $test_result);
             $compiler_info = trim($test_result_parts[0]);
             if (!preg_match('@^(.*)version[ \t]*([0-9.]+)(?:[- ]+.*)?$@m', $compiler_info, $match)) {
