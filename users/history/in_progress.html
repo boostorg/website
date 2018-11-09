@@ -102,6 +102,13 @@
             </li>
             <li>
               <div>
+                New CppCon 2018 <a href="https://www.boost.org/doc/libs/master/libs/beast/doc/html/beast/examples.html#beast.examples.cppcon_2018">websocket
+                chat example</a> and <a href="https://www.youtube.com/watch?v=7FQwAjELMek">presentation
+                video</a>.
+              </div>
+            </li>
+            <li>
+              <div>
                 For a complete list of changes, please view the official <a href="/doc/libs/master/libs/beast/doc/html/beast/release_notes.html">Release
                 Notes</a>.
               </div>
@@ -170,6 +177,97 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/fiber/">Fiber</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <a href="https://github.com/boostorg/fiber/issues/181">#181</a>: unbuffered_channel push not return
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://github.com/boostorg/fiber/issues/182">#182</a>: Remove UTF-8 BOM at begining of the file
+              </div>
+            </li>
+            <li>
+              <div>
+                <a href="https://github.com/boostorg/fiber/issues/183">#183</a>: Fix boost-install use; should only be issued once
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/filesystem/">Filesystem</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Don't use <code><span class="identifier">readdir_r</span></code>
+                on Linux and Android since the <code><span class="identifier">readdir</span></code>
+                function is already thread-safe. (<a href="https://github.com/boostorg/filesystem/pull/68">PR#68</a>, <a href="https://github.com/boostorg/filesystem/issues/72">#72</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed crashes in <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">copy</span></code>
+                due to undefined behavior in the implementation. (<a href="https://github.com/boostorg/filesystem/pull/71">PR#71</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed undefined behavior in <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">directory_iterator</span></code>
+                implementation. (<a href="https://github.com/boostorg/filesystem/pull/77">PR#77</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed compilation errors when using directory iterators with <code><span class="identifier">BOOST_FOREACH</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Removed workarounds for older PGI C++ compiler versions to fix compilation
+                on the newer ones. (<a href="https://github.com/boostorg/filesystem/pull/49">PR#49</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed MSVC warnings about narrowing conversions. (<a href="https://github.com/boostorg/filesystem/pull/44">PR#44</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/integer/">Integer</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">pending</span><span class="special">/</span><span class="identifier">integer_log2</span><span class="special">.</span><span class="identifier">hpp</span></code> header is deprecated and will
+                be removed in future releases. Use <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">integer_log2</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                instead.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/iterator/">Iterator</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed compilation problems with ambiguous unqualified calls to <code><span class="identifier">advance</span></code> and <code><span class="identifier">distance</span></code>
+                on iterators whose types involve types in the namespace <code><span class="identifier">boost</span></code>. (<a href="https://github.com/boostorg/iterator/issues/43">#43</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/lexical_cast/">LexicalCast</a>:</span>
           <ul>
             <li>
@@ -181,6 +279,46 @@
               <div>
                 Maintenance: dropped some dependencies on other Boost libraries,
                 fixed build system warnings.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/log/">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                General changes:
+                <ul>
+                  <li>
+                    <div>
+                      Updated syslog sink backend to avoid using deprecated Boost.ASIO
+                      interfaces. (<a href="https://github.com/boostorg/log/issues/59">#59</a>)
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Bug fixes:
+                <ul>
+                  <li>
+                    <div>
+                      Fixed a possible incorrect estimation of the total size of
+                      rotated files in the target directory of a text file sink in
+                      some cases.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                See <a href="/doc/libs/master/libs/log/doc/html/log/changelog.html">changelog</a>
+                for more details.
               </div>
             </li>
           </ul>
@@ -210,6 +348,105 @@
                 for construction and destruction of the value type, and using the
                 empty base optimization for storing empty or stateless allocators
                 (Glen Fernandes).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/multi_index/index.html">Multi-index Containers</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Introduced an alternative <a href="/doc/libs/master/libs/multi_index/doc/tutorial/key_extraction.html#key">terse
+                key specification syntax</a> for C++17 compliant environments.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/preprocessor/">Preprocessor</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Supports the new C++ standard conforming preprocessor in VC++ 14.1,
+                which is currently enabled by using the /experimental:preprocessor
+                switch, in Visual Studio 2017 15.8 on up.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/spirit/">Spirit</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Spirit.X3:
+                <ul>
+                  <li>
+                    <div>
+                      Drop own FP routines in favor of <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">math</span></code>
+                      (<a href="https://github.com/boostorg/spirit/issues/392">#392</a>) (<a href="https://svn.boost.org/trac/boost/ticket/13531">#13531</a>)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Missing visibility mark on exception types (<a href="https://github.com/boostorg/spirit/issues/409">#409</a>)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      to_utf8: Fixed wchar_t handling on Windows (<a href="https://github.com/boostorg/spirit/issues/413">#413</a>)
+                      (<a href="https://github.com/boostorg/spirit/issues/395">#395</a>)
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Spirit V2
+                <ul>
+                  <li>
+                    <div>
+                      Drop own FP routines in favor of <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">math</span></code>
+                      (<a href="https://github.com/boostorg/spirit/issues/392">#392</a>) (<a href="https://svn.boost.org/trac/boost/ticket/13531">#13531</a>)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Missing visibility mark on exception types (<a href="https://github.com/boostorg/spirit/issues/409">#409</a>)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed transform_attribute ambiguity (<a href="https://github.com/boostorg/spirit/issues/407">#407</a>) (<a href="https://github.com/boostorg/spirit/issues/396">#396</a>)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      to_utf8: Fixed wchar_t handling on Windows (<a href="https://github.com/boostorg/spirit/issues/413">#413</a>)
+                      (<a href="https://github.com/boostorg/spirit/issues/395">#395</a>)
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Spirit.Classic:
+                <ul>
+                  <li>
+                    <div>
+                      Missing visibility mark on exception types (<a href="https://github.com/boostorg/spirit/issues/409">#409</a>)
+                    </div>
+                  </li>
+                </ul>
               </div>
             </li>
           </ul>
@@ -314,6 +551,24 @@
                 exception could cross the boundaries of shared library with hidden
                 visibility and could be catched in other shared library with hidden
                 visibility.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/yap/">YAP</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Minor changes to support MSVC++ version 14.15 (Visual Studio 2017
+                version 15.8).
+              </div>
+            </li>
+            <li>
+              <div>
+                Doc fixes.
               </div>
             </li>
           </ul>
