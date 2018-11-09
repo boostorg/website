@@ -74,9 +74,30 @@ To disable that feature use `./b2 visibility=global` like command during build.
   * Resolved link issues with the smart library [github dll 20].
   * Maintenance: fixes for docs and tests.
 
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Don't use `readdir_r` on Linux and Android since the `readdir` function is already thread-safe. ([github_pr filesystem 68], [github filesystem 72])
+  * Fixed crashes in `boost::filesystem::copy` due to undefined behavior in the implementation. ([github_pr filesystem 71])
+  * Fixed undefined behavior in `boost::filesystem::directory_iterator` implementation. ([github_pr filesystem 77])
+  * Fixed compilation errors when using directory iterators with `BOOST_FOREACH`.
+  * Removed workarounds for older PGI C++ compiler versions to fix compilation on the newer ones. ([github_pr filesystem 49])
+  * Fixed MSVC warnings about narrowing conversions. ([github_pr filesystem 44])
+
+* [phrase library..[@/libs/integer/ Integer]:]
+  * `boost/pending/integer_log2.hpp` header is deprecated and will be removed in future releases. Use `boost/integer/integer_log2.hpp` instead.
+
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * Fixed compilation problems with ambiguous unqualified calls to `advance` and `distance` on iterators whose types involve types in the namespace `boost`. ([github iterator 43])
+
 * [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
   * Fixed sign-conversion warnings [ticket 8991].
   * Maintenance: dropped some dependencies on other Boost libraries, fixed build system warnings.
+
+* [phrase library..[@/libs/log/ Log]:]
+  * General changes:
+    * Updated syslog sink backend to avoid using deprecated Boost.ASIO interfaces. ([github log 59])
+  * Bug fixes:
+    * Fixed a possible incorrect estimation of the total size of rotated files in the target directory of a text file sink in some cases.
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
 * [phrase library..[@/libs/mp11/ Mp11]:]
   * Implemented the `mp_starts_with` facility (Glen Fernandes).
