@@ -14,6 +14,16 @@
 
 [import ext.qbk]
 
+[section Notes for non-Windows users]
+
+Boost build system now supports visibilities and builds shared libraries with hidden visibility by default. As a result Boost shared libraries become smaller, load faster and have less chances to get a symbol collision.
+
+See [@/build/manual/develop/index.html#bbv2.builtin.features.visibility Boost.Build visibility and local-visibility] for more info.
+
+To disable that feature use `./b2 visibility=global` like command during build.
+
+[endsect]
+
 [section New Libraries]
 
 [/ Example:
@@ -32,6 +42,10 @@
   * Added anonymous shared memory for UNIX systems.
   * `shared_ptr` is movable and supports aliasing ([ticket 1234]).
 ]
+
+* [phrase library..[@/libs/any/ Any]:]
+  * Fixed issue with visibility. Now `boost::any` variables constructed in one shared library with hidden visibility could be used and destroyed in other shared library with hidden visibility.
+  * Maintenance: dropped some dependencies on other Boost libraries, fixes for docs.
 
 * [phrase library..[@/libs/beast/ Beast]:]
   * This version fixes some issues in the examples, and provides a new
@@ -55,6 +69,14 @@
     behavior for MSVC compilers upon failure to call `boost::report_errors`
     (Glen Fernandes).
 
+* [phrase library..[@/libs/dll/ DLL]:]
+  * Resolved link issues with the smart library [github dll 20].
+  * Maintenance: fixes for docs and tests.
+
+* [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
+  * Fixed sign-conversion warnings [ticket 8991].
+  * Maintenance: dropped some dependencies on other Boost libraries, fixed build system warnings.
+
 * [phrase library..[@/libs/mp11/ Mp11]:]
   * Implemented the `mp_starts_with` facility (Glen Fernandes).
 
@@ -64,10 +86,26 @@
     construction and destruction of the value type, and using the empty base
     optimization for storing empty or stateless allocators (Glen Fernandes).
 
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * `libbacktrace` usage was significantly improved. `BOOST_STACKTRACE_USE_BACKTRACE` or `boost_stacktrace_backtrace` users are encouraged to update:
+    * Memory consumprion dropped down.
+    * Stack capturing became faster by an order of magnitude.
+    * `syminfo` fallback enabled to provide information for visible symbols even without debug information (thanks to github user driesdeschout!)[github stacktrace 60], [github stacktrace 61].
+    * Exact location of the `backtrace.h` header now can be specified via `BOOST_STACKTRACE_BACKTRACE_INCLUDE_FILE`, to allow `backtrace.h` header usage on platforms and compilers where that header is unreachable otherwise (for example Ubuntu Xenial + Clang) [github stacktrace 59].
+  * Optimized stack capturing if `max_depth` is set (thanks to Jan Eisenhauer for the PR!) [github stacktrace 67].
+  * Added `to_string(const stacktrace& )` functions for fast conversion of stacktraces to `std::string` [github stacktrace 57].
+  * Maintenance: updated docs [github stacktrace 62], tests updated.
+
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * Fix the regression and speed up parsing of the `boost/type_traits.hpp` header by 30% (thanks to Nikita Kniazev for the PR!) [github type_index 21].
+
 * [phrase library..[@/libs/utility/ Utility]:]
   * Added support for non-inheritable empty types to `boost::compressed_pair`
     by avoiding the empty base optimization for types which are declared as
     final (Glen Fernandes).
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Fixed issue with visibility. Now `boost::bad_visit` exception could cross the boundaries of shared library with hidden visibility and could be catched in other shared library with hidden visibility.
 
 * /TODO/
 
