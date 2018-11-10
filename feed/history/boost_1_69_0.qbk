@@ -159,6 +159,20 @@ To disable that feature use `./b2 visibility=global` like command during build.
   * Added `to_string(const stacktrace& )` functions for fast conversion of stacktraces to `std::string` [github stacktrace 57].
   * Maintenance: updated docs [github stacktrace 62], tests updated.
 
+* [phrase library..[@/libs/system/ System]:]
+  * Boost.System is now header-only. A stub library is still built for compatibility, but linking to it is no longer necessary.
+  * Even more functions have been marked `constexpr`.
+  * The destructor of `error_category` is now `protected` and no longer `virtual`. This is a potentially breaking
+    change, but its impact is expected to be limited.
+  * `error_category` now has a constructor that accepts a 64 bit identifier, enabling distinct category objects to compare equal.
+  * The constructors of `error_category` are now `protected`.
+  * A non-allocating, nonthrowing overload of `message` has been added.
+  * A virtual function `failed` has been added, allowing categories for which success is not synonymous with 0.
+  * The deprecated `boost::system::throws` object has been removed.
+  * `boost::throws()` is now deprecated and its use is discouraged.
+  * The constructor of `system_error` taking a single `error_code` argument is now `explicit`.
+  * `system_error::code()` now returns by value.
+
 * [phrase library..[@/libs/test/ Test]:]
   * Boost.test v3.9 see the
     [@libs/test/doc/html/boost_test/change_log.html Changes log]
