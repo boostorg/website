@@ -19,6 +19,16 @@
 
 [import ext.qbk]
 
+[section Notes for non-Windows users]
+
+Boost build system now supports visibilities and builds shared libraries with hidden visibility by default. As a result Boost shared libraries become smaller, load faster and have less chances to get a symbol collision.
+
+See [@/build/manual/develop/index.html#bbv2.builtin.features.visibility Boost.Build visibility and local-visibility] for more info.
+
+To disable that feature use `./b2 visibility=global` like command during build.
+
+[endsect]
+
 [section New Libraries]
 
 [/ Example:
@@ -38,10 +48,15 @@
   * `shared_ptr` is movable and supports aliasing ([ticket 1234]).
 ]
 
+* [phrase library..[@/libs/any/ Any]:]
+  * Fixed issue with visibility. Now `boost::any` variables constructed in one shared library with hidden visibility could be used and destroyed in other shared library with hidden visibility.
+  * Maintenance: dropped some dependencies on other Boost libraries, fixes for docs.
+
 * [phrase library..[@/libs/beast/ Beast]:]
   * This version fixes some issues in the examples, and provides a new
     experimental socket which supports built-in timeouts on asynchronous
     operations.
+  * New CppCon 2018 [@https://www.boost.org/doc/libs/master/libs/beast/doc/html/beast/examples.html#beast.examples.cppcon_2018 websocket chat example] and [@https://www.youtube.com/watch?v=7FQwAjELMek presentation video].
   * For a complete list of changes, please view the official
     [@/libs/beast/doc/html/beast/release_notes.html Release Notes].
 
@@ -60,6 +75,44 @@
     behavior for MSVC compilers upon failure to call `boost::report_errors`
     (Glen Fernandes).
 
+* [phrase library..[@/libs/dll/ DLL]:]
+  * Resolved link issues with the smart library [github dll 20].
+  * Maintenance: fixes for docs and tests.
+
+* [phrase library..[@/libs/fiber/ Fiber]:]
+    * [github fiber 181]: unbuffered_channel push not return
+    * [github fiber 182]: Remove UTF-8 BOM at begining of the file
+    * [github fiber 183]: Fix boost-install use; should only be issued once
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Don't use `readdir_r` on Linux and Android since the `readdir` function is already thread-safe. ([github_pr filesystem 68], [github filesystem 72])
+  * Fixed crashes in `boost::filesystem::copy` due to undefined behavior in the implementation. ([github_pr filesystem 71])
+  * Fixed undefined behavior in `boost::filesystem::directory_iterator` implementation. ([github_pr filesystem 77])
+  * Fixed compilation errors when using directory iterators with `BOOST_FOREACH`.
+  * Removed workarounds for older PGI C++ compiler versions to fix compilation on the newer ones. ([github_pr filesystem 49])
+  * Fixed MSVC warnings about narrowing conversions. ([github_pr filesystem 44])
+
+* [phrase library..[@/libs/flyweight/index.html Flyweight]:]
+  * Fixed some issues in GCC related to Boost.MPL placeholder expression handling.
+  * Maintenance fixes.
+
+* [phrase library..[@/libs/integer/ Integer]:]
+  * `boost/pending/integer_log2.hpp` header is deprecated and will be removed in future releases. Use `boost/integer/integer_log2.hpp` instead.
+
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * Fixed compilation problems with ambiguous unqualified calls to `advance` and `distance` on iterators whose types involve types in the namespace `boost`. ([github iterator 43])
+
+* [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
+  * Fixed sign-conversion warnings [ticket 8991].
+  * Maintenance: dropped some dependencies on other Boost libraries, fixed build system warnings.
+
+* [phrase library..[@/libs/log/ Log]:]
+  * General changes:
+    * Updated syslog sink backend to avoid using deprecated Boost.ASIO interfaces. ([github log 59])
+  * Bug fixes:
+    * Fixed a possible incorrect estimation of the total size of rotated files in the target directory of a text file sink in some cases.
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
 * [phrase library..[@/libs/mp11/ Mp11]:]
   * Implemented the `mp_starts_with` facility (Glen Fernandes).
 
@@ -68,6 +121,43 @@
     allocators, support for stateful allocators, using the allocator for
     construction and destruction of the value type, and using the empty base
     optimization for storing empty or stateless allocators (Glen Fernandes).
+
+* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+  * Introduced an alternative
+    [@/libs/multi_index/doc/tutorial/key_extraction.html#key terse key specification syntax]
+    for C++17 compliant environments.
+
+* [phrase library..[@/libs/poly_collection/ PolyCollection]:]
+  * Added Bost.PolyCollection-specific versions of algorithms
+    `std::for_each_n` and `std::sample`.
+
+* [phrase library..[@/libs/preprocessor/ Preprocessor]:]
+  * Supports the new C++ standard conforming preprocessor in VC++ 14.1,
+    which is currently enabled by using the /experimental:preprocessor switch,
+    in Visual Studio 2017 15.8 on up.
+
+* [phrase library..[@/libs/spirit/ Spirit]:]
+  * Spirit.X3:
+    * Drop own FP routines in favor of `boost::math` ([github spirit 392]) ([ticket 13531])
+    * Missing visibility mark on exception types ([github spirit 409])
+    * to_utf8: Fixed wchar_t handling on Windows ([github spirit 413]) ([github spirit 395])
+  * Spirit V2
+    * Drop own FP routines in favor of `boost::math` ([github spirit 392]) ([ticket 13531])
+    * Missing visibility mark on exception types ([github spirit 409])
+    * Fixed transform_attribute ambiguity ([github spirit 407]) ([github spirit 396])
+    * to_utf8: Fixed wchar_t handling on Windows ([github spirit 413]) ([github spirit 395])
+  * Spirit.Classic:
+    * Missing visibility mark on exception types ([github spirit 409])
+
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * `libbacktrace` usage was significantly improved. `BOOST_STACKTRACE_USE_BACKTRACE` or `boost_stacktrace_backtrace` users are encouraged to update:
+    * Memory consumprion dropped down.
+    * Stack capturing became faster by an order of magnitude.
+    * `syminfo` fallback enabled to provide information for visible symbols even without debug information (thanks to github user driesdeschout!)[github stacktrace 60], [github stacktrace 61].
+    * Exact location of the `backtrace.h` header now can be specified via `BOOST_STACKTRACE_BACKTRACE_INCLUDE_FILE`, to allow `backtrace.h` header usage on platforms and compilers where that header is unreachable otherwise (for example Ubuntu Xenial + Clang) [github stacktrace 59].
+  * Optimized stack capturing if `max_depth` is set (thanks to Jan Eisenhauer for the PR!) [github stacktrace 67].
+  * Added `to_string(const stacktrace& )` functions for fast conversion of stacktraces to `std::string` [github stacktrace 57].
+  * Maintenance: updated docs [github stacktrace 62], tests updated.
 
 * [phrase library..[@/libs/test/ Test]:]
   * Boost.test v3.9 see the
@@ -82,10 +172,20 @@
     * GitHub Issues: [github test 149], [github test 150], [github test 156], [github test 158], [github test 163]
     * GitHub Pull Requests: [github_pr test 147], [github_pr test 148], [github_pr test 151], [github_pr test 154], [github_pr test 161]
 
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * Fix the regression and speed up parsing of the `boost/type_traits.hpp` header by 30% (thanks to Nikita Kniazev for the PR!) [github type_index 21].
+
 * [phrase library..[@/libs/utility/ Utility]:]
   * Added support for non-inheritable empty types to `boost::compressed_pair`
     by avoiding the empty base optimization for types which are declared as
     final (Glen Fernandes).
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Fixed issue with visibility. Now `boost::bad_visit` exception could cross the boundaries of shared library with hidden visibility and could be catched in other shared library with hidden visibility.
+
+* [phrase library..[@/libs/yap/ YAP]:]
+  * Minor changes to support MSVC++ version 14.15 (Visual Studio 2017 version 15.8).
+  * Doc fixes.
 
 * /TODO/
 
