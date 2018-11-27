@@ -40,17 +40,32 @@ To disable that feature use `./b2 visibility=global` like command during build.
 
 [endsect]
 
+[section Discontinued Libraries]
+
+* Signals (v1) was deprecated in 1.54, announced for removal in 1.68, and removed in 1.69.
+  Use Signals2 instead.
+
+* /TODO/
+
+[endsect]
+
 [section Updated Libraries]
 
 [/ Example:
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
   * Added anonymous shared memory for UNIX systems.
-  * `shared_ptr` is movable and supports aliasing ([ticket 1234]).
+  * trac issue example: `shared_ptr` is movable and supports aliasing ([ticket 1234]).
+  * github issue example: fixed an issue ([github interprocess 25])
+  * github pull request issue example: improved sprocket ([github_pr interprocess 25])
 ]
 
 * [phrase library..[@/libs/any/ Any]:]
   * Fixed issue with visibility. Now `boost::any` variables constructed in one shared library with hidden visibility could be used and destroyed in other shared library with hidden visibility.
   * Maintenance: dropped some dependencies on other Boost libraries, fixes for docs.
+
+* [phrase library..[@/libs/assign/ Assign]:]
+  * Add rvalue reference, perfect forwarding, and variadic template support ([github_pr assign 6]) ([ticket 10477])
+  * Avoid conversion to container's allocator ([github_pr assign 29]) ([ticket 5419]) ([ticket 7364])
 
 * [phrase library..[@/libs/beast/ Beast]:]
   * This version fixes some issues in the examples, and provides a new
@@ -63,6 +78,9 @@ To disable that feature use `./b2 visibility=global` like command during build.
 * [phrase library..[@/libs/circular_buffer/ CircularBuffer]:]
   * Use the empty base optimization for storing allocators that are empty and
     not final (Glen Fernandes).
+
+* [phrase library..[@/libs/concept_check/ Concept Check]:]
+  * Removed dependency on mpl. ([github_pr concept_check 14])
 
 * [phrase library..[@/libs/context/ Context]:]
     * [github context 91]: add .file section for *_elf_gas.S files
@@ -82,6 +100,10 @@ To disable that feature use `./b2 visibility=global` like command during build.
   * Resolved link issues with the smart library [github dll 20].
   * Maintenance: fixes for docs and tests.
 
+* [phrase library..[@/libs/dynamic_bitset/ Dynamic Bitset]:]
+  * Performance improvements (over 2x in some cases). ([github_pr dynamic_bitset 26])
+  * Added range-based set, reset, flip methods ([github_pr dynamic_bitset 27])
+
 * [phrase library..[@/libs/fiber/ Fiber]:]
     * [github fiber 181]: unbuffered_channel push not return
     * [github fiber 182]: Remove UTF-8 BOM at begining of the file
@@ -99,8 +121,14 @@ To disable that feature use `./b2 visibility=global` like command during build.
   * Fixed some issues in GCC related to Boost.MPL placeholder expression handling.
   * Maintenance fixes.
 
+* [phrase library..[@/libs/function/ Function]:]
+  * Removed dependencies on mpl, test ([github_pr function 20]) ([github_pr function 22])
+
 * [phrase library..[@/libs/integer/ Integer]:]
   * `boost/pending/integer_log2.hpp` header is deprecated and will be removed in future releases. Use `boost/integer/integer_log2.hpp` instead.
+
+* [phrase library..[@/libs/iostreams/ Iostreams]:]
+  * Remove call to nonexistent member seekpos() of std::fpos ([github_pr iostreams 58])
 
 * [phrase library..[@/libs/iterator/ Iterator]:]
   * Fixed compilation problems with ambiguous unqualified calls to `advance` and `distance` on iterators whose types involve types in the namespace `boost`. ([github iterator 43])
@@ -133,6 +161,9 @@ To disable that feature use `./b2 visibility=global` like command during build.
   * Improve `sinc` approximations and add better tests.
   * Fix typo in Student's T hypothesis testing documentation, see [@https://github.com/boostorg/math/issues/143 #143].
 
+* [phrase library..[@/libs/logic/ Logic]:]
+  * [*Breaking change:] Use explicit operator bool when available ([github_pr logic 5])
+
 * [phrase library..[@/libs/mp11/ Mp11]:]
   * Implemented the `mp_starts_with` facility (Glen Fernandes).
 
@@ -160,10 +191,16 @@ To disable that feature use `./b2 visibility=global` like command during build.
   * Added Bost.PolyCollection-specific versions of algorithms
     `std::for_each_n` and `std::sample`.
 
+* [phrase library..[@/libs/pool/ Pool]:]
+  * Replace boost::mutex use to avoid a dependency on Boost.Thread ([github_pr pool 23])
+
 * [phrase library..[@/libs/preprocessor/ Preprocessor]:]
   * Supports the new C++ standard conforming preprocessor in VC++ 14.1,
     which is currently enabled by using the /experimental:preprocessor switch,
     in Visual Studio 2017 15.8 on up.
+
+* [phrase library..[@/libs/rational/ Rational]:]
+  * Add constexpr support ([github_pr rational 28]) ([github_pr rational 32])
 
 * [phrase library..[@/libs/spirit/ Spirit]:]
   * Spirit.X3:
