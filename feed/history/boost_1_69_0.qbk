@@ -2,14 +2,18 @@
     [quickbook 1.6]
     [source-mode c++]
     [purpose
-        New Libraries:
-        Updated Libraries:
-        [/ Please don't add updated libraries yet, it
-           can create unnecessary merge conflicts.]
+        New Libraries: Safe Numerics.
+        Updated Libraries: Any, Asio, Assign, Beast, CircularBuffer,
+            Concept Check, Core, DLL, Dynamic Bitset, Fiber, Filesystem,
+            Flyweight, Geometry, Integer, Iostreams, Iterator, LexicalCast,
+            Log, Logic, Math, Mp11, MultiArray, Multi-index Containers,
+            Multiprecision, PolyCollection, Pool, Preprocessor, Rational,
+            Spirit, Stacktrace, System, Test, TypeIndex, Utility, Variant,
+            YAP.
+        Discontinued Libraries: Signals.
     ]
     [authors [Dawes, Beman]]
-    [/ last-revision is used for the final release date]
-    [last-revision ]
+    [last-revision Wed, 12 Dec 2018 02:58:00 -0700]
 ]
 
 [/ Use
@@ -155,18 +159,18 @@ guaranteed correct integer arithmetic for C++14 and later, from Robert Ramey.
 
 * [phrase library..[@/libs/geometry/ Geometry]:]
   * Improvements
-    * [@https://github.com/boostorg/geometry/pull/486 486] Karney's solution of direct geodesic problem for internal use (thanks to Adeel Ahmad).
-    * [@https://github.com/boostorg/geometry/pull/490 490] Discrete Frechet and Hausdorff distance algorithms (thanks to Yaghyavardhan Singh Khangarot).
-    * [@https://github.com/boostorg/geometry/pull/496 496] New run-time and upgraded compile-time SRS transformation interfaces (undocumented for now due to potential interface changes).
+    * [github_pr geometry 486] Karney's solution of direct geodesic problem for internal use (thanks to Adeel Ahmad).
+    * [github_pr geometry 490] Discrete Frechet and Hausdorff distance algorithms (thanks to Yaghyavardhan Singh Khangarot).
+    * [github_pr geometry 496] New run-time and upgraded compile-time SRS transformation interfaces (undocumented for now due to potential interface changes).
   * Solved issues
-    * [@https://github.com/boostorg/geometry/issues/520 520] Missing documentation for dsv().
-    * [@https://github.com/boostorg/geometry/issues/521 521] Wrong documentation description for distance().
-    * [@https://github.com/boostorg/geometry/issues/524 524] Fixed 'enumeration values not handled in switch' warnings.
-    * [@https://github.com/boostorg/geometry/issues/527 527] Workaround for VS 2017 (msvc-15).
+    * [github geometry 520] Missing documentation for dsv().
+    * [github geometry 521] Wrong documentation description for distance().
+    * [github geometry 524] Fixed 'enumeration values not handled in switch' warnings.
+    * [github geometry 527] Workaround for VS 2017 (msvc-15).
   * Bugfixes
-    * [@https://github.com/boostorg/geometry/pull/505 505] Fixed overflow in overlay algorithms (thanks to Dane Springmeyer).
-    * [@https://github.com/boostorg/geometry/pull/518 518] Fixed passing of temporaries in append() (thanks to xventura81).
-    * [@https://github.com/boostorg/geometry/pull/522 522] Support python3 in building documentation.
+    * [github_pr geometry 505] Fixed overflow in overlay algorithms (thanks to Dane Springmeyer).
+    * [github_pr geometry 518] Fixed passing of temporaries in append() (thanks to xventura81).
+    * [github_pr geometry 522] Support python3 in building documentation.
 
 * [phrase library..[@/libs/integer/ Integer]:]
   * `boost/pending/integer_log2.hpp` header is deprecated and will be removed in future releases. Use `boost/integer/integer_log2.hpp` instead.
@@ -198,15 +202,15 @@ guaranteed correct integer arithmetic for C++14 and later, from Robert Ramey.
   * Minor fixes to better support variable precision floating point types.
   * Removed use of deprecated Boost.Endian in favour of Predef.
   * Updated continued fraction and series evaluation code to support complex types.
-  * Prevent logic error leading to infinite loop in toms748_solve.  See [@https://github.com/boostorg/math/issues/138 #138].
-  * Fix mean and standard_deviation for extreme_value_distribution.  See [@https://github.com/boostorg/math/issues/139 #139].
-  * Improve heuristics used in newton_raphson_iterate.  See [@https://github.com/boostorg/math/issues/145 #145].
-  * Fix result of `erf(NaN)`.  See [@https://github.com/boostorg/math/issues/141 #141].
-  * Big push to reduce GCC warnings.  See [@https://github.com/boostorg/math/issues/136 #136].
-  * Refactor polynomial addition.  See [@https://github.com/boostorg/math/pull/132 PR132].
-  * Fix for vxWorks having a `real` function in the global namespace. See [@https://github.com/boostorg/math/pull/131 PR131].
+  * Prevent logic error leading to infinite loop in toms748_solve.  See [github math 138].
+  * Fix mean and standard_deviation for extreme_value_distribution.  See [github math 139].
+  * Improve heuristics used in newton_raphson_iterate.  See [github math 145].
+  * Fix result of `erf(NaN)`.  See [github math 141 #141].
+  * Big push to reduce GCC warnings.  See [github math 136 #136].
+  * Refactor polynomial addition.  See [github_pr math 132].
+  * Fix for vxWorks having a `real` function in the global namespace. See [github_pr math 131].
   * Improve `sinc` approximations and add better tests.
-  * Fix typo in Student's T hypothesis testing documentation, see [@https://github.com/boostorg/math/issues/143 #143].
+  * Fix typo in Student's T hypothesis testing documentation, see [github math 143].
 
 * [phrase library..[@/libs/mp11/ Mp11]:]
   * Implemented the `mp_starts_with` facility (Glen Fernandes).
@@ -217,18 +221,18 @@ guaranteed correct integer arithmetic for C++14 and later, from Robert Ramey.
     construction and destruction of the value type, and using the empty base
     optimization for storing empty or stateless allocators (Glen Fernandes).
 
-* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+* [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
   * Introduced an alternative
     [@/libs/multi_index/doc/tutorial/key_extraction.html#key terse key specification syntax]
     for C++17 compliant environments.
     
-* [phrase library..[@/libs/multiprecision/Multiprecision]:]
+* [phrase library..[@/libs/multiprecision/ Multiprecision]:]
   * Big update to better support variable precision types so that the precision of the result is always the largest of all the arguments.
-  * Add support for allocators that are `final` in __cpp_int.
+  * Add support for allocators that are `final` in __cpp_int (Glen Fernandes).
   * Removed use of deprecated Boost.Endian in favour of Predef.
   * Add support for `std::string_view`.
-  * Fixed minor bug in constant initialization.  See [@https://github.com/boostorg/multiprecision/issues/67 #67].
-  * Make assignment of non-finite value to `cpp_int` a runtime errors.  See [@https://github.com/boostorg/multiprecision/issues/58 #58].
+  * Fixed minor bug in constant initialization.  See [github multiprecision 67].
+  * Make assignment of non-finite value to `cpp_int` a runtime errors.  See [github multiprecision 58].
   * Added typedefs for `cpp_bin_float_oct` and `cpp_complex_oct`.
 
 * [phrase library..[@/libs/poly_collection/ PolyCollection]:]
