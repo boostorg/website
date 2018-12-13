@@ -52,17 +52,18 @@
     <h3><span class="link">Notes for non-Windows
     users</span></h3>
     <p>
-      Boost build system now supports visibilities and builds shared libraries with
-      hidden visibility by default. As a result Boost shared libraries become smaller,
-      load faster and have less chances to get a symbol collision.
+      The Boost build system now supports visibilities. If you are building shared
+      libraries, they will use hidden visibility by default. As a result Boost shared
+      libraries become smaller, load faster and have less chances to get a symbol
+      collision.
     </p>
     <p>
       See <a href="/build/manual/develop/index.html#bbv2.builtin.features.visibility">Boost.Build
       visibility and local-visibility</a> for more info.
     </p>
     <p>
-      To disable that feature use <code><span class="special">./</span><span class="identifier">b2</span> <span class="identifier">visibility</span><span class="special">=</span><span class="identifier">global</span></code> like
-      command during build.
+      To disable that feature you can use use a command line <code><span class="special">./</span><span class="identifier">b2</span> <span class="identifier">visibility</span><span class="special">=</span><span class="identifier">global</span></code> to
+      build.
     </p>
   </div>
   <div id="version_1_69_0.new_libraries">
@@ -70,19 +71,9 @@
     <ul>
       <li>
         <div>
-          <span class="library"><a href="/libs/safe_numerics/">Safe Numerics</a>:</span>
-          This library implements special versions of int, unsigned, etc. which behave exactly like the original ones except that the results of these operations are guaranteed to be either to be arithmetically correct or invoke an error.
-        </div>
-      </li>
-    </ul>
-  </div>
-  <div id="version_1_69_0.discontinued_libraries">
-    <h3><span class="link">Discontinued Libraries</span></h3>
-    <ul>
-      <li>
-        <div>
-          Signals (v1) was deprecated in 1.54, announced for removal in 1.68, and
-          removed in 1.69. Use Signals2 instead.
+          <span class="library"><a href="/libs/safe_numerics/">Safe Numerics</a>:</span> A library
+          for guaranteed correct integer arithmetic for C++14 and later, from Robert
+          Ramey.
         </div>
       </li>
     </ul>
@@ -105,6 +96,120 @@
               <div>
                 Maintenance: dropped some dependencies on other Boost libraries,
                 fixes for docs.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed a problem with the detection of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">future</span></code>
+                availability with libstdc++.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed compile error in regex overload of <code><span class="identifier">read_until</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a timer heap corruption issue that can occur when moving a
+                cancelled timer.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed detection of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">string_view</span></code>
+                and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">string_view</span></code> with newer clang/libc++.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed MSVC version detection for availability of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">invoke_result</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed the buffer sequence traits to test the new requirements, if
+                <code><span class="keyword">decltype</span></code> is available.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed an MSVC issue when building with exceptions disabled.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added SSL context options for TLS v1.3.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a compile-time test for TLS v1 support.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed the macro used to test for TLS v1.2 support.
+              </div>
+            </li>
+            <li>
+              <div>
+                Prevented global objects from being created once per thread on Windows.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a crash when using <code><span class="identifier">size</span><span class="special">()</span></code>, <code><span class="identifier">max_size</span><span class="special">()</span></code> or <code><span class="identifier">empty</span><span class="special">()</span></code> on default-constructed resolver
+                results.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed to move the return value in <code><span class="identifier">basic_resolver_results</span><span class="special">::</span><span class="identifier">begin</span><span class="special">()</span></code> to avoid copying.
+              </div>
+            </li>
+            <li>
+              <div>
+                Enabled move support for the Intel Compiler.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">string_view</span></code> detection issue when
+                using clang-cl.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed the handler tracking operation name for <code><span class="identifier">io_context</span><span class="special">::</span><span class="identifier">executor_type</span><span class="special">::</span><span class="identifier">dispatch</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a buffer overflow that could occur when parsing an address
+                string with a 64-bit scope id.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added examples showing how to write composed operations.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added C++11 versions of the Timeouts, Timers, SOCKS4 and SSL examples.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed minor issues in documentation and examples.
               </div>
             </li>
           </ul>
@@ -699,7 +804,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/libs/multiprecision/multiprecision">Multiprecision</a>:</span>
+          <span class="library"><a href="/libs/multiprecision/Multiprecision">/libs/multiprecision/Multiprecision</a>:</span>
           <ul>
             <li>
               <div>
@@ -1129,6 +1234,20 @@
       </li>
     </ul>
   </div>
+  <div id="version_1_69_0.discontinued_libraries">
+    <h3><span class="link">Discontinued Libraries</span></h3>
+    <ul>
+      <li>
+        <div>
+          Signals (v1) is now removed. Its removal was announced in 1.68 and its
+          deprecation was announced in 1.54. Boost 1.68 is the last release that
+          provides this library. Users are encouraged to use Signals2 instead. The
+          Boost community thanks Douglas Gregor for his work on Signals which served
+          its users well and which also inspired Signals2.
+        </div>
+      </li>
+    </ul>
+  </div>
   <div id="version_1_69_0.compilers_tested">
     <h3><span class="link">Compilers Tested</span></h3>
     <p>
@@ -1463,8 +1582,8 @@
   <div id="version_1_69_0.acknowledgements">
     <h3><span class="link">Acknowledgements</span></h3>
     <p>
-      Daniel James,
-      Vladimir Prus, Marshall Clow and Michael Caisse managed this release.
+      Daniel James, Vladimir Prus, Marshall Clow and Michael Caisse managed this
+      release.
     </p>
   </div>
 </div>
