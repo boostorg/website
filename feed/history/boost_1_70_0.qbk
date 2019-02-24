@@ -33,6 +33,24 @@
   * `shared_ptr` is movable and supports aliasing ([ticket 1234]).
 ]
 
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Fixed a few instances of dereferencing `std::string::end()` in `path` implementation.
+  * Fixed program termination in case of out of memory condition in directory iterators constructors and operations accepting a reference to `error_code`. ([github filesystem 58])
+  * Fixed possible linking errors caused by missing definitions of static members of `path`. ([ticket 12759])
+  * Fixed possible use of uninitialized data in directory iterator increment operation on Linux.
+  * Added support for movability to directory iterators.
+  * Added file status query overloads for `directory_entry`. This avoids a relatively expensive OS query when file status is requested for a result of dereferencing a directory iterator. ([github_pr filesystem 55])
+  * Reworked `current_path` and `read_symlink` implementation to avoid possible memory exhaustion on broken or tampered with filesystems. The functions now have an internal limit of the path size they will accept from the OS, which is currently 16 MiB.
+  * Increased the size of the internal buffer used by `copy_file`.
+
+* [phrase library..[@/libs/integer/ Integer]:]
+  * Added Extended Euclidean Algorithm and Modular Multiplicative Inverse function. (Nick Thompson, [github_pr integer 11])
+
+* [phrase library..[@/libs/log/ Log]:]
+  * New features:
+    * Added support for generating another log file name before collecting the file in the text file sink backend. This allows to combine appending to an existing log file with timestamps and file counters in log filenames, and, consequently, file collection in general.
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
 * [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
   * `size_type` and `difference_type` are now defined as the allocator's same-named types.
     This will not make any difference in the vast majority of cases, but allows for some
