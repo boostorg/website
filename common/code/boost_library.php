@@ -3,7 +3,7 @@
   Copyright 2006 Redshift Software, Inc.
   Copyright 2014 Daniel James
   Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+  (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 */
 
 /**
@@ -50,12 +50,6 @@ class BoostLibrary
     public function __construct($lib) {
         assert(!isset($lib['update-version']));
         assert(isset($lib['key']));
-
-        // Temporary override for Chrono.Stopwatch.
-        // Can be removed once it merges the metadata to master
-        if ($lib['key'] === 'chrono/stopwatch') {
-            $lib['status'] = 'unreleased';
-        }
 
         // Convert version number to object
         if (!empty($lib['boost-version'])) {
@@ -111,7 +105,7 @@ class BoostLibrary
         // Check the status.
         if (isset($lib['status'])) {
             $lib['status'] = strtolower($lib['status']);
-            if (!in_array($lib['status'], array('hidden', 'unreleased', 'deprecated'))) {
+            if (!in_array($lib['status'], array('hidden', 'unreleased', 'deprecated', 'removed'))) {
                 throw new BoostLibraries_exception("Invalid status: {$lib['status']}");
             }
         }
@@ -154,7 +148,9 @@ class BoostLibrary
     /** Kind of hacky way to fill in details that probably shouldn't be
      *  stored here anyway. */
     public function fill_in_details_from_previous_version($previous = null) {
-        if (empty($this->details['boost-version'])) {
+        if (empty($this->details['boost-version']) &&
+            BoostWebsite::array_get($this->details, 'status') != 'removed')
+        {
             $this->details['boost-version'] = isset($previous->details['boost-version']) ?
                 $previous->details['boost-version'] :
                 BoostVersion::unreleased();

@@ -1,0 +1,468 @@
+[article Version 1.67.0
+    [quickbook 1.6]
+    [source-mode c++]
+    [purpose
+        New Libraries:
+        Contract, HOF.
+        Updated Libraries:
+        Asio, Atomic, Beast, Container Hash, Context, Core, Coroutine2,
+        DateTime, DLL, Fiber, Filesystem, Fusion, Locale, Log,
+        Math, Multi-index Containers, Multiprecision,
+        Optional, Phoenix, PolyCollection, Python, Spirit, Stacktrace,
+        Test, TypeIndex, TypeTraits, Unordered, Units, Uuid, Utility, Variant.
+    ]
+    [authors [James, Daniel]]
+    [/ last-revision is used for the final release date]
+    [last-revision ]
+]
+
+[import ext.qbk]
+
+[section Known Issues]
+
+These are patches from library authors which were found too
+late to be fixed in the release. Be careful as they have
+not been through the normal testing process.
+
+* Fix compiling with FreeBSD:
+  * [@/patches/1_67_0/0001-Fiber-Use-pthread_setaffinity_np-on-FreeBSD-as-well.patch]
+  * [@/patches/1_67_0/0002-Wave-Avoid-using-wrong-T_DIVIDE-on-BSDs.patch]
+* Fix Python auto-linking:
+  * [@/patches/1_67_0/0003-Python-Fix-auto-linking-logic-Windows-only.patch]
+
+[endsect]
+
+[section New Libraries]
+
+* [phrase library..[@/libs/contract/ Contract]:]
+  Contract programming for C++. All contract programming features are
+  supported: Subcontracting, class invariants, postconditions (with old and
+  return values), preconditions, customizable actions on assertion failure
+  (e.g., terminate or throw), optional compilation and checking of assertions,
+  etc, from Lorenzo Caminiti.
+
+* [phrase library..[@/libs/hof/ HOF]:]
+  Higher-order functions for C++, from Paul Fultz II.
+
+[endsect]
+
+[section Updated Libraries]
+
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added missing const qualifier to `basic_socket_acceptor::get_option`.
+  * Worked around a parsing error that occurs with some versions of gcc.
+  * Fixed broken code samples in tutorial.
+  * Added new experimental features. (Note that "experimental" features may be changed without notice in subsequent releases.)
+    * Added `experimental::detached` completion token.
+    * Added `experimental::redirect_error` completion token.
+    * Added `experimental::co_spawn` facility for integration with the coroutines technical specification.
+    * Updated timeout examples to use latest features.
+    * Used `asio::steady_timer` rather than `asio::deadline_timer`.
+    * Used `asio::dynamic_buffer` rather than `asio::streambuf`.
+    * Used timed `asio::io_context::run_for()` function for blocking clients.
+    * Added example showing a custom completion token for blocking with timeouts.
+  * Fixed unit tests to compile when `BOOST_ASIO_NO_DEPRECATED` is defined.
+  * Changed socket iostreams to use chrono by default, to fix compatibility with the Networking TS. Define `BOOST_ASIO_USE_BOOST_DATE_TIME_FOR_SOCKET_IOSTREAM` to enable the old Boost.Date_Time interface in `basic_socket_streambuf` and `basic_socket_iostream`.
+  * Updated examples to use chrono rather than Boost.Date_Time.
+  * Fixed an incorrect member function detector in the `is_dynamic_buffer` trait.
+  * Fixed an `async_result` incompatibility with deprecated `handler_type`.
+  * Added a missing move optimisation in the SSL stream implementation.
+  * Fixed incorrect `basic_resolver_results::value_type` typedef.
+  * Fixed a compile error with some OpenSSL versions when `SSL_OP_NO_COMPRESSION` is defined.
+  * Changed `add_certificate_authority` to process multiple certificates in a bundle.
+  * Eliminated deprecation warning with MSVC by using `std::invoke_result` rather than `std::result_of`.
+  * Changed to use `std::string_view` for C++17 or later, and `std::experimental::string_view` for C++14. Define the preprocessor macro `BOOST_ASIO_DISABLE_STD_STRING_VIEW` to force the use of std::experimental::string_view (assuming it is available) when compiling in C++17 mode.
+  * Ensured `DynamicBuffer` template arguments are decayed before using in `enable_if` tests.
+  * Changed documentation to distinguish legacy completion handlers (which are still required to be CopyConstructible) from new MoveConstructible handlers.
+  * Suppressed a discarded return value warning in the buffer debugging support.
+  * Fixed `basic_yield_context` to work with completion signatures containing reference parameters.
+  * Ensured that stackful coroutines launched using `spawn()` correctly store decayed copies of their function and handler arguments.
+  * Fixed some compatibility issues with Android.
+  * Added cross-compilation support to Jamfiles.
+  * Fixed some minor portability issues in examples.
+
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * [*Breaking change:] Changed the result of the `(op)_and_test` operations added in Boost 1.66 to the opposite - the functions now return `true` if the operation result is non-zero. This is consistent with other `test` methods in Boost.Atomic and the C++ standard library. Users can define `BOOST_ATOMIC_DETAIL_HIGHLIGHT_OP_AND_TEST` when compiling their code to emit warnings on every use of the changed functions. This way users can locate the code that needs to be updated. ([github atomic 11])
+  * Update for C++2a. On C++11 compilers that support scoped enums, the `memory_order` enumeration is now scoped and contains constants with shorter names like `acquire`, `release` or `seq_cst` (i.e. users can use `memory_order::acquire` instead of `memory_order_acquire`). The old constants are also provided for backward compatibility. ([@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0439r0.html P0439R0])
+  * Update for C++2a. Added experimental support for atomic operations on floating point types. In addition to general operations, `add`, `sub`, `negate` operations and their `fetch_(op)` and `opaque_(op)` versions are supported. Lock-free property can be tested with the new macros `BOOST_ATOMIC_FLOAT/DOUBLE/LONG_DOUBLE_LOCK_FREE`. The support for floating point types is optional and can be disabled by defining `BOOST_ATOMIC_NO_FLOATING_POINT`. ([@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0020r6.html P0020R6])
+  * Added new experimental operations:
+    * `negate_and_test` and `complement_and_test` which perform negation or bitwise complement and return `true` if the result is not zero.
+    * `add`, `sub`, `negate`, `bitwise_and`, `bitwise_or`, `bitwise_xor`, `bitwise_complement` operations which perform the operation and return its result.
+  * For generic `atomic<T>` specialization, the default constructor is now trivial if `T`'s default constructor is.
+  * The internal implementation of `atomic<T>` has been updated to avoid undefined behavior that stems from signed integer overflows. As required by the C++ standard, the library uses two's complement representation of signed integers internally and accroding rules of overflow. Currently, the library requires the native signed integer types to also use two's complement representation (but no defined overflow semantics).
+  * Improved Clang support. In particular, fixed DCAS not being lock-free and fixed possible incorrect code generated on 32-bit x86.
+  * Improved MinGW support. For gcc versions up to 4.6, fixed compilation of DCAS on x86.
+  * In x86 PIE code, asm blocks now preserve `ebx` value.
+
+* [phrase library..[@/libs/beast/ Beast]:]
+  * This version fixes significant defects in `websocket::stream`
+    which can lead to asserts or undefined behavior. Users are encouraged
+    to update to the latest Boost release.
+  * For a complete list of changes, please view the official
+    [@/libs/beast/doc/html/beast/release_notes.html Release Notes].
+
+* [phrase library..[@/libs/container_hash/ ContainerHash]:]
+  * Extracted from the functional module to break a dependency cycle.
+  * Moved headers to new location to reflect name change, the old include paths
+    will still work.
+  * Added support for `std::string_view`, `std::error_code`, `std::error_condition`,
+    `std::optional`, `std::variant`, `std::monostate` where available.
+  * Added explicit support for `vector<bool>`, so that it will work with
+    libc++ ([ticket 13501]).
+  * More detail in the
+    [@/doc/html/hash/changes.html#hash.changes.boost_1_67_0 library change log].
+
+ * [phrase library..[@/libs/context/ Context]:]
+  * [github context 62]/[github_pr context 64]: fix i386/macho routines to correctly return transfer_t in EAX/EDX
+  * [github context 65]: `__sanitizer_finish_switch_fiber` should be called directly after context switch
+  * [github context 66]: Clang on Windows : error: No best alternative for libs/context/build/asm_sources
+  * [github context 73]: fixing C2492 for execution_context (v1)
+  * known bug: including all.hpp + <context-impl>ucontext/winfib causes error 'forced_unwind: is not a member of boost::context::detail'
+
+* [phrase library..[@/libs/core/ Core]:]
+  * Updated `to_address` and `pointer_traits` to reflect the design adopted for C++2a in
+    [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0653r2.html P0653R2]
+    (Glen Fernandes).
+
+* [phrase library..[@/libs/coroutine2/ Coroutine2]:]
+  * [github coroutine2 13]: Pull coroutine does not rethrow an exception if it is thrown on the first entry
+
+* [phrase library..[@/libs/date_time/ DateTime]:]
+  * Fixed various year 2038 (32-bit) issues
+    ([ticket 2818]) ([ticket 2819]) ([ticket 3487]) ([ticket 4543]) ([ticket 8450]) ([ticket 9158]) ([ticket 9489]) ([ticket 10570]) ([ticket 12609])
+  * Fixed a binary serialization regression introduced in 1.66.0
+    ([github date_time 56]) ([github_pr date_time 58]) ([github_pr date_time 70])
+  * Updated the timezone database file
+    ([ticket 4430]) ([ticket 10087]) ([github_pr date_time 68])
+  * Enhanced `from_iso_string` so it can read output of `to_iso_string` for special values
+    ([ticket 1078]) ([github_pr date_time 69])
+  * Changed maximum supported year from 10000 to 9999 to resolve various issues
+    ([ticket 13159]) ([ticket 12630]) ([github_pr date_time 71])
+  * `boost::date_time::period_parser::delimiter_strings` did nothing
+    ([ticket 11142]) ([github_pr date_time 63])
+  * Ensure special values are not automatically translated to integral types
+    ([ticket 11168]) ([github_pr date_time 64])
+  * `int_adapter::is_signed` should be const
+    ([ticket 12363]) ([github_pr date_time 60])
+  * `boost::date_time::time_input_facet` throws when using `%j` alone
+    ([ticket 12910]) ([github_pr date_time 59])
+  * Time input facet is not able to parse `%e` day
+    ([ticket 13194]) ([github_pr date_time 54])
+  * Improved Github CI build environment for better project metrics and quality
+    ([github_pr date_time 52]) ([github_pr date_time 72])
+  * Fixed various compiler warnings
+    ([ticket 3606]) ([ticket 9882]) ([github_pr date_time 62])
+
+* [phrase library..[@/libs/dll/ DLL]:]
+  * Fixes for calling functions on dirty `GetLastError()` [github dll 16].
+
+* [phrase library..[@/libs/fiber/ Fiber]:]
+  * [github fiber 128]: Assertion "! ctx->ready_is_linked()" when using condition_variable::wait_for
+  * [github fiber 132]: fatal error: 'stdexception' file not found
+  * [github fiber 141]: boost::fibers::async problem
+  * [github fiber 146]: remove unecessary lock of remote-ready-queue spinlock
+  * [github fiber 153]: docu: replace set_ready() by schedule()
+  * [github fiber 154]: Document iterators on channels
+  * [github fiber 155]: this_fiber is wrongly documented as being a member of boost::fibers
+  * [github fiber 156]: Many examples are using their own barrier.hpp
+  * [github fiber 158]: add BOOST_FIBERS_DECL to work_stealing class
+  * [github fiber 162]: remove use-coutner increment for timed wait ops
+  * [github fiber 166]: remove assertion for wait_is_linked() in schedule()
+  * [github fiber 167]: call shared_state::owner_destroyed() only if future was created from
+  * [github fiber 168]: fiber/doc/installing.qbk not not up to date
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Fix static initialization issue that caused a crash if path operations were used before main() ([github_pr filesystem 62], [github_pr filesystem 43], [github_pr filesystem 50], [github_pr filesystem 59])
+
+* [phrase library..[@/libs/fusion/ Fusion]:]
+  * Switch to SFINAE in template parameters on `fusion::map` to fix compile error on newer MSVC 2017. ([github_pr fusion 164])
+  * Fix for compilers not compatible with CWG defect 945 on `fusion::vector`. ([github_pr fusion 166])
+  * Added limits precheck on sequence converter to make error message clearer. ([github_pr fusion 168])
+  * Allow incomplete types in `fusion::tag_of` and `fusion::is_native_fusion_sequence`.
+    Note that this changes no behaviour from previous release, but compliant to TypeTraits's change. ([github_pr fusion 171])
+
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * Improvements:
+    * New map projection and SRS transformation representations (undocumented for now due to potential interface changes).
+    * New densify() algorithm.
+    * No longer using std::iterator (thanks to Daniela Engert).
+    * No longer using allocator directly in the rtree. Replaced with boost::container::allocator_traits (thanks to Daniela Engert).
+    * Default rtree allocator changed to boost::container::new_allocator to still support move semantics emulation in C++03 with boost::container::allocator_traits.
+    * Area strategies interface changed. This is potentially a breaking change.
+    * Radius or Sphere can be passed into spherical strategies.
+    * Added Point-Box and Box-Box spherical and geographic distance() strategies.
+    * Simplify (multi)polygons will discard output rings of 2 points or (for closed polygons) 3 points, but it tries to avoid creating those
+    * Simplify (multi)polygons will omit empty interior rings or polygons from output
+  * Solved issues:
+    * [@https://svn.boost.org/trac10/ticket/13386 13386] Workaround for some gcc compilers
+    * [@https://svn.boost.org/trac10/ticket/13381 13381] Compile error with matrix_transformer in Visual C++ 2015
+    * [@https://svn.boost.org/trac10/ticket/13436 13436] Incorrectness in boost::geometry::model::polygon documentation
+  * Bugfixes:
+    * Add missing strategy resolving in length() algorithm, affecting Variant support.
+    * Simplify (multi)polygons now simplifies closing point
+  * Changes in behavior
+    * Simplify (multi)polygons now usually rotates input rings before simplifying to select a non collinear point on its convex hull. This improves output.
+
+* [phrase library..[@/libs/locale/ Locale]:]
+  * Added support of `unique_ptr` interface in addition to C++2003 `auto_ptr` - in order to support C++2017, now you can use `BOOST_LOCALE_HIDE_AUTO_PTR` definiton to remove `auto_ptr` from the interfaces and prevent deprecated watnings.
+  * Fixed test problem with ICU >60.1
+  * Fix of solaris build
+  * Fixed wired FreeBSD/clang issue on optimized build. Probably compiler workaround
+  * Added workaround for failing MSVC tests due to 932 codepage codecvt issue
+  * Fixed bugs 6851, 12572, 12453
+  * Fixed missing throw in case of failure in `icu/date_time`
+  * Fixed build agains Boost.Thread v4
+  * Fixed Year of week instead of year ICU backend formatting
+  * Fixed formatting test for ICU 56.1 and above
+
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Improved compatibility with C++17: use `allocator_traits` to work with allocators instead of directly accessing its members.
+  * Improved compatibility with gcc 7 and later by updating library ABI namespace definition.
+  * Added documentation for the "Append" config file parameter for "TextFile" sinks. The parameter was supported previously, only the documentation was missing.
+
+* [phrase library..[@/libs/math/index.html Math]:]
+  * Add naive Monte Carlo integration support.
+  * Add Chebyshev interpolation routines.
+
+* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+  * Elements with overloaded `operator&` are now fully accepted (ticket [ticket 13307]).
+    Thanks to Daniel Frey for his updating
+    [@/libs/utility/operators.htm#deref Boost.Operators] to help fix this issue.
+  * Avoided usage of `std::allocator` members deprecated in C++17.
+    Contributed by Daniela Engert.
+  * Maintenance fixes.
+  
+* [phrase library..[@/libs/multiprecision/index.html Multiprecision]:]
+  * [*Breaking Change:] When converting a multiprecision integer to a narrower type, if the value is too large (or negative) to
+    fit in the smaller type, then the result is either the maximum (or minimum) value of the target type.  This was always the intended
+    behaviour, but was somewhat haphazardly enforced before.  If you really do want just the low order N bits of a value, then you will
+    need to mask these out prior to the case, for example: `static_cast<unsigned>(~static_cast<unsigned>(0) & my_value)`.  Note that
+    technically (to avoid undefined behaviour) you should do the same thing with built in integer types too.
+    See [@https://svn.boost.org/trac/boost/ticket/13109 #13109].
+  * Fix bug in conversion of decimal to rational types (zero needs special handling), see [@https://svn.boost.org/trac/boost/ticket/13148 #13148].
+  * Fix conversion from cpp_bin_float to a wider built in integer type, see [@https://svn.boost.org/trac/boost/ticket/13301 #13301].
+  * Improve performance heurists used in cpp_bin_float exp function.
+  * Fix bug in floor/ceil and cpp_bin_float when the exponent type is wider than an int, see [@https://svn.boost.org/trac/boost/ticket/13264 #13264].
+  * Disable explicit conversion operator when the target type is already constructible from this type, see  [@https://github.com/boostorg/multiprecision/issues/30 #30].
+  * Fix support for changes new to MPIR-3.0, see [@https://svn.boost.org/trac/boost/ticket/13124 #13124].
+
+* [phrase library..[@/libs/optional/index.html Optional]:]
+  * Fixed issue [github optional 46]
+  * Fixed `-Wzero-as-null-pointer-constant` warnings.
+
+* [phrase library..[@/libs/phoenix/ Phoenix]:]
+  * Correct documentation and example code. ([ticket 8187], [github_pr phoenix 56], [github_pr phoenix 57])
+  * Fixed bug with initializing phoenix lazy from array types in C++11. ([ticket 12733], [github_pr phoenix 58], [github_pr phoenix 61])
+  * Use proto subscript and assignment overload operators buildins to fix compile error with some lambda experssions on recent MSVC.
+    ([github phoenix 62], [github_pr phoenix 64], [github_pr phoenix 66], [github_pr phoenix 67])
+  * Remove use of deprecated `std::iteratror`. Thanks to Daniela Engert. ([github_pr phoenix 59])
+
+* [phrase library..[@/libs/poly_collection/ PolyCollection]:]
+  * Maintenance fixes.
+
+* [phrase library..[@/libs/python/ Python]:]
+  * The library name now includes the version suffix of the Python version used to compile it.
+    For example, a variant compiled with Python 2.7 will produce library names
+    `boost_python27` and `boost_numpy27`, etc..
+    Combined with a related fix in Boost.Build, this means that it is now possible to build variants for multiple
+    Python versions in a single build process.
+
+* [phrase library..[@/libs/spirit/ Spirit]:]
+  * Spirit.X3:
+    * [*Breaking change:] Removed `with_context` ([github spirit 239])
+    * Added noexcept to `x3::variant` and `forward_ast` ([github spirit 241])
+    * CR+LF lines wrongly counted in `error_handler::position()` ([github spirit 248])
+    * Fixed `unused_type` attribute case in `parse_into_container` ([github spirit 266])
+    * Fixed parsing into associative containers ([github spirit 289])
+    * Fixed overflow problem in `uint_parser<signed T>` ([github spirit 297])
+    * Added VS2015 Update 3 support by using workarounds ([github spirit 308])
+    * Fixed include guard names collision with Qi ([github spirit 313])
+    * Added parsing into range ([github spirit 316]) ([ticket 12928])
+    * Changed iterator concept static assert from `ForwardIterator` to `ReadableIteratorConcept` && `ForwardTraversalConcept` ([github spirit 320])
+    * Reenabled `fusion::map` support ([github spirit 330])
+    * Fixed `string("...")` and `attr("...")` to single item sequence ([github spirit 337])
+    * Dereference a single item view instead of unwrapping sequence ([github spirit 340])
+    * Prevent `parse_nan` from dereferencing out of range iterator ([github spirit 351])
+    * Use traits to test if container is empty ([github spirit 355])
+
+  * Spirit V2
+    * Fixed keyword directives compilation on C++11 ([github spirit 256]) ([ticket 11493])
+    * Fixed subrules compilation ([github spirit 279]) ([github spirit 259])
+    * Fixed subrules use after scope bug ([github spirit 284]) ([ticket 5270])
+    * Fixed undefined behavior in sequential or operator. Underlying parsers order of execution was dependent on compiler ([github spirit 310])
+    * Spirit was accidentally relaying on `types` typedef of `boost::optional`. The typedef was removed in the new optional implementation ([github spirit 271]) ([ticket 12349])
+    * Fixed problems with `BOOST_SPIRIT_NO_PREDEFINED_TERMINALS` (`attr_cast`, `confix`, `distinct`, `keywords`, and `flush_multi_pass`) ([github spirit 314]) ([ticket 13311])
+    * Added missing copy assignment operator to `hold_any` ([github spirit 361]) ([ticket 8268])
+
+  * Spirit.Qi:
+    * Fixed alternate operator ([github spirit 201]) ([github spirit 271]) ([ticket 12349])
+    * Fixed signed integer overflow in real parser ([github spirit 245])
+    * Fixed overflow problem in `uint_parser<signed T>` ([github spirit 297])
+    * Fixed `get_current_line`, `get_line_start`, and added `get_line_end` ([github spirit 304])
+    * Permutations parser were always initializing optionals ([github spirit 319]) ([ticket 12473])
+    * Changed iterator concept static assert from `ForwardIterator` to `ReadableIteratorConcept` && `ForwardTraversalConcept` ([github spirit 320])
+    * Added assertations to real parsers to ensure that the `parse_frac_n` from user defined real policy does not return negative values and also to prevent static analyzers false-positives ([github spirit 358])
+
+  * Spirit.Karma:
+    * Fixed alternate operator ([github spirit 271])
+    * Fixed `no_buffering_policy` missing copy constructor ([github spirit 261])
+    * The `ostream_iterator` was inheriting `std::iterator` which is deprecated in C++17 ([github spirit 345])
+
+  * Spirit.Lex:
+    * Store id as promoted type to allow out-of-enum values ([github spirit 247])
+    * Fixed C2001 'newline in constant' warning in generated lexers ([github spirit 324]) ([ticket 11540])
+
+  * Spirit.Classic:
+    * Fixed `remove_reference` usage without a namespace in Phoenix ([github spirit 274])
+    * Fixed `std::complex` usage without the include ([github spirit 273])
+    * Fixed compilation of `match<T &>` ([github spirit 275])
+    * Fixed compilation with `BOOST_DISABLE_THREADS` defined ([github spirit 323]) ([ticket 12639])
+    * Increment scanner through iterator policy ([github spirit 336]) ([ticket 7371])
+    * Removed deprecated in C++17 `std::iterator` usage ([github spirit 345])
+
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * Async safe dumping into files on Windows OS was causing hangs on some platforms and now is disabled [github stacktrace 33]. Users are encouraged to update to the latest Boost release.
+  * [@/libs/container_hash/ ContainerHash] library is now used to reduce dependencies.
+  * Minor fixes (including [github stacktrace 31], [github stacktrace 38], [github stacktrace 39], [github stacktrace 40], [github stacktrace 42]).
+
+* [phrase library..[@/libs/test/ Test]:]
+  * Boost.test v3.7 see the
+    [@/doc/libs/1_67_0/libs/test/doc/html/boost_test/change_log.html Changes log]
+    for more details.
+  * Breaking changes
+    * Adding test cases with the same name to the same test suite is now reported as an error. See the
+      changes log for more details.
+  * New feature:
+    * Colour output on by default and available on Windows,
+    * Improved and clearer command line help
+    * `BOOST_AUTO_TEST_CASE_TEMPLATE` now accepts a sequence of types in an `std::tuple`
+  * Bug fixes and pull requests:
+    * Trac tickets: [ticket 12092], [ticket 12596], [ticket 12597], [ticket 12969], [ticket 13058], [ticket 13149], [ticket 13170]
+    * Trac tickets: [ticket 13181], [ticket 13371], [ticket 13387], [ticket 13398], [ticket 13407], [ticket 13435], [ticket 13443]
+    * Pull requests: [github test 112], [github test 118], [github test 118], [github test 121], [github test 122], [github test 125], [github test 127]
+
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * [@/libs/container_hash/ ContainerHash] library is now used to reduce dependencies.
+  * Minor fixes (including [github type_index 17])
+
+* [phrase library..[@/libs/type_traits/ TypeTraits]:]
+  * Added new traits `detected`, `detected_or`, `is_detected`, `is_detected_convertible`, `is_detected_exact`, `is_complete`.
+  * Added greatly improved code for detecting binary operators.
+  * Add assertions for completeness to traits which require complete types as arguments: this prevents various traits from giving eroneous results from incomplete types.
+  * Fix minor issue with mpl compatibility, see [@https://svn.boost.org/trac/boost/ticket/12212 #12212].
+  * Add macro to indicate when `is_constructible` is fully implemented, see [@https://svn.boost.org/trac/boost/ticket/12003 #12003].
+  * Update `is_function` and `is_member_function_pointer` to work correctly with C++17 noexcept specifications.
+  * Add workaround for `is_default_constructible` and `std::pair`.
+  * Added fallback for `is_nothrow_swappable` on pre-C++11 compilers.
+
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * [*Breaking change:]
+    `<boost/utility.hpp>` header no longer includes `boost::next` and `boost::prior`
+    as they have been moved to the iterator module. Instead include `<boost/next_prior.hpp>`.
+    Other uses of `<boost/utility.hpp>` are discouraged, it's better to use the header for the
+    specific functionality instead.
+
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * Template deduction guides.
+  * Standard conforming `noexcept` specifications for `swap`, `operator=`
+    and node handles.
+  * Add `element_type` to iterators, so that `std::pointer_traits`
+    will work.
+  * Support `std::piecewise_construct` on recent Visual C++ and Dinkumware libraries.
+  * Use `std::iterator_traits` rather than the boost iterator traits
+    in order to remove dependency on Boost.Iterator.
+  * Iterators no longer inherit from `std::iterator`, as it's deprecated
+    ([github_pr unordered 7]).
+  * More detail in the
+    [@/doc/html/unordered/changes.html#unordered.changes.boost_1_67_0 library change log].
+
+* [phrase library..[@/libs/units/ Units]:]
+  * Fix sqrt for scaled units [ticket 10270] [github units 27]
+  * Add constexpr support [github units 22]
+  * minor documentation fixes
+
+* [phrase library..[@/libs/uuid/ Uuid]:]
+  * [*Breaking change:] random_generator is no longer copyable ([github uuid 61])
+  * Optimized random_generator to use OS-provided entropy directly ([github_pr uuid 53])
+  * Provide `random_generator_mt19937` for bulk UUID generation
+  * Handle entropy acquisition errors instead of ignoring them
+  * Support for Windows UWP ([github uuid 24])
+  * Support for CloudABI
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Substitute function arguments on compilers with variadic templates support and do not generate substitution metafunctions using preprocessor [github variant 42], [github variant 46]. Many thanks to Nikita Kniazev for providing an initial fix.
+  * Perfect forwarding for passing visitor in apply_visitor [github variant 40], [ticket 13288]. Many thanks to Paweł Dac!
+  * Minor fixes (including [github variant 41], [github variant 44])
+
+[endsect]
+
+[section Compilers Tested]
+
+Boost's primary test compilers are:
+
+* Linux:
+  * Clang: 3.0, 4.0.1, 5.0.1
+  * Clang, C++0x: 3.0
+  * Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 5.0.1
+  * Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 4.0.1, 5.0.1
+  * Clang, C++17: 5.0.1
+  * GCC: 4.4.7, 4.5.3, 4.6.3, 5.4.0, 7.2.0
+  * GCC, C++0x: 4.4.7
+  * GCC, C++11: 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0, 7.2.0
+  * GCC, C++14: 5.4.0, 5.4.1, 6.3.0, 6.4.0, 7.1.0, 7.2.0, 7.3.0
+  * GCC, C++17: 7.2.0
+  * Intel, C++14: 18.0
+* OS X:
+  * Clang: 9.0.0
+  * Clang, C++11: 9.0.0
+  * Clang, C++14: 9.0.0
+  * Clang, C++1z: 9.0.0
+* Windows:
+  * GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+  * GCC, C++0x: 4.6.4
+  * GCC, C++11: 4.7.3, 4.8.1, 4.9.3
+  * GCC, C++14: 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0, 7.1.0
+  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+
+Boost's additional test compilers include:
+
+* Linux:
+  * Clang: 3.0, 3.8.1, 4.0.1, 5.0.1
+  * Clang, C++0x: 3.0
+  * Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 5.0.1
+  * Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 4.0.1, 5.0.1
+  * Clang, C++17: 5.0.1
+  * GCC: 4.4.7, 4.5.3, 4.6.3, 4.7.2, 4.9.2, 5.4.0, 7.2.0
+  * GCC, C++0x: 4.4.7
+  * GCC, C++11: 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0, 7.2.0
+  * GCC, C++14: 5.4.0, 5.4.1, 6.3.0, 6.4.0, 7.1.0, 7.2.0, 7.3.0
+  * GCC, C++17: 7.2.0
+  * Intel, C++14: 18.0
+* OS X:
+  * Clang: 9.0.0
+  * Clang, C++11: 9.0.0
+  * Clang, C++14: 9.0.0
+  * Clang, C++1z: 9.0.0
+* Windows:
+  * GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+  * GCC, C++0x: 4.6.4
+  * GCC, C++11: 4.7.3, 4.8.1, 4.9.3
+  * GCC, C++14: 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0, 7.1.0
+  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+* FreeBSD:
+  * Clang: 4.0.0
+  * Clang, C++11: 4.0.0
+  * Clang, C++14: 4.0.0
+  * Clang, C++1z: 4.0.0
+
+[endsect]
+
+[section Acknowledgements]
+
+[@/users/people/beman_dawes.html Beman Dawes],
+Daniel James, Vladimir Prus and Marshall Clow
+managed this release.
+
+[endsect]

@@ -2,7 +2,7 @@
 /*
   Copyright 2005-2008 Redshift Software, Inc.
   Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+  (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
@@ -118,6 +118,15 @@ class BoostDocumentation
             $file = "{$this->archive_dir}/{$this->file_doc_dir}/{$this->path}";
         }
 
+        if (!is_readable($file)) {
+            $tmp_file = "{$this->fix_dir}/fallback/{$this->path}";
+            if (is_readable($tmp_file)) {
+                $file = $tmp_file;
+            } else {
+                BoostWeb::throw_error_404($file, 'Unable to find file.');
+            }
+        }
+
         // Only use a permanent redirect for releases (beta or full).
 
         $redirect_status_code = $this->version &&
@@ -131,15 +140,12 @@ class BoostDocumentation
         else {
             $compare_version = BoostVersion::from($this->version)->
                 compare(BoostVersion::current());
-            $expires = $compare_version === -1 ? "+1 year" :
-                ($compare_version === 0 ? "+1 week" : "+1 day");
+            $expires = $compare_version === -1 ? "+1 month" :
+                ($compare_version === 0 ? "+1 week" : "+5 minutes");
         }
 
         // Last modified date
 
-        if (!is_readable($file)) {
-            BoostWeb::throw_error_404($file, 'Unable to find file.');
-        }
 
         $last_modified = max(
             strtotime(BOOST_DOCS_MODIFIED_DATE),        // last manual documenation update
@@ -167,7 +173,7 @@ class BoostDocumentation
                 $this->path = $this->path.$found_file;
             }
             else {
-                if (!BoostWeb::http_headers('text/html', $last_modified, $expires))
+                if (!BoostWeb::http_headers('text/html', null, $expires))
                     return;
 
                 $display_dir = new BoostDisplayDir($this, $file);
@@ -229,7 +235,7 @@ class BoostDocumentation
 
         // Output raw files.
 
-        if($extractor == 'raw') {
+        if($extractor == 'raw' || BoostWebsite::array_get($_GET, 'format') == 'raw') {
             if (!BoostWeb::http_headers($type, $last_modified, $expires))
                 return;
 
@@ -246,7 +252,7 @@ class BoostDocumentation
 
             if($type == 'text/html') {
                 if($redirect = detect_redirect($content)) {
-                    BoostWeb::http_headers('text/html', null, "+1 day");
+                    BoostWeb::http_headers('text/html', null, "+5 minutes");
                     header("Location: $redirect", TRUE, $redirect_status_code);
                     if($_SERVER['REQUEST_METHOD'] != 'HEAD') echo $content;
                     return;
@@ -304,8 +310,10 @@ function detect_redirect($content)
 
 function latest_link($filter_data)
 {
+    $result = '';
+
     if (!isset($filter_data->version)) {
-        return;
+        return $result;
     }
 
     $version = BoostVersion::from($filter_data->version);
@@ -316,50 +324,58 @@ function latest_link($filter_data)
     case 0:
         break;
     case 1:
-        echo '<div class="boost-common-header-notice">';
+        $result .= '<div class="boost-common-header-notice">';
         if (!$filter_data->path ||
             ($filter_data->archive_dir && realpath("{$filter_data->archive_dir}/{$current->dir()}/{$filter_data->path}") !== false) ||
-            ($filter_data->fix_dir && realpath("{$filter_data->fix_dir}/{$current->dir()}/{$filter_data->path}") !== false))
+            ($filter_data->fix_dir && realpath("{$filter_data->fix_dir}/{$current->dir()}/{$filter_data->path}") !== false) ||
+            ($filter_data->fix_dir && realpath("{$filter_data->fix_dir}/fallback/{$filter_data->path}") !== false))
         {
-            echo '<a class="boost-common-header-inner" href="/doc/libs/release/',$filter_data->path,'">',
+            $result .= '<a class="boost-common-header-inner" href="/doc/libs/release/'.$filter_data->path.'">'.
                 "This is the documentation for an old version of Boost.
-                Click here to view this page for the latest version.",
+                Click here to view this page for the latest version.".
                 '</a>';
         }
         else
         {
-            echo '<a class="boost-common-header-inner" href="/doc/libs/">',
+            $result .= '<a class="boost-common-header-inner" href="/doc/libs/">'.
                 "This is the documentation for an old version of boost.
-                Click here for the latest Boost documentation.",
+                Click here for the latest Boost documentation.".
                 '</a>';
         }
-        echo '</div>', "\n";
+        $result .= '</div>'. "\n";
         break;
     case -1:
         if ($version->release_stage() === BoostVersion::release_stage_development) {
             $hash_path = realpath("{$filter_data->documentation_dir()}/.bintray-version");
             $hash = $hash_path ? trim(file_get_contents($hash_path)) : null;
-                echo '<div class="boost-common-header-notice">';
-                echo '<span class="boost-common-header-inner">';
-                echo "This is the documentation for a snapshot of the {$version} branch";
-                if ($hash) {
-                    echo ", built from commit <a href='";
-                    echo "https://github.com/boostorg/boost/commit/{$hash}";
-                    echo "'>";
-                    echo substr($hash, 0, 10);
-                    echo "</a>";
-                }
-                echo ".";
-                echo '</span>';
-                echo '</div>', "\n";
+            if (is_string($hash) && $hash[0] == '{') {
+                $hash = json_decode($hash);
+                $hash = $hash->hash;
+            }
+
+            $result .= '<div class="boost-common-header-notice">';
+            $result .= '<span class="boost-common-header-inner">';
+            $result .= "This is the documentation for a snapshot of the {$version} branch";
+            if ($hash) {
+                $result .= ", built from commit <a href='";
+                $result .= "https://github.com/boostorg/boost/commit/{$hash}";
+                $result .= "'>";
+                $result .= substr($hash, 0, 10);
+                $result .= "</a>";
+            }
+            $result .= ".";
+            $result .= '</span>';
+            $result .= '</div>'. "\n";
         }
         else {
-            echo '<div class="boost-common-header-notice">';
-            echo '<span class="boost-common-header-inner">';
-            echo 'This is the documentation for a development version of boost.';
-            echo '</span>';
-            echo '</div>', "\n";
+            $result .= '<div class="boost-common-header-notice">';
+            $result .= '<span class="boost-common-header-inner">';
+            $result .= 'This is the documentation for a development version of boost.';
+            $result .= '</span>';
+            $result .= '</div>'. "\n";
         }
         break;
     }
+
+    return $result;
 }

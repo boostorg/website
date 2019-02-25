@@ -2,7 +2,7 @@
 /*
   Copyright 2005-2008 Redshift Software, Inc.
   Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+  (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 */
 
 /*
@@ -90,7 +90,7 @@ class BoostFilter
 
     function prepare_html($text, $full = false) {
         $text = preg_replace(
-            '@href="?http://(?:www.)?boost.org/?([^"\s>]*)"?@i',
+            '@href="?https?://(?:www.)?boost.org/?([^"\s>]*)"?@i',
             'href="/${1}"',
             $text );
 
@@ -151,7 +151,8 @@ class BoostFilter
             $title = "{$this->title} - " . BoostVersion::from($this->data->version);
         }
 
-        $head = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
+        $head = "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\" />\n";
+        $head .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
 
         if (!empty($this->noindex))
             $head .= "<meta name=\"robots\" content=\"noindex\">\n";

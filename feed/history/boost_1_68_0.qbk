@@ -1,0 +1,317 @@
+[article Version 1.68.0
+    [quickbook 1.6]
+    [source-mode c++]
+    [purpose
+        New Libraries: YAP.
+        Updated Libraries: Beast, Context, Coroutine2, Fiber, Fusion,
+            Geometry, GIL, Graph, Lexical Cast, Log, Math, Multiprecision,
+            Optional, Predef, Program Options, Python, Rational, System,
+            Signals, Spirit, Stacktrace, Test, TypeIndex, Uuid.
+    ]
+    [authors [Dawes, Beman]]
+    [last-revision Wed, 9 Aug 2018 03:46:00 -0700]
+]
+
+[import ext.qbk]
+
+[section Notes for Windows users]
+
+Boost.WinAPI has been updated to target Windows 7 by default, where possible. In previous releases
+Windows Vista was the default.
+
+Boost.WinAPI is used internally as the Windows SDK abstraction layer in a number
+of Boost libraries, including Boost.Beast, Boost.Chrono, Boost.DateTime, Boost.Dll, Boost.Log,
+Boost.Process, Boost.Stacktrace, Boost.System, Boost.Thread and Boost.UUID. To select the target
+Windows version define `BOOST_USE_WINAPI_VERSION` to the numeric version similar to `_WIN32_WINNT`
+while compiling Boost and user's code. For example:
+
+[pre
+    b2 release define=BOOST_USE_WINAPI_VERSION=0x0501 stage
+]
+
+The list of Windows API version numbers can be seen on
+[@https://msdn.microsoft.com/en-us/library/6sehtctf.aspx this] page.
+
+[endsect]
+
+[section New Libraries]
+
+* [phrase library..[@/libs/yap/ YAP]:] An expression template library
+  for C++14 and later, from Zach Laine.
+
+[/ Example:
+* [phrase library..[@/libs/accumulators/ Accumulators]:] Framework for
+  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
+]
+
+[endsect]
+
+[section Updated Libraries]
+
+* [phrase library..[@/libs/beast/ Beast]:]
+  * This version fixes a missing executor work guard in all composed operations
+    used in the implementation. Users who are experiencing crashes related to
+    asynchronous completion handlers are encouraged to upgrade.
+  * For a complete list of changes, please view the official
+    [@/libs/beast/doc/html/beast/release_notes.html Release Notes].
+
+* [phrase library..[@/libs/context/ Context]:]
+    * [github context 78]: Linker error with `context-impl=ucontext`: multiple definition of `boost::context::detail::current_rec`
+
+* [phrase library..[@/libs/coroutine2/ Coroutine2]:]
+    * [github coroutine2 14]: crash while stack unwinding
+    * [github coroutine2 18]: some guidance on why to use coroutine2
+    * [github coroutine2 20]: failes to compile test in due to the error C2039
+    * [github coroutine2 22]: undefined behaviour documentation
+
+* [phrase library..[@/libs/fiber/ Fiber]:]
+    * [github fiber 170]: buffered_channel::try_push has incorrect documentation
+    * [github fiber 172: WIN64]: 'invalid conversion from 'HANDLE' to 'std::thread::native_handle_type' errors for builds using mingw-w64
+    * [github fiber 175]: throw exception "Operation not permitted" 
+    * NUMA support moved to extra library (fiber-numa); enabled via property numa (numa=on)
+
+* [phrase library..[@/libs/fusion/ Fusion]:]
+  * Added a workaround for ambiguous call of `fusion::deque` constructor on GCC 4.4/c++0x
+    ([github_pr fusion 178], [@https://github.com/boostorg/fusion/pull/178/commits/9de32721749b635ff3e04e690da89cf06602c122 commit]).
+  * Fixed a bug with C-style array ([github_pr fusion 177]).
+  * Fixed a `fusion::for_each` signature to take functor by value ([ticket 4427]).
+    * This may break existing code with non-copyable (non-movable) functor, but the implementation
+      wasn't correct for a long time; the documantation was correct from the first. So, please
+      make sure your usage.
+  * Fixed unintentional MPL placeholder substitution bug on `fusion::transform` ([ticket 5490]).
+  * Moved description, how to conform Fusion sequence as MPL sequence, to mpl section ([ticket 4029]).
+  * Added notes regarding IO facility for adapted type ([ticket 6091]).
+
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * Improvements
+    * [@https://github.com/boostorg/geometry/pull/469 469] Horizontal grid shift (nadgrids) in SRS transformations (undocumented for now due to potential interface changes).
+    * [@https://github.com/boostorg/geometry/pull/478 478] Box-Segment distance for spherical and geographic coordinate systems.
+    * [@https://github.com/boostorg/geometry/pull/487 487] Missing combinations of geometries in distance for spherical and geographic cs
+    * [@https://github.com/boostorg/geometry/pull/489 489] Additional direct geodesic problem formulas for internal use 
+  * Solved issues
+    * [@https://github.com/boostorg/geometry/issues/470 470] Assertion failure with short spherical and geographic segments.
+    * [@https://github.com/boostorg/geometry/issues/471 471] Invalid envelope of spherical polygon
+    * [@https://github.com/boostorg/geometry/issues/498 498] Unexpected results with expand() and make_inverse() for spherical and geographic CS
+    * [@https://github.com/boostorg/geometry/issues/504 504] Unused parameter warnings.
+  * Bugfixes
+    * [@https://github.com/boostorg/geometry/pull/488 488] Handle non-true-references in closing_iterator and ever_circling_range_iterator
+    * [@https://github.com/boostorg/geometry/pull/495 495] VxWorks 7 cross-compilation issue.
+
+* [phrase library..[@/libs/gil/ GIL]:]
+  * The I/O extensions have been entirely rewritten.
+  * The library now requires a C++11-compliant compiler.
+  * Documentation has been reformatted and updated.
+
+* [phrase library..[@/libs/graph/ Graph]:]
+  * Conditionally replace deprecated/removed C++98 `std::bind1st` by
+    `std::bind`, `std::auto_ptr` by `std::unique_ptr`, and
+    `std::random_shuffle` by `std::shuffle`.  ([github_pr graph 89])
+  * Fix compiler error with release builds on VS2015 ([github_pr graph 84])
+  * Fix the Stanford GraphBase examples ([github_pr graph 87])
+  * Fix friend declarations for iterator_core_access ([github_pr graph 103])
+  * Add missing `<boost/iterator.hpp>` include ([github_pr graph 104])
+  * Avoid an unused variable warning ([github_pr graph 90])
+  * Fix some typos in documentation
+    ([github_pr graph 88], [github_pr graph 98], [github_pr graph 102])
+  * Fix some issues in tests and examples
+    ([github_pr graph 85], [github_pr graph 105])
+
+* [phrase library..[@/libs/lexical_cast/ Lexical Cast]:]
+  * Fixes for clang-tidy warnings [ticket 12092]
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Improved support for VxWorks. ([github_pr log 39])
+  * Save and restore `ebx` register on x86 PIE targets in the `dump` stream manipulator implementation.
+    
+* [phrase library..[@/libs/math/ Math]:]
+  * Support for arbitrary precision complex valued quadrature and hence contour integration
+  * Improve performance of polynomial addition
+  * Continue to improve numerical integration routines, and in particular add support for contour integrals.
+  * Improve accuracy of erfc function's rational approximations.
+
+* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+  * Containers of moveable but non-copyable elements can now be serialized
+    (ticket [ticket 13478]). Thanks to S'''&#233;'''bastien Paris for the report.
+  * `multi_index_container`'s default constructor is no longer `explicit`
+    (ticket [ticket 13518]). 
+
+* [phrase library..[@/libs/multiprecision Multiprecision]:]
+  * Support added for complex multiprecision numbers.
+  * Changed conversion to unsigned integer types to be truncating to match standard defined behaviour.
+  * Correct bug in MPFR string formatting.
+  * Fix undefined behaviour in cpp_dec_float conversion from long long.
+  * Add support for Eigen interoperability.
+  * float128.hpp: Fix Intel on Windows build.
+  * Fix type used in temporaries when expanding expression templates containing mixed expressions.
+  * Fix infinite loop in gmp_float to fixed-point string conversion.
+  * Update the expression templates to issue static_asserts with better error messages when you try and do something unsupported.
+  * Fix bug in cpp_int where incrementing to zero doesn't set the sign correctly.
+  * Remove erroneous use of std::move, and rely on NVRO instead.
+  * Fix up support for changes to MPIR-3.0.
+  * Fix various conversion errors in cpp_bin_float when the exponent type is a `long long`, or else we're converting to an integer that is wider than we are.
+  * Fix compatibility issue with GCC-8 caused by the introduction of `std::byte`.
+
+* [phrase library..[@/libs/optional/ Optional]:]
+  * Added member function `has_value()` for compatibility with `std::optional` ([@https://github.com/boostorg/optional/issues/52 issue #52]).
+  * Added member function `map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> U`.
+  * Added member function `flat_map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> optonal<U>`.
+  
+* [phrase library..[@/libs/predef/ Predef]:]
+  * Add support for __ARM_ARCH macro. (from Tim Blechmann)
+  * Add detection for PTX architecture. (from Benjamin Worpitz)
+  * Add nvcc compiler detection. (from Benjamin Worpitz)
+  * Add support for detecting CUDA. (from Benjamin Worpitz)
+  * Remove reference to obsolete BOOST_ARCH_AMD64. (from Peter Kolbus)
+
+* [phrase library..[@/libs/program_options/ Program Options]:]
+  * Support for multiple long names for an option, thanks to Eyal Rozenberg
+    ([@https://github.com/boostorg/program_options/pull/53 PR#53])
+    
+* [phrase library..[@/libs/python/ Python]:]
+  * Bug fixes to correct autolink support (Windows) ([github python 193])
+
+* [phrase library..[@/libs/rational/ Rational]:]
+  * Fixed undefined behavior in normalize() ([github_pr rational 19]).
+
+* [phrase library..[@/libs/system/ System]:]
+  * Add constexpr to error_code and error_condition members under C++14 and above ([github_pr system 23]).
+
+* [phrase library..[@/libs/signals/ Signals]:]
+  * [*Removal Notice:] Boost.Signals will be removed in the next release.
+    Boost.Signals was deprecated in version 1.54.0.  Transition to Boost.Signals2
+    now to avoid disruption.
+
+* [phrase library..[@/libs/spirit/ Spirit]:]
+  * Spirit.X3:
+    * Small list parser optimization ([github_pr spirit 368]).
+    * Pass container attributes through sequence parser or unary ending down
+      to a sequence parser ([github_pr spirit 370] [ticket 12085]).
+    * More fine grained sequence attribute check message ([github_pr spirit 371]).
+    * Removed redundant check in `skip_over` ([github_pr spirit 373]).
+    * Workaround constexpr in noexcept VS2015 bug in entire `x3::variant` ([github_pr spirit 379]).
+    * Fixed calc4b example compilation ([github_pr spirit 384]).
+    * Minor code improvements ([github_pr spirit 374]).
+
+  * Spirit.Qi:
+    * Fixed ADT support by permutation and sequence_or operator ([github_pr spirit 376]).
+    * Specialize iterator_source for random access ([github_pr spirit 383]).
+    * Removed redundant check in `skip_over` ([github_pr spirit 373]).
+
+  * Spirit.Karma:
+    * Fixed UB in `get_absolute_value` function ([github_pr spirit 246]).
+    * Fixed use after scope bug if ADT getter returns by value ([github_pr spirit 375] [ticket 6126]).
+
+  * Spirit.Classic:
+    * Fixed a regression introduced in [github_pr spirit 336] ([github_pr spirit 386]).
+    * Minor code improvements ([github_pr spirit 367]).
+
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * Fixed compilation on Solaris and other platforms that do qualify address as const in `dladdr` function (github 54).
+  * Dropped dependency on Boost.LexicalCast.
+
+* [phrase library..[@/libs/test/ Test]:]
+  * Boost.test v3.8 see the
+    [@libs/test/doc/html/boost_test/change_log.html Changes log]
+    for more details.
+  * Breaking changes
+    * The `master_test_suite_t` object is no more copyable
+  * New feature:
+    * Dataset test case can now use command line parameters
+  * Bug fixes and pull requests:
+    * Trac tickets: [ticket 12095], [ticket 12953], [ticket 13504], [ticket 13525], [ticket 13528]
+    * Pull requests: [github_pr test 143], [github_pr test 145]
+
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * Dropped dependency on Boost.MPL.
+
+* [phrase library..[@/libs/uuid/ Uuid]:]
+  * [*Breaking change:] sha1 detail namespace header redirection
+    for backwards compatibility was removed ([github_pr uuid 69]).
+  * Added support for std::hash ([github_pr uuid 67]).
+  * Added support for move semantics on random generators ([github_pr uuid 74]).
+  * Properly handle EINTR when acquiring entropy ([github_pr uuid 74]).
+  * Use getrandom(2) instead of getentropy(3) on linux ([github_pr uuid 75]).
+
+[/ Example:
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  * Added anonymous shared memory for UNIX systems.
+  * `shared_ptr` is movable and supports aliasing ([ticket 1234]).
+]
+
+[endsect]
+
+[section Compilers Tested]
+
+Boost's primary test compilers are:
+
+* Linux:
+  * Clang: 3.0, 4.0.1, 6.0.1
+  * Clang, C++0x: 3.0
+  * Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 6.0.1
+  * Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 4.0.1, 5.0.2, 6.0.1
+  * Clang, C++17: 5.0.2, 6.0.1
+  * GCC: 4.4.7, 4.5.3, 4.6.3, 5.4.0, 8.0.1
+  * GCC, C++0x: 4.4.7
+  * GCC, C++11: 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0, 8.0.1
+  * GCC, C++14: 5.4.0, 5.5.0, 6.4.0, 7.1.0, 7.3.0, 8.0.1
+  * GCC, C++17: 7.3.0, 8.0.1
+  * Intel, C++14: 18.0
+* OS X:
+  * Apple Clang: 9.0.0, 9.1.0
+  * Apple Clang, C++11: 9.0.0, 9.1.0
+  * Apple Clang, C++14: 9.0.0, 9.1.0
+  * Apple Clang, C++17: 9.1.0
+  * Apple Clang, C++1z: 9.0.0
+* Windows:
+  * GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+  * GCC, C++0x: 4.6.4
+  * GCC, C++11: 4.7.3, 4.8.1, 4.9.3
+  * GCC, C++14: 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0
+  * GCC, C++17: 7.1.0, 7.2.0, 7.3.0
+  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+* FreeBSD:
+  * Clang: 4.0.0
+  * Clang, C++11: 4.0.0
+  * Clang, C++14: 4.0.0
+  * Clang, C++1z: 4.0.0
+
+Boost's additional test compilers include:
+
+* Linux:
+  * Clang: 3.0, 3.8.1, 3.9.1, 4.0.1, 5.0.2, 6.0.1
+  * Clang, C++0x: 3.0
+  * Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 6.0.1
+  * Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 4.0.1, 5.0.2, 6.0.1, 7.0.0
+  * Clang, C++17: 5.0.2, 6.0.1
+  * GCC: 4.4.7, 4.5.3, 4.6.3, 4.9.4, 5.4.0, 5.5.0, 8.0.1
+  * GCC, C++0x: 4.4.7
+  * GCC, C++11: 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0, 8.0.1
+  * GCC, C++14: 5.4.0, 5.5.0, 6.3.0, 6.4.0, 7.1.0, 7.3.0, 8.0.1, 8.1.0
+  * GCC, C++17: 7.3.0, 8.0.1
+  * Intel, C++14: 18.0
+* OS X:
+  * Apple Clang: 9.0.0, 9.1.0
+  * Apple Clang, C++11: 9.0.0, 9.1.0
+  * Apple Clang, C++14: 9.0.0, 9.1.0
+  * Apple Clang, C++17: 9.1.0
+  * Apple Clang, C++1z: 9.0.0
+* Windows:
+  * GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+  * GCC, C++0x: 4.6.4
+  * GCC, C++11: 4.7.3, 4.8.1, 4.9.3
+  * GCC, C++14: 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0
+  * GCC, C++17: 7.1.0, 7.2.0, 7.3.0
+  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+* FreeBSD:
+  * Clang: 4.0.0
+  * Clang, C++11: 4.0.0
+  * Clang, C++14: 4.0.0
+  * Clang, C++1z: 4.0.0
+
+[endsect]
+
+[section Acknowledgements]
+
+Daniel James, Vladimir Prus, and Marshall Clow managed this release.
+
+[endsect]

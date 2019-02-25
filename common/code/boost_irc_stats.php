@@ -2,7 +2,7 @@
 /*
   Copyright 2005-2006 Redshift Software, Inc.
   Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+  (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
@@ -82,7 +82,7 @@ HTML
         $text = $this->content_;
         
         $text = preg_replace(
-            '@href="?http://www.boost.org/?([^"\s]*)"?@i',
+            '@href="?https?://www.boost.org/?([^"\s]*)"?@i',
             'href="/${1}"',
             $text );
         $text = preg_replace(

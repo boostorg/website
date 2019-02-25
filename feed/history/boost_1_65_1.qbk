@@ -1,0 +1,318 @@
+[article Version 1.65.1
+    [quickbook 1.6]
+    [source-mode c++]
+    [purpose
+        Bug fixes:
+        Config, Context, Fiber, Smart Pointers, Stacktrace, Thread
+    ]
+    [authors [James, Daniel]]
+    [/ last-revision is used for the final release date]
+    [last-revision ]
+]
+
+[import ext.qbk]
+
+[section Fixes in 1.65.1]
+
+* [phrase library..[@/libs/config/ Config]:]
+  * Version macro changes for CUDA.
+  * Update last known MSVC version.
+  * MSVC 14.11 supports structured bindings.
+
+* [phrase library..[@/libs/context/ Context]:]
+  * Return a continuation from functions executed by `resume_with`.
+
+* [phrase library..[@/libs/fiber/ Fiber]:]
+  * Return a continuation from functions executed by `resume_with`.
+
+* [phrase library..[@/libs/smart_ptr/ Smart Pointers]:]
+  * Fix Visual C++ version checks.
+  * Fix compilation for NVCC with host compiler clang.
+
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * Update build testing file to detail with a MinGW issue.
+  * Change preprocessor file extensions to work with the installation system.
+  * Support FreeBSD and other OSs that do not define `_GNU_SOURCE` but have
+    `_Unwind_Backtrace` function.
+
+* [phrase library..[@/libs/thread/ Thread]:]
+  * Fix bug in `boost::condition_variable` on Windows
+    ([@https://github.com/boostorg/thread/issues/130 #130]).
+
+[endsect]
+
+[section Compilers Tested]
+
+Boost's primary test compilers are:
+
+* Linux:
+  * Clang: 3.0, 4.0.1, 5.0.0
+  * Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 5.0.0
+  * Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 5.0.0
+  * Clang, C++17: 5.0.0
+  * Clang, C++1z: 4.0.0
+  * GCC: 4.4.7, 4.5.3, 4.6.3, 4.7.2, 5.4.0, 7.1.0
+  * GCC, C++11: 4.4.7, 4.7.2, 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0
+  * GCC, C++14: 5.4.0, 5.4.1, 6.3.0, 6.4.0, 7.1.0, 7.2.0
+  * GCC, C++17: 7.1.0
+  * GCC, C++1z: 6.3.0
+  * Intel: 17.0
+* OS X:
+  * Clang: 8.1.0
+  * Clang, C++11: 8.1.0
+  * Clang, C++14: 8.1.0
+  * Clang, C++1z: 8.1.0
+* Windows:
+  * GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+  * GCC, C++11: 4.6.4, 4.7.3, 4.8.1
+  * GCC, C++14: 4.9.3, 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0, 7.1.0
+  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+* Android:
+  * Clang: 3.6, 3.7, 3.8
+  * GCC: 4.9, 5.4
+  * GCC, C++14: 6.2
+* FreeBSD:
+  * Clang: 3.8.0
+  * Clang, C++11: 3.8.0
+  * Clang, C++14: 3.8.0
+  * Clang, C++1z: 3.8.0
+* QNX:
+  * QCC, C++11: 4.4.2
+* SunOS:
+  * Oracle Solaris Studio: 12.5_next, 12.5
+  * Oracle Solaris Studio, C++11: , 12.5_next, 12.5
+
+[endsect]
+
+[section Acknowledgements]
+
+[@/users/people/beman_dawes.html Beman Dawes],
+Daniel James, Vladimir Prus and Marshall Clow
+managed this release.
+
+[endsect]
+
+[section New Libraries in 1.65.0]
+
+* [phrase library..[@/libs/poly_collection/ PolyCollection]:]
+  Fast containers of polymorphic objects, from
+  Joaqu'''&#237;'''n M L'''&#243;'''pez Mu'''&#241;'''oz.
+
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  Gather, store, copy and print backtraces, from Antony Polukhin.
+  * Note: Library has [@https://github.com/boostorg/stacktrace/issues/14 issue with MinGW] and
+  may produce empty backtraces with that compiler.
+
+[endsect]
+
+[section Removed Libraries in 1.65.0]
+
+* TR1
+
+[endsect]
+
+[section Updated Libraries in 1.65.0]
+
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Changed to require [^g++] versions >= 4.7 to use standard atomics, to fix
+    a linker error when using [^g++] 4.6 ([ticket 13121]).
+  * Enabled use of `constexpr` and variadic templates with recent MSVC versions.
+  * Fixed a race condition in the Linux epoll backend, which may occur when a
+    socket or descriptor is closed while another thread is blocked on epoll.
+  * Eliminated use of deprecated `auto_ptr`.
+  * Fixed misplaced use of `asio_handler_is_continuation` result in reactive
+    `async_accept` implementation.
+  * Changed to use `poll.h` rather than `sys/poll.h` on some modern POSIX
+    platforms ([ticket 12419]).
+  * Fixed MSVC intellisense detection.
+  * Disabled use of the `__thread` keyword extension for android/clang/x86
+    targets.
+
+* [phrase library..[@/libs/context/ Context]:]
+    * Improvements:
+        * call/cc supports ucontext-API (swapcontext)
+        * call/cc supports Windows-Fiber-API
+        * call/cc supports on demand growing (segmented/split) stacks
+    * Bugfixes:
+        * [ticket 12719]: context test cases and examples segmentation fault when built with mingw-w64 toolchain 
+        * #52: Failing to build callcc test with g++-4.9
+     * important:
+        * required bug fix [@https://github.com/boostorg/context/commit/420554fe9ac01482990e8ae314f4f7ba81010c9a 420554fe9ac01482990e8ae314f4f7ba81010c9a] not included in 1.65
+
+* [phrase library..[@/libs/config/ Config]:]
+  * Added `BOOST_NO_CXX11_POINTER_TRAITS`, `BOOST_NO_CXX17_FOLD_EXPRESSIONS`,
+    `BOOST_NO_CXX17_INLINE_VARIABLES`, `BOOST_NO_CXX17_STRUCTURED_BINDINGS`
+    defect detection.
+  * BOOST_FALLTHROUGH support for GCC 7 and above. (Glen Fernandes)
+
+* [phrase library..[@/libs/core/ Core]:]
+    * Implemented `pointer_traits` for C++03 and higher, that implements
+      [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0653r0.html P0653r0]
+      (Glen Fernandes). This implementation is now used by Align, Circular
+      Buffer, Fiber, Geometry, among other libraries.
+    * Added `BOOST_TEST_GT` and `BOOST_TEST_GE` to Lightweight Test.
+
+* [phrase library..[@/libs/coroutine2/ Coroutine2]:]
+    * supports ucontext-API (swapcontext)
+    * supports Windows-Fiber-API
+    * [ticket 13064]: different behavior coroutine and coroutine2 
+
+* [phrase library..[@/libs/dll/ DLL]:]
+    * Fix PE parsing on non Windows platforms.
+
+ * [phrase library..[@/libs/fiber/ Fiber]:]
+    * Improvements:
+        * hardware transactional memory (Intel TSX) supported
+        * NUMA supported
+        * ucontext-API (swapcontext) supported
+        * Windows-Fiber-API supported
+        * on demand growing stacks
+    * Bugfixes:
+        * #121: failing to build static lib with GCC 4.8 and C++11
+        * #123: assertion failure in schedule_from_remote
+        * #125: erratic crashes in testsuite
+        * #126: incorrect std::memory_order value in compare_exchange_strong?
+     * important:
+        * required bug fix [@https://github.com/boostorg/fiber/commit/63f1041f0e484e64dec437a0fa780ea2463abda2 63f1041f0e484e64dec437a0fa780ea2463abda2] not included in 1.65
+
+* [phrase library..[@/libs/fusion/ Fusion]:]
+  * MSVC 14.1 supports variadic containers, such as `fusion::vector`, `fusion::deque`, `fusion::map`, `fusion::set`, and `fusion::tuple`. ([ticket 12986])
+
+* [phrase library..[@/libs/geometry/ Geometry]:]
+    * Improvements:
+        * Add correct() overload taking area strategy
+        * Add is_convex() overload taking side strategy
+        * Add missing relational operations (covered_by, crosses, equals, etc.) for MultiPoint/AnyGeometry
+    * Solved issues:
+        * [@https://svn.boost.org/trac/boost/ticket/12410 12410] Lack of support of geographic coordinate system in correct()
+        * [@https://svn.boost.org/trac/boost/ticket/13035 13035] Wrong result of non-cartesian intersection strategies for segments near poles.
+        * [@https://svn.boost.org/trac/boost/ticket/13057 13057] Wrong result of intersects() for linestrings caused by numerical issue in disjoint() for boxes.
+    * Bugfixes:
+        * Fix is_valid which could return false for multipolygons where an interior ring touches another interior ring
+        * Fix is_valid which could return false for multipolygons where a polygon was located in an interior ring, all touching each other
+        * Fix union which could produce invalid results (for some cases, this needs to define BOOST_GEOMETRY_INCLUDE_SELF_TURNS)
+        * Fix intersection (idem), but some cases are still not yet valid
+        * Fix difference (idem), but some cases are still not yet valid
+        * Fix propagation of area strategy into the internals of various algorithms from intersection strategy
+        * Fix uninitialized variable in relate and reference to temporary in overlay
+        * Fix error in disjoint for geographic Segment/Box
+        * Fix handling of non-cartesian geometries in various algorithms
+
+* [phrase library..[@/libs/functional/hash/ Hash]:]
+  * Support for `char16_t`, `char32_t`, `u16string`, `u32string`.
+
+* [phrase library..[@/libs/log/ Log]:]
+  * General changes:
+    * Improved compatibility with Solaris.
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
+* [phrase library..[@/libs/phoenix/ Phoenix]:]
+  * Corrected some documentation. ([@https://github.com/boostorg/phoenix/pull/50 PR#50])
+  * `phoenix::erase` with associative container returns iterator in C++11 mode. ([ticket 7423])
+  * `std::set` and `std::multiset` should be worked with predefined lazy functions. ([@https://github.com/boostorg/phoenix/pull/52 PR#52])
+  * Disable `phoenix::random_shuffle` in C++17. ([@https://github.com/boostorg/phoenix/pull/53 PR#53])
+  * Don't forward declare, include instead. ([ticket 11875])
+
+* [phrase library..[@/libs/predef/ Predef]:]
+  * Fix Intel C/C++ version 9999 detection to be 12.1.0.
+  * Addition of `BOOST_PREDEF_WORKAROUND` and `BOOST_PREDEF_TESTED_AT` macros
+    for defect workarounds and detection.
+  * Add ARM64 MSVC SIMD detection. (from Minmin Gong)
+  * Add detection of iOS simulator vs device as a platform choice. (from Ruslan
+    Baratov)
+  * Fix MinGW incorrect header guard. (from Ruslan Baratov)
+
+* [phrase library..[@/libs/program_options/ Program Options]:]
+  * Support for storing values into `boost::optional`, thanks to Ed Catmur
+    ([@https://svn.boost.org/trac/boost/ticket/7495 #7495],
+     [@https://github.com/boostorg/program_options/pull/18 PR#18])
+  * Parsing of implicit options can now use the value from the next token. Since 1.59,
+    unless the value of implicit option was specified in the same token as the option
+    itself, the implicit value was used. That proved inconvenient, and now we again
+    check the next token and use it as value if it's not an option itself.
+    ([@https://github.com/boostorg/program_options/issues/25 #25])
+
+* [phrase library..[@/libs/python/ Python]:]
+  * `eval()`, `exec()`, and `exec_statement()` now allow `char const *` arguments, in addition
+    to `boost::python::str`.
+  * The `boost::python::numeric` API has been removed, as it is being obsoleted
+    by `boost::python::numpy`.
+  * Fix some build issues when using Python3 with MSVC.
+
+* [phrase library..[@/libs/smart_ptr/ Smart Pointers]:]
+  * New class template`atomic_shared_ptr`, that provides thread-safe atomic
+    pointer operations over `shared_ptr`. (Peter Dimov)
+  * New class template `local_shared_ptr`, where the reference count is
+    updated with non-atomic operations. (Peter Dimov)
+  * More optimizations in `allocate_shared` and `make_shared` for arrays.
+    (Glen Fernandes)
+  * Documentation has been completely rewritten in Asciidoc format.
+
+* [phrase library..[@/libs/test/ Test]:]
+  * Boost.test v3.6 see the
+    [@/doc/libs/1_65_0/libs/test/doc/html/boost_test/change_log.html Change log]
+    section for more details.
+  * New feature:
+    * C++17 compatibility (tested on VS2017), thanks to [@https://github.com/DanielaE Daniela Engert]
+    * Direct comparison of C-arrays in `BOOST_TEST`
+    * Better global fixtures mechanism, and spitting of responsibilities with
+      [@/doc/libs/1_65_0/libs/test/doc/html/boost_test/utf_reference/test_org_reference/test_org_boost_test_global_fixture.html `BOOST_TEST_GLOBAL_FIXTURE`] for global fixtures
+      and
+      [@/doc/libs/1_65_0/libs/test/doc/html/boost_test/utf_reference/link_references/link_boost_test_global_configuration.html `BOOST_TEST_GLOBAL_CONFIGURATION`]
+      for global initialization (compile time configuration).
+    * Improved support for fixtures (`setup` / `teardown` member function) which enables better teardown time
+      checks
+  * Breaking changes
+    * Some API changes for the loggers
+    * Deprecating `BOOST_GLOBAL_FIXTURE` in favor of `BOOST_TEST_GLOBAL_FIXTURE` and `BOOST_TEST_GLOBAL_CONFIGURATION` (see above)
+  * Bug fixes
+    * Trac tickets [ticket 5282], [ticket 5563], [ticket 11471], [ticket 11962], [ticket 12228]
+    * Trac tickets [ticket 12631], [ticket 13011]
+    * Pull request [@https://github.com/boostorg/test/pull/106 PR106]
+
+* [phrase library..[@/libs/thread/ Thread]:]
+  * Important Regression on Windows:
+    * [@https://github.com/boostorg/thread/issues/130 #130] windows: Bug in boost::condition_variable on Windows
+    Please, merge these two patches
+    * [@https://github.com/boostorg/thread/commit/fdc0cbcd8ce8f34a19c7cdaf6f1fa679f0a49657]
+    * [@https://github.com/boostorg/thread/commit/395e3d786bc1dce9c60eb84da85f5845a2c1fb3d]
+    
+  * Bug fixes
+    * [@http://svn.boost.org/trac/boost/ticket/6787 #6787] boost::thread::sleep() hangs if system time is rolled back
+    * [@http://svn.boost.org/trac/boost/ticket/12519 #12519] boost::thread::try_join_for does not return after timeout
+    * [@http://svn.boost.org/trac/boost/ticket/12874 #12874] future<> extension constructor must be under BOOST_THREAD_PROVIDES_FUTURE_UNWRAP
+    * [@http://svn.boost.org/trac/boost/ticket/12888 #12888] Linking with boost thread does not work on mingw/gcc 4.4
+    * [@http://svn.boost.org/trac/boost/ticket/12958 #12958] sync_bounded_queue::wait_pull_front( lve ) might throw
+    * [@http://svn.boost.org/trac/boost/ticket/13077 #13077] Linking to static 64bit libboost_thread fails DLL initialization
+    * [@http://svn.boost.org/trac/boost/ticket/13155 #13155] log doesn't build on a system with pthreads
+    * [@https://github.com/boostorg/thread/issues/121 #121] on_tls_prepare is broken under VS2017
+
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * Include <boost/functional/hash.hpp> if required, thanks to Ed Catmur [ticket 13009].
+  * Use native `hash_code()` when possible on GCC-like compilers [ticket 13027].
+  * Fix `ctti_type_index` for GCC 7 and later, thanks to Benjamin Buch [@https://github.com/boostorg/type_index/pull/16 PR16].
+
+* [phrase library..[@/libs/typeof/ Typeof]:]
+  * Fix compilation error with clang-cl [@https://svn.boost.org/trac10/ticket/11821 ticket 11821].
+
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * Use the same data structure for `unordered_set` and `unordered_multiset`,
+    and for`unordered_map` and `unordered_multimap`. This is required for
+    C++17, so that nodes can be merged and extracted between compatible
+    containers.
+  * Add deprecated attributes to long deprecated functions.
+  * Improved use of `allocator_traits` `construct` and `destroy`
+    on C++11 compilers, using piecewise pair construction when appropriate.
+  * Fewer workarounds on newer Oracle compilers.
+  * Avoid dereferencing pointers to uninitialized memory
+    ([@https://github.com/boostorg/unordered/pull/5 PR #5]).
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * Improved compatibility of `boost::next`/`boost::prior` with SFINAE-unfriendly iterators. [ticket 10847], [ticket 13002].
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * r-value overload for `boost::get` was added by Albert Sverdlov [ticket 13018].
+  * Missing include fro `<boost/variant/polymorphic_get.hpp>` header was added by Adam Badura [ticket 13037].
+  * `boost::make_variant_over` was fixed and now works with views and other Forward Sequences (thanks to Mikhail Maksimov for the fix) [ticket 8554], [ticket 10041], [@https://github.com/boostorg/variant/pull/35 PR#35].
+
+[endsect]

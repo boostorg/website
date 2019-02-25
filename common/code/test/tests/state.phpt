@@ -40,6 +40,9 @@ function test_state_file($state, $text) {
     BoostState::save(nested_key_shuffle($state), $tmp_file);
     Assert::same($text, file_get_contents($tmp_file));
 
+    BoostState::save_json($state, $tmp_file);
+    Assert::same($state, BoostState::load_json($tmp_file));
+
     unlink($tmp_file);
 }
 

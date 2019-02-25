@@ -33,10 +33,12 @@ function main() {
 
         echo "[section New Libraries]\n\n";
         foreach($unreleased_libs as $lib) {
+            $authors = is_array($lib['authors']) ? implode(', ', $lib['authors']) : $lib['authors'];
+            $description = preg_replace('@(?<![.\s])[.\s]*$@', '', $lib['description']);
             echo "* [phrase library..[@/{$lib['documentation']} {$lib['name']}]:]\n";
-            echo "  {$lib['description']}\n\n";
+            echo "  {$description}, from {$authors}.\n\n";
         }
-        echo "[endsection]\n\n";
+        echo "[endsect]\n\n";
     }
     else {
         echo "No new libraries yet.\n";

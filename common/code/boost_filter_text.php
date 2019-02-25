@@ -2,7 +2,7 @@
 /*
   Copyright 2005-2008 Redshift Software, Inc.
   Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+  (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 */
 
 class BoostFilterText extends BoostFilter
@@ -40,14 +40,14 @@ class BoostFilterText extends BoostFilter
 
         // John Gruber's regular expression for finding urls
         // http://daringfireball.net/2009/11/liberal_regex_for_matching_urls
-        
+
         foreach(preg_split(
             '@\b((?:[\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|[^[:punct:]\s]|/))@',
             $this->content, -1, PREG_SPLIT_DELIM_CAPTURE)
             as $index => $part)
         {
             if($index % 2 == 0) {
-                $html = $this->html_encode_with_fallback($part);
+                $html = html_encode($part);
 
                 if($type == 'cpp') {
                     $html = preg_replace(
@@ -66,28 +66,15 @@ class BoostFilterText extends BoostFilter
                 $url = $this->process_absolute_url($part, $root);
                 if($url) {
                     $text .= '<a href="'.html_encode($url).'">'.
-                        $this->html_encode_with_fallback($part).'</a>';
+                        html_encode($part).'</a>';
                 }
                 else {
-                    $text .= $this->html_encode_with_fallback($part);
+                    $text .= html_encode($part);
                 }
             }
         }
 
         return $text;
-    }
-
-    function html_encode_with_fallback($text) {
-        // Could probably handle this better with php 5.4 or multibyte
-        // extensions.
-        if (defined('ENT_SUBSTITUTE')) {
-            return htmlentities($text, ENT_SUBSTITUTE, 'UTF-8');
-        } else if (preg_match('//u', $text)) {
-            return htmlentities($text, ENT_COMPAT, 'UTF-8');
-        } else {
-            return html_encode(
-                preg_replace('/[\x80-\xFF]/', "\xef\xbf\xbd", $text));
-        }
     }
 
     function process_absolute_url($url, $root = null) {

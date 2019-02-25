@@ -2,7 +2,7 @@
 # Copyright 2007 Rene Rivera
 # Copyright 2011,2015 Daniel James
 # Distributed under the Boost Software License, Version 1.0.
-# (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+# (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 
 class BoostSiteTools {
     var $root;
@@ -23,6 +23,7 @@ class BoostSiteTools {
 
     function update_in_progress_pages() {
         $pages = $this->load_pages();
+        $pages->scan_for_new_quickbook_pages();
         $pages->convert_quickbook_pages('in_progress');
         $pages->save();
     }

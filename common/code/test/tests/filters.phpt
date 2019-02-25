@@ -27,6 +27,7 @@ $test_text_expected = <<<EOL
 
 <html>
 <head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Hello_world_test.txt</title></head>
 <body>
@@ -53,6 +54,7 @@ $test_text_expected = <<<EOL
 
 <html>
 <head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Hello_world_test.txt</title></head>
 <body>
@@ -90,6 +92,7 @@ if (version_compare(PHP_VERSION, '5.4.0') < 0) {
 
 <html>
 <head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Hello_world_test.txt</title></head>
 <body>
@@ -106,6 +109,7 @@ EOL;
 
 <html>
 <head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Hello_world_test.txt</title></head>
 <body>
@@ -135,6 +139,7 @@ $test_cpp_expected = <<<EOL
 
 <html>
 <head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>foo/test.cpp</title></head>
 <body>

@@ -1,0 +1,406 @@
+[article Version 1.69.0
+    [quickbook 1.6]
+    [source-mode c++]
+    [purpose
+        New Libraries: Safe Numerics.
+        Updated Libraries: Any, Asio, Assign, Beast, CircularBuffer,
+            Concept Check, Core, DLL, Dynamic Bitset, Fiber, Filesystem,
+            Flyweight, Geometry, Integer, Iostreams, Iterator, LexicalCast,
+            Log, Logic, Math, Mp11, MultiArray, Multi-index Containers,
+            Multiprecision, PolyCollection, Pool, Preprocessor, Rational,
+            Spirit, Stacktrace, System, Test, TypeIndex, Utility, Variant,
+            YAP.
+        Discontinued Libraries: Signals.
+    ]
+    [authors [Dawes, Beman]]
+    [last-revision Wed, 12 Dec 2018 02:58:00 -0700]
+]
+
+[/ Use
+  [github library_name github_issue_number] to link to a github issue
+  [github_pr library_name github_pull_request_number] to link to a github pull request
+]
+
+[import ext.qbk]
+
+[section Notes for non-Windows users]
+
+The Boost build system now supports visibilities. If you are building shared
+libraries, they will use hidden visibility by default. As a result Boost shared
+libraries become smaller, load faster and have less chances to get a symbol
+collision.
+
+See [@/build/manual/develop/index.html#bbv2.builtin.features.visibility Boost.Build visibility and local-visibility] for more info.
+
+To disable that feature you can use use a command line `./b2 visibility=global`
+to build.
+
+[endsect]
+
+[section New Libraries]
+
+[/ Example:
+* [phrase library..[@/libs/accumulators/ Accumulators]:] Framework for
+  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
+]
+
+* [phrase library..[@/libs/safe_numerics/ Safe Numerics]:] A library for
+guaranteed correct integer arithmetic for C++14 and later, from Robert Ramey.
+
+[endsect]
+
+[section Updated Libraries]
+
+[/ Example:
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  * Added anonymous shared memory for UNIX systems.
+  * trac issue example: `shared_ptr` is movable and supports aliasing ([ticket 1234]).
+  * github issue example: fixed an issue ([github interprocess 25])
+  * github pull request issue example: improved sprocket ([github_pr interprocess 25])
+]
+
+* [phrase library..[@/libs/any/ Any]:]
+  * Fixed issue with visibility. Now `boost::any` variables constructed in one shared library with hidden visibility could be used and destroyed in other shared library with hidden visibility.
+  * Maintenance: dropped some dependencies on other Boost libraries, fixes for docs.
+  
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Fixed a problem with the detection of `std::future` availability with
+    libstdc++.
+  * Fixed compile error in regex overload of `read_until`.
+  * Fixed a timer heap corruption issue that can occur when moving a cancelled
+    timer.
+  * Fixed detection of `std::experimental::string_view` and `std::string_view`
+    with newer clang/libc++.
+  * Fixed MSVC version detection for availability of `std::invoke_result`.
+  * Fixed the buffer sequence traits to test the new requirements, if `decltype`
+    is available.
+  * Fixed an MSVC issue when building with exceptions disabled.
+  * Added SSL context options for TLS v1.3.
+  * Added a compile-time test for TLS v1 support.
+  * Fixed the macro used to test for TLS v1.2 support.
+  * Prevented global objects from being created once per thread on Windows.
+  * Fixed a crash when using `size()`, `max_size()` or `empty()` on
+    default-constructed resolver results.
+  * Changed to move the return value in `basic_resolver_results::begin()` to avoid
+    copying.
+  * Enabled move support for the Intel Compiler.
+  * Fixed `std::string_view` detection issue when using clang-cl.
+  * Fixed the handler tracking operation name for
+    `io_context::executor_type::dispatch`.
+  * Fixed a buffer overflow that could occur when parsing an address string with
+    a 64-bit scope id.
+  * Added examples showing how to write composed operations.
+  * Added C++11 versions of the Timeouts, Timers, SOCKS4 and SSL examples.
+  * Fixed minor issues in documentation and examples.
+
+* [phrase library..[@/libs/assign/ Assign]:]
+  * Add rvalue reference, perfect forwarding, and variadic template support ([github_pr assign 6]) ([ticket 10477])
+  * Avoid conversion to container's allocator ([github_pr assign 29]) ([ticket 5419]) ([ticket 7364])
+
+* [phrase library..[@/libs/beast/ Beast]:]
+  * This version fixes some issues in the examples, and provides a new
+    experimental socket which supports built-in timeouts on asynchronous
+    operations.
+  * New CppCon 2018 [@https://www.boost.org/doc/libs/master/libs/beast/doc/html/beast/examples.html#beast.examples.cppcon_2018 websocket chat example] and [@https://www.youtube.com/watch?v=7FQwAjELMek presentation video].
+  * For a complete list of changes, please view the official
+    [@/libs/beast/doc/html/beast/release_notes.html Release Notes].
+
+* [phrase library..[@/libs/circular_buffer/ CircularBuffer]:]
+  * Use the empty base optimization for storing allocators that are empty and
+    not final (Glen Fernandes).
+
+* [phrase library..[@/libs/concept_check/ Concept Check]:]
+  * Removed dependency on mpl. ([github_pr concept_check 14])
+
+* [phrase library..[@/libs/context/ Context]:]
+    * [github context 85]: duplicate alias should be missing GCC alias
+    * [github context 87]: the clang-win toolset (clang-cl.exe) uses masm from the underlying msvc
+    * [github context 90]: remove useless lines in Jamfile.v2
+    * [github context 91]: add .file section for *_elf_gas.S files
+
+* [phrase library..[@/libs/core/ Core]:]
+  * Implemented `boost::empty_value`, for library authors to conveniently
+    leverage the Empty Base Optimization to store objects of potentially empty
+    types (Glen Fernandes). This facility is now used in Boost.Beast,
+    Boost.CircularBuffer, Boost.MultiArray, and more.
+  * Implemented `boost::quick_exit` to provide the C++11 standard library
+    facility `std::quick_exit` functionality (Peter Dimov).
+  * Reduced the number of statics in Lightweight Test, and employ lighter abort
+    behavior for MSVC compilers upon failure to call `boost::report_errors`
+    (Glen Fernandes).
+
+* [phrase library..[@/libs/dll/ DLL]:]
+  * Resolved link issues with the smart library [github dll 20].
+  * Maintenance: fixes for docs and tests.
+
+* [phrase library..[@/libs/dynamic_bitset/ Dynamic Bitset]:]
+  * Performance improvements (over 2x in some cases). ([github_pr dynamic_bitset 26])
+  * Added range-based set, reset, flip methods ([github_pr dynamic_bitset 27])
+
+* [phrase library..[@/libs/fiber/ Fiber]:]
+    * [github fiber 181]: unbuffered_channel push not return
+    * [github fiber 182]: Remove UTF-8 BOM at begining of the file
+    * [github fiber 183]: Fix boost-install use; should only be issued once
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Don't use `readdir_r` on Linux and Android since the `readdir` function is already thread-safe. ([github_pr filesystem 68], [github filesystem 72])
+  * Fixed crashes in `boost::filesystem::copy` due to undefined behavior in the implementation. ([github_pr filesystem 71])
+  * Fixed undefined behavior in `boost::filesystem::directory_iterator` implementation. ([github_pr filesystem 77])
+  * Fixed compilation errors when using directory iterators with `BOOST_FOREACH`.
+  * Removed workarounds for older PGI C++ compiler versions to fix compilation on the newer ones. ([github_pr filesystem 49])
+  * Fixed MSVC warnings about narrowing conversions. ([github_pr filesystem 44])
+
+* [phrase library..[@/libs/flyweight/index.html Flyweight]:]
+  * Fixed some issues in GCC related to Boost.MPL placeholder expression handling.
+  * Maintenance fixes.
+
+* [phrase library..[@/libs/function/ Function]:]
+  * Removed dependencies on mpl, test ([github_pr function 20]) ([github_pr function 22])
+
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * Improvements
+    * [github_pr geometry 486] Karney's solution of direct geodesic problem for internal use (thanks to Adeel Ahmad).
+    * [github_pr geometry 490] Discrete Frechet and Hausdorff distance algorithms (thanks to Yaghyavardhan Singh Khangarot).
+    * [github_pr geometry 496] New run-time and upgraded compile-time SRS transformation interfaces (undocumented for now due to potential interface changes).
+  * Solved issues
+    * [github geometry 520] Missing documentation for dsv().
+    * [github geometry 521] Wrong documentation description for distance().
+    * [github geometry 524] Fixed 'enumeration values not handled in switch' warnings.
+    * [github geometry 527] Workaround for VS 2017 (msvc-15).
+  * Bugfixes
+    * [github_pr geometry 505] Fixed overflow in overlay algorithms (thanks to Dane Springmeyer).
+    * [github_pr geometry 518] Fixed passing of temporaries in append() (thanks to xventura81).
+    * [github_pr geometry 522] Support python3 in building documentation.
+
+* [phrase library..[@/libs/integer/ Integer]:]
+  * `boost/pending/integer_log2.hpp` header is deprecated and will be removed in future releases. Use `boost/integer/integer_log2.hpp` instead.
+
+* [phrase library..[@/libs/iostreams/ Iostreams]:]
+  * Remove call to nonexistent member seekpos() of std::fpos ([github_pr iostreams 58])
+
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * Fixed compilation problems with ambiguous unqualified calls to `advance` and `distance` on iterators whose types involve types in the namespace `boost`. ([github iterator 43])
+
+* [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
+  * Fixed sign-conversion warnings [ticket 8991].
+  * Maintenance: dropped some dependencies on other Boost libraries, fixed build system warnings.
+
+* [phrase library..[@/libs/log/ Log]:]
+  * General changes:
+    * Updated syslog sink backend to avoid using deprecated Boost.ASIO interfaces. ([github log 59])
+  * Bug fixes:
+    * Fixed a possible incorrect estimation of the total size of rotated files in the target directory of a text file sink in some cases.
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
+* [phrase library..[@/libs/logic/ Logic]:]
+  * [*Breaking change:] Use explicit operator bool when available ([github_pr logic 5])
+
+* [phrase library..[@/libs/math/ Math]:]
+  * Add LambertW functions.
+  * Update integration routines to support complex valued integrands and contour integrals.
+  * Added the derivative of the Barycentric rational approximation.
+  * Minor fixes to better support variable precision floating point types.
+  * Removed use of deprecated Boost.Endian in favour of Predef.
+  * Updated continued fraction and series evaluation code to support complex types.
+  * Prevent logic error leading to infinite loop in toms748_solve.  See [github math 138].
+  * Fix mean and standard_deviation for extreme_value_distribution.  See [github math 139].
+  * Improve heuristics used in newton_raphson_iterate.  See [github math 145].
+  * Fix result of `erf(NaN)`.  See [github math 141 #141].
+  * Big push to reduce GCC warnings.  See [github math 136 #136].
+  * Refactor polynomial addition.  See [github_pr math 132].
+  * Fix for vxWorks having a `real` function in the global namespace. See [github_pr math 131].
+  * Improve `sinc` approximations and add better tests.
+  * Fix typo in Student's T hypothesis testing documentation, see [github math 143].
+
+* [phrase library..[@/libs/mp11/ Mp11]:]
+  * Implemented the `mp_starts_with` facility (Glen Fernandes).
+
+* [phrase library..[@/libs/multi_array/ MultiArray]:]
+  * Improve C++11 allocator model support including: Support for C++11 minimal
+    allocators, support for stateful allocators, using the allocator for
+    construction and destruction of the value type, and using the empty base
+    optimization for storing empty or stateless allocators (Glen Fernandes).
+
+* [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
+  * Introduced an alternative
+    [@/libs/multi_index/doc/tutorial/key_extraction.html#key terse key specification syntax]
+    for C++17 compliant environments.
+    
+* [phrase library..[@/libs/multiprecision/ Multiprecision]:]
+  * Big update to better support variable precision types so that the precision of the result is always the largest of all the arguments.
+  * Add support for allocators that are `final` in __cpp_int (Glen Fernandes).
+  * Removed use of deprecated Boost.Endian in favour of Predef.
+  * Add support for `std::string_view`.
+  * Fixed minor bug in constant initialization.  See [github multiprecision 67].
+  * Make assignment of non-finite value to `cpp_int` a runtime errors.  See [github multiprecision 58].
+  * Added typedefs for `cpp_bin_float_oct` and `cpp_complex_oct`.
+
+* [phrase library..[@/libs/poly_collection/ PolyCollection]:]
+  * Added Boost.PolyCollection-specific versions of algorithms
+    `std::for_each_n` and `std::sample`.
+
+* [phrase library..[@/libs/pool/ Pool]:]
+  * Replace boost::mutex use to avoid a dependency on Boost.Thread ([github_pr pool 23])
+
+* [phrase library..[@/libs/preprocessor/ Preprocessor]:]
+  * Supports the new C++ standard conforming preprocessor in VC++ 14.1,
+    which is currently enabled by using the /experimental:preprocessor switch,
+    in Visual Studio 2017 15.8 on up.
+
+* [phrase library..[@/libs/rational/ Rational]:]
+  * Add constexpr support ([github_pr rational 28]) ([github_pr rational 32])
+
+* [phrase library..[@/libs/spirit/ Spirit]:]
+  * Spirit.X3:
+    * Drop own FP routines in favor of `boost::math` ([github spirit 392]) ([ticket 13531])
+    * Missing visibility mark on exception types ([github spirit 409])
+    * to_utf8: Fixed wchar_t handling on Windows ([github spirit 413]) ([github spirit 395])
+  * Spirit V2
+    * Drop own FP routines in favor of `boost::math` ([github spirit 392]) ([ticket 13531])
+    * Missing visibility mark on exception types ([github spirit 409])
+    * Fixed transform_attribute ambiguity ([github spirit 407]) ([github spirit 396])
+    * to_utf8: Fixed wchar_t handling on Windows ([github spirit 413]) ([github spirit 395])
+  * Spirit.Classic:
+    * Missing visibility mark on exception types ([github spirit 409])
+
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * `libbacktrace` usage was significantly improved. `BOOST_STACKTRACE_USE_BACKTRACE` or `boost_stacktrace_backtrace` users are encouraged to update:
+    * Memory consumprion dropped down.
+    * Stack capturing became faster by an order of magnitude.
+    * `syminfo` fallback enabled to provide information for visible symbols even without debug information (thanks to github user driesdeschout!)[github stacktrace 60], [github stacktrace 61].
+    * Exact location of the `backtrace.h` header now can be specified via `BOOST_STACKTRACE_BACKTRACE_INCLUDE_FILE`, to allow `backtrace.h` header usage on platforms and compilers where that header is unreachable otherwise (for example Ubuntu Xenial + Clang) [github stacktrace 59].
+  * Optimized stack capturing if `max_depth` is set (thanks to Jan Eisenhauer for the PR!) [github stacktrace 67].
+  * Added `to_string(const stacktrace& )` functions for fast conversion of stacktraces to `std::string` [github stacktrace 57].
+  * Maintenance: updated docs [github stacktrace 62], tests updated.
+
+* [phrase library..[@/libs/system/ System]:]
+  * Boost.System is now header-only. A stub library is still built for compatibility, but linking to it is no longer necessary.
+  * Even more functions have been marked `constexpr`.
+  * The destructor of `error_category` is now `protected` and no longer `virtual`. This is a potentially breaking
+    change, but its impact is expected to be limited.
+  * `error_category` now has a constructor that accepts a 64 bit identifier, enabling distinct category objects to compare equal.
+  * The constructors of `error_category` are now `protected`.
+  * A non-allocating, nonthrowing overload of `message` has been added.
+  * A virtual function `failed` has been added, allowing categories for which success is not synonymous with 0.
+  * The deprecated `boost::system::throws` object has been removed.
+  * `boost::throws()` is now deprecated and its use is discouraged.
+  * The constructor of `system_error` taking a single `error_code` argument is now `explicit`.
+  * `system_error::code()` now returns by value.
+
+* [phrase library..[@/libs/test/ Test]:]
+  * Boost.test v3.9 see the
+    [@libs/test/doc/html/boost_test/change_log.html Changes log]
+    for more details.
+  * New feature:
+    * Official support of header-only variant of Boost.Test with multiple translation units.
+    * Now possible to manually add a test case by specifying its name, with `BOOST_TEST_CASE_NAME`
+    * Better support of `boost::exception` in the logs
+  * Bug fixes and pull requests:
+    * Trac tickets: [ticket 13380], [ticket 13625], [ticket 13637]
+    * GitHub Issues: [github test 149], [github test 150], [github test 156], [github test 158], [github test 163]
+    * GitHub Pull Requests: [github_pr test 147], [github_pr test 148], [github_pr test 151], [github_pr test 154], [github_pr test 161]
+
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * Fix the regression and speed up parsing of the `boost/type_traits.hpp` header by 30% (thanks to Nikita Kniazev for the PR!) [github type_index 21].
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * Added support for non-inheritable empty types to `boost::compressed_pair`
+    by avoiding the empty base optimization for types which are declared as
+    final (Glen Fernandes).
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Fixed issue with visibility. Now `boost::bad_visit` exception could cross the boundaries of shared library with hidden visibility and could be catched in other shared library with hidden visibility.
+
+* [phrase library..[@/libs/yap/ YAP]:]
+  * Minor changes to support MSVC++ version 14.15 (Visual Studio 2017 version 15.8).
+  * Doc fixes.
+
+[endsect]
+
+[section Discontinued Libraries]
+
+* Signals (v1) is now removed. Its removal was announced in 1.68 and its
+deprecation was announced in 1.54. Boost 1.68 is the last release that provides
+this library. Users are encouraged to use Signals2 instead. The Boost community
+thanks Douglas Gregor for his work on Signals which served its users well and
+which also inspired Signals2.
+
+[endsect]
+
+[section Compilers Tested]
+
+Boost's primary test compilers are:
+
+* Linux:
+  * Clang: 3.0, 4.0.1, 6.0.1
+  * Clang, C++0x: 3.0
+  * Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 6.0.1
+  * Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 4.0.1, 5.0.2, 6.0.1
+  * Clang, C++17: 5.0.2, 6.0.1
+  * GCC: 4.4.7, 4.5.3, 4.6.3, 5.4.0, 8.0.1
+  * GCC, C++0x: 4.4.7
+  * GCC, C++11: 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0, 8.0.1
+  * GCC, C++14: 5.4.0, 5.5.0, 6.4.0, 7.1.0, 7.3.0, 8.0.1
+  * GCC, C++17: 7.3.0, 8.0.1
+  * Intel, C++14: 18.0
+* OS X:
+  * Apple Clang: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++11: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++14: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++17: 9.1.0, 10.0.0
+  * Apple Clang, C++1z: 9.0.0
+  * Apple Clang, C++2a: 10.0.0
+* Windows:
+  * GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+  * GCC, C++0x: 4.6.4
+  * GCC, C++11: 4.7.3, 4.8.1, 4.9.3
+  * GCC, C++14: 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0
+  * GCC, C++17: 7.1.0, 7.2.0, 7.3.0
+  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+* FreeBSD:
+  * Clang: 4.0.0
+  * Clang, C++11: 4.0.0
+  * Clang, C++14: 4.0.0
+  * Clang, C++1z: 4.0.0
+
+Boost's additional test compilers include:
+
+* Linux:
+  * Clang: 3.0, 3.8.1, 3.9.1, 4.0.1, 5.0.2, 6.0.1
+  * Clang, C++0x: 3.0
+  * Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 6.0.1
+  * Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 4.0.1, 5.0.2, 6.0.1, 7.0.0
+  * Clang, C++17: 5.0.2, 6.0.1
+  * GCC: 4.4.7, 4.5.3, 4.6.3, 4.9.4, 5.4.0, 5.5.0, 8.0.1
+  * GCC, C++0x: 4.4.7
+  * GCC, C++11: 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0, 8.0.1
+  * GCC, C++14: 5.4.0, 5.5.0, 6.3.0, 6.4.0, 7.1.0, 7.3.0, 8.0.1, 8.1.0
+  * GCC, C++17: 7.3.0, 8.0.1
+  * Intel, C++14: 18.0
+* OS X:
+  * Apple Clang: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++11: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++14: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++17: 9.1.0, 10.0.0
+  * Apple Clang, C++1z: 9.0.0
+  * Apple Clang, C++2a: 10.0.0
+* Windows:
+  * GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+  * GCC, C++0x: 4.6.4
+  * GCC, C++11: 4.7.3, 4.8.1, 4.9.3
+  * GCC, C++14: 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0
+  * GCC, C++17: 7.1.0, 7.2.0, 7.3.0
+  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+* FreeBSD:
+  * Clang: 4.0.0
+  * Clang, C++11: 4.0.0
+  * Clang, C++14: 4.0.0
+  * Clang, C++1z: 4.0.0
+
+[endsect]
+
+[section Acknowledgements]
+
+Daniel James, Vladimir Prus, Marshall Clow and Michael Caisse managed this release.
+
+[endsect]

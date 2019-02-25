@@ -1,6 +1,11 @@
+Deny from 65.55.52.94
+Deny from 100.43.83.160
+Deny from 110.209.193.111
 AddType text/html .shtml
 AddOutputFilter INCLUDES .shtml
 AddOutputFilter INCLUDES .html
+
+Options -MultiViews
 
 AddType text/x-component .htc
 
@@ -67,12 +72,13 @@ RewriteRule ^status(.*) development/testing.html [R=permanent,L]
 # The tools pages (todo)
 RewriteRule ^tools(/.*)?$ doc/tools$1 [R=permanent,L]
 # The wiki
-RewriteRule ^wiki/?$ http://svn.boost.org/trac/boost [R,L]
+RewriteRule ^wiki/?$ https://svn.boost.org/trac10/wiki [R,L]
 # The license file. (This link was never correct, but it's common enough to require a redirect).
 RewriteRule ^LICENSE-1.0$ LICENSE_1_0.txt [R=permanent,L]
 
 ########## Other redirects
-RewriteRule ^b2/?$ /build/ [R=permanent,L]
+RewriteRule ^b2(/.*)?$ https://boostorg.github.io/build$1 [R=permanent,L]
+RewriteRule ^build(/.*)?$ https://boostorg.github.io/build$1 [R=permanent,L]
 
 ########## Hide dot files/directories and stop directory listings.
 ########## Everything's available on github anyway, but just in case.

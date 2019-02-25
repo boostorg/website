@@ -187,7 +187,11 @@ function read_metadata_from_modules($path, $location, $hash, $sublibs = array('l
         }
         else {
             $text = implode("\n", $super_project->run_git("show {$metadata_hash}"));
-            $updated_libs = array_merge($updated_libs, load_from_text($text, $metadata_path, dirname(dirname($metadata_path))));
+            try {
+                $updated_libs = array_merge($updated_libs, load_from_text($text, $metadata_path, dirname(dirname($metadata_path))));
+            } catch (BoostLibraries_DecodeException $e) {
+                echo "Error decoding metadata for library at {$metadata_path}:\n{$e->content()}\n";
+            }
         }
     }
 
@@ -195,7 +199,7 @@ function read_metadata_from_modules($path, $location, $hash, $sublibs = array('l
     foreach($modules as $name => $module) {
         $submodule_path = $path ? "{$path}/{$module['path']}" : $module['path'];
 
-        if (!preg_match('@^\.\./(\w+)\.git$@', $module['url'])) {
+        if (!preg_match('@^\.\./(\w+)(\.git)?$@', $module['url'])) {
             // In quiet mode don't warn about documentation submodules, which
             // libraries have previously included from remote locations.
             if (!UpdateDocListSettings::$quiet || strpos($submodule_path.'/', '/doc/') === false) {
@@ -251,7 +255,7 @@ function read_metadata_from_filesystem($location, $version) {
 
         try {
             $updated_libs = array_merge($updated_libs, load_from_file($json_path, $path));
-        } catch (library_decode_exception $e) {
+        } catch (BoostLibraries_DecodeException $e) {
             echo "Error decoding metadata for library at {$json_path}:\n{$e->content()}\n";
         }
     }

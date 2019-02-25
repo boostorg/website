@@ -2,7 +2,7 @@
 /*
   Copyright 2007 Redshift Software, Inc.
   Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+  (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 */
 require_once(dirname(__FILE__) . '/boost_config.php');
 
@@ -12,8 +12,17 @@ class BoostWebsite {
     }
 }
 
-function html_encode($text) {
-    return htmlentities($text, ENT_COMPAT, 'UTF-8');
+if (defined('ENT_SUBSTITUTE')) {
+    function html_encode($text) {
+        return htmlentities($text, ENT_SUBSTITUTE, 'UTF-8');
+    }
+} else {
+    function html_encode($text) {
+        if (!preg_match('//u', $text)) {
+            $text = preg_replace('/[\x80-\xFF]/', "\xef\xbf\xbd", $text);
+        }
+        return htmlentities($text, ENT_COMPAT, 'UTF-8');
+    }
 }
 
 class BoostException extends RuntimeException {}

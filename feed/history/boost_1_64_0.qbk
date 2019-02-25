@@ -2,19 +2,39 @@
     [quickbook 1.6]
     [source-mode c++]
     [purpose
+        New Library:
+        Process.
         Updated Libraries:
         Any, Atomic, Config, Container, Context, Conversion,
-        Core, Coroutine2, DLL, Fiber, Hash, Interprocess,
-        Intrusive, LexicalCast, Math, Multiprecision, Predef,
-        Program Options, Regex, Smart Pointers, Test, TypeIndex,
+        Core, Coroutine2, DLL, Fiber, Geometry, Hash, Interprocess,
+        Intrusive, LexicalCast, Math, Multi-index Containers, Multiprecision, Predef,
+        Regex, Smart Pointers, Test, TypeIndex,
         TypeTraits, Unordered, Variant.
     ]
-    [authors [Dawes, Beman]]
+    [authors [Rivera, Rene]]
     [/ last-revision is used for the final release date]
     [last-revision ]
 ]
 
 [import ext.qbk]
+
+[section New Libraries]
+
+* [phrase library..[@/libs/process/ Process]:]
+  Process library by Klemens D. Morgenstern, that provides cross platorm ways to allows you to:
+  [itemized_list
+    [create child processes]
+    [setup streams for child processes]
+    [communicate with child processes through streams (synchronously or asynchronously)]
+    [wait for processes to exit (synchronously or asynchronously)]
+    [terminate processes]
+  ]
+  Broken feature:
+  [itemized_list
+    [[@https://github.com/klemens-morgenstern/boost-process/issues/67 GitHub #67: ['"group.wait() does not return"]].]
+  ]
+
+[endsect]
 
 [section Updated Libraries]
 
@@ -40,9 +60,14 @@
 * [phrase library..[@/libs/context/ Context]:]
     * new API: call/cc
     * deprecated API:execution-context
+    * stack manipulation on MIPS fixed
     * [ticket 12719] segmentation fault when built with mingw-w64
+    * [ticket 12948] Unexpected snprintf result is on Android ARM
     * #38: context_entry() crashes on macOS
     * #39: Unknown directive .cpu on aarch64 with Clang 3.8 on Android
+    * #41: std::bind() fails with invoke()
+    * #46: "rename of continuation member functions" missed a spot
+    * #50: bad assembly for fcontext on ppc64/sysv/elf 
 
 * [phrase library..[@/libs/conversion/ Conversion]:]
     * Docs were ported to Quickbook (thanks to Mikhail Maksimov for the port)
@@ -65,10 +90,35 @@
     * CI tests now run with `address` and `leak` sanitizers
 
 * [phrase library..[@/libs/fiber/ Fiber]:]
-    * #100: ASIO: unbuffered_channel / scheduler notify issue
-    * #106: Passing a fixed_stack allocator to async/packaged_task doesn't compile
-    * #111: endless-loop in buffered_channel::try_value_pop()
     * (un)bounded_channel<> removed
+    * #100: ASIO: unbuffered_channel / scheduler notify issue
+    * #105: skynet variants crash on windows
+    * #106: Passing a fixed_stack allocator to async/packaged_task doesn't compile
+    * #110: Compile error on ARMv6
+    * #111: endless-loop in buffered_channel::try_value_pop()
+    * #114: buffered_channel::try_push` does not wake fibers in `pop`
+
+* [phrase library..[@/libs/geometry/ Geometry]:]
+    * Improvements:
+        * matrix transformation is now based on Boost.QVM instead of Boost.Ublas
+    * Breaking changes:
+        * ublas_transformer is renamed to matrix_transformer
+        * explicit modifier is added to constructors of rtree index::dynamic_* parameters
+        * strategy::area::huiller replaced by strategy::area::spherical
+    * Solved issues:
+        * [@https://github.com/boostorg/geometry/issues/363 363] Missing includes in geometry/index/parameters.hpp
+        * [@https://github.com/boostorg/geometry/issues/364 364] within(Linear, Areal) compilation error when arguments use different point types
+        * [@https://github.com/boostorg/geometry/issues/370 370] Buffer Seg Faults with Ring as Input
+    * Solved tickets:
+        * [@https://svn.boost.org/trac/boost/ticket/11899 11899] boost::geometry::equals doesn't handle open polygons
+        * [@https://svn.boost.org/trac/boost/ticket/11930 11930] Inaccuracy of area::huiller strategy
+        * [@https://svn.boost.org/trac/boost/ticket/11931 11931] Wrong spherical area with pole encircling polygons
+        * [@https://svn.boost.org/trac/boost/ticket/12410 12410] Lack of support of geographic coordinate system in correct()
+        * [@https://svn.boost.org/trac/boost/ticket/12566 12566] Ambiguous template instantiation in equal_to<> when pair value contains raw pointer
+        * [@https://svn.boost.org/trac/boost/ticket/12861 12861] Segmentation fault in stdlibc++ (gcc 4.8.2) affecting rtree
+        * [@https://svn.boost.org/trac/boost/ticket/12885 12885] Use BOOST_THROW_EXCEPTION instead of throw
+    * Bugfixes:
+        * Fix distance_measure in get_turn_info
 
 * [phrase library..[@/libs/functional/hash/ Hash]:]
     * Stop using `std::unary_function` and `std::binary_function` when they're
@@ -100,6 +150,11 @@
     * Big push to ensure all functions in also in C99 are compatible with Annex F.
     * Improved accuracy of the Bessel functions I0, I1, K0 and K1, see [@https://svn.boost.org/trac/boost/ticket/12066 12066].
 
+* [phrase library..[@/libs/multi_index/index.html Multi-index Containers]:]
+  * Fixed a bug related to ambiguous references in the presence of more than
+    one ranked index (ticket [ticket 12955]). 
+  * Maintenance fixes.
+
 * [phrase library..[@/libs/multiprecision/ Multiprecision]:]
     * In `cpp_bin_float` prevent double rounding when converting to a denormalized float.  See [@https://svn.boost.org/trac/boost/ticket/12527 #12527].
     * Fix bug in integer sqrt for very small integers.  See [@https://svn.boost.org/trac/boost/ticket/12559 #12559].
@@ -122,11 +177,6 @@
   * Change VS version numbering. Versions after VS2015 will use the compiler
     version instead of the varied product versions.
 
-* [phrase library..[@/libs/program_options/ Program Options]:]
-  * Support for storing values into `boost::optional`, thanks to Ed Catmur
-    ([@https://svn.boost.org/trac/boost/ticket/7495 #7495],
-     [@https://github.com/boostorg/program_options/pull/18 PR#18])
-   
 * [phrase library..[@/libs/regex/ Regex]:]
   * Compiling with Oracle C++ toolset is no longer restricted to static linking.
   * Big effort to de-fuzz the library using libFuzzer and fix identified issues, see:  [@https://svn.boost.org/trac/boost/ticket/12818 #12818].

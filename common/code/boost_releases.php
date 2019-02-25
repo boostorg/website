@@ -1,7 +1,7 @@
 <?php
 # Copyright 2016 Daniel James
 # Distributed under the Boost Software License, Version 1.0.
-# (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+# (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 
 class BoostReleases {
     var $release_file;
@@ -12,7 +12,7 @@ class BoostReleases {
 
         if (is_file($this->release_file)) {
             $release_data = array();
-            foreach(BoostState::load($this->release_file) as $key => $data) {
+            foreach(BoostState::load_json($this->release_file) as $key => $data) {
                 $data = $this->unflatten_array($data);
 
                 if (preg_match('@^([a-zA-Z][^-]*)-(.*)$@', $key, $match)) {
@@ -33,6 +33,9 @@ class BoostReleases {
                 $version = (string) $version_object;
                 $data['version'] = $version_object;
                 $data['release_name'] = $release_name;
+                if (array_key_exists('release_date', $data) && is_string($data['release_date'])) {
+                    $data['release_date'] = new DateTime($data['release_date']);
+                }
 
                 if (isset($this->release_data[$key][$version])) {
                     echo "Duplicate release data for {$release_name} {$version}.\n";
@@ -53,7 +56,7 @@ class BoostReleases {
                 $flat_release_data[$key] = $this->flatten_array($data);
             }
         }
-        BoostState::save($flat_release_data, $this->release_file);
+        BoostState::save_json($flat_release_data, $this->release_file);
     }
 
     function unflatten_array($array) {
@@ -171,7 +174,7 @@ class BoostReleases {
     // URL
     // (blank line)
     // Output of sha256sum
-    function loadReleaseInfo($release_name, $release_details) {
+    function loadReleaseInfo($release_details, $release_name, $release_version = null) {
         if (!preg_match('@
             \A
             \s*([^\s]*)[ \t]*\n
@@ -190,11 +193,16 @@ class BoostReleases {
             throw new BoostException("Release details needs to start with a directory URL");
         }
 
-        if (!preg_match('@/(?:boost|boostorg/beta)/([0-9][^/]*)/@', $download_page, $match)) {
-            throw new BoostException("Error extracting boost version from download page URL");
+        if (!is_null($release_version)) {
+            $version = BoostVersion::from($release_version);
+        } else {
+            if (!preg_match('@/(?:boost|boostorg/beta|boostorg/release)/([0-9][^/]*)/@', $download_page, $match)) {
+                throw new BoostException("Error extracting boost version from download page URL");
+            }
+
+            $version = BoostVersion::from($match[1]);
         }
 
-        $version = BoostVersion::from($match[1]);
         $version_string = (string) $version;
 
         $downloads = array();

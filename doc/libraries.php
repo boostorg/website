@@ -1,3 +1,4 @@
+<?php error_reporting (E_ALL ^ E_NOTICE); ?>
 <?php
 
 require_once(dirname(__FILE__) . '/../common/code/bootstrap.php');
@@ -15,7 +16,8 @@ class LibraryPage {
 
     static $view_fields = Array(
         'all' => 'All',
-        'categorized' => 'Categorized'
+        'categorized' => 'Categorized',
+        'condensed' => 'Condensed',
     );
 
     static $filter_fields = Array(
@@ -70,7 +72,7 @@ class LibraryPage {
 
         $this->view_value = $this->params['view'];
         if (strpos($this->view_value, 'filtered_') === 0) {
-            $this->filter_value = substr($this->view_value, strlen('filtered_'));
+            $this->filter_value = substr($this->view_value, strlen('filtered_')) ?: '';
 
             if (!array_key_exists($this->filter_value, self::$filter_fields)) {
                 BoostWeb::throw_http_error(400, "Malformed request",
@@ -80,13 +82,15 @@ class LibraryPage {
                 BoostWeb::throw_http_error(410, 'Filter field no longer supported.',
                     "Filter field {$this->filter_value} is no longer supported");
             }
+            $this->view_value = 'all';
         }
         else if (strpos($this->view_value, 'category_') === 0) {
-            $this->category_value = substr($this->view_value, strlen('category_'));
+            $this->category_value = substr($this->view_value, strlen('category_')) ?: '';
             if(!array_key_exists($this->category_value, $this->categories)) {
                 BoostWeb::throw_http_error(400, "Invalid category",
                     "Invalid category: {$this->category_value}");
             }
+            $this->view_value = 'all';
         }
         else {
             if (!array_key_exists($this->view_value, self::$view_fields)) {
@@ -200,6 +204,11 @@ class LibraryPage {
     }
 
     // Library display functions:
+
+    function libid($lib) {
+        $id = trim(preg_replace('@[^a-zA-Z0-9]+@', '-', $lib['key']), '-');
+        echo "lib-{$id}";
+    }
 
     function libref($lib) {
         if (!empty($lib['documentation'])) {
@@ -317,7 +326,7 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
   <div id="heading">
     <?php virtual("/common/heading.html"); ?>
   </div>
-  <?php latest_link($library_page->documentation_page); ?>
+  <?php echo latest_link($library_page->documentation_page); ?>
 
   <div id="body">
     <div id="body-inner">
@@ -344,12 +353,12 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
                   </div>
               </div>
 
-              <?php if ($library_page->view_value != 'categorized'): ?>
+              <?php if ($library_page->view_value == 'all'): ?>
 
               <?php $library_page->category_subtitle(); ?>
               <dl>
               <?php foreach ($library_page->filtered_libraries() as $lib): ?>
-                <dt><?php $library_page->libref($lib); ?></dt>
+                <dt id="<?php echo $library_page->libid($lib); ?>"><?php $library_page->libref($lib); ?></dt>
                 <dd>
                   <p><?php $library_page->libdescription($lib); ?></p>
                   <dl class="fields">
@@ -366,6 +375,21 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
               <?php endforeach; ?>
               </dl>
 
+              <?php elseif ($library_page->view_value == 'condensed'): ?>
+
+              <?php $library_page->category_subtitle(); ?>
+              <ul>
+              <?php foreach ($library_page->filtered_libraries() as $lib): ?>
+                <li id="<?php echo $library_page->libid($lib); ?>">
+                <?php
+                  $library_page->libref($lib);
+                  echo ': ';
+                  $library_page->libdescription($lib);
+                ?>
+                </li>
+              <?php endforeach; ?>
+              </ul>
+
               <?php else: ?>
 
               <h2>By Category</h2>
@@ -373,6 +397,7 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
               foreach ($library_page->categorized_libraries() as $name => $category) {
                 if(count($category['libraries'])) {
                   echo '<h3>';
+                  echo "\n";
                   $library_page->category_link($name);
                   echo '</h3>';
                   echo '<ul>';
@@ -382,8 +407,10 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
                     echo ': ';
                     $library_page->libdescription($lib);
                     echo '</li>';
+                    echo "\n";
                   }
                   echo '</ul>';
+                  echo "\n";
                 }
               }
               ?>

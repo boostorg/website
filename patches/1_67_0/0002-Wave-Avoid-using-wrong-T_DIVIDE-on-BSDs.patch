@@ -1,0 +1,35 @@
+From 0e25913e025b9e1b71a6f800a262892afd13f935 Mon Sep 17 00:00:00 2001
+From: Jan Beich <jbeich@FreeBSD.org>
+Date: Tue, 10 Apr 2018 17:18:37 +0000
+Subject: [PATCH] Avoid using wrong T_DIVIDE on BSDs
+
+In file included from libs/wave/src/instantiate_re2c_lexer.cpp:29:
+In file included from ./boost/wave/cpplexer/re2clex/cpp_re2c_lexer.hpp:38:
+In file included from ./boost/wave/cpplexer/re2clex/cpp_re.hpp:379:
+cpp.re:189:7: error: cannot initialize return object of type 'boost::wave::token_id' with an rvalue of type 'int'
+    { BOOST_WAVE_RET(T_DIVIDE); }
+      ^~~~~~~~~~~~~~~~~~~~~~~~
+./boost/wave/cpplexer/re2clex/cpp_re.hpp:65:16: note: expanded from macro 'BOOST_WAVE_RET'
+        return (i);                                                           \
+               ^~~
+---
+ boost/wave/cpplexer/re2clex/cpp_re.hpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/boost/wave/cpplexer/re2clex/cpp_re.hpp b/boost/wave/cpplexer/re2clex/cpp_re.hpp
+index 9cb64a7..2c6a04a 100644
+--- a/boost/wave/cpplexer/re2clex/cpp_re.hpp
++++ b/boost/wave/cpplexer/re2clex/cpp_re.hpp
+@@ -373,6 +373,9 @@ boost::wave::token_id scan(Scanner<Iterator> *s)
+     string_type   rawstringdelim;         // for use with C++11 raw string literals
+ 
+ // include the correct Re2C token definition rules
++#if (defined (__FreeBSD__) || defined (__DragonFly__) || defined (__OpenBSD__)) && defined (T_DIVIDE)
++#undef T_DIVIDE
++#endif
+ #if BOOST_WAVE_USE_STRICT_LEXER != 0
+ #include "strict_cpp_re.inc"
+ #else
+-- 
+2.16.2
+

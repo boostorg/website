@@ -3,7 +3,7 @@
   Copyright 2007 Redshift Software, Inc.
   Copyright 2012 Redshift Software, Inc.
   Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+  (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 */
 
 class BoostVersion {
@@ -110,41 +110,51 @@ class BoostVersion {
     static function from($value) {
         if ($value instanceof BoostVersion) {
             return $value;
-        }
-        else if (is_string($value)) {
-            $value = trim($value, " \t\n\r\0\x0B/");
-
-            switch($value) {
-                case 'master': return self::master();
-                case 'develop': return self::develop();
-                case 'latest': return self::latest();
-                case 'unreleased': return self::unreleased();
-                case 'hidden': return self::hidden();
-            }
-
-            if (preg_match('@^(\d+)[._](\d+)[._](\d+)[-._ ]?(?:(b(?:eta)?[- _.]*)(\d*)|(prerelease))?$@',
-                trim(strtolower($value)), $matches))
-            {
-                return new BoostVersion(Array(
-                    'major' => (int) $matches[1],
-                    'minor' => (int) $matches[2],
-                    'point' => (int) $matches[3],
-                    'release_stage' =>
-                        !empty($matches[4]) ? self::release_stage_beta : (
-                        !empty($matches[6]) ? self::release_stage_prerelease :
-                        self::release_stage_final),
-                    'extra' => empty($matches[4]) ? false :
-                        (int) ($matches[5] ?: 1),
-                ));
-            }
-            else
-            {
+        } else if (is_string($value)) {
+            $version = self::parseVersion($value);
+            if ($version) {
+                return $version;
+            } else {
                 throw new BoostVersion_Exception(
                     "Invalid version: ".html_encode($value));
             }
-        }
-        else {
+        } else {
             throw new BoostVersion_Exception("Can't convert to BoostVersion.");
+        }
+    }
+
+    /**
+     * Returns a BoostVersion representation of the version number in the
+     * argument, or null if it couldn't be parsed.
+     */
+    static function parseVersion($version_string) {
+        $version_string = strtolower(trim($version_string, " \t\n\r\0\x0B/"));
+
+        switch($version_string) {
+            case 'master': return self::master();
+            case 'develop': return self::develop();
+            case 'latest': return self::latest();
+            case 'unreleased': return self::unreleased();
+            case 'hidden': return self::hidden();
+        }
+
+        if (preg_match('@^(\d+)[._](\d+)[._](\d+)[-._ ]?(?:(b(?:eta)?[- _.]*)(\d*)|(prerelease))?$@', $version_string, $matches))
+        {
+            return new BoostVersion(Array(
+                'major' => (int) $matches[1],
+                'minor' => (int) $matches[2],
+                'point' => (int) $matches[3],
+                'release_stage' =>
+                    !empty($matches[4]) ? self::release_stage_beta : (
+                    !empty($matches[6]) ? self::release_stage_prerelease :
+                    self::release_stage_final),
+                'extra' => empty($matches[4]) ? false :
+                    (int) ($matches[5] ?: 1),
+            ));
+        }
+        else
+        {
+            return null;
         }
     }
 
@@ -302,6 +312,15 @@ class BoostVersion {
     function base_version() {
         return $this->version['stage'] ? $this->stage_name() :
             implode('.', $this->version_numbers());
+    }
+
+    /**
+     * The version number without release stage info or point versions
+     * (e.g. 1.65 for 1.65 betas and point releases)
+     */
+    function minor_release() {
+        return $this->version['stage'] ? $this->stage_name() :
+            implode('.', array_slice($this->version, 1, 2));
     }
 
     /** Return the git tag/branch for the version.

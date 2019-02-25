@@ -67,6 +67,8 @@ BoostDocumentation::library_documentation_page()->display_from_archive(
   array('','@^libs/fusion/.*(html|htm)$@i','basic','text/html', 'add_spirit_analytics'),
   array('','@^libs/wave/.*(html|htm)$@i','raw','text/html'),
   array('','@^libs/range/doc/.*(html|htm)$@i','raw','text/html'),
+  array('1.65.0','@^libs/assert/doc/html/.*(html|htm)$@i','basic','text/html'),
+  array('','@^libs/assert/doc/html/.*(html|htm)$@i','simple','text/html'),
   //~ special cases that can't be embeded in the standard frame
   array('','@^libs/locale/doc/.*(html|htm)$@i','raw','text/html'),
   array('','@^libs/hana/doc/.*(html|htm)$@i','simple','text/html'),
@@ -86,6 +88,8 @@ BoostDocumentation::library_documentation_page()->display_from_archive(
   array('','@^tools.*(html|htm)$@i','basic','text/html'),
   array('','@^doc/html/.*html$@i','boost_book_basic','text/html'),
   array('','@^more/.*html$@i','basic','text/html'),
+  //~ Add the development box to some of the plain html files
+  array('','@^index.html$@i', 'develop_box', 'text/html'),
   //~ the headers are text files displayed in an embeded page
   array('','@^boost/.*$@i','cpp','text/plain')
   )

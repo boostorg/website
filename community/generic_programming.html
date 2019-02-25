@@ -18,7 +18,7 @@
   </style>
 </head><!--
 Note: Editing website content is documented at:
-http://www.boost.org/development/website_updating.html
+https://www.boost.org/development/website_updating.html
 -->
 
 <body>
@@ -100,16 +100,16 @@ void* memcpy(void* region1, const void* region2, size_t n)
               know when to stop. The C++ standard library groups requirements
               such as these into <strong class="c1">concepts</strong>, in
               this case the <a href=
-              "http://www.sgi.com/tech/stl/InputIterator.html">Input
-              Iterator</a> concept (for <code>region2</code>) and the
-              <a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output
+              "http://en.cppreference.com/w/cpp/concept/InputIterator">Input
+              Iterator</a> concept (for <code>region2</code>) and the <a href=
+              "http://en.cppreference.com/w/cpp/concept/OutputIterator">Output
               Iterator</a> concept (for <code>region1</code>).</p>
 
               <p>If we rewrite the <code>memcpy()</code> as a function
               template, and use the <a href=
-              "http://www.sgi.com/tech/stl/InputIterator.html">Input
+              "http://en.cppreference.com/w/cpp/concept/InputIterator">Input
               Iterator</a> and <a href=
-              "http://www.sgi.com/tech/stl/OutputIterator.html">Output
+              "http://en.cppreference.com/w/cpp/concept/OutputIterator">Output
               Iterator</a> concepts to describe the requirements on the
               template parameters, we can implement a highly reusable
               <code>copy()</code> function in the following way:</p>
@@ -127,7 +127,8 @@ copy(InputIterator first, InputIterator last, OutputIterator result)
               <p>Using the generic <code>copy()</code> function, we can now
               copy elements from any kind of sequence, including a linked
               list that exports iterators such as <code>std::<a href=
-              "http://www.sgi.com/tech/stl/List.html">list</a></code>.</p>
+              "http://en.cppreference.com/w/cpp/container/list">list</a>
+              </code>.</p>
               <pre>
 #include &lt;list&gt;
 #include &lt;vector&gt;
@@ -191,16 +192,16 @@ int main()
               </ul>
 
               <p>The concepts used in the C++ Standard Library are documented
-              at the <a href=
-              "http://www.sgi.com/tech/stl/table_of_contents.html">SGI STL
-              site</a>.</p>
+              at the <a href="http://en.cppreference.com/w/">C++ reference
+              website</a>.</p>
 
               <h2><a name="traits" id="traits">Traits</a></h2>
 
               <p>A traits class provides a way of associating information
               with a compile-time entity (a type, integral constant, or
               address). For example, the class template <a href=
-              "http://www.sgi.com/tech/stl/iterator_traits.html"><code>std::iterator_traits&lt;T&gt;</code></a>
+              "http://en.cppreference.com/w/cpp/iterator/iterator_traits">
+              <code>std::iterator_traits&lt;T&gt;</code></a>
               looks something like this:</p>
               <pre>
 template &lt;class Iterator&gt;
@@ -228,12 +229,11 @@ struct iterator_traits {
 
               <p>For an in-depth description of
               <code>std::iterator_traits</code>, see <a href=
-              "http://www.sgi.com/tech/stl/iterator_traits.html">this
-              page</a> provided by SGI. Another very different expression of
-              the traits idiom in the standard is
-              <code>std::numeric_limits&lt;T&gt;</code> which provides
-              constants describing the range and capabilities of numeric
-              types.</p>
+              "http://en.cppreference.com/w/cpp/iterator/iterator_traits">this
+              page</a>. Another very different expression of the traits idiom
+              in the standard is <code>std::numeric_limits&lt;T&gt;</code>
+              which provides constants describing the range and capabilities
+              of numeric types.</p>
 
               <h2><a name="tag_dispatching" id="tag_dispatching">Tag
               Dispatching</a></h2>
@@ -242,44 +242,47 @@ struct iterator_traits {
               dispatch based on properties of a type, and is often used hand
               in hand with traits classes. A good example of this synergy is
               the implementation of the <a href=
-              "http://www.sgi.com/tech/stl/advance.html"><code>std::advance()</code></a>
-              function in the C++ Standard Library, which increments an
-              iterator <code>n</code> times. Depending on the kind of
-              iterator, there are different optimizations that can be applied
-              in the implementation. If the iterator is <a href=
-              "http://www.sgi.com/tech/stl/RandomAccessIterator.html">random
+              "http://en.cppreference.com/w/cpp/iterator/advance">
+              <code>std::advance()</code></a> function in the C++ Standard
+              Library, which increments an iterator <code>n</code> times.
+              Depending on the kind of iterator, there are different
+              optimizations that can be applied in the implementation. If the
+              iterator is <a href=
+              "http://en.cppreference.com/w/cpp/concept/RandomAccessIterator">random
               access</a> (can jump forward and backward arbitrary distances),
               then the <code>advance()</code> function can simply be
               implemented with <code>i += n</code>, and is very efficient:
               constant time. Other iterators must be <code>advance</code>d in
               steps, making the operation linear in n. If the iterator is
               <a href=
-              "http://www.sgi.com/tech/stl/BidirectionalIterator.html">bidirectional</a>,
-              then it makes sense for <code>n</code> to be negative, so we
-              must decide whether to increment or decrement the iterator.</p>
+              "http://en.cppreference.com/w/cpp/concept/BidirectionalIterator">
+              bidirectional</a>, then it makes sense for <code>n</code> to be
+              negative, so we must decide whether to increment or decrement
+              the iterator.</p>
 
               <p>The relation between tag dispatching and traits classes is
               that the property used for dispatching (in this case the
               <code>iterator_category</code>) is often accessed through a
               traits class. The main <code>advance()</code> function uses the
               <a href=
-              "http://www.sgi.com/tech/stl/iterator_traits.html"><code>iterator_traits</code></a>
-              class to get the <code>iterator_category</code>. It then makes
-              a call the the overloaded <code>advance_dispatch()</code>
-              function. The appropriate <code>advance_dispatch()</code> is
-              selected by the compiler based on whatever type the
-              <code>iterator_category</code> resolves to, either <a href=
-              "http://www.sgi.com/tech/stl/input_iterator_tag.html"><code>input_iterator_tag</code></a>,
-              <a href=
-              "http://www.sgi.com/tech/stl/bidirectional_iterator_tag.html"><code>
+              "http://en.cppreference.com/w/cpp/iterator/iterator_traits">
+              <code>iterator_traits</code></a> class to get the
+              <code>iterator_category</code>. It then makes a call the the
+              overloaded <code>advance_dispatch()</code> function. The
+              appropriate <code>advance_dispatch()</code> is selected by the
+              compiler based on whatever type the <code>iterator_category
+              </code> resolves to, either <a href=
+              "http://en.cppreference.com/w/cpp/iterator/iterator_tags">
+              <code>input_iterator_tag</code></a>, <a href=
+              "http://en.cppreference.com/w/cpp/iterator/iterator_tags"><code>
               bidirectional_iterator_tag</code></a>, or <a href=
-              "http://www.sgi.com/tech/stl/random_access_iterator_tag.html"><code>
+              "http://en.cppreference.com/w/cpp/iterator/iterator_tags"><code>
               random_access_iterator_tag</code></a>. A <strong class=
               "c1">tag</strong> is simply a class whose only purpose is to
               convey some property for use in tag dispatching and similar
               techniques. Refer to <a href=
-              "http://www.sgi.com/tech/stl/iterator_tags.html">this page</a>
-              for a more detailed description of iterator tags.</p>
+              "http://en.cppreference.com/w/cpp/iterator/iterator_tags">this
+              page</a> for a more detailed description of iterator tags.</p>
               <pre>
 namespace std {
   struct input_iterator_tag { };
@@ -321,11 +324,12 @@ namespace std {
               <p>An <i>adaptor</i> is a class template which builds on
               another type or types to provide a new interface or behavioral
               variant. Examples of standard adaptors are <a href=
-              "http://www.sgi.com/tech/stl/ReverseIterator.html">std::reverse_iterator</a>,
+              "http://en.cppreference.com/w/cpp/iterator/reverse_iterator">std::reverse_iterator</a>,
               which adapts an iterator type by reversing its motion upon
               increment/decrement, and <a href=
-              "http://www.sgi.com/tech/stl/stack.html">std::stack</a>, which
-              adapts a container to provide a simple stack interface.</p>
+              "http://en.cppreference.com/w/cpp/container/stack">std::stack
+              </a>, which adapts a container to provide a simple stack
+              interface.</p>
 
               <p>A more comprehensive review of the adaptors in the standard
               can be found <a href=
@@ -389,7 +393,7 @@ boost::filter_iterator_generator&lt;my_predicate,my_base_iterator&gt;::type
               to a function rather than stored in a variable. Most Boost
               object generators are named with the prefix
               "<code>make_</code>", after <code>std::<a href=
-              "http://www.sgi.com/tech/stl/pair.html">make_pair</a>(const&nbsp;T&amp;,&nbsp;const&nbsp;U&amp;)</code>.</p>
+              "http://en.cppreference.com/w/cpp/utility/pair/make_pair">make_pair</a>(const&nbsp;T&amp;,&nbsp;const&nbsp;U&amp;)</code>.</p>
 
               <p>For example, given:</p>
               <pre>
@@ -401,9 +405,9 @@ std::vector&lt;widget *&gt; widget_ptrs;
 
               <p>By chaining two standard object generators,
               <code>std::<a href=
-              "http://www.dinkumware.com/manuals/default.aspx?manual=compleat&amp;page=functio2.html#bind2nd">bind2nd</a>()</code>
+              "http://en.cppreference.com/w/cpp/utility/functional/bind12">bind2nd</a>()</code>
               and <code>std::<a href=
-              "http://www.dinkumware.com/manuals/default.aspx?manual=compleat&amp;page=functio2.html#mem_fun">mem_fun</a>()</code>,
+              "http://en.cppreference.com/w/cpp/utility/functional/mem_fun">mem_fun</a>()</code>,
               we can easily tweak all widgets:</p>
               <pre>
 void tweak_all_widgets1(int arg)
@@ -432,9 +436,9 @@ void tweak_all_widgets2(int arg)
               <p>A policy class is a template parameter used to transmit
               behavior. An example from the standard library is
               <code>std::<a href=
-              "http://www.dinkumware.com/manuals/default.aspx?manual=compleat&amp;page=memory.html#allocator">allocator</a></code>,
+              "http://en.cppreference.com/w/cpp/memory/allocator">allocator</a></code>,
               which supplies memory management behaviors to standard <a href=
-              "http://www.sgi.com/tech/stl/Container.html">containers</a>.</p>
+              "http://en.cppreference.com/w/cpp/container">containers</a>.</p>
 
               <p>Policy classes have been explored in detail by <a href=
               "http://www.moderncppdesign.com/">Andrei Alexandrescu</a> in
@@ -466,17 +470,17 @@ void tweak_all_widgets2(int arg)
               "/doc/libs/release/libs/iterator/doc/iterator_adaptor.html"><code>
               iterator_adaptor</code></a> that used non-orthogonal policies.
               There is also precedent in the standard library: <a href=
-              "http://www.dinkumware.com/manuals/default.aspx?manual=compleat&amp;page=string2.html#char_traits">
+              "http://en.cppreference.com/w/cpp/string/char_traits">
               <code>std::char_traits</code></a>, despite its name, acts as a
               policies class that determines the behaviors of <a href=
-              "http://www.dinkumware.com/manuals/default.aspx?manual=compleat&amp;page=string2.html#basic_string">
+              "http://en.cppreference.com/w/cpp/string/basic_string">
               std::basic_string</a>.</p>
 
               <h2>Notes</h2>
 
               <p><a name="footnote1" id="footnote1">[1]</a> Type generators
               are sometimes viewed as a workaround for the lack of
-              ``templated typedefs'' in C++.</p>
+              &ldquo;templated typedefs&rdquo; in C++.</p>
             </div>
           </div>
         </div>

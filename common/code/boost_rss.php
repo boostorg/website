@@ -1,7 +1,7 @@
 <?php
 # Copyright 2011, 2015-2016 Daniel James
 # Distributed under the Boost Software License, Version 1.0.
-# (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+# (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 
 class BoostRss {
     var $root;
@@ -61,17 +61,19 @@ class BoostRss {
 
     function rss_prefix($feed_file, $details) {
         $title = $this->encode_for_rss($details['title']);
-        $link = $this->encode_for_rss("http://www.boost.org/".$details['link']);
+        $link = $this->encode_for_rss("https://www.boost.org/".$details['link']);
+        $self_link = $this->encode_for_rss("https://www.boost.org/".$feed_file);
         $description = '';
         $language = 'en-us';
-        $copyright = 'Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)';
+        $copyright = 'Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)';
         return <<<EOL
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:boostbook="urn:boost.org:boostbook">
+<rss version="2.0" xmlns:boostbook="urn:boost-org:boostbook" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <generator>Boost Website Site Tools</generator>
     <title>{$title}</title>
     <link>{$link}</link>
+    <atom:link href="{$self_link}" rel="self" type="application/rss+xml" />
     <description>{$description}</description>
     <language>{$language}</language>
     <copyright>{$copyright}</copyright>
@@ -85,14 +87,14 @@ EOL;
 
     function generate_rss_item($page, $values, $description) {
         $xml = '';
-        $page_link = "http://www.boost.org/{$page->location}";
+        $page_link = "https://www.boost.org/{$page->location}";
 
         $xml .= '<item>';
 
         $xml .= '<title>'.$this->encode_for_rss($values['title_xml']).'</title>';
         // TODO: guid and link for beta/dev pages
         $xml .= '<link>'.$this->encode_for_rss($page_link).'</link>';
-        $xml .= '<guid>'.$this->encode_for_rss($page_link).'</guid>';
+        $xml .= '<guid>'.$this->encode_for_rss($page->guid).'</guid>';
 
         // Q: Maybe use $page->last_modified when there's no pub_date.
         $pub_date = null;

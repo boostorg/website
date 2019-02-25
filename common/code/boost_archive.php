@@ -4,41 +4,41 @@
   Copyright 2005-2008 Redshift Software, Inc.
   Copyright 2016 Daniel James
   Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+  (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 */
 
 require_once(dirname(__FILE__) . '/boost.php');
 
 class BoostArchive
 {
-    var $params;
+    var $pattern;
+    var $archive_dir;
+    var $archive_file_prefix;
 
+    /**
+     * @param array $params
+     */
     function __construct($params = Array()) {
-        $this->params = $params;
+        $this->pattern = BoostWebsite::array_get($params, 'pattern', '@^[/]([^/]+)[/](.*)$@');
+        $this->archive_dir = BoostWebsite::array_get($params, 'archive_dir', STATIC_DIR);
+        $this->archive_file_prefix = BoostWebsite::array_get($params, 'archive_file_prefix', ARCHIVE_FILE_PREFIX);
     }
 
-    function get_param($key, $default) {
-        return array_key_exists($key, $this->params) ? $this->params[$key] : $default;
-    }
-
+    /**
+     * Serve a file from the zipfile archive.
+     */
     function display_from_archive()
     {
-        // Set default values
-
-        $pattern = $this->get_param('pattern', '@^[/]([^/]+)[/](.*)$@');
-        $archive_dir = $this->get_param('archive_dir', STATIC_DIR);
-        $archive_file_prefix = $this->get_param('archive_file_prefix', ARCHIVE_FILE_PREFIX);
-
         // Get the archive location.
 
         $path_parts = array();
-        preg_match($pattern, $_SERVER["PATH_INFO"], $path_parts);
+        preg_match($this->pattern, $_SERVER["PATH_INFO"], $path_parts);
 
         $zipfile_name = $path_parts[1];
-        $path_in_zipfile = $archive_file_prefix . $path_parts[2];
+        $path_in_zipfile = $this->archive_file_prefix . $path_parts[2];
 
         $archive_file =
-                str_replace('\\','/', $archive_dir . '/' . $zipfile_name . '.zip');
+                str_replace('\\','/', $this->archive_dir . '/' . $zipfile_name . '.zip');
 
         // Check file exists.
 
@@ -79,29 +79,43 @@ class BoostArchive
         $this->display_raw_file($archive_file, $path_in_zipfile);
     }
 
+    /**
+     * Write out the content of a file from a zipfile.
+     *
+     * @param string $archive Path of the archive file
+     * @param string $file Path of the file in the archive
+     */
     function display_raw_file($archive, $file)
     {
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        ## header('Content-Disposition: attachment; filename="downloaded.pdf"');
         $file_handle = popen($this->unzip_command($archive, $file), 'rb');
         fpassthru($file_handle);
         $exit_status = pclose($file_handle);
 
-        // Don't display errors for a corrupt zip file, as we seemd to
-        // be getting them for legitimate files.
-
+        // $exit_status of 1 is a warning.
         if($exit_status > 1) {
             $this->unzip_error($exit_status, $archive);
         }
     }
 
+    /**
+     * Get the shell command for running unzip.
+     *
+     * @param string $archive Path to the zip file.
+     * @param string $path Path of the file in the archive.
+     * @return string Returns the shell command.
+     */
     function unzip_command($archive, $path) {
         return UNZIP
           .' -p '.escapeshellarg($archive)
           .' '.escapeshellarg($path);
     }
 
+    /**
+     * Write out error for a failed unzip.
+     *
+     * @param int $exit_status
+     * @param string $archive Path to the zip file.
+     */
     function unzip_error($exit_status, $archive) {
         $code="500 Internal Server Error";
 
@@ -131,7 +145,7 @@ class BoostArchive
         default: $message = 'Unknown unzip error code.'; break;
         }
 
-        if ($code) {
+        if ($code && !headers_sent()) {
             header("{$_SERVER["SERVER_PROTOCOL"]} {$code}", true);
         }
 

@@ -1,0 +1,26 @@
+From c3c8b31c6d76d2c4ffa76fad06a66fcf4766d8fb Mon Sep 17 00:00:00 2001
+From: "Vicente J. Botet Escriba" <vicente.botet@wanadoo.fr>
+Date: Thu, 24 Aug 2017 09:04:26 +0200
+Subject: [PATCH 4/4] [thread] #130 - Bug in boost::condition_variable on
+ Windows.
+
+---
+ boost/thread/win32/condition_variable.hpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/boost/thread/win32/condition_variable.hpp b/boost/thread/win32/condition_variable.hpp
+index 9c2bf83..7f670bb 100644
+--- a/boost/thread/win32/condition_variable.hpp
++++ b/boost/thread/win32/condition_variable.hpp
+@@ -221,7 +221,7 @@ namespace boost
+                 }
+                 ~entry_manager() BOOST_NOEXCEPT_IF(false)
+                 {
+-                    remove_waiter();
++                  remove_waiter_and_reset();
+                 }
+ 
+                 list_entry* operator->()
+-- 
+2.11.0
+

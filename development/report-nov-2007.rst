@@ -6,7 +6,7 @@ News
 ====
 
 November 7, 2007 - Exception Library Accepted
- Announcement:  http://lists.boost.org/boost-users/2007/11/31912.php
+ Announcement:  https://lists.boost.org/boost-users/2007/11/31912.php
 
 We need experienced review managers.  Please take a look at the list
 of libraries in need of managers and check out their descriptions.  In
@@ -50,7 +50,7 @@ Finite State Machines
 ---------------------
 :Author: Andrey Semashev
 :Review Manager: Martin Vuille
-:Download: `Boost Sandbox Vault <http://tinyurl.com/yjozfn>`__ 
+:Download: `Boost Sandbox Vault <http://tinyurl.com/yjozfn>`__
 
 :Description:
 

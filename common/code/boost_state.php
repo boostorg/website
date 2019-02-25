@@ -2,7 +2,7 @@
 
 # Copyright 2011, 2015 Daniel James
 # Distributed under the Boost Software License, Version 1.0.
-# (See accompanying file LICENSE_1_0.txt || http://www.boost.org/LICENSE_1_0.txt)
+# (See accompanying file LICENSE_1_0.txt || https://www.boost.org/LICENSE_1_0.txt)
 
 class BoostState_ParseError extends BoostException {}
 
@@ -129,6 +129,61 @@ class BoostState {
             fputs($file, ")\n");
         }
 
+        fclose($file);
+    }
+
+    static function load_json($file_path) {
+        if ($file_path && is_file($file_path)) {
+            $v = json_decode(file_get_contents($file_path), true);
+            if (is_null($v)) { throw new BoostState_ParseError(); }
+            return $v;
+        } else {
+            return array();
+        }
+    }
+
+    static function save_json($state, $file_path) {
+        $file = fopen($file_path, "wb");
+        ksort($state);
+        fputs($file, "{\n");
+        $first_record = true;
+        foreach ($state as $record_key => $record) {
+            if (!$first_record) { fputs($file, ",\n"); }
+            $first_record = false;
+
+            fputs($file, "    ");
+            fputs($file, json_encode($record_key));
+            fputs($file, ": {\n");
+
+            ksort($record);
+            $first = true;
+            foreach ($record as $key => $value) {
+                if (!$first) { fputs($file, ",\n"); }
+                $first = false;
+
+                fputs($file, "        ");
+                fputs($file, json_encode($key));
+                fputs($file, ":\n");
+                fputs($file, "            ");
+
+                if (is_float($value)) {
+                    $v = json_encode($value);
+                    if (ctype_digit($v)) { $v .= '.0'; }
+                    fputs($file, $v);
+                } else if ($value instanceof \DateTime || $value instanceof \DateTimeInterface) {
+                    // Will load as a string, but can be decoded.
+                    fputs($file, json_encode($value->format(DATE_RSS)));
+                } else {
+                    // Should possibly check that this is an atom.
+                    // Maybe write a recursive thing?
+                    fputs($file, json_encode($value));
+                }
+            }
+            fputs($file, "\n");
+            fputs($file, "    }");
+        }
+        fputs($file, "\n");
+        fputs($file, "}\n");
         fclose($file);
     }
 }

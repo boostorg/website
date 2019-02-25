@@ -1,7 +1,7 @@
 <?php
 # Copyright 2011, 2015 Daniel James
 # Distributed under the Boost Software License, Version 1.0.
-# (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+# (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 
 class BoostPages {
     // If you change these values, they will only apply to new pages.
@@ -368,8 +368,8 @@ class BoostPages {
                         // again on the next run.
                         echo "Using old cached entry for {$page}.\n";
                     }
-                    $this->generate_quickbook_page($page_data, $boostbook_values);
                     $this->update_page_data_from_boostbook_values($page_data, $boostbook_values);
+                    $this->generate_quickbook_page($page_data, $boostbook_values);
                     if ($fresh_cache) {
                         $page_data->page_state = null;
                         ++$page_data->update_count;
@@ -454,6 +454,7 @@ class BoostPages {
         if (!$page_data->location) {
             $location_data = $this->get_page_location_data($page_data->qbk_file);
             $page_data->location = "{$location_data['destination']}/{$page_data->id}.html";
+            $page_data->guid = "https://www.boost.org/{$page_data->location}";
         }
     }
 
@@ -533,7 +534,7 @@ class BoostPages_Page {
     var $qbk_file;
 
     // Page state
-    var $section, $page_state, $location, $id, $last_modified;
+    var $section, $page_state, $location, $guid, $id, $last_modified;
     var $qbk_hash, $update_count;
 
     // Boostbook data stored for use in indexes etc.
@@ -557,6 +558,7 @@ class BoostPages_Page {
         $this->section = BoostWebsite::array_get($attrs, 'section');
         $this->page_state = BoostWebsite::array_get($attrs, 'page_state');
         $this->location = BoostWebsite::array_get($attrs, 'location');
+        $this->guid = BoostWebsite::array_get($attrs, 'guid');
         $this->id = BoostWebsite::array_get($attrs, 'id');
         $this->title_xml = BoostWebsite::array_get($attrs, 'title');
         $this->purpose_xml = BoostWebsite::array_get($attrs, 'purpose');
@@ -583,6 +585,10 @@ class BoostPages_Page {
         else if (is_numeric($this->last_modified)) {
             $this->last_modified = new DateTime("@{$this->last_modified}");
         }
+
+        if (!$this->guid && $this->location) {
+            $this->guid = "http://www.boost.org/{$this->location}";
+        }
     }
 
     function state() {
@@ -590,6 +596,7 @@ class BoostPages_Page {
             'section' => $this->section,
             'page_state' => $this->page_state,
             'location' => $this->location,
+            'guid'  => $this->guid,
             'id'  => $this->id,
             'title' => $this->title_xml,
             'purpose' => $this->purpose_xml,
@@ -618,9 +625,11 @@ class BoostPages_Page {
         return (object) array(
             'id' => $this->id,
             'location' => $this->location,
+            'guid' => $this->guid,
             'full_title_xml' => $this->full_title_xml($this->title_xml),
             'web_date' => $this->web_date($this->pub_date),
             'download_page' => $this->get_download_page(),
+            'download_table' => $this->download_table(),
             'documentation' => $this->get_documentation(),
             'title_xml' => $this->title_xml,
             'purpose_xml' => $this->purpose_xml,

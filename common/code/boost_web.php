@@ -3,7 +3,7 @@
   Copyright 2005-2008 Redshift Software, Inc.
   Copyright 2016 Daniel James
   Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+  (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)
 */
 
 // Some miscellaneous functions for serving web pages....
@@ -86,7 +86,7 @@ class BoostWeb
         header("{$_SERVER["SERVER_PROTOCOL"]} {$error}");
 
         $head = <<<HTML
-      <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       <title>Boost C++ Libraries - {$error_html}</title>
 HTML;
 
