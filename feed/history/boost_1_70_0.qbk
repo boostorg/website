@@ -94,6 +94,11 @@
     [@/libs/beast/doc/html/beast/release_notes.html Release Notes]
     for a complete list of changes.
 
+* [phrase library..[@/libs/dll/ DLL]:]
+  * New macro [@/libs/dll/BOOST_DLL_USE_STD_FS.html BOOST_DLL_USE_STD_FS]. Define it to `1` to make the Boost.DLL use C++17's `std::filesystem::path`, `std::system_error` and `std::error_code` ([github dll 21]). Note that exception types change from `boost::system::system_error` to `std::system_error`, so make sure to update `catch`es.
+  * Significant rewrite of the dynamic loadable detection and decoration logic. More precise errors are now reported in case of loading failures. Added `shared_library::decorate()` function that returns a decorated path to the library without doing any platform related queries and detections. Prefer using `shared_library::load` and `shared_library` constructors for better results (many thanks to Loïc Touraine for the work [github_pr dll 23]).
+  * CI hardening, docs updates, typos fixes, cleanups and many portability fixes.
+
 * [phrase library..[@/libs/dynamic_bitset/ Dynamic Bitset]:]
   * Disabled hardware-assisted popcount (added in 1.69.0) on MSVC due to undefined behavior
     on older CPUs. ([github dynamic_bitset 33] [github_pr dynamic_bitset 35])
@@ -139,6 +144,10 @@
     after an error reported by Billy O'Neal ([github_pr poly_collection 9]).
   * Fixed a potentially serious bug with an internal cache structure.
 
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * Build fix for iOS 32-bit ARM (many thanks to Ivan Ponomarev for providing the fix [github_pr stacktrace 70])
+  * Fixed multiple typos, warnings and updated the docs.
+
 * [phrase library..[@/libs/test/ Test]:]
   * Boost.test v3.10 see the
     [@libs/test/doc/html/boost_test/change_log.html Changes log]
@@ -171,7 +180,15 @@
       [github_pr test 183], [github_pr test 184], [github_pr test 190], [github_pr test 195],
       [github_pr test 195], [github_pr test 197], [github_pr test 205]
 
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * Support for the GHS C++ compiler added (many thanks to Brandon Castellano for providing the patch [github_pr type_index 28])
+  * Optimized string and type comparisons (many thanks to Andrey Semashev for providing the patch [github_pr type_index 23])
+  * Fixed clang-win compilation (many thanks to Peter Dimov for providing the patch [github_pr type_index 25])
+  * CI hardening.
 
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Many cleanups and internal improvements, many thanks to Nikita Kniazev ([github_pr variant 55], [github_pr variant 56], [github_pr variant 57]) and Louis Dionne ([github_pr variant 51])
+  * CI hardening.
 
 * /TODO/
 
