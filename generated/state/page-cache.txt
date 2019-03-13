@@ -16759,6 +16759,13 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/histogram/">Histogram</a>:</span> Fast and extensible
+"          multi-dimensional histograms with convenient interface for C++14, from
+"          Hans Dembinski.
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <em>TODO</em>
 "        </div>
 "      </li>
@@ -16892,6 +16899,42 @@
 "              <div>
 "                See the full <a href="/libs/beast/doc/html/beast/release_notes.html">Release
 "                Notes</a> for a complete list of changes.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/dll/">DLL</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                New macro <a href="/libs/dll/BOOST_DLL_USE_STD_FS.html">BOOST_DLL_USE_STD_FS</a>.
+"                Define it to <code><span class="number">1</span></code> to make
+"                the Boost.DLL use C++17's <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span></code>,
+"                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">system_error</span></code> and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">error_code</span></code> (<a href="https://github.com/boostorg/dll/issues/21">#21</a>). Note that
+"                exception types change from <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">system</span><span class="special">::</span><span class="identifier">system_error</span></code>
+"                to <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">system_error</span></code>, so make sure to update
+"                <code><span class="keyword">catch</span></code>es.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Significant rewrite of the dynamic loadable detection and decoration
+"                logic. More precise errors are now reported in case of loading failures.
+"                Added <code><span class="identifier">shared_library</span><span class="special">::</span><span class="identifier">decorate</span><span class="special">()</span></code> function that returns a decorated
+"                path to the library without doing any platform related queries and
+"                detections. Prefer using <code><span class="identifier">shared_library</span><span class="special">::</span><span class="identifier">load</span></code>
+"                and <code><span class="identifier">shared_library</span></code>
+"                constructors for better results (many thanks to Loïc Touraine for
+"                the work <a href="https://github.com/boostorg/dll/pull/23">PR#23</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                CI hardening, docs updates, typos fixes, cleanups and many portability
+"                fixes.
 "              </div>
 "            </li>
 "          </ul>
@@ -17106,6 +17149,192 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/stacktrace/">Stacktrace</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Build fix for iOS 32-bit ARM (many thanks to Ivan Ponomarev for providing
+"                the fix <a href="https://github.com/boostorg/stacktrace/pull/70">PR#70</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed multiple typos, warnings and updated the docs.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/test/">Test</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Boost.test v3.10 see the <a href="libs/test/doc/html/boost_test/change_log.html">Changes
+"                log</a> for more details.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Breaking changes:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Boost.Test <code><span class="identifier">minimal</span><span class="special">.</span><span class="identifier">hpp</span></code>
+"                      is now showing a deprecation warning,
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Change in floating point comparison may fail tests that were
+"                      silently not using the floating point comparison logic prior
+"                      to this release,
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Internal API change to <code><span class="identifier">unit_test_log_formatter</span></code>,
+"                      see detailed change log,
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                New feature:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Floating point comparison has been extended to capture non-floating
+"                      point and arithmetic operands: expressions like <code><span class="identifier">BOOST_TEST</span><span class="special">(</span><span class="number">3.0001</span> <span class="special">==</span>
+"                      <span class="number">3</span><span class="special">)</span></code>
+"                      now use floating point support of Boost.Test,
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Custom datasets are not required to declare the <code><span class="identifier">sample</span></code> type field anymore,
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Extending template test cases from <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">tuple</span></code>
+"                      to any variadic definition,
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Windows support for timed tests,
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Timed test on test-suites,
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Removed dependency to Boost.Timer,
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      New macro <code><span class="identifier">BOOST_TEST_INFO_SCOPE</span></code>
+"                      for scoped context declaration,
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Improved <code><span class="identifier">BOOST_TEST_CONTEXT</span></code>
+"                      syntax
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Bug fixes and pull requests:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Trac tickets: <a href="https://svn.boost.org/trac/boost/ticket/7397">#7397</a>, <a href="https://svn.boost.org/trac/boost/ticket/9434">#9434</a>, <a href="https://svn.boost.org/trac/boost/ticket/13106">#13106</a>, <a href="https://svn.boost.org/trac/boost/ticket/13418">#13418</a>
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GitHub Issues: <a href="https://github.com/boostorg/test/issues/133">#133</a>, <a href="https://github.com/boostorg/test/issues/138">#138</a>, <a href="https://github.com/boostorg/test/issues/141">#141</a>, <a href="https://github.com/boostorg/test/issues/157">#157</a>,
+"                      <a href="https://github.com/boostorg/test/issues/160">#160</a>, <a href="https://github.com/boostorg/test/issues/174">#174</a>, <a href="https://github.com/boostorg/test/issues/176">#176</a>, <a href="https://github.com/boostorg/test/issues/177">#177</a>, <a href="https://github.com/boostorg/test/issues/180">#180</a>,
+"                      <a href="https://github.com/boostorg/test/issues/181">#181</a>, <a href="https://github.com/boostorg/test/issues/194">#194</a>, <a href="https://github.com/boostorg/test/issues/196">#196</a>, <a href="https://github.com/boostorg/test/issues/198">#198</a>, <a href="https://github.com/boostorg/test/issues/199">#199</a>,
+"                      <a href="https://github.com/boostorg/test/issues/202">#202</a>, <a href="https://github.com/boostorg/test/issues/203">#203</a>, <a href="https://github.com/boostorg/test/issues/204">#204</a>
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GitHub Pull Requests: <a href="https://github.com/boostorg/test/pull/171">PR#171</a>, <a href="https://github.com/boostorg/test/pull/172">PR#172</a>, <a href="https://github.com/boostorg/test/pull/182">PR#182</a>,
+"                      <a href="https://github.com/boostorg/test/pull/183">PR#183</a>, <a href="https://github.com/boostorg/test/pull/184">PR#184</a>, <a href="https://github.com/boostorg/test/pull/190">PR#190</a>, <a href="https://github.com/boostorg/test/pull/195">PR#195</a>,
+"                      <a href="https://github.com/boostorg/test/pull/195">PR#195</a>, <a href="https://github.com/boostorg/test/pull/197">PR#197</a>, <a href="https://github.com/boostorg/test/pull/205">PR#205</a>
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/type_index/">TypeIndex</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Support for the GHS C++ compiler added (many thanks to Brandon Castellano
+"                for providing the patch <a href="https://github.com/boostorg/type_index/pull/28">PR#28</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Optimized string and type comparisons (many thanks to Andrey Semashev
+"                for providing the patch <a href="https://github.com/boostorg/type_index/pull/23">PR#23</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed clang-win compilation (many thanks to Peter Dimov for providing
+"                the patch <a href="https://github.com/boostorg/type_index/pull/25">PR#25</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                CI hardening.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/variant/">Variant</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Many cleanups and internal improvements, many thanks to Nikita Kniazev
+"                (<a href="https://github.com/boostorg/variant/pull/55">PR#55</a>, <a href="https://github.com/boostorg/variant/pull/56">PR#56</a>, <a href="https://github.com/boostorg/variant/pull/57">PR#57</a>) and Louis Dionne
+"                (<a href="https://github.com/boostorg/variant/pull/51">PR#51</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                CI hardening.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <em>TODO</em>
 "        </div>
 "      </li>
@@ -17142,7 +17371,7 @@
 "  </div>
 "
 -hash
-"c5a8683473b0a468a93abc55f0552962f08093bfeca933cfad552872bf19e4c6
+"37686422bfd07d60988b34d0f2153c7d293ac3bc80ff872110c350ea364ef476
 -id
 "version_1_70_0
 -notice_url
@@ -17150,7 +17379,7 @@
 -pub_date
 -purpose_xml
 "
-"      New Libraries: Updated Libraries:
+"      New Libraries: Outcome, Histogram. Updated Libraries:
 "
 -title_xml
 "Version 1.70.0
