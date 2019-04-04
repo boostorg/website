@@ -122,6 +122,19 @@
     * Added support for generating another log file name before collecting the file in the text file sink backend. This allows to combine appending to an existing log file with timestamps and file counters in log filenames, and, consequently, file collection in general.
   * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
+* [phrase library..[@/libs/math/ Math]:]
+  * New features:
+    * Add Lanczos smoothing derivatives
+    * Move `numerical_differentiation.hpp` from `boost/math/tools/` to `boost/math/differentiation/finite_difference.hpp`.
+    * Add mean, variance, skewness, kurtosis, median, Gini coefficient, and median absolute deviation to `tools/univariate_statistics.hpp`.
+    * Add correlation coefficients and covariance to `tools/bivariate_statistics.hpp`
+    * Add absolute Gini coefficient, Hoyer sparsity, oracle SNR, and the /M/[sub 2]/M/[sub 4] SNR estimator to `tools/signal_statistics.hpp`.
+    * Add total variation, l0, l1, l2, and sup norms, as well as corresponding distance functions to `tools/norms.hpp`.
+    * Add move constructors for polynomials, support complex coefficients, add `.prime()` and `.integrate()` methods.
+    * Add `quadratic_roots` to `tools/roots.hpp`.
+    * Add support for complex-valued functions to Newton's method in `roots.hpp`.
+    * Add Catmull-Rom interpolator.
+
 * [phrase library..[@/libs/mp11/ Mp11]:]
   * Renamed `mp_invoke` to `mp_invoke_q`
   * Added `mp_similar`
@@ -140,6 +153,16 @@
     is not documented in the reference section (i.e., it has semi-official status). 
   * Maintenance work.
   
+* [phrase library..[@/libs/multiprecision/ Multiprecision]:]
+  * Fix various conversion issues in the traits classes, check for compatibility with Boost.Optional.
+  * Prevent instantiation of `std::numeric_limits` on any old type when checking for convertibility.  See [@https://github.com/boostorg/multiprecision/issues/98 #98].
+  * Update variable precision code to accound for arbitrary precision integers.  See [@https://github.com/boostorg/multiprecision/issues/103 #103].
+  * Add support for XML serialization archives.
+  * Fix bug in fixed precision iostream formatting in `mpf_float` and `mpfr_float`.  See [@https://github.com/boostorg/multiprecision/issues/113 #113].
+  * Add more overloads for special functions which are better handled natively by MPFR.
+  * Fixed bug in generic `exp` implementation which could cause invariant failure.
+  * Fixed generic conversion from float to integer to avoid undefined behaviour.  See [@https://github.com/boostorg/multiprecision/issues/110 #110].
+
 * [phrase library..[@/libs/poly_collection/ PolyCollection]:]
   * Improved handling of stateful allocators and allocator propagation traits,
     after an error reported by Billy O'Neal ([github_pr poly_collection 9]).
@@ -186,6 +209,12 @@
   * Optimized string and type comparisons (many thanks to Andrey Semashev for providing the patch [github_pr type_index 23])
   * Fixed clang-win compilation (many thanks to Peter Dimov for providing the patch [github_pr type_index 25])
   * CI hardening.
+
+* [phrase library..[@/libs/type_traits/ TypeTraits]:]
+  * Added is_bounded_array and is_unbounded_array.
+  * Added copy_reference and copy_cv_ref.
+  * Improved support for msvc with /clr option.
+  * Misc compiler compatibility fixes.
 
 * [phrase library..[@/libs/variant/ Variant]:]
   * Many cleanups and internal improvements, many thanks to Nikita Kniazev ([github_pr variant 55], [github_pr variant 56], [github_pr variant 57]) and Louis Dionne ([github_pr variant 51])
