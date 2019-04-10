@@ -47,6 +47,44 @@
   * Keep the list of libraries in alphabetical order please.
 ]
 
+* [phrase library..[@/libs/asio/ Asio]:]
+  * This release includes a number of new features, bug fixes, performance enhancements,
+    and documentation improvements. Notable changes include:
+    * Added the ability to use custom I/O executors with I/O objects (such as sockets).
+    * Added a new `async_result` form with an `initiate` static member function.
+    * Updated the Coroutines TS support and promoted it to the `asio` namespace.
+    * Added a new `DynamicBuffer_v2` concept which is CopyConstructible.
+    * Added a new `async_compose` function that simplifies the implementation of
+      user-defined asynchronous operations.
+    * Added a `make_strand` helper function.
+    * Relaxed the completion condition type requirements to only require
+      move-constructibility rather than copy-constructibility.
+    * Added a constructor for `local::basic_endpoint` that takes a `string_view`.
+    * Added the noexcept qualifier to various functions.
+    * Added a new `BOOST_ASIO_DISABLE_VISIBILITY` configuration `#define`.
+    * Enabled recycling of the memory used to type-erase a function object with the
+      polymorphic executor.
+    * Changed receive operations to return the correct number of bytes transferred
+      when truncation (`error::message_size`) occurs on a datagram-oriented socket.
+    * Fixed calculation of absolute timeout when the backend uses
+      `pthread_cond_timedwait`.
+    * Changed the range-based asynchronous connect operation to deduce the
+      `EndpointSequence` iterator type.
+    * Fixed `buffer_sequence_begin` and `buffer_sequence_end` to prevent implicit
+      conversion.
+    * Ensured SSL handshake errors are propagated to the peer before the local
+      operation completes.
+    * Suppressed the `eof` error on SSL shutdown as it actually indicates success.
+    * Added a fallback error code for when we OpenSSL produces an
+      `SSL_ERROR_SYSCALL` result without an associated error.
+    * Changed composed asynchronous read and write operations to move buffer sequence objects.
+    * Fixed a macOS-specific warning about the deprecation of `OSMemoryBarrier`.
+    * Fixed compile errors that occur when using the composed read and write
+      operations with MSVC 11.0.
+    * Improved `dispatch`, `post` and `defer` documentation.
+    * Fixed a Windows-specific memory leak that may occur when `system_executor` is used.
+  * Consult the [@/doc/libs/1_70_0/doc/html/boost_asio/history.html Revision History] for further details.
+
 * [phrase library..[@/libs/beast/ Beast]:]
   [*BIG Update!!!]
   * Some APIs have changed.
