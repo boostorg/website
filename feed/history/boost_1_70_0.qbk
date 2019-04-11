@@ -206,6 +206,57 @@
     after an error reported by Billy O'Neal ([github_pr poly_collection 9]).
   * Fixed a potentially serious bug with an internal cache structure.
 
+* [phrase library..[@/libs/spirit/ Spirit]:]
+  * Removed use of deprecated `boost/detail/iterator.hpp` header. [github_pr spirit 432]
+  * X3
+    * Integer parsers should now handle user defined types. [github_pr spirit 429]
+    * [/^] [*Note:] The `check_overflow` trait default implementation now relies on
+      `std::numeric_limits<T>::is_bounded` instead of `boost::integer_traits<T>::is_integral`.
+    * Removed sequence into plain parsing. Now it triggers a compile time error
+      instead of silently parsing the the sequence and taking the last value as a result. [github_pr spirit 439]
+    * Fixed `parse_rule` instantiation with `BOOST_SPIRIT_INSTANTIATE` when:
+      * A rule has no attribute. [github_pr spirit 455]
+      * An actual attribute is not of type a rule was declared with. [github_pr spirit 456] [github spirit 457]
+    * [/^] A [*huge] thanks goes out to [@https://github.com/Xeverous Xeverous]
+      for reporting a regression in [github spirit 453].
+    * Fixed unneded attribute synthesization and no-transformation attribute
+      reference pass-through in rules. [github spirit 444] [github_pr spirit 449] [github_pr spirit 452]
+    * Removed broken 1.0#INF parser. It was poorly documented and never worked. [github spirit 415] [github_pr spirit 458] [ticket 8699]
+    * The undocumented `make_attribute` trait was removed due to bugs [github_pr spirit 449]
+      and to simplify attribute transformation. [github_pr spirit 460]
+    * [/^] If you were using it to workaround bugs in attribute transformation -
+      they should not be needed anymore as of this release.
+    * The integer value parser now respects `std::numeric_limits<T>::digits10` value. [github_pr spirit 469]
+    * Fixed underflow check for a `(Min % Base) == 0` corner case. [github_pr spirit 469]
+    * Fixed an output value on overflow of IgnoreOverflowDigits=true integer parser. [github_pr spirit 470]
+    * Container attribute elements were copyied, but not moved. [github_pr spirit 472]
+    * Special handling of references in `transform_attribute` was removed. [github_pr spirit 480]
+  * V2
+    * Macro name collisions and namespace conflicts with Boost.Endian were fixed. [github_pr spirit 349] [github_pr spirit 482]
+    * utree
+      * Fixed UB in tag getter due to left shift of negative value. [github_pr spirit 423]
+      * Fixed double-conversion (`spirit::string -> std::string -> spirit::string`). [github_pr spirit 462]
+    * Qi
+      * Added static asserts for rule skipper type problems. [github_pr spirit 427]
+      * The `check_overflow` trait default implementation now relies on
+        `std::numeric_limits<T>::is_bounded` instead of `boost::integer_traits<T>::is_integral` [github_pr spirit 429]
+      * Integer parsers should now handle user defined types. [github_pr spirit 429]
+      *[/^] [*Note:] The `check_overflow` trait default implementation now relies on
+        `std::numeric_limits<T>::is_bounded` instead of `boost::integer_traits<T>::is_integral`.
+      * Removed broken 1.0#INF parser. It was poorly documented and never worked. [github spirit 415] [github_pr spirit 458] [ticket 8699]
+      * The undocumented `make_attribute` trait was merged into `transform_attribute` trait. [github_pr spirit 471]
+      * The `pre_transform`, `post_transform`, and `fail_transform` utility functions
+        were removed in favor of directly using `pre`/`post`/`fail` of the transform trait. [github_pr spirit 467]
+      * The integer value parser now respects `std::numeric_limits<T>::digits10` value. [github_pr spirit 469]
+      * Fixed underflow check for a `(Min % Base) == 0` corner case. [github_pr spirit 469]
+      * Fixed an output value on overflow of IgnoreOverflowDigits=true integer parser. [github_pr spirit 470]
+      * Special handling of references in `transform_attribute` was removed. [github_pr spirit 480]
+    * Lex
+      * Fixed UB in default constructor of lexer with user specified token type. [github_pr spirit 420]
+  * Classic:
+    * Fixed `position_iterator` forming reference to local when the
+      underlying iterator dereference operator returns a non-reference type. [github_pr spirit 422] [ticket 9737]
+
 * [phrase library..[@/libs/stacktrace/ Stacktrace]:]
   * Build fix for iOS 32-bit ARM (many thanks to Ivan Ponomarev for providing the fix [github_pr stacktrace 70])
   * Fixed multiple typos, warnings and updated the docs.
