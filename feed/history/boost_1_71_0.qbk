@@ -45,6 +45,71 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/flyweight/index.html Flyweight]:]
   * Maintenance work.
 
+* [phrase library..[@/libs/parameter/doc/html/index.html Parameter]:]
+  * Upgraded keyword generation macro `BOOST_PARAMETER_TEMPLATE_KEYWORD`
+    ([github_pr parameter 15]).
+  * Moved keyword generation macro `BOOST_PARAMETER_NESTED_KEYWORD` from
+    [@/libs/accumulators/doc/html/index.html Accumulators] to this library
+    ([github_pr parameter 28]).
+  * Added support for `std::reference_wrapper` and `std::ref()`
+    ([github_pr parameter 16]).
+  * Moved `boost::parameter::required`, `boost::parameter::optional`, and
+    `boost::parameter::deduced` metafunction definitions to their own header
+    files in directory boost/parameter ([github_pr parameter 18]).
+  * Added support for Boost.[@/libs/parameter/doc/html/index.html
+    Parameter]-enabled function call operators ([github_pr parameter 20]).
+  * Added support for parameter category qualifiers "forward", "consume", and
+    "move_from" (current qualifiers are "in", "out", and "in_out")
+    ([github_pr parameter 21]) ([github_pr parameter 23]) based on
+    [@http://www.modernescpp.com/index.php/c-core-guidelines-how-to-pass-function-parameters].
+    Added new usage syntax `BOOST_PARAMETER_NAME((object-name), namespace-name) qualifier(tag-name))`
+    and `BOOST_PARAMETER_NAME(qualifier(name))`.  (Existing code that uses
+    qualifiers directly and correctly with `BOOST_PARAMETER_FUNCTION` and
+    other code generation macros should remain unaffected for now, so no
+    breaking changes.)  The reason for the change in usage is to enable
+    applying of parameter category constraints to
+    Boost.[@/libs/parameter/doc/html/index.html Parameter]-enabled functions
+    and constructors invoked through argument composition.  (Otherwise, it is
+    currently possible to use argument composition to bypass parameter
+    category constraints applied in `BOOST_PARAMETER_FUNCTION` et. al.)
+  * Added support for perfect forwarding ([github_pr parameter 23])
+    ([github_pr parameter 26]), so that `parameter::parameters::operator()`
+    can accept non-`const` rvalues.  As a positive side effect,
+    Boost.[@/libs/parameter/doc/html/index.html Parameter]-enabled functions
+    and constructors are no longer bound by `BOOST_PARAMETER_MAX_ARITY` on
+    compilers that support perfect forwarding.  User code can now check for
+    this support by detecting the configuration macro
+    `BOOST_PARAMETER_HAS_PERFECT_FORWARDING`, or manually turn off this
+    support by defining the configuration macro
+    `BOOST_PARAMETER_DISABLE_PERFECT_FORWARDING`.
+  * Added metafunctions `boost::parameter::is_argument_pack` ([github_pr parameter 27]),
+    `boost::parameter::are_tagged_arguments` ([github_pr parameter 52]), and
+    `boost::parameter::result_of::compose` ([github_pr parameter 75]).
+  * Added variadic function template `boost::parameter::compose()` which takes
+    in named arguments and returns them in an argument pack
+    ([github_pr parameter 52]).  For compilers that do not support perfect
+    forwarding, the configuration macro `BOOST_PARAMETER_COMPOSE_MAX_ARITY`
+    determines the maximum number of arguments that
+    `boost::parameter::compose()` can take in ([github_pr parameter 61]).
+  * Added code generation macros
+    `BOOST_PARAMETER_BASIC_FUNCTION_CALL_OPERATOR`,
+    `BOOST_PARAMETER_BASIC_CONST_FUNCTION_CALL_OPERATOR`,
+    `BOOST_PARAMETER_NO_SPEC_FUNCTION`,
+    `BOOST_PARAMETER_NO_SPEC_MEMBER_FUNCTION`,
+    `BOOST_PARAMETER_NO_SPEC_CONST_MEMBER_FUNCTION`,
+    `BOOST_PARAMETER_NO_SPEC_FUNCTION_CALL_OPERATOR`,
+    `BOOST_PARAMETER_NO_SPEC_CONST_FUNCTION_CALL_OPERATOR`,
+    `BOOST_PARAMETER_NO_SPEC_CONSTRUCTOR`, and
+    `BOOST_PARAMETER_NO_SPEC_NO_BASE_CONSTRUCTOR` ([github_pr parameter 52]).
+  * Added support for Boost.[@/libs/mp11/doc/html/mp11.html MP11]
+    ([github_pr parameter 47]) ([github_pr parameter 66])
+    ([github_pr parameter 70]).  User code can now check for this support by
+    detecting the configuration macro `BOOST_PARAMETER_CAN_USE_MP11`, or
+    manually turn off this support by defining the configuration macro
+    `BOOST_PARAMETER_DISABLE_MP11_USAGE`.
+  * Improved support for parameter-dependent return types via SFINAE
+    ([github_pr parameter 73]).
+
 * [phrase library..[@/libs/poly_collection/ PolyCollection]:]
   * Maintenance work.
 
