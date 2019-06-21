@@ -18450,6 +18450,121 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/parameter/doc/html/index.html">Parameter</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Upgraded keyword generation macro <code><span class="identifier">BOOST_PARAMETER_TEMPLATE_KEYWORD</span></code>
+"                (<a href="https://github.com/boostorg/parameter/pull/15">PR#15</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Moved keyword generation macro <code><span class="identifier">BOOST_PARAMETER_NESTED_KEYWORD</span></code>
+"                from <a href="/libs/accumulators/doc/html/index.html">Accumulators</a>
+"                to this library (<a href="https://github.com/boostorg/parameter/pull/28">PR#28</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added support for <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">reference_wrapper</span></code>
+"                and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">ref</span><span class="special">()</span></code>
+"                (<a href="https://github.com/boostorg/parameter/pull/16">PR#16</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Moved <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">parameter</span><span class="special">::</span><span class="identifier">required</span></code>, <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">parameter</span><span class="special">::</span><span class="identifier">optional</span></code>,
+"                and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">parameter</span><span class="special">::</span><span class="identifier">deduced</span></code> metafunction definitions
+"                to their own header files in directory boost/parameter (<a href="https://github.com/boostorg/parameter/pull/18">PR#18</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added support for Boost.<a href="/libs/parameter/doc/html/index.html">Parameter</a>-enabled
+"                function call operators (<a href="https://github.com/boostorg/parameter/pull/20">PR#20</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added support for parameter category qualifiers "forward",
+"                "consume", and "move_from" (current qualifiers
+"                are "in", "out", and "in_out") (<a href="https://github.com/boostorg/parameter/pull/21">PR#21</a>)
+"                (<a href="https://github.com/boostorg/parameter/pull/23">PR#23</a>) based on <a href="http://www.modernescpp.com/index.php/c-core-guidelines-how-to-pass-function-parameters">http://www.modernescpp.com/index.php/c-core-guidelines-how-to-pass-function-parameters</a>.
+"                Added new usage syntax <code><span class="identifier">BOOST_PARAMETER_NAME</span><span class="special">((</span><span class="identifier">object</span><span class="special">-</span><span class="identifier">name</span><span class="special">),</span> <span class="keyword">namespace</span><span class="special">-</span><span class="identifier">name</span><span class="special">)</span> <span class="identifier">qualifier</span><span class="special">(</span><span class="identifier">tag</span><span class="special">-</span><span class="identifier">name</span><span class="special">))</span></code> and <code><span class="identifier">BOOST_PARAMETER_NAME</span><span class="special">(</span><span class="identifier">qualifier</span><span class="special">(</span><span class="identifier">name</span><span class="special">))</span></code>. (Existing code that uses qualifiers
+"                directly and correctly with <code><span class="identifier">BOOST_PARAMETER_FUNCTION</span></code>
+"                and other code generation macros should remain unaffected for now,
+"                so no breaking changes.) The reason for the change in usage is to
+"                enable applying of parameter category constraints to Boost.<a href="/libs/parameter/doc/html/index.html">Parameter</a>-enabled
+"                functions and constructors invoked through argument composition.
+"                (Otherwise, it is currently possible to use argument composition
+"                to bypass parameter category constraints applied in <code><span class="identifier">BOOST_PARAMETER_FUNCTION</span></code> et. al.)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added support for perfect forwarding (<a href="https://github.com/boostorg/parameter/pull/23">PR#23</a>) (<a href="https://github.com/boostorg/parameter/pull/26">PR#26</a>),
+"                so that <code><span class="identifier">parameter</span><span class="special">::</span><span class="identifier">parameters</span><span class="special">::</span><span class="keyword">operator</span><span class="special">()</span></code> can accept non-<code><span class="keyword">const</span></code>
+"                rvalues. As a positive side effect, Boost.<a href="/libs/parameter/doc/html/index.html">Parameter</a>-enabled
+"                functions and constructors are no longer bound by <code><span class="identifier">BOOST_PARAMETER_MAX_ARITY</span></code>
+"                on compilers that support perfect forwarding. User code can now check
+"                for this support by detecting the configuration macro <code><span class="identifier">BOOST_PARAMETER_HAS_PERFECT_FORWARDING</span></code>,
+"                or manually turn off this support by defining the configuration macro
+"                <code><span class="identifier">BOOST_PARAMETER_DISABLE_PERFECT_FORWARDING</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added metafunctions <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">parameter</span><span class="special">::</span><span class="identifier">is_argument_pack</span></code>
+"                (<a href="https://github.com/boostorg/parameter/pull/27">PR#27</a>), <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">parameter</span><span class="special">::</span><span class="identifier">are_tagged_arguments</span></code>
+"                (<a href="https://github.com/boostorg/parameter/pull/52">PR#52</a>), and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">parameter</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">compose</span></code>
+"                (<a href="https://github.com/boostorg/parameter/pull/75">PR#75</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added variadic function template <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">parameter</span><span class="special">::</span><span class="identifier">compose</span><span class="special">()</span></code> which takes in named arguments
+"                and returns them in an argument pack (<a href="https://github.com/boostorg/parameter/pull/52">PR#52</a>). For compilers
+"                that do not support perfect forwarding, the configuration macro
+"                <code><span class="identifier">BOOST_PARAMETER_COMPOSE_MAX_ARITY</span></code>
+"                determines the maximum number of arguments that <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">parameter</span><span class="special">::</span><span class="identifier">compose</span><span class="special">()</span></code> can take in (<a href="https://github.com/boostorg/parameter/pull/61">PR#61</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added code generation macros <code><span class="identifier">BOOST_PARAMETER_BASIC_FUNCTION_CALL_OPERATOR</span></code>,
+"                <code><span class="identifier">BOOST_PARAMETER_BASIC_CONST_FUNCTION_CALL_OPERATOR</span></code>,
+"                <code><span class="identifier">BOOST_PARAMETER_NO_SPEC_FUNCTION</span></code>,
+"                <code><span class="identifier">BOOST_PARAMETER_NO_SPEC_MEMBER_FUNCTION</span></code>,
+"                <code><span class="identifier">BOOST_PARAMETER_NO_SPEC_CONST_MEMBER_FUNCTION</span></code>,
+"                <code><span class="identifier">BOOST_PARAMETER_NO_SPEC_FUNCTION_CALL_OPERATOR</span></code>,
+"                <code><span class="identifier">BOOST_PARAMETER_NO_SPEC_CONST_FUNCTION_CALL_OPERATOR</span></code>,
+"                <code><span class="identifier">BOOST_PARAMETER_NO_SPEC_CONSTRUCTOR</span></code>,
+"                and <code><span class="identifier">BOOST_PARAMETER_NO_SPEC_NO_BASE_CONSTRUCTOR</span></code>
+"                (<a href="https://github.com/boostorg/parameter/pull/52">PR#52</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added support for Boost.<a href="/libs/mp11/doc/html/mp11.html">MP11</a>
+"                (<a href="https://github.com/boostorg/parameter/pull/47">PR#47</a>) (<a href="https://github.com/boostorg/parameter/pull/66">PR#66</a>) (<a href="https://github.com/boostorg/parameter/pull/70">PR#70</a>). User code
+"                can now check for this support by detecting the configuration macro
+"                <code><span class="identifier">BOOST_PARAMETER_CAN_USE_MP11</span></code>,
+"                or manually turn off this support by defining the configuration macro
+"                <code><span class="identifier">BOOST_PARAMETER_DISABLE_MP11_USAGE</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Improved support for parameter-dependent return types via SFINAE
+"                (<a href="https://github.com/boostorg/parameter/pull/73">PR#73</a>).
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/poly_collection/">PolyCollection</a>:</span>
 "          <ul>
 "            <li>
@@ -18493,7 +18608,7 @@
 "  </div>
 "
 -hash
-"cdff718ddf82f62df4501fccb80e460fed181e7e38def1ecfef33fd93d6e872a
+"6a90dc7f5774fee30c837f37e8eacc3739903142c01b52d87347164339df8fdc
 -id
 "version_1_71_0
 -notice_url
