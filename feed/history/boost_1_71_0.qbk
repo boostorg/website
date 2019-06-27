@@ -63,12 +63,31 @@ Please keep the list of libraries sorted in lexicographical order.
   * Updated `endian_reverse` to correctly support all non-`bool` integral types
   * Moved deprecated names to the deprecated header `endian.hpp`
 
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Fixed incorrect `error_code` returned from directory iterator increment when `readdir_r` is used.
+  * For `path`, fixed rvalue-aware `operator/` return type to return an rvalue instead of rvalue reference. This fixes leaving a dangling reference in the user's code if the result of `operator/` is bound to a const reference. ([github filesystem 110])
+  * Fixes for better compatibility with Windows CE. ([github_pr filesystem 24])
+  * Added minimal support for CMake. ([github_pr filesystem 106])
+
 * [phrase library..[@/libs/flyweight/index.html Flyweight]:]
   * Maintenance work.
 
 * [phrase library..[@/libs/iostreams/ IoStreams]:]
   * Fixed processing of multi-stream files ([github_pr iostreams 87]).
   * Added support for multi-threaded LZMA ([github_pr iostreams 95]).
+
+* [phrase library..[@/libs/log/ Log]:]
+  * New features:
+    * Improved support for C++17 `std::string_view` in `basic_formatting_ostream`. The string view can now participate in character code conversion on output.
+    * Added `auto_newline` formatter and stream manipulator. It can be used to ensure that formatted output always ends with a newline while avoiding duplicate newlines.
+    * In the output stream, text file and text multi-file sink backends added support for configuring behavior with regard to appending a trailing newline to every formatted log record. Use `auto_newline_mode` named parameter of the backend constructor or call the `set_auto_newline_mode` method on the sink backend.
+    * [*Note:] The default behavior with regard to trailing newlines added by sink backends has changed slightly compared to the previous Boost.Log releases. The backends will now only add a trailing newline if there isn't one in the formatted log message string already. In previous releases a newline was added unconditionally.
+    * Added support for passing arbitrary function objects in the `filter` and `format` named parameters to sink constructors and convenience functions for initializing sinks. For example, it is now possible to specify C++11 lambda functions directly in these parameters. ([github log 63])
+    * In the default filter and formatter factories used in filter and formatter parsers, added support for severity level attribute values of type `boost::log::trivial::severity_level`. For filters, the support is limited to attributes with "Severity" name.
+  * Bug fixes:
+    * Fixed incorrect parsing of components of the rotated file names while scanning for files in the text file sink backend. If the file name pattern ended with a placeholder (for example, a file counter), the `scan_for_files` method would not find files matching that pattern in the target storage, leaving them unmanaged. In particular, such files would not be deleted to free target storage. ([github log 78])
+    * Updated `basic_formatting_ostream` and `basic_record_ostream` to make it possible to overload stream output operators for pointers to user-defined types. User-defined `operator<<` overloads taking `std::basic_ostream` and a pointer argument should now be picked up by the compiler when the pointer is being written to one of Boost.Log streams. ([github log 84])
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
 * [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
   * Added [@/libs/multi_index/doc/tutorial/key_extraction.html#x_mem_fun variants of `const_mem_fun` and `mem_fun`]
