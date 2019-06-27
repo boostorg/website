@@ -43,6 +43,14 @@ Please keep the list of libraries sorted in lexicographical order.
 
 * /TODO/
 
+* [phrase library..[@/libs/core/ Core]:]
+  * Added `boost/core/alloc_construct.hpp` header, which provides a set of functions for allocator aware and exception safe construction and destruction of objects and arrays. (Glen Fernandes)
+  * Added `boost/core/first_scalar.hpp` header, which provides the `first_scalar` function for obtaining a pointer to the first scalar element of an array. Given a pointer of type `T*` they return a pointer of type `remove_all_extents_t<T>*`. (Glen Fernandes)
+  * Added `boost/core/noinit_adaptor.hpp` header, providing `noinit_adaptor` class template, that converts any allocator into one whose `construct(ptr)` performs default initialization via placement new, and whose `destroy(ptr)` invokes `value_type` destructor directly. (Glen Fernandes)
+  * Added `boost/core/default_allocator.hpp` header, providing `default_allocator` class template, which can serve as a minimal default allocator that has interface similar to C++20 `std::allocator`, supports configurations with disabled exceptions and does not have `std` as an associated namespace. The allocator uses `operator new`/`operator delete` for allocating memory. (Glen Fernandes)
+  * In `boost/core/uncaught_exceptions.hpp` header, added workarounds for better compatibility with QNX SDP 7.0 when libc++/libc++abi libraries are used. (Andrey Semashev, [github core 59])
+  * The `boost/detail/sp_typeinfo.hpp` header is now marked as deprecated and will be removed in a future release. `boost/core/typeinfo.hpp` should be used instead. (Peter Dimov)
+
 * [phrase library..[@/libs/dynamic_bitset/ Dynamic Bitset]:]
   * Enabled hardware-assisted popcount on MSVC ([github_pr dynamic_bitset 38]).
   * Added support for boost::hash and std::hash ([github_pr dynamic_bitset 45]).
