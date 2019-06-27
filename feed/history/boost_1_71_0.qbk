@@ -97,6 +97,19 @@ Please keep the list of libraries sorted in lexicographical order.
     specification syntax now correctly handles `noexcept`-specified member functions
     (issue [github multi_index 24]). 
 
+* [phrase library..[@/libs/outcome/ Outcome]:]
+  * Enhancements:
+    * [@https://github.com/ned14/outcome/issues/184 #184] As per request from Boost release managers, relocated `version.hpp` and `revision.hpp` into detail, and added the Boost licence boilerplate to the top of every source file which was missing one (I think). Also took the opportunity to run the licence restamping script over all Outcome, so copyright dates are now up to date.
+    * [@https://github.com/ned14/outcome/issues/185 #185] Add FAQ item explaining issue #185, and why we will do nothing to fix it right now.
+    * [@https://github.com/ned14/outcome/issues/189 #189] Refactored the `OUTCOME_TRY` implementation to use more clarified customisation points capable of accepting very foreign inputs. Removed the `std::experimental::expected<T, E>` specialisations, as those are no longer necessary. Fixed the documentation for the customisation points which previously claimed that they are ADL discovered, which they are not. Added a recipe describing how to add in support for foreign input types.
+    * [@https://github.com/ned14/outcome/issues/183 #183] Added a separate `motivation/plug_error_code` specifically for Boost.
+  * Bug fixes:
+    * `OUTCOME_VERSION_MINOR` hadn't been updated to 1.
+    * [@https://github.com/ned14/outcome/issues/181 #181] Fix issue #181 where Outcome didn't actually implement the strong swap guarantee, despite being documented as doing so.
+    * [@https://github.com/ned14/outcome/issues/190 #190] Fix issue #190 in Boost edition where unit test suite was not runnable from the Boost release distro.
+    * [@https://github.com/ned14/outcome/issues/182 #182] Fix issue #182 where `trait::is_exception_ptr_available<T>` was always true, thus causing much weirdness, like not printing diagnostics and trying to feed everything to `make_exception_ptr()`.
+    * [@https://github.com/ned14/outcome/issues/192 #192] Fix issue #192 where the `std::basic_outcome_failure_exception_from_error()` was being defined twice for translation units which combine standalone and Boost Outcome's.
+
 * [phrase library..[@/libs/parameter/doc/html/index.html Parameter]:]
   * Upgraded keyword generation macro `BOOST_PARAMETER_TEMPLATE_KEYWORD`
     ([github_pr parameter 15]).
