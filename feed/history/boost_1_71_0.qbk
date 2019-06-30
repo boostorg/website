@@ -43,6 +43,17 @@ Please keep the list of libraries sorted in lexicographical order.
 
 * /TODO/
 
+* [phrase library..[@/libs/align/ Align]:]
+  * Support for any integral type in the integral versions of `align_up` and `align_down`.
+  * Revised the implementation of `aligned_allocator` to no longer require a specialization for `void`.
+  * Define `propagate_on_container_move_assignment` and `is_always_equal` in `aligned_allocator`.
+
+* [phrase library..[@/libs/circular_buffer/ Circular Buffer]:]
+  * Correct doxygen generated reference to no longer show internal members.
+    (Glen Fernandes)
+  * Eliminate ubsan warning on `add` and `sub`. (Glen Fernandes)
+  * Fix incorrect check in `is_uninitialized`. (Niklas Fejes)
+
 * [phrase library..[@/libs/context/ Context]:]
   * Add support for RISC-V LP64D
   * [github context 72]: Fix ABI violation on ppc64 ELFv2
@@ -121,6 +132,9 @@ Please keep the list of libraries sorted in lexicographical order.
   * Bug fixes:
     * Multiple compatibility issues with Multiprecision fixed
     * Lambert-W fixed on a rare architecture
+
+* [phrase library..[@/libs/multi_array/ Multi Array]:]
+  * Simplify allocator support by using new `alloc_construct_n` and `alloc_destroy_n` facilities from Core. (Glen Fernandes)
 
 * [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
   * Added [@/libs/multi_index/doc/tutorial/key_extraction.html#x_mem_fun variants of `const_mem_fun` and `mem_fun`]
@@ -220,6 +234,10 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed output of `name()`, `source_location()` and `source_line()` for the default constructed `frame` with thread sanitizer builds in C++98 mode.
   * Fixed output of long strings from `name()` and `source_location()` on MSVC [github stacktrace 78].
   * Maintenance work.
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * Implemented function template `ostream_string` in `boost/utility/ostream_string.hpp` to optimally write any kind of string content to an output stream. It satisfies the requirements of \[ostream.formatted.reqmts\]. (Glen Fernandes)
+  * Optimized the stream output operators of `basic_string_view` and `basic_string_ref` to write directly to the `rdbuf` stream buffer.  (Glen Fernandes)
 
 * [phrase library..[@/libs/uuid/ Uuid]:]
   * [*Breaking change:] MD5 name-based uuid generation was corrected to be identical
