@@ -132,6 +132,26 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/flyweight/index.html Flyweight]:]
   * Maintenance work.
 
+* [phrase library..[@/libs/histogram/index.html Histogram]:]
+  * New features:
+    * Support for thread-safe storages and new thread-safe accumulators
+    * Support for compiling without exceptions/RTTI (increases performance by 10-20 %) [with Glen Fernandes]
+    * Performance improvements for 1D and 2D histograms
+    * boost::histogram::indexed now returns forward iterator range instead of input iterator range
+    * boost::histogram::indexed_range::accessor is now non-copyable and acts like reference to cell value, making more algorithms from the C++ stdlib work
+    * boost::histogram::algorithm::reduce with new slice option and option fusion
+    * boost::histogram::algorithm::project accepts runtime indices for static histograms
+  * Bug Fixes:
+    * boost::histogram::algorithm::reduce also works on histograms that have some axis types without reduction support
+    * boost::histogram::axis::traits::update now works correctly for boost::histogram::axis::variant
+  * Other:
+    * 100 % test coverage
+    * Reduced internal Boost dependencies
+    * Improved documentation and examples
+    * Guaranteed no-throw moves for all builtin axis types
+    * Compile cleanly at higher warning levels
+  * See [@/libs/histogram/doc/html/histogram/history.html changelog] for more details.
+
 * [phrase library..[@/libs/iostreams/ IoStreams]:]
   * Fixed processing of multi-stream files ([github_pr iostreams 87]).
   * Added support for multi-threaded LZMA ([github_pr iostreams 95]).
