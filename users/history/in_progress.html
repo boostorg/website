@@ -396,52 +396,54 @@
           <ul>
             <li>
               <div>
-                Added <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">alloc_construct</span><span class="special">.</span><span class="identifier">hpp</span></code> header, which provides a set
-                of functions for allocator aware and exception safe construction
-                and destruction of objects and arrays. (Glen Fernandes)
+                Added functions <code><span class="identifier">alloc_construct</span></code>,
+                <code><span class="identifier">alloc_construct_n</span></code>,
+                <code><span class="identifier">alloc_destroy</span></code>, and
+                <code><span class="identifier">alloc_destroy_n</span></code> in
+                <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">alloc_construct</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> for allocator aware and exception
+                safe construction and destruction of objects and arrays. (Glen Fernandes)
               </div>
             </li>
             <li>
               <div>
-                Added <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">first_scalar</span><span class="special">.</span><span class="identifier">hpp</span></code> header, which provides the
-                <code><span class="identifier">first_scalar</span></code> function
-                for obtaining a pointer to the first scalar element of an array.
-                Given a pointer of type <code><span class="identifier">T</span><span class="special">*</span></code> they return a pointer of type <code><span class="identifier">remove_all_extents_t</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span></code>.
-                (Glen Fernandes)
+                Added constexpr functions <code><span class="identifier">first_scalar</span></code>
+                in <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">first_scalar</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> for obtaining a pointer to the
+                first scalar element of an array. Given a pointer of type <code><span class="identifier">T</span><span class="special">*</span></code>
+                they return a pointer of type <code><span class="identifier">remove_all_extents_t</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span></code>. (Glen Fernandes)
               </div>
             </li>
             <li>
               <div>
-                Added <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">noinit_adaptor</span><span class="special">.</span><span class="identifier">hpp</span></code> header, providing <code><span class="identifier">noinit_adaptor</span></code> class template,
+                Added class template <code><span class="identifier">noinit_adaptor</span></code>
+                in <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">noinit_adaptor</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> which is an allocator adaptor
                 that converts any allocator into one whose <code><span class="identifier">construct</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">)</span></code> performs default initialization
-                via placement new, and whose <code><span class="identifier">destroy</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">)</span></code> invokes <code><span class="identifier">value_type</span></code>
+                via placement new, and whose <code><span class="identifier">destroy</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">)</span></code> invokes the <code><span class="identifier">value_type</span></code>
                 destructor directly. (Glen Fernandes)
               </div>
             </li>
             <li>
               <div>
-                Added <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">default_allocator</span><span class="special">.</span><span class="identifier">hpp</span></code> header, providing <code><span class="identifier">default_allocator</span></code> class template,
-                which can serve as a minimal default allocator that has interface
-                similar to C++20 <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span></code>,
-                supports configurations with disabled exceptions and does not have
-                <code><span class="identifier">std</span></code> as an associated
-                namespace. The allocator uses <code><span class="keyword">operator</span>
-                <span class="keyword">new</span></code>/<code><span class="keyword">operator</span>
-                <span class="keyword">delete</span></code> for allocating memory.
-                (Glen Fernandes)
+                Added class template <code><span class="identifier">default_allocator</span></code>
+                in <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">default_allocator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>, which can serve as a minimal
+                default allocator that has interface similar to C++20 <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span></code>, supports configurations
+                with disabled exceptions and does not have <code><span class="identifier">std</span></code>
+                as an associated namespace. The allocator uses <code><span class="keyword">operator</span>
+                <span class="keyword">new</span></code> and <code><span class="keyword">operator</span>
+                <span class="keyword">delete</span></code> for allocation. (Glen
+                Fernandes)
               </div>
             </li>
             <li>
               <div>
-                In <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">uncaught_exceptions</span><span class="special">.</span><span class="identifier">hpp</span></code> header, added workarounds for
+                In <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">uncaught_exceptions</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> header, added workarounds for
                 better compatibility with QNX SDP 7.0 when libc++/libc++abi libraries
                 are used. (Andrey Semashev, <a href="https://github.com/boostorg/core/issues/59">#59</a>)
               </div>
             </li>
             <li>
               <div>
-                The <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">sp_typeinfo</span><span class="special">.</span><span class="identifier">hpp</span></code> header is now marked as deprecated
-                and will be removed in a future release. <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">typeinfo</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                The <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">sp_typeinfo</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> header is now marked as deprecated
+                and will be removed in a future release. <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">typeinfo</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
                 should be used instead. (Peter Dimov)
               </div>
             </li>
@@ -1361,8 +1363,8 @@
             <li>
               <div>
                 Implemented function template <code><span class="identifier">ostream_string</span></code>
-                in <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">utility</span><span class="special">/</span><span class="identifier">ostream_string</span><span class="special">.</span><span class="identifier">hpp</span></code> to optimally write any kind
-                of string content to an output stream. It satisfies the requirements
+                in <code><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">utility</span><span class="special">/</span><span class="identifier">ostream_string</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> to optimally write any kind of
+                string content to an output stream. It satisfies the requirements
                 of [ostream.formatted.reqmts]. (Glen Fernandes)
               </div>
             </li>
