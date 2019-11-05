@@ -84,6 +84,48 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/endian/">Endian</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Made <code><span class="identifier">endian_reverse</span></code>,
+                <code><span class="identifier">conditional_reverse</span></code>
+                and <code><span class="special">\*\</span><span class="identifier">_to_</span><span class="special">*</span></code> <code><span class="keyword">constexpr</span></code>
+                on GCC and Clang
+              </div>
+            </li>
+            <li>
+              <div>
+                Added convenience load and store functions
+              </div>
+            </li>
+            <li>
+              <div>
+                Added floating point convenience typedefs
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a non-const overload of <code><span class="identifier">data</span><span class="special">()</span></code>; changed its return type to <code><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">*</span></code>
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">__int128</span></code> support
+                to <code><span class="identifier">endian_reverse</span></code>
+                when available
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a convenience header <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">endian</span><span class="special">.</span><span class="identifier">hpp</span></code>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/functional/factory/">Functional/Factory</a>:</span>
           <ul>
             <li>
@@ -150,11 +192,166 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/outcome/">Outcome</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Enhancements:
+                <ul>
+                  <li>
+                    <div>
+                      Standalone outcome is now <code><span class="identifier">make</span>
+                      <span class="identifier">install</span></code>-able, and
+                      cmake <code><span class="identifier">find_package</span><span class="special">()</span></code> can find it. Note that you
+                      must separately install and <code><span class="identifier">find_package</span><span class="special">()</span></code> Outcome's dependency, quickcpplib,
+                      else <code><span class="identifier">find_package</span><span class="special">()</span></code> of Outcome will fail.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      The git submodule mechanism used by standalone Outcome of specifying
+                      dependent libraries has been replaced with a cmake superbuild
+                      of dependencies mechanism instead. Upon cmake configure, an
+                      internal copy of quickcpplib will be git cloned, built and
+                      installed into the build directory from where an internal
+                      <code><span class="identifier">find_package</span><span class="special">()</span></code> uses it. This breaks the
+                      use of the unconfigured Outcome repo as an implementation of
+                      Outcome, one must now do one of: 1. Add Outcome as subdirectory
+                      to cmake build. 2. Use cmake superbuild (i.e. <code><span class="identifier">ExternalProject_Add</span><span class="special">()</span></code>)
+                      to build and install Outcome into a local installation. 3.
+                      Use one of the single header editions.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      For standalone Outcome, the current compiler is now checked
+                      for whether it will compile code containing C++ Concepts, and
+                      if it does, all cmake consumers of Outcome will enable C++
+                      Concepts. Set the cmake variable <code><span class="identifier">CXX_CONCEPTS_FLAGS</span></code>
+                      to an empty string to prevent auto detection and enabling of
+                      C++ Concepts support occurring.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">OUTCOME_TRY</span></code>
+                      operation now hints to the compiler that operation will be
+                      successful. [P1886 <strong>Error speed benchmarking</strong>](https://wg21.link/P1886)
+                      showed that there is considerable gain in very small functions
+                      by hinting to the compiler whether the expression is expected
+                      to be successful or not. <code><span class="identifier">OUTCOME_TRY</span></code>
+                      previously did not hint to the compiler at all, but now it
+                      does. A new suite of macros <code><span class="identifier">OUTCOME_TRY_FAILURE_LIKELY</span></code>
+                      hint to the compiler that failure is expected. If you wish
+                      to return to the previously unhinted behaviour, define <code><span class="identifier">OUTCOME_TRY_LIKELY</span><span class="special">(</span><span class="identifier">expr</span><span class="special">)</span></code>
+                      to <code><span class="special">(!!</span><span class="identifier">expr</span><span class="special">)</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/ned14/outcome/issues/199">#199</a>
+                      Support for C++ Coroutines has been added. This comes in two
+                      parts, firstly there is now an <code><span class="identifier">OUTCOME_CO_TRY</span><span class="special">()</span></code> operation suitable for performing
+                      the <code><span class="identifier">TRY</span></code> operation
+                      from within a C++ Coroutine. Secondly, in the header <code><span class="identifier">outcome</span><span class="special">/</span><span class="identifier">coroutine_support</span><span class="special">.</span><span class="identifier">hpp</span></code> there are implementations
+                      of <code><span class="identifier">eager</span><span class="special">&lt;</span><span class="identifier">OutcomeType</span><span class="special">&gt;</span></code>
+                      and <code><span class="identifier">lazy</span><span class="special">&lt;</span><span class="identifier">OutcomeType</span><span class="special">&gt;</span></code>
+                      which let you more naturally and efficiently use <code><span class="identifier">basic_result</span></code> or <code><span class="identifier">basic_outcome</span></code> from within
+                      C++ Coroutines -- specifically, if the result or outcome will
+                      construct from an exception pointer, exceptions thrown in the
+                      coroutine return an errored or excepted result with the thrown
+                      exception instead of throwing the exception through the coroutine
+                      machinery (which in current compilers, has a high likelihood
+                      of blowing up the program). Both <code><span class="identifier">eager</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> and <code><span class="identifier">lazy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> can accept any <code><span class="identifier">T</span></code> as well. Both have been
+                      tested and found working on VS2019 and clang 9.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/ned14/outcome/issues/210">#210</a>
+                      <code><span class="identifier">make_error_code</span><span class="special">()</span></code> and <code><span class="identifier">make_exception_ptr</span><span class="special">()</span></code> are now additionally considered
+                      for compatible copy and move conversions for <code><span class="identifier">basic_result</span><span class="special">&lt;&gt;</span></code>.
+                      This lets you construct a <code><span class="identifier">basic_result</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">E</span><span class="special">&gt;</span></code> into a <code><span class="identifier">basic_result</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">error_code</span><span class="special">&gt;</span></code>, where <code><span class="identifier">E</span></code>
+                      is a custom type which has implemented the ADL discovered free
+                      function <code><span class="identifier">error_code</span>
+                      <span class="identifier">make_error_code</span><span class="special">(</span><span class="identifier">E</span><span class="special">)</span></code>,
+                      but is otherwise unrelated to <code><span class="identifier">error_code</span></code>.
+                      The same availability applies for <code><span class="identifier">exception_ptr</span></code>
+                      with <code><span class="identifier">make_exception_ptr</span><span class="special">()</span></code> being the ADL discovered
+                      free function. <code><span class="identifier">basic_outcome</span><span class="special">&lt;&gt;</span></code> has less support for
+                      this than <code><span class="identifier">basic_result</span><span class="special">&lt;&gt;</span></code> in order to keep constructor
+                      count down, but it will accept via this mechanism conversions
+                      from <code><span class="identifier">basic_result</span><span class="special">&lt;&gt;</span></code> and <code><span class="identifier">failure_type</span><span class="special">&lt;&gt;</span></code>.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Bug fixes:
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://github.com/ned14/outcome/issues/184">#184</a>
+                      The detection of <code><span class="special">[[</span><span class="identifier">nodiscard</span><span class="special">]]</span></code>
+                      support in the compiler was very mildly broken.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/poly_collection/">PolyCollection</a>:</span>
           <ul>
             <li>
               <div>
                 Maintenance work.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/preprocessor/">Preprocessor</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Topic added which discusses emptiness
+              </div>
+            </li>
+            <li>
+              <div>
+                Support for the C++20 <code><span class="identifier">__VA_OPT__</span></code>
+                construct
+                <ul>
+                  <li>
+                    <div>
+                      <code><span class="identifier">BOOST_PP_VARIADIC_HAS_OPT</span></code>
+                      whether <code><span class="identifier">__VA_OPT__</span></code>
+                      is supported at the C++20 level
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">BOOST_PP_CHECK_EMPTY</span></code>
+                      test for emptiness using <code><span class="identifier">__VA_OPT__</span></code>
+                      at the C++20 level
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">BOOST_PP_VA_OPT</span></code>
+                      more flexible alternative to <code><span class="identifier">__VA_OPT__</span></code>
+                      at the C++20 level
+                    </div>
+                  </li>
+                </ul>
               </div>
             </li>
           </ul>
@@ -168,6 +365,20 @@
               <div>
                 Implemented <code><span class="identifier">allocate_unique</span></code>
                 for scalars and arrays. (Glen Fernandes)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/vmd/">VMD</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <code><span class="identifier">BOOST_VMD_IS_EMPTY</span></code>
+                updated to use <code><span class="identifier">__VA_OPT__</span></code>
+                at the C++20 level has 100% reliability
               </div>
             </li>
           </ul>
