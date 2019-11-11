@@ -40,6 +40,10 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed `named_condition_any` fails to notify ([github interprocess 62])
 ]
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Added a workaround for `__float128` not being considered as a floating point type by some versions of libstdc++.
+  * Improved compatibility with clang-win compiler.
+
 * [phrase library..[@/libs/beast/ Beast]:]
   * This is a maintenance update containing bug fixes, and updates to use
     the new features delivered in Boost.Asio.
@@ -68,6 +72,21 @@ Please keep the list of libraries sorted in lexicographical order.
   * Added `__int128` support to `endian_reverse` when available
   * Added a convenience header `boost/endian.hpp`
 
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Extracted `filesystem_error` to `exception.hpp`; `file_status` and associated enums and functions to `file_status.hpp`; `directory_entry`, `directory_iterator` and `recursive_directory_iterator` to `directory.hpp`.
+  * [*Deprecated:] For backward compatibility `operations.hpp` still includes the new headers `exception.hpp`, `file_status.hpp` and `directory.hpp`, unless `BOOST_FILESYSTEM_NO_DEPRECATED` macro is defined. These implicit includes are considered deprecated and will be removed in a future release. Users are encouraged to include the new headers directly or include `filesystem.hpp`.
+  * The `filesystem_error` exception is now implemented in the compiled library of Boost.Filesystem. Users may need to add linking with Boost.Filesystem library in their projects.
+  * On POSIX.1-2008 platforms, use `utimensat` instead of `utime`. `utime` is declared obsolete in POSIX.1-2008 and can be disabled e.g. in uClibc-ng. ([github_pr filesystem 115])
+  * `directory_iterator` is now left in the end state on memory allocation errors.
+  * In `directory_iterator` on POSIX systems, support for `readdir`/`readdir_r` has been reworked to avoid memory allocations for `dirent` structures when `readdir` is used. This reduces memory consumption and eliminates the possibility of buffer overruns in case if `readdir` produces a very long directory name.
+  * On Windows, use Boost.WinAPI to select the target Windows version.
+  * [*New:] Added `directory_options` enum, which reflects the same named enum from C++20. The enum is supported in `directory_iterator` and `recursive_directory_iterator` to customize iteration behavior. In particular, the iterators now support skipping directories that can't be opened due to insufficient permissions. The `symlink_option` enum is now deprecated and should be replaced with `directory_options`.
+  * By default, `recursive_directory_iterator` is now reset to the end state in case of errors, as required by C++20. ([github filesystem 112])
+  * [*New:] Added `directory_options::pop_on_error` option, which configures `recursive_directory_iterator` so that it attempts to recover from iteration errors by repeatedly invoking `pop()` until it succeeds or the end state is reached. ([github filesystem 113])
+  * [*New:] Added `directory_options::skip_dangling_symlinks` option, which configures `recursive_directory_iterator` so that it doesn't follow dangling directory symlinks and continues iteration instead of reporting an error.
+  * [*Deprecated:] The following members of `recursive_directory_iterator` are now marked as deprecated: `level()`, `no_push_pending()`, `no_push_request()`, `no_push()`. Users are advised to replace their use with the standard counterparts: `depth()`, `recursion_pending()`, `disable_recursion_pending()`. Note that `recursion_pending()` has the opposite meaning compared to `no_push_pending()` and `no_push_request()`. Deprecated methods will be removed in a future release.
+  * Fixed `path::lexically_relative` (and any dependent algorithms) to correctly handle empty, dot and dot-dot path elements in its argument. The behavior is made closer to C++17 `std::path::lexically_relative` in that empty and dot path elements are ignored and dot-dot path elements are accounted by decreasing the number of dot-dot path elements to generate in the resulting relative path. ([github filesystem 76])
+
 * [phrase library..[@/libs/functional/factory/ Functional/Factory]:]
   * Glen Fernandes rewrote the implementations of `factory` and `value_factory`
     to provide the following features:
@@ -83,6 +102,9 @@ Please keep the list of libraries sorted in lexicographical order.
       `BOOST_FUNCTIONAL_VALUE_FACTORY_MAX_ARITY`
     * Using `boost::none_t` in place of `void` through
       `BOOST_FUNCTIONAL_FACTORY_SUPPORT_NONE_T`
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Improved compatibility with clang-win compiler.
 
 * [phrase library..[@/libs/mpi/ MPI]:]
   * Documentation clarifications.
