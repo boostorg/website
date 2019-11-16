@@ -20188,6 +20188,25 @@
 "    <ul>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added a workaround for <code><span class="identifier">__float128</span></code>
+"                not being considered as a floating point type by some versions of
+"                libstdc++.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Improved compatibility with clang-win compiler.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/beast/">Beast</a>:</span>
 "          <ul>
 "            <li>
@@ -20286,6 +20305,129 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Extracted <code><span class="identifier">filesystem_error</span></code>
+"                to <code><span class="identifier">exception</span><span class="special">.</span><span class="identifier">hpp</span></code>; <code><span class="identifier">file_status</span></code>
+"                and associated enums and functions to <code><span class="identifier">file_status</span><span class="special">.</span><span class="identifier">hpp</span></code>;
+"                <code><span class="identifier">directory_entry</span></code>,
+"                <code><span class="identifier">directory_iterator</span></code>
+"                and <code><span class="identifier">recursive_directory_iterator</span></code>
+"                to <code><span class="identifier">directory</span><span class="special">.</span><span class="identifier">hpp</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>Deprecated:</strong> For backward compatibility
+"                <code><span class="identifier">operations</span><span class="special">.</span><span class="identifier">hpp</span></code> still includes the new headers
+"                <code><span class="identifier">exception</span><span class="special">.</span><span class="identifier">hpp</span></code>, <code><span class="identifier">file_status</span><span class="special">.</span><span class="identifier">hpp</span></code>
+"                and <code><span class="identifier">directory</span><span class="special">.</span><span class="identifier">hpp</span></code>, unless <code><span class="identifier">BOOST_FILESYSTEM_NO_DEPRECATED</span></code>
+"                macro is defined. These implicit includes are considered deprecated
+"                and will be removed in a future release. Users are encouraged to
+"                include the new headers directly or include <code><span class="identifier">filesystem</span><span class="special">.</span><span class="identifier">hpp</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The <code><span class="identifier">filesystem_error</span></code>
+"                exception is now implemented in the compiled library of Boost.Filesystem.
+"                Users may need to add linking with Boost.Filesystem library in their
+"                projects.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On POSIX.1-2008 platforms, use <code><span class="identifier">utimensat</span></code>
+"                instead of <code><span class="identifier">utime</span></code>.
+"                <code><span class="identifier">utime</span></code> is declared
+"                obsolete in POSIX.1-2008 and can be disabled e.g. in uClibc-ng. (<a href="https://github.com/boostorg/filesystem/pull/115">PR#115</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">directory_iterator</span></code>
+"                is now left in the end state on memory allocation errors.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                In <code><span class="identifier">directory_iterator</span></code>
+"                on POSIX systems, support for <code><span class="identifier">readdir</span></code>/<code><span class="identifier">readdir_r</span></code> has been reworked to
+"                avoid memory allocations for <code><span class="identifier">dirent</span></code>
+"                structures when <code><span class="identifier">readdir</span></code>
+"                is used. This reduces memory consumption and eliminates the possibility
+"                of buffer overruns in case if <code><span class="identifier">readdir</span></code>
+"                produces a very long directory name.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On Windows, use Boost.WinAPI to select the target Windows version.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>New:</strong> Added <code><span class="identifier">directory_options</span></code>
+"                enum, which reflects the same named enum from C++20. The enum is
+"                supported in <code><span class="identifier">directory_iterator</span></code>
+"                and <code><span class="identifier">recursive_directory_iterator</span></code>
+"                to customize iteration behavior. In particular, the iterators now
+"                support skipping directories that can't be opened due to insufficient
+"                permissions. The <code><span class="identifier">symlink_option</span></code>
+"                enum is now deprecated and should be replaced with <code><span class="identifier">directory_options</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                By default, <code><span class="identifier">recursive_directory_iterator</span></code>
+"                is now reset to the end state in case of errors, as required by C++20.
+"                (<a href="https://github.com/boostorg/filesystem/issues/112">#112</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>New:</strong> Added <code><span class="identifier">directory_options</span><span class="special">::</span><span class="identifier">pop_on_error</span></code>
+"                option, which configures <code><span class="identifier">recursive_directory_iterator</span></code>
+"                so that it attempts to recover from iteration errors by repeatedly
+"                invoking <code><span class="identifier">pop</span><span class="special">()</span></code>
+"                until it succeeds or the end state is reached. (<a href="https://github.com/boostorg/filesystem/issues/113">#113</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>New:</strong> Added <code><span class="identifier">directory_options</span><span class="special">::</span><span class="identifier">skip_dangling_symlinks</span></code>
+"                option, which configures <code><span class="identifier">recursive_directory_iterator</span></code>
+"                so that it doesn't follow dangling directory symlinks and continues
+"                iteration instead of reporting an error.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>Deprecated:</strong> The following members
+"                of <code><span class="identifier">recursive_directory_iterator</span></code>
+"                are now marked as deprecated: <code><span class="identifier">level</span><span class="special">()</span></code>, <code><span class="identifier">no_push_pending</span><span class="special">()</span></code>, <code><span class="identifier">no_push_request</span><span class="special">()</span></code>, <code><span class="identifier">no_push</span><span class="special">()</span></code>. Users are advised to replace their
+"                use with the standard counterparts: <code><span class="identifier">depth</span><span class="special">()</span></code>, <code><span class="identifier">recursion_pending</span><span class="special">()</span></code>, <code><span class="identifier">disable_recursion_pending</span><span class="special">()</span></code>. Note that <code><span class="identifier">recursion_pending</span><span class="special">()</span></code> has the opposite meaning compared
+"                to <code><span class="identifier">no_push_pending</span><span class="special">()</span></code> and <code><span class="identifier">no_push_request</span><span class="special">()</span></code>. Deprecated methods will be removed
+"                in a future release.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">lexically_relative</span></code> (and any dependent
+"                algorithms) to correctly handle empty, dot and dot-dot path elements
+"                in its argument. The behavior is made closer to C++17 <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">path</span><span class="special">::</span><span class="identifier">lexically_relative</span></code> in that empty
+"                and dot path elements are ignored and dot-dot path elements are accounted
+"                by decreasing the number of dot-dot path elements to generate in
+"                the resulting relative path. (<a href="https://github.com/boostorg/filesystem/issues/76">#76</a>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/functional/factory/">Functional/Factory</a>:</span>
 "          <ul>
 "            <li>
@@ -20345,6 +20487,235 @@
 "                    </div>
 "                  </li>
 "                </ul>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/gil/">GIL</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added
+"                <ul>
+"                  <li>
+"                    <div>
+"                      GSoC 2019: Lanczos resampling for image down scaling (<a href="https://github.com/boostorg/gil/pull/309">PR #309</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GSoC 2019: Methods for binary thresholding, inverted binary
+"                      thresholding and truncation thresholding (<a href="https://github.com/boostorg/gil/pull/313">PR
+"                      #313</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GSoC 2019: Otsu thresholding method (<a href="https://github.com/boostorg/gil/pull/314">PR
+"                      #314</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GSoC 2019: Adaptive thresholding using mean or gaussian-weighted
+"                      sum of the neighbourhood area (<a href="https://github.com/boostorg/gil/pull/315">PR
+"                      #315</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GSoC 2019: Harris response calculation (corner detector without
+"                      non-maximum filtering) (<a href="https://github.com/boostorg/gil/pull/350">PR
+"                      #350</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GSoC 2019: Hessian corner detector (<a href="https://github.com/boostorg/gil/pull/364">PR
+"                      #364</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GSoC 2019: Types for defining 2D kernel, <code><span class="identifier">kernel_2d</span></code>
+"                      and <code><span class="identifier">kernel_2d_fixed</span></code>,
+"                      in Numeric extension (<a href="https://github.com/boostorg/gil/pull/361">PR
+"                      #361</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GSoC 2019: Implementation of 2D convolution as new function
+"                      <code><span class="identifier">convolve_2d</span></code>
+"                      (<a href="https://github.com/boostorg/gil/pull/367">PR #367</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GSoC 2019: Box filtering using the average filter (<a href="https://github.com/boostorg/gil/pull/383">PR
+"                      #383</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GSoC 2019: Blur function based on normalized mean filter (<a href="https://github.com/boostorg/gil/pull/383">PR #383</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GSoC 2019: Sobel and Scharr operators (<a href="https://github.com/boostorg/gil/pull/392">PR
+"                      #392</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GSoC 2019: Median filter to remove noise from image (<a href="https://github.com/boostorg/gil/pull/393">PR #393</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Continued adding new test cases and significantly improved
+"                      overall test coverage.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Documented purpose of <code><span class="identifier">cached_location_t</span></code>
+"                      (<a href="https://github.com/boostorg/gil/pull/287">PR #287</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Function <code><span class="identifier">convolve_1d</span></code>
+"                      in Numeric extension for convenient use of <code><span class="identifier">convolve_rows</span></code>
+"                      and <code><span class="identifier">convolve_cols</span></code>
+"                      (<a href="https://github.com/boostorg/gil/pull/347">PR #347</a>)
+"                      and <a href="https://github.com/boostorg/gil/pull/367">PR
+"                      #367</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Function <code><span class="identifier">extend_boundary</span></code>
+"                      in Numeric extension to perform image boundary extension (<a href="https://github.com/boostorg/gil/pull/386">PR #386</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Project release notes maintained in Markdown file <code><span class="identifier">RELEASES</span><span class="special">.</span><span class="identifier">md</span></code> (<a href="https://github.com/boostorg/gil/pull/404">PR
+"                      #404</a>).
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Move all tests, core features and extensions, inside <code><span class="identifier">test</span><span class="special">/</span></code>
+"                      directory (<a href="https://github.com/boostorg/gil/pull/302">PR
+"                      #302</a>).
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Dropped support for GCC &lt;= 4.8 (<a href="https://github.com/boostorg/gil/pull/296">PR
+"                      #296</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Replace Boost.MPL with Boost.MP11 (<a href="https://github.com/boostorg/gil/pull/274">PR
+"                      #274</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Removed use of Boost.TypeTraits (<a href="https://github.com/boostorg/gil/pull/274">PR
+"                      #274</a>).
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Undetermined value of default-initialized channel and pixel
+"                      objects (<a href="https://github.com/boostorg/gil/pull/273">PR
+"                      #273</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Undefined behaviour due to <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">is_trivially_default_constructible</span></code>
+"                      specializations (<a href="https://github.com/boostorg/gil/pull/284">PR
+"                      #284</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Crash when reading PNG files with an invalid header (<a href="https://github.com/boostorg/gil/pull/385">PR #385</a>).
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Applied the Rule of Three for numerous types.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Removed uses of deprecated implicit definition of defaulted
+"                      copy assignment operator or copy constructor.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/histogram/">Histogram</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Several new features and performance improvements, some bug-fixes
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                See the full <a href="/libs/histogram/doc/html/histogram/history.html">Release
+"                Notes</a> for a complete list of changes
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/log/">Log</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Improved compatibility with clang-win compiler.
 "              </div>
 "            </li>
 "          </ul>
@@ -20922,7 +21293,7 @@
 "  </div>
 "
 -hash
-"e42fa32c750bc2204d9c4aef2ad95ce60c1b8683a1313d52a3a580c106639f92
+"a7f3b6812e1c43129aa128e77206b3db90ace8149841f1eb21387258ab2861f0
 -id
 "version_1_72_0
 -notice_url
