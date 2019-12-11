@@ -40,6 +40,37 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed `named_condition_any` fails to notify ([github interprocess 62])
 ]
 
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Changed the `async_initiate` helper function to automatically deduce its
+    return type, for C++11 or later.
+  * Changed all asynchronous operations to use automatically deduced return
+    types, for C++14 or later.
+  * Introduced concepts to support `async_initiate`.
+  * Added the nested template type `rebind_executor` to all I/O object types.
+  * Changed the initiation function objects to report their associated I/O
+    executor via the nested type `executor_type` and member function
+    `get_executor()`.
+  * Added the `default_completion_token` trait, giving I/O executor types an
+    associated default completion token type for use with asynchronous
+    operations. This trait is specialised for the `use_awaitable` completion
+    token, for example, to allow asynchronous operations to be used as follows:
+    `co_await socket.async_connect(my_endpoint)`.
+  * Added missing `async_initiate` to the Windows-specific I/O objects'
+    asynchronous operations.
+  * Ensured that the executor type is propagated to newly accepted sockets.
+  * Changed to require that `Protocol` copy and move operations never throw.
+  * Changed to require that `Endpoint` default constructor and move operations
+    never throw.
+  * Added the `noexcept` qualifier to protocol accessors.
+  * Added the `noexcept` qualifier to socket move constructors.
+  * Fixed issues associated with opening serial ports on Windows:
+    * Use the correct constant to initialise the RTS control flag.
+    * Specify a default baud rate (9600).
+  * Fixed a lost "outstanding work count" that can occur when an asynchronous
+    accept operation is automatically restarted.
+  * Consult the [@/doc/libs/1_72_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
+
 * [phrase library..[@/libs/atomic/ Atomic]:]
   * Added a workaround for `__float128` not being considered as a floating point type by some versions of libstdc++.
   * Improved compatibility with clang-win compiler.
