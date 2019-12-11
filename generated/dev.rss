@@ -8,7 +8,7 @@
     <description></description>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)</copyright>
-<item><title>Version 1.72.0</title><link>https://www.boost.org/users/history/version_1_72_0.html</link><guid>https://www.boost.org/users/history/version_1_72_0.html</guid><pubDate>Thu, 21 Nov 2019 07:46:52 +0000</pubDate><description>
+<item><title>Version 1.72.0</title><link>https://www.boost.org/users/history/version_1_72_0.html</link><guid>https://www.boost.org/users/history/version_1_72_0.html</guid><pubDate>Wed, 11 Dec 2019 18:06:09 +0000</pubDate><description>
 
 
   &lt;div id="version_1_72_0.new_libraries"&gt;
@@ -26,7 +26,120 @@
     &lt;ul&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/atomic/"&gt;Atomic&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/asio/"&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed the &lt;code&gt;&lt;span class="identifier"&gt;async_initiate&lt;/span&gt;&lt;/code&gt;
+                helper function to automatically deduce its return type, for C++11
+                or later.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed all asynchronous operations to use automatically deduced
+                return types, for C++14 or later.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Introduced concepts to support &lt;code&gt;&lt;span class="identifier"&gt;async_initiate&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added the nested template type &lt;code&gt;&lt;span class="identifier"&gt;rebind_executor&lt;/span&gt;&lt;/code&gt;
+                to all I/O object types.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed the initiation function objects to report their associated
+                I/O executor via the nested type &lt;code&gt;&lt;span class="identifier"&gt;executor_type&lt;/span&gt;&lt;/code&gt;
+                and member function &lt;code&gt;&lt;span class="identifier"&gt;get_executor&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added the &lt;code&gt;&lt;span class="identifier"&gt;default_completion_token&lt;/span&gt;&lt;/code&gt;
+                trait, giving I/O executor types an associated default completion
+                token type for use with asynchronous operations. This trait is specialised
+                for the &lt;code&gt;&lt;span class="identifier"&gt;use_awaitable&lt;/span&gt;&lt;/code&gt;
+                completion token, for example, to allow asynchronous operations to
+                be used as follows: &lt;code&gt;&lt;span class="identifier"&gt;co_await&lt;/span&gt;
+                &lt;span class="identifier"&gt;socket&lt;/span&gt;&lt;span class="special"&gt;.&lt;/span&gt;&lt;span class="identifier"&gt;async_connect&lt;/span&gt;&lt;span class="special"&gt;(&lt;/span&gt;&lt;span class="identifier"&gt;my_endpoint&lt;/span&gt;&lt;span class="special"&gt;)&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added missing &lt;code&gt;&lt;span class="identifier"&gt;async_initiate&lt;/span&gt;&lt;/code&gt;
+                to the Windows-specific I/O objects' asynchronous operations.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Ensured that the executor type is propagated to newly accepted sockets.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed to require that &lt;code&gt;&lt;span class="identifier"&gt;Protocol&lt;/span&gt;&lt;/code&gt;
+                copy and move operations never throw.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed to require that &lt;code&gt;&lt;span class="identifier"&gt;Endpoint&lt;/span&gt;&lt;/code&gt;
+                default constructor and move operations never throw.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added the &lt;code&gt;&lt;span class="keyword"&gt;noexcept&lt;/span&gt;&lt;/code&gt; qualifier
+                to protocol accessors.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added the &lt;code&gt;&lt;span class="keyword"&gt;noexcept&lt;/span&gt;&lt;/code&gt; qualifier
+                to socket move constructors.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed issues associated with opening serial ports on Windows:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Use the correct constant to initialise the RTS control flag.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Specify a default baud rate (9600).
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed a lost "outstanding work count" that can occur when
+                an asynchronous accept operation is automatically restarted.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Consult the &lt;a href="https://www.boost.org/doc/libs/1_72_0/doc/html/boost_asio/history.html"&gt;Revision
+                History&lt;/a&gt; for further details.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/atomic/"&gt;Atomic&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -45,7 +158,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/beast/"&gt;Beast&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/beast/"&gt;Beast&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -62,7 +175,7 @@
             &lt;/li&gt;
             &lt;li&gt;
               &lt;div&gt;
-                See the full &lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/beast/doc/html/beast/release_notes.html"&gt;Release
+                See the full &lt;a href="https://www.boost.org/libs/beast/doc/html/beast/release_notes.html"&gt;Release
                 Notes&lt;/a&gt; for a complete list of changes.
               &lt;/div&gt;
             &lt;/li&gt;
@@ -71,7 +184,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/circular_buffer/"&gt;Circular Buffer&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/circular_buffer/"&gt;Circular Buffer&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -84,7 +197,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/context/"&gt;Context&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/context/"&gt;Context&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -101,7 +214,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/endian/"&gt;Endian&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/endian/"&gt;Endian&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -143,7 +256,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/filesystem/"&gt;Filesystem&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/filesystem/"&gt;Filesystem&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -266,7 +379,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/functional/factory/"&gt;Functional/Factory&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/functional/factory/"&gt;Functional/Factory&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -332,7 +445,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/gil/"&gt;GIL&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/gil/"&gt;GIL&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -470,12 +583,6 @@
                 &lt;ul&gt;
                   &lt;li&gt;
                     &lt;div&gt;
-                      Dropped support for GCC &amp;lt;= 4.8 (&lt;a href="https://github.com/boostorg/gil/pull/296"&gt;PR
-                      #296&lt;/a&gt;).
-                    &lt;/div&gt;
-                  &lt;/li&gt;
-                  &lt;li&gt;
-                    &lt;div&gt;
                       Replace Boost.MPL with Boost.MP11 (&lt;a href="https://github.com/boostorg/gil/pull/274"&gt;PR
                       #274&lt;/a&gt;).
                     &lt;/div&gt;
@@ -484,6 +591,19 @@
                     &lt;div&gt;
                       Removed use of Boost.TypeTraits (&lt;a href="https://github.com/boostorg/gil/pull/274"&gt;PR
                       #274&lt;/a&gt;).
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Dropped support for GCC &amp;lt;= 4.8 (&lt;a href="https://github.com/boostorg/gil/pull/296"&gt;PR
+                      #296&lt;/a&gt;).
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Remove &lt;code&gt;&lt;span class="identifier"&gt;include&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;gil&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;version&lt;/span&gt;&lt;span class="special"&gt;.&lt;/span&gt;&lt;span class="identifier"&gt;hpp&lt;/span&gt;&lt;/code&gt;
+                      file as unused (&lt;a href="https://github.com/boostorg/gil/pull/403"&gt;PR
+                      #403&lt;/a&gt;).
                     &lt;/div&gt;
                   &lt;/li&gt;
                 &lt;/ul&gt;
@@ -531,7 +651,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/histogram/"&gt;Histogram&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/histogram/"&gt;Histogram&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -540,7 +660,7 @@
             &lt;/li&gt;
             &lt;li&gt;
               &lt;div&gt;
-                See the full &lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/histogram/doc/html/histogram/history.html"&gt;Release
+                See the full &lt;a href="https://www.boost.org/libs/histogram/doc/html/histogram/history.html"&gt;Release
                 Notes&lt;/a&gt; for a complete list of changes
               &lt;/div&gt;
             &lt;/li&gt;
@@ -549,7 +669,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/log/"&gt;Log&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/log/"&gt;Log&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -561,7 +681,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/mpi/"&gt;MPI&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/mpi/"&gt;MPI&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -588,7 +708,105 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/outcome/"&gt;Outcome&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/math/"&gt;Math&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added Hypergeometric functions 1F0, 0F1, 2F0, 1F1 and pFq.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added Jacobi polynomial (and derivatives) evaluation.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added Gegenbauer polynomial (and derivatives) evaluation.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added Cardinal B-Splines (and derivatives) as polynomial functions
+                in their own right.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added Cardinal Trigonometric Interpolation.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added new statistics sub-section.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added One Sample Student's T Test.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added Anderson Darling test for normality.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added Ljung Box test for auto-correlation.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added Runs test for random sequences.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                The headers &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;math&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;tools&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;univariate_statistics&lt;/span&gt;&lt;span class="special"&gt;.&lt;/span&gt;&lt;span class="identifier"&gt;hpp&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;math&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;tools&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;bivariate_statistics&lt;/span&gt;&lt;span class="special"&gt;.&lt;/span&gt;&lt;span class="identifier"&gt;hpp&lt;/span&gt;&lt;/code&gt;, have been deprecated in favor
+                of &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;math&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;statistics&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;univariate_statistics&lt;/span&gt;&lt;span class="special"&gt;.&lt;/span&gt;&lt;span class="identifier"&gt;hpp&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;math&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;statistics&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;bivariate_statistics&lt;/span&gt;&lt;span class="special"&gt;.&lt;/span&gt;&lt;span class="identifier"&gt;hpp&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added The Empirical CDF distribution.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Reworked the Sterling approximation used by multiprecision gamma
+                functions to be applicable to all the function that use the Lanczos
+                approximation at regular precision. Also extended Lanczos approximations
+                up to 100 decimal digit precision.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/multiprecision/"&gt;Multiprecision&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Big &lt;code&gt;&lt;span class="keyword"&gt;constexpr&lt;/span&gt;&lt;/code&gt; update
+                allows cpp_int and float128 arithmetic to be fully &lt;code&gt;&lt;span class="keyword"&gt;constexpr&lt;/span&gt;&lt;/code&gt; with gcc and clang 9 or
+                later, or any compiler supporting &lt;code&gt;&lt;span class="identifier"&gt;std&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;is_constant_evaluated&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fix bug in variable precision mpf_float which causes it to go into
+                a tailspin trying to select the correct precision - see https://github.com/boostorg/multiprecision/issues/164.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/outcome/"&gt;Outcome&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -702,7 +920,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/poly_collection/"&gt;PolyCollection&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/poly_collection/"&gt;PolyCollection&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -714,7 +932,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/preprocessor/"&gt;Preprocessor&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/preprocessor/"&gt;Preprocessor&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -755,7 +973,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/smart_ptr/"&gt;Smart Pointers&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/smart_ptr/"&gt;Smart Pointers&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -768,7 +986,57 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_72_0_beta1/libs/vmd/"&gt;VMD&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/test/"&gt;Test&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Boost.test v3.12 see the &lt;a href="https://www.boost.org/libs/test/doc/html/boost_test/change_log.html"&gt;Changes
+                log&lt;/a&gt; for more details.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                New feature:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Support for C++17 &lt;code&gt;&lt;span class="identifier"&gt;std&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;string_view&lt;/span&gt;&lt;/code&gt;
+                      has been added.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Better diagnostic on &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;exception&lt;/span&gt;&lt;/code&gt;
+                      and no rtti mode (thanks to Mikhail Pilin / [pull_request 234])
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Bug fixes and pull requests:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      GitHub Issues: &lt;a href="https://github.com/boostorg/test/issues/206"&gt;#206&lt;/a&gt;, &lt;a href="https://github.com/boostorg/test/issues/217"&gt;#217&lt;/a&gt;, &lt;a href="https://github.com/boostorg/test/issues/223"&gt;#223&lt;/a&gt;, &lt;a href="https://github.com/boostorg/test/issues/229"&gt;#229&lt;/a&gt;
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      GitHub Pull Requests: &lt;a href="https://github.com/boostorg/test/pull/227"&gt;PR#227&lt;/a&gt;, &lt;a href="https://github.com/boostorg/test/pull/231"&gt;PR#231&lt;/a&gt;, &lt;a href="https://github.com/boostorg/test/pull/232"&gt;PR#232&lt;/a&gt;,
+                      &lt;a href="https://github.com/boostorg/test/pull/234"&gt;PR#234&lt;/a&gt;
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/vmd/"&gt;VMD&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;

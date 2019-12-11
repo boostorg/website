@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Version 1.72.0 beta 1</title>
+  <title>Version 1.72.0</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
@@ -37,13 +37,13 @@
 
             <div class="section-body">
               <h2><span class=
-              "news-title">Version 1.72.0 beta 1</span></h2>
+              "news-title">Version 1.72.0</span></h2>
 
-              <p><span class=news-date">November 21st, 2019 07:46 GMT</span></p>
-              <p><a href="/doc/libs/1_72_0_beta1/">Documentation</a>
-              <table class="download-table"><caption>Beta Downloads</caption><tr><th scope="col">Platform</th><th scope="col">File</th><th scope="col">SHA256 Hash</th></tr>
-<tr><th scope="row" rowspan="2">unix</th><td><a href="https://dl.bintray.com/boostorg/beta/1.72.0.beta.1/source/boost_1_72_0_b1.tar.bz2">boost_1_72_0_b1.tar.bz2</a></td><td>6c85a7aed198757f5e4be66a971ae90a25c4ce32703fecfb5bb19019bd80947c</td></tr><tr><td><a href="https://dl.bintray.com/boostorg/beta/1.72.0.beta.1/source/boost_1_72_0_b1.tar.gz">boost_1_72_0_b1.tar.gz</a></td><td>be4a3fdaa84d5a8b25863651043308e02645f3fbf772b7623ee6462fb1dbad09</td></tr>
-<tr><th scope="row" rowspan="2">windows</th><td><a href="https://dl.bintray.com/boostorg/beta/1.72.0.beta.1/source/boost_1_72_0_b1.7z">boost_1_72_0_b1.7z</a></td><td>5a6b5cbd27b8ca0c7741b715e022a3bf05aecbb1e73dc72dd82eef9622374bd5</td></tr><tr><td><a href="https://dl.bintray.com/boostorg/beta/1.72.0.beta.1/source/boost_1_72_0_b1.zip">boost_1_72_0_b1.zip</a></td><td>95181a5f3de0078b8fc031f63a4dc8be4d70b7d3d5cde3b266d2cd98bd4b61b0</td></tr></table>
+              <p><span class=news-date">December 11th, 2019 18:06 GMT</span></p>
+              <p><a href="/doc/libs/1_72_0/">Documentation</a>
+              <table class="download-table"><caption>Downloads</caption><tr><th scope="col">Platform</th><th scope="col">File</th><th scope="col">SHA256 Hash</th></tr>
+<tr><th scope="row" rowspan="2">unix</th><td><a href="https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2">boost_1_72_0.tar.bz2</a></td><td>59c9b274bc451cf91a9ba1dd2c7fdcaf5d60b1b3aa83f2c9fa143417cc660722</td></tr><tr><td><a href="https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.gz">boost_1_72_0.tar.gz</a></td><td>c66e88d5786f2ca4dbebb14e06b566fb642a1a6947ad8cc9091f9f445134143f</td></tr>
+<tr><th scope="row" rowspan="2">windows</th><td><a href="https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.7z">boost_1_72_0.7z</a></td><td>247a91dd7e4d9dd3c4b954b532fbc167ba62dc15ab834e5ad893d7c3f9eb5f0f</td></tr><tr><td><a href="https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.zip">boost_1_72_0.zip</a></td><td>8c20440aaba21dd963c0f7149517445f50c62ce4eb689df2b5544cc89e6e621e</td></tr></table>
               <div class="news-description">
                 <div class="description">
 
@@ -63,7 +63,120 @@
     <ul>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/atomic/">Atomic</a>:</span>
+          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Changed the <code><span class="identifier">async_initiate</span></code>
+                helper function to automatically deduce its return type, for C++11
+                or later.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed all asynchronous operations to use automatically deduced
+                return types, for C++14 or later.
+              </div>
+            </li>
+            <li>
+              <div>
+                Introduced concepts to support <code><span class="identifier">async_initiate</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added the nested template type <code><span class="identifier">rebind_executor</span></code>
+                to all I/O object types.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed the initiation function objects to report their associated
+                I/O executor via the nested type <code><span class="identifier">executor_type</span></code>
+                and member function <code><span class="identifier">get_executor</span><span class="special">()</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added the <code><span class="identifier">default_completion_token</span></code>
+                trait, giving I/O executor types an associated default completion
+                token type for use with asynchronous operations. This trait is specialised
+                for the <code><span class="identifier">use_awaitable</span></code>
+                completion token, for example, to allow asynchronous operations to
+                be used as follows: <code><span class="identifier">co_await</span>
+                <span class="identifier">socket</span><span class="special">.</span><span class="identifier">async_connect</span><span class="special">(</span><span class="identifier">my_endpoint</span><span class="special">)</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added missing <code><span class="identifier">async_initiate</span></code>
+                to the Windows-specific I/O objects' asynchronous operations.
+              </div>
+            </li>
+            <li>
+              <div>
+                Ensured that the executor type is propagated to newly accepted sockets.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed to require that <code><span class="identifier">Protocol</span></code>
+                copy and move operations never throw.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed to require that <code><span class="identifier">Endpoint</span></code>
+                default constructor and move operations never throw.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added the <code><span class="keyword">noexcept</span></code> qualifier
+                to protocol accessors.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added the <code><span class="keyword">noexcept</span></code> qualifier
+                to socket move constructors.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed issues associated with opening serial ports on Windows:
+                <ul>
+                  <li>
+                    <div>
+                      Use the correct constant to initialise the RTS control flag.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Specify a default baud rate (9600).
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a lost "outstanding work count" that can occur when
+                an asynchronous accept operation is automatically restarted.
+              </div>
+            </li>
+            <li>
+              <div>
+                Consult the <a href="/doc/libs/1_72_0/doc/html/boost_asio/history.html">Revision
+                History</a> for further details.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
           <ul>
             <li>
               <div>
@@ -82,7 +195,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/beast/">Beast</a>:</span>
+          <span class="library"><a href="/libs/beast/">Beast</a>:</span>
           <ul>
             <li>
               <div>
@@ -99,7 +212,7 @@
             </li>
             <li>
               <div>
-                See the full <a href="/doc/libs/1_72_0_beta1/libs/beast/doc/html/beast/release_notes.html">Release
+                See the full <a href="/libs/beast/doc/html/beast/release_notes.html">Release
                 Notes</a> for a complete list of changes.
               </div>
             </li>
@@ -108,7 +221,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/circular_buffer/">Circular Buffer</a>:</span>
+          <span class="library"><a href="/libs/circular_buffer/">Circular Buffer</a>:</span>
           <ul>
             <li>
               <div>
@@ -121,7 +234,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/context/">Context</a>:</span>
+          <span class="library"><a href="/libs/context/">Context</a>:</span>
           <ul>
             <li>
               <div>
@@ -138,7 +251,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/endian/">Endian</a>:</span>
+          <span class="library"><a href="/libs/endian/">Endian</a>:</span>
           <ul>
             <li>
               <div>
@@ -180,7 +293,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/filesystem/">Filesystem</a>:</span>
+          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
           <ul>
             <li>
               <div>
@@ -303,7 +416,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/functional/factory/">Functional/Factory</a>:</span>
+          <span class="library"><a href="/libs/functional/factory/">Functional/Factory</a>:</span>
           <ul>
             <li>
               <div>
@@ -369,7 +482,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/gil/">GIL</a>:</span>
+          <span class="library"><a href="/libs/gil/">GIL</a>:</span>
           <ul>
             <li>
               <div>
@@ -507,12 +620,6 @@
                 <ul>
                   <li>
                     <div>
-                      Dropped support for GCC &lt;= 4.8 (<a href="https://github.com/boostorg/gil/pull/296">PR
-                      #296</a>).
-                    </div>
-                  </li>
-                  <li>
-                    <div>
                       Replace Boost.MPL with Boost.MP11 (<a href="https://github.com/boostorg/gil/pull/274">PR
                       #274</a>).
                     </div>
@@ -521,6 +628,19 @@
                     <div>
                       Removed use of Boost.TypeTraits (<a href="https://github.com/boostorg/gil/pull/274">PR
                       #274</a>).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Dropped support for GCC &lt;= 4.8 (<a href="https://github.com/boostorg/gil/pull/296">PR
+                      #296</a>).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Remove <code><span class="identifier">include</span><span class="special">/</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">gil</span><span class="special">/</span><span class="identifier">version</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                      file as unused (<a href="https://github.com/boostorg/gil/pull/403">PR
+                      #403</a>).
                     </div>
                   </li>
                 </ul>
@@ -568,7 +688,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/histogram/">Histogram</a>:</span>
+          <span class="library"><a href="/libs/histogram/">Histogram</a>:</span>
           <ul>
             <li>
               <div>
@@ -577,7 +697,7 @@
             </li>
             <li>
               <div>
-                See the full <a href="/doc/libs/1_72_0_beta1/libs/histogram/doc/html/histogram/history.html">Release
+                See the full <a href="/libs/histogram/doc/html/histogram/history.html">Release
                 Notes</a> for a complete list of changes
               </div>
             </li>
@@ -586,7 +706,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/log/">Log</a>:</span>
+          <span class="library"><a href="/libs/log/">Log</a>:</span>
           <ul>
             <li>
               <div>
@@ -598,7 +718,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/mpi/">MPI</a>:</span>
+          <span class="library"><a href="/libs/mpi/">MPI</a>:</span>
           <ul>
             <li>
               <div>
@@ -625,7 +745,105 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/outcome/">Outcome</a>:</span>
+          <span class="library"><a href="/libs/math/">Math</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added Hypergeometric functions 1F0, 0F1, 2F0, 1F1 and pFq.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added Jacobi polynomial (and derivatives) evaluation.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added Gegenbauer polynomial (and derivatives) evaluation.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added Cardinal B-Splines (and derivatives) as polynomial functions
+                in their own right.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added Cardinal Trigonometric Interpolation.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added new statistics sub-section.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added One Sample Student's T Test.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added Anderson Darling test for normality.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added Ljung Box test for auto-correlation.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added Runs test for random sequences.
+              </div>
+            </li>
+            <li>
+              <div>
+                The headers <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">tools</span><span class="special">/</span><span class="identifier">univariate_statistics</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                and <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">tools</span><span class="special">/</span><span class="identifier">bivariate_statistics</span><span class="special">.</span><span class="identifier">hpp</span></code>, have been deprecated in favor
+                of <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">statistics</span><span class="special">/</span><span class="identifier">univariate_statistics</span><span class="special">.</span><span class="identifier">hpp</span></code> and <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">statistics</span><span class="special">/</span><span class="identifier">bivariate_statistics</span><span class="special">.</span><span class="identifier">hpp</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added The Empirical CDF distribution.
+              </div>
+            </li>
+            <li>
+              <div>
+                Reworked the Sterling approximation used by multiprecision gamma
+                functions to be applicable to all the function that use the Lanczos
+                approximation at regular precision. Also extended Lanczos approximations
+                up to 100 decimal digit precision.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/multiprecision/">Multiprecision</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Big <code><span class="keyword">constexpr</span></code> update
+                allows cpp_int and float128 arithmetic to be fully <code><span class="keyword">constexpr</span></code> with gcc and clang 9 or
+                later, or any compiler supporting <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">is_constant_evaluated</span><span class="special">()</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix bug in variable precision mpf_float which causes it to go into
+                a tailspin trying to select the correct precision - see https://github.com/boostorg/multiprecision/issues/164.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/outcome/">Outcome</a>:</span>
           <ul>
             <li>
               <div>
@@ -739,7 +957,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/poly_collection/">PolyCollection</a>:</span>
+          <span class="library"><a href="/libs/poly_collection/">PolyCollection</a>:</span>
           <ul>
             <li>
               <div>
@@ -751,7 +969,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/preprocessor/">Preprocessor</a>:</span>
+          <span class="library"><a href="/libs/preprocessor/">Preprocessor</a>:</span>
           <ul>
             <li>
               <div>
@@ -792,7 +1010,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/smart_ptr/">Smart Pointers</a>:</span>
+          <span class="library"><a href="/libs/smart_ptr/">Smart Pointers</a>:</span>
           <ul>
             <li>
               <div>
@@ -805,7 +1023,57 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_72_0_beta1/libs/vmd/">VMD</a>:</span>
+          <span class="library"><a href="/libs/test/">Test</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Boost.test v3.12 see the <a href="/libs/test/doc/html/boost_test/change_log.html">Changes
+                log</a> for more details.
+              </div>
+            </li>
+            <li>
+              <div>
+                New feature:
+                <ul>
+                  <li>
+                    <div>
+                      Support for C++17 <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">string_view</span></code>
+                      has been added.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Better diagnostic on <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">exception</span></code>
+                      and no rtti mode (thanks to Mikhail Pilin / [pull_request 234])
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Bug fixes and pull requests:
+                <ul>
+                  <li>
+                    <div>
+                      GitHub Issues: <a href="https://github.com/boostorg/test/issues/206">#206</a>, <a href="https://github.com/boostorg/test/issues/217">#217</a>, <a href="https://github.com/boostorg/test/issues/223">#223</a>, <a href="https://github.com/boostorg/test/issues/229">#229</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      GitHub Pull Requests: <a href="https://github.com/boostorg/test/pull/227">PR#227</a>, <a href="https://github.com/boostorg/test/pull/231">PR#231</a>, <a href="https://github.com/boostorg/test/pull/232">PR#232</a>,
+                      <a href="https://github.com/boostorg/test/pull/234">PR#234</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/vmd/">VMD</a>:</span>
           <ul>
             <li>
               <div>
