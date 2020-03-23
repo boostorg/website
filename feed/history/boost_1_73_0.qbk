@@ -46,16 +46,8 @@ Please keep the list of libraries sorted in lexicographical order.
   * Speedup compilation by not including `<algorithm>`.
   * Maintenance work, including CI hardening.
 
-* [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
-  * `multi_index_container` is now [@https://en.cppreference.com/w/cpp/named_req/AllocatorAwareContainer `AllocatorAware`].
-  * Swapping of internal `KeyFromValue`, `Compare`, `Hash` and `Pred` objects now
-    selects the appropriate `swap` function between `std::swap` and ADL candidates,
-    in accordance with standard specifications in [*\[swappable.requirements\]]
-    (issue [github multi_index 29]). 
-  * Provided some internal copy constructors and assignment operators whose
-    default implicit definition is deprecated in C++11 onwards ([*\[depr.impldec\]]),
-    which was warned about on some compilers. 
-  * Maintenance work. 
+* [phrase library..[@/libs/assert/ Assert]:]
+  * Added `source_location`.
 
 * [phrase library..[@/libs/context/ Context]:]
   * [github context 133]: IBM Z: Fix fcontext routines
@@ -80,6 +72,26 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
   * Maintenance work, including CI hardening and better workarounds for broken standard libraries (thanks to Nikita Kniazev [github lexical_cast 32], [github lexical_cast 33]).
 
+* [phrase library..[@/libs/mp11/ Mp11]:]
+  * Added `mp_unique_if` (contributed by Kris Jusiak)
+  * Added `mp_flatten`
+  * Added `mp_rotate_left`, `mp_rotate_right` (contributed by Duncan Barber)
+  * Added `mp_compose`
+  * Added `mp_power_set`
+  * Added `mp_partial_sum`
+  * Added `mp_iterate`
+
+* [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
+  * `multi_index_container` is now [@https://en.cppreference.com/w/cpp/named_req/AllocatorAwareContainer `AllocatorAware`].
+  * Swapping of internal `KeyFromValue`, `Compare`, `Hash` and `Pred` objects now
+    selects the appropriate `swap` function between `std::swap` and ADL candidates,
+    in accordance with standard specifications in [*\[swappable.requirements\]]
+    (issue [github multi_index 29]). 
+  * Provided some internal copy constructors and assignment operators whose
+    default implicit definition is deprecated in C++11 onwards ([*\[depr.impldec\]]),
+    which was warned about on some compilers. 
+  * Maintenance work. 
+
 * [phrase library..[@/libs/poly_collection/ PolyCollection]:]
   * Suppressed a potential redundant move warning in `boost::poly_collection::for_each`.
   * Fixed a bug by which elements were copied rather than moved in
@@ -94,12 +106,24 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed msvc-9 build
   * Maintenance work, including test fixes [github stacktrace 86], fixing typos [github stacktrace 84], CI improvements and hardening, inspect tool fixes.
 
+* [phrase library..[@/libs/throw_exception/ ThrowException]:]
+  * Added an overload of `throw_exception` that takes a `boost::source_location`
+    object.
+  * NOTE: Projects using `BOOST_THROW_EXCEPTION` with exceptions disabled will need
+    to add a definition of this new overload.
+
 * [phrase library..[@/libs/type_index/ TypeIndex]:]
   * Maintenance work, including CI integration with inspect tool.
 
 * [phrase library..[@/libs/variant/ Variant]:]
   * Removed unused includes (thanks to Nikita Kniazev [github variant 74]).
   * Maintenance work, including typo fixes.
+
+* [phrase library..[@/libs/variant2/ Variant2]:]
+  * Added support for `std::hash`, `boost::hash`.
+  * `variant<T...>` is now trivial when all types in `T...` are trivial.
+    This improves performance by enabling it to be passed to, and returned
+    from, functions in registers.
 
 [endsect]
 
