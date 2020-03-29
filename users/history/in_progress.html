@@ -277,6 +277,74 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/outcome/">Outcome</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Enhancements:
+                <ul>
+                  <li>
+                    <div>
+                      Performance of Outcome-based code compiled by clang has been
+                      greatly improved. The previous implementation of Outcome's
+                      status bitfield confused clang's optimiser, which caused low
+                      quality codegen. Unlike most codegen issues, this was noticeably
+                      in empirical benchmarks of real world code, as was shown by
+                      <a href="https://wg21.link/P1886">P1886 <strong>Error
+                      speed benchmarking</strong></a>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      The safe part of the <a href="https://github.com/ned14/outcome/tree/better_optimisation"><code><span class="identifier">better_optimisation</span></code></a>
+                      Outcome v2.2.0 future branch was merged to Outcome v2.1.3 which
+                      includes a new status bitfield implementation. This appears
+                      to not confuse clang's optimiser, and clang 9 produces code
+                      which routinely beats GCC 9's code for various canned use cases.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Installability is now CI tested per commit. Due to installability
+                      of standalone Outcome (e.g. <code><span class="identifier">make</span>
+                      <span class="identifier">install</span></code>) breaking
+                      itself rather more frequently than is ideal, installability
+                      is now tested on CI per commit.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Bug fixes:
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://github.com/ned14/outcome/issues/214">#214</a>
+                      Newer Concepts implementing compilers were unhappy with the
+                      early check for destructibility of <code><span class="identifier">T</span></code>
+                      and <code><span class="identifier">E</span></code>, so removed
+                      template constraints, falling back to static assert which runs
+                      later in the type instantiation sequence.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/ned14/outcome/issues/220">#220</a>
+                      A false positive undefined behaviour sanitiser failure in some
+                      use cases of Experimental Outcome was worked around to avoid
+                      the failure message.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/poly_collection/">PolyCollection</a>:</span>
           <ul>
             <li>
