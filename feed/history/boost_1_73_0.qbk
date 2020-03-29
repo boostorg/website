@@ -92,6 +92,15 @@ Please keep the list of libraries sorted in lexicographical order.
     which was warned about on some compilers. 
   * Maintenance work. 
 
+* [phrase library..[@/libs/outcome/ Outcome]:]
+  * Enhancements:
+    * Performance of Outcome-based code compiled by clang has been greatly improved. The previous implementation of Outcome's status bitfield confused clang's optimiser, which caused low quality codegen. Unlike most codegen issues, this was noticeably in empirical benchmarks of real world code, as was shown by [@https://wg21.link/P1886 P1886 *Error speed benchmarking*].
+    * The safe part of the [@https://github.com/ned14/outcome/tree/better_optimisation `better_optimisation`] Outcome v2.2.0 future branch was merged to Outcome v2.1.3 which includes a new status bitfield implementation. This appears to not confuse clang's optimiser, and clang 9 produces code which routinely beats GCC 9's code for various canned use cases.
+    * Installability is now CI tested per commit. Due to installability of standalone Outcome (e.g. `make install`) breaking itself rather more frequently than is ideal, installability is now tested on CI per commit.
+  * Bug fixes:
+    * [@https://github.com/ned14/outcome/issues/214 #214] Newer Concepts implementing compilers were unhappy with the early check for destructibility of `T` and `E`, so removed template constraints, falling back to static assert which runs later in the type instantiation sequence.
+    * [@https://github.com/ned14/outcome/issues/220 #220] A false positive undefined behaviour sanitiser failure in some use cases of Experimental Outcome was worked around to avoid the failure message.
+
 * [phrase library..[@/libs/poly_collection/ PolyCollection]:]
   * Suppressed a potential redundant move warning in `boost::poly_collection::for_each`.
   * Fixed a bug by which elements were copied rather than moved in
