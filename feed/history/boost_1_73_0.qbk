@@ -49,6 +49,18 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/assert/ Assert]:]
   * Added `source_location`.
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Implemented C++20 `atomic_ref`. See [@/libs/atomic/doc/html/atomic/interface.html#atomic.interface.interface_atomic_ref docs] and especially the [@/libs/atomic/doc/html/atomic/interface.html#atomic.interface.interface_atomic_ref.caveats caveats] section.
+  * Implemented `atomic_flag::test` operation, which was introduced in C++20.
+  * `atomic<T>` should now take into account alignment requirements of `T`, which makes a difference if those requirements are higher than that of the internal storage of `atomic`.
+  * Added static asserts enforcing the requirements on the value type `T` used with `atomic` and `atomic_ref`. This should prohibit invalid types from being used as atomics.
+  * Improved internal lock pool implementation. The pool is larger, and lock selection accounts for atomic object alignment, which should reduce the potential of thread contention.
+  * Fixed incorrect x86 code generated for `bit_test_and_*` operations on 8 and 16-bit arguments. Other architectures are not affected.
+  * Fixed a possible unaligned memory access in `compare_exchange_*` operations, if alignment requirements of `value_type` are less than that of the internal storage of `atomic`.
+  * `boost/atomic/atomic.hpp` no longer includes `boost/atomic/atomic_flag.hpp` and `boost/atomic/fences.hpp` and only defines the `boost::atomic` class template and related typedefs. Include the other headers explicitly or use `boost/atomic.hpp` to include all parts of Boost.Atomic.
+  * The `atomic<T>::storage()` accessor and associated `atomic<T>::storage_type` type are deprecated. Instead, users are advised to use `atomic<T>::value()` and `atomic<T>::value_type`, respectively. Users can define `BOOST_ATOMIC_SILENCE_STORAGE_DEPRECATION` to disable deprecation warnings for the time of transition. The deprecated pieces will be removed in a future release.
+  * Removed support for `BOOST_ATOMIC_DETAIL_HIGHLIGHT_OP_AND_TEST`. This macro was used as a helper for transition to the updated returned values of `*_and_test` operations in Boost.Atomic 1.67, which was released 2 years before 1.73.
+
 * [phrase library..[@/libs/beast/ Beast]:]
   * This is a maintenance update.
   * Nested `mutable_data_type` in Beast dynamic buffers is deprecated.
@@ -100,6 +112,18 @@ Please keep the list of libraries sorted in lexicographical order.
 
 * [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
   * Maintenance work, including CI hardening and better workarounds for broken standard libraries (thanks to Nikita Kniazev [github lexical_cast 32], [github lexical_cast 33]).
+
+* [phrase library..[@/libs/log/ Log]:]
+  * New Features:
+    * Default sink used in trivial logging, when no sinks are registered in the logging core, now automatically flushes output after each log record. ([github log 103])
+    * `core::flush` now performs a flush on the default sink used for trivial logging, when no sinks are registered.
+  * Bug fixes:
+    * Added a workaround for some syslog API implementations (e.g. glibc), which do not save the application identification string in `openlog` call. Such implementations could access already freed memory on each `syslog` call, resulting in undefined behavior. ([github log 97])
+    * Fixed that log file rotation on a specific day of month (e.g. `rotation_at_time_point(boost::gregorian::greg_day(1))`) could be silently ignored and not happen. ([github log 98])
+    * Fixed that `text_file_backend::rotate_file` could throw if there were no log records written yet and target file name pattern was set.
+    * Ported various components of the library to `std::allocator_traits` to improve compatibility with C++20 allocators.
+    * Fixed compilation errors when building in MSYS2 Cygwin environment. ([github log 102])
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
 * [phrase library..[@/libs/mp11/ Mp11]:]
   * Added `mp_unique_if` (contributed by Kris Jusiak)
@@ -176,6 +200,10 @@ Please keep the list of libraries sorted in lexicographical order.
   * `variant<T...>` is now trivial when all types in `T...` are trivial.
     This improves performance by enabling it to be passed to, and returned
     from, functions in registers.
+
+* [phrase library..[@/libs/winapi/ WinAPI]:]
+  * Headers in `boost/detail/winapi` are deprecated and will be removed in a future release.
+  * Boost.WinAPI headers no longer include `winerror.h`. Include `boost/winapi/error_codes.hpp` to get Windows error codes. ([github winapi 81])
 
 [endsect]
 
