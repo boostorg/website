@@ -103,6 +103,16 @@ Please keep the list of libraries sorted in lexicographical order.
     which was warned about on some compilers.
   * Maintenance work.
 
+* [phrase library..[@/libs/io/ IO]:]
+  * Made all the IOS state saver classes non-copyable. (Glen Fernandes)
+  * Correctly handle error upon first read from the input stream when reading
+    a quoted string. (Glen Fernandes)
+  * Implemented `ostream_joiner` for delimiter based joining. (Glen Fernandes)
+  * Relocated `ostream_string` from the Utility library to the IO library as
+    `ostream_put`. (Glen Fernandes implemented this facility when optimizing
+    the output of string views to write directly to the stream buffer).
+  * Glen Fernandes became maintainer of the IO library.
+
 * [phrase library..[@/libs/outcome/ Outcome]:]
   * Enhancements:
     * Performance of Outcome-based code compiled by clang has been greatly improved. The previous implementation of Outcome's status bitfield confused clang's optimiser, which caused low quality codegen. Unlike most codegen issues, this was noticeably in empirical benchmarks of real world code, as was shown by [@https://wg21.link/P1886 P1886 *Error speed benchmarking*].
@@ -134,6 +144,10 @@ Please keep the list of libraries sorted in lexicographical order.
 
 * [phrase library..[@/libs/type_index/ TypeIndex]:]
   * Maintenance work, including CI integration with inspect tool.
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * The `ostream_string` facility has moved from the Utility library to the IO
+    library as `ostream_put`.
 
 * [phrase library..[@/libs/variant/ Variant]:]
   * Removed unused includes (thanks to Nikita Kniazev [github variant 74]).
