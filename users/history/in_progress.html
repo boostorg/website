@@ -88,6 +88,90 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/atomic/">Atomic</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Implemented C++20 <code><span class="identifier">atomic_ref</span></code>.
+                See <a href="/doc/libs/master/libs/atomic/doc/html/atomic/interface.html#atomic.interface.interface_atomic_ref">docs</a>
+                and especially the <a href="/doc/libs/master/libs/atomic/doc/html/atomic/interface.html#atomic.interface.interface_atomic_ref.caveats">caveats</a>
+                section.
+              </div>
+            </li>
+            <li>
+              <div>
+                Implemented <code><span class="identifier">atomic_flag</span><span class="special">::</span><span class="identifier">test</span></code>
+                operation, which was introduced in C++20.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+                should now take into account alignment requirements of <code><span class="identifier">T</span></code>, which makes a difference if
+                those requirements are higher than that of the internal storage of
+                <code><span class="identifier">atomic</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added static asserts enforcing the requirements on the value type
+                <code><span class="identifier">T</span></code> used with <code><span class="identifier">atomic</span></code> and <code><span class="identifier">atomic_ref</span></code>.
+                This should prohibit invalid types from being used as atomics.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improved internal lock pool implementation. The pool is larger, and
+                lock selection accounts for atomic object alignment, which should
+                reduce the potential of thread contention.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed incorrect x86 code generated for <code><span class="identifier">bit_test_and_</span><span class="special">*</span></code> operations on 8 and 16-bit arguments.
+                Other architectures are not affected.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a possible unaligned memory access in <code><span class="identifier">compare_exchange_</span><span class="special">*</span></code> operations, if alignment requirements
+                of <code><span class="identifier">value_type</span></code> are
+                less than that of the internal storage of <code><span class="identifier">atomic</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">atomic</span><span class="special">/</span><span class="identifier">atomic</span><span class="special">.</span><span class="identifier">hpp</span></code> no longer includes <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">atomic</span><span class="special">/</span><span class="identifier">atomic_flag</span><span class="special">.</span><span class="identifier">hpp</span></code> and <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">atomic</span><span class="special">/</span><span class="identifier">fences</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                and only defines the <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">atomic</span></code>
+                class template and related typedefs. Include the other headers explicitly
+                or use <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">atomic</span><span class="special">.</span><span class="identifier">hpp</span></code> to include all parts of Boost.Atomic.
+              </div>
+            </li>
+            <li>
+              <div>
+                The <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">storage</span><span class="special">()</span></code>
+                accessor and associated <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">storage_type</span></code>
+                type are deprecated. Instead, users are advised to use <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">()</span></code>
+                and <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value_type</span></code>, respectively. Users
+                can define <code><span class="identifier">BOOST_ATOMIC_SILENCE_STORAGE_DEPRECATION</span></code>
+                to disable deprecation warnings for the time of transition. The deprecated
+                pieces will be removed in a future release.
+              </div>
+            </li>
+            <li>
+              <div>
+                Removed support for <code><span class="identifier">BOOST_ATOMIC_DETAIL_HIGHLIGHT_OP_AND_TEST</span></code>.
+                This macro was used as a helper for transition to the updated returned
+                values of <code><span class="special">*</span><span class="identifier">_and_test</span></code>
+                operations in Boost.Atomic 1.67, which was released 2 years before
+                1.73.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/beast/">Beast</a>:</span>
           <ul>
             <li>
@@ -212,6 +296,116 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/gil/">GIL</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added
+                <ul>
+                  <li>
+                    <div>
+                      New member function <code><span class="identifier">size</span><span class="special">()</span></code> in <code><span class="identifier">any_image_view</span></code>
+                      class (<a href="https://github.com/boostorg/gil/pull/456">PR#456</a>).
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed
+                <ul>
+                  <li>
+                    <div>
+                      Replace Boost.Test with Boost.LightweightTest as the only test
+                      framework used in GIL (<a href="https://github.com/boostorg/gil/pull/459">PR#459</a>) and (<a href="https://github.com/boostorg/gil/pull/464">PR#464</a>). This
+                      also restructured the <code><span class="identifier">test</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">io</span><span class="special">/</span></code> sub-tree and targets in related
+                      <code><span class="identifier">Jamfile</span></code>-s.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Removed remaining uses of Boost.MPL (<a href="https://github.com/boostorg/gil/pull/459">PR#459</a>).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Renamed all macros using <code><span class="identifier">BOOST_GIL_</span></code>
+                      prefix (<a href="https://github.com/boostorg/gil/pull/411">PR#411</a>).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Renamed all CMake configuration options using <code><span class="identifier">BOOST_GIL_</span></code> prefix (<a href="https://github.com/boostorg/gil/pull/419">PR#419</a>).
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed
+                <ul>
+                  <li>
+                    <div>
+                      Removed <code><span class="identifier">extension</span><span class="special">/</span><span class="identifier">dynamic_image</span><span class="special">/</span><span class="identifier">reduce</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                      as unused and possibly unfinished (<a href="https://github.com/boostorg/gil/pull/466">PR#466</a>). An implementation
+                      attempt of techniques described in the paper [Efficient Run-Time
+                      Dispatching in Generic Programming with Minimal Code Bloat](http://lubomir.org/academic/MinimizingCodeBloat.pdf)
+                      by Lubomir Bourdev, Jaakko Jarvi.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Removed direct dependency on Boost.MPL, Boost.System and Boost.Test.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Started removing public macros for compile-time configuration
+                      of I/O extension tests, i.e. <code><span class="identifier">BOOST_GIL_IO_TEST_ALLOW_READING_IMAGES</span></code>
+                      and <code><span class="identifier">BOOST_GIL_IO_TEST_ALLOW_WRITING_IMAGES</span></code>.
+                      Instead, if a test target is built, it builds all its test
+                      cases unconditionally.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed
+                <ul>
+                  <li>
+                    <div>
+                      Avoid <code><span class="identifier">longjmp</span></code>
+                      interaction during destruction of I/O extension objects (<a href="https://github.com/boostorg/gil/pull/433">PR#433</a>).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed missing alignment default value in constructor of <code><span class="identifier">image</span></code> class (<a href="https://github.com/boostorg/gil/pull/429">PR#429</a>).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed segmentation fault when reading corrupted PNG file (<a href="https://github.com/boostorg/gil/pull/414">PR#414</a>).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed illegal initialization of return values in the old IOv1
+                      interface of I/O extension (<a href="https://github.com/boostorg/gil/pull/409">PR#409</a>).
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/lexical_cast/">LexicalCast</a>:</span>
           <ul>
             <li>
@@ -219,6 +413,83 @@
                 Maintenance work, including CI hardening and better workarounds for
                 broken standard libraries (thanks to Nikita Kniazev <a href="https://github.com/boostorg/lexical_cast/issues/32">#32</a>,
                 <a href="https://github.com/boostorg/lexical_cast/issues/33">#33</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/log/">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                New Features:
+                <ul>
+                  <li>
+                    <div>
+                      Default sink used in trivial logging, when no sinks are registered
+                      in the logging core, now automatically flushes output after
+                      each log record. (<a href="https://github.com/boostorg/log/issues/103">#103</a>)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">core</span><span class="special">::</span><span class="identifier">flush</span></code> now performs a flush
+                      on the default sink used for trivial logging, when no sinks
+                      are registered.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Bug fixes:
+                <ul>
+                  <li>
+                    <div>
+                      Added a workaround for some syslog API implementations (e.g.
+                      glibc), which do not save the application identification string
+                      in <code><span class="identifier">openlog</span></code>
+                      call. Such implementations could access already freed memory
+                      on each <code><span class="identifier">syslog</span></code>
+                      call, resulting in undefined behavior. (<a href="https://github.com/boostorg/log/issues/97">#97</a>)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed that log file rotation on a specific day of month (e.g.
+                      <code><span class="identifier">rotation_at_time_point</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">gregorian</span><span class="special">::</span><span class="identifier">greg_day</span><span class="special">(</span><span class="number">1</span><span class="special">))</span></code>) could be silently ignored
+                      and not happen. (<a href="https://github.com/boostorg/log/issues/98">#98</a>)
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed that <code><span class="identifier">text_file_backend</span><span class="special">::</span><span class="identifier">rotate_file</span></code>
+                      could throw if there were no log records written yet and target
+                      file name pattern was set.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Ported various components of the library to <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator_traits</span></code>
+                      to improve compatibility with C++20 allocators.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed compilation errors when building in MSYS2 Cygwin environment.
+                      (<a href="https://github.com/boostorg/log/issues/102">#102</a>)
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                See <a href="/doc/libs/master/libs/log/doc/html/log/changelog.html">changelog</a>
+                for more details.
               </div>
             </li>
           </ul>
@@ -301,6 +572,43 @@
             <li>
               <div>
                 Maintenance work.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/io/">IO</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Made all the IOS state saver classes non-copyable. (Glen Fernandes)
+              </div>
+            </li>
+            <li>
+              <div>
+                Correctly handle error upon first read from the input stream when
+                reading a quoted string. (Glen Fernandes)
+              </div>
+            </li>
+            <li>
+              <div>
+                Implemented <code><span class="identifier">ostream_joiner</span></code>
+                for delimiter based joining. (Glen Fernandes)
+              </div>
+            </li>
+            <li>
+              <div>
+                Relocated <code><span class="identifier">ostream_string</span></code>
+                from the Utility library to the IO library as <code><span class="identifier">ostream_put</span></code>.
+                (Glen Fernandes implemented this facility when optimizing the output
+                of string views to write directly to the stream buffer).
+              </div>
+            </li>
+            <li>
+              <div>
+                Glen Fernandes became maintainer of the IO library.
               </div>
             </li>
           </ul>
@@ -459,6 +767,20 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/utility/">Utility</a>:</span>
+          <ul>
+            <li>
+              <div>
+                The <code><span class="identifier">ostream_string</span></code>
+                facility has moved from the Utility library to the IO library as
+                <code><span class="identifier">ostream_put</span></code>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/variant/">Variant</a>:</span>
           <ul>
             <li>
@@ -489,6 +811,26 @@
                 <code><span class="identifier">variant</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">...&gt;</span></code>
                 is now trivial when all types in <code><span class="identifier">T</span><span class="special">...</span></code> are trivial. This improves performance
                 by enabling it to be passed to, and returned from, functions in registers.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/winapi/">WinAPI</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Headers in <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">winapi</span></code>
+                are deprecated and will be removed in a future release.
+              </div>
+            </li>
+            <li>
+              <div>
+                Boost.WinAPI headers no longer include <code><span class="identifier">winerror</span><span class="special">.</span><span class="identifier">h</span></code>.
+                Include <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">winapi</span><span class="special">/</span><span class="identifier">error_codes</span><span class="special">.</span><span class="identifier">hpp</span></code> to get Windows error codes.
+                (<a href="https://github.com/boostorg/winapi/issues/81">#81</a>)
               </div>
             </li>
           </ul>
