@@ -5,7 +5,7 @@ use Tester\Assert;
 require_once(__DIR__.'/../config/bootstrap.php');
 require_once(__DIR__.'/../../boost.php');
 
-$libraries = BoostLibraries::from_xml('<?xml version="1.0" encoding="US-ASCII"?>
+$libraries = BoostLibraries::from_xml('<?xml version="1.0" encoding="UTF-8"?>
 <boost xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <categories>
     <category name="Math">
