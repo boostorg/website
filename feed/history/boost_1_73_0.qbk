@@ -2,7 +2,7 @@
     [quickbook 1.6]
     [source-mode c++]
     [purpose
-        New Libraries:
+        New Libraries: Nowide
         Updated Libraries:
         [/ Please don't add updated libraries yet, it
            can create unnecessary merge conflicts.]
@@ -26,6 +26,9 @@ Please keep the list of libraries sorted in lexicographical order.
   incremental calculation, and collection of statistical accumulators, from Eric Niebler.
 ]
 
+* [phrase library..[@/libs/nowide/ Nowide]:] Standard library functions with UTF-8 API on Windows, from Artyom Beilis.
+* [phrase library..[@/libs/static_string/ StaticString]:] A dynamically resizable string of characters with compile-time fixed capacity and contiguous embedded storage, from Vinnie Falco and Krystian Stasiowski
+
 * /TODO/
 
 [endsect]
@@ -42,38 +45,145 @@ Please keep the list of libraries sorted in lexicographical order.
 
 * /TODO/
 
+* [phrase library..[@/libs/any/ Any]:]
+  * Speedup compilation by not including `<algorithm>`.
+  * Maintenance work, including CI hardening.
+
+* [phrase library..[@/libs/assert/ Assert]:]
+  * Added `source_location`.
+
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Implemented C++20 `atomic_ref`. See [@/libs/atomic/doc/html/atomic/interface.html#atomic.interface.interface_atomic_ref docs] and especially the [@/libs/atomic/doc/html/atomic/interface.html#atomic.interface.interface_atomic_ref.caveats caveats] section.
+  * Implemented `atomic_flag::test` operation, which was introduced in C++20.
+  * `atomic<T>` should now take into account alignment requirements of `T`, which makes a difference if those requirements are higher than that of the internal storage of `atomic`.
+  * Added static asserts enforcing the requirements on the value type `T` used with `atomic` and `atomic_ref`. This should prohibit invalid types from being used as atomics.
+  * Improved internal lock pool implementation. The pool is larger, and lock selection accounts for atomic object alignment, which should reduce the potential of thread contention.
+  * Fixed incorrect x86 code generated for `bit_test_and_*` operations on 8 and 16-bit arguments. Other architectures are not affected.
+  * Fixed a possible unaligned memory access in `compare_exchange_*` operations, if alignment requirements of `value_type` are less than that of the internal storage of `atomic`.
+  * `boost/atomic/atomic.hpp` no longer includes `boost/atomic/atomic_flag.hpp` and `boost/atomic/fences.hpp` and only defines the `boost::atomic` class template and related typedefs. Include the other headers explicitly or use `boost/atomic.hpp` to include all parts of Boost.Atomic.
+  * The `atomic<T>::storage()` accessor and associated `atomic<T>::storage_type` type are deprecated. Instead, users are advised to use `atomic<T>::value()` and `atomic<T>::value_type`, respectively. Users can define `BOOST_ATOMIC_SILENCE_STORAGE_DEPRECATION` to disable deprecation warnings for the time of transition. The deprecated pieces will be removed in a future release.
+  * Removed support for `BOOST_ATOMIC_DETAIL_HIGHLIGHT_OP_AND_TEST`. This macro was used as a helper for transition to the updated returned values of `*_and_test` operations in Boost.Atomic 1.67, which was released 2 years before 1.73.
+
+* [phrase library..[@/libs/beast/ Beast]:]
+  * This is a maintenance update.
+  * Nested `mutable_data_type` in Beast dynamic buffers is deprecated.
+  * We'd love to know how you or your company use Beast, consider adding an
+    entry  to the
+    [@https://github.com/boostorg/beast/wiki/Companies-and-Individuals-Using-Beast Companies and Individuals Using Beast]
+    list.
+  * See the full
+    [@/libs/beast/doc/html/beast/release_notes.html Release Notes]
+    for a complete list of changes.
+
 * [phrase library..[@/libs/context/ Context]:]
   * [github context 133]: IBM Z: Fix fcontext routines
   * [github context 132]: mips64/n64: .align 3
   * [github context 131]: Use OSPLAT MIPS32/MIPS64 to set different ABI
   * [github context 129]: Fix non-PIC in RISC-V assembly
 
+* [phrase library..[@/libs/conversion/ Conversion]:]
+  * Added `boost::polymorphic_downcast` for references (thanks to Julien Delacroix for the patch).
+  * Significant docs update.
+
 * [phrase library..[@/libs/date_time/ date_time]:]
   * [github date_time 123]: Support constexpr in c++14 and above
   * [github date_time 134]: Make date_time all inline. Users no longer need to link
     the library for any functions. Library remains for build compatibility.
   * [github date_time 132]: Deprecate support for legacy io and
-    USE_DATE_TIME_PRE_1_33_FACET_IO macro
+    `USE_DATE_TIME_PRE_1_33_FACET_IO` macro
   * Misc documentation updates and bugfixes.
+
+* [phrase library..[@/libs/dll/ DLL]:]
+  * Fixes and tests for demangling in `boost::dll::smart_library` (thanks to Ramil Gauss for [github dll 35]).
+  * Make UB sanitizers happy with `boost::dll::load_mode::type` [github dll 30].
+  * Ceased dependence on MPL improving compile times (thanks to Nikita Kniazev for [github dll 34]).
+  * Clang and ICC on Windows fixes and CI support for those platforms (thanks to Nikita Kniazev [github dll 33]).
+  * Maintenance work, including CI hardening and tests improving.
 
 * [phrase library..[@/libs/flyweight/index.html Flyweight]:]
   * Maintenance work.
+
+* [phrase library..[@/libs/gil/ GIL]:]
+  * Added
+    * Added move constructor and move assignment operator to `image` class ([github_pr gil 457]).
+    * New member function `size()` in `any_image_view` class ([github_pr gil 456]).
+  * Changed
+    * Replace Boost.Test with Boost.LightweightTest as the only test framework used in GIL ([github_pr gil 459]) and ([github_pr gil 464]). This also restructured the `test/extension/io/` sub-tree and targets in related `Jamfile`-s.
+    * Removed remaining uses of Boost.MPL ([github_pr gil 459]).
+    * Renamed all macros using `BOOST_GIL_` prefix ([github_pr gil 411]).
+    * Renamed all CMake configuration options using `BOOST_GIL_` prefix ([github_pr gil 419]).
+  * Changed
+    * Removed `extension/dynamic_image/reduce.hpp` as unused and possibly unfinished ([github_pr gil 466]). An implementation attempt of techniques described in the paper [Efficient Run-Time Dispatching in Generic Programming with Minimal Code Bloat](http://lubomir.org/academic/MinimizingCodeBloat.pdf) by Lubomir Bourdev, Jaakko Jarvi.
+    * Removed direct dependency on Boost.MPL, Boost.System and Boost.Test.
+    * Started removing public macros for compile-time configuration of I/O extension tests, i.e. `BOOST_GIL_IO_TEST_ALLOW_READING_IMAGES` and `BOOST_GIL_IO_TEST_ALLOW_WRITING_IMAGES`. Instead, if a test target is built, it builds all its test cases unconditionally.
+  * Fixed
+    * Avoid `longjmp` interaction during destruction of I/O extension objects ([github_pr gil 433]).
+    * Fixed missing alignment default value in constructor of `image` class ([github_pr gil 429]).
+    * Fixed segmentation fault when reading corrupted PNG file ([github_pr gil 414]).
+    * Fixed illegal initialization of return values in the old IOv1 interface of I/O extension ([github_pr gil 409]).
+  * Acknowledgements
+    * Samuel Debionne, Thiago Henrique Hüpner, Pranam Lashkari, Mateusz Loskot, Debabrata Mandal, Olzhas Zhumabek
 
 * [phrase library..[@/libs/icl/ icl]:]
   * [github_pr icl 23]: Remove references to date_time compiled library.
   * [github_pr icl 17]: Fix forward decl lower and upper less equal.
   * Misc bugfixes.
 
+* [phrase library..[@/libs/io/ IO]:]
+  * Made all the IOS state saver classes non-copyable. (Glen Fernandes)
+  * Correctly handle error upon first read from the input stream when reading
+    a quoted string. (Glen Fernandes)
+  * Implemented `ostream_joiner` for delimiter based joining. (Glen Fernandes)
+  * Relocated `ostream_string` from the Utility library to the IO library as
+    `ostream_put`.
+  * Correctly handle stream width and fill in quoted output. (Glen Fernandes)
+  * Optimize quoted output to write directly to the stream buffer.
+    (Glen Fernandes)
+  * Glen Fernandes became the maintainer of the IO library.
+
+* [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
+  * Maintenance work, including CI hardening and better workarounds for broken standard libraries (thanks to Nikita Kniazev [github lexical_cast 31], [github lexical_cast 32]).
+
+* [phrase library..[@/libs/log/ Log]:]
+  * New Features:
+    * Default sink used in trivial logging, when no sinks are registered in the logging core, now automatically flushes output after each log record. ([github log 103])
+    * `core::flush` now performs a flush on the default sink used for trivial logging, when no sinks are registered.
+  * Bug fixes:
+    * Added a workaround for some syslog API implementations (e.g. glibc), which do not save the application identification string in `openlog` call. Such implementations could access already freed memory on each `syslog` call, resulting in undefined behavior. ([github log 97])
+    * Fixed that log file rotation on a specific day of month (e.g. `rotation_at_time_point(boost::gregorian::greg_day(1))`) could be silently ignored and not happen. ([github log 98])
+    * Fixed that `text_file_backend::rotate_file` could throw if there were no log records written yet and target file name pattern was set.
+    * Ported various components of the library to `std::allocator_traits` to improve compatibility with C++20 allocators.
+    * Fixed compilation errors when building in MSYS2 Cygwin environment. ([github log 102])
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
+* [phrase library..[@/libs/mp11/ Mp11]:]
+  * Added `mp_unique_if` (contributed by Kris Jusiak)
+  * Added `mp_flatten`
+  * Added `mp_rotate_left`, `mp_rotate_right` (contributed by Duncan Barber)
+  * Added `mp_compose`
+  * Added `mp_power_set`
+  * Added `mp_partial_sum`
+  * Added `mp_iterate`
+
 * [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
   * `multi_index_container` is now [@https://en.cppreference.com/w/cpp/named_req/AllocatorAwareContainer `AllocatorAware`].
   * Swapping of internal `KeyFromValue`, `Compare`, `Hash` and `Pred` objects now
     selects the appropriate `swap` function between `std::swap` and ADL candidates,
     in accordance with standard specifications in [*\[swappable.requirements\]]
-    (issue [github multi_index 29]). 
+    (issue [github multi_index 29]).
   * Provided some internal copy constructors and assignment operators whose
     default implicit definition is deprecated in C++11 onwards ([*\[depr.impldec\]]),
-    which was warned about on some compilers. 
-  * Maintenance work. 
+    which was warned about on some compilers.
+  * Maintenance work.
+
+* [phrase library..[@/libs/outcome/ Outcome]:]
+  * Enhancements:
+    * Performance of Outcome-based code compiled by clang has been greatly improved. The previous implementation of Outcome's status bitfield confused clang's optimiser, which caused low quality codegen. Unlike most codegen issues, this was noticeably in empirical benchmarks of real world code, as was shown by [@https://wg21.link/P1886 P1886 *Error speed benchmarking*].
+    * The safe part of the [@https://github.com/ned14/outcome/tree/better_optimisation `better_optimisation`] Outcome v2.2.0 future branch was merged to Outcome v2.1.3 which includes a new status bitfield implementation. This appears to not confuse clang's optimiser, and clang 9 produces code which routinely beats GCC 9's code for various canned use cases.
+    * Installability is now CI tested per commit. Due to installability of standalone Outcome (e.g. `make install`) breaking itself rather more frequently than is ideal, installability is now tested on CI per commit.
+  * Bug fixes:
+    * [@https://github.com/ned14/outcome/issues/214 #214] Newer Concepts implementing compilers were unhappy with the early check for destructibility of `T` and `E`, so removed template constraints, falling back to static assert which runs later in the type instantiation sequence.
+    * [@https://github.com/ned14/outcome/issues/220 #220] A false positive undefined behaviour sanitiser failure in some use cases of Experimental Outcome was worked around to avoid the failure message.
 
 * [phrase library..[@/libs/poly_collection/ PolyCollection]:]
   * Suppressed a potential redundant move warning in `boost::poly_collection::for_each`.
@@ -84,11 +194,44 @@ Please keep the list of libraries sorted in lexicographical order.
     construction for the legacy version of libstdc++-v3 shipped with GCC 4.8
     (which can also be used by Clang).
 
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * Added documentation on distribution of PDBs [github stacktrace 55], [github stacktrace 47] (thanks to emptyVoid and Roger Orr for information and to zlojvavan for testing).
+  * Fixed msvc-9 build
+  * Maintenance work, including test fixes [github stacktrace 86], fixing typos [github stacktrace 84], CI improvements and hardening, inspect tool fixes.
+
+* [phrase library..[@/libs/throw_exception/ ThrowException]:]
+  * Added an overload of `throw_exception` that takes a `boost::source_location`
+    object.
+  * NOTE: Projects using `BOOST_THROW_EXCEPTION` with exceptions disabled will need
+    to add a definition of this new overload.
+
+* [phrase library..[@/libs/type_index/ TypeIndex]:]
+  * Maintenance work, including CI integration with inspect tool.
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * The `ostream_string` facility has moved from the Utility library to the IO
+    library as `ostream_put`.
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Removed unused includes (thanks to Nikita Kniazev [github variant 74]).
+  * Fixed zero-as-null-pointer-constat warnings (thanks to Bart Siwek [github variant 77]).
+  * Maintenance work, including typo fixes.
+
+* [phrase library..[@/libs/variant2/ Variant2]:]
+  * Added support for `std::hash`, `boost::hash`.
+  * `variant<T...>` is now trivial when all types in `T...` are trivial.
+    This improves performance by enabling it to be passed to, and returned
+    from, functions in registers.
+
+* [phrase library..[@/libs/winapi/ WinAPI]:]
+  * Headers in `boost/detail/winapi` are deprecated and will be removed in a future release.
+  * Boost.WinAPI headers no longer include `winerror.h`. Include `boost/winapi/error_codes.hpp` to get Windows error codes. ([github winapi 81])
+
 [endsect]
 
 [section Updated Tools]
 
-* [phrase library..[@/tools/build/ B2]:]
+* [phrase library..[@/tools/build/ Build]:]
   * Includes release [@https://github.com/boostorg/build/releases/tag/4.2.0 4.2.0] of B2.
   * WARNING: Since version 4.0.0 B2 requires a capable C++11 compiler to bootstrap.
     This is only needed to build B2 itself not to build Boost for your use.
@@ -99,16 +242,78 @@ Please keep the list of libraries sorted in lexicographical order.
 
 Boost's primary test compilers are:
 
-* /TODO/
+* Linux:
+  * Clang: 3.0, 4.0.1, 6.0.1
+  * Clang, C++0x: 3.0
+  * Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 6.0.1, 7.0.0, 8.0.0
+  * Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 4.0.1, 5.0.2,
+    6.0.1, 7.0.0, 8.0.0
+  * Clang, C++17: 5.0.2, 6.0.1, 7.0.0, 8.0.0
+  * GCC: 4.4.7, 4.5.3, 4.6.3, 5.4.0, 8.0.1
+  * GCC, C++0x: 4.4.7
+  * GCC, C++11: 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0, 8.0.1
+  * GCC, C++14: 5.4.0, 5.5.0, 6.4.0, 7.1.0, 7.3.0, 8.0.1
+  * GCC, C++17: 7.3.0, 8.0.1
+  * Intel, C++14: 18.0
+* OS X:
+  * Apple Clang: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++11: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++14: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++17: 9.1.0, 10.0.0
+  * Apple Clang, C++1z: 9.0.0
+  * Apple Clang, C++2a: 10.0.0
+* Windows:
+  * GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+  * GCC, C++0x: 4.6.4
+  * GCC, C++11: 4.7.3, 4.8.1, 4.9.3
+  * GCC, C++14: 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0
+  * GCC, C++17: 7.1.0, 7.2.0, 7.3.0
+  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+* FreeBSD:
+  * Clang: 4.0.0
+  * Clang, C++11: 4.0.0
+  * Clang, C++14: 4.0.0
+  * Clang, C++1z: 4.0.0
 
 Boost's additional test compilers include:
 
-* /TODO/
+* Linux:
+  * Clang: 3.0, 3.8.1, 3.9.1, 4.0.1, 5.0.2, 6.0.1
+  * Clang, C++0x: 3.0
+  * Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 6.0.1, 7.0.0, 8.0.0
+  * Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 4.0.1, 5.0.2,
+    6.0.1, 7.0.0, 8.0.0
+  * Clang, C++17: 5.0.2, 6.0.1, 7.0.0, 8.0.0
+  * GCC: 4.4.7, 4.5.3, 4.6.3, 4.9.4, 5.4.0, 5.5.0, 8.0.1
+  * GCC, C++0x: 4.4.7
+  * GCC, C++11: 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0, 8.0.1
+  * GCC, C++14: 5.4.0, 5.5.0, 6.3.0, 6.4.0, 7.1.0, 7.3.0, 8.0.1, 8.1.0
+  * GCC, C++17: 7.3.0, 8.0.1
+  * Intel, C++14: 18.0
+* OS X:
+  * Apple Clang: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++11: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++14: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++17: 9.1.0, 10.0.0
+  * Apple Clang, C++1z: 9.0.0
+  * Apple Clang, C++2a: 10.0.0
+* Windows:
+  * GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+  * GCC, C++0x: 4.6.4
+  * GCC, C++11: 4.7.3, 4.8.1, 4.9.3
+  * GCC, C++14: 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0
+  * GCC, C++17: 7.1.0, 7.2.0, 7.3.0
+  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+* FreeBSD:
+  * Clang: 4.0.0
+  * Clang, C++11: 4.0.0
+  * Clang, C++14: 4.0.0
+  * Clang, C++1z: 4.0.0
 
 [endsect]
 
 [section Acknowledgements]
 
-/TODO/
+Marshall Clow, Michael Caisse and Glen Fernandes managed this release.
 
 [endsect]

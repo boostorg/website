@@ -418,7 +418,7 @@ class BoostLibraries
         //$writer->setIndent(true);
         //$writer->setIndentString('  ');
 
-        $writer->startDocument('1.0', 'US-ASCII');
+        $writer->startDocument('1.0', 'UTF-8');
         $writer->startElement('boost');
         $writer->writeAttribute('xmlns:xsi',
                 'http://www.w3.org/2001/XMLSchema-instance');
@@ -706,7 +706,7 @@ class BoostLibraries_XMLWriter {
     }
 
     function startDocument($version, $encoding) {
-        assert($encoding === 'US-ASCII');
+        assert($encoding === 'UTF-8');
         assert(!$this->text);
         assert(!$this->in_element);
         assert(!$this->element_stack);

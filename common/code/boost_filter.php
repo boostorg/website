@@ -144,7 +144,7 @@ class BoostFilter
     // General purpose render callbacks.
 
     function template_params($content) {
-        $charset = $this->charset ?: 'us-ascii';
+        $charset = $this->charset ?: 'utf-8';
         $title = $this->title ?: 'Boost C++ Libraries';
 
         if (!empty($this->data->version)) {
