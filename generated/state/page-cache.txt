@@ -21705,21 +21705,11 @@
 "          embedded storage, from Vinnie Falco and Krystian Stasiowski
 "        </div>
 "      </li>
-"      <li>
-"        <div>
-"          <em>TODO</em>
-"        </div>
-"      </li>
 "    </ul>
 "  </div>
 "  <div id="version_1_73_0.updated_libraries">
 "    <h3><span class="link">Updated Libraries</span></h3>
 "    <ul>
-"      <li>
-"        <div>
-"          <em>TODO</em>
-"        </div>
-"      </li>
 "      <li>
 "        <div>
 "          <span class="library"><a href="/libs/align/">Align</a>:</span>
@@ -21745,6 +21735,149 @@
 "            <li>
 "              <div>
 "                Maintenance work, including CI hardening.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fixed compatibility with C++20 concept syntax.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Marked the POSIX descriptor classes' move constructors as <code><span class="keyword">noexcept</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added the <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">host_name_verification</span></code> class, which
+"                is a drop-in replacement for <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">rfc2818_verification</span></code>.
+"                The <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">rfc2818_verification</span></code> class has
+"                been marked as deprecated. As a consequence of this change, SSL support
+"                now depends on functions that were introduced in OpenSSL 1.0.2.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added an <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">context</span></code> constructor to take ownership
+"                of a native handle.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed C++ language version detection with <tt>gcc</tt>
+"                to use <code><span class="identifier">__cplusplus</span></code>
+"                macro.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a work counting issue in the asynchronous resolve operation
+"                for endpoints.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed the <code><span class="identifier">strand</span><span class="special">&lt;&gt;</span></code> converting constructors and
+"                assignment operators.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Ensured that resolvers are restarted correctly after a fork.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed compatibility with the current NetBSD release.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed spurious handler requirement checks in some <code><span class="identifier">async_read</span></code> overloads.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed the <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">context</span></code> class to propagate non-EOF
+"                errors from the <code><span class="identifier">add_certificate_authority</span></code>
+"                function.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a Windows-specific <code><span class="identifier">thread_pool</span></code>
+"                destructor hang that occurred when the pool had an associated I/O
+"                object.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed the <tt>select</tt> reactor to recreate the "self
+"                pipe trick" sockets on error. This addresses an issue on some
+"                versions of Windows, where these sockets are discconected after a
+"                system sleep.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a compile error in the buffered streams due to the lack of
+"                reference collapsing in C++98.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed the <code><span class="identifier">priority_scheduler</span></code>
+"                example to demonstrate calls to <code><span class="identifier">shutdown</span><span class="special">()</span></code> and <code><span class="identifier">destroy</span><span class="special">()</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed some unnecessary null pointer checks.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed Windows platform detection to recognise TV titles as Windows
+"                apps.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added some emscripten compatibility patches.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a compile error in the <code><span class="identifier">use_awaitable_t</span><span class="special">::</span><span class="identifier">as_default_on</span></code>
+"                function.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed all uses of the boost.bind placeholders to use the <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">placeholders</span></code> namespace.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a potential compile error in the <code><span class="identifier">async_compose</span></code>
+"                implementation due to incorrect overload selection.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Suppressed some non-virtual destructor warnings.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Various documentation fixes and improvements.
 "              </div>
 "            </li>
 "          </ul>
@@ -22008,6 +22141,79 @@
 "            <li>
 "              <div>
 "                Maintenance work.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/geometry/">Geometry</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Improvements
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/650">PR#650</a> Missing input combinations in <code><span class="identifier">intersection</span><span class="special">()</span></code>
+"                      and introduction of tupled-output.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/671">PR#671</a> Added <code><span class="identifier">d3</span><span class="special">::</span><span class="identifier">point_xyz</span></code>
+"                      geometry model (thanks to Digvijay Janartha).
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Solved issues
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/issues/657">#657</a> Incorrect definition of <code><span class="identifier">EPSG</span><span class="special">:</span><span class="number">3785</span></code>.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Bugfixes
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/639">PR#639</a> R-tree exception-safety improvement.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/668">PR#668</a> Andoyer inverse formula fixed for close points.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/687">PR#687</a> Fixed dangling reference in distance algorithm.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Deprecation
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/issues/590">#590</a> Support for C++03 has been deprecated and Geometry
+"                      will require C++14 from Boost 1.75 onwards.
+"                    </div>
+"                  </li>
+"                </ul>
 "              </div>
 "            </li>
 "          </ul>
@@ -22383,6 +22589,72 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/math/">Math</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                IMPORTANT: C++03 support is now deprecated and will be removed from
+"                March 2021.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added Cubic Hermite Interpolation.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added Modified Akima Interpolation.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added PCHIP Interpolation.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added Quintic Hermite Interpolation.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added entropy to numerous distributions.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Allow trivial quadrature case where the two end points are equal,
+"                and in addition allow bounds to be interchanged.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix exp_sinh quadrature to work with complex types over a non-native
+"                range.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix miscellaneous compiler warnings in factorial.hpp.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Use std::chrono rather than boost::chrono in timed pFq calculations.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Remove much of the old boost::mpl dependencies to improve constexpr
+"                support.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/mp11/">Mp11</a>:</span>
 "          <ul>
 "            <li>
@@ -22458,6 +22730,48 @@
 "            <li>
 "              <div>
 "                Maintenance work.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/multiprecision/">Multiprecision</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                IMPORTANT: Mark C++03 support as deprecated and due for removal in
+"                2021.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Big update to cpp_int adds faster Karatsuba and Coomba multiplication
+"                routines.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix conversion of gmp_rational to <code><span class="keyword">long</span>
+"                <span class="keyword">double</span></code> and <code><span class="identifier">__float128</span></code>,
+"                fixes #178.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix up libtommath support to function with the latest libtom releases.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix up some incompatibilities with the latest Intel C++ compiler.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix up <code><span class="keyword">constexpr</span></code> arithmetic
+"                support for latest MSVC release.
 "              </div>
 "            </li>
 "          </ul>
@@ -22583,6 +22897,54 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/test/">Test</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Boost.test v3.13 see the <a href="/libs/test/doc/html/boost_test/change_log.html">Changes
+"                log</a> for more details.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                New feature: It is now possible to combine tolerance indication,
+"                user message and collection comparison modifier in a single <code><span class="identifier">BOOST_TEST</span></code> expression. See change
+"                logs for more details.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Bug fixes and pull requests:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      GitHub Issues: <a href="https://github.com/boostorg/test/issues/173">#173</a>, <a href="https://github.com/boostorg/test/issues/179">#179</a>, <a href="https://github.com/boostorg/test/issues/220">#220</a>, <a href="https://github.com/boostorg/test/issues/221">#221</a>,
+"                      <a href="https://github.com/boostorg/test/issues/235">#235</a>
+"      <a href="https://github.com/boostorg/test/issues/237">#237</a>, <a href="https://github.com/boostorg/test/issues/241">#241</a>, <a href="https://github.com/boostorg/test/issues/245">#245</a>, <a href="https://github.com/boostorg/test/issues/246">#246</a>,
+"                      <a href="https://github.com/boostorg/test/issues/251">#251</a>, <a href="https://github.com/boostorg/test/issues/253">#253</a>
+"      <a href="https://github.com/boostorg/test/issues/254">#254</a>, <a href="https://github.com/boostorg/test/issues/263">#263</a>
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Trac tickets: <a href="https://svn.boost.org/trac/boost/ticket/11107">#11107</a>
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      GitHub Pull Requests: <a href="https://github.com/boostorg/test/pull/41">PR#41</a>, <a href="https://github.com/boostorg/test/pull/114">PR#114</a>, <a href="https://github.com/boostorg/test/pull/187">PR#187</a>,
+"                      <a href="https://github.com/boostorg/test/pull/239">PR#239</a>, <a href="https://github.com/boostorg/test/pull/247">PR#247</a>
+"      <a href="https://github.com/boostorg/test/pull/252">PR#252</a>, <a href="https://github.com/boostorg/test/pull/259">PR#259</a>, <a href="https://github.com/boostorg/test/pull/265">PR#265</a>
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/throw_exception/">ThrowException</a>:</span>
 "          <ul>
 "            <li>
@@ -22597,6 +22959,27 @@
 "                NOTE: Projects using <code><span class="identifier">BOOST_THROW_EXCEPTION</span></code>
 "                with exceptions disabled will need to add a definition of this new
 "                overload.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/tti/">TTI</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added introspection of function templates for more recent C++ compilers
+"                versions from gcc and vc++. as well as all versions of clang. Older
+"                versions of vc++ before 14.0 and gcc prior to 4.8 may fail.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added specific introspection for elements of struct/class, enum,
+"                and union types, which can be used for more fine-grained introspection
+"                than the general 'type' introspection.
 "              </div>
 "            </li>
 "          </ul>
@@ -23067,7 +23450,7 @@
 "  </div>
 "
 -hash
-"7b51f75482708d8b33c653d8ec0881a8a8fa926a7c2533225b279741c2a367e1
+"38813e1b693a75fa0a989642e0d3baf1ad445743a636a01c681e183c5e6e0150
 -id
 "version_1_73_0
 -notice_url
