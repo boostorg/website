@@ -315,10 +315,10 @@ class BoostLibraries
                 array_keys($this->categories));
             $valid_categories = array_intersect($category,
                     array_keys($this->categories));
-            if ($invalid_categories) {
-                echo $lib->details['key'], ": Invalid categories: ",
-                   implode(', ', $invalid_categories), "\n"; 
-            }
+//            if ($invalid_categories) {
+//                echo $lib->details['key'], ": Invalid categories: ",
+//                   implode(', ', $invalid_categories), "\n"; 
+//            }
 
             if (!$valid_categories) {
                 $valid_categories = array('miscellaneous');
