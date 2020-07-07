@@ -23547,73 +23547,46 @@
 "          <ul>
 "            <li>
 "              <div>
-"                Accommodate upstream changes in Asio.
+"                This update brings bug fixes and support for the following changes
+"                changes in Boost.Asio:
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1913">#1913</a> Fix standalone compilation error with std::string_view.
+"                Beast supports <code><span class="identifier">BOOST_ASIO_NO_DEPRECATED</span></code>.
+"                Define this to help identify areas of your Beast and Asio code which
+"                use deprecated Asio interfaces.
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1925">#1925</a> [1916] Fix compile errors on Visual Studio with /std:c++latest.
+"                Beast also supports <code><span class="identifier">BOOST_ASIO_NO_TS_EXECUTORS</span></code>.
+"                Define this to identify uses of executors from the now potentially
+"                outdated <a href="https://cplusplus.github.io/networking-ts/draft.pdf">Networking
+"                TS</a>
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1924">#1924</a> Fix c++20 deprecation warning in span_body.
+"                Asio will use the <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p0443r11.html">Standard
+"                Executors</a> model by default. You can prevent this behaviour
+"                by defining <code><span class="identifier">BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT</span></code>
+"                in which the Networking TS model will be used by default. Setting
+"                this flag does not prevent a program from using executors from the
+"                Standard Executors model explicitly.
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1920">#1920</a> Fix use buffered_read_stream with use_awaitable.
+"                We'd love to know how you or your company use Beast, consider adding
+"                an entry to the <a href="https://github.com/boostorg/beast/wiki/Companies-and-Individuals-Using-Beast">Companies
+"                and Individuals Using Beast</a> list.
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1918">#1918</a> Fix async_detect_ssl with use_awaitable.
-"              </div>
-"            </li>
-"            <li>
-"              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1944">#1944</a> Fix FILE namespace qualification.
-"              </div>
-"            </li>
-"            <li>
-"              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1942">#1942</a> Fix http read bytes_transferred.
-"              </div>
-"            </li>
-"            <li>
-"              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1943">#1943</a> Fix basic_stream expires_after.
-"              </div>
-"            </li>
-"            <li>
-"              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1897">#1897</a> Parser body_limit is optional (API Change).
-"              </div>
-"            </li>
-"            <li>
-"              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1934">#1934</a> Remove deprecated interfaces (API Change).
-"              </div>
-"            </li>
-"            <li>
-"              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1956">#1956</a> Deprecate string_param (API Change).
-"              </div>
-"            </li>
-"            <li>
-"              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1980">#1980</a> Fix <code><span class="identifier">max</span></code>
-"                compile error.
-"              </div>
-"            </li>
-"            <li>
-"              <div>
-"                <a href="https://github.com/boostorg/beast/issues/1949">#1949</a> iless and iequal take part in Heterogeneous Lookup.
+"                See the full <a href="/libs/beast/doc/html/beast/release_notes.html">Release
+"                Notes</a> for a complete list of changes.
 "              </div>
 "            </li>
 "          </ul>
@@ -23797,6 +23770,122 @@
 "              <div>
 "                Add support for <code><span class="identifier">stat</span></code>
 "                with UTF-8 paths
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/outcome/">Outcome</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Announcements:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      The v2.1 branch is expected to be retired end of 2020, with
+"                      the v2.2 branch becoming the default. You can use the future
+"                      v2.2 branch now using <a href="https://github.com/ned14/outcome/tree/better_optimisation"><code><span class="identifier">better_optimisation</span></code></a>.
+"                      This branch has a number of major breaking changes to Outcome
+"                      v2.1, see the front page for details.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Enhancements:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      BREAKING CHANGE <code><span class="keyword">void</span></code>
+"                      results and outcomes no longer default construct types during
+"                      explicit construction. Previously if you explicitly constructed
+"                      a <code><span class="identifier">result</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+"                      from a non-errored <code><span class="identifier">result</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span></code>, it default constructed
+"                      <code><span class="identifier">T</span></code>. This was
+"                      found to cause unhelpful surprise, so it has been disabled.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      New macro <code><span class="identifier">OUTCOME_ENABLE_LEGACY_SUPPORT_FOR</span></code>.
+"                      The macro <code><span class="identifier">OUTCOME_ENABLE_LEGACY_SUPPORT_FOR</span></code>
+"                      can be used to enable aliasing of older naming and features
+"                      to newer naming and features when using a newer version of
+"                      Outcome.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Concepts now have snake case style naming instead of camel
+"                      case style. When Outcome was first implemented, it was thought
+"                      that C++ 20 concepts were going to have camel case style. This
+"                      was changed before the C++ 20 release, and Outcome's concepts
+"                      have been renamed similarly. This won't break any code in Outcome
+"                      v2.1, as compatibility aliases are provided. However code compiled
+"                      against Outcome v2.2 will need to be upgraded, unless <code><span class="identifier">OUTCOME_ENABLE_LEGACY_SUPPORT_FOR</span></code>
+"                      is set to <code><span class="number">210</span></code> or
+"                      lower.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Concepts now live in <code><span class="identifier">OUTCOME_V2_NAMESPACE</span><span class="special">::</span><span class="identifier">concepts</span></code>
+"                      namespace. Previously concepts lived in the <code><span class="identifier">convert</span></code>
+"                      namespace, now they live in their own namespace.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      New concepts <code><span class="identifier">basic_result</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> and <code><span class="identifier">basic_outcome</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> added. End users were finding
+"                      an unhelpful gap in between <code><span class="identifier">is_basic_result</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> and <code><span class="identifier">value_or_error</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> where they wanted a concept
+"                      that matched types which were <code><span class="identifier">basic_result</span></code>,
+"                      but not exactly one of those. Concepts filling that gap were
+"                      added.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Operation <code><span class="identifier">TRY</span></code>
+"                      works differently from Outcome v2.2 onwards. This is a severely
+"                      code breaking change which change the syntax of how one uses
+"                      <code><span class="identifier">OUTCOME_TRY</span><span class="special">()</span></code>. A regular expression suitable
+"                      for upgrading code can be found in the list of changes between
+"                      Outcome v2.1 and v2.2.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Bug fixes:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/ned14/outcome/issues/224">#224</a>
+"                      The clang Apple ships in Xcode 11.4 (currently the latest)
+"                      has not been patched with the fixes to LLVM clang that fix
+"                      <code><span class="keyword">noexcept</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">is_constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span>
+"                      <span class="keyword">void</span><span class="special">&gt;)</span></code>
+"                      failing to compile which I originally submitted years ago.
+"                      So give up waiting on Apple to fix their clang, add a workaround
+"                      to Outcome.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Spare storage could not be used from within no-value policy
+"                      classes. Due to an obvious brain fart when writing the code
+"                      at the time, the spare storage APIs had the wrong prototype
+"                      which prevented them working from within policy classes. Sorry.
+"                    </div>
+"                  </li>
+"                </ul>
 "              </div>
 "            </li>
 "          </ul>
@@ -24062,7 +24151,7 @@
 "  </div>
 "
 -hash
-"92327c1134df8ace813ea5af3d0d0d1cb03429c466f97cffc65b978294b85f9b
+"4dbff3dab2164163f01d79332dd2d78d9fd09e863a21cd60a5e1a7688a0e6444
 -id
 "version_1_74_0
 -notice_url
