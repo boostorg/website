@@ -109,6 +109,20 @@ Please keep the list of libraries sorted in lexicographical order.
   * Generic UTF conversion functions are now available in the `boost::nowide::utf namespace`
   * Add support for `stat` with UTF-8 paths
 
+* [phrase library..[@/libs/outcome/ Outcome]:]
+  * Announcements:
+    * The v2.1 branch is expected to be retired end of 2020, with the v2.2 branch becoming the default. You can use the future v2.2 branch now using [@https://github.com/ned14/outcome/tree/better_optimisation `better_optimisation`]. This branch has a number of major breaking changes to Outcome v2.1, see the front page for details.
+  * Enhancements:
+    * BREAKING CHANGE `void` results and outcomes no longer default construct types during explicit construction. Previously if you explicitly constructed a `result<T>` from a non-errored `result<void>`, it default constructed `T`. This was found to cause unhelpful surprise, so it has been disabled.
+    * New macro `OUTCOME_ENABLE_LEGACY_SUPPORT_FOR`. The macro `OUTCOME_ENABLE_LEGACY_SUPPORT_FOR` can be used to enable aliasing of older naming and features to newer naming and features when using a newer version of Outcome.
+    * Concepts now have snake case style naming instead of camel case style. When Outcome was first implemented, it was thought that C++ 20 concepts were going to have camel case style. This was changed before the C++ 20 release, and Outcome's concepts have been renamed similarly. This won't break any code in Outcome v2.1, as compatibility aliases are provided. However code compiled against Outcome v2.2 will need to be upgraded, unless `OUTCOME_ENABLE_LEGACY_SUPPORT_FOR` is set to `210` or lower.
+    * Concepts now live in `OUTCOME_V2_NAMESPACE::concepts` namespace. Previously concepts lived in the `convert` namespace, now they live in their own namespace.
+    * New concepts `basic_result<T>` and `basic_outcome<T>` added. End users were finding an unhelpful gap in between `is_basic_result<T>` and `value_or_error<T>` where they wanted a concept that matched types which were `basic_result`, but not exactly one of those. Concepts filling that gap were added.
+    * Operation `TRY` works differently from Outcome v2.2 onwards. This is a severely code breaking change which change the syntax of how one uses `OUTCOME_TRY()`. A regular expression suitable for upgrading code can be found in the list of changes between Outcome v2.1 and v2.2.
+  * Bug fixes:
+    * [@https://github.com/ned14/outcome/issues/224 #224] The clang Apple ships in Xcode 11.4 (currently the latest) has not been patched with the fixes to LLVM clang that fix `noexcept(std::is_constructible<T, void>)` failing to compile which I originally submitted years ago. So give up waiting on Apple to fix their clang, add a workaround to Outcome.
+    * Spare storage could not be used from within no-value policy classes. Due to an obvious brain fart when writing the code at the time, the spare storage APIs had the wrong prototype which prevented them working from within policy classes. Sorry.
+
 * [phrase library..[@/libs/poly_collection/ PolyCollection]:]
   * Fixed internal ambiguity problem between `boost::type_erasure::any` and
     `boost::any` (issue [github poly_collection 17]).
