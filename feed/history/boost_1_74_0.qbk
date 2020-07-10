@@ -44,6 +44,55 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed `named_condition_any` fails to notify ([github interprocess 62])
 ]
 
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added an implementation of the proposed standard executors
+    ([@http://wg21.link/P0443r13 P0443r13], [@http://wg21.link/P1348r0 P1348r0],
+    and [@http://wg21.link/P1393r0 P1393r0]).
+  * Added support for the proposed standard executors to Asio's I/O facilities.
+    * The supplied executors now meet the requirements for the
+      proposed standard executors. These classes also continue to meet the
+      existing requirements for the Networking TS model of executors.
+    * All I/O objects, asynchronous operations, and utilities will
+      interoperate with both new proposed standard executors, and with
+      existing Networking TS executors.
+    * The `any_io_executor` type alias has been introduced as the default
+      runtime-polymorphic executor for all I/O objects. This defaults to
+      the `execution::any_executor<>` template. If required for backward
+      compatibility, `BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT` can be defined to
+      use the old `asio::executor` polymorphic wrapper instead.
+    * Support for the existing Networking TS model of executors can be disabled
+      by defining `BOOST_ASIO_NO_TS_EXECUTORS`.
+  * Added converting move construction and assignment to `basic_waitable_timer`.
+  * Enabled C++20 coroutine support when using [^gcc] 10.
+  * Added overloads of `co_spawn` that launch an awaitable.
+  * Added a new constructor overload to `use_awaitable_t`'s default executor
+    adapter, to enable conversion between executor types.
+  * Added support for using `detached_t` as a default completion token, by
+    adding members `as_default_on()` and `as_default_on_t<>`.
+  * Added a move constructor to `ssl::stream<>`.
+  * Changed `ssl::stream<>` write operations to linearise gather-write buffer
+    sequences.
+  * Added compile-time detection of the deprecated `asio_handler_invoke`,
+    `asio_handler_allocate`, and `asio_handler_deallocate` hooks, when
+    `BOOST_ASIO_NO_DEPRECATED` is defined.
+  * Implemented a number of performance optimisations.
+  * Added source location support to handler tracking.
+  * Implemented various improvements to the [^handlerviz.pl] tool.
+  * Added the [^handlerlive.pl] tool, which processes handler tracking output to
+    produce a list of "live" handlers.
+  * Added the [^handlertree.pl] tool, which filters handler tracking output to
+    include only those events in the tree that produced the nominated handlers.
+  * Added changes for clang-based Embarcadero C++ compilers.
+  * Fixed a deadlock that can occur when multiple threads concurrently initialise
+    the Windows I/O completion port backend.
+  * Fixed `async_compose` to work with copyable handlers when passed by lvalue.
+  * Fixed completion signature deduction in `co_spawn`.
+  * Removed a spurious `Executor` base class from the `executor_binder`
+    implementation.
+  * Various fixes and improvements in the documentation and examples.
+  * Consult the [@/doc/libs/1_74_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
+
 * [phrase library..[@/libs/beast/ Beast]:]
   * This update brings bug fixes and support for the following changes changes in Boost.Asio:
   * Beast supports `BOOST_ASIO_NO_DEPRECATED`. Define this to help identify areas of your
