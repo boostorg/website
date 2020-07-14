@@ -93,6 +93,24 @@ Please keep the list of libraries sorted in lexicographical order.
   * Consult the [@/doc/libs/1_74_0/doc/html/boost_asio/history.html Revision
     History] for further details.
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Added missing `const` qualifiers to some operations in `atomic_ref`.
+  * Added support for `yield` instruction on ARMv8-A. The instruction is used internally in spin loops to reduce CPU power consumption.
+  * Added support for C++20 [@/doc/html/atomic/interface.html#atomic.interface.interface_wait_notify_ops waiting and notifying operations]. The implementation includes generic backend that involves the internal lock pool, as well as specialized backends for Windows, Linux, FreeBSD, DragonFly BSD and NetBSD. Atomic types provide a new method `has_native_wait_notify`, a static boolean constant `always_has_native_wait_notify` and a set of capability macros that allow to detect if the implementation supports native waiting and notifying operations for a given type.
+  * Changed internal representation of `atomic_flag` to use 32-bit storage. This allows for more efficient waiting and notifying operations on `atomic_flag` on some platforms.
+  * Added support for build-time configuration of the internal lock pool size. The user can define the `BOOST_ATOMIC_LOCK_POOL_SIZE_LOG2` macro to specify binary logarithm of the size of the lock pool. The default value is 8, meaning that the size of the lock pool is 256, up from 64 used in the previous release.
+  * Added support for a new set of atomic types dedicated for [@/doc/html/atomic/interface.html#atomic.interface.interface_ipc inter-process communication]: `ipc_atomic_flag`, `ipc_atomic` and `ipc_atomic_ref`. Users are recommended to port their code using non-IPC types for inter-process communication to the new types. The new types provide the same set of operations as their non-IPC counterparts, with the following differences:
+    * Most operations have an added precondition that `is_lock_free` returns `true` for the given atomic object. The library will issue a compile time error if this precondition is known to be not satisfied at compile time.
+    * All provided operations are address-free, meaning that the atomic object (in case of `ipc_atomic_ref` - the referenced object) may be located in process-shared memory or mapped into the same process at multiple different addresses.
+    * The new `has_native_wait_notify` operation and `always_has_native_wait_notify` constant indicate support for native inter-process waiting and notifying operations. When that support is not present, the operations are implemented with a busy loop, which is less efficient, but still is address-free. A separate set of capability macros is also provided to indicate this support.
+  * Added new `atomic_unsigned_lock_free` and `atomic_signed_lock_free` types introduced in C++20. The types indicate the atomic object type for an unsigned or signed integer, respectively, that is lock-free and preferably has native support for waiting and notifying operations.
+  * Added new gcc assembler backends for ARMv8-A (for both AArch32 and AArch64). The new backends are used to implement operations not supported by compiler intrinsics (including 128-bit operations on AArch64) and can also be used when compiler intrinsics are not available. Both little and big endian targets are supported. AArch64 backend supports extensions defined in ARMv8.1 and ARMv8.3.
+  * Added support for big endian targets in the legacy ARM backend based on gcc assembler blocks (this backend is used on ARMv7 and older targets). Previously, the backend assumed little endian memory layout, which is significant for 64-bit operations.
+  * Improved performance of seq_cst stores and thread fences on x86 by using `lock`-prefixed instructions instead of `mfence`. This means that the operations no longer affect non-temporal stores, which was also not guaranteed before. Use specialized instructions and intrinsics to order non-temporal memory accesses.
+  * Fixed capability macros for 80-bit `long double` on x86 targets not indicating lock-free operations even if 128-bit atomic operations were available.
+  * Fixed compilation of gcc asm blocks on Alpha targets.
+  * In the gcc `__sync*` intrinsics backend, fixed that store and load operations of large objects (larger than a pointer size) could be non-atomic. The implementation currently assumes that small objects can be stored with a single instruction atomically on all modern architectures.
+
 * [phrase library..[@/libs/beast/ Beast]:]
   * This update brings bug fixes and support for the following changes changes in Boost.Asio:
   * Beast supports `BOOST_ASIO_NO_DEPRECATED`. Define this to help identify areas of your
@@ -135,6 +153,33 @@ Please keep the list of libraries sorted in lexicographical order.
   * Enabled `bool`, `enum`, `float`, `double` in `endian_reverse_inplace`.
   * Added an overload of `endian_reverse_inplace` for arrays.
 
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Removed compile-time checks for support for symlinks and hardlink on Windows. Instead, a runtime check is used. ([github_pr filesystem 142])
+  * Fixed handling of reparse points in `canonical` and `read_symlink` on Windows. This also affects other algorithms that involve `canonical` and `read_symlink` in their implementation. ([github_pr filesystem 100], [github filesystem 85], [github filesystem 99], [github filesystem 123], [github filesystem 125])
+  * Fixed that `read_symlink` on Windows could potentially fail or cause failures elsewhere with a sharing violation error, if the same symlink was opened concurrently. ([github filesystem 138])
+  * Fixed that `is_symlink(directory_entry)` would always return `false`, even if the directory entry actually referred to a symlink. ([github_pr filesystem 148])
+  * Added missing status inspection operation overloads for `directory_entry` and `error_code` (e.g. `is_directory(directory_entry, error_code&)`. Removed incorrect `noexcept` specifications for the overloads not taking the `error_code` arguments.
+  * `copy_file` implementation has been updated to perform checks on the source and target files, as required by C++20 ([fs.op.copy.file]/4.1). In particular, the operation will fail if the source or target file is not a regular file or the source and target paths identify the same file.
+  * `copy_file` on POSIX systems will now also copy the source file permissions to the target file, if the target file is overwritten.
+  * [*New:] Added `copy_file` implementations based on `sendfile` and `copy_file_range` system calls on Linux, which may improve file copying performance, especially on network filesystems.
+  * [*Deprecated:] The `copy_option` enumeration that is used with the `copy_file` operation is deprecated. As a replacement, the new enum `copy_options` (note the trailing 's') has been added. The new enum contains values similar to the `copy_options` enum from C++20. The old enum values are mapped onto the new enum. The old enum will be removed in a future release.
+  * [*New:] Added `copy_options::skip_existing` option, which allows `copy_file` operation to succeed without overwriting the target file, if it exists.
+  * [*New:] Added `copy_options::update_existing` option, which allows `copy_file` operation to conditionally overwrite the target file, if it exists, if its last write time is older than that of the replacement file.
+  * [*New:] `copy_file` now returns `bool`, which indicates whether the file was copied.
+  * [*New, breaking change:] `copy` operation has been extended and reworked to implement behavior specified in C++20 [fs.op.copy]. This includes support for `copy_options::recursive`, `copy_options::copy_symlinks`, `copy_options::skip_symlinks`, `copy_options::directories_only`, `copy_options::create_symlinks` and `copy_options::create_hard_links` options. The operation performs additional checks based on the specified options. Applying `copy` to a directory with default `copy_options` will now also copy files residing in that directory (but not nested directories or files in those directories).
+  * [*New:] Added `create_directory` overload taking two paths. The second path is a path to an existing directory, which is used as a source of permission attributes to use in the directory to create.
+  * [*Deprecated:] `copy_directory` operation has been deprecated in favor of the new `create_directory` overload. Note that the two operations have reversed order of the path arguments.
+  * `equivalent` on POSIX systems now returns the actual error code from the OS if one of the paths does not resolve to a file. Previously the function would return an error code of 1. ([github filesystem 141])
+  * `equivalent` no longer considers file size and last modification time in order to test whether the two paths refer to the same file. These checks could result in a false negative if the file was modified during the `equivalent` call.
+  * [*New:] Added `absolute` overloads taking `error_code` argument.
+  * Operations that have `current_path()` as the default value of their arguments and also have an `error_code` argument will use the `current_path(error_code& ec)` overload to obtain the current path, so that its failure is reported via the `error_code` argument instead of an exception.
+  * `space` now initializes the `space_info` structure members to -1 values on error, as required by C++20 ([fs.op.space]/1).
+  * `space` on Windows now accepts paths referring to arbitrary files, not only directories. This is similar to POSIX systems and corresponds to the operation description in C++20. ([github filesystem 73])
+  * [*New:] Added implementation of `temp_directory_path` for Windows CE. ([github_pr filesystem 25])
+  * [*New:] Improved compatibility with [@https://wasi.dev/ WASI] platform. ([github_pr filesystem 144])
+  * [*New:] Improved support for Embarcadero compilers. ([github_pr filesystem 130])
+  * [*New:] Added implementations of `unique_path` operation based on `getrandom` (Linux), `arc4random_buf` (OpenBSD/FreeBSD/CloudABI) and BCrypt (Windows) system APIs.
+
 * [phrase library..[@/libs/flyweight/index.html Flyweight]:]
   * Maintenance work.
 
@@ -164,9 +209,27 @@ Please keep the list of libraries sorted in lexicographical order.
   * Correct destruction of top node in `skew_heap`. (Glen Fernandes)
   * Correct and simplify allocator use. (Glen Fernandes)
 
+* [phrase library..[@/libs/integer/ Integer]:]
+  * Fixed compilation of `gcd` in C++20 mode with clang 10.
+  * Improved support for Embarcadero compilers. ([github_pr integer 21])
+
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * `boost/function_output_iterator.hpp` header is now deprecated. Users should replace its inclusion with `boost/iterator/function_output_iterator.hpp`. ([github_pr iterator 51])
+  * Improved support for Embarcadero compilers. ([github_pr iterator 55])
+
 * [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
   * Fixed warnings on missing `override` (thanks to EugeneZelenko [github lexical_cast 35], [github lexical_cast 34]).
   * Fixes for the the Embarcadero compilers (thanks to Edward Diener).
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Bug fixes:
+    * The syslog sink backend now verifies the IP version of the local and target addresses set by user. The addresses must have the same IP version as was specified in the `ip_version` named parameter on the sink backend construction (by default, IPv4 is assumed). When an address is obtained as a result of host name resolution, only addresses with matching IP version are considered. ([github log 119])
+  * New Features:
+    * Move constructors and assignment operators of various components were marked `noexcept`.
+    * Added a new `range_manip` stream manipulator that can be used for outputting elements of a range, optionally separated by a delimiter.
+    * Added a new `tuple_manip` stream manipulator that can be used for outputting elements of a tuple or any other heterogeneous sequence, optionally separated by a delimiter.
+    * Added a new `optional_manip` stream manipulator that can be used for outputting optionally present values.
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
 * [phrase library..[@/libs/mp11/ Mp11]:]
   * Improved compilation performance of `mp_with_index<N>` for large `N`.
