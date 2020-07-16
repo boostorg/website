@@ -51335,6 +51335,1006 @@
 -update_count
 =5
 )
+(feed/history/boost_1_74_0.qbk
+-item
+"<item><title>Version 1.74.0</title><link>https://www.boost.org/users/history/version_1_74_0.html</link><guid>https://www.boost.org/users/history/version_1_74_0.html</guid><pubDate>Thu, 16 Jul 2020 04:37:20 +0000</pubDate><description>
+"
+"
+"  &lt;div id="version_1_74_0.new_libraries"&gt;
+"    &lt;h3&gt;&lt;span class="link"&gt;New Libraries&lt;/span&gt;&lt;/h3&gt;
+"    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/stl_interfaces/"&gt;STLInterfaces&lt;/a&gt;:&lt;/span&gt; A library
+"          of CRTP bases to ease the writing of STL views, iterators, and sequence
+"          containers, from Zach Laine.
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;em&gt;TODO&lt;/em&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ul&gt;
+"  &lt;/div&gt;
+"  &lt;div id="version_1_74_0.updated_libraries"&gt;
+"    &lt;h3&gt;&lt;span class="link"&gt;Updated Libraries&lt;/span&gt;&lt;/h3&gt;
+"    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/asio/"&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added an implementation of the proposed standard executors (&lt;a href="http://wg21.link/P0443r13"&gt;P0443r13&lt;/a&gt;, &lt;a href="http://wg21.link/P1348r0"&gt;P1348r0&lt;/a&gt;,
+"                and &lt;a href="http://wg21.link/P1393r0"&gt;P1393r0&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added support for the proposed standard executors to Asio's I/O facilities.
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      The supplied executors now meet the requirements for the proposed
+"                      standard executors. These classes also continue to meet the
+"                      existing requirements for the Networking TS model of executors.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      All I/O objects, asynchronous operations, and utilities will
+"                      interoperate with both new proposed standard executors, and
+"                      with existing Networking TS executors.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      The &lt;code&gt;&lt;span class="identifier"&gt;any_io_executor&lt;/span&gt;&lt;/code&gt;
+"                      type alias has been introduced as the default runtime-polymorphic
+"                      executor for all I/O objects. This defaults to the &lt;code&gt;&lt;span class="identifier"&gt;execution&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;any_executor&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
+"                      template. If required for backward compatibility, &lt;code&gt;&lt;span class="identifier"&gt;BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT&lt;/span&gt;&lt;/code&gt;
+"                      can be defined to use the old &lt;code&gt;&lt;span class="identifier"&gt;asio&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;executor&lt;/span&gt;&lt;/code&gt;
+"                      polymorphic wrapper instead.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Support for the existing Networking TS model of executors can
+"                      be disabled by defining &lt;code&gt;&lt;span class="identifier"&gt;BOOST_ASIO_NO_TS_EXECUTORS&lt;/span&gt;&lt;/code&gt;.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added converting move construction and assignment to &lt;code&gt;&lt;span class="identifier"&gt;basic_waitable_timer&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Enabled C++20 coroutine support when using &lt;tt&gt;gcc&lt;/tt&gt;
+"                10.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added overloads of &lt;code&gt;&lt;span class="identifier"&gt;co_spawn&lt;/span&gt;&lt;/code&gt;
+"                that launch an awaitable.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added a new constructor overload to &lt;code&gt;&lt;span class="identifier"&gt;use_awaitable_t&lt;/span&gt;&lt;/code&gt;'s
+"                default executor adapter, to enable conversion between executor types.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added support for using &lt;code&gt;&lt;span class="identifier"&gt;detached_t&lt;/span&gt;&lt;/code&gt;
+"                as a default completion token, by adding members &lt;code&gt;&lt;span class="identifier"&gt;as_default_on&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class="identifier"&gt;as_default_on_t&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added a move constructor to &lt;code&gt;&lt;span class="identifier"&gt;ssl&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;stream&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Changed &lt;code&gt;&lt;span class="identifier"&gt;ssl&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;stream&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
+"                write operations to linearise gather-write buffer sequences.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added compile-time detection of the deprecated &lt;code&gt;&lt;span class="identifier"&gt;asio_handler_invoke&lt;/span&gt;&lt;/code&gt;,
+"                &lt;code&gt;&lt;span class="identifier"&gt;asio_handler_allocate&lt;/span&gt;&lt;/code&gt;,
+"                and &lt;code&gt;&lt;span class="identifier"&gt;asio_handler_deallocate&lt;/span&gt;&lt;/code&gt;
+"                hooks, when &lt;code&gt;&lt;span class="identifier"&gt;BOOST_ASIO_NO_DEPRECATED&lt;/span&gt;&lt;/code&gt;
+"                is defined.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Implemented a number of performance optimisations.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added source location support to handler tracking.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Implemented various improvements to the &lt;tt&gt;handlerviz.pl&lt;/tt&gt;
+"                tool.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added the &lt;tt&gt;handlerlive.pl&lt;/tt&gt; tool, which processes
+"                handler tracking output to produce a list of "live" handlers.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added the &lt;tt&gt;handlertree.pl&lt;/tt&gt; tool, which filters handler
+"                tracking output to include only those events in the tree that produced
+"                the nominated handlers.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added changes for clang-based Embarcadero C++ compilers.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed a deadlock that can occur when multiple threads concurrently
+"                initialise the Windows I/O completion port backend.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed &lt;code&gt;&lt;span class="identifier"&gt;async_compose&lt;/span&gt;&lt;/code&gt;
+"                to work with copyable handlers when passed by lvalue.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed completion signature deduction in &lt;code&gt;&lt;span class="identifier"&gt;co_spawn&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Removed a spurious &lt;code&gt;&lt;span class="identifier"&gt;Executor&lt;/span&gt;&lt;/code&gt;
+"                base class from the &lt;code&gt;&lt;span class="identifier"&gt;executor_binder&lt;/span&gt;&lt;/code&gt;
+"                implementation.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Various fixes and improvements in the documentation and examples.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Consult the &lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/doc/html/boost_asio/history.html"&gt;Revision
+"                History&lt;/a&gt; for further details.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/beast/"&gt;Beast&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                This update brings bug fixes and support for the following changes
+"                changes in Boost.Asio:
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Beast supports &lt;code&gt;&lt;span class="identifier"&gt;BOOST_ASIO_NO_DEPRECATED&lt;/span&gt;&lt;/code&gt;.
+"                Define this to help identify areas of your Beast and Asio code which
+"                use deprecated Asio interfaces.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Beast also supports &lt;code&gt;&lt;span class="identifier"&gt;BOOST_ASIO_NO_TS_EXECUTORS&lt;/span&gt;&lt;/code&gt;.
+"                Define this to identify uses of executors from the now potentially
+"                outdated &lt;a href="https://cplusplus.github.io/networking-ts/draft.pdf"&gt;Networking
+"                TS&lt;/a&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Asio will use the &lt;a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p0443r11.html"&gt;Standard
+"                Executors&lt;/a&gt; model by default. You can prevent this behaviour
+"                by defining &lt;code&gt;&lt;span class="identifier"&gt;BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT&lt;/span&gt;&lt;/code&gt;
+"                in which the Networking TS model will be used by default. Setting
+"                this flag does not prevent a program from using executors from the
+"                Standard Executors model explicitly.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                We'd love to know how you or your company use Beast, consider adding
+"                an entry to the &lt;a href="https://github.com/boostorg/beast/wiki/Companies-and-Individuals-Using-Beast"&gt;Companies
+"                and Individuals Using Beast&lt;/a&gt; list.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                See the full &lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/beast/doc/html/beast/release_notes.html"&gt;Release
+"                Notes&lt;/a&gt; for a complete list of changes.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/bimap/"&gt;Bimap&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Correct allocator usage (fixes C++20 compilation). (Glen Fernandes)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/config/"&gt;Config&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Implement &lt;code&gt;&lt;span class="identifier"&gt;BOOST_NO_CXX11_OVERRIDE&lt;/span&gt;&lt;/code&gt;
+"                and &lt;code&gt;&lt;span class="identifier"&gt;BOOST_OVERRIDE&lt;/span&gt;&lt;/code&gt;.
+"                (Glen Fernandes)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/core/"&gt;Core&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Implemented the allocator access utilities which provide a replacement
+"                for &lt;code&gt;&lt;span class="identifier"&gt;allocator_traits&lt;/span&gt;&lt;/code&gt;
+"                with individual traits and functions for each facility. They support
+"                the C++11 allocator model when possible and provide a fallback for
+"                C++98 compatibility. These are now used in Circular_Buffer, Wave,
+"                Lockfree, Heap, Smart_Ptr, Dynamic_Bitset, Format, Bimap and more.
+"                (Glen Fernandes)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/dll/"&gt;DLL&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Multiple fixes for the &lt;code&gt;&lt;span class="identifier"&gt;library_info&lt;/span&gt;&lt;/code&gt;
+"                work on empty shared objects.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Compilation fixes for C++98 and C++11 modes (&lt;a href="https://github.com/boostorg/dll/issues/28"&gt;#28&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixes for &lt;code&gt;&lt;span class="identifier"&gt;smart_library&lt;/span&gt;&lt;/code&gt;
+"                manglings (thanks to XiaLiChao82 &lt;a href="https://github.com/boostorg/dll/issues/37"&gt;#37&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/endian/"&gt;Endian&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Enabled scoped enumeration types in &lt;code&gt;&lt;span class="identifier"&gt;endian_reverse&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Enabled &lt;code&gt;&lt;span class="keyword"&gt;bool&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="keyword"&gt;enum&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="keyword"&gt;float&lt;/span&gt;&lt;/code&gt;,
+"                &lt;code&gt;&lt;span class="keyword"&gt;double&lt;/span&gt;&lt;/code&gt; in &lt;code&gt;&lt;span class="identifier"&gt;endian_reverse_inplace&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added an overload of &lt;code&gt;&lt;span class="identifier"&gt;endian_reverse_inplace&lt;/span&gt;&lt;/code&gt;
+"                for arrays.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/flyweight/index.html"&gt;Flyweight&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Maintenance work.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/format/"&gt;Format&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Correct allocator usage (fixes C++20 compilation). (Glen Fernandes)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/gil/"&gt;GIL&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Added new constructor initializing &lt;code&gt;&lt;span class="identifier"&gt;any_image&lt;/span&gt;&lt;/code&gt;
+"                      from r-value reference to any image (&lt;a href="https://github.com/boostorg/gil/pull/486"&gt;PR#486&lt;/a&gt;).
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Implemented mechanism to reverse &lt;code&gt;&lt;span class="identifier"&gt;kernel_2d&lt;/span&gt;&lt;/code&gt;
+"                      (&lt;a href="https://github.com/boostorg/gil/pull/489"&gt;PR#489&lt;/a&gt;).
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Changed
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Replace Boost.Variant with Boost.Variant2 (&lt;a href="https://github.com/boostorg/gil/pull/474"&gt;PR#474&lt;/a&gt;).
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Use perfect forwarding from apply_operation to visit (&lt;a href="https://github.com/boostorg/gil/pull/491"&gt;PR#491&lt;/a&gt;).
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Removed
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Removed dependency on Boost.Variant
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed invalid conversion from RGB8 to CMYK32 due to overflow
+"                      (&lt;a href="https://github.com/boostorg/gil/pull/470"&gt;PR#470&lt;/a&gt;).
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed &lt;code&gt;&lt;span class="identifier"&gt;image&lt;/span&gt;&lt;/code&gt;
+"                      constructor from other image (&lt;a href="https://github.com/boostorg/gil/pull/477"&gt;PR#477&lt;/a&gt;).
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed error &lt;code&gt;&lt;span class="identifier"&gt;plane_view_t&lt;/span&gt;&lt;/code&gt;
+"                      is not a class or namespace name (&lt;a href="https://github.com/boostorg/gil/pull/481"&gt;PR#481&lt;/a&gt;).
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed &lt;code&gt;&lt;span class="identifier"&gt;interleaved_view&lt;/span&gt;&lt;/code&gt;
+"                      factory using &lt;code&gt;&lt;span class="identifier"&gt;point&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&lt;/span&gt;&lt;span class="identifier"&gt;std&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;ptrdiff_t&lt;/span&gt;&lt;span class="special"&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt; for dimension (&lt;a href="https://github.com/boostorg/gil/pull/487"&gt;PR#487&lt;/a&gt;).
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed documentation replacing uses MPL with MP11 in tutorial
+"                      (&lt;a href="https://github.com/boostorg/gil/pull/494"&gt;PR#494&lt;/a&gt;).
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Fixed missing header in &lt;code&gt;&lt;span class="identifier"&gt;numeric&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;kernel&lt;/span&gt;&lt;span class="special"&gt;.&lt;/span&gt;&lt;span class="identifier"&gt;hpp&lt;/span&gt;&lt;/code&gt;
+"                      to make it self-contained (&lt;a href="https://github.com/boostorg/gil/pull/502"&gt;PR#502&lt;/a&gt;).
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Acknowledgements
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Samuel Debionne, Pranam Lashkari, Mateusz Loskot, Debabrata
+"                      Mandal
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/heap/"&gt;Heap&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Correct destruction of top node in &lt;code&gt;&lt;span class="identifier"&gt;skew_heap&lt;/span&gt;&lt;/code&gt;.
+"                (Glen Fernandes)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Correct and simplify allocator use. (Glen Fernandes)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/lexical_cast/"&gt;LexicalCast&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed warnings on missing &lt;code&gt;&lt;span class="identifier"&gt;override&lt;/span&gt;&lt;/code&gt;
+"                (thanks to EugeneZelenko &lt;a href="https://github.com/boostorg/lexical_cast/issues/35"&gt;#35&lt;/a&gt;, &lt;a href="https://github.com/boostorg/lexical_cast/issues/34"&gt;#34&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixes for the the Embarcadero compilers (thanks to Edward Diener).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/mp11/"&gt;Mp11&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Improved compilation performance of &lt;code&gt;&lt;span class="identifier"&gt;mp_with_index&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&lt;/span&gt;&lt;span class="identifier"&gt;N&lt;/span&gt;&lt;span class="special"&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt; for large &lt;code&gt;&lt;span class="identifier"&gt;N&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added &lt;code&gt;&lt;span class="identifier"&gt;tuple_transform&lt;/span&gt;&lt;/code&gt;
+"                (contributed by Hans Dembinski.)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/multi_index/"&gt;Multi-index Containers&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added &lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/multi_index/doc/tutorial/basics.html#node_handling"&gt;node
+"                extraction and insertion&lt;/a&gt; following the analogous interface
+"                of associative containers as introduced in C++17. This feature has
+"                also been extended to non key-based indices, in contrast to C++ standard
+"                library sequence containers, which do not provide such functionality.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Clarified documentation on read/write key extractors (issue &lt;a href="https://github.com/boostorg/multi_index/issues/32"&gt;#32&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Maintenance work.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/nowide/"&gt;Nowide&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                The library now requires a C++11-compliant compiler and stdlib
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                LFS: Add support for files &amp;gt; 2 GB where the underlying system
+"                supports it
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Generic UTF conversion functions are now available in the &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;nowide&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;utf&lt;/span&gt; &lt;span class="keyword"&gt;namespace&lt;/span&gt;&lt;/code&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Add support for &lt;code&gt;&lt;span class="identifier"&gt;stat&lt;/span&gt;&lt;/code&gt;
+"                with UTF-8 paths
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/outcome/"&gt;Outcome&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Announcements:
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      The v2.1 branch is expected to be retired end of 2020, with
+"                      the v2.2 branch becoming the default. You can use the future
+"                      v2.2 branch now using &lt;a href="https://github.com/ned14/outcome/tree/better_optimisation"&gt;&lt;code&gt;&lt;span class="identifier"&gt;better_optimisation&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;.
+"                      This branch has a number of major breaking changes to Outcome
+"                      v2.1, see the front page for details.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Enhancements:
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      BREAKING CHANGE &lt;code&gt;&lt;span class="keyword"&gt;void&lt;/span&gt;&lt;/code&gt;
+"                      results and outcomes no longer default construct types during
+"                      explicit construction. Previously if you explicitly constructed
+"                      a &lt;code&gt;&lt;span class="identifier"&gt;result&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&lt;/span&gt;&lt;span class="identifier"&gt;T&lt;/span&gt;&lt;span class="special"&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;
+"                      from a non-errored &lt;code&gt;&lt;span class="identifier"&gt;result&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&lt;/span&gt;&lt;span class="keyword"&gt;void&lt;/span&gt;&lt;span class="special"&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;, it default constructed
+"                      &lt;code&gt;&lt;span class="identifier"&gt;T&lt;/span&gt;&lt;/code&gt;. This was
+"                      found to cause unhelpful surprise, so it has been disabled.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      New macro &lt;code&gt;&lt;span class="identifier"&gt;OUTCOME_ENABLE_LEGACY_SUPPORT_FOR&lt;/span&gt;&lt;/code&gt;.
+"                      The macro &lt;code&gt;&lt;span class="identifier"&gt;OUTCOME_ENABLE_LEGACY_SUPPORT_FOR&lt;/span&gt;&lt;/code&gt;
+"                      can be used to enable aliasing of older naming and features
+"                      to newer naming and features when using a newer version of
+"                      Outcome.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Concepts now have snake case style naming instead of camel
+"                      case style. When Outcome was first implemented, it was thought
+"                      that C++ 20 concepts were going to have camel case style. This
+"                      was changed before the C++ 20 release, and Outcome's concepts
+"                      have been renamed similarly. This won't break any code in Outcome
+"                      v2.1, as compatibility aliases are provided. However code compiled
+"                      against Outcome v2.2 will need to be upgraded, unless &lt;code&gt;&lt;span class="identifier"&gt;OUTCOME_ENABLE_LEGACY_SUPPORT_FOR&lt;/span&gt;&lt;/code&gt;
+"                      is set to &lt;code&gt;&lt;span class="number"&gt;210&lt;/span&gt;&lt;/code&gt; or
+"                      lower.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Concepts now live in &lt;code&gt;&lt;span class="identifier"&gt;OUTCOME_V2_NAMESPACE&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;concepts&lt;/span&gt;&lt;/code&gt;
+"                      namespace. Previously concepts lived in the &lt;code&gt;&lt;span class="identifier"&gt;convert&lt;/span&gt;&lt;/code&gt;
+"                      namespace, now they live in their own namespace.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      New concepts &lt;code&gt;&lt;span class="identifier"&gt;basic_result&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&lt;/span&gt;&lt;span class="identifier"&gt;T&lt;/span&gt;&lt;span class="special"&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class="identifier"&gt;basic_outcome&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&lt;/span&gt;&lt;span class="identifier"&gt;T&lt;/span&gt;&lt;span class="special"&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt; added. End users were finding
+"                      an unhelpful gap in between &lt;code&gt;&lt;span class="identifier"&gt;is_basic_result&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&lt;/span&gt;&lt;span class="identifier"&gt;T&lt;/span&gt;&lt;span class="special"&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class="identifier"&gt;value_or_error&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&lt;/span&gt;&lt;span class="identifier"&gt;T&lt;/span&gt;&lt;span class="special"&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt; where they wanted a concept
+"                      that matched types which were &lt;code&gt;&lt;span class="identifier"&gt;basic_result&lt;/span&gt;&lt;/code&gt;,
+"                      but not exactly one of those. Concepts filling that gap were
+"                      added.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Operation &lt;code&gt;&lt;span class="identifier"&gt;TRY&lt;/span&gt;&lt;/code&gt;
+"                      works differently from Outcome v2.2 onwards. This is a severely
+"                      code breaking change which change the syntax of how one uses
+"                      &lt;code&gt;&lt;span class="identifier"&gt;OUTCOME_TRY&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt;&lt;/code&gt;. A regular expression suitable
+"                      for upgrading code can be found in the list of changes between
+"                      Outcome v2.1 and v2.2.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Bug fixes:
+"                &lt;ul&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      &lt;a href="https://github.com/ned14/outcome/issues/224"&gt;#224&lt;/a&gt;
+"                      The clang Apple ships in Xcode 11.4 (currently the latest)
+"                      has not been patched with the fixes to LLVM clang that fix
+"                      &lt;code&gt;&lt;span class="keyword"&gt;noexcept&lt;/span&gt;&lt;span class="special"&gt;(&lt;/span&gt;&lt;span class="identifier"&gt;std&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;is_constructible&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&lt;/span&gt;&lt;span class="identifier"&gt;T&lt;/span&gt;&lt;span class="special"&gt;,&lt;/span&gt;
+"                      &lt;span class="keyword"&gt;void&lt;/span&gt;&lt;span class="special"&gt;&amp;gt;)&lt;/span&gt;&lt;/code&gt;
+"                      failing to compile which I originally submitted years ago.
+"                      So give up waiting on Apple to fix their clang, add a workaround
+"                      to Outcome.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                  &lt;li&gt;
+"                    &lt;div&gt;
+"                      Spare storage could not be used from within no-value policy
+"                      classes. Due to an obvious brain fart when writing the code
+"                      at the time, the spare storage APIs had the wrong prototype
+"                      which prevented them working from within policy classes. Sorry.
+"                    &lt;/div&gt;
+"                  &lt;/li&gt;
+"                &lt;/ul&gt;
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/poly_collection/"&gt;PolyCollection&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed internal ambiguity problem between &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;type_erasure&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;any&lt;/span&gt;&lt;/code&gt;
+"                and &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;any&lt;/span&gt;&lt;/code&gt; (issue &lt;a href="https://github.com/boostorg/poly_collection/issues/17"&gt;#17&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Maintenance work.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/polygon/"&gt;Polygon&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                C++20 fixed for &lt;code&gt;&lt;span class="identifier"&gt;event_comparison_type&lt;/span&gt;&lt;/code&gt;,
+"                &lt;code&gt;&lt;span class="identifier"&gt;vertex_equality_predicate_type&lt;/span&gt;&lt;/code&gt;,
+"                and &lt;code&gt;&lt;span class="identifier"&gt;voronoi_predicates&lt;/span&gt;&lt;/code&gt;.
+"                (Glen Fernandes)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/smart_ptr/"&gt;SmartPtr&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added &lt;code&gt;&lt;span class="identifier"&gt;owner_equals&lt;/span&gt;&lt;/code&gt;
+"                to &lt;code&gt;&lt;span class="identifier"&gt;shared_ptr&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;weak_ptr&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;local_shared_ptr&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added &lt;code&gt;&lt;span class="identifier"&gt;owner_hash_value&lt;/span&gt;&lt;/code&gt;
+"                to &lt;code&gt;&lt;span class="identifier"&gt;shared_ptr&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;weak_ptr&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added &lt;code&gt;&lt;span class="identifier"&gt;owner_equal_to&lt;/span&gt;&lt;/code&gt;,
+"                &lt;code&gt;&lt;span class="identifier"&gt;owner_hash&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added &lt;code&gt;&lt;span class="identifier"&gt;std&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;hash&lt;/span&gt;&lt;/code&gt; specializations for &lt;code&gt;&lt;span class="identifier"&gt;shared_ptr&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;local_shared_ptr&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;hash&lt;/span&gt;&lt;/code&gt; support to, and &lt;code&gt;&lt;span class="identifier"&gt;std&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;hash&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;std&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;equal_to&lt;/span&gt;&lt;/code&gt;
+"                specializations for, &lt;code&gt;&lt;span class="identifier"&gt;weak_ptr&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/stacktrace/"&gt;Stacktrace&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed a build error when compiled with &lt;code&gt;&lt;span class="special"&gt;-&lt;/span&gt;&lt;span class="identifier"&gt;fno&lt;/span&gt;&lt;span class="special"&gt;-&lt;/span&gt;&lt;span class="identifier"&gt;exceptions&lt;/span&gt;&lt;/code&gt; (thanks to Jeremiah
+"                Rodriguez &lt;a href="https://github.com/boostorg/stacktrace/issues/91"&gt;#91&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/system/"&gt;System&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                &lt;code&gt;&lt;span class="keyword"&gt;operator&lt;/span&gt; &lt;span class="keyword"&gt;bool&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt;&lt;/code&gt; now returns &lt;code&gt;&lt;span class="identifier"&gt;failed&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt;&lt;/code&gt; instead of &lt;code&gt;&lt;span class="identifier"&gt;value&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt; &lt;span class="special"&gt;!=&lt;/span&gt; &lt;span class="number"&gt;0&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/type_traits/"&gt;Type_Traits&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Implemented &lt;code&gt;&lt;span class="identifier"&gt;conjunction&lt;/span&gt;&lt;/code&gt;,
+"                &lt;code&gt;&lt;span class="identifier"&gt;disjunction&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;negation&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;is_trivially_copyable&lt;/span&gt;&lt;/code&gt;,
+"                &lt;code&gt;&lt;span class="identifier"&gt;is_scoped_enum&lt;/span&gt;&lt;/code&gt;, and
+"                &lt;code&gt;&lt;span class="identifier"&gt;is_unscoped_enum&lt;/span&gt;&lt;/code&gt;.
+"                (Glen Fernandes)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/variant/"&gt;Variant&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed warnings on missing &lt;code&gt;&lt;span class="identifier"&gt;override&lt;/span&gt;&lt;/code&gt;
+"                (thanks to EugeneZelenko &lt;a href="https://github.com/boostorg/variant/issues/78"&gt;#78&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixes for the the Embarcadero compilers (thanks to Edward Diener
+"                &lt;a href="https://github.com/boostorg/variant/issues/79"&gt;#79&lt;/a&gt;).
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Updated header locations to avoid warnings about using deprecated
+"                headers (thanks to Andrey Semashev &lt;a href="https://github.com/boostorg/variant/issues/80"&gt;#80&lt;/a&gt;)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/variant2/"&gt;Variant2&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added support for derived types in &lt;code&gt;&lt;span class="identifier"&gt;visit&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Improved compilation performance for many (hundreds of) alternatives.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added support for &lt;code&gt;&lt;span class="identifier"&gt;visit&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&lt;/span&gt;&lt;span class="identifier"&gt;R&lt;/span&gt;&lt;span class="special"&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/wave/"&gt;Wave&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Implement C++20 features for variadics, including &lt;code&gt;&lt;span class="identifier"&gt;__VA_OPT__&lt;/span&gt;&lt;/code&gt;
+"                (&lt;a href="https://github.com/boostorg/wave/pull/75"&gt;PR#75&lt;/a&gt;)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Implement &lt;code&gt;&lt;span class="identifier"&gt;__has_include&lt;/span&gt;&lt;/code&gt;
+"                (&lt;a href="https://github.com/boostorg/wave/pull/102"&gt;PR#102&lt;/a&gt;)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Introduce new sample: &lt;code&gt;&lt;span class="identifier"&gt;check_macro_naming&lt;/span&gt;&lt;/code&gt;,
+"                useful with Boost itself (&lt;a href="https://github.com/boostorg/wave/pull/97"&gt;PR#97&lt;/a&gt;)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fix compilation issue caused by &lt;code&gt;&lt;span class="identifier"&gt;std&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;allocator&lt;/span&gt;&lt;/code&gt;
+"                member removal in C++20 (&lt;a href="https://github.com/boostorg/wave/pull/72"&gt;PR#72&lt;/a&gt;)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Repair Xpressive lexer and &lt;code&gt;&lt;span class="identifier"&gt;token_statistics&lt;/span&gt;&lt;/code&gt;
+"                sample (&lt;a href="https://github.com/boostorg/wave/pull/79"&gt;PR#79&lt;/a&gt;)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Repair lexertl lexer (&lt;a href="https://github.com/boostorg/wave/pull/78"&gt;PR#78&lt;/a&gt;)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Ensure hooks are run on predefined macros as well (&lt;a href="https://github.com/boostorg/wave/pull/87"&gt;PR#87&lt;/a&gt;)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Various minor bug fixes
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                C++98/03 support is now deprecated and will be removed in 1.77
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/yap/"&gt;YAP&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fixed compilation errors for placeholders; they now work in the general
+"                case, and in particular work with yap::print().
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                constexpr all the YAP.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Fix printing of correct value category in yap::print().
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Doc clarification.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;em&gt;TODO&lt;/em&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ul&gt;
+"  &lt;/div&gt;
+"  &lt;div id="version_1_74_0.updated_tools"&gt;
+"    &lt;h3&gt;&lt;span class="link"&gt;Updated Tools&lt;/span&gt;&lt;/h3&gt;
+"    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/tools/boostbook/"&gt;Boostbook&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Change encoding of generated documentation from US-ASCII to UTF-8.
+"                (Glen Fernandes)
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ul&gt;
+"  &lt;/div&gt;
+"  &lt;div id="version_1_74_0.compilers_tested"&gt;
+"    &lt;h3&gt;&lt;span class="link"&gt;Compilers Tested&lt;/span&gt;&lt;/h3&gt;
+"    &lt;p&gt;
+"      Boost's primary test compilers are:
+"    &lt;/p&gt;
+"    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;em&gt;TODO&lt;/em&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ul&gt;
+"    &lt;p&gt;
+"      Boost's additional test compilers include:
+"    &lt;/p&gt;
+"    &lt;ul&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
+"          &lt;em&gt;TODO&lt;/em&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"    &lt;/ul&gt;
+"  &lt;/div&gt;
+"  &lt;div id="version_1_74_0.acknowledgements"&gt;
+"    &lt;h3&gt;&lt;span class="link"&gt;Acknowledgements&lt;/span&gt;&lt;/h3&gt;
+"    &lt;p&gt;
+"      &lt;em&gt;TODO&lt;/em&gt;
+"    &lt;/p&gt;
+"  &lt;/div&gt;
+"</description></item>
+-last_modified
+@Thu, 16 Jul 2020 04:37:21 +0000
+-quickbook
+"feed/history/boost_1_74_0.qbk
+-update_count
+=1
+)
 (feed/history/unversioned.qbk
 -item
 "<item><title>Old Versions</title><pubDate>Tue, 14 Dec 1999 12:00:00 GMT</pubDate><boostbook:purpose>&lt;span class=&quot;brief&quot;&gt;&lt;span class=&quot;purpose&quot;&gt;
