@@ -8,7 +8,7 @@
     <description></description>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)</copyright>
-<item><title>Version 1.74.0</title><link>https://www.boost.org/users/history/version_1_74_0.html</link><guid>https://www.boost.org/users/history/version_1_74_0.html</guid><pubDate>Thu, 16 Jul 2020 04:37:20 +0000</pubDate><description>
+<item><title>Version 1.74.0</title><link>https://www.boost.org/users/history/version_1_74_0.html</link><guid>https://www.boost.org/users/history/version_1_74_0.html</guid><pubDate>Fri, 14 Aug 2020 05:02:54 +0000</pubDate><description>
 
 
   &lt;div id="version_1_74_0.new_libraries"&gt;
@@ -16,14 +16,9 @@
     &lt;ul&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/stl_interfaces/"&gt;STLInterfaces&lt;/a&gt;:&lt;/span&gt; A library
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/stl_interfaces/"&gt;STLInterfaces&lt;/a&gt;:&lt;/span&gt; A library
           of CRTP bases to ease the writing of STL views, iterators, and sequence
           containers, from Zach Laine.
-        &lt;/div&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;div&gt;
-          &lt;em&gt;TODO&lt;/em&gt;
         &lt;/div&gt;
       &lt;/li&gt;
     &lt;/ul&gt;
@@ -33,7 +28,7 @@
     &lt;ul&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/asio/"&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/asio/"&gt;Asio&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -192,7 +187,7 @@
             &lt;/li&gt;
             &lt;li&gt;
               &lt;div&gt;
-                Consult the &lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/doc/html/boost_asio/history.html"&gt;Revision
+                Consult the &lt;a href="https://www.boost.org/doc/libs/1_74_0/doc/html/boost_asio/history.html"&gt;Revision
                 History&lt;/a&gt; for further details.
               &lt;/div&gt;
             &lt;/li&gt;
@@ -201,7 +196,153 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/beast/"&gt;Beast&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/atomic/"&gt;Atomic&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added missing &lt;code&gt;&lt;span class="keyword"&gt;const&lt;/span&gt;&lt;/code&gt;
+                qualifiers to some operations in &lt;code&gt;&lt;span class="identifier"&gt;atomic_ref&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for &lt;code&gt;&lt;span class="identifier"&gt;yield&lt;/span&gt;&lt;/code&gt;
+                instruction on ARMv8-A. The instruction is used internally in spin
+                loops to reduce CPU power consumption.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for C++20 &lt;a href="https://www.boost.org/doc/html/atomic/interface.html#atomic.interface.interface_wait_notify_ops"&gt;waiting
+                and notifying operations&lt;/a&gt;. The implementation includes generic
+                backend that involves the internal lock pool, as well as specialized
+                backends for Windows, Linux, FreeBSD, DragonFly BSD and NetBSD. Atomic
+                types provide a new method &lt;code&gt;&lt;span class="identifier"&gt;has_native_wait_notify&lt;/span&gt;&lt;/code&gt;,
+                a static boolean constant &lt;code&gt;&lt;span class="identifier"&gt;always_has_native_wait_notify&lt;/span&gt;&lt;/code&gt;
+                and a set of capability macros that allow to detect if the implementation
+                supports native waiting and notifying operations for a given type.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed internal representation of &lt;code&gt;&lt;span class="identifier"&gt;atomic_flag&lt;/span&gt;&lt;/code&gt;
+                to use 32-bit storage. This allows for more efficient waiting and
+                notifying operations on &lt;code&gt;&lt;span class="identifier"&gt;atomic_flag&lt;/span&gt;&lt;/code&gt;
+                on some platforms.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for build-time configuration of the internal lock pool
+                size. The user can define the &lt;code&gt;&lt;span class="identifier"&gt;BOOST_ATOMIC_LOCK_POOL_SIZE_LOG2&lt;/span&gt;&lt;/code&gt;
+                macro to specify binary logarithm of the size of the lock pool. The
+                default value is 8, meaning that the size of the lock pool is 256,
+                up from 64 used in the previous release.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for a new set of atomic types dedicated for &lt;a href="https://www.boost.org/doc/html/atomic/interface.html#atomic.interface.interface_ipc"&gt;inter-process
+                communication&lt;/a&gt;: &lt;code&gt;&lt;span class="identifier"&gt;ipc_atomic_flag&lt;/span&gt;&lt;/code&gt;,
+                &lt;code&gt;&lt;span class="identifier"&gt;ipc_atomic&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class="identifier"&gt;ipc_atomic_ref&lt;/span&gt;&lt;/code&gt;. Users are recommended
+                to port their code using non-IPC types for inter-process communication
+                to the new types. The new types provide the same set of operations
+                as their non-IPC counterparts, with the following differences:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Most operations have an added precondition that &lt;code&gt;&lt;span class="identifier"&gt;is_lock_free&lt;/span&gt;&lt;/code&gt; returns &lt;code&gt;&lt;span class="keyword"&gt;true&lt;/span&gt;&lt;/code&gt; for the given atomic object.
+                      The library will issue a compile time error if this precondition
+                      is known to be not satisfied at compile time.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      All provided operations are address-free, meaning that the
+                      atomic object (in case of &lt;code&gt;&lt;span class="identifier"&gt;ipc_atomic_ref&lt;/span&gt;&lt;/code&gt;
+                      - the referenced object) may be located in process-shared memory
+                      or mapped into the same process at multiple different addresses.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      The new &lt;code&gt;&lt;span class="identifier"&gt;has_native_wait_notify&lt;/span&gt;&lt;/code&gt;
+                      operation and &lt;code&gt;&lt;span class="identifier"&gt;always_has_native_wait_notify&lt;/span&gt;&lt;/code&gt;
+                      constant indicate support for native inter-process waiting
+                      and notifying operations. When that support is not present,
+                      the operations are implemented with a busy loop, which is less
+                      efficient, but still is address-free. A separate set of capability
+                      macros is also provided to indicate this support.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added new &lt;code&gt;&lt;span class="identifier"&gt;atomic_unsigned_lock_free&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class="identifier"&gt;atomic_signed_lock_free&lt;/span&gt;&lt;/code&gt;
+                types introduced in C++20. The types indicate the atomic object type
+                for an unsigned or signed integer, respectively, that is lock-free
+                and preferably has native support for waiting and notifying operations.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added new gcc assembler backends for ARMv8-A (for both AArch32 and
+                AArch64). The new backends are used to implement operations not supported
+                by compiler intrinsics (including 128-bit operations on AArch64)
+                and can also be used when compiler intrinsics are not available.
+                Both little and big endian targets are supported. AArch64 backend
+                supports extensions defined in ARMv8.1 and ARMv8.3.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for big endian targets in the legacy ARM backend based
+                on gcc assembler blocks (this backend is used on ARMv7 and older
+                targets). Previously, the backend assumed little endian memory layout,
+                which is significant for 64-bit operations.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improved performance of seq_cst stores and thread fences on x86 by
+                using &lt;code&gt;&lt;span class="identifier"&gt;lock&lt;/span&gt;&lt;/code&gt;-prefixed
+                instructions instead of &lt;code&gt;&lt;span class="identifier"&gt;mfence&lt;/span&gt;&lt;/code&gt;.
+                This means that the operations no longer affect non-temporal stores,
+                which was also not guaranteed before. Use specialized instructions
+                and intrinsics to order non-temporal memory accesses.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed capability macros for 80-bit &lt;code&gt;&lt;span class="keyword"&gt;long&lt;/span&gt;
+                &lt;span class="keyword"&gt;double&lt;/span&gt;&lt;/code&gt; on x86 targets not
+                indicating lock-free operations even if 128-bit atomic operations
+                were available.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed compilation of gcc asm blocks on Alpha targets.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                In the gcc &lt;code&gt;&lt;span class="identifier"&gt;__sync&lt;/span&gt;&lt;span class="special"&gt;*&lt;/span&gt;&lt;/code&gt; intrinsics backend, fixed that store
+                and load operations of large objects (larger than a pointer size)
+                could be non-atomic. The implementation currently assumes that small
+                objects can be stored with a single instruction atomically on all
+                modern architectures.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/beast/"&gt;Beast&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -243,7 +384,7 @@
             &lt;/li&gt;
             &lt;li&gt;
               &lt;div&gt;
-                See the full &lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/beast/doc/html/beast/release_notes.html"&gt;Release
+                See the full &lt;a href="https://www.boost.org/libs/beast/doc/html/beast/release_notes.html"&gt;Release
                 Notes&lt;/a&gt; for a complete list of changes.
               &lt;/div&gt;
             &lt;/li&gt;
@@ -252,7 +393,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/bimap/"&gt;Bimap&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/bimap/"&gt;Bimap&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -264,7 +405,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/config/"&gt;Config&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/config/"&gt;Config&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -278,7 +419,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/core/"&gt;Core&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/core/"&gt;Core&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -296,7 +437,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/dll/"&gt;DLL&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/dll/"&gt;DLL&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -320,7 +461,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/endian/"&gt;Endian&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/endian/"&gt;Endian&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -344,7 +485,225 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/flyweight/index.html"&gt;Flyweight&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/filesystem/"&gt;Filesystem&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Removed compile-time checks for support for symlinks and hardlink
+                on Windows. Instead, a runtime check is used. (&lt;a href="https://github.com/boostorg/filesystem/pull/142"&gt;PR#142&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed handling of reparse points in &lt;code&gt;&lt;span class="identifier"&gt;canonical&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class="identifier"&gt;read_symlink&lt;/span&gt;&lt;/code&gt;
+                on Windows. This also affects other algorithms that involve &lt;code&gt;&lt;span class="identifier"&gt;canonical&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class="identifier"&gt;read_symlink&lt;/span&gt;&lt;/code&gt;
+                in their implementation. (&lt;a href="https://github.com/boostorg/filesystem/pull/100"&gt;PR#100&lt;/a&gt;, &lt;a href="https://github.com/boostorg/filesystem/issues/85"&gt;#85&lt;/a&gt;, &lt;a href="https://github.com/boostorg/filesystem/issues/99"&gt;#99&lt;/a&gt;,
+                &lt;a href="https://github.com/boostorg/filesystem/issues/123"&gt;#123&lt;/a&gt;, &lt;a href="https://github.com/boostorg/filesystem/issues/125"&gt;#125&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed that &lt;code&gt;&lt;span class="identifier"&gt;read_symlink&lt;/span&gt;&lt;/code&gt;
+                on Windows could potentially fail or cause failures elsewhere with
+                a sharing violation error, if the same symlink was opened concurrently.
+                (&lt;a href="https://github.com/boostorg/filesystem/issues/138"&gt;#138&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed that &lt;code&gt;&lt;span class="identifier"&gt;is_symlink&lt;/span&gt;&lt;span class="special"&gt;(&lt;/span&gt;&lt;span class="identifier"&gt;directory_entry&lt;/span&gt;&lt;span class="special"&gt;)&lt;/span&gt;&lt;/code&gt; would always return &lt;code&gt;&lt;span class="keyword"&gt;false&lt;/span&gt;&lt;/code&gt;, even if the directory entry
+                actually referred to a symlink. (&lt;a href="https://github.com/boostorg/filesystem/pull/148"&gt;PR#148&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added missing status inspection operation overloads for &lt;code&gt;&lt;span class="identifier"&gt;directory_entry&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class="identifier"&gt;error_code&lt;/span&gt;&lt;/code&gt; (e.g. &lt;code&gt;&lt;span class="identifier"&gt;is_directory&lt;/span&gt;&lt;span class="special"&gt;(&lt;/span&gt;&lt;span class="identifier"&gt;directory_entry&lt;/span&gt;&lt;span class="special"&gt;,&lt;/span&gt;
+                &lt;span class="identifier"&gt;error_code&lt;/span&gt;&lt;span class="special"&gt;&amp;amp;)&lt;/span&gt;&lt;/code&gt;).
+                Removed incorrect &lt;code&gt;&lt;span class="keyword"&gt;noexcept&lt;/span&gt;&lt;/code&gt;
+                specifications for the overloads not taking the &lt;code&gt;&lt;span class="identifier"&gt;error_code&lt;/span&gt;&lt;/code&gt;
+                arguments.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;code&gt;&lt;span class="identifier"&gt;copy_file&lt;/span&gt;&lt;/code&gt; implementation
+                has been updated to perform checks on the source and target files,
+                as required by C++20 ([fs.op.copy.file]/4.1). In particular, the
+                operation will fail if the source or target file is not a regular
+                file or the source and target paths identify the same file.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;code&gt;&lt;span class="identifier"&gt;copy_file&lt;/span&gt;&lt;/code&gt; on POSIX
+                systems will now also copy the source file permissions to the target
+                file, if the target file is overwritten.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;New:&lt;/strong&gt; Added &lt;code&gt;&lt;span class="identifier"&gt;copy_file&lt;/span&gt;&lt;/code&gt;
+                implementations based on &lt;code&gt;&lt;span class="identifier"&gt;sendfile&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class="identifier"&gt;copy_file_range&lt;/span&gt;&lt;/code&gt;
+                system calls on Linux, which may improve file copying performance,
+                especially on network filesystems.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;Deprecated:&lt;/strong&gt; The &lt;code&gt;&lt;span class="identifier"&gt;copy_option&lt;/span&gt;&lt;/code&gt;
+                enumeration that is used with the &lt;code&gt;&lt;span class="identifier"&gt;copy_file&lt;/span&gt;&lt;/code&gt;
+                operation is deprecated. As a replacement, the new enum &lt;code&gt;&lt;span class="identifier"&gt;copy_options&lt;/span&gt;&lt;/code&gt; (note the trailing
+                's') has been added. The new enum contains values similar to the
+                &lt;code&gt;&lt;span class="identifier"&gt;copy_options&lt;/span&gt;&lt;/code&gt; enum
+                from C++20. The old enum values are mapped onto the new enum. The
+                old enum will be removed in a future release.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;New:&lt;/strong&gt; Added &lt;code&gt;&lt;span class="identifier"&gt;copy_options&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;skip_existing&lt;/span&gt;&lt;/code&gt;
+                option, which allows &lt;code&gt;&lt;span class="identifier"&gt;copy_file&lt;/span&gt;&lt;/code&gt;
+                operation to succeed without overwriting the target file, if it exists.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;New:&lt;/strong&gt; Added &lt;code&gt;&lt;span class="identifier"&gt;copy_options&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;update_existing&lt;/span&gt;&lt;/code&gt;
+                option, which allows &lt;code&gt;&lt;span class="identifier"&gt;copy_file&lt;/span&gt;&lt;/code&gt;
+                operation to conditionally overwrite the target file, if it exists,
+                if its last write time is older than that of the replacement file.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;New:&lt;/strong&gt; &lt;code&gt;&lt;span class="identifier"&gt;copy_file&lt;/span&gt;&lt;/code&gt;
+                now returns &lt;code&gt;&lt;span class="keyword"&gt;bool&lt;/span&gt;&lt;/code&gt;, which
+                indicates whether the file was copied.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;New, breaking change:&lt;/strong&gt; &lt;code&gt;&lt;span class="identifier"&gt;copy&lt;/span&gt;&lt;/code&gt; operation has been extended
+                and reworked to implement behavior specified in C++20 [fs.op.copy].
+                This includes support for &lt;code&gt;&lt;span class="identifier"&gt;copy_options&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;recursive&lt;/span&gt;&lt;/code&gt;,
+                &lt;code&gt;&lt;span class="identifier"&gt;copy_options&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;copy_symlinks&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;copy_options&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;skip_symlinks&lt;/span&gt;&lt;/code&gt;,
+                &lt;code&gt;&lt;span class="identifier"&gt;copy_options&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;directories_only&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;copy_options&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;create_symlinks&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class="identifier"&gt;copy_options&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;create_hard_links&lt;/span&gt;&lt;/code&gt; options. The
+                operation performs additional checks based on the specified options.
+                Applying &lt;code&gt;&lt;span class="identifier"&gt;copy&lt;/span&gt;&lt;/code&gt; to
+                a directory with default &lt;code&gt;&lt;span class="identifier"&gt;copy_options&lt;/span&gt;&lt;/code&gt;
+                will now also copy files residing in that directory (but not nested
+                directories or files in those directories).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;New:&lt;/strong&gt; Added &lt;code&gt;&lt;span class="identifier"&gt;create_directory&lt;/span&gt;&lt;/code&gt;
+                overload taking two paths. The second path is a path to an existing
+                directory, which is used as a source of permission attributes to
+                use in the directory to create.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;Deprecated:&lt;/strong&gt; &lt;code&gt;&lt;span class="identifier"&gt;copy_directory&lt;/span&gt;&lt;/code&gt;
+                operation has been deprecated in favor of the new &lt;code&gt;&lt;span class="identifier"&gt;create_directory&lt;/span&gt;&lt;/code&gt;
+                overload. Note that the two operations have reversed order of the
+                path arguments.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;code&gt;&lt;span class="identifier"&gt;equivalent&lt;/span&gt;&lt;/code&gt; on POSIX
+                systems now returns the actual error code from the OS if one of the
+                paths does not resolve to a file. Previously the function would return
+                an error code of 1. (&lt;a href="https://github.com/boostorg/filesystem/issues/141"&gt;#141&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;code&gt;&lt;span class="identifier"&gt;equivalent&lt;/span&gt;&lt;/code&gt; no longer
+                considers file size and last modification time in order to test whether
+                the two paths refer to the same file. These checks could result in
+                a false negative if the file was modified during the &lt;code&gt;&lt;span class="identifier"&gt;equivalent&lt;/span&gt;&lt;/code&gt; call.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;New:&lt;/strong&gt; Added &lt;code&gt;&lt;span class="identifier"&gt;absolute&lt;/span&gt;&lt;/code&gt;
+                overloads taking &lt;code&gt;&lt;span class="identifier"&gt;error_code&lt;/span&gt;&lt;/code&gt;
+                argument.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Operations that have &lt;code&gt;&lt;span class="identifier"&gt;current_path&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt;&lt;/code&gt; as the default value of their arguments
+                and also have an &lt;code&gt;&lt;span class="identifier"&gt;error_code&lt;/span&gt;&lt;/code&gt;
+                argument will use the &lt;code&gt;&lt;span class="identifier"&gt;current_path&lt;/span&gt;&lt;span class="special"&gt;(&lt;/span&gt;&lt;span class="identifier"&gt;error_code&lt;/span&gt;&lt;span class="special"&gt;&amp;amp;&lt;/span&gt; &lt;span class="identifier"&gt;ec&lt;/span&gt;&lt;span class="special"&gt;)&lt;/span&gt;&lt;/code&gt; overload to obtain the current path,
+                so that its failure is reported via the &lt;code&gt;&lt;span class="identifier"&gt;error_code&lt;/span&gt;&lt;/code&gt;
+                argument instead of an exception.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;code&gt;&lt;span class="identifier"&gt;space&lt;/span&gt;&lt;/code&gt; now initializes
+                the &lt;code&gt;&lt;span class="identifier"&gt;space_info&lt;/span&gt;&lt;/code&gt; structure
+                members to -1 values on error, as required by C++20 ([fs.op.space]/1).
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;code&gt;&lt;span class="identifier"&gt;space&lt;/span&gt;&lt;/code&gt; on Windows
+                now accepts paths referring to arbitrary files, not only directories.
+                This is similar to POSIX systems and corresponds to the operation
+                description in C++20. (&lt;a href="https://github.com/boostorg/filesystem/issues/73"&gt;#73&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;New:&lt;/strong&gt; Added implementation of &lt;code&gt;&lt;span class="identifier"&gt;temp_directory_path&lt;/span&gt;&lt;/code&gt; for Windows
+                CE. (&lt;a href="https://github.com/boostorg/filesystem/pull/25"&gt;PR#25&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;New:&lt;/strong&gt; Improved compatibility with
+                &lt;a href="https://wasi.dev/"&gt;WASI&lt;/a&gt; platform. (&lt;a href="https://github.com/boostorg/filesystem/pull/144"&gt;PR#144&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;New:&lt;/strong&gt; Improved support for Embarcadero
+                compilers. (&lt;a href="https://github.com/boostorg/filesystem/pull/130"&gt;PR#130&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;New:&lt;/strong&gt; Added implementations of &lt;code&gt;&lt;span class="identifier"&gt;unique_path&lt;/span&gt;&lt;/code&gt; operation based on
+                &lt;code&gt;&lt;span class="identifier"&gt;getrandom&lt;/span&gt;&lt;/code&gt; (Linux),
+                &lt;code&gt;&lt;span class="identifier"&gt;arc4random_buf&lt;/span&gt;&lt;/code&gt; (OpenBSD/FreeBSD/CloudABI)
+                and BCrypt (Windows) system APIs.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;strong&gt;Deprecated:&lt;/strong&gt; Auto-linking against
+                system libraries on Windows with MSVC-compatible compilers is deprecated
+                and will be removed in a future release. This affects users linking
+                against static library of Boost.Filesystem. Users are advised to
+                update their project build systems to either use a shared library
+                of Boost.Filesystem, or explicitly specify the dependencies of Boost.Filesystem
+                in the linker command line. Users of shared library of Boost.Filesystem
+                are not affected.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/flyweight/index.html"&gt;Flyweight&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -356,7 +715,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/format/"&gt;Format&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/format/"&gt;Format&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -368,7 +727,73 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/gil/"&gt;GIL&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/geometry/"&gt;Geometry&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improvements
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/pull/720"&gt;PR#720&lt;/a&gt; Additional R-tree constructors (thanks to
+                      Caian Benedicto).
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Various improvements in buffer, set and relational operations.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Solved issues
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/issues/709"&gt;#709&lt;/a&gt; memcpy called for object with no trivial copy-assignment.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/issues/721"&gt;#721&lt;/a&gt; Compilation error in bgi::detail::rtree::visitors::insert.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/issues/727"&gt;#727&lt;/a&gt; MSVC warning: conditional expression is constant.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Bugfixes
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/pull/700"&gt;PR#700&lt;/a&gt; Missing cases for default strategies in distance
+                      algorithm.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/pull/738"&gt;PR#738&lt;/a&gt; Longitudes out of range in direct geodesic
+                      formulas.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/gil/"&gt;GIL&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -395,7 +820,9 @@
                 &lt;ul&gt;
                   &lt;li&gt;
                     &lt;div&gt;
-                      Replace Boost.Variant with Boost.Variant2 (&lt;a href="https://github.com/boostorg/gil/pull/474"&gt;PR#474&lt;/a&gt;).
+                      BREAKING: Replace Boost.Variant with Boost.Variant2 (&lt;a href="https://github.com/boostorg/gil/pull/474"&gt;PR#474&lt;/a&gt;)
+                      which completes removal on uses of Boost.MPL (missing from
+                      Boost 1.72.0 change added &lt;a href="https://github.com/boostorg/gil/pull/274"&gt;PR#274&lt;/a&gt;).
                     &lt;/div&gt;
                   &lt;/li&gt;
                   &lt;li&gt;
@@ -412,7 +839,7 @@
                 &lt;ul&gt;
                   &lt;li&gt;
                     &lt;div&gt;
-                      Removed dependency on Boost.Variant
+                      BREAKING: Removed dependency on Boost.Variant
                     &lt;/div&gt;
                   &lt;/li&gt;
                 &lt;/ul&gt;
@@ -479,7 +906,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/heap/"&gt;Heap&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/heap/"&gt;Heap&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -497,7 +924,44 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/lexical_cast/"&gt;LexicalCast&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/integer/"&gt;Integer&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed compilation of &lt;code&gt;&lt;span class="identifier"&gt;gcd&lt;/span&gt;&lt;/code&gt;
+                in C++20 mode with clang 10.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improved support for Embarcadero compilers. (&lt;a href="https://github.com/boostorg/integer/pull/21"&gt;PR#21&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/iterator/"&gt;Iterator&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;function_output_iterator&lt;/span&gt;&lt;span class="special"&gt;.&lt;/span&gt;&lt;span class="identifier"&gt;hpp&lt;/span&gt;&lt;/code&gt; header is now deprecated. Users
+                should replace its inclusion with &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;iterator&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;function_output_iterator&lt;/span&gt;&lt;span class="special"&gt;.&lt;/span&gt;&lt;span class="identifier"&gt;hpp&lt;/span&gt;&lt;/code&gt;.
+                (&lt;a href="https://github.com/boostorg/iterator/pull/51"&gt;PR#51&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improved support for Embarcadero compilers. (&lt;a href="https://github.com/boostorg/iterator/pull/55"&gt;PR#55&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/lexical_cast/"&gt;LexicalCast&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -515,7 +979,72 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/mp11/"&gt;Mp11&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/log/"&gt;Log&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Bug fixes:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      The syslog sink backend now verifies the IP version of the
+                      local and target addresses set by user. The addresses must
+                      have the same IP version as was specified in the &lt;code&gt;&lt;span class="identifier"&gt;ip_version&lt;/span&gt;&lt;/code&gt; named parameter
+                      on the sink backend construction (by default, IPv4 is assumed).
+                      When an address is obtained as a result of host name resolution,
+                      only addresses with matching IP version are considered. (&lt;a href="https://github.com/boostorg/log/issues/119"&gt;#119&lt;/a&gt;)
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                New Features:
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Move constructors and assignment operators of various components
+                      were marked &lt;code&gt;&lt;span class="keyword"&gt;noexcept&lt;/span&gt;&lt;/code&gt;.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Added a new &lt;code&gt;&lt;span class="identifier"&gt;range_manip&lt;/span&gt;&lt;/code&gt;
+                      stream manipulator that can be used for outputting elements
+                      of a range, optionally separated by a delimiter.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Added a new &lt;code&gt;&lt;span class="identifier"&gt;tuple_manip&lt;/span&gt;&lt;/code&gt;
+                      stream manipulator that can be used for outputting elements
+                      of a tuple or any other heterogeneous sequence, optionally
+                      separated by a delimiter.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Added a new &lt;code&gt;&lt;span class="identifier"&gt;optional_manip&lt;/span&gt;&lt;/code&gt;
+                      stream manipulator that can be used for outputting optionally
+                      present values.
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                See &lt;a href="https://www.boost.org/libs/log/doc/html/log/changelog.html"&gt;changelog&lt;/a&gt;
+                for more details.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/mp11/"&gt;Mp11&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -533,11 +1062,11 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/multi_index/"&gt;Multi-index Containers&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/multi_index/"&gt;Multi-index Containers&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
-                Added &lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/multi_index/doc/tutorial/basics.html#node_handling"&gt;node
+                Added &lt;a href="https://www.boost.org/libs/multi_index/doc/tutorial/basics.html#node_handling"&gt;node
                 extraction and insertion&lt;/a&gt; following the analogous interface
                 of associative containers as introduced in C++17. This feature has
                 also been extended to non key-based indices, in contrast to C++ standard
@@ -559,7 +1088,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/nowide/"&gt;Nowide&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/nowide/"&gt;Nowide&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -588,7 +1117,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/outcome/"&gt;Outcome&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/outcome/"&gt;Outcome&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -704,7 +1233,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/poly_collection/"&gt;PolyCollection&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/poly_collection/"&gt;PolyCollection&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -722,7 +1251,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/polygon/"&gt;Polygon&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/polygon/"&gt;Polygon&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -737,7 +1266,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/smart_ptr/"&gt;SmartPtr&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/smart_ptr/"&gt;SmartPtr&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -773,7 +1302,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/stacktrace/"&gt;Stacktrace&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/stacktrace/"&gt;Stacktrace&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -786,7 +1315,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/system/"&gt;System&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/system/"&gt;System&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -798,7 +1327,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/type_traits/"&gt;Type_Traits&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/type_traits/"&gt;Type_Traits&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -814,7 +1343,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/variant/"&gt;Variant&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/variant/"&gt;Variant&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -839,7 +1368,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/variant2/"&gt;Variant2&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/variant2/"&gt;Variant2&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -861,7 +1390,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/wave/"&gt;Wave&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/wave/"&gt;Wave&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -918,7 +1447,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_74_0_beta1/libs/yap/"&gt;YAP&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/yap/"&gt;YAP&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -942,11 +1471,6 @@
               &lt;/div&gt;
             &lt;/li&gt;
           &lt;/ul&gt;
-        &lt;/div&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;div&gt;
-          &lt;em&gt;TODO&lt;/em&gt;
         &lt;/div&gt;
       &lt;/li&gt;
     &lt;/ul&gt;
@@ -977,7 +1501,166 @@
     &lt;ul&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;em&gt;TODO&lt;/em&gt;
+          Linux:
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang: 3.0, 4.0.1, 6.0.1
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++0x: 3.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 6.0.1, 7.0.0, 8.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 4.0.1, 5.0.2,
+                6.0.1, 7.0.0, 8.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++17: 5.0.2, 6.0.1, 7.0.0, 8.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC: 4.4.7, 4.5.3, 4.6.3, 5.4.0, 8.0.1
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++0x: 4.4.7
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++11: 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0, 8.0.1
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++14: 5.4.0, 5.5.0, 6.4.0, 7.1.0, 7.3.0, 8.0.1
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++17: 7.3.0, 8.0.1
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Intel, C++14: 18.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          OS X:
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Apple Clang: 9.0.0, 9.1.0, 10.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Apple Clang, C++11: 9.0.0, 9.1.0, 10.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Apple Clang, C++14: 9.0.0, 9.1.0, 10.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Apple Clang, C++17: 9.1.0, 10.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Apple Clang, C++1z: 9.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Apple Clang, C++2a: 10.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          Windows:
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++0x: 4.6.4
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++11: 4.7.3, 4.8.1, 4.9.3
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++14: 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++17: 7.1.0, 7.2.0, 7.3.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          FreeBSD:
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang: 4.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++11: 4.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++14: 4.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++1z: 4.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
         &lt;/div&gt;
       &lt;/li&gt;
     &lt;/ul&gt;
@@ -987,7 +1670,166 @@
     &lt;ul&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;em&gt;TODO&lt;/em&gt;
+          Linux:
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang: 3.0, 3.8.1, 3.9.1, 4.0.1, 5.0.2, 6.0.1
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++0x: 3.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 6.0.1, 7.0.0, 8.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 4.0.1, 5.0.2,
+                6.0.1, 7.0.0, 8.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++17: 5.0.2, 6.0.1, 7.0.0, 8.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC: 4.4.7, 4.5.3, 4.6.3, 4.9.4, 5.4.0, 5.5.0, 8.0.1
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++0x: 4.4.7
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++11: 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0, 8.0.1
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++14: 5.4.0, 5.5.0, 6.3.0, 6.4.0, 7.1.0, 7.3.0, 8.0.1, 8.1.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++17: 7.3.0, 8.0.1
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Intel, C++14: 18.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          OS X:
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Apple Clang: 9.0.0, 9.1.0, 10.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Apple Clang, C++11: 9.0.0, 9.1.0, 10.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Apple Clang, C++14: 9.0.0, 9.1.0, 10.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Apple Clang, C++17: 9.1.0, 10.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Apple Clang, C++1z: 9.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Apple Clang, C++2a: 10.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          Windows:
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++0x: 4.6.4
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++11: 4.7.3, 4.8.1, 4.9.3
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++14: 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                GCC, C++17: 7.1.0, 7.2.0, 7.3.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          FreeBSD:
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang: 4.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++11: 4.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++14: 4.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Clang, C++1z: 4.0.0
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
         &lt;/div&gt;
       &lt;/li&gt;
     &lt;/ul&gt;
@@ -995,7 +1837,7 @@
   &lt;div id="version_1_74_0.acknowledgements"&gt;
     &lt;h3&gt;&lt;span class="link"&gt;Acknowledgements&lt;/span&gt;&lt;/h3&gt;
     &lt;p&gt;
-      &lt;em&gt;TODO&lt;/em&gt;
+      Marshall Clow, Michael Caisse and Glen Fernandes managed this release.
     &lt;/p&gt;
   &lt;/div&gt;
 </description></item><item><title>Version 1.73.0</title><link>https://www.boost.org/users/history/version_1_73_0.html</link><guid>https://www.boost.org/users/history/version_1_73_0.html</guid><pubDate>Tue, 28 Apr 2020 03:57:05 +0000</pubDate><description>
