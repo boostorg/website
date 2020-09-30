@@ -1,4 +1,4 @@
-# The boost website.
+# The amazing boost website.
 
 This is the source code for the [boost website](http://www.boost.org).
 It's automatically updated from the master branch.
