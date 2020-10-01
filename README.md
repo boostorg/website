@@ -5,6 +5,9 @@ It's automatically updated from the master branch.
 The [beta website](https://beta.boost.org) website is available for
 testing and experiments, and is automatically updated from the beta branch.
 
+Anybody can contribute to this project, if you are confident that you can make this project better with your skills.
+
+
 If you want to edit the website, or run it locally, see the
 [guide to updating the website](https://www.boost.org/development/website_updating.html).
 
