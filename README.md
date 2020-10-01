@@ -12,4 +12,4 @@ To add to the release notes, create a pull request for the appropriate file in
 [the history directory](https://github.com/boostorg/website/tree/master/feed/history).
 You can preview the release notes for upcoming releases at the
 [in progress release page](https://www.boost.org/users/history/in_progress.html).
-This is updated once an hour.
+This is updated every hour.
