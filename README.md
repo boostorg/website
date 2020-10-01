@@ -1,5 +1,4 @@
-# The boost website.
-
+# Welcome to the Boost website codebase
 This is the source code for the [boost website](http://www.boost.org).
 It's automatically updated from the master branch.
 The [beta website](https://beta.boost.org) website is available for
