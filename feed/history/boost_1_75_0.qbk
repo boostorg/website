@@ -44,6 +44,25 @@ Please keep the list of libraries sorted in lexicographical order.
   * C++20 fixes for `event_comparison_type`, `vertex_equality_predicate_type`,
     and `voronoi_predicates`. (Glen Fernandes)
 
+* [phrase library..[@/libs/preprocessor/ Preprocessor]:]
+  * When variadic data is empty in C++20 mode with __VA_OPT__ support the variadic size has been corrected to be 0.
+    This also means that in this C++20 mode it is now valid to convert to and from empty arrays and lists and variadic data.
+    The end-user can read the "C++20 Support For Variadic Macros" part of the "variadic macros" topic for more information
+    about empty variadic data in the library.
+  * A number of the limits defined in the config/limits.hpp can now be changed to higher amounts for a TU.
+    The end-user should read the "limitations" topic to understand how and which limits can be changed.
+  * The library has been upgraded to assume variadic macro support for any compiler working
+    with the library. Ostensibly this means that the library is now a C++11 on up library, yet most of the major
+    compilers, including gcc, clang, and VC++, also support variadic macros in C++98/C++03 mode as long as strict
+    compliance to C++98/C++03 is not turned on when using one of those compilers.
+
+* [phrase library..[@/libs/vmd/ VMD]:]
+  * The VMD number parsing has been upgraded to support the ability for the end-user to change the
+    number limits in the Preprocessor library.
+  * The macro BOOST_VMD_IS_GENERAL_IDENTIFIER has been added to support the parsing of input that
+    represents a preprocessor token which matches the VMD identifier syntax, without having to register
+    the identifier as a specific identifier.
+
 * /TODO/
 
 [endsect]
