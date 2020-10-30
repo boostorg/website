@@ -16,8 +16,9 @@ BOOST_WEBSITE_DATA_ROOT_DIR
   than testing purposes.
 
 BOOST_WEBSITE_SHARED_DIR
-  The root directory for some of these constants, not needed if you
-  set them explicitly.
+  The root directory for many of these constants, not needed if you
+  set them all explicitly. 
+  - In production this is /home/www/shared
 
 BOOST_RSS_DIR
   Path to directory with RSS feeds from Gmane.
@@ -40,7 +41,7 @@ BOOST_FIX_DIR
   - Defaults to BOOST_WEBSITE_DATA_ROOT_DIR/doc/fixes
 
 BOOST_REPOS_DIR
-  Loction of local copies for develop and master super projects.
+  Location of local copies for develop and master super projects.
   Set them up using:
   git clone https://github.com/boostorg/boost.git -b master --depth=1 boost-master
   git clone https://github.com/boostorg/boost.git -b develop --depth=1 boost-develop
@@ -53,11 +54,16 @@ BOOST_TASKS_DIR
   implementation is the only thing of interest.
   - Defaults to BOOST_WEBSITE_SHARED_DIR/tasks
 
+RESULTS_DIR
+  Location of testing zip files to be extracted and displayed at https://www.boost.org/development/tests/develop/developer/summary.html
+  - Defaults to BOOST_WEBSITE_SHARED_DIR/testing
+
 EXECUTABLES
 ===========
 
 UNZIP
   Unzip program to use to extract files from ZIPs.
+  - Defaults to 'unzip'
 
 BOOST_QUICKBOOK_EXECUTABLE
   Quickbook executable. Set to false if quickbook isn't available.
@@ -119,6 +125,10 @@ if (defined('BOOST_WEBSITE_SHARED_DIR')) {
     if (!defined('BOOST_TASKS_DIR')) {
         define('BOOST_TASKS_DIR', BOOST_WEBSITE_SHARED_DIR.'/tasks');
     }
+
+    if (!defined('RESULTS_DIR')) {
+	define('RESULTS_DIR', BOOST_WEBSITE_SHARED_DIR.'/testing');
+    }
 }
 
 // TODO: I'm going to move the fix directory to a separate repo
@@ -128,4 +138,8 @@ if (!defined('BOOST_FIX_DIR')) {
 
 if (!defined('BOOST_QUICKBOOK_EXECUTABLE')) {
     define('BOOST_QUICKBOOK_EXECUTABLE', 'quickbook');
+}
+
+if (!defined('UNZIP')) {
+    define('UNZIP', 'unzip');
 }

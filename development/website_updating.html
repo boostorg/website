@@ -333,8 +333,8 @@ tidy --tidy-mark no -i -wrap 78 -m -asxhtml --merge-divs no --merge-spans no --d
                   <pre>
 &lt;VirtualHost 127.0.0.1:80&gt;
   ServerName boost.localhost
-  DocumentRoot "/path/to/boost/website/public_html/beta"
-  &lt;Directory "/path/to/boost/website/public_html/beta"&gt;
+  DocumentRoot "/path/to/boost/website"
+  &lt;Directory "/path/to/boost/website"&gt;
     Options +MultiViews +Includes +ExecCGI +FollowSymLinks +Includes
     AllowOverride All
     Order allow,deny
@@ -349,14 +349,12 @@ tidy --tidy-mark no -i -wrap 78 -m -asxhtml --merge-divs no --merge-spans no --d
                 <li>
                   <p>Create a local PHP configuration file for Boost specific
                   settings as
-                  "<tt>/path/to/boost/website/public_html/beta/common/code/boost_config_local.php</tt>"
+                  "<tt>/path/to/boost/website/common/code/boost_config_local.php</tt>"
                   that contains something like:</p>
                   <pre>
 &lt;?php
-define('BOOST_WEBSITE_SHARED_DIR', '/path/to/boost/website/workplace');
-define('ARCHIVE_DIR', '/path/to/boost/website/workplace/archives');
-define('RESULTS_DIR', '/path/to/boost/website/workplace/testing');
-define('UNZIP', 'unzip');
+define('BOOST_WEBSITE_SHARED_DIR', '/path/to/boost/shared');
+define('STATIC_DIR', '/path/to/boost/shared/archives/live');
 ?&gt;
 </pre>
 
@@ -369,14 +367,23 @@ define('UNZIP', 'unzip');
                 <li>
                   <p>In order to view the documentation, or the build
                   sub-site, you'll need to setup the appropriate directories.
-                  <tt>ARCHIVE_DIR</tt> needs to be the location of unzipped
+                  <tt>/build</tt> needs to contain the <a href=
+                  "https://github.com/boostorg/build/tree/website"><tt>website</tt>
+                  branch of Boost.Build</a>. A soft link to another directory
+                  can be used here (which is how it's done on the server).
+                  <tt>STATIC_DIR</tt> needs to be the location of unzipped
                   copies of the appropriate boost distribution to serve the
-                  documentation. <tt>/build</tt> needs to contain the
-                  <a href="https://github.com/boostorg/build/tree/website"><tt>
-                  website</tt> branch of Boost.Build</a>. A soft link to
-                  another directory can be used here (which is how it's done
-                  on the server).</p>
+                  documentation. By default, boost_config.php sets STATIC_DIR
+                  to $BOOST_WEBSITE_SHARED_DIR/archives/live. Follow steps
+                  similar to this, changing variables as necessary:</p>
+                  <pre>
+BOOST_WEBSITE_SHARED_DIR=/home/www/shared
+mkdir -p $BOOST_WEBSITE_SHARED_DIR/archives/live
+cd $BOOST_WEBSITE_SHARED_DIR/archives/live
+wget https://dl.bintray.com/boostorg/release/1.74.0/source/boost_1_74_0.tar.gz
+tar -xvf boost_1_74_0.tar.gz</pre>
                 </li>
+
               </ol>
 
               <h3>Ubuntu setup</h3>
@@ -388,9 +395,7 @@ sudo a2enmod headers
 sudo a2enmod rewrite
 sudo a2enmod include
 sudo a2dismod deflate
-sudo service apache2 restart
-              
-</pre>
+sudo service apache2 restart</pre>
 
               <p>I had to disable <code>deflate</code> because it interacts
               badly with php's <code>virtual</code> function.</p>
