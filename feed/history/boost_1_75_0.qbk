@@ -109,10 +109,6 @@ Please keep the list of libraries sorted in lexicographical order.
   * Added `mp_pairwise_fold` (suggested by Barry Revzin)
   * Removed `mp_invoke` (use `mp_invoke_q`)
 
-* [phrase library..[@/libs/polygon/ Polygon]:]
-  * C++20 fixes for `event_comparison_type`, `vertex_equality_predicate_type`,
-    and `voronoi_predicates`. (Glen Fernandes)
-
 * [phrase library..[@/libs/outcome/ Outcome]:]
   * Announcements:
     * After a year and three major Boost releases announcing this upcoming change, this is the FINAL RELEASE of the v2.1 branch. From Boost 1.76 onwards, the v2.2 branch becomes the default. This branch has a number of major breaking changes to Outcome v2.1, see the documentation for details.
@@ -122,6 +118,10 @@ Please keep the list of libraries sorted in lexicographical order.
   * Bug fixes:
     * Boost.Outcome should now compile with `BOOST_NO_EXCEPTIONS` defined. Thanks to Emil, maintainer of Boost.Exception, making a change for me, Boost.Outcome should now compile with C++ exceptions globally disabled. You won't be able to use `boost::exception_ptr` as it can't be included if C++ exceptions are globally disabled.
     * [@https://github.com/ned14/outcome/issues/236 #236] In the Coroutine support the `final_suspend()` was not `noexcept`, despite being required to be so in the C++ 20 standard. This has been fixed, but only if your compiler implements `noop_coroutine`. Additionally, if `noop_coroutine` is available, we use the much more efficient coroutine handle returning variant of `await_suspend()` which should significantly improve codegen and context switching performance.
+
+* [phrase library..[@/libs/polygon/ Polygon]:]
+  * C++20 fixes for `event_comparison_type`, `vertex_equality_predicate_type`,
+    and `voronoi_predicates`. (Glen Fernandes)
 
 * [phrase library..[@/libs/preprocessor/ Preprocessor]:]
   * When variadic data is empty in C++20 mode with __VA_OPT__ support the variadic size has been corrected to be 0.
