@@ -11191,3 +11191,608 @@
 -title_xml
 "Version 1.74.0
 )
+(feed/history/boost_1_75_0.qbk:1.75.0 beta1
+-description_xhtml
+"
+"
+"
+"  <div id="version_1_75_0.new_libraries">
+"    <h3><span class="link">New Libraries</span></h3>
+"    <ul>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/json/">JSON</a>:</span> JSON parsing, serialization,
+"          and DOM in C++11, from Vinnie Falco and Krystian Stasiowski.
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/leaf/">LEAF</a>:</span> A lightweight error-handling
+"          library for C++11, from Emil Dotchevski.
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/pfr/">PFR</a>:</span> Basic reflection without macro
+"          or boilerplate code for user defined types, from Antony Polukhin.
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
+"  <div id="version_1_75_0.updated_libraries">
+"    <h3><span class="link">Updated Libraries</span></h3>
+"    <ul>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Implemented SSE2 and SSE4.1 versions of address lookup algorithm,
+"                which is used in the internal lock pool implementation. This may
+"                improve performance of waiting and notifying operations in heavily
+"                contended cases.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/container/">Container</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                New <code>devector</code>
+"                container.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed bugs/issues:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/container/issues/152">#152</a> Tree-based containers have troubles with move-only
+"                      types.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/container/issues/156">#156</a> Compile error with vector.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/container/pull/157">PR#157</a> Add missing include.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/container/issues/159">#159</a>: pmr::monotonic_buffer_resource crashes on
+"                      large single allocations.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/container/issues/160">#160</a>: Usage of uses_allocator needs a remove_cvref_t.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/container/issues/162">#162</a>: small_vector on MSVC x86 call-by-value crash.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/container/issues/161">#161</a>: polymorphic_allocator(memory_resource*) non-standard
+"                      extension causes headache.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/container/pull/163">PR#163</a>: container_rebind for small_vector with
+"                      options.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/container/issues/165">#165</a>: Link error with shared library and memory_resource
+"                      inline members.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/container/pull/166">PR#166</a>: Fix encoding error in copyright headers.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/container/pull/167">PR#167</a>: error: the address of 'msg' will always
+"                      evaluate as 'true' warning with GCC 4.4.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/container/issues/169">#169</a>: flood of warnings building dlmalloc_ext_2_8_6.c
+"                      on clang11.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/endian/">Endian</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <code><span class="identifier">endian_arithmetic</span></code>
+"                no longer inherits from <code><span class="identifier">endian_buffer</span></code>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                When <code><span class="identifier">BOOST_ENDIAN_NO_CTORS</span></code>
+"                is defined, the unaligned <code><span class="identifier">endian_buffer</span></code>
+"                and <code><span class="identifier">endian_arithmetic</span></code>
+"                are C++03 PODs, to enable use of <code><span class="identifier">__attribute__</span><span class="special">((</span><span class="identifier">packed</span><span class="special">))</span></code>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <strong>New:</strong> Added <code><span class="identifier">creation_time</span></code>
+"                operation, which allows to obtain file creation time. (Inspired by
+"                <a href="https://github.com/boostorg/filesystem/pull/134">PR#134</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The returned value of <code><span class="identifier">last_write_time</span><span class="special">(</span><span class="identifier">p</span><span class="special">,</span> <span class="identifier">ec</span><span class="special">)</span></code> operation in case of failure has
+"                been changed to a minimal value representable by <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">time_t</span></code>
+"                instead of -1.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The returned value of <code><span class="identifier">hard_link_count</span><span class="special">(</span><span class="identifier">p</span><span class="special">,</span> <span class="identifier">ec</span><span class="special">)</span></code> operation in case of failure has
+"                been changed to <code><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">uintmax_t</span><span class="special">&gt;(-</span><span class="number">1</span><span class="special">)</span></code> instead of 0.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On POSIX systems, <code><span class="identifier">file_size</span></code>
+"                will now indicate error code <code><span class="identifier">errc</span><span class="special">::</span><span class="identifier">function_not_supported</span></code>
+"                if the path resolves to a non-regular file. Previously, <code><span class="identifier">errc</span><span class="special">::</span><span class="identifier">operation_not_permitted</span></code> was reported.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On Linux, many operations now use <code><span class="identifier">statx</span></code>
+"                system call internally, when possible, which allows to reduce the
+"                amount of information queried from the filesystem and potentially
+"                improve performance. The <code><span class="identifier">statx</span></code>
+"                system call was introduced in Linux kernel 4.11.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed <code><span class="keyword">const</span></code>-qualification
+"                from return types of some <code><span class="identifier">path</span></code>
+"                methods. This could prevent move construction and move assignment
+"                at the call site in some cases. (<a href="https://github.com/boostorg/filesystem/issues/160">#160</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On OpenBSD 4.4 and newer, use <code><span class="identifier">statvfs</span></code>
+"                system call to obtain filesystem space information. (Inspired by
+"                <a href="https://github.com/boostorg/filesystem/pull/162">PR#162</a>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/gil/">GIL</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                BREAKING: In next release, we are going to drop support for GCC 5.
+"                We may also change the required minimum C++ version from C++11 to
+"                C++14.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/interprocess/">Interprocess</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fixed bugs:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/interprocess/issues/127">#127</a>: static assertion failure with boost interprocess
+"                      1.74 and basic_managed_shared_memory.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/intrusive/">Intrusive</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fixed bugs:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/intrusive/pull/48">PR#48</a>: MSVC "assignment within conditional"
+"                      warning fix.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/intrusive/pull/49">PR#49</a>: Fix empty control statement warnings.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/intrusive/issues/52">#52</a>: Invalid casting in BOOST_INTRUSIVE_BSR_INTRINSIC.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/log/">Log</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Bug fixes:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Corrected the file counter that would be used in <code><span class="identifier">text_file_backend</span></code> when generating
+"                      the target file name (based on the pattern set by <code><span class="identifier">set_target_file_name_pattern</span></code>
+"                      method) when the log file is rotated. (<a href="https://github.com/boostorg/log/issues/125">#125</a>)
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Replaced a volatile version counter in <code><span class="identifier">basic_sink_frontend</span></code>
+"                      with an atomic. (<a href="https://github.com/boostorg/log/issues/128">#128</a>)
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      In the <code><span class="identifier">asynchronous_sink</span></code>
+"                      frontend, resolved a possible conflict between <code><span class="identifier">flush</span></code> and <code><span class="identifier">run</span></code>
+"                      methods, if <code><span class="identifier">run</span></code>
+"                      is called from a user's thread instead of the internal dedicated
+"                      thread spawned by the frontend. (<a href="https://github.com/boostorg/log/issues/131">#131</a>)
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                See <a href="/libs/log/doc/html/log/changelog.html">changelog</a>
+"                for more details.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/move/">Move</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fixed bugs:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/move/issues/30">#30</a>: (void) C-cast is a non-portable way of suppressing
+"                      compiler warnings.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/mp11/">Mp11</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">mp_pairwise_fold</span></code>
+"                (suggested by Barry Revzin)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed <code><span class="identifier">mp_invoke</span></code>
+"                (use <code><span class="identifier">mp_invoke_q</span></code>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/polygon/">Polygon</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                C++20 fixes for <code><span class="identifier">event_comparison_type</span></code>,
+"                <code><span class="identifier">vertex_equality_predicate_type</span></code>,
+"                and <code><span class="identifier">voronoi_predicates</span></code>.
+"                (Glen Fernandes)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/outcome/">Outcome</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Announcements:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      After a year and three major Boost releases announcing this
+"                      upcoming change, this is the FINAL RELEASE of the v2.1 branch.
+"                      From Boost 1.76 onwards, the v2.2 branch becomes the default.
+"                      This branch has a number of major breaking changes to Outcome
+"                      v2.1, see the documentation for details.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Enhancements:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      The ADL discovered event hooks have been replaced with policy-specified
+"                      event hooks instead. This is due to brittleness (where hooks
+"                      would quietly self-disable if somebody changed something),
+"                      compiler bugs (a difference in compiler settings causes the
+"                      wrong hooks, or some but not all hooks, to get discovered),
+"                      and end user difficulty in using them at all. The policy-specified
+"                      event hooks can be told to default to ADL discovered hooks
+"                      for backwards compatibility: set <code><span class="identifier">OUTCOME_ENABLE_LEGACY_SUPPORT_FOR</span></code>
+"                      to less than <code><span class="number">220</span></code>
+"                      to enable emulation.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Improve configuring <code><span class="identifier">OUTCOME_GCC6_CONCEPT_BOOL</span></code>.
+"                      Older GCCs had boolean based concepts syntax, whereas newer
+"                      GCCs are standards conforming. However the precise logic of
+"                      when to use legacy and conforming syntax was not well understood,
+"                      which caused Outcome to fail to compile depending on what options
+"                      you pass to GCC. The new logic always uses the legacy syntax
+"                      if on GCC 8 or older, otherwise we use conforming syntax if
+"                      and only if GCC is in C++ 20 mode or later. This hopefully
+"                      will resolve the corner case build failures on GCC.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Bug fixes:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Boost.Outcome should now compile with <code><span class="identifier">BOOST_NO_EXCEPTIONS</span></code>
+"                      defined. Thanks to Emil, maintainer of Boost.Exception, making
+"                      a change for me, Boost.Outcome should now compile with C++
+"                      exceptions globally disabled. You won't be able to use <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">exception_ptr</span></code> as it can't
+"                      be included if C++ exceptions are globally disabled.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/ned14/outcome/issues/236">#236</a>
+"                      In the Coroutine support the <code><span class="identifier">final_suspend</span><span class="special">()</span></code> was not <code><span class="keyword">noexcept</span></code>,
+"                      despite being required to be so in the C++ 20 standard. This
+"                      has been fixed, but only if your compiler implements <code><span class="identifier">noop_coroutine</span></code>. Additionally,
+"                      if <code><span class="identifier">noop_coroutine</span></code>
+"                      is available, we use the much more efficient coroutine handle
+"                      returning variant of <code><span class="identifier">await_suspend</span><span class="special">()</span></code> which should significantly
+"                      improve codegen and context switching performance.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/preprocessor/">Preprocessor</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                When variadic data is empty in C++20 mode with __VA_OPT__ support
+"                the variadic size has been corrected to be 0. This also means that
+"                in this C++20 mode it is now valid to convert to and from empty arrays
+"                and lists and variadic data. The end-user can read the "C++20
+"                Support For Variadic Macros" part of the "variadic macros"
+"                topic for more information about empty variadic data in the library.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                A number of the limits defined in the config/limits.hpp can now be
+"                changed to higher amounts for a TU. The end-user should read the
+"                "limitations" topic to understand how and which limits
+"                can be changed.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The library has been upgraded to assume variadic macro support for
+"                any compiler working with the library. Ostensibly this means that
+"                the library is now a C++11 on up library, yet most of the major compilers,
+"                including gcc, clang, and VC++, also support variadic macros in C++98/C++03
+"                mode as long as strict compliance to C++98/C++03 is not turned on
+"                when using one of those compilers.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/system/">System</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                The platform-specific headers <code><span class="identifier">windows_error</span><span class="special">.</span><span class="identifier">hpp</span></code>,
+"                <code><span class="identifier">linux_error</span><span class="special">.</span><span class="identifier">hpp</span></code>, and <code><span class="identifier">cygwin_error</span><span class="special">.</span><span class="identifier">hpp</span></code>
+"                emit deprecation messages and are slated for removal.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The old names for <code><span class="identifier">generic_category</span><span class="special">()</span></code> and <code><span class="identifier">system_category</span><span class="special">()</span></code> emit deprecation messages and are
+"                slated for removal.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">error_condition</span><span class="special">::</span><span class="identifier">failed</span></code> is deprecated and is slated
+"                for removal. <code><span class="keyword">operator</span> <span class="keyword">bool</span><span class="special">()</span></code>
+"                for <code><span class="identifier">error_condition</span></code>
+"                has been reverted to its old meaning of <code><span class="identifier">value</span><span class="special">()</span> <span class="special">!=</span> <span class="number">0</span></code>. This is done for compatibility with
+"                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">error_condition</span></code> as the next release
+"                is expected to improve interoperability with <code><span class="special">&lt;</span><span class="identifier">system_error</span><span class="special">&gt;</span></code>
+"                even further. <em>Note that this does not
+"                affect</em> <code><span class="identifier">error_code</span><span class="special">::</span><span class="identifier">failed</span></code>,
+"                which is still alive and well.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The overload of <code><span class="identifier">error_condition</span><span class="special">::</span><span class="identifier">message</span></code>
+"                that takes a buffer is deprecated and is slated for removal, for
+"                the same reasons. <em>Note that this does
+"                not affect</em> <code><span class="identifier">error_code</span><span class="special">::</span><span class="identifier">message</span></code>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/vmd/">VMD</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                The VMD number parsing has been upgraded to support the ability for
+"                the end-user to change the number limits in the Preprocessor library.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The macro BOOST_VMD_IS_GENERAL_IDENTIFIER has been added to support
+"                the parsing of input that represents a preprocessor token which matches
+"                the VMD identifier syntax, without having to register the identifier
+"                as a specific identifier.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <em>TODO</em>
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
+"  <div id="version_1_75_0.compilers_tested">
+"    <h3><span class="link">Compilers Tested</span></h3>
+"    <p>
+"      Boost's primary test compilers are:
+"    </p>
+"    <ul>
+"      <li>
+"        <div>
+"          <em>TODO</em>
+"        </div>
+"      </li>
+"    </ul>
+"    <p>
+"      Boost's additional test compilers include:
+"    </p>
+"    <ul>
+"      <li>
+"        <div>
+"          <em>TODO</em>
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
+"  <div id="version_1_75_0.acknowledgements">
+"    <h3><span class="link">Acknowledgements</span></h3>
+"    <p>
+"      <em>TODO</em>
+"    </p>
+"  </div>
+"
+-hash
+"1605b9df261192a63e698d941c4850773e7a65a61a46bb9d507f21ceff9bd0f0
+-id
+"version_1_75_0
+-notice_url
+-notice_xml
+-pub_date
+-purpose_xml
+"
+"      New Libraries: Updated Libraries:
+"
+-title_xml
+"Version 1.75.0
+)
