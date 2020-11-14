@@ -47,6 +47,9 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed `named_condition_any` fails to notify ([github interprocess 62])
 ]
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Implemented SSE2 and SSE4.1 versions of address lookup algorithm, which is used in the internal lock pool implementation. This may improve performance of waiting and notifying operations in heavily contended cases.
+
 * [phrase library..[@/libs/container/ Container]:]
   * New [classref boost::container::devector devector] container.
   * Fixed bugs/issues:
@@ -68,6 +71,15 @@ Please keep the list of libraries sorted in lexicographical order.
   * When `BOOST_ENDIAN_NO_CTORS` is defined, the unaligned `endian_buffer` and
     `endian_arithmetic` are C++03 PODs, to enable use of `__attribute__((packed))`
 
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * [*New:] Added `creation_time` operation, which allows to obtain file creation time. (Inspired by [github_pr filesystem 134])
+  * The returned value of `last_write_time(p, ec)` operation in case of failure has been changed to a minimal value representable by `std::time_t` instead of -1.
+  * The returned value of `hard_link_count(p, ec)` operation in case of failure has been changed to `static_cast<uintmax_t>(-1)` instead of 0.
+  * On POSIX systems, `file_size` will now indicate error code `errc::function_not_supported` if the path resolves to a non-regular file. Previously, `errc::operation_not_permitted` was reported.
+  * On Linux, many operations now use `statx` system call internally, when possible, which allows to reduce the amount of information queried from the filesystem and potentially improve performance. The `statx` system call was introduced in Linux kernel 4.11.
+  * Removed `const`-qualification from return types of some `path` methods. This could prevent move construction and move assignment at the call site in some cases. ([github filesystem 160])
+  * On OpenBSD 4.4 and newer, use `statvfs` system call to obtain filesystem space information. (Inspired by [github_pr filesystem 162])
+
 * [phrase library..[@/libs/gil/ GIL]:]
   * BREAKING: In next release, we are going to drop support for GCC 5.
     We may also change the required minimum C++ version from C++11 to C++14.
@@ -81,6 +93,13 @@ Please keep the list of libraries sorted in lexicographical order.
     *  [github_pr intrusive 48]: MSVC "assignment within conditional" warning fix.
     *  [github_pr intrusive 49]: Fix empty control statement warnings.
     *  [github intrusive 52]: Invalid casting in BOOST_INTRUSIVE_BSR_INTRINSIC.
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Bug fixes:
+    * Corrected the file counter that would be used in `text_file_backend` when generating the target file name (based on the pattern set by `set_target_file_name_pattern` method) when the log file is rotated. ([github log 125])
+    * Replaced a volatile version counter in `basic_sink_frontend` with an atomic. ([github log 128])
+    * In the `asynchronous_sink` frontend, resolved a possible conflict between `flush` and `run` methods, if `run` is called from a user's thread instead of the internal dedicated thread spawned by the frontend. ([github log 131])
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
 * [phrase library..[@/libs/move/ Move]:]
   *  Fixed bugs:
