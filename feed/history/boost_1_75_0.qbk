@@ -50,6 +50,22 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/atomic/ Atomic]:]
   * Implemented SSE2 and SSE4.1 versions of address lookup algorithm, which is used in the internal lock pool implementation. This may improve performance of waiting and notifying operations in heavily contended cases.
 
+* [phrase library..[@/libs/container/ Container]:]
+  * New [classref boost::container::devector devector] container.
+  * Fixed bugs/issues:
+    * [github container 152] Tree-based containers have troubles with move-only types.
+    * [github container 156] Compile error with vector.
+    * [github_pr container 157] Add missing include.
+    * [github container 159]: pmr::monotonic_buffer_resource crashes on large single allocations.
+    * [github container 160]: Usage of uses_allocator needs a remove_cvref_t.
+    * [github container 162]: small_vector on MSVC x86 call-by-value crash.
+    * [github container 161]: polymorphic_allocator(memory_resource*) non-standard extension causes headache.
+    * [github_pr container 163]: container_rebind for small_vector with options.
+    * [github container 165]: Link error with shared library and memory_resource inline members.
+    * [github_pr container 166]: Fix encoding error in copyright headers.
+    * [github_pr container 167]: error: the address of 'msg' will always evaluate as 'true' warning with GCC 4.4.
+    * [github container 169]: flood of warnings building dlmalloc_ext_2_8_6.c on clang11.
+
 * [phrase library..[@/libs/endian/ Endian]:]
   * `endian_arithmetic` no longer inherits from `endian_buffer`
   * When `BOOST_ENDIAN_NO_CTORS` is defined, the unaligned `endian_buffer` and
@@ -64,12 +80,30 @@ Please keep the list of libraries sorted in lexicographical order.
   * Removed `const`-qualification from return types of some `path` methods. This could prevent move construction and move assignment at the call site in some cases. ([github filesystem 160])
   * On OpenBSD 4.4 and newer, use `statvfs` system call to obtain filesystem space information. (Inspired by [github_pr filesystem 162])
 
+* [phrase library..[@/libs/gil/ GIL]:]
+  * BREAKING: In next release, we are going to drop support for GCC 5.
+    We may also change the required minimum C++ version from C++11 to C++14.
+
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  *  Fixed bugs:
+    * [github interprocess 127]: static assertion failure with boost interprocess 1.74 and basic_managed_shared_memory.
+
+* [phrase library..[@/libs/intrusive/ Intrusive]:]
+  *  Fixed bugs:
+    *  [github_pr intrusive 48]: MSVC "assignment within conditional" warning fix.
+    *  [github_pr intrusive 49]: Fix empty control statement warnings.
+    *  [github intrusive 52]: Invalid casting in BOOST_INTRUSIVE_BSR_INTRINSIC.
+
 * [phrase library..[@/libs/log/ Log]:]
   * Bug fixes:
     * Corrected the file counter that would be used in `text_file_backend` when generating the target file name (based on the pattern set by `set_target_file_name_pattern` method) when the log file is rotated. ([github log 125])
     * Replaced a volatile version counter in `basic_sink_frontend` with an atomic. ([github log 128])
     * In the `asynchronous_sink` frontend, resolved a possible conflict between `flush` and `run` methods, if `run` is called from a user's thread instead of the internal dedicated thread spawned by the frontend. ([github log 131])
   * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
+* [phrase library..[@/libs/move/ Move]:]
+  *  Fixed bugs:
+    * [github move 30]: (void) C-cast is a non-portable way of suppressing compiler warnings.
 
 * [phrase library..[@/libs/mp11/ Mp11]:]
   * Added `mp_pairwise_fold` (suggested by Barry Revzin)
