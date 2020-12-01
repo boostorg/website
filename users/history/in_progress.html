@@ -803,10 +803,44 @@
             </li>
             <li>
               <div>
-                A number of the limits defined in the config/limits.hpp can now be
-                changed to higher amounts for a TU. The end-user should read the
-                "limitations" topic to understand how and which limits
-                can be changed.
+                The macro BOOST_PP_IS_STANDARD() has been added for identifying if
+                the currently used preprocessor is a C++ standard conforming preprocessor.
+                A number of preprocessors which generally work correctly with the
+                library but need various internal workarounds, including the currently
+                default VC++ preprocessor, are not considered C++ standard conforming
+                preprocessors. However most preprocessors, including among others
+                gcc, clang, and the new but currently non-default VC++ preprocessor
+                in VS2019, are C++ standard conforming preprocessors.
+              </div>
+            </li>
+            <li>
+              <div>
+                For C++ standard conforming preprocessors a number of the limits
+                defined in the config/limits.hpp can now be changed to higher amounts
+                for a TU. The end-user should read the "limitations" topic
+                to understand how and which limits can be changed.
+              </div>
+            </li>
+            <li>
+              <div>
+                For C++ standard conforming preprocessors, in order to allow the
+                maximum number of FOR and WHILE iterations, the beginning 'r' and
+                'd' iteration numbers in the user-defined macros start at 1 and not
+                2, as it did in previous releases. This could be a breaking change
+                if these iteration numbers are used in the user-defined macros (
+                they probably would not be ), but the change was necessary to fix
+                some arcane bugs when dealing with numerical/logical operations with
+                maximum numbers as well to allow the user-defined macros to be called
+                the correct possible maximum number of times. For non-C++ conforming
+                preprocessors, this change was not made because those non-conforming
+                C++ preprocessors generally have limitations which disallow the maximum
+                number of looping constructs to be run, and it was felt not to introduce
+                a possible breaking change to those more fragile preprocessors would
+                be better. It was also felt that besides fixing some arcane preprocessor
+                bugs and providing the possible maximum number of user-defined macro
+                invocations, this change could be made because it has never been
+                documented what the starting 'r' and 'd' iteration numbers actually
+                are but only that these numbers are incremented for each iteration.
               </div>
             </li>
             <li>
