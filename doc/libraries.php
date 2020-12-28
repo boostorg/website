@@ -253,6 +253,11 @@ class LibraryPage {
         print ($p ? implode(', ', $p) : '&nbsp;');
     }
 
+    function libstandard_min_level($lib) {
+        print !empty($lib['cxxstd']) ?
+                html_encode($lib['cxxstd']) : '&nbsp;';
+    }
+
     function libcategories($lib) {
         $first = true;
         if ($lib['category']) {
@@ -368,6 +373,10 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
                     <dd><?php $library_page->libavailable($lib); ?></dd>
                     <dt>Standard</dt>
                     <dd><?php $library_page->libstandard($lib); ?></dd>
+                    <?php if (isset($lib['cxxstd'])): ?>
+                    <dt>C++ standard minimum level</dt>
+                    <dd><?php $library_page->libstandard_min_level($lib); ?></dd>
+                    <?php endif ?>
                     <dt>Categories</dt>
                     <dd><?php $library_page->libcategories($lib); ?></dd>
                   </dl>
