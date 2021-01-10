@@ -23,8 +23,6 @@ $libraries = BoostLibraries::from_xml('<?xml version="1.0" encoding="UTF-8"?>
     <authors>Eric Niebler</authors>
     <description>Framework for incremental calculation, and collection of statistical accumulators.</description>
     <documentation>libs/accumulators/</documentation>
-    <std-proposal>false</std-proposal>
-    <std-tr1>false</std-tr1>
     <category>Math</category>
   </library>
 </boost>

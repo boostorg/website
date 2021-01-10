@@ -359,7 +359,7 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
                     <dt>First&nbsp;Release</dt>
                     <dd><?php $library_page->libavailable($lib); ?></dd>
                     <?php if (isset($lib['cxxstd'])): ?>
-                    <dt>C++ standard minimum level</dt>
+                    <dt>C++&nbsp;Standard&nbsp;Minimum&nbsp;Level</dt>
                     <dd><?php $library_page->libstandard_min_level($lib); ?></dd>
                     <?php endif ?>
                     <dt>Categories</dt>
