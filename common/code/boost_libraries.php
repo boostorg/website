@@ -116,18 +116,6 @@ class BoostLibraries
                         else { $lib[$val['tag']] = ''; }
                     }
                     break;
-                    case 'std-proposal':
-                    case 'std-tr1':
-                    {
-                        $value = isset($val['value']) ? trim($val['value']) : false;
-                        if($value && $value != 'true' && $value != 'false') {
-                            throw new BoostLibraries_DecodeException(
-                                "Invalid value for {$val['tag']}: {$value}",
-                                $xml);
-                        }
-                        $lib[$val['tag']] = ($value == 'true');
-                    }
-                    break;
                     case 'authors':
                     case 'maintainers':
                     case 'category':

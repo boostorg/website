@@ -21,8 +21,6 @@ class LibraryPage {
     );
 
     static $filter_fields = Array(
-        'std-proposal' => 'Standard Proposals',
-        'std-tr1' => 'TR1 libraries',
         'header-only' => '[old]',
         'autolink' => '[old]'
     );
@@ -30,14 +28,14 @@ class LibraryPage {
     static $sort_fields =  Array(
         'name' => 'Name',
         'boost-version' => 'First Release',
-        'std-proposal' => 'STD Proposal',
-        'std-tr1' => 'STD::TR1',
-        'key' => 'Key'
+        'key' => 'Key',
+        'cxxstd' => 'C++ Minimum'
     );
 
     static $display_sort_fields = Array(
         'name' => 'Name',
-        'boost-version' => 'First Release'
+        'boost-version' => 'First Release',
+        'cxxstd' => 'C++ Minimum'
     );
 
     var $params;            // Normalised URL parameters
@@ -242,17 +240,6 @@ class LibraryPage {
             '<i>'.html_encode($lib['boost-version']).'</i>';
     }
 
-    function libstandard($lib) {
-        $p = array();
-        if ($lib['std-proposal']) {
-            $p[] = 'Proposed';
-        }
-        if ($lib['std-tr1']) {
-            $p[] = 'TR1';
-        }
-        print ($p ? implode(', ', $p) : '&nbsp;');
-    }
-
     function libstandard_min_level($lib) {
         print !empty($lib['cxxstd']) ?
                 html_encode($lib['cxxstd']) : '&nbsp;';
@@ -371,8 +358,6 @@ if (!is_dir($library_page->documentation_page->documentation_dir())) {
                     <dd><?php $library_page->libauthors($lib); ?></dd>
                     <dt>First&nbsp;Release</dt>
                     <dd><?php $library_page->libavailable($lib); ?></dd>
-                    <dt>Standard</dt>
-                    <dd><?php $library_page->libstandard($lib); ?></dd>
                     <?php if (isset($lib['cxxstd'])): ?>
                     <dt>C++ standard minimum level</dt>
                     <dd><?php $library_page->libstandard_min_level($lib); ?></dd>
