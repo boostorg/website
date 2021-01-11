@@ -62,27 +62,6 @@ class BoostLibrary
             $lib['authors'] = '';
         }
 
-        // Setup the standard flags.
-        if (!isset($lib['std'])) {
-            $lib['std'] = array();
-        }
-
-        foreach(array('proposal', 'tr1') as $std) {
-            $tag = "std-{$std}";
-            if (isset($lib[$tag])) {
-                if ($lib[$tag]) {
-                    $lib['std'][] = $std;
-                }
-                else {
-                    $lib['std'] = array_diff($lib['std'], array($std));
-                }
-            }
-            else {
-                $lib[$tag] = in_array($std, $lib['std']);
-            }
-        }
-        $lib['std'] = array_unique($lib['std']);
-
         // Normalize the data representation
         foreach($lib as $key => &$value) {
             if (is_string($value)) {
@@ -127,12 +106,6 @@ class BoostLibrary
 
     public function array_for_json($exclude = array()) {
         $details = $this->details;
-
-        if (empty($details['std'])) {
-            unset($details['std']);
-        }
-        unset($details['std-tr1']);
-        unset($details['std-proposal']);
 
         $details = self::clean_for_output($details, $exclude);
 
