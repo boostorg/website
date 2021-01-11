@@ -104,6 +104,7 @@ class BoostLibraries
                     case 'documentation':
                     case 'status':
                     case 'library_path':
+                    case 'cxxstd':
                     {
                         if (isset($val['value'])) { $lib[$val['tag']] = trim($val['value']); }
                         else { $lib[$val['tag']] = ''; }
@@ -119,6 +120,7 @@ class BoostLibraries
                     case 'authors':
                     case 'maintainers':
                     case 'category':
+                    case 'std':
                     {
                         if(isset($val['value'])) {
                             $name = trim($val['value']);
@@ -445,6 +447,7 @@ class BoostLibraries
                 $this->write_many_elements($writer, $exclude, $details, 'maintainers');
                 $this->write_optional_element($writer, $exclude, $details, 'description');
                 $this->write_optional_element($writer, $exclude, $details, 'documentation');
+                $this->write_optional_element($writer, $exclude, $details, 'cxxstd');
                 $this->write_category_elements($writer, $exclude, $details, 'category');
                 $writer->endElement();
             }
