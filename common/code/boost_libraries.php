@@ -120,7 +120,6 @@ class BoostLibraries
                     case 'authors':
                     case 'maintainers':
                     case 'category':
-                    case 'std':
                     {
                         if(isset($val['value'])) {
                             $name = trim($val['value']);
