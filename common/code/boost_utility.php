@@ -60,5 +60,5 @@ class BoostUtility
     { return strcmp($a['title'],$b['title']); }
 
     static function cmp_cxxstd($a,$b)
-    { return strcmp($a['cxxstd'],$b['cxxstd']); }
+    { return self::cmp(strcmp($a['cxxstd'],$b['cxxstd']),$a,$b); }
 }
