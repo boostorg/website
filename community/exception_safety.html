@@ -50,7 +50,7 @@ https://www.boost.org/development/website_updating.html
               well-defined interactions with exceptions, the error-handling
               mechanism built-in to the core C++ language. It explores the
               meaning of exception-safety, reveals surprising myths about
-              exceptions and genericity, describes valuable tools for
+              exceptions and genericity describes valuable tools for
               reasoning about program correctness, and outlines an automated
               testing procedure for verifying exception-safety.</p>
 
@@ -71,7 +71,7 @@ https://www.boost.org/development/website_updating.html
 
               <p>More formally, we can describe a component as minimally
               exception-safe if, when exceptions are thrown from within that
-              component, its invariants are intact. Later on we'll see that
+              component, its invariants are intact. Later on, we'll see that
               at least three different levels of exception-safety can be
               usefully distinguished. These distinctions can help us to
               describe and reason about the behavior of large systems.</p>
@@ -94,9 +94,9 @@ https://www.boost.org/development/website_updating.html
               <i>mysterious attack</i> on otherwise correct code, from which
               we must protect ourselves. Needless to say, this doesn't lead
               to a healthy relationship with error handling! During
-              standardization, a democratic process which requires broad
+              standardization, a democratic process that requires broad
               support for changes, I encountered many widely-held
-              superstitions. In order to even begin the discussion of
+              superstitions. To even begin the discussion of
               exception-safety in generic components, it may be worthwhile
               confronting a few of them.</p>
 
@@ -114,9 +114,9 @@ https://www.boost.org/development/website_updating.html
               same is true of operations using familiar virtual functions or
               simple function pointers.</p>
 
-              <p><i>&ldquo;It is well known to be impossible to write an
+              <p><i>&ldquo; It is well known to be impossible to write an
               exception-safe generic container.&rdquo;</i> This claim is
-              often heard with reference to an article by Tom Cargill
+              often heard concerning an article by Tom Cargill
               <a title=
               "Tom Cargill, &ldquo;Exception Handling: A False Sense of Security&rdquo;, C++ Report, Nov-Dec 1994"
               href="#reference4"><sup>[4]</sup></a> in which he explores the
@@ -142,9 +142,9 @@ https://www.boost.org/development/website_updating.html
               href="#reference7"><sup>[7]</sup></a>. That alone gives
               programs using exceptions performance equivalent to that of a
               program which ignores the possibility of errors. Using
-              exceptions can actually result in faster programs than
+              exceptions can result in faster programs than
               &ldquo;traditional&rdquo; error handling methods for other
-              reasons. First, a catch block clearly indicates to the compiler
+              reasons. First, a catch block indicates to the compiler
               which code is devoted to error-handling; it can then be
               separated from the usual execution path, improving locality of
               reference. Second, code using &ldquo;traditional&rdquo; error
@@ -187,12 +187,12 @@ int f()                 // 1
               <p>For many programmers more familiar with exceptions, the
               second example is actually more readable and understandable
               than the first. The &ldquo;hidden&rdquo; code paths include the
-              same calls to destructors of local variables. In addition, they
+              same calls to destructors of local variables. Also, they
               follow a simple pattern which acts <i>exactly</i> as though
-              there were a potential return statement after each function
+              there was a potential return statement after each function
               call in case of an exception. Readability is enhanced because
               the normal path of execution is unobscured by error-handling,
-              and return values are freed up to be used in a natural way.</p>
+              and return values are freed up to be used naturally.</p>
 
               <p>There is an even more important way in which exceptions can
               enhance correctness: by allowing simple class invariants. In
@@ -214,7 +214,7 @@ int f()                 // 1
               code, exception-safety in a generic component usually depends
               on a contract between the component and its clients. For
               example, the designer of a generic component might require that
-              an operation which is used in the component's destructor not
+              an operation that is used in the component's destructor not
               throw any exceptions.<a title=
               " It is usually inadvisable to throw an exception from a destructor in C++, since the destructor may itself be called during the stack-unwinding caused by another exception. If the second exception is allowed to propagate beyond the destructor, the program is immediately terminated."
               href="#footnote2"><sup>2</sup></a> The generic component might,
@@ -241,8 +241,8 @@ int f()                 // 1
               stack-unwinding. This guarantee is actually less useful than it
               might at first appear. If a component has many valid states,
               after an exception we have no idea what state the component is
-              in; only that the state is valid. The options for recovery in
-              this case are limited: either destruction or resetting the
+              in; only that the state is valid. The options for recovery, in
+              this case, are limited: either destruction or resetting the
               component to some known state before further use. Consider the
               following example:</p>
               <pre>
@@ -265,7 +265,7 @@ void print_random_sequence()
               <p>Since all we know about v after an exception is that it is
               valid, the function is allowed to print any random sequence of
               <code>X</code>s.<a title=
-              "In practice of course, this function would make an extremely poor random sequence generator!"
+              "In practice, of course, this function would make an extremely poor random sequence generator!"
               href="#footnote3"><sup>3</sup></a> It is &ldquo;safe&rdquo; in
               the sense that it is not allowed to crash, but its output may
               be unpredictable.</p>
@@ -274,7 +274,7 @@ void print_random_sequence()
               &ldquo;commit-or-rollback&rdquo; semantics. In the case of C++
               standard containers, this means, for example, that if an
               exception is thrown all iterators remain valid. We also know
-              that the container has exactly the same elements as before the
+              that the container has the same elements as before the
               exception was thrown. A transaction that has no effects if it
               fails has obvious benefits: the program state is simple and
               predictable in case of an exception. In the C++ standard
@@ -304,7 +304,7 @@ void print_random_sequence()
               will be thrown. For example, the standard container operation
               <code>vector&lt;T&gt;::erase</code> gives the <i>basic</i>
               guarantee for any <code>T</code>, but for types whose copy
-              constructor and copy assignment operator do not throw, it gives
+              constructor and copy assignment operator does not throw, it gives
               the <i>no-throw</i> guarantee.<a title=
               "Similar arrangements might have been made in the C++ standard for many of the mutating algorithms, but were never considered due to time constraints on the standardization process."
               href="#footnote6"><sup>6</sup></a></p>
@@ -335,7 +335,7 @@ void print_random_sequence()
               guarantee is a &ldquo;natural&rdquo; level of safety for this
               operation, which it can provide without violating its
               performance guarantees. In fact all of the operations in the
-              library appear to have such a &ldquo;natural&rdquo; level of
+              library appears to have such a &ldquo;natural&rdquo; level of
               safety.</p>
 
               <p>Because performance requirements were already a
@@ -377,14 +377,14 @@ href="#footnote7"><sup>7</sup></a>
               well-explored domains of data structures and algorithms covered
               by the STL, but even there, advances are being made. A good
               example is the recent <i>introsort</i> algorithm <a title=
-              "D. R. Musser, &ldquo;Introspective Sorting and Selection Algorithms&rdquo;, Software-Practice and Experience 27(8):983-993, 1997."
+              "D. R. Musser, &ldquo; Introspective Sorting and Selection Algorithms&rdquo; Software-Practice and Experience 27(8):983-993, 1997."
               href="#reference6"><sup>[6]</sup></a>, which represents a
               substantial improvement in worst-case complexity over the
               well-established <i>quicksort</i>.</p>
 
               <p>To determine exactly how much to demand of the standard
               components, I looked at a typical real-world scenario. The
-              chosen test case was a &ldquo;composite container.&rdquo; Such
+              chosen test case was a &ldquo; composite container.&rdquo; Such
               a container, built of two or more standard container
               components, is not only commonly needed, but serves as a simple
               representative case for maintaining invariants in larger
@@ -432,7 +432,7 @@ void SearchableStack&lt;T&gt;::push(const T&amp; t)         // 2
 }                                                       // 14 
 </pre>
 
-              <p>What does our code actually require of the library? We need
+              <p>What does our code require of the library? We need
               to examine the lines where non-const operations occur:</p>
 
               <ul>
@@ -451,7 +451,7 @@ void SearchableStack&lt;T&gt;::push(const T&amp; t)         // 2
                 be unable to restore our invariant. We absolutely depend on
                 the <i>no-throw</i> guarantee from
                 <code>set&lt;T&gt;::erase</code>.<a title=
-                "One might be tempted to surround the erase operation with a try/catch block to reduce the requirements on set&lt;T&gt; and the problems that arise in case of an exception, but in the end that just begs the question. First, erase just failed and in this case there are no viable alternative ways to produce the necessary result. Second and more generally, because of the variability of its type parameters a generic component can seldom be assured that any alternatives will succeed."
+                "One might be tempted to surround the erase operation with a try/catch block to reduce the requirements on set&lt; T&gt; and the problems that arise in case of an exception, but in the end that just begs the question. First, erase just failed and in this case there are no viable alternative ways to produce the necessary result. Second and more generally, because of the variability of its type parameters a generic component can seldom be assured that any alternatives will succeed."
                 href="#footnote9"><sup>9</sup></a></li>
 
                 <li>Line 11: for the same reasons, we also depend on being
@@ -462,9 +462,9 @@ void SearchableStack&lt;T&gt;::push(const T&amp; t)         // 2
 
               <p>I learned a great deal by approaching the question this way
               during standardization. First, the guarantee specified for the
-              composite container actually depends on stronger guarantees
+              composite container depends on stronger guarantees
               from its components (the <i>no-throw</i> guarantees in line
-              11). Also, I took advantage of all of the natural level of
+              11). Also, I took advantage of all of the natural levels of
               safety to implement this simple example. Finally, the analysis
               revealed a requirement on iterators which I had previously
               overlooked when operations were considered on their own. The
@@ -481,9 +481,9 @@ void SearchableStack&lt;T&gt;::push(const T&amp; t)         // 2
               exception-safe reference implementation of the STL.
               Error-handling code is seldom rigorously tested in real life,
               in part because it is difficult to cause error conditions to
-              occur. It is very common to see error-handling code which
+              occur. It is very common to see error-handling code that
               crashes the first time it is executed ...in a shipping product!
-              To bolster confidence that the implementation actually worked
+              To bolster confidence that the implementation worked
               as advertised, I designed an automated test suite, based on an
               exhaustive technique due to my colleague Matt Arnold.</p>
 
@@ -596,7 +596,7 @@ void StrongCheck(const Value&amp; v, const Operation&amp; op)
               href="#reference1"><sup>[1]</sup></a> is only slightly more
               formal, but relies on hard-to-read &ldquo;standardese&rdquo;
               and an occasionally subtle web of implication.<a title=
-              "The changes to the draft standard which introduced exception-safety were made late in the process, when amendments were likely to be rejected solely on the basis of the number of altered words. Unfortunately, the result compromises clarity somewhat in favor of brevity. Greg Colvin was responsible for the clever language-lawyering needed to minimize the extent of these changes."
+              "The changes to the draft standard which introduced exception-safety were made late in the process, when amendments were likely to be rejected solely based on the number of altered words. Unfortunately, the result compromises clarity somewhat in favor of brevity. Greg Colvin was responsible for the clever language-lawyering needed to minimize the extent of these changes."
               href="#footnote13"><sup>13</sup></a> In particular, leaks are
               not treated directly at all. It does have the advantage that it
               <i>is</i> the standard.</p>
@@ -746,7 +746,7 @@ void StrongCheck(const Value&amp; v, const Operation&amp; op)
               <p><a name="footnote13" id="footnote13">13</a> The changes to
               the draft standard which introduced exception-safety were made
               late in the process, when amendments were likely to be rejected
-              solely on the basis of the number of altered words.
+              solely based on the number of altered words.
               Unfortunately, the result compromises clarity somewhat in favor
               of brevity. Greg Colvin was responsible for the clever
               language-lawyering needed to minimize the extent of these

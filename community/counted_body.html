@@ -79,14 +79,13 @@ https://www.boost.org/development/website_updating.html
                 offer a transparent optimisation. The body is shared between
                 copies of a string until such a time as a change is needed,
                 at which point a copy is made. Such a COPY ON WRITE pattern
-                (a specialisation of LAZY EVALUATION) requires the use of a
+                (a specialization of LAZY EVALUATION) requires the use of a
                 hidden reference counted body.</li>
 
                 <li><i>Explicit</i>: Here the body is of interest and the
                 handle merely provides intelligence for its access and
                 housekeeping. In C++ this is often implemented as the SMART
-                POINTER idiom. One such application is that of reference
-                counted smart pointers that collaborate to keep a count of an
+                POINTER idiom. One such application is that of reference-counted smart pointers that collaborate to keep a count of an
                 object, deleting it when the count falls to zero.</li>
               </ul>
 
@@ -104,7 +103,7 @@ https://www.boost.org/development/website_updating.html
                 reference counting does not require an additional object. The
                 drawbacks are clearly that this is intrusive, and that the
                 space for the reference count is wasted when the object is
-                not heap based. Therefore the reference counting ties you to
+                not heap-based. Therefore the reference counting ties you to
                 a particular implementation and style of use.</li>
 
                 <li>DETACHED COUNTED HANDLE/BODY places the count outside the
@@ -135,7 +134,7 @@ https://www.boost.org/development/website_updating.html
               non-cohesiveness of having the count lying dormant in a
               non-counted object, and you get the feeling that excepting its
               use in widespread object models such as COM and CORBA the
-              COUNTED BODY approach is perhaps only of use in specialised
+              COUNTED BODY approach is perhaps only of use in specialized
               situations.</p>
 
               <h2>A requirements based approach</h2>
@@ -143,7 +142,7 @@ https://www.boost.org/development/website_updating.html
               <p>It is the question of openness that convinced me to revisit
               the problems with the COUNTED BODY idiom. Yes, there is a
               certain degree of intrusion expected when using this idiom, but
-              is there anyway to minimise this and decouple the choice of
+              is there anyway to minimize this and decouple the choice of
               counting mechanism from the smart pointer type used?</p>
 
               <p>In recent years the most instructive body of code and
@@ -159,7 +158,7 @@ https://www.boost.org/development/website_updating.html
               suggests, resolves functions at compile time based on function
               name and argument usage, i.e. overloading. This is less
               intrusive, although less easily diagnosed if incorrect, than
-              runtime poymorphism that is based on types, names and function
+              runtime polymorphism that is based on types, names and function
               signatures.</p>
 
               <p>This requirements based approach can be applied to reference
@@ -186,7 +185,7 @@ https://www.boost.org/development/website_updating.html
               the use of global functions, meaning that no particular member
               functions are implied; a perfect way to wrap up an existing
               counted body class without modifying the class itself. The
-              other aspect to the openness comes from a more precise
+              other aspect of openness comes from a more precise
               specification of the operations.</p>
 
               <p>For a type to be <i>Countable</i> it must satisfy the
@@ -241,7 +240,7 @@ https://www.boost.org/development/website_updating.html
               </table>
 
               <p>Note that the two arguments to <code>dispose</code> are to
-              support selection of the appropriate type safe version of the
+              support selection of the appropriate type-safe version of the
               function to be called. In the general case the intent is that
               the first argument determines the type to be deleted, and would
               typically be templated, while the second selects which template
@@ -296,7 +295,7 @@ https://www.boost.org/development/website_updating.html
               <p>Note that there are no requirements on these functions in
               terms of exceptions thrown or not thrown, except that if
               exceptions are thrown the functions themselves should be
-              exception safe.</p>
+              exception-safe.</p>
 
               <h2>Getting smart</h2>
 
@@ -454,8 +453,8 @@ private: // prevention
               does not depend on the <code>const</code>-ness or otherwise of
               an object. I won't include the definitions of the member
               functions here as you can probably guess them: increment,
-              decrement and return the current count, respectively for the
-              manipulation functions. In a multithreaded environment you
+              decrement, and return the current count, respectively for the
+              manipulation functions. In a multithreaded environment, you
               should ensure that such read and write operations are
               atomic.</p>
 
@@ -517,7 +516,7 @@ void simple()
               that <code>void</code> is perhaps the least committed of any
               type.</p>
 
-              <p>The forces to resolve on this are quite interesting, to say
+              <p>The forces to resolve this are quite interesting, to say
               the least. Interesting, but not insurmountable. Given that the
               class of a runtime object cannot change dynamically in any well
               defined manner, and the layout of the object must be fixed, we
@@ -546,7 +545,7 @@ void operator delete(void *, const countable_new &amp;);
               has a header block that holds the count, i.e. we have extended
               the object by prefixing it. We can provide a couple of features
               in an anonymous namespace (not shown) in the implementation
-              file for for supporting the count and its access from a raw
+              file for supporting the count and its access from a raw
               pointer:</p>
               <pre>
 struct count
@@ -674,7 +673,7 @@ void simple()
               detected in most cases by extending the code shown here to add
               a check member to the <code>count</code>, validating the check
               on every access. A benefit of ensuring clear separation between
-              header and implementation source files means that you can
+              header and implementation source files mean that you can
               introduce a checking version of this allocator without having
               to recompile your code.</p>
 
