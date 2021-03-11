@@ -45,6 +45,28 @@ Please keep the list of libraries sorted in lexicographical order.
   * See the full
     [@/libs/beast/doc/html/beast/release_notes.html Release Notes]
     for a complete list of changes.
+    
+* [phrase library..[@/libs/math/ Math]:]
+  * [*Breaking Change:] C++03 support is now removed, a C++11 or later conformant compiler is now required to use this library.
+  * Added [link math_toolkit.z_test Z-test].
+  * Added execution policy support to univariate and bivariate statistics: enables parallel execution (requires C++17 and `<execution>`).
+  * Big update/improvement on CI testing.
+  * Bivariate statistics now have integer support.
+  * T-Test now has integer support.
+  * Linear regression now has integer support.
+  * Correct PDF of the beta distribution at the endpoints.
+  * Correct use of Stirling's approximation in certain multiprecision cases, fixes [@https://github.com/boostorg/math/issues/396 #396].
+  * Eliminate -Wimplicit-int-float-conversion on clang.
+  * Fix some constexpr issues in quaternion/octonion.
+  * Minor performance fix to tanh_sinh integration.
+  * Update hypergeometric functions internal scaling to allow for 64-bit (long long) exponents with multiprecision types.
+
+* [phrase library..[@/libs/multiprecision/ Multiprecision]:]
+  * [*BREAKING CHANGE]: Massive refactoring and code simpification makes C++11 an absolute requirement.
+  * Use BOOST_TRY/CATCH in headers so code can be use din s=exception-free environments.
+  * Correct corner case in pow, fixes [@https://github.com/boostorg/multiprecision/issues/277 #277]. 
+  * Correct exception type thrown to match docs in lsb/msb: fixes [@https://github.com/boostorg/multiprecision/issues/257 #257].
+  * Allow moves and operators between related but different types (ie types with the same allocator), fixes [@https://github.com/boostorg/multiprecision/issues/278 #278].
 
 * [phrase library..[@/libs/poly_collection/ PolyCollection]:]
   * Worked around [@https://gcc.gnu.org/bugzilla/show_bug.cgi?id=95888 GCC bug]
@@ -65,6 +87,14 @@ Please keep the list of libraries sorted in lexicographical order.
   * Add `WORD_BITS` set of predefs to detect the architecture word size.
     Initial implementation inspired by submission from Mikhail Komarov.
   * Add CI testing for Cygwin 32 and 64.
+  
+* [phrase library..[@/libs/regex/ Regex]:]
+  * Regex is now header only except in C++03 mode.
+  * Support for C++03 is now deprecated.
+  * The library can now be used "standalone" without the rest of Boost being present.
+  
+* [phrase library..[@/libs/type_traits/ Type Traits]:]
+  * Fix for Visual Studio managed code projects.
 
 * [phrase library..[@/libs/variant2/ Variant2]:]
   * Improved generated code for the double buffered case.
