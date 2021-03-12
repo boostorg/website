@@ -72,6 +72,18 @@ Please keep the list of libraries sorted in lexicographical order.
   * BREAKING: In next release, we are going to drop support for GCC 5.
     We will also change the required minimum C++ version from C++11 to C++14.
 
+* [phrase library..[@/libs/outcome/ Outcome]:]
+  * Announcements:
+    * BREAKING CHANGE: After a year and three major Boost releases announcing this upcoming change, this is the FIRST RELEASE of the v2.2 branch. This branch has a number of major breaking changes to the Outcome v2.1 which shipped in Boost 1.75 and earlier, see the documentation for details.
+  * Enhancements:
+    * VS2019.8 changed how to enable Coroutines, which caused Outcome to not compile on that compiler.
+    * If on C++ 20, we now use C++ 20 `[[likely]]` instead of compiler-specific markup to indicate when TRY has likely success or failure.
+    * BREAKING CHANGE: Previously the value of `spare_storage(const basic_result|basic_outcome *) noexcept` was not propagated over `BOOST_OUTCOME_TRY`, which causes things like stack backtraces captured at the point of construction of an errored result to get dropped at every `TRY` point. This has been fixed by adding an optional `spare_storage` to `success_type<T>` and `failure_type<T>`, as well as to `auto success(T &&, ...)` and `auto failure(T &&, ...)`.
+  * Bug fixes:
+    * Boost.Outcome should now compile with `BOOST_NO_EXCEPTIONS` defined. Thanks to Emil, maintainer of Boost.Exception, making a change for me, Boost.Outcome should now compile with C++ exceptions globally disabled. You won't be able to use `boost::exception_ptr` as it can't be included if C++ exceptions are globally disabled.
+    * BREAKING CHANGE [@https://github.com/ned14/outcome/issues/244 #244] It came as a shock to learn that `BOOST_OUTCOME_TRY` had been broken since the inception of this library for certain corner case code, which required a breaking change in how TRY works. See [@https://boostorg.github.io/outcome/changelog.html the changelog in the documentation for more detail].
+
+
 * [phrase library..[@/libs/poly_collection/ PolyCollection]:]
   * Worked around [@https://gcc.gnu.org/bugzilla/show_bug.cgi?id=95888 GCC bug]
     affecting GCC versions 9.3-10.2 (issue [github poly_collection 20]).
