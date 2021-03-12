@@ -223,6 +223,109 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/outcome/">Outcome</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Announcements:
+                <ul>
+                  <li>
+                    <div>
+                      BREAKING CHANGE: After a year and three major Boost releases
+                      announcing this upcoming change, this is the FIRST RELEASE
+                      of the v2.2 branch. This branch has a number of major breaking
+                      changes to the Outcome v2.1 which shipped in Boost 1.75 and
+                      earlier, see the documentation for details.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Enhancements:
+                <ul>
+                  <li>
+                    <div>
+                      VS2019.8 changed how to enable Coroutines, which caused Outcome
+                      to not compile on that compiler.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      If on C++ 20, we now use C++ 20 <code><span class="special">[[</span><span class="identifier">likely</span><span class="special">]]</span></code>
+                      instead of compiler-specific markup to indicate when TRY has
+                      likely success or failure.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      BREAKING CHANGE: Previously the value of <code><span class="identifier">spare_storage</span><span class="special">(</span><span class="keyword">const</span>
+                      <span class="identifier">basic_result</span><span class="special">|</span><span class="identifier">basic_outcome</span> <span class="special">*)</span>
+                      <span class="keyword">noexcept</span></code> was not propagated
+                      over <code><span class="identifier">BOOST_OUTCOME_TRY</span></code>,
+                      which causes things like stack backtraces captured at the point
+                      of construction of an errored result to get dropped at every
+                      <code><span class="identifier">TRY</span></code> point.
+                      This has been fixed by adding an optional <code><span class="identifier">spare_storage</span></code>
+                      to <code><span class="identifier">success_type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> and <code><span class="identifier">failure_type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>, as well as to <code><span class="keyword">auto</span> <span class="identifier">success</span><span class="special">(</span><span class="identifier">T</span>
+                      <span class="special">&amp;&amp;,</span> <span class="special">...)</span></code>
+                      and <code><span class="keyword">auto</span> <span class="identifier">failure</span><span class="special">(</span><span class="identifier">T</span>
+                      <span class="special">&amp;&amp;,</span> <span class="special">...)</span></code>.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Bug fixes:
+                <ul>
+                  <li>
+                    <div>
+                      Boost.Outcome should now compile with <code><span class="identifier">BOOST_NO_EXCEPTIONS</span></code>
+                      defined. Thanks to Emil, maintainer of Boost.Exception, making
+                      a change for me, Boost.Outcome should now compile with C++
+                      exceptions globally disabled. You won't be able to use <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">exception_ptr</span></code> as it can't
+                      be included if C++ exceptions are globally disabled.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      BREAKING CHANGE <a href="https://github.com/ned14/outcome/issues/244">#244</a>
+                      It came as a shock to learn that <code><span class="identifier">BOOST_OUTCOME_TRY</span></code>
+                      had been broken since the inception of this library for certain
+                      corner case code, which required a breaking change in how TRY
+                      works. See <a href="https://boostorg.github.io/outcome/changelog.html">the
+                      changelog in the documentation for more detail</a>.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/json/">Json</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Several bug fixes.
+              </div>
+            </li>
+            <li>
+              <div>
+                See the full <a href="/doc/libs/master/libs/json/doc/html/json/release_notes.html">Release
+                Notes</a> for a complete list of changes.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/poly_collection/">PolyCollection</a>:</span>
           <ul>
             <li>
@@ -373,7 +476,7 @@
           <ul>
             <li>
               <div>
-                Includes release of <a href="https://boostorg.github.io/build/manual/master/index.html#_version_4_4_1">B2
+                Includes release of <a href="/tools/build/doc/html/#_version_4_4_1">B2
                 version 4.4.1</a>.
               </div>
             </li>
