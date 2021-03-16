@@ -45,6 +45,14 @@ Please keep the list of libraries sorted in lexicographical order.
   * See the full
     [@/libs/beast/doc/html/beast/release_notes.html Release Notes]
     for a complete list of changes.
+
+* [phrase library..[@/libs/dll/ DLL]:]
+  * [*BREAKING CHANGE]: `boost::dll::import` was renamed to `boost::dll::import_symbol` to avoid collision with C++20 `import` keyword.
+  * Updated docs, including FAQ section.
+
+* [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
+  * Dropped dependency on Boost.Math (thanks to Peter Dimov [github lexical_cast 37], [github lexical_cast 39]).
+  * Fixes for the CI and coverage (thanks to  Sam Darwin from "The C++ Alliance" [github lexical_cast 38],  [github lexical_cast 42]).
     
 * [phrase library..[@/libs/math/ Math]:]
   * [*Breaking Change:] C++03 support is now removed, a C++11 or later conformant compiler is now required to use this library.
@@ -89,6 +97,11 @@ Please keep the list of libraries sorted in lexicographical order.
   * See the full [@/libs/json/doc/html/json/release_notes.html Release Notes]
     for a complete list of changes.
 
+* [phrase library..[@/libs/pfr/ PFR]:]
+  * Fixed reflection of types with missing `const` in SFINAE expressions in template constructor. Now reflection of aggregates with `std::optional<std::chrono::duration<???>>` fields works on any Standard Library implementation, even if LWG3050 is not fixed.
+  * Comparison functions are now `constexpr` [github pfr 52]
+  * Fixed numerous typos in docs (thanks to Phil Miller [github pfr 63])
+
 * [phrase library..[@/libs/poly_collection/ PolyCollection]:]
   * Worked around [@https://gcc.gnu.org/bugzilla/show_bug.cgi?id=95888 GCC bug]
     affecting GCC versions 9.3-10.2 (issue [github poly_collection 20]).
@@ -113,6 +126,10 @@ Please keep the list of libraries sorted in lexicographical order.
   * Regex is now header only except in C++03 mode.
   * Support for C++03 is now deprecated.
   * The library can now be used "standalone" without the rest of Boost being present.
+
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * Better support for pre-C++11 builds on clang [github stacktrace 102].
+  * Bigger warning for [*do not use boost::stacktrace::stacktrace in signal handlers] [github stacktrace 71].
   
 * [phrase library..[@/libs/type_traits/ Type Traits]:]
   * Fix for Visual Studio managed code projects.
