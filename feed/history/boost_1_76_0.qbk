@@ -32,10 +32,6 @@ Please keep the list of libraries sorted in lexicographical order.
 
 [section Updated Libraries]
 
-* [phrase library..[@/libs/bind/ Bind]:]
-  * Add support for using the standard C++11 placeholders with `boost::bind`.
-  * Update `boost::apply` to use variadic templates and perfect forwarding.
-
 * [phrase library..[@/libs/beast/ Beast]:]
   * This update brings minor bug fixes and revamped CI reporting.
   * We'd love to know how you or your company use Beast, consider adding an
@@ -46,14 +42,30 @@ Please keep the list of libraries sorted in lexicographical order.
     [@/libs/beast/doc/html/beast/release_notes.html Release Notes]
     for a complete list of changes.
 
+* [phrase library..[@/libs/bind/ Bind]:]
+  * Add support for using the standard C++11 placeholders with `boost::bind`.
+  * Update `boost::apply` to use variadic templates and perfect forwarding.
+
 * [phrase library..[@/libs/dll/ DLL]:]
   * [*BREAKING CHANGE]: `boost::dll::import` was renamed to `boost::dll::import_symbol` to avoid collision with C++20 `import` keyword.
   * Updated docs, including FAQ section.
 
+* [phrase library..[@/libs/gil/ GIL]:]
+  * BREAKING: In next release, we are going to drop support for GCC 5.
+    We will also change the required minimum C++ version from C++11 to C++14.
+
+* [phrase library..[@/libs/json/ JSON]:]
+  * [@https://cppalliance.org/pdf/C%20Plus%20Plus%20Alliance%20-%20Boost%20JSON%20Security%20Assessment%202020%20-%20Assessment%20Report%20-%2020210317.pdf Security Report] from Bishop Fox.
+  * ([github json 481]) Refactored `value_from` implementation; user
+    customizations are now always preferred over library-provided overloads.
+  * ([github json 484]) Fix imprecise parsing for some floating point numbers.
+  * ([github json 485]) Fix link errors in standalone mode, when used alongside Boost.
+  * ([github json 497]) Fix Boost.Build builds on GCC 4.8.
+
 * [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
   * Dropped dependency on Boost.Math (thanks to Peter Dimov [github lexical_cast 37], [github lexical_cast 39]).
   * Fixes for the CI and coverage (thanks to  Sam Darwin from "The C++ Alliance" [github lexical_cast 38],  [github lexical_cast 42]).
-    
+
 * [phrase library..[@/libs/math/ Math]:]
   * [*Breaking Change:] C++03 support is now removed, a C++11 or later conformant compiler is now required to use this library.
   * Added [link math_toolkit.z_test Z-test].
@@ -75,18 +87,6 @@ Please keep the list of libraries sorted in lexicographical order.
   * Correct corner case in pow, fixes [@https://github.com/boostorg/multiprecision/issues/277 #277]. 
   * Correct exception type thrown to match docs in lsb/msb: fixes [@https://github.com/boostorg/multiprecision/issues/257 #257].
   * Allow moves and operators between related but different types (ie types with the same allocator), fixes [@https://github.com/boostorg/multiprecision/issues/278 #278].
-
-* [phrase library..[@/libs/gil/ GIL]:]
-  * BREAKING: In next release, we are going to drop support for GCC 5.
-    We will also change the required minimum C++ version from C++11 to C++14.
-
-* [phrase library..[@/libs/json/ JSON]:]
-  * [@https://cppalliance.org/pdf/C%20Plus%20Plus%20Alliance%20-%20Boost%20JSON%20Security%20Assessment%202020%20-%20Assessment%20Report%20-%2020210317.pdf Security Report] from Bishop Fox.
-  * ([github json #481]) Refactored `value_from` implementation; user
-    customizations are now always preferred over library-provided overloads.
-  * ([github json #484]) Fix imprecise parsing for some floating point numbers.
-  * ([github json #485]) Fix link errors in standalone mode, when used alongside Boost.
-  * ([github json #497]) Fix Boost.Build builds on GCC 4.8.
 
 * [phrase library..[@/libs/outcome/ Outcome]:]
   * Announcements:
