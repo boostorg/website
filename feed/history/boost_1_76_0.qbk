@@ -92,11 +92,17 @@ Please keep the list of libraries sorted in lexicographical order.
   * Update hypergeometric functions internal scaling to allow for 64-bit (long long) exponents with multiprecision types.
 
 * [phrase library..[@/libs/multiprecision/ Multiprecision]:]
-  * [*BREAKING CHANGE]: Massive refactoring and code simpification makes C++11 an absolute requirement.
+  * [*BREAKING CHANGE]: Massive refactoring and code simplification makes C++11 an absolute requirement.
   * Use BOOST_TRY/CATCH in headers so code can be used in exception-free environments.
   * Correct corner case in pow, fixes [@https://github.com/boostorg/multiprecision/issues/277 #277]. 
   * Correct exception type thrown to match docs in lsb/msb: fixes [@https://github.com/boostorg/multiprecision/issues/257 #257].
   * Allow moves and operators between related but different types (ie types with the same allocator), fixes [@https://github.com/boostorg/multiprecision/issues/278 #278].
+
+* [phrase library..[@/libs/nowide/ Nowide]:]
+  * Fix discarding of characters for text file streams when seek or sync functions are used and newlines were converted (e.g. on Windows)
+  * Fix potential use-after-free bug when reusing (via `open`) a file stream that has been closed
+  * Fix potential invalid memory access when using a file stream that has been moved or swapped to where the source had a put-back character or was set to unbuffered mode
+  * Known issues: Read performance for text files is degraded. Binary files and writing is unaffected.
 
 * [phrase library..[@/libs/outcome/ Outcome]:]
   * Announcements:
