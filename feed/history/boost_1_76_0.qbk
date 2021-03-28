@@ -47,10 +47,14 @@ Please keep the list of libraries sorted in lexicographical order.
   * Update `boost::apply` to use variadic templates and perfect forwarding.
 
 * [phrase library..[@/libs/core/ Core]:]
-  * Added `boost/core/cmath.hpp` with floating point classification and sign manipulation functions. (Peter Dimov)
-  * Added `boost/core/bit.hpp` with bit manipulation functions and endianness detection equivalent to `<bit>` from C++20. (Peter Dimov)
-  * In tests based on `boost/core/lightweight_test.hpp` macros, when a test macro outputs a character, it will now output hexadecimal representation instead of non-printable characters. (Peter Dimov)
-  * Added workarounds for MSVC 2013 in `boost/core/allocator_access.hpp`. (Glen Fernandes)
+  * Add implicit conversion between compatible reference wrappers.
+  * Add `boost/core/cmath.hpp`, a portable implementation of the floating point
+    classification functions from `<cmath>`.
+  * Add `boost/core/bit.hpp`, a portable implementation of the C++20 standard header
+    `<bit>`.
+  * Fix `BOOST_TEST_EQ`, `BOOST_TEST_NE` for character types under C++20.
+  * Revise allocator access utilities (now support VS2013, and no workarounds use
+    `allocator_traits`.)
 
 * [phrase library..[@/libs/dll/ DLL]:]
   * [*BREAKING CHANGE]: `boost::dll::import` was renamed to `boost::dll::import_symbol` to avoid collision with C++20 `import` keyword.
