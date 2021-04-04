@@ -54,6 +54,18 @@
     <ul>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/atomic/">Atomic</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed compilation with MSVC for ARM. (<a href="https://github.com/boostorg/atomic/pull/49">PR#49</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/beast/">Beast</a>:</span>
           <ul>
             <li>
@@ -97,6 +109,69 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/continer/">Container</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added [[no-discard]] attribute in all containers to catch bugs related
+                to unused return values.
+              </div>
+            </li>
+            <li>
+              <div>
+                Replaced default standard exception classes with Boost.Container
+                own classes, reducing considerably the included files overhead. Example:
+                in MSVC 19 <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">container</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                preprocessed file size reduces from 1,5MB to 930KB. If you still
+                want to use standard exception classes, you can define <code><span class="identifier">BOOST_CONTAINER_USE_STD_EXCEPTIONS</span></code>
+                before using any Boost.Container class.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed bugs/issues:
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/container/issues/102">GitHub
+                      #102: <em>"flat_map::insert ambiguous with initializer
+                      list &amp; pairs that need to convert"</em></a>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/container/issues/139">GitHub
+                      #139: <em>"flat_map merge and iterators"</em></a>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/container/issues/141">GitHub
+                      #141: <em>"small_vector does not propagate no throw
+                      properties of move operation of contained type"</em></a>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/container/issues/164">GitHub
+                      #164: <em>"Compile error when using <code><span class="identifier">pmr</span><span class="special">::</span><span class="identifier">map</span></code> with a <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span></code>; works when using a
+                      <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">tuple</span></code>"</em></a>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/container/issues/171">GitHub
+                      #171: <em>"deque::clear() uses undefined behaviour"</em></a>.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/core/">Core</a>:</span>
           <ul>
             <li>
@@ -126,7 +201,7 @@
             <li>
               <div>
                 Revise allocator access utilities (now support VS2013, and no workarounds
-                use allocator_traits.)
+                use <code><span class="identifier">allocator_traits</span></code>.)
               </div>
             </li>
           </ul>
@@ -154,6 +229,31 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/filesystem/">Filesystem</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Updated compatibility with WASI platform. (<a href="https://github.com/boostorg/filesystem/pull/169">PR#169</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed an exception being thrown by <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">remove_filename</span></code>
+                if the path is "////". (<a href="https://github.com/boostorg/filesystem/issues/176">#176</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">create_directories</span></code>
+                disregarding errors from file status query operations issued internally.
+                This could result in incorrect error codes returned by <code><span class="identifier">create_directories</span></code>. (<a href="https://github.com/boostorg/filesystem/issues/182">#182</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/gil/">GIL</a>:</span>
           <ul>
             <li>
@@ -161,6 +261,191 @@
                 BREAKING: In next release, we are going to drop support for GCC 5.
                 We will also change the required minimum C++ version from C++11 to
                 C++14.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/intrusive/">Intrusive</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Reduced compile-time dependencies:
+                <ul>
+                  <li>
+                    <div>
+                      <code><span class="identifier">linear_slist_algorithms</span></code>
+                      use a simple node_ptr instead of std::pair on return.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">list</span></code>/<code><span class="identifier">slist</span></code> use <code><span class="keyword">operator</span>
+                      <span class="special">&lt;</span></code>/<code><span class="keyword">operator</span>
+                      <span class="special">==</span></code> instead of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">equal_to</span></code>/<code><span class="identifier">std</span><span class="special">::</span><span class="identifier">less</span></code>.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <a href="https://github.com/boostorg/intrusive/issues/54">GitHub
+                #54: <em>set.rbegin() looks like O(log(N))</em></a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/interprocess/">Interprocess</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added <code><span class="keyword">wchar_t</span></code> API support
+                for named resources in operating systems that offer native wide character
+                API (e.g. Windows). The following classes were updated with <code><span class="keyword">wchar_t</span></code> name support:
+                <ul>
+                  <li>
+                    <div>
+                      <code><span class="identifier">file_mapping</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">managed_mapped_file</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">managed_shared_memory</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">managed_windows_shared_memory</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">shared_memory_object</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">windows_shared_memory_object</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">file_lock</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">named_condition</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">named_condition_any</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">named_mutex</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">named_recursive_mutex</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">named_semaphore</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">named_sharable_mutex</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">named_upgradable_mutex</span></code>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <code><span class="identifier">message_queue</span></code>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">BOOST_INTERPROCESS_FORCE_NATIVE_EMULATION</span></code>
+                macro option to disable the use of generic emulation code for process
+                shared synchronization primitives instead of native POSIX or Winapi
+                functions.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed bugs:
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/interprocess/issues/76">GitHub
+                      #76 (<em>"Cygwin compilation errors"</em>)</a>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/interprocess/pull/83">GitHub
+                      #83 (<em>"Add BOOST_INTERPROCESS_FORCE_NATIVE_EMULATION
+                      option"</em>)</a>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/interprocess/pull/92">GitHub
+                      #92 (<em>"bufferstream: Correct MSVC compilation
+                      warning"</em>)</a>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/interprocess/pull/106">GitHub
+                      #106 (<em>"Use fallocate on truncate_file"</em>)</a>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/interprocess/issues/120">GitHub
+                      #120 (<em>"segment_manager customization"</em>)</a>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/interprocess/issues/122">GitHub
+                      #122 (<em>"Mark constructors/assignment/swap noexcept
+                      where possible"</em>)</a>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/interprocess/issues/126">GitHub
+                      #126 (<em>"_ReadWriteBarrier is deprecated warning
+                      when compiling with clang-cl.exe"</em>)</a>.
+                    </div>
+                  </li>
+                </ul>
               </div>
             </li>
           </ul>
@@ -216,6 +501,41 @@
               <div>
                 Fixes for the CI and coverage (thanks to Sam Darwin from "The
                 C++ Alliance" <a href="https://github.com/boostorg/lexical_cast/issues/38">#38</a>, <a href="https://github.com/boostorg/lexical_cast/issues/42">#42</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/log/">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Corrected a formal race condition in the thread-safe log record queue
+                implementation used in the <code><span class="identifier">unbounded_fifo_queue</span></code>
+                policy of the <code><span class="identifier">asynchronous_sink</span></code>
+                frontend. The race could be detected by TSAN, but it was not a real
+                problem on most current CPU architectures and compilers. (<a href="https://github.com/boostorg/log/issues/139">#139</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                When copying a logger with a channel attribute (e.g. <code><span class="identifier">channel_logger</span></code>), the channel attribute
+                is now deep-copied from the original logger. This means that modifying
+                the channel in the new logger will no longer affect the original
+                logger.
+              </div>
+            </li>
+            <li>
+              <div>
+                Replaced the use of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span></code> in template parameters with a
+                new tag type <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">log</span><span class="special">::</span><span class="identifier">use_std_allocator</span></code>
+                to silence libc++ warnings about the former being deprecated in C++17
+                and later. The tag indicates that the instantiated template should
+                be using a specialization of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span></code>
+                internally to allocate dynamic memory, so the change has no functional
+                effect. (<a href="https://github.com/boostorg/log/issues/141">#141</a>)
               </div>
             </li>
           </ul>
@@ -293,6 +613,19 @@
               <div>
                 Update hypergeometric functions internal scaling to allow for 64-bit
                 (long long) exponents with multiprecision types.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/move/">Move</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <a href="https://github.com/boostorg/move/issues/35">Git Issue
+                #35: <em>"New nothrow move traits are incomplete"</em></a>.
               </div>
             </li>
           </ul>
@@ -445,6 +778,20 @@
                     </div>
                   </li>
                 </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/parameter/">Parameter</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added a workaround for MSVC 2015 code miscompilation when an rvalue
+                was used as a default value of a named parameter of a function. (<a href="https://github.com/boostorg/parameter/pull/109">PR#109</a>,
+                <a href="https://github.com/boostorg/log/issues/132">#132</a>)
               </div>
             </li>
           </ul>
