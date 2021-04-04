@@ -69,11 +69,16 @@ Please keep the list of libraries sorted in lexicographical order.
     `<bit>`.
   * Fix `BOOST_TEST_EQ`, `BOOST_TEST_NE` for character types under C++20.
   * Revise allocator access utilities (now support VS2013, and no workarounds use
-    allocator_traits.)
+    `allocator_traits`.)
 
 * [phrase library..[@/libs/dll/ DLL]:]
   * [*BREAKING CHANGE]: `boost::dll::import` was renamed to `boost::dll::import_symbol` to avoid collision with C++20 `import` keyword.
   * Updated docs, including FAQ section.
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Updated compatibility with WASI platform. ([github_pr filesystem 169])
+  * Fixed an exception being thrown by `path::remove_filename` if the path is "////". ([github filesystem 176])
+  * Fixed `create_directories` disregarding errors from file status query operations issued internally. This could result in incorrect error codes returned by `create_directories`. ([github filesystem 182])
 
 * [phrase library..[@/libs/gil/ GIL]:]
   * BREAKING: In next release, we are going to drop support for GCC 5.
@@ -126,6 +131,11 @@ Please keep the list of libraries sorted in lexicographical order.
   * Dropped dependency on Boost.Math (thanks to Peter Dimov [github lexical_cast 37], [github lexical_cast 39]).
   * Fixes for the CI and coverage (thanks to  Sam Darwin from "The C++ Alliance" [github lexical_cast 38],  [github lexical_cast 42]).
 
+* [phrase library..[@/libs/log/ Log]:]
+  * Corrected a formal race condition in the thread-safe log record queue implementation used in the `unbounded_fifo_queue` policy of the `asynchronous_sink` frontend. The race could be detected by TSAN, but it was not a real problem on most current CPU architectures and compilers. ([github log 139])
+  * When copying a logger with a channel attribute (e.g. `channel_logger`), the channel attribute is now deep-copied from the original logger. This means that modifying the channel in the new logger will no longer affect the original logger.
+  * Replaced the use of `std::allocator<void>` in template parameters with a new tag type `boost::log::use_std_allocator` to silence libc++ warnings about the former being deprecated in C++17 and later. The tag indicates that the instantiated template should be using a specialization of `std::allocator` internally to allocate dynamic memory, so the change has no functional effect. ([github log 141])
+
 * [phrase library..[@/libs/math/ Math]:]
   * [*Breaking Change:] C++03 support is now removed, a C++11 or later conformant compiler is now required to use this library.
   * Added [link math_toolkit.z_test Z-test].
@@ -167,6 +177,9 @@ Please keep the list of libraries sorted in lexicographical order.
   * Bug fixes:
     * Boost.Outcome should now compile with `BOOST_NO_EXCEPTIONS` defined. Thanks to Emil, maintainer of Boost.Exception, making a change for me, Boost.Outcome should now compile with C++ exceptions globally disabled. You won't be able to use `boost::exception_ptr` as it can't be included if C++ exceptions are globally disabled.
     * BREAKING CHANGE [@https://github.com/ned14/outcome/issues/244 #244] It came as a shock to learn that `BOOST_OUTCOME_TRY` had been broken since the inception of this library for certain corner case code, which required a breaking change in how TRY works. See [@https://boostorg.github.io/outcome/changelog.html the changelog in the documentation for more detail].
+
+* [phrase library..[@/libs/parameter/ Parameter]:]
+  * Added a workaround for MSVC 2015 code miscompilation when an rvalue was used as a default value of a named parameter of a function. ([github_pr parameter 109], [github log 132])
 
 * [phrase library..[@/libs/pfr/ PFR]:]
   * Fixed reflection of types with missing `const` in SFINAE expressions in template constructor. Now reflection of aggregates with `std::optional<std::chrono::duration<???>>` fields works on any Standard Library implementation, even if LWG3050 is not fixed.
