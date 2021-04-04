@@ -49,6 +49,18 @@ Please keep the list of libraries sorted in lexicographical order.
   * Add support for using the standard C++11 placeholders with `boost::bind`.
   * Update `boost::apply` to use variadic templates and perfect forwarding.
 
+* [phrase library..[@/libs/continer/ Container]:]
+  * Added [[no-discard]] attribute in all containers to catch bugs related to unused return values.
+  * Replaced default standard exception classes with Boost.Container own classes, reducing considerably the included files overhead.
+    Example: in MSVC 19 `boost/container/vector.hpp` preprocessed file size reduces from 1,5MB to 930KB. If you still want to use
+    standard exception classes, you can define `BOOST_CONTAINER_USE_STD_EXCEPTIONS` before using any Boost.Container class.
+  * Fixed bugs/issues:
+    * [@https://github.com/boostorg/container/issues/102    GitHub #102: ['"flat_map::insert ambiguous with initializer list & pairs that need to convert"]].
+    * [@https://github.com/boostorg/container/issues/139    GitHub #139: ['"flat_map merge and iterators"]].
+    * [@https://github.com/boostorg/container/issues/141    GitHub #141: ['"small_vector does not propagate no throw properties of move operation of contained type"]].
+    * [@https://github.com/boostorg/container/issues/164    GitHub #164: ['"Compile error when using `pmr::map` with a `std::pair`; works when using a `std::tuple`"]].
+    * [@https://github.com/boostorg/container/issues/171    GitHub #171: ['"deque::clear() uses undefined behaviour"]].
+
 * [phrase library..[@/libs/core/ Core]:]
   * Add implicit conversion between compatible reference wrappers.
   * Add `boost/core/cmath.hpp`, a portable implementation of the floating point
@@ -66,6 +78,41 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/gil/ GIL]:]
   * BREAKING: In next release, we are going to drop support for GCC 5.
     We will also change the required minimum C++ version from C++11 to C++14.
+
+* [phrase library..[@/libs/intrusive/ Intrusive]:]
+  * Reduced compile-time dependencies:
+    * `linear_slist_algorithms` use a simple node_ptr instead of std::pair on return.
+    * `list`/`slist` use `operator <`/`operator ==` instead of `std::equal_to`/`std::less`.
+  * Fixed [@https://github.com/boostorg/intrusive/issues/54  GitHub #54: ['set.rbegin() looks like O(log(N))]]
+
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  *  Added `wchar_t` API support for named resources in operating systems that offer native wide character API (e.g. Windows).
+     The following classes were updated with `wchar_t` name support:
+    * `file_mapping`
+    * `managed_mapped_file`
+    * `managed_shared_memory`
+    * `managed_windows_shared_memory`
+    * `shared_memory_object`
+    * `windows_shared_memory_object`
+    * `file_lock`
+    * `named_condition`
+    * `named_condition_any`
+    * `named_mutex`
+    * `named_recursive_mutex`
+    * `named_semaphore`
+    * `named_sharable_mutex`
+    * `named_upgradable_mutex`
+    * `message_queue`
+  * Added `BOOST_INTERPROCESS_FORCE_NATIVE_EMULATION` macro option to disable the use of generic emulation code for process
+    shared synchronization primitives instead of native POSIX or Winapi functions.
+  * Fixed bugs:
+    * [@https://github.com/boostorg/interprocess/issues/76  GitHub #76  (['"Cygwin compilation errors"])].
+    * [@https://github.com/boostorg/interprocess/pull/83    GitHub #83  (['"Add BOOST_INTERPROCESS_FORCE_NATIVE_EMULATION option"])].
+    * [@https://github.com/boostorg/interprocess/pull/92    GitHub #92  (['"bufferstream: Correct MSVC compilation warning"])].
+    * [@https://github.com/boostorg/interprocess/pull/106   GitHub #106 (['"Use fallocate on truncate_file"])].
+    * [@https://github.com/boostorg/interprocess/issues/120 GitHub #120 (['"segment_manager customization"])].
+    * [@https://github.com/boostorg/interprocess/issues/122 GitHub #122 (['"Mark constructors/assignment/swap noexcept where possible"])].
+    * [@https://github.com/boostorg/interprocess/issues/126 GitHub #126 (['"_ReadWriteBarrier is deprecated warning when compiling with clang-cl.exe"])].
 
 * [phrase library..[@/libs/json/ JSON]:]
   * [@https://cppalliance.org/pdf/C%20Plus%20Plus%20Alliance%20-%20Boost%20JSON%20Security%20Assessment%202020%20-%20Assessment%20Report%20-%2020210317.pdf Security Report] from Bishop Fox.
@@ -93,6 +140,9 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fix some constexpr issues in quaternion/octonion.
   * Minor performance fix to tanh_sinh integration.
   * Update hypergeometric functions internal scaling to allow for 64-bit (long long) exponents with multiprecision types.
+
+* [phrase library..[@/libs/move/ Move]:]
+   * [@https://github.com/boostorg/move/issues/35 Git Issue #35: ['"New nothrow move traits are incomplete"]].
 
 * [phrase library..[@/libs/multiprecision/ Multiprecision]:]
   * [*BREAKING CHANGE]: Massive refactoring and code simplification makes C++11 an absolute requirement.
