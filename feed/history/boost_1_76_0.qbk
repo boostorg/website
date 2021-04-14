@@ -132,9 +132,12 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixes for the CI and coverage (thanks to  Sam Darwin from "The C++ Alliance" [github lexical_cast 38],  [github lexical_cast 42]).
 
 * [phrase library..[@/libs/log/ Log]:]
-  * Corrected a formal race condition in the thread-safe log record queue implementation used in the `unbounded_fifo_queue` policy of the `asynchronous_sink` frontend. The race could be detected by TSAN, but it was not a real problem on most current CPU architectures and compilers. ([github log 139])
-  * When copying a logger with a channel attribute (e.g. `channel_logger`), the channel attribute is now deep-copied from the original logger. This means that modifying the channel in the new logger will no longer affect the original logger.
-  * Replaced the use of `std::allocator<void>` in template parameters with a new tag type `boost::log::use_std_allocator` to silence libc++ warnings about the former being deprecated in C++17 and later. The tag indicates that the instantiated template should be using a specialization of `std::allocator` internally to allocate dynamic memory, so the change has no functional effect. ([github log 141])
+  * Bug fixes:
+    * Corrected a formal race condition in the thread-safe log record queue implementation used in the `unbounded_fifo_queue` policy of the `asynchronous_sink` frontend. The race could be detected by TSAN, but it was not a real problem on most current CPU architectures and compilers. ([github log 139])
+    * When copying a logger with a channel attribute (e.g. `channel_logger`), the channel attribute is now deep-copied from the original logger. This means that modifying the channel in the new logger will no longer affect the original logger.
+    * Replaced the use of `std::allocator<void>` in template parameters with a new tag type `boost::log::use_std_allocator` to silence libc++ warnings about the former being deprecated in C++17 and later. The tag indicates that the instantiated template should be using a specialization of `std::allocator` internally to allocate dynamic memory, so the change has no functional effect. ([github log 141])
+    * Boost.Log no longer defines `__MSVCRT_VERSION__` macro on MinGW and MinGW-w64. Defining this macro caused incompatibility with UCRT, which is available as an option in recent MinGW-w64. ([github_pr log 149])
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
 * [phrase library..[@/libs/math/ Math]:]
   * [*Breaking Change:] C++03 support is now removed, a C++11 or later conformant compiler is now required to use this library.
