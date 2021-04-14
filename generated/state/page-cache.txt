@@ -26721,6 +26721,110 @@
 "    <ul>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">ip</span><span class="special">::</span><span class="identifier">scope_id_type</span></code> type alias.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">ip</span><span class="special">::</span><span class="identifier">port_type</span></code> type alias.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">hash</span></code> specialisations for IP addresses.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">hash</span></code> specialisations for <code><span class="identifier">ip</span><span class="special">::</span><span class="identifier">basic_endpoint</span><span class="special">&lt;&gt;</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Refactored SFINAE usage to improve compile times.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added friendship support to customisation points, and made most customisations
+"                private.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed <code><span class="identifier">any_io_executor</span></code>
+"                to a "strong typedef"-style class.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">as_single</span></code>
+"                to work with handler hook deprecation.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Ensured pthread condition variable attributes are cleaned up on all
+"                platforms.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clarified thread safety notes on sockets and descriptors.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Ensured <code><span class="identifier">errno</span></code> is
+"                not overwritten if <code><span class="identifier">socket</span><span class="special">()</span></code> fails on macOS/FreeBSD.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed work tracking for <code><span class="identifier">io_context</span></code>
+"                and <code><span class="identifier">thread_pool</span></code> executors
+"                when move-assigned.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Ensured internal <code><span class="identifier">call_stack</span></code>
+"                objects are accessed only from implementation files.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed I/O object move-assignment to ensure the executor is left in
+"                a valid state.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed detection of compiler support for defaulted template argument
+"                on functions with MSVC.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Prevented the <code><span class="identifier">blocking</span><span class="special">.</span><span class="identifier">always</span></code>
+"                property from being used with <code><span class="identifier">strand</span><span class="special">&lt;&gt;</span></code>, as it did not produce the
+"                correct semantics.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed deprecated file <tt>asio/impl/src.cpp</tt>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
 "          <ul>
 "            <li>
@@ -27179,30 +27283,51 @@
 "          <ul>
 "            <li>
 "              <div>
-"                Corrected a formal race condition in the thread-safe log record queue
-"                implementation used in the <code><span class="identifier">unbounded_fifo_queue</span></code>
-"                policy of the <code><span class="identifier">asynchronous_sink</span></code>
-"                frontend. The race could be detected by TSAN, but it was not a real
-"                problem on most current CPU architectures and compilers. (<a href="https://github.com/boostorg/log/issues/139">#139</a>)
+"                Bug fixes:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Corrected a formal race condition in the thread-safe log record
+"                      queue implementation used in the <code><span class="identifier">unbounded_fifo_queue</span></code>
+"                      policy of the <code><span class="identifier">asynchronous_sink</span></code>
+"                      frontend. The race could be detected by TSAN, but it was not
+"                      a real problem on most current CPU architectures and compilers.
+"                      (<a href="https://github.com/boostorg/log/issues/139">#139</a>)
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      When copying a logger with a channel attribute (e.g. <code><span class="identifier">channel_logger</span></code>), the channel
+"                      attribute is now deep-copied from the original logger. This
+"                      means that modifying the channel in the new logger will no
+"                      longer affect the original logger.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Replaced the use of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span></code> in template parameters
+"                      with a new tag type <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">log</span><span class="special">::</span><span class="identifier">use_std_allocator</span></code>
+"                      to silence libc++ warnings about the former being deprecated
+"                      in C++17 and later. The tag indicates that the instantiated
+"                      template should be using a specialization of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span></code> internally to allocate
+"                      dynamic memory, so the change has no functional effect. (<a href="https://github.com/boostorg/log/issues/141">#141</a>)
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Boost.Log no longer defines <code><span class="identifier">__MSVCRT_VERSION__</span></code>
+"                      macro on MinGW and MinGW-w64. Defining this macro caused incompatibility
+"                      with UCRT, which is available as an option in recent MinGW-w64.
+"                      (<a href="https://github.com/boostorg/log/pull/149">PR#149</a>)
+"                    </div>
+"                  </li>
+"                </ul>
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                When copying a logger with a channel attribute (e.g. <code><span class="identifier">channel_logger</span></code>), the channel attribute
-"                is now deep-copied from the original logger. This means that modifying
-"                the channel in the new logger will no longer affect the original
-"                logger.
-"              </div>
-"            </li>
-"            <li>
-"              <div>
-"                Replaced the use of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span></code> in template parameters with a
-"                new tag type <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">log</span><span class="special">::</span><span class="identifier">use_std_allocator</span></code>
-"                to silence libc++ warnings about the former being deprecated in C++17
-"                and later. The tag indicates that the instantiated template should
-"                be using a specialization of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span></code>
-"                internally to allocate dynamic memory, so the change has no functional
-"                effect. (<a href="https://github.com/boostorg/log/issues/141">#141</a>)
+"                See <a href="/libs/log/doc/html/log/changelog.html">changelog</a>
+"                for more details.
 "              </div>
 "            </li>
 "          </ul>
@@ -27358,8 +27483,25 @@
 "            </li>
 "            <li>
 "              <div>
+"                Fix compatibility with ucrt runtime by not defining <code><span class="identifier">__MSVCRT_VERSION__</span></code>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
 "                Known issues: Read performance for text files is degraded. Binary
 "                files and writing is unaffected.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/optional/">Optional</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fixed MSVC warning C4702.
 "              </div>
 "            </li>
 "          </ul>
@@ -28046,7 +28188,7 @@
 "  </div>
 "
 -hash
-"c0dc56e85d88991dfa7ae5314595be2ea38b5d9e8b3c701412e4959a18fa9c93
+"0879926cc0022f234c925afd8aded0ee664abad7d4a378f5f74aafe7fc89d287
 -id
 "version_1_76_0
 -notice_url
