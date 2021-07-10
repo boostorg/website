@@ -41,6 +41,35 @@ Please keep the list of libraries sorted in lexicographical order.
 ]
 
 * /TODO/
+* [phrase library..[@/libs/any/ Any]:]
+  * Added `boost::anys::basic_any` - a data type with customizable Small Object Optimization whose instances can hold instances of any type that satisfies ValueType requirements (many thanks to Ruslan Arutyunyan @rarutyun). If you are not sure that you really need it, then use `boost::any` instead.
+  * Started using GithubActions CI for additional testing
+
+* [phrase library..[@/libs/conversion/ Conversion]:]
+  * `boost::implicit_cast` is now `constexpr` ([github conversion 25]).
+  * Fixed broken links ([github_pr conversion 23]).
+  * Started using GithubActions CI for additional testing
+
+* [phrase library..[@/libs/dll/ DLL]:]
+  * More runtime checks for malformed ELFs in `boost::dll::library_info`
+  * In `boost::dll::library_info` use info from `.dynsym` ELF section if `.symtab` is empty or missing
+  * List protected ELF symbols in `boost::dll::library_info` as they are available for import ([github dll 50])
+  * Remove unneeded convert from `wchar_t` to char on POSIX environment, thanks to Vladislav Shchapov ([github_pr dll 49])
+  * Started using GithubAction CI for additional testing
+
+* [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
+  * Fixed assignment to an int of a floating point value that is out of representable range for int.
+  * Started using GithubActions CI for additional testing
+
+* [phrase library..[@/libs/pfr/ PFR]:]
+  * A MurMur Hash based implementation of hash_combine() is now used to reduce collisions count and improve quality of `boost::pfr::hash_value()`
+  * Visual Studio 2017 now supported in C++14 mode (thanks to Denis Mikhailov aka @denzor200)
+  * Issues found by inspect tool were fixed
+  * Fixed some warnings, including removal of extra semicolons in include/boost/pfr/detail/fields_count.hpp ([github pfr 72])
+  * Added a compile time assert for inherited types (thanks to Denis Mikhailov aka @denzor200)
+  * Reflection of aggregates with non movable fields is now possible if guaranteed copy elision is on
+  * Fixed spelling issues
+  * Started using GithubActions CI for additional testing
 
 * [phrase library..[@/libs/uuid/ Uuid]:]
   * Added `to_chars` for writing uuid strings without allocating ([github_pr uuid 116])
