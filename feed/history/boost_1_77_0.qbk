@@ -26,7 +26,13 @@ Please keep the list of libraries sorted in lexicographical order.
   incremental calculation, and collection of statistical accumulators, from Eric Niebler.
 ]
 
-* /TODO/
+* [phrase library..[@/libs/describe/ Describe]:] A C++14 reflection library,
+  from Peter Dimov. Provides macros for describing enumerators and struct/class members,
+  and primitives for querying this information.
+
+* [phrase library..[@/libs/lambda2/ Lambda2]:] A C++14, dependency-free, single header
+  lambda library, from Peter Dimov. Allows simple function objects to be constructed via
+  expressions such as `_1 + 5`, `_1 % 2 == 0`, `_1 > _2`, or `_1 == ' ' || _1 == '\t'`.
 
 [endsect]
 
@@ -95,6 +101,9 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/log/ Log]:]
   * Fixed compilation for riscv32 target. ([github_pr log 150])
 
+* [phrase library..[@/libs/mp11/ Mp11]:]
+  * Added `mp_intersperse`, `mp_split`, `mp_join`
+
 * [phrase library..[@/libs/pfr/ PFR]:]
   * A MurMur Hash based implementation of hash_combine() is now used to reduce collisions count and improve quality of `boost::pfr::hash_value()`
   * Visual Studio 2017 now supported in C++14 mode (thanks to Denis Mikhailov aka @denzor200)
@@ -104,6 +113,27 @@ Please keep the list of libraries sorted in lexicographical order.
   * Reflection of aggregates with non movable fields is now possible if guaranteed copy elision is on
   * Fixed spelling issues
   * Started using GithubActions CI for additional testing
+
+* [phrase library..[@/libs/system/ System]:]
+  * The conversion operator from `error_category` to `std::error_category`
+    has been improved and no longer requires `<map>` or `<mutex>`.
+  * The comparison operators of `error_category` are now inline friends
+    instead of member functions (a side effect of the previous change.)
+  * `error_condition` now defers calling `generic_category()` to avoid
+    instantiating the object until it's actually needed.
+  * `error_condition::failed` and `error_condition::message` have been
+    undeprecated, and `operator bool()` now once again returns `failed()`.
+  * The system category now doesn't call `generic_category()`, to avoid
+    instantiating the object.
+  * The return value of `default_error_condition` changes in some cases into
+    an `error_condition` from the generic category, instead of from the system
+    category. This happens on POSIX when the input `error_code` is from
+    the system category and does not correspond to any `errc_t` value.
+  * The interoperability of `error_code` and `std::error_code` has been
+    improved substantially. It is now possible to construct
+    `boost::system::error_code` from `std::error_code`, and it's possible
+    to pass `boost::system::error_code` to functions taking `std::error_code&`.
+  * A stream insertion operator for `error_condition` has been added.
 
 * [phrase library..[@/libs/uuid/ Uuid]:]
   * Added `to_chars` for writing uuid strings without allocating ([github_pr uuid 116])
