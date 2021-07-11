@@ -51,10 +51,17 @@ Please keep the list of libraries sorted in lexicographical order.
   * Added `boost::anys::basic_any` - a data type with customizable Small Object Optimization whose instances can hold instances of any type that satisfies ValueType requirements (many thanks to Ruslan Arutyunyan @rarutyun). If you are not sure that you really need it, then use `boost::any` instead.
   * Started using GithubActions CI for additional testing
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Added `make_atomic_ref` and `make_ipc_atomic_ref` factory functions for constructing atomic reference objects.
+  * Added C++17 template argument deduction guides for `atomic_ref` and `ipc_atomic_ref` to allow omitting template arguments when they can be deduced from constructor arguments.
+
 * [phrase library..[@/libs/conversion/ Conversion]:]
   * `boost::implicit_cast` is now `constexpr` ([github conversion 25]).
   * Fixed broken links ([github_pr conversion 23]).
   * Started using GithubActions CI for additional testing
+
+* [phrase library..[@/libs/core/ Core]:]
+  * `boost/core/uncaught_exceptions.hpp` has been modified for compatibility with Mac OS 10.4 and older. ([github_pr core 92])
 
 * [phrase library..[@/libs/dll/ DLL]:]
   * More runtime checks for malformed ELFs in `boost::dll::library_info`
@@ -63,9 +70,36 @@ Please keep the list of libraries sorted in lexicographical order.
   * Remove unneeded convert from `wchar_t` to char on POSIX environment, thanks to Vladislav Shchapov ([github_pr dll 49])
   * Started using GithubAction CI for additional testing
 
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * [*Introducing Boost.Filesystem v4.] This new version of the library removes all deprecated features of v3 and also makes a number of breaking API changes intended to make Boost.Filesystem more compatible with std::filesystem introduced in C++17. The differences are described in the release notes and documentation using [*v3] and [*v4] tags and are also summarised in a separate section. Users can select Boost.Filesystem version by defining `BOOST_FILESYSTEM_VERSION` macro to either 3 or 4 when compiling their code. There is no need to separately compile Boost.Filesystem for each library version - a single binary supports both v3 and v4. Users should avoid using both v3 and v4 in the same application as this can lead to subtle bugs. Currently, v3 is the default. In a future release v4 will become the default, and eventually v3 will be removed. v4 is functional, but it is still a work in progress and there may be breaking API changes in the future.
+  * [*v4:] `path::filename`, `path::stem` and `path::extension` no longer consider root name or root directory of the path as a filename if the path only consists of those components. For example, on Windows `path("C:").filename()` used to return "C:" and `path("C:\").filename()` used to return "\" and both will return an empty path now. ([github filesystem 88], [github filesystem 194])
+  * [*v4:] `path::stem` and `path::extension` no longer treat a filename that starts with a dot and has no other dots as an extension. Filenames starting with a dot are commonly treated as filenames with an empty extension. The leading dot is used to indicate a hidden file on most UNIX-like systems. ([github filesystem 88])
+  * [*New:] Improved support for various path prefixes on Windows. Added support for local device prefix ("\\.\") and experimental support for NT path prefix ("\??\"). The prefixes will be included in the root name of a path. Note that using the prefixes with Boost.Filesystem v3 can lead to surprising results (e.g. `path("\\\\.\\").stem() == "\\\\"`). It is recommended to use the prefixes only with Boost.Filesystem v4.
+  * Reworked `path::lexically_normal` implementation to eliminate some cases of duplicate dot (".") elements in the normalized paths.
+  * [*New:] Added runtime detection of the `statx` and `getrandom` system calls on Linux. This can be useful if the syscall is present at compile time but fails with `ENOSYS` at run time (for example, in Docker containers that restrict the syscall, even if available on the host). ([github filesystem 172])
+  * [*New:] Added support for disabling usage of various system APIs at library build time. This can be useful when a certain API is detected as present by the library configuration scripts but must not be used for some reason (for example, when runtime detection does not work on the target system). See the description of configuration macros in the library documentationfor for more details.
+  * [*New:] Added `copy_options::synchronize_data` and `copy_options::synchronize` options for the `copy_file` operation. These options allow to synchronize the written data and attributes with the permanent storage. These options are expensive in terms of performance, but allow to ensure reliability of the copied data. Note that `copy_file` performed implicit data synchronization on POSIX systems since Boost.Filesystem 1.74.0. This release adds support for more platforms and disables data synchronization by default while allowing the caller to explicitly request it. ([github filesystem 186])
+  * Added handling of `EINTR` error code on POSIX systems for some system calls issued internally. In particular, `EINTR` could have been ignored on `close`, which on HP-UX would result in a leaked file descriptor.
+  * In the `copy_file` implementations based on Linux `sendfile` and `copy_file_range` system calls, added handling of error codes indicating that a particular filesystem does not support the system call and fall back to the generic `read`/`write` loop. This should fix `copy_file` failing on [@https://www.ecryptfs.org/ eCryptFS] and possibly other filesystems. ([github filesystem 184])
+  * The `copy_file_range` system call is now used since Linux kernel 4.5, whereas previously it was only enabled since 5.3. The `copy_file` implementation will fall back to `sendfile` or `read`/`write` loop if `copy_file_range` fails to copy a given file across filesystems.
+  * The `copy_file` implementations based on Linux `sendfile` and `copy_file_range` system calls will not be used on filesystems that are known to contain files with generated content. These system calls are incompatible with such files, and copying them would result in zero-sized files. The generic `read`/`write` loop will be used instead. Currently, the blacklisted filesystems are: procfs, sysfs, tracefs and debugfs.
+  * In the `copy_file` implementation based on `read`/`write` loop, increased the maximum size of the buffer used for temporary storage and take into account the target filesystem block size for more optimal performance.
+  * On Windows CE, calling `current_path` to obtain the current path for a process will now fail with an error instead of returning successfully with a root path. This platform does not support current directory. Changing the current path was already failing similarly in previous releases of Boost.Filesystem.
+  * In `canonical`, fixed the check for a symlink referencing a directory above root, if an earlier symlink was resolved to an absolute path with a different root from the original path.
+  * In `canonical`, added a limit for the maximum number of symlinks that can be resolved during the call. The limit is currently at least 40 symlinks.
+  * On Windows, `canonical` and `weakly_canonical` will now use `path::preferred_separator` for the root directory separator in the resulting paths. This fixes "file not found" errors caused by Windows API not handling generic separators in UNC paths and paths that start with the Win32 filesystem prefix ("\\?\"). ([github filesystem 87], [github filesystem 187])
+  * [*New:] Added `weakly_canonical` overloads taking `base` path as an argument.
+  * In `read_symlink` on Windows, corrected reparse point handling. The operation would return an empty path for some mount points (for example, created by [@https://www.box.com/ Box] cloud storage driver) and directory junction points that had empty print names. The new implementation now parses substitute name of the reparse point and attempts to reconstruct a Win32 path from it. ([github filesystem 187])
+  * On Windows, file streams provided in `boost/filesystem/fstream.hpp` will use wide character paths on libc++ versions 7.0 and higher, when the standard library supports opening files with wide character paths. ([github filesystem 181])
+  * On Windows, creating symlinks should no longer require elevated privileges, if Windows is configured in [@https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development Developer mode].
+  * With some compilers, global objects used internally in Boost.Filesystem are now destroyed after user's global destructors are called. This allows to call Boost.Filesystem methods during the program termination stage. In particular, this concerns the path locale that is used for character code conversion and can be installed by calling `path::imbue`. The supported compilers include MSVC, GCC and Clang, as well as other compilers that support customizing program initialization order through `#pragma section` (for MSVC-compatible compilers) or `__attribute__ ((init_priority))` (for GCC-compatible compilers).
+
 * [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
   * Fixed assignment to an int of a floating point value that is out of representable range for int.
   * Started using GithubActions CI for additional testing
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Fixed compilation for riscv32 target. ([github_pr log 150])
 
 * [phrase library..[@/libs/mp11/ Mp11]:]
   * Added `mp_intersperse`, `mp_split`, `mp_join`
