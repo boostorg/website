@@ -29288,6 +29288,27 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">make_atomic_ref</span></code>
+"                and <code><span class="identifier">make_ipc_atomic_ref</span></code>
+"                factory functions for constructing atomic reference objects.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added C++17 template argument deduction guides for <code><span class="identifier">atomic_ref</span></code> and <code><span class="identifier">ipc_atomic_ref</span></code>
+"                to allow omitting template arguments when they can be deduced from
+"                constructor arguments.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/conversion/">Conversion</a>:</span>
 "          <ul>
 "            <li>
@@ -29303,6 +29324,19 @@
 "            <li>
 "              <div>
 "                Started using GithubActions CI for additional testing
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/core/">Core</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">uncaught_exceptions</span><span class="special">.</span><span class="identifier">hpp</span></code> has been modified for compatibility
+"                with Mac OS 10.4 and older. (<a href="https://github.com/boostorg/core/pull/92">PR#92</a>)
 "              </div>
 "            </li>
 "          </ul>
@@ -29346,6 +29380,241 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <strong>Introducing Boost.Filesystem v4.</strong>
+"                This new version of the library removes all deprecated features of
+"                v3 and also makes a number of breaking API changes intended to make
+"                Boost.Filesystem more compatible with std::filesystem introduced
+"                in C++17. The differences are described in the release notes and
+"                documentation using <strong>v3</strong> and <strong>v4</strong> tags and are also summarised in a separate
+"                section. Users can select Boost.Filesystem version by defining <code><span class="identifier">BOOST_FILESYSTEM_VERSION</span></code> macro
+"                to either 3 or 4 when compiling their code. There is no need to separately
+"                compile Boost.Filesystem for each library version - a single binary
+"                supports both v3 and v4. Users should avoid using both v3 and v4
+"                in the same application as this can lead to subtle bugs. Currently,
+"                v3 is the default. In a future release v4 will become the default,
+"                and eventually v3 will be removed. v4 is functional, but it is still
+"                a work in progress and there may be breaking API changes in the future.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>v4:</strong> <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">filename</span></code>,
+"                <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">stem</span></code> and <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">extension</span></code>
+"                no longer consider root name or root directory of the path as a filename
+"                if the path only consists of those components. For example, on Windows
+"                <code><span class="identifier">path</span><span class="special">(</span><span class="string">"C:"</span><span class="special">).</span><span class="identifier">filename</span><span class="special">()</span></code>
+"                used to return "C:" and <code><span class="identifier">path</span><span class="special">(</span><span class="error">"</span><span class="identifier">C</span><span class="special">:\</span><span class="error">"</span><span class="special">).</span><span class="identifier">filename</span><span class="special">()</span></code>
+"                used to return "" and both will return an empty path now.
+"                (<a href="https://github.com/boostorg/filesystem/issues/88">#88</a>, <a href="https://github.com/boostorg/filesystem/issues/194">#194</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>v4:</strong> <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">stem</span></code>
+"                and <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">extension</span></code> no longer treat a filename
+"                that starts with a dot and has no other dots as an extension. Filenames
+"                starting with a dot are commonly treated as filenames with an empty
+"                extension. The leading dot is used to indicate a hidden file on most
+"                UNIX-like systems. (<a href="https://github.com/boostorg/filesystem/issues/88">#88</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>New:</strong> Improved support for various
+"                path prefixes on Windows. Added support for local device prefix ("\.")
+"                and experimental support for NT path prefix ("??"). The
+"                prefixes will be included in the root name of a path. Note that using
+"                the prefixes with Boost.Filesystem v3 can lead to surprising results
+"                (e.g. <code><span class="identifier">path</span><span class="special">(</span><span class="string">"\\\\.\\"</span><span class="special">).</span><span class="identifier">stem</span><span class="special">()</span>
+"                <span class="special">==</span> <span class="string">"\\\\"</span></code>).
+"                It is recommended to use the prefixes only with Boost.Filesystem
+"                v4.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Reworked <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">lexically_normal</span></code> implementation
+"                to eliminate some cases of duplicate dot (".") elements
+"                in the normalized paths.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>New:</strong> Added runtime detection of
+"                the <code><span class="identifier">statx</span></code> and <code><span class="identifier">getrandom</span></code> system calls on Linux.
+"                This can be useful if the syscall is present at compile time but
+"                fails with <code><span class="identifier">ENOSYS</span></code>
+"                at run time (for example, in Docker containers that restrict the
+"                syscall, even if available on the host). (<a href="https://github.com/boostorg/filesystem/issues/172">#172</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>New:</strong> Added support for disabling
+"                usage of various system APIs at library build time. This can be useful
+"                when a certain API is detected as present by the library configuration
+"                scripts but must not be used for some reason (for example, when runtime
+"                detection does not work on the target system). See the description
+"                of configuration macros in the library documentationfor for more
+"                details.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>New:</strong> Added <code><span class="identifier">copy_options</span><span class="special">::</span><span class="identifier">synchronize_data</span></code>
+"                and <code><span class="identifier">copy_options</span><span class="special">::</span><span class="identifier">synchronize</span></code>
+"                options for the <code><span class="identifier">copy_file</span></code>
+"                operation. These options allow to synchronize the written data and
+"                attributes with the permanent storage. These options are expensive
+"                in terms of performance, but allow to ensure reliability of the copied
+"                data. Note that <code><span class="identifier">copy_file</span></code>
+"                performed implicit data synchronization on POSIX systems since Boost.Filesystem
+"                1.74.0. This release adds support for more platforms and disables
+"                data synchronization by default while allowing the caller to explicitly
+"                request it. (<a href="https://github.com/boostorg/filesystem/issues/186">#186</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added handling of <code><span class="identifier">EINTR</span></code>
+"                error code on POSIX systems for some system calls issued internally.
+"                In particular, <code><span class="identifier">EINTR</span></code>
+"                could have been ignored on <code><span class="identifier">close</span></code>,
+"                which on HP-UX would result in a leaked file descriptor.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                In the <code><span class="identifier">copy_file</span></code>
+"                implementations based on Linux <code><span class="identifier">sendfile</span></code>
+"                and <code><span class="identifier">copy_file_range</span></code>
+"                system calls, added handling of error codes indicating that a particular
+"                filesystem does not support the system call and fall back to the
+"                generic <code><span class="identifier">read</span></code>/<code><span class="identifier">write</span></code> loop. This should fix <code><span class="identifier">copy_file</span></code> failing on <a href="https://www.ecryptfs.org/">eCryptFS</a>
+"                and possibly other filesystems. (<a href="https://github.com/boostorg/filesystem/issues/184">#184</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The <code><span class="identifier">copy_file_range</span></code>
+"                system call is now used since Linux kernel 4.5, whereas previously
+"                it was only enabled since 5.3. The <code><span class="identifier">copy_file</span></code>
+"                implementation will fall back to <code><span class="identifier">sendfile</span></code>
+"                or <code><span class="identifier">read</span></code>/<code><span class="identifier">write</span></code> loop if <code><span class="identifier">copy_file_range</span></code>
+"                fails to copy a given file across filesystems.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The <code><span class="identifier">copy_file</span></code> implementations
+"                based on Linux <code><span class="identifier">sendfile</span></code>
+"                and <code><span class="identifier">copy_file_range</span></code>
+"                system calls will not be used on filesystems that are known to contain
+"                files with generated content. These system calls are incompatible
+"                with such files, and copying them would result in zero-sized files.
+"                The generic <code><span class="identifier">read</span></code>/<code><span class="identifier">write</span></code> loop will be used instead.
+"                Currently, the blacklisted filesystems are: procfs, sysfs, tracefs
+"                and debugfs.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                In the <code><span class="identifier">copy_file</span></code>
+"                implementation based on <code><span class="identifier">read</span></code>/<code><span class="identifier">write</span></code> loop, increased the maximum
+"                size of the buffer used for temporary storage and take into account
+"                the target filesystem block size for more optimal performance.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On Windows CE, calling <code><span class="identifier">current_path</span></code>
+"                to obtain the current path for a process will now fail with an error
+"                instead of returning successfully with a root path. This platform
+"                does not support current directory. Changing the current path was
+"                already failing similarly in previous releases of Boost.Filesystem.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                In <code><span class="identifier">canonical</span></code>, fixed
+"                the check for a symlink referencing a directory above root, if an
+"                earlier symlink was resolved to an absolute path with a different
+"                root from the original path.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                In <code><span class="identifier">canonical</span></code>, added
+"                a limit for the maximum number of symlinks that can be resolved during
+"                the call. The limit is currently at least 40 symlinks.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On Windows, <code><span class="identifier">canonical</span></code>
+"                and <code><span class="identifier">weakly_canonical</span></code>
+"                will now use <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">preferred_separator</span></code>
+"                for the root directory separator in the resulting paths. This fixes
+"                "file not found" errors caused by Windows API not handling
+"                generic separators in UNC paths and paths that start with the Win32
+"                filesystem prefix ("\?"). (<a href="https://github.com/boostorg/filesystem/issues/87">#87</a>, <a href="https://github.com/boostorg/filesystem/issues/187">#187</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>New:</strong> Added <code><span class="identifier">weakly_canonical</span></code>
+"                overloads taking <code><span class="identifier">base</span></code>
+"                path as an argument.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                In <code><span class="identifier">read_symlink</span></code> on
+"                Windows, corrected reparse point handling. The operation would return
+"                an empty path for some mount points (for example, created by <a href="https://www.box.com/">Box</a> cloud storage driver) and
+"                directory junction points that had empty print names. The new implementation
+"                now parses substitute name of the reparse point and attempts to reconstruct
+"                a Win32 path from it. (<a href="https://github.com/boostorg/filesystem/issues/187">#187</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On Windows, file streams provided in <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">filesystem</span><span class="special">/</span><span class="identifier">fstream</span><span class="special">.</span><span class="identifier">hpp</span></code>
+"                will use wide character paths on libc++ versions 7.0 and higher,
+"                when the standard library supports opening files with wide character
+"                paths. (<a href="https://github.com/boostorg/filesystem/issues/181">#181</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On Windows, creating symlinks should no longer require elevated privileges,
+"                if Windows is configured in <a href="https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development">Developer
+"                mode</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                With some compilers, global objects used internally in Boost.Filesystem
+"                are now destroyed after user's global destructors are called. This
+"                allows to call Boost.Filesystem methods during the program termination
+"                stage. In particular, this concerns the path locale that is used
+"                for character code conversion and can be installed by calling <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">imbue</span></code>. The supported compilers
+"                include MSVC, GCC and Clang, as well as other compilers that support
+"                customizing program initialization order through <code><span class="preprocessor">#pragma</span>
+"                <span class="identifier">section</span></code> (for MSVC-compatible
+"                compilers) or <code><span class="identifier">__attribute__</span>
+"                <span class="special">((</span><span class="identifier">init_priority</span><span class="special">))</span></code> (for GCC-compatible compilers).
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/lexical_cast/">LexicalCast</a>:</span>
 "          <ul>
 "            <li>
@@ -29357,6 +29626,18 @@
 "            <li>
 "              <div>
 "                Started using GithubActions CI for additional testing
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/log/">Log</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fixed compilation for riscv32 target. (<a href="https://github.com/boostorg/log/pull/150">PR#150</a>)
 "              </div>
 "            </li>
 "          </ul>
@@ -29509,6 +29790,24 @@
 "      </li>
 "    </ul>
 "  </div>
+"  <div id="version_1_77_0.updated_tools">
+"    <h3><span class="link">Updated Tools</span></h3>
+"    <ul>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/tools/build/">Build</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Includes release of <a href="/tools/build/doc/html/#_version_4_6_1">B2
+"                version 4.6.1</a>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
 "  <div id="version_1_77_0.compilers_tested">
 "    <h3><span class="link">Compilers Tested</span></h3>
 "    <p>
@@ -29540,7 +29839,7 @@
 "  </div>
 "
 -hash
-"4b4f627b7c231e58ec096cf69a3204cff54a6f7dfa95eaefc6157fbd99099709
+"151d59893dfb449a0ed3fe194e3fec601f5dd2ec369fda65d2c2ee97f92ab5ae
 -id
 "version_1_77_0
 -notice_url
