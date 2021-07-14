@@ -93,6 +93,15 @@ Please keep the list of libraries sorted in lexicographical order.
   * On Windows, creating symlinks should no longer require elevated privileges, if Windows is configured in [@https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development Developer mode].
   * With some compilers, global objects used internally in Boost.Filesystem are now destroyed after user's global destructors are called. This allows to call Boost.Filesystem methods during the program termination stage. In particular, this concerns the path locale that is used for character code conversion and can be installed by calling `path::imbue`. The supported compilers include MSVC, GCC and Clang, as well as other compilers that support customizing program initialization order through `#pragma section` (for MSVC-compatible compilers) or `__attribute__ ((init_priority))` (for GCC-compatible compilers).
 
+* [phrase library..[@/libs/json/ JSON]:]
+  * `value_to` supports `TupleLike` types.
+  * `value_to` and `value_from` support `std::array` and similar types.
+  * Implicit conversion operator from `string` to `std::string_view`.
+  * `std::hash` specializations for json types.
+  * Fixed allocation errors in `object` and `key_value_pair`.
+  * Fixed crash when constructing `array` from a pair of iterators that form an
+    empty range.
+
 * [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
   * Fixed assignment to an int of a floating point value that is out of representable range for int.
   * Started using GithubActions CI for additional testing
