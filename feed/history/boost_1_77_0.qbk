@@ -49,6 +49,50 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/any/ Any]:]
   * Added `boost::anys::basic_any` - a data type with customizable Small Object Optimization whose instances can hold instances of any type that satisfies ValueType requirements (many thanks to Ruslan Arutyunyan @rarutyun). If you are not sure that you really need it, then use `boost::any` instead.
   * Started using GithubActions CI for additional testing
+  
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added support for cancellation of individual asynchronous operations.
+  * Added the `associator` trait, used to generically forward associators.
+  * Changed all asynchronous operations implemented in Asio to invoke their
+    completion handlers as rvalue references.
+  * Added support for asynchronous operations with multiple completion signatures.
+  * Added `operator&&` and `operator||` for `awaitable<>`, to allow coroutines to
+    be trivially awaited in parallel.
+  * Added the `experimental::as_tuple` completion token adapter.
+  * Added the `experimental::append` completion token adapter.
+  * Added the `experimental::prepend` completion token adapter.
+  * Added the `experimental::deferred` completion token, whicih allows deferred
+    execution of asynchronous operations.
+  * Added the `experimental::parallel_group` class and
+    `experimental::make_parallel_group` function.
+  * Added `experimental::promise`, which allows eager execution and
+    synchronisation of asynchronous operations.
+  * Added the `experimental::coro` class template, a C++20
+    coroutine primitive with the ability to combine both
+    asynchronous waiting (`co_await`) and yielding (`co_yield`).
+  * Added move assignment to `ssl::stream<>`.
+  * Changed `co_spawn` to `dispatch` the coroutine's initial step to the executor.
+  * Enabled additional optimisations for `any_executor` and `any_io_executor`
+    when used with asynchronous operations.
+  * Added the `nodiscard` attribute to `awaitable<>`.
+  * Increased the number of cached slots in the default recycling allocator.
+  * Changed the default allocator behaviour to respect alignment requirements,
+    to support over-aligned types.
+  * Ensured the result strings are always initialised in reverse name resolution.
+  * Fixed recursive template instantiation issues in
+    `use_awaitable_t::executor_with_default`.
+  * Fixed the `any_io_executor` equality operators to correctly return a result
+    based on the target executor.
+  * Fixed `strand<>` to avoid using a potentially moved-from executor.
+  * Ensured [^gcc] tests are not used for [^clang] when detecting compiler
+    features.
+  * Disabled coroutines support for the [^clang] shipped with MSVC.
+  * Fixed compatibility with recent LibreSSL when `OPENSSL_NO_SSL_INTERN` is
+    defined.
+  * Fixed `posix::basic_stream_descriptor` move operations to work with
+    non-defaulted executors.
+  * Consult the [@/doc/libs/1_77_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
 
 * [phrase library..[@/libs/atomic/ Atomic]:]
   * Added `make_atomic_ref` and `make_ipc_atomic_ref` factory functions for constructing atomic reference objects.
