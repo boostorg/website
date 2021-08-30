@@ -42,6 +42,35 @@ Please keep the list of libraries sorted in lexicographical order.
 
 * /TODO/
 
+* [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
+  * Added `contains` to key-based indices (issue [github multi_index 35]).
+  * Added `merge` operations to key-based indices. The functionality goes beyond
+    the standard specification for (unordered) associative containers in a number
+    of ways, most notably:
+    [itemized_list
+      [The source index can be of any type, including non key-based indices.]
+      [Partial merge is provided: for instance, `x.merge(y,first,last)` merges
+      only the elements of `y` within \[`first`,`last`).]
+    ]
+  * Previous versions of `splice` for sequenced and random access indices were
+    destructive, i.e. elements were copy-inserted into the destination and then
+    erased from the source. Now, `splice` is based on node transfer much as
+    `merge` in key-based indices, and has been similarly extended to accept source
+    indices of any type: in fact, `splice` can be regarded as a frontend to the
+    same functionality provided by `merge` in key-based indices. For reasons of
+    backwards compatibility, the destructive behavior of `splice` has been retained
+    in the case that the source and destination containers have unequal allocators.
+  * The fact has been documented that index iterator types do only depend on
+    `node_type` and the position of the index in its multi_index_container,
+    (except for hashed indices, where uniqueness/non-uniqueness is also a
+    dependency). This has implications on the validity of iterators to elements
+    transferred by `merge` or `splice`. This property is a variant of what has been
+    called [@https://wg21.link/n2980 SCARY iterators] in the C++ standard mailing
+    lists. SCARYness is currently (August 2021) not mandated for standard
+    containers.
+  * Iterator SCARYness is now also preserved in
+    [@/libs/multi_index/doc/tutorial/debug.html#safe_mode safe mode].
+
 [endsect]
 
 [section Compilers Tested]
