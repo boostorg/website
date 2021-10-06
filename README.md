@@ -2,7 +2,7 @@
 
 This is the source code for the [boost website](http://www.boost.org).
 It's automatically updated from the master branch.
-The [beta website](https://beta.boost.org) website is available for
+The [beta website](https://beta.boost.org) is available for
 testing and experiments, and is automatically updated from the beta branch.
 
 If you want to edit the website, or run it locally, see the
