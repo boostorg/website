@@ -43,6 +43,20 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/assert/ Assert]:]
   * Added `source_location::to_string`.
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Use process-local futex operations on Android for non-IPC waiting and notifying operations.
+  * Added support for Linux targets that only define `SYS_futex_time64` syscall, such as riscv32.
+  * Added a workaround for incorrect result of `std::alignment_of` on clang 8 for 64-bit types on 32-bit x86 targets.
+  * Added a ulock backend for waiting and notifying operations on Darwin systems since Mac OS 10.12, iOS 10.0, tvOS 10.0 or watchOS 3.0.
+  * On Windows, corrected discrepancy between [^['atomic-type]::always_has_native_wait_notify] and the corresponding capability macros when targeting Windows 8 or later. The library will now directly use `WaitOnAddress` and related APIs from public headers and therefore require user to link with `synchronization.lib` if the user requires Windows 8 or later by defining `BOOST_USE_WINAPI_VERSION`, `_WIN32_WINNT` or similar macros. The library is linked automatically on compilers that support auto-linking (e.g. MSVC).
+  * Added support for types with padding bits, except unions, on compilers that provide a way to clear the padding bits. This feature is supported by gcc 11 and MSVC 14.2 (compiler version 19.27) and newer, as well as other compilers supporting similar intrinsics. On compilers that don't allow to clear the padding bits, types with padding are still generally not supported with the exception of 80-bit `long double` on x86 targets. A new `BOOST_ATOMIC_NO_CLEAR_PADDING` capability macro is defined to indicate when clearing the padding is not supported.
+  * Initializing constructors of `atomic_ref` and `ipc_atomic_ref` no longer use atomic instructions to clear the padding bits in the referenced object. This reduces the cost of the atomic reference construction.
+  * Initializing constructors of `atomic` and `ipc_atomic` are now `constexpr` for enums, classes and floating point types. For classes and floating point types, the constructors are `constexpr` if the compiler supports `constexpr` `std::bit_cast`, the type has no padding bytes and no padding is required to implement native atomic operations.
+  * In accordance with C++20, default constructors of `atomic` and `ipc_atomic` now perform value initialization of the contained object. For types without a user-defined default constructor, this means the default-constructed atomic will be zero-initialized.
+  * Added a workaround for compilation error on AIX caused by the assembler tool not supporting numeric labels. ([github_pr atomic 50])
+  * Added a workaround for compilation error with Visual Studio 2015 prior to Update 3. ([github atomic 52])
+  * See [@/libs/atomic/doc/html/atomic/changelog.html changelog] for more details.
+
 * [phrase library..[@/libs/beast/ Beast]:]
   * This maintenance update brings minor bug fixes and updated CI reporting.
   * Fixed security vulnerability CVE-2016-9840 in zlib implementation.
@@ -74,6 +88,19 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed missing #include, thanks to Denis Blank ([github_pr dll 54])
   * Dropped TravisCI in favor of GithubAction CI
 
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * [*v4:] `path::filename` and `path::iterator` no longer return an implicit trailing dot (".") element if the path ends with a directory separator. Instead, an empty path is returned, similar to C++17 std::filesystem. This also affects other methods that are defined in terms of iterators or filename, such as `path::stem`, `path::compare` or `lexicographical_compare`. For example, `path("a/b/") == path("a/b/.")` no longer holds true. ([github filesystem 193])
+  * [*v4:] `path::lexically_normal` no longer produce a trailing dot (".") element and omits a directory separator after a trailing dot-dot ("..") element in the normalized paths.
+  * [*v4:] `path` append operations now consider root name and root directory in the appended path. If the appended path is absolute, or root name is present and differs from the source path, the resulting path is equivalent to the appended path. If root directory is present, the result is the root directory and relative path rebased on top of the root name of the source path. Otherwise, the behavior is similar to v3. ([github filesystem 214])
+  * `path::lexically_normal` now converts directory separators to preferred separators in the root name of the normalized paths.
+  * Optimized overloads of `path::assign`, `path::append`, `path::concat` and the corresponding operators to avoid unnecessary path copying and reduce the amount of code redundancy.
+  * On POSIX systems, fixed `absolute(p, base)` returning a path with root name `base.root_name()` if `p` starts with a root directory. In such a case `p` is already an absolute path and should be returned as is.
+  * `create_directories` no longer reports an error if the input path consists entirely of dot (".") and dot-dot ("..") elements. The implementation is no longer using recursion internally and therefore is better protected from stack overflow on extremely long paths.
+  * On Windows, `remove` now supports deleting read-only files. The operation will attempt to reset the read-only attribute prior to removal. Note that this introduces a possibility of the read-only attribute being left unset, if the operation fails and the original value of the attribute fails to be restored. This also affects `remove_all`. ([github filesystem 216])
+  * `remove_all` now returns `static_cast< uintmax_t >(-1)` in case of error, similar to C++17 std::filesystem.
+  * Fixed a linking error about unresolved references to Boost.ContainerHash functions when user's code includes `boost/filesystem/path.hpp` but not `boost/container_hash/hash.hpp` and the compiler is set to preserve unused inline functions. ([github filesystem 215])
+  * Added a workaround for MSVC and compatible compilers eliminating path globals cleanup in release builds. This could lead to a memory leak if Boost.Filesystem shared library was repeatedly loaded and unloaded in the process. ([github filesystem 217])
+
 * [phrase library..[@/libs/json/ JSON]:]
   * Standalone mode of the library is deprecated.
   * Allow external libraries to forward declare `value_to` and `value_from`.
@@ -85,6 +112,18 @@ Please keep the list of libraries sorted in lexicographical order.
     the first argument is a stream, to allow `std::cout << _1`.
   * Added `operator->*`.
   * Added `first`, `second`.
+
+* [phrase library..[@/libs/log/ Log]:]
+  * General changes:
+    * Updated detection of `std::codecvt` specializations for `char16_t` and `char32_t` for compatibility with C++17 and later. ([github_pr log 159])
+    * Added support for C++17 `std::byte` type to receive methods of the inter-process message queue.
+    * On Windows, when building the library for Windows 8 or later, the library will use `nt62` tag in the version namespace to denote the target OS ABI. For example, the version namespace could be named as `v2_mt_nt62`. This name will be part of all symbols exported by the library. Use the `BOOST_USE_WINAPI_VERSION` macro consistenly when building Boost and your code to request the minimum target Windows version.
+    * Improved performance of SSSE3 and AVX2 implementations of the `dump` stream manipulator.
+    * Added support for CMake build system. Only library build is supported at this moment, Boost.Build is still used for running tests.
+  * Bug fixes:
+    * Fixed a race condition on POSIX systems in `reliable_message_queue::open_or_create` or the equivalent constructor. Multiple threads or processes calling `open_or_create` concurrently with sending or receiving messages from the same queue could end up corrupting the queue contents and potentially crashing the process. ([github log 162])
+    * Added a workaround for `b2 install` failing on Windows because of missing `boost_log_setup` library if `BOOST_LOG_WITHOUT_SETTINGS_PARSERS` is defined. ([github log 164])
+  * See [@/libs/log/doc/html/atomic/changelog.html changelog] for more details.
 
 * [phrase library..[@/libs/math/ Math]:]
   * Add support for cubic roots.
@@ -163,6 +202,9 @@ Please keep the list of libraries sorted in lexicographical order.
   * `system_error::what()` now contains the source location, if present.
   * Added `result<T, E = error_code>`, a class holding either a value or an
     error, defined in `<boost/system/result.hpp>`.
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * Library documentation converted to QuickBook (thanks to Alan de Freitas, [github_pr utility 79]).
 
 * [phrase library..[@/libs/variant2/ Variant2]:]
   * Added `<boost/variant2.hpp>`.
