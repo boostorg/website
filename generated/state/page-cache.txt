@@ -30250,6 +30250,110 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Use process-local futex operations on Android for non-IPC waiting
+"                and notifying operations.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added support for Linux targets that only define <code><span class="identifier">SYS_futex_time64</span></code>
+"                syscall, such as riscv32.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a workaround for incorrect result of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">alignment_of</span></code>
+"                on clang 8 for 64-bit types on 32-bit x86 targets.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a ulock backend for waiting and notifying operations on Darwin
+"                systems since Mac OS 10.12, iOS 10.0, tvOS 10.0 or watchOS 3.0.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On Windows, corrected discrepancy between <tt><em>atomic-type</em>::always_has_native_wait_notify</tt>
+"                and the corresponding capability macros when targeting Windows 8
+"                or later. The library will now directly use <code><span class="identifier">WaitOnAddress</span></code>
+"                and related APIs from public headers and therefore require user to
+"                link with <code><span class="identifier">synchronization</span><span class="special">.</span><span class="identifier">lib</span></code>
+"                if the user requires Windows 8 or later by defining <code><span class="identifier">BOOST_USE_WINAPI_VERSION</span></code>, <code><span class="identifier">_WIN32_WINNT</span></code> or similar macros.
+"                The library is linked automatically on compilers that support auto-linking
+"                (e.g. MSVC).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added support for types with padding bits, except unions, on compilers
+"                that provide a way to clear the padding bits. This feature is supported
+"                by gcc 11 and MSVC 14.2 (compiler version 19.27) and newer, as well
+"                as other compilers supporting similar intrinsics. On compilers that
+"                don't allow to clear the padding bits, types with padding are still
+"                generally not supported with the exception of 80-bit <code><span class="keyword">long</span> <span class="keyword">double</span></code>
+"                on x86 targets. A new <code><span class="identifier">BOOST_ATOMIC_NO_CLEAR_PADDING</span></code>
+"                capability macro is defined to indicate when clearing the padding
+"                is not supported.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Initializing constructors of <code><span class="identifier">atomic_ref</span></code>
+"                and <code><span class="identifier">ipc_atomic_ref</span></code>
+"                no longer use atomic instructions to clear the padding bits in the
+"                referenced object. This reduces the cost of the atomic reference
+"                construction.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Initializing constructors of <code><span class="identifier">atomic</span></code>
+"                and <code><span class="identifier">ipc_atomic</span></code> are
+"                now <code><span class="keyword">constexpr</span></code> for enums,
+"                classes and floating point types. For classes and floating point
+"                types, the constructors are <code><span class="keyword">constexpr</span></code>
+"                if the compiler supports <code><span class="keyword">constexpr</span></code>
+"                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">bit_cast</span></code>, the type has no padding
+"                bytes and no padding is required to implement native atomic operations.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                In accordance with C++20, default constructors of <code><span class="identifier">atomic</span></code>
+"                and <code><span class="identifier">ipc_atomic</span></code> now
+"                perform value initialization of the contained object. For types without
+"                a user-defined default constructor, this means the default-constructed
+"                atomic will be zero-initialized.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a workaround for compilation error on AIX caused by the assembler
+"                tool not supporting numeric labels. (<a href="https://github.com/boostorg/atomic/pull/50">PR#50</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a workaround for compilation error with Visual Studio 2015
+"                prior to Update 3. (<a href="https://github.com/boostorg/atomic/issues/52">#52</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                See <a href="/libs/atomic/doc/html/atomic/changelog.html">changelog</a>
+"                for more details.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/beast/">Beast</a>:</span>
 "          <ul>
 "            <li>
@@ -30368,6 +30472,113 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <strong>v4:</strong> <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">filename</span></code>
+"                and <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">iterator</span></code> no longer return an implicit
+"                trailing dot (".") element if the path ends with a directory
+"                separator. Instead, an empty path is returned, similar to C++17 std::filesystem.
+"                This also affects other methods that are defined in terms of iterators
+"                or filename, such as <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">stem</span></code>,
+"                <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">compare</span></code> or <code><span class="identifier">lexicographical_compare</span></code>.
+"                For example, <code><span class="identifier">path</span><span class="special">(</span><span class="string">"a/b/"</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">path</span><span class="special">(</span><span class="string">"a/b/."</span><span class="special">)</span></code>
+"                no longer holds true. (<a href="https://github.com/boostorg/filesystem/issues/193">#193</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>v4:</strong> <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">lexically_normal</span></code>
+"                no longer produce a trailing dot (".") element and omits
+"                a directory separator after a trailing dot-dot ("..") element
+"                in the normalized paths.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>v4:</strong> <code><span class="identifier">path</span></code>
+"                append operations now consider root name and root directory in the
+"                appended path. If the appended path is absolute, or root name is
+"                present and differs from the source path, the resulting path is equivalent
+"                to the appended path. If root directory is present, the result is
+"                the root directory and relative path rebased on top of the root name
+"                of the source path. Otherwise, the behavior is similar to v3. (<a href="https://github.com/boostorg/filesystem/issues/214">#214</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">lexically_normal</span></code> now converts directory
+"                separators to preferred separators in the root name of the normalized
+"                paths.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Optimized overloads of <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">assign</span></code>,
+"                <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">append</span></code>, <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">concat</span></code>
+"                and the corresponding operators to avoid unnecessary path copying
+"                and reduce the amount of code redundancy.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On POSIX systems, fixed <code><span class="identifier">absolute</span><span class="special">(</span><span class="identifier">p</span><span class="special">,</span> <span class="identifier">base</span><span class="special">)</span></code> returning a path with root name
+"                <code><span class="identifier">base</span><span class="special">.</span><span class="identifier">root_name</span><span class="special">()</span></code>
+"                if <code><span class="identifier">p</span></code> starts with
+"                a root directory. In such a case <code><span class="identifier">p</span></code>
+"                is already an absolute path and should be returned as is.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">create_directories</span></code>
+"                no longer reports an error if the input path consists entirely of
+"                dot (".") and dot-dot ("..") elements. The implementation
+"                is no longer using recursion internally and therefore is better protected
+"                from stack overflow on extremely long paths.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On Windows, <code><span class="identifier">remove</span></code>
+"                now supports deleting read-only files. The operation will attempt
+"                to reset the read-only attribute prior to removal. Note that this
+"                introduces a possibility of the read-only attribute being left unset,
+"                if the operation fails and the original value of the attribute fails
+"                to be restored. This also affects <code><span class="identifier">remove_all</span></code>.
+"                (<a href="https://github.com/boostorg/filesystem/issues/216">#216</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">remove_all</span></code> now returns
+"                <code><span class="keyword">static_cast</span><span class="special">&lt;</span>
+"                <span class="identifier">uintmax_t</span> <span class="special">&gt;(-</span><span class="number">1</span><span class="special">)</span></code>
+"                in case of error, similar to C++17 std::filesystem.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a linking error about unresolved references to Boost.ContainerHash
+"                functions when user's code includes <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">filesystem</span><span class="special">/</span><span class="identifier">path</span><span class="special">.</span><span class="identifier">hpp</span></code>
+"                but not <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">container_hash</span><span class="special">/</span><span class="identifier">hash</span><span class="special">.</span><span class="identifier">hpp</span></code> and the compiler is set to
+"                preserve unused inline functions. (<a href="https://github.com/boostorg/filesystem/issues/215">#215</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a workaround for MSVC and compatible compilers eliminating
+"                path globals cleanup in release builds. This could lead to a memory
+"                leak if Boost.Filesystem shared library was repeatedly loaded and
+"                unloaded in the process. (<a href="https://github.com/boostorg/filesystem/issues/217">#217</a>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/json/">JSON</a>:</span>
 "          <ul>
 "            <li>
@@ -30413,6 +30624,91 @@
 "            <li>
 "              <div>
 "                Added <code><span class="identifier">first</span></code>, <code><span class="identifier">second</span></code>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/log/">Log</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                General changes:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Updated detection of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">codecvt</span></code>
+"                      specializations for <code><span class="keyword">char16_t</span></code>
+"                      and <code><span class="keyword">char32_t</span></code> for
+"                      compatibility with C++17 and later. (<a href="https://github.com/boostorg/log/pull/159">PR#159</a>)
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Added support for C++17 <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">byte</span></code>
+"                      type to receive methods of the inter-process message queue.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      On Windows, when building the library for Windows 8 or later,
+"                      the library will use <code><span class="identifier">nt62</span></code>
+"                      tag in the version namespace to denote the target OS ABI. For
+"                      example, the version namespace could be named as <code><span class="identifier">v2_mt_nt62</span></code>. This name will
+"                      be part of all symbols exported by the library. Use the <code><span class="identifier">BOOST_USE_WINAPI_VERSION</span></code>
+"                      macro consistenly when building Boost and your code to request
+"                      the minimum target Windows version.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Improved performance of SSSE3 and AVX2 implementations of the
+"                      <code><span class="identifier">dump</span></code> stream
+"                      manipulator.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Added support for CMake build system. Only library build is
+"                      supported at this moment, Boost.Build is still used for running
+"                      tests.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Bug fixes:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Fixed a race condition on POSIX systems in <code><span class="identifier">reliable_message_queue</span><span class="special">::</span><span class="identifier">open_or_create</span></code>
+"                      or the equivalent constructor. Multiple threads or processes
+"                      calling <code><span class="identifier">open_or_create</span></code>
+"                      concurrently with sending or receiving messages from the same
+"                      queue could end up corrupting the queue contents and potentially
+"                      crashing the process. (<a href="https://github.com/boostorg/log/issues/162">#162</a>)
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Added a workaround for <code><span class="identifier">b2</span>
+"                      <span class="identifier">install</span></code> failing on
+"                      Windows because of missing <code><span class="identifier">boost_log_setup</span></code>
+"                      library if <code><span class="identifier">BOOST_LOG_WITHOUT_SETTINGS_PARSERS</span></code>
+"                      is defined. (<a href="https://github.com/boostorg/log/issues/164">#164</a>)
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                See <a href="/libs/log/doc/html/atomic/changelog.html">changelog</a>
+"                for more details.
 "              </div>
 "            </li>
 "          </ul>
@@ -30716,6 +31012,19 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/utility/">Utility</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Library documentation converted to QuickBook (thanks to Alan de Freitas,
+"                <a href="https://github.com/boostorg/utility/pull/79">PR#79</a>).
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/variant2/">Variant2</a>:</span>
 "          <ul>
 "            <li>
@@ -30752,8 +31061,8 @@
 "          <ul>
 "            <li>
 "              <div>
-"                Includes release of <a href="/tools/build/doc/html/#_version_4_7_1">B2
-"                version 4.7.1</a>.
+"                Includes release of <a href="/tools/build/doc/html/#_version_4_7_2">B2
+"                version 4.7.2</a>.
 "              </div>
 "            </li>
 "          </ul>
@@ -30878,7 +31187,7 @@
 "  </div>
 "
 -hash
-"81764d1e12e4efaacd0273a45cd5f805ff242ac671e2c8c1b280488d3741ce40
+"dfa64f54a932282bf9325109ad5695eeadffd121a2d817824450d9e4671bb382
 -id
 "version_1_78_0
 -notice_url
