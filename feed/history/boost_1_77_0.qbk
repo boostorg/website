@@ -150,6 +150,25 @@ Please keep the list of libraries sorted in lexicographical order.
   * On Windows, creating symlinks should no longer require elevated privileges, if Windows is configured in [@https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development Developer mode].
   * With some compilers, global objects used internally in Boost.Filesystem are now destroyed after user's global destructors are called. This allows to call Boost.Filesystem methods during the program termination stage. In particular, this concerns the path locale that is used for character code conversion and can be installed by calling `path::imbue`. The supported compilers include MSVC, GCC and Clang, as well as other compilers that support customizing program initialization order through `#pragma section` (for MSVC-compatible compilers) or `__attribute__ ((init_priority))` (for GCC-compatible compilers).
 
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * Improvements
+    * [github_pr geometry 812] Umbrella strategies for distance and comparable_distance (undocumented for now).
+    * [github_pr geometry 840] Umbrella strategies for various algorithms (undocumented for now).
+    * [github_pr geometry 850] Introduced DynamicGeometry and GeometryCollection concepts and support in some algorithms (undocumented for now).
+    * [github_pr geometry 855] Various improvements related to strategies. Default strategies are now included with algorithms.
+  * Solved issues
+    * [github geometry 865] Exception thrown in rtree serialization.
+    * [github geometry 439] Invalid box spherical area computation.
+    * [github geometry 838] Invalid result of union_().
+    * [github geometry 851] Invalid geographic disjoint segment/box result.
+    * [github geometry 861] Invalid result of intersection().
+  * Bugfixes
+    * [github_pr geometry 832] Fixed box spherical and geographic area computation.
+    * [github_pr geometry 853] Fixed geographic disjoint segment/box.
+    * [github_pr geometry 866] Fixed serialization of rtree containing lesser number of elements in root node than minimum.
+    * [github_pr geometry 886] Fixed knn rtree query bug causing it to be slow for big k.
+    * Various fixes in set operations and buffer.
+
 * [phrase library..[@/libs/json/ JSON]:]
   * `value_to` supports `TupleLike` types.
   * `value_to` and `value_from` support `std::array` and similar types.
