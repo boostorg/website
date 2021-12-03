@@ -101,6 +101,20 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed a linking error about unresolved references to Boost.ContainerHash functions when user's code includes `boost/filesystem/path.hpp` but not `boost/container_hash/hash.hpp` and the compiler is set to preserve unused inline functions. ([github filesystem 215])
   * Added a workaround for MSVC and compatible compilers eliminating path globals cleanup in release builds. This could lead to a memory leak if Boost.Filesystem shared library was repeatedly loaded and unloaded in the process. ([github filesystem 217])
 
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * Improvements
+    * [github_pr geometry 894] Optimization and refactoring of rtree queries.
+    * [github_pr geometry 913] DynamicGeometry and GeometryCollection support in various algorithms (undocumented for now).
+    * [github_pr geometry 922] DynamicGeometry and GeometryCollection support in distance (undocumented for now).
+  * Solved issues
+    * [github geometry 867] Poor performance of rtree query iterator with nearest predicate for big k.
+    * [github geometry 870] Compilation error in boost::geometry::self_turns.
+    * [github geometry 896] Assertion failure in get_turns with BOOST_GEOMETRY_NO_ROBUSTNESS.
+  * Bugfixes
+    * [github_pr geometry 906] Invalid result of buffer on macos-11 with clang-12.
+    * [github_pr geometry 921] Compilation errors with c++20 (various compilers) and gcc-5.
+    * Various fixes in set operations and buffer.
+
 * [phrase library..[@/libs/json/ JSON]:]
   * Standalone mode of the library is deprecated.
   * Allow external libraries to forward declare `value_to` and `value_from`.
