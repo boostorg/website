@@ -31718,6 +31718,33 @@
 "    <ul>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/assert/">Assert</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <code><span class="identifier">source_location</span><span class="special">().</span><span class="identifier">file_name</span><span class="special">()</span></code>
+"                and <code><span class="identifier">source_location</span><span class="special">().</span><span class="identifier">function_name</span><span class="special">()</span></code> now return <code><span class="string">""</span></code>
+"                instead of <code><span class="string">"(unknown)"</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a <code><span class="identifier">source_location</span></code>
+"                constructor from <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">source_location</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed <code><span class="identifier">BOOST_CURRENT_LOCATION</span></code>
+"                to more closely match the behavior of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">source_location</span><span class="special">::</span><span class="identifier">current</span><span class="special">()</span></code>, such as being usable at top level
+"                or as a default function argument.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/core/">Core</a>:</span>
 "          <ul>
 "            <li>
@@ -31737,6 +31764,53 @@
 "              <div>
 "                Updated the allocator access traits to support most of the C++11
 "                allocator model in C++03. (Glen Fernandes)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">iterator</span><span class="special">.</span><span class="identifier">hpp</span></code> is deprecated and will be removed
+"                in a future release. The header defines <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">iterator</span></code>
+"                template, which is equivalent to <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">iterator</span></code>
+"                in <code><span class="special">&lt;</span><span class="identifier">iterator</span><span class="special">&gt;</span></code> header. However, since <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">iterator</span></code> is itself deprecated in
+"                C++17, users are advised to remove <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">iterator</span></code>
+"                or <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">iterator</span></code> use from their code.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">verbose_terminate_handler</span></code>, a utility
+"                function intended to be passed to <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">set_terminate</span></code>
+"                that prints information about the uncaught exception to <code><span class="identifier">stderr</span></code>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/describe/">Describe</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Enabled unions in <code><span class="identifier">BOOST_DESCRIBE_STRUCT</span></code>
+"                and updated examples to check <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">is_union</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added example of defining a <code><span class="identifier">fmtlib</span></code>
+"                class formatter.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added example of defining a <code><span class="identifier">fmtlib</span></code>
+"                enum formatter.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added example of printing pointers to members.
 "              </div>
 "            </li>
 "          </ul>
@@ -31772,6 +31846,54 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/system/">System</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added a <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">source_location</span></code> parameter to <code><span class="identifier">throw_exception_from_error</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">throw_exception_from_error</span></code>
+"                overloads for <code><span class="identifier">errc</span><span class="special">::</span><span class="identifier">errc_t</span></code>,
+"                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">error_code</span></code>, <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">errc</span></code>,
+"                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception_ptr</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">result</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span></code> now automatically supplies
+"                <code><span class="identifier">BOOST_CURRENT_LOCATION</span></code>
+"                to <code><span class="identifier">throw_exception_from_error</span></code>
+"                via a default argument.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added an <code><span class="identifier">errc</span><span class="special">::</span><span class="identifier">make_error_code</span></code> overload taking
+"                a source location.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/throw_exception/">ThrowException</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">throw_with_location</span></code>, a more lightweight
+"                alternative of <code><span class="identifier">BOOST_THROW_EXCEPTION</span></code>
+"                for programs that do not use Boost.Exception.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/unordered/">Unordered</a>:</span>
 "          <ul>
 "            <li>
@@ -31783,6 +31905,12 @@
 "            <li>
 "              <div>
 "                All containers now implement the member function <code><span class="identifier">contains</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">erase_if</span></code> has been
+"                implemented for all containers.
 "              </div>
 "            </li>
 "            <li>
@@ -31804,6 +31932,29 @@
 "            <li>
 "              <div>
 "                Update code to internally use <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">allocator_traits</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Switch to Fibonacci hashing.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Update documentation to be written in AsciiDoc instead of QuickBook.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/variant2/">Variant2</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added <code><span class="keyword">operator</span><span class="special">&lt;&lt;</span></code>
+"                for <code><span class="identifier">monostate</span></code>.
 "              </div>
 "            </li>
 "          </ul>
@@ -31842,7 +31993,7 @@
 "  </div>
 "
 -hash
-"30bda68abdc134397aaceab677cb3faf3b2765d9a20cf04533209828b0c4fe0d
+"5e999cab3df1d607fbd75206ff73f2a6842741391f28250e150d77234bb5c749
 -id
 "version_1_79_0
 -notice_url
