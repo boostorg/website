@@ -40,6 +40,14 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed `named_condition_any` fails to notify ([github interprocess 62])
 ]
 
+* [phrase library..[@/libs/assert/ Assert]:]
+  * `source_location().file_name()` and `source_location().function_name()`
+    now return `""` instead of `"(unknown)"`.
+  * Added a `source_location` constructor from `std::source_location`.
+  * Changed `BOOST_CURRENT_LOCATION` to more closely match the behavior of
+    `std::source_location::current()`, such as being usable at top level or
+    as a default function argument.
+
 * [phrase library..[@/libs/atomic/ Atomic]:]
   * Fixed compilation for Universal Windows Platform (UWP). ([github atomic 54])
   * Added `BOOST_ATOMIC_NO_DARWIN_ULOCK` configuration macro. The macto affects compilation on Darwin systems and disables `ulock`-based implementation of waiting and notifying operations. This may be useful to comply with Apple App Store requirements. ([github atomic 55])
@@ -51,6 +59,20 @@ Please keep the list of libraries sorted in lexicographical order.
     traits. This implementation supports C++03 and above. (Glen Fernandes)
   * Updated the allocator access traits to support most of the C++11 allocator
     model in C++03. (Glen Fernandes)
+  * `boost/iterator.hpp` is deprecated and will be removed in a future release.
+    The header defines `boost::iterator` template, which is equivalent to
+    `std::iterator` in `<iterator>` header. However, since `std::iterator` is
+    itself deprecated in C++17, users are advised to remove `boost::iterator`
+    or `std::iterator` use from their code.
+  * Added `boost::core::verbose_terminate_handler`, a utility function intended
+    to be passed to `std::set_terminate` that prints information about the
+    uncaught exception to `stderr`.
+
+* [phrase library..[@/libs/describe/ Describe]:]
+  * Enabled unions in `BOOST_DESCRIBE_STRUCT` and updated examples to check `std::is_union<T>`.
+  * Added example of defining a `fmtlib` class formatter.
+  * Added example of defining a `fmtlib` enum formatter.
+  * Added example of printing pointers to members.
 
 * [phrase library..[@/libs/filesystem/ Filesystem]:]
   * [*v3:] `path::replace_extension` now works in terms of [*v3] definition of `path::extension` rather than [*v4].
@@ -87,19 +109,42 @@ Please keep the list of libraries sorted in lexicographical order.
     * Fixed file counter being set to zero if the user calls `text_file_backend::scan_for_files` multiple times, and the second and the following calls don't find any new files. ([github log 179])
   * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
+* [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
+  * Improved the efficiency of `count` operations in ranked indices from
+    `O(log(n) + count)` to `O(log(n))`. Contributed by Damian Sawicki.
+  * Maintenance work.
+
 * [phrase library..[@/libs/smart_ptr/ Smart Pointers]:]
   * Added `boost::get_allocator_pointer` to obtain the Allocator pointer from
     the result of `boost::allocate_unique` (Glen Fernandes).
+
+* [phrase library..[@/libs/system/ System]:]
+  * Added a `boost::source_location` parameter to `throw_exception_from_error`.
+  * Added `throw_exception_from_error` overloads for `errc::errc_t`,
+    `std::error_code`, `std::errc`, `std::exception_ptr`.
+  * `result<T>::value` now automatically supplies `BOOST_CURRENT_LOCATION` to
+    `throw_exception_from_error` via a default argument.
+  * Added an `errc::make_error_code` overload taking a source location.
+
+* [phrase library..[@/libs/throw_exception/ ThrowException]:]
+  * Added `boost::throw_with_location`, a more lightweight alternative of
+    `BOOST_THROW_EXCEPTION` for programs that do not use Boost.Exception.
 
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * All containers have been updated to support heterogeneous `count`,
     `equal_range` and `find`.
   * All containers now implement the member function `contains`.
+  * `erase_if` has been implemented for all containers.
   * All containers have been updated to support heterogeneous `erase` and
     `extract`.
   * Changed behavior of `reserve` to eagerly allocate.
   * Various warning fixes in the test suite.
   * Update code to internally use `boost::allocator_traits`.
+  * Switch to Fibonacci hashing.
+  * Update documentation to be written in AsciiDoc instead of QuickBook.
+
+* [phrase library..[@/libs/variant2/ Variant2]:]
+  * Added `operator<<` for `monostate`.
 
 [endsect]
 
