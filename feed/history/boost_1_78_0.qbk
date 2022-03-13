@@ -4,7 +4,7 @@
     [purpose
         Updated Libraries: Asio, Assert, Atomic, Beast, Core, Describe, DLL,
         Filesystem, Geometry, JSON, Lambda2, Log, Math, MultiIndex,
-        Multiprecision, PFR, Predef, Regex, System, Utility, Variant2.
+        Multiprecision, Nowide, PFR, Predef, Regex, System, Utility, Variant2.
         [/ Please don't add updated libraries yet, it
            can create unnecessary merge conflicts.]
     ]
@@ -238,6 +238,12 @@ in the release.
   * Correct miscellaneous configuration issues (Intel intrinsic usage and Apple clang).
   * Correct some iostream operators for unsigned char types.
   * Correct mpq_rational conversions to integer types, see [@https://github.com/boostorg/multiprecision/issues/342 #342].
+
+* [phrase library..[@/libs/nowide/ Nowide]:]
+  * Breaking Change: `do_unshift` for the UTF-32 specialization of `utf8_codecvt` now correctly returns `noconv` instead of `ok`
+  * Remove unnecessary branch in `utf8_codecvt` for UTF-16 output
+  * Suppress deprecation warnings in MSVC when using `utf8_codecvt` with unicode char types
+  * Fix possible double-free when setting a custom buffer (`setbuf`) after `filebuf` already allocated an internal buffer
 
 * [phrase library..[@/libs/pfr/ PFR]:]
   * Added missing `#include <memory>` for inclusion of `std::addressof`
