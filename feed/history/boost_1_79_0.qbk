@@ -40,6 +40,69 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed `named_condition_any` fails to notify ([github interprocess 62])
 ]
 
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added `bind_allocator`.
+  * Added `file_base::sync_all_on_write` flag.
+  * Added missing implementation of `basic_file::release()`.
+  * Added per-operation cancellation support to signal sets.
+  * Exposed `recycling_allocator` as part of the public interface.
+  * Added the `nodiscard` attribute to a number of functions.
+  * Added OpenSSL 3.0 compatibility.
+  * Added support for adopting an existing `SSL*` into an `ssl::stream<>`.
+  * Enabled `executor_work_guard<>` in all build configurations.
+  * Enabled movable socket iostreams when using clang.
+  * Fixed `bind_cancellation_slot` and `bind_executor` compatibility with legacy
+    completion tokens.
+  * Fixed `associator` specialisations for `experimental::append` and
+    `experimental::prepend`.
+  * Fixed `associated_allocator` primary template.
+  * Fixed [^io_uring] implementations of `async_receive_from` for
+    sockets and `write_some_at` for files.
+  * Fixed [^io_uring] feature detection.
+  * Fixed `experimental::coro`'s per-operation cancellation.
+  * Fixed memory management in `experimental::promise`'s type-erased completion
+    handlers.
+  * Fixed move `operator=` implementation for `ssl::stream`.
+  * Fixed `any_io_executor` implementation to work when both
+    `BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT` and
+    `BOOST_ASIO_SEPARATE_COMPILATION` are defined.
+  * Fixed implementation of `basic_socket::at_mark()` when using the
+    `sockatmark()` system call.
+  * Changed the recycling allocator to use the default alignment as the minimum
+    alignment for allocations.
+  * Added a workaround for apparent coroutine codegen bug with Apple's clang.
+  * On Windows, changed the file support to open files using the same sharing
+    mode as `fopen()`.
+  * On Linux, fixed UNIX domain sockets implementation to correctly handle
+    `EAGAIN`.
+  * Fixed implementation of `experimental::basic_channel::reset()` and
+    `experimental::basic_concurrent_channel::reset()`.
+  * Fixed potential undefined behaviour in the `experimental::promise`.
+  * Changed the `co_spawn` implementation to dispatch cancellation
+    signals through the executor in some circumstances.
+  * Fixed various header inclusion issues.
+  * Fixed various warnings.
+  * A number of documentation enhancements, including:
+    * Added an overview of Asio's asynchronous model.
+    * Reworked reference and requirements documentation in terms of asynchronous
+      model.
+    * Updated documentation for `dispatch()`, `post()`, and `defer()`.
+    * Documented per-operation cancellation for serial ports.
+    * Clarified the non-concurrency guarantees made for allocators.
+    * Reverted the `io_context` reference documentation to use
+      `executor_work_guard`.
+    * Added more detailed reference documentation to `make_strand()`,
+      `make_work_guard()`, `ip::address_v4`, `ip::address_v6`,
+      `experimental::basic_channel`, and
+      `experimental::basic_concurrent_channel`.
+    * Re-arranged and extended the Overview documentation to cover recently
+      added features.
+  * Added a C++11 example showing file descriptor passing over local sockets.
+  * Added C++14 examples of wrapping callback-based APIs in asynchronous
+    operations.
+  * Consult the [@/doc/libs/1_79_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
+
 * [phrase library..[@/libs/assert/ Assert]:]
   * `source_location().file_name()` and `source_location().function_name()`
     now return `""` instead of `"(unknown)"`.
