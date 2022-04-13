@@ -169,6 +169,22 @@ Please keep the list of libraries sorted in lexicographical order.
   * [*Deprecated:] `boost/filesystem/string_file.hpp` header is deprecated and will be removed in a future release. The header is no longer included by `boost/filesystem.hpp` by default. Users are advised to implement the functionality themselves or migrate to other implementations.
   * [*Deprecated:] Windows CE support is deprecated and will be removed in a future release. Windows CE has been untested for many years and is likely non-functional.
 
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * Major change
+    * [github_pr geometry 977] Rescaling is turned off by default. This avoids many related bugs in set operations and buffer.
+  * Improvements
+    * [github_pr geometry 961] Added Web Mercator projection.
+    * [github_pr geometry 966] More efficient cartesian distance strategy used in simplify.
+  * Solved issues
+    * [github geometry 956] Result of simplify algorithm with incorrect closure.
+    * [github geometry 962] Runtime error in R-tree deserialization due to load factor.
+    * [github geometry 971] R-tree insertion time impacted by use of long double on ARM platforms.
+  * Bugfixes
+    * [github_pr geometry 936] Envelope of polygon containing pole.
+    * [github_pr geometry 948] Spherical and geographic envelope for near meridian segments.
+    * [github_pr geometry 974] Spheroidal normalization utilities for NaN coordinates.
+    * Various fixes in set operations and buffer.
+
 * [phrase library..[@/libs/integer/ Integer]:]
   * Optimized `integer_log2` implementation to use bit operations internally. This allows to employ bit instructions available on most modern CPUs. ([github integer 31])
 
