@@ -55,6 +55,15 @@ Please keep the list of libraries sorted in lexicographical order.
       [@https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p2387r3.html
       P2387].
 
+* [phrase library..[@/libs/system/ System]:]
+  * When an `error_code` is converted to `std::error_code` and then back
+    to `error_code`, the original is now restored, if possible.
+  * Reworked the conversion from `error_category` to `std::error_category`
+    to avoid the one-time allocation that shows up on leak checkers.
+  * Added a constructor that allows replacing the source location of an
+    `error_code`, and a corresponding `assign`.
+  * Added a converting constructor to `result`.
+
 [/ Example:
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
   * Added anonymous shared memory for UNIX systems.
