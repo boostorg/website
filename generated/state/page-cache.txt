@@ -33087,6 +33087,73 @@
 "    <ul>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Improved portability of endianness checks on ARM, AArch32 and AArch64
+"                targets. (<a href="https://github.com/boostorg/atomic/issues/59">#59</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed compilation with MSVC 14.0 (Visual Studio 2015) in C++17 mode.
+"                (<a href="https://github.com/boostorg/atomic/issues/61">#61</a>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                On Windows, added a fallback implementation for querying file attributes
+"                in case if the file cannot be opened with <code><span class="identifier">ERROR_ACCESS_DENIED</span></code>
+"                error. This may allow <code><span class="identifier">status</span></code>
+"                and <code><span class="identifier">symlink_status</span></code>
+"                to succeed for system files and directories that are not reparse
+"                points or symlinks. (<a href="https://github.com/boostorg/filesystem/issues/234">#234</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On Windows, added a workaround for FAT/exFAT filesystems that produce
+"                <code><span class="identifier">ERROR_INVALID_PARAMETER</span></code>
+"                when querying file attributes. This affected <code><span class="identifier">status</span></code>
+"                and <code><span class="identifier">symlink_status</span></code>,
+"                which reported that files do not exist, and directory iterators,
+"                which failed to construct, as well as other dependent operations.
+"                (<a href="https://github.com/boostorg/filesystem/issues/236">#236</a>, <a href="https://github.com/boostorg/filesystem/issues/237">#237</a>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/iterator/">Iterator</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                For C++11 and later, added support for perfect forwarding of values
+"                written to <code><span class="identifier">function_output_iterator</span></code>.
+"                (<a href="https://github.com/boostorg/iterator/pull/73">PR#73</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added protection against writing to <code><span class="identifier">function_output_iterator</span></code>
+"                a result of dereferencing another <code><span class="identifier">function_output_iterator</span></code>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/leaf/">LEAF</a>:</span>
 "          <ul>
 "            <li>
@@ -33108,6 +33175,41 @@
 "            <li>
 "              <div>
 "                Fixed pedantic warnings
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/log/">Log</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Bug fixes:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      Fixed binding incorrect local address in UDP socket-based
+"                      <code><span class="identifier">syslog_backend</span></code>
+"                      when IPv6 address is used for the syslog server. (<a href="https://github.com/boostorg/log/issues/181">#181</a>)
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Added a workaround for a <a href="https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105857">bug</a>
+"                      in libstdc++ from gcc 11.2. When <code><span class="identifier">max_size_decor</span></code>
+"                      was used on a formatting stream, <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">codecvt</span><span class="special">::</span><span class="identifier">do_length</span></code>
+"                      incorrectly accessed the input buffer and caused a buffer overflow.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                See <a href="/libs/log/doc/html/log/changelog.html">changelog</a>
+"                for more details.
 "              </div>
 "            </li>
 "          </ul>
@@ -33202,6 +33304,39 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/utility/">Utility</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                In <code><span class="identifier">string_view</span></code>/<code><span class="identifier">string_ref</span></code>, fixed <code><span class="identifier">max_size</span></code> returning incorrect value.
+"                (<a href="https://github.com/boostorg/utility/issues/91">#91</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed <code><span class="keyword">noexcept</span></code> specifier
+"                from <code><span class="identifier">string_view</span><span class="special">::</span><span class="identifier">compare</span></code>
+"                as it may throw on some input arguments. (<a href="https://github.com/boostorg/utility/issues/94">#94</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                In <code><span class="identifier">string_view</span></code>/<code><span class="identifier">string_ref</span></code>, added support for calling
+"                <code><span class="identifier">substr</span></code> with no arguments.
+"                (<a href="https://github.com/boostorg/utility/issues/96">#96</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">string_view</span><span class="special">::</span><span class="identifier">contains</span></code>
+"                methods that were introduced in C++23. (<a href="https://github.com/boostorg/utility/issues/93">#93</a>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <em>TODO</em>
 "        </div>
 "      </li>
@@ -33256,7 +33391,7 @@
 "  </div>
 "
 -hash
-"9a95593c2db43d6ae44291a9a68c5bce7958905ceff9223b1e65374be0e6e03d
+"09351b40d03b548a85bbe93f174c8a3a3a734df13330354dbbf683c523bcc694
 -id
 "version_1_80_0
 -notice_url
