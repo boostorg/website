@@ -58,6 +58,16 @@ Please keep the list of libraries sorted in lexicographical order.
   * Using nullptr instead of 0 throughout
   * Fixed pedantic warnings
 
+* [phrase library..[@/libs/locale/ Locale]:]
+  * Deprecated support for C++03 and earlier, C++11 will be required in the next release
+  * Provide `-sICU_LINK_LOCALE` as a temporary replacement for `-sICU_LINK` which is incompatible with Boost.Regex. `-sICU_LINK_LOCALE` and `-sICU_LINK` are deprecated and will be replaced by `ICU_*_NAME` options to be compatible with Boost.Regex
+  * Fix UB/assertion failure in the ICU `collator` implementation when transforming empty strings
+  * Fix some issues related to visibility of classes in shared libraries (Unix only)
+  * Fix compatibility with C++20 mode
+  * Fix compatibility with `BOOST_USE_WINDOWS_H`
+  * Fix build failures due to missing includes
+  * Handle or suppress many warnings which makes the build log cleaner
+
 * [phrase library..[@/libs/log/ Log]:]
   * Bug fixes:
     * Fixed binding incorrect local address in UDP socket-based `syslog_backend` when IPv6 address is used for the syslog server. ([github log 181])
@@ -66,6 +76,12 @@ Please keep the list of libraries sorted in lexicographical order.
 
 * [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
   * Maintenance work.
+
+* [phrase library..[@/libs/nowide/ Nowide]:]
+  * Major performance improvement for Bulk I/O with files
+  * `basic_filebuf`: Fix wrong return value of `sync` when `fflush` failed
+  * `basic_filebuf`: Fix possible undefined behavior in a corner case when nothing was actually written but buffer is in "write" mode
+  * `basic_filebuf`: Limit putback of characters (i.e. `pbackfail`) only allowing putback of buffered characters (may be only 1 character)
 
 * [phrase library..[@/libs/stl_interfaces/ STLInterfaces]:]
   * Fix [github stl_interfaces 53]: "missing 'typename' prior to dependent type
