@@ -48,6 +48,65 @@ Please keep the list of libraries sorted in lexicographical order.
   * On Windows, added a fallback implementation for querying file attributes in case if the file cannot be opened with `ERROR_ACCESS_DENIED` error. This may allow `status` and `symlink_status` to succeed for system files and directories that are not reparse points or symlinks. ([github filesystem 234])
   * On Windows, added a workaround for FAT/exFAT filesystems that produce `ERROR_INVALID_PARAMETER` when querying file attributes. This affected `status` and `symlink_status`, which reported that files do not exist, and directory iterators, which failed to construct, as well as other dependent operations. ([github filesystem 236], [github filesystem 237])
 
+* [phrase library..[@/libs/gil/ GIL]:]
+  [*NOTICE:] We are planning BREAKING switch to C++17 as minimum required C++ language version in one or two releases after Boost 1.80 ([github gil 676])
+  * Added
+    * GSoC 2020: Added Perona-Malik anisotropic diffusion algorithm ([github_pr gil 500])
+    * GSoC 2020: Added histogram class and related functionality ([github_pr gil 499])
+    * GSoC 2020: Added histogram equalization feature ([github_pr gil 514])
+    * GSoC 2020: Added histogram matching algorithm ([github_pr gil 515])
+    * GSoC 2020: Added ability to stack images either horizontally (`hstack`) or vertically (`vstack`) ([github_pr gil 506])
+    * GSoC 2020: Added adaptive histogram equalization algorithm ([github_pr gil 516])
+    * GSoC 2020: Added Standard Hough Transform and circle rasterization ([github_pr gil 512])
+    * GSoC 2020: Added Bresenham's algorithm for line rasterization ([github_pr gil 512])
+    * GSoC 2021: Added rotation of image by arbitrary angle around its center ([github_pr gil 565])
+    * GSoC 2021: Added rasterization support for ellipse based on "An Efficient Ellipse-Drawing Algorithm" by Jerry Van Aken ([github_pr gil 585])
+    * Added `image` constructor from compatible view ([github_pr gil 520])
+    * Added inverse function for affine `matrix3x2` ([github_pr gil 527])
+    * Added standard morphological transformations ([github_pr gil 541])
+    * Added `for_each_pixel` overload for `any_image` ([github_pr gil 648])
+    * Added C++17 polymorphic memory resource typedefs for `image` class ([github_pr gil 529])
+  * Changed
+    * [*BREAKING:] The required minimum C++ version is changed from from C++11 to C++14.
+      Currently, large parts of GIL still compile with a C++11 compiler. However,
+      there is no guarantee that it stays that way, and any compilers that do not
+      support at least C++14 are considered unsupported as of now.
+    * [*BREAKING:] `any_color_converted_view()` is deprecated and will be removed in the next release.
+      Use `color_converted_view()` instead, which provides the same feature.
+    * [*BREAKING:] `apply_operation` for `any_image` is deprecated and will be removed in the next release.
+      Use `variant2::visit` instead, which provides the same feature. ([github_pr gil 656])
+    * Moved numeric extension to core ([github_pr gil 573])
+    * Added support for C++17's `<filesystem>` ([github_pr gil 636])
+      The availability of the `std::filesystem` is detected automatically,
+      unless the `BOOST_GIL_IO_USE_BOOST_FILESYSTEM` macro is defined that forces
+      the preference of the Boost.Filesystem.
+    * Renamed `pixel_multiply_t` to `pixel_multiplies_t` and `pixel_divide_t` to `pixel_divides_t` ([github_pr gil 655])
+    * Renamed `io/dynamic_io_new.hpp` to `io/detail/dynamic.hpp` ([github_pr gil 653])
+    * Moved function `construct_method` into `boost::gil::detail` namespace as it was only used by other implementation details ([github_pr gil 653])
+    * Made `packed_pixel` trivially copyable and assignable ([github_pr gil 679])
+    * Replace deprecated libtiff v4.3 typedefs with C99 fixed-size integers ([github_pr gil 685])
+  * Removed
+    * [*BREAKING:] Removed support for GCC 5 ([github_pr gil 572])
+    * Removed deprecated.hpp ([github_pr gil 627])
+  * Fixed
+    * Fixed conversion from RGB to HSL ([github_pr gil 505])
+    * Fixed conversion from RGB to signed CMYK ([github_pr gil 522])
+    * Removed unnecessary numeric cast in hsv.hpp ([github_pr gil 530])
+    * Fixed default constructor for `homogeneous_color_base` for reference pixel elements ([github_pr gil 542])
+    * Fixed returning reference to local temporary object in `subchroma_image_view` ([github_pr gil 556])
+    * Added missing header guards in diffusion.hpp ([github_pr gil 568])
+    * Fixed `any_image_view<>::const_t` ([github_pr gil 526])
+    * Fixed C++20 incompatibilities in I/O extensions ([github_pr gil 617])
+    * Ensured all examples build without errors ([github_pr gil 628])
+    * Fixed `convolve_2d` for images with `float32_t` channel model ([github_pr gil 577])
+    * Fixed `for_each_pixel` for non-1d iterable views ([github_pr gil 621])
+    * Fixed: `is_equal_to_sixteen` in PNG I/O was less-than test ([github_pr gil 650])
+    * Re-allow `devicen_t` with two components ([github_pr gil 654])
+      It was unintentionally removed in Boost 1.72
+    * Fixed memory leak in `image` class for empty dimensions ([github_pr gil 649])
+  * Acknowledgements
+    * Cypre55, Samuel Debionne, Mike-Devel, Edward Diener, Peter Dimov, Omar Emara, Dhruva Gole, Nicolas Herry, Eugene K, Avinal Kumar, Gaurav Kumar, Marco Langer, Pranam Lashkari, Mateusz Łoskot, Giovanni Mascellani, Debabrata Mandal, Gopi Krishna Menon, René Ferdinand Rivera Morell, Felix Morgner, Harshit Pant, Paul92, André Schröder, Scramjet911, Siddharth, Dirk Stolle, Prathamesh Tagore, theroyn, Olzhas Zhumabek
+
 * [phrase library..[@/libs/iterator/ Iterator]:]
   * For C++11 and later, added support for perfect forwarding of values written to `function_output_iterator`. ([github_pr iterator 73])
   * Added protection against writing to `function_output_iterator` a result of dereferencing another `function_output_iterator`.
