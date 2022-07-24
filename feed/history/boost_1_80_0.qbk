@@ -47,6 +47,9 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/filesystem/ Filesystem]:]
   * On Windows, added a fallback implementation for querying file attributes in case if the file cannot be opened with `ERROR_ACCESS_DENIED` error. This may allow `status` and `symlink_status` to succeed for system files and directories that are not reparse points or symlinks. ([github filesystem 234])
   * On Windows, added a workaround for FAT/exFAT filesystems that produce `ERROR_INVALID_PARAMETER` when querying file attributes. This affected `status` and `symlink_status`, which reported that files do not exist, and directory iterators, which failed to construct, as well as other dependent operations. ([github filesystem 236], [github filesystem 237])
+  * Worked around a compilation problem on [@https://www.rtems.org/ RTEMS]. ([github_pr filesystem 240])
+  * On Linux, corrected switching to `sendfile` `copy_file` implementation if `copy_file_range` failed with `ENOSYS` in runtime. The `sendfile` fallback implementation used to skip the filesystem type check and could fail for some filesystems.
+  * On POSIX systems supporting `openat` and related APIs defined in POSIX.1-2008 and on Windows Vista and later, improved protection of `remove_all` against [@https://www.cve.org/CVERecord?id=CVE-2022-21658 CVE-2022-21658] that was implemented in the previous release. The previous fix could still result in removing unintended files in [@https://github.com/boostorg/filesystem/issues/224#issuecomment-1183738097 certain conditions]. Other systems remain vulnerable.
 
 * [phrase library..[@/libs/gil/ GIL]:]
   [*NOTICE:] We are planning BREAKING switch to C++17 as minimum required C++ language version in one or two releases after Boost 1.80 ([github gil 676])
