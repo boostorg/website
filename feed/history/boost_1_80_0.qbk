@@ -149,6 +149,26 @@ Please keep the list of libraries sorted in lexicographical order.
     * Added a workaround for a [@https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105857 bug] in libstdc++ from gcc 11.2. When `max_size_decor` was used on a formatting stream, `std::codecvt::do_length` incorrectly accessed the input buffer and caused a buffer overflow.
   * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
 
+* [phrase library..[@/libs/math/ Math]:]
+  * [*Deprecated C++11 support]: from 2023 we will require C++14 as a minimum standard.
+    This will mean GCC-5 or MSVC-14.1 as a minimal requirement.
+  * Add `constexpr` fma support, see [@https://github.com/boostorg/math/pull/734 734].
+  * Add support for the Chatterjee Correlation Coefficient, see [@https://github.com/boostorg/math/pull/770 770].
+  * Added support for the logarithm of the PDF for all the distributions.
+  * Improve support for building with no exception or RTTI support.
+  * Some minor bug fixes for [sub 1]F[sub 1] corner cases, see [@https://github.com/boostorg/math/pull/778 778].
+
+* [phrase library..[@/libs/multiprecision/ Multiprecision]:]
+  * [*Mark C++11 support as deprecated]: from 2023 we will move to requiring C++14 as a minimum standard level.  That will drop support for
+    GCC versions prior to 5 and MSVC prior to 14.1.
+  * Fix conflict between `boost/cstdfloat.hpp` and this library.
+  * Clean up lots of gcc and clang warnings.
+  * Fix input streaming of composite types (complex, interval rational) where there is a trailing delimeter in the stream and no whitespace.
+  * Fix `constexpr` integer square root where the input is 1, 2 or 3.
+  * Add missing `#include` of `<memory>` to float128.hpp.
+  * Correct 2-arg constructor for class `number` to prevent ambiguity in some cases.
+  * Correct and make more consistent behaviour of divide-by-zero in gmp.hpp.
+
 * [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
   * Maintenance work.
 
