@@ -32,6 +32,63 @@ Please keep the list of libraries sorted in lexicographical order.
 
 [section Updated Libraries]
 
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added a deduced trailing return type to all asynchronous operations, to enable
+    the new form of `async_result` for C++11.
+  * Moved `append`, `prepend`, `as_tuple`, and `deferred` to the `boost::asio`
+    namespace, and made them compatible with C++11.
+  * Made `experimental::parallel_group` compatible with C++11.
+  * Added `buffer()` overloads for contiguous containers, such as `std::span`.
+  * Added the ability for `awaitable<>`-based coroutines to directly `co_await`
+    operations that are packaged as function objects.
+  * Changed `spawn()` to be a completion token-based asynchronous operation,
+    and added support for cancellation. The `basic_yield_context` token now
+    supports move-only and variadic result types. When targeting C++11 and later,
+    `spawn()` and `basic_yield_context` are implemented in terms of Boost.Context
+    directly.
+  * Added the `is_async_operation` trait and `async_operation` concept.
+  * Added the `completion_signature_of` trait.
+  * Added converting move construction/assignment to posix descriptors, serial
+    ports, pipes, Windows `object_handle`, Windows stream handles, and Windows
+    random-access handles.
+  * Added `release()` member functions to pipes, Windows stream handles, and
+    Windows random-access handles.
+  * Enabled support for `Endpoint` implementations that return `void` pointers
+    from their `data()` member functions, as per the documented `Endpoint` type
+    requirements.
+  * Removed `all()` and `race()` from `experimental::promise`, as
+    `experimental::parallel_group` covers this functionality.
+  * Added source locations to exceptions and error codes produced by the
+    synchronous and asynchronous operations.
+  * Fixed compatibility with OpenSSL 3.0.4 and later.
+  * Fixed compatibility with with [^-masm=intel].
+  * Explicitly stated that socket `shutdown()` calls are thread-safe with respect
+    to certain other synchronous operations on the same socket.
+  * Optimised the move construction of I/O objects where only the executor type
+    differs.
+  * Fixed the detection of `std::invoke_result` for clang/libc++.
+  * Fixed an issue where `experimental::parallel_group` initiation incorrectly
+    moved arguments instead of forwarding them.
+  * Fixed a sequencing issue in the implementation of `post()`, `dispatch()`,
+    and `defer()`.
+  * Fixed the `awaitable<>` implementation to propagate exceptions from awaited
+    initiation functions through the current completion handler.
+  * Fixed detection of `std::aligned_alloc` with [^gcc] 7.
+  * Changed to avoid using the soon-to-be-deprecated `std::aligned_storage` on
+    newer compilers.
+  * Fixed detection of `std::aligned_alloc` for older Apple platforms.
+  * Removed faulty assertions from `experimental::coro` implementation.
+  * Added defence against Qt-defined macros when building with Intel C++.
+  * Changed the implementation of the `select_reactor`, on Windows, to ensure that
+    any exception resulting from failure to recreate its interrupter's sockets
+    will be allowed to propagate out through `io_context::run()`.
+  * Fixed various compiler warnings.
+  * Updated all composed operations examples, and the C++11 timeouts example, to
+    use the new `async_result` form.
+  * Added composed operation and coroutine examples for C++20.
+  * Consult the [@/doc/libs/1_80_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
+
 * [phrase library..[@/libs/atomic/ Atomic]:]
   * Improved portability of endianness checks on ARM, AArch32 and AArch64 targets. ([github atomic 59])
   * Fixed compilation with MSVC 14.0 (Visual Studio 2015) in C++17 mode. ([github atomic 61])
