@@ -33084,6 +33084,29 @@
 "
 "
 "
+"  <div id="version_1_80_0.known_issues">
+"    <h3><span class="link">Known Issues</span></h3>
+"    <p>
+"      These are patches from library authors which were found too late to be fixed
+"      in the release.
+"    </p>
+"    <ul>
+"      <li>
+"        <div>
+"          Boost.Filesystem directory iterators may fail to construct for a network
+"          share on Windows prior to 10, see <a href="https://github.com/boostorg/filesystem/pull/246">PR#246</a> and <a href="https://github.com/boostorg/filesystem/issues/245">#245</a>.
+"          <a href="/patches/1_80_0/0001-filesystem-win-fix-dir-it-net-share.patch">Patch</a>.
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          In Boost.Filesystem on Windows, <code><span class="identifier">weakly_canonical</span></code>
+"          fails to process paths that start with the "\\?\" prefix, see
+"          <a href="https://github.com/boostorg/filesystem/issues/247">#247</a>. <a href="/patches/1_80_0/0002-filesystem-fix-weakly-canonical-long-paths.patch">Patch</a>.
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
 "  <div id="version_1_80_0.new_libraries">
 "    <h3><span class="link">New Libraries</span></h3>
 "    <ul>
@@ -33097,6 +33120,213 @@
 "  <div id="version_1_80_0.updated_libraries">
 "    <h3><span class="link">Updated Libraries</span></h3>
 "    <ul>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added a deduced trailing return type to all asynchronous operations,
+"                to enable the new form of <code><span class="identifier">async_result</span></code>
+"                for C++11.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Moved <code><span class="identifier">append</span></code>, <code><span class="identifier">prepend</span></code>, <code><span class="identifier">as_tuple</span></code>,
+"                and <code><span class="identifier">deferred</span></code> to the
+"                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span></code> namespace, and made them compatible
+"                with C++11.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Made <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">parallel_group</span></code>
+"                compatible with C++11.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">buffer</span><span class="special">()</span></code>
+"                overloads for contiguous containers, such as <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">span</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added the ability for <code><span class="identifier">awaitable</span><span class="special">&lt;&gt;</span></code>-based coroutines to directly
+"                <code><span class="identifier">co_await</span></code> operations
+"                that are packaged as function objects.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed <code><span class="identifier">spawn</span><span class="special">()</span></code>
+"                to be a completion token-based asynchronous operation, and added
+"                support for cancellation. The <code><span class="identifier">basic_yield_context</span></code>
+"                token now supports move-only and variadic result types. When targeting
+"                C++11 and later, <code><span class="identifier">spawn</span><span class="special">()</span></code> and <code><span class="identifier">basic_yield_context</span></code>
+"                are implemented in terms of Boost.Context directly.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added the <code><span class="identifier">is_async_operation</span></code>
+"                trait and <code><span class="identifier">async_operation</span></code>
+"                concept.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added the <code><span class="identifier">completion_signature_of</span></code>
+"                trait.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added converting move construction/assignment to posix descriptors,
+"                serial ports, pipes, Windows <code><span class="identifier">object_handle</span></code>,
+"                Windows stream handles, and Windows random-access handles.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">release</span><span class="special">()</span></code>
+"                member functions to pipes, Windows stream handles, and Windows random-access
+"                handles.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Enabled support for <code><span class="identifier">Endpoint</span></code>
+"                implementations that return <code><span class="keyword">void</span></code>
+"                pointers from their <code><span class="identifier">data</span><span class="special">()</span></code> member functions, as per the documented
+"                <code><span class="identifier">Endpoint</span></code> type requirements.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed <code><span class="identifier">all</span><span class="special">()</span></code>
+"                and <code><span class="identifier">race</span><span class="special">()</span></code>
+"                from <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">promise</span></code>,
+"                as <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">parallel_group</span></code> covers this functionality.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added source locations to exceptions and error codes produced by
+"                the synchronous and asynchronous operations.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed compatibility with OpenSSL 3.0.4 and later.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed compatibility with with <tt>-masm=intel</tt>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Explicitly stated that socket <code><span class="identifier">shutdown</span><span class="special">()</span></code> calls are thread-safe with respect
+"                to certain other synchronous operations on the same socket.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Optimised the move construction of I/O objects where only the executor
+"                type differs.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed the detection of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">invoke_result</span></code>
+"                for clang/libc++.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed an issue where <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">parallel_group</span></code>
+"                initiation incorrectly moved arguments instead of forwarding them.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a sequencing issue in the implementation of <code><span class="identifier">post</span><span class="special">()</span></code>, <code><span class="identifier">dispatch</span><span class="special">()</span></code>, and <code><span class="identifier">defer</span><span class="special">()</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed the <code><span class="identifier">awaitable</span><span class="special">&lt;&gt;</span></code> implementation to propagate
+"                exceptions from awaited initiation functions through the current
+"                completion handler.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed detection of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">aligned_alloc</span></code>
+"                with <tt>gcc</tt> 7.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed to avoid using the soon-to-be-deprecated <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">aligned_storage</span></code>
+"                on newer compilers.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed detection of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">aligned_alloc</span></code>
+"                for older Apple platforms.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed faulty assertions from <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">coro</span></code>
+"                implementation.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added defence against Qt-defined macros when building with Intel
+"                C++.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed the implementation of the <code><span class="identifier">select_reactor</span></code>,
+"                on Windows, to ensure that any exception resulting from failure to
+"                recreate its interrupter's sockets will be allowed to propagate out
+"                through <code><span class="identifier">io_context</span><span class="special">::</span><span class="identifier">run</span><span class="special">()</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed various compiler warnings.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Updated all composed operations examples, and the C++11 timeouts
+"                example, to use the new <code><span class="identifier">async_result</span></code>
+"                form.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added composed operation and coroutine examples for C++20.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Consult the <a href="/doc/libs/1_80_0/doc/html/boost_asio/history.html">Revision
+"                History</a> for further details.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
 "      <li>
 "        <div>
 "          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
@@ -34099,52 +34329,54 @@
 "          <ul>
 "            <li>
 "              <div>
-"                Clang: 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 12.0.0
+"                Clang: 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 12.0.0, 13.0.0, 14.0.0
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                Clang, C++11: 3.4, 11.0.0
+"                Clang, C++11: 3.4, 11.0.0, 13.0.0, 14.0.0
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                Clang, C++14: 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 5.0, 12.0.0
+"                Clang, C++14: 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 5.0, 12.0.0, 13.0.0,
+"                14.0.0
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                Clang, C++17: 6.0.1, 7.0.0, 8.0.0, 9.0.0, 10.0.0, 11.0.0, 12.0.0
+"                Clang, C++17: 6.0.1, 7.0.0, 8.0.0, 9.0.0, 10.0.0, 11.0.0, 12.0.0,
+"                13.0.0, 14.0.0
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                Clang, C++20: 11.0.0, 12.0.0, 13.0.0
+"                Clang, C++20: 11.0.0, 12.0.0, 13.0.0, 14.0.0
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                GCC: 4.6.3, 11
+"                GCC: 4.6.3, 11, 12
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                GCC, C++11: 4.7.3, 4.8.5, 11
+"                GCC, C++11: 4.7.3, 4.8.5, 11, 12
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                GCC, C++14: 5.4.0, 6.4.0, 7.3.0, 8.0.1, 9.1.0, 11
+"                GCC, C++14: 5.4.0, 6.4.0, 7.3.0, 8.0.1, 9.1.0, 11, 12
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                GCC, C++17: 7.3.0, 8.0.1, 9.1.0, 11
+"                GCC, C++17: 7.3.0, 8.0.1, 9.1.0, 11, 12
 "              </div>
 "            </li>
 "            <li>
 "              <div>
-"                GCC, C++20: 8.0.1, 9.1.0, 10, 11
+"                GCC, C++20: 8.0.1, 9.1.0, 10, 11, 12
 "              </div>
 "            </li>
 "          </ul>
@@ -34188,7 +34420,7 @@
 "          <ul>
 "            <li>
 "              <div>
-"                Visual C++: 10.0, 11.0, 12.0, 14.0, 14.1, 14.2
+"                Visual C++: 10.0, 11.0, 12.0, 14.0, 14.1, 14.2, 14.3
 "              </div>
 "            </li>
 "          </ul>
@@ -34204,7 +34436,7 @@
 "  </div>
 "
 -hash
-"e558cf4931b6bad21b70cdb3332b8f469ccf4b618a2b732bb2906367d5396502
+"0f4b975d4b59922f70283b2b765a933cfae283674099ac712e5e69a84d016bb0
 -id
 "version_1_80_0
 -notice_url
