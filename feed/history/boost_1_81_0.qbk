@@ -72,6 +72,29 @@ Please keep the list of libraries sorted in lexicographical order.
     includes `enum.hpp`. Code that has been relying on this implicit inclusion
     may fail, and will need to be fixed to include `enum.hpp`.
 
+* [phrase library..[@/libs/locale/ Locale]:]
+  * [*Major update with some breaking changes.]
+  * C++11 support is now required, support for C++03 and earlier is dropped
+  * Some enums have been converted to enum classes - Avoids name clashes
+  * Replace `-sICU_LINK_LOCALE` & `-sICU_LINK` by fine-grained configuration options as done in Boost.RegEx
+  * Fix detection of libiconv allowing Boost.Locale to be build (again) on some platforms
+  * Remove use of and support for `std::auto_ptr`
+  * Make the `codecvt` using `wchar_t` on Windows assume/use UTF-16 enconding
+  * Performance improvements:
+    Make `basic_format`, `date_time` & `hold_ptr` movable,
+    Fix use of format cache
+  * Make Boost.Locale compatible with more ICU versions (especially the tests)
+  * Fix RTTI definitions for some classes (visibility issues)
+  * Fix compatibility of the ICU backend with some libc++ versions
+  * Fix return value of some operators to correctly return non-const `*this`
+  * Fix int-overflow on negative roll of years in `date_time`
+  * Handle or suppress many warnings which makes the build log cleaner
+  * Add support for more Windows codepages
+  * Fix support for  Windows codepages like ISO-2022-JP
+
+* [phrase library..[@/libs/nowide/ Nowide]:]
+  * Fix build failure of tests on MSVC
+
 * [phrase library..[@/libs/system/ System]:]
   * The macro `BOOST_SYSTEM_DISABLE_THREADS` can now be defined to disable
     the use of `<mutex>` (e.g. on single-threaded libstdc++).
