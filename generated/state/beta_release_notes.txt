@@ -14895,3 +14895,484 @@
 -title_xml
 "Version 1.80.0
 )
+(feed/history/boost_1_81_0.qbk:1.81.0 beta1
+-description_xhtml
+"
+"
+"
+"  <div id="version_1_81_0.new_libraries">
+"    <h3><span class="link">New Libraries</span></h3>
+"    <ul>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/url/">URL</a>:</span> A library for parsing, modifying,
+"          and printing URLs using only C++11, from Vinnie Falco and Alan de Freitas.
+"          Features include fast compilation, strong invariants, and strict compliance
+"          using a memory-friendly approach.
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
+"  <div id="version_1_81_0.updated_libraries">
+"    <h3><span class="link">Updated Libraries</span></h3>
+"    <ul>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/beast/">Beast</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Add <code><span class="identifier">buffers_generator</span></code>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Add <code><span class="identifier">beast</span><span class="special">::</span><span class="identifier">http</span><span class="special">::</span><span class="identifier">message_generator</span></code>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">buffer_ref</span></code>,
+"                so beast buffers can be used with asio.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Support for per-operation cancellation
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                C++20 awaitable examples.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                websocket per-message compression options
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                websocket timeout option api
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                multiple content length error
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Support for default-completion and rebind
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/container_hash/">Container Hash</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <strong>Major update.</strong>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The specializations of <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">hash</span></code>
+"                have been removed; it now always calls <code><span class="identifier">hash_value</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Support for <code><span class="identifier">BOOST_HASH_NO_EXTENSIONS</span></code>
+"                has been removed. The extensions are always enabled.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                All standard containers are now supported. This includes <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">forward_list</span></code> and the unordered
+"                associative containers.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                User-defined containers (types that have <code><span class="identifier">begin</span><span class="special">()</span></code> and <code><span class="identifier">end</span><span class="special">()</span></code> member functions that return iterators)
+"                are now supported out of the box.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Described structs and classes (those annotated with <code><span class="identifier">BOOST_DESCRIBE_STRUCT</span></code> or <code><span class="identifier">BOOST_DESCRIBE_CLASS</span></code>) are now supported
+"                out of the box.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">hash_combine</span></code> has
+"                been improved.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The performance (and quality, as a result of the above change) of
+"                string hashing has been improved. <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">hash</span></code>
+"                for strings now passes SMHasher in 64 bit mode.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The documentation has been substantially revised to reflect the changes.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/describe/">Describe</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                To allow the inclusion of <code><span class="identifier">enumerators</span><span class="special">.</span><span class="identifier">hpp</span></code>,
+"                <code><span class="identifier">bases</span><span class="special">.</span><span class="identifier">hpp</span></code>, and <code><span class="identifier">members</span><span class="special">.</span><span class="identifier">hpp</span></code>
+"                when the option <code><span class="special">-</span><span class="identifier">pedantic</span></code>
+"                is used, the invocation of <code><span class="identifier">BOOST_DESCRIBE_ENUM</span></code>
+"                has been moved from <code><span class="identifier">modifiers</span><span class="special">.</span><span class="identifier">hpp</span></code>
+"                into a separate header, <code><span class="identifier">modifier_description</span><span class="special">.</span><span class="identifier">hpp</span></code>.
+"                As a consequence, <code><span class="identifier">modifiers</span><span class="special">.</span><span class="identifier">hpp</span></code>
+"                no longer includes <code><span class="keyword">enum</span><span class="special">.</span><span class="identifier">hpp</span></code>.
+"                Code that has been relying on this implicit inclusion may fail, and
+"                will need to be fixed to include <code><span class="keyword">enum</span><span class="special">.</span><span class="identifier">hpp</span></code>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/locale/">Locale</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <strong>Major update with some breaking changes.</strong>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                C++11 support is now required, support for C++03 and earlier is dropped
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Some enums have been converted to enum classes - Avoids name clashes
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Replace <code><span class="special">-</span><span class="identifier">sICU_LINK_LOCALE</span></code>
+"                &amp; <code><span class="special">-</span><span class="identifier">sICU_LINK</span></code>
+"                by fine-grained configuration options as done in Boost.RegEx
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix detection of libiconv allowing Boost.Locale to be build (again)
+"                on some platforms
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Remove use of and support for <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span></code>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Make the <code><span class="identifier">codecvt</span></code>
+"                using <code><span class="keyword">wchar_t</span></code> on Windows
+"                assume/use UTF-16 enconding
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Performance improvements: Make <code><span class="identifier">basic_format</span></code>,
+"                <code><span class="identifier">date_time</span></code> &amp;
+"                <code><span class="identifier">hold_ptr</span></code> movable,
+"                Fix use of format cache
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Make Boost.Locale compatible with more ICU versions (especially the
+"                tests)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix RTTI definitions for some classes (visibility issues)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix compatibility of the ICU backend with some libc++ versions
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix return value of some operators to correctly return non-const
+"                <code><span class="special">*</span><span class="keyword">this</span></code>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix int-overflow on negative roll of years in <code><span class="identifier">date_time</span></code>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Handle or suppress many warnings which makes the build log cleaner
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Add support for more Windows codepages
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix support for Windows codepages like ISO-2022-JP
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/nowide/">Nowide</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fix build failure of tests on MSVC
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/system/">System</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                The macro <code><span class="identifier">BOOST_SYSTEM_DISABLE_THREADS</span></code>
+"                can now be defined to disable the use of <code><span class="special">&lt;</span><span class="identifier">mutex</span><span class="special">&gt;</span></code>
+"                (e.g. on single-threaded libstdc++).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">value_type</span></code>,
+"                <code><span class="identifier">error_type</span></code>, <code><span class="identifier">in_place_value</span></code>, <code><span class="identifier">in_place_error</span></code>
+"                to <code><span class="identifier">result</span><span class="special">&lt;&gt;</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">emplace</span></code> to
+"                <code><span class="identifier">result</span><span class="special">&lt;&gt;</span></code>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/unordered/">Unordered</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <strong>Major update.</strong>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added fast containers <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">unordered_flat_map</span></code>
+"                and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">unordered_flat_set</span></code> based on open
+"                addressing.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/variant2/">Variant2</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added support for <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">json</span><span class="special">::</span><span class="identifier">value_from</span></code>
+"                and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">json</span><span class="special">::</span><span class="identifier">value_to</span></code>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/flyweight/index.html">Flyweight</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Maintenance work.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/multi_index/">Multi-index Containers</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Maintenance work.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
+"  <div id="version_1_81_0.compilers_tested">
+"    <h3><span class="link">Compilers Tested</span></h3>
+"    <p>
+"      Boost's primary test compilers are:
+"    </p>
+"    <ul>
+"      <li>
+"        <div>
+"          Linux:
+"          <ul>
+"            <li>
+"              <div>
+"                Clang: 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 12.0.0, 13.0.0, 14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++11: 3.4, 11.0.0, 13.0.0, 14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++14: 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 5.0, 12.0.0, 13.0.0,
+"                14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++17: 6.0.1, 7.0.0, 8.0.0, 9.0.0, 10.0.0, 11.0.0, 12.0.0,
+"                13.0.0, 14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++20: 11.0.0, 12.0.0, 13.0.0, 14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC: 4.6.3, 11, 12
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++11: 4.7.3, 4.8.5, 11, 12
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++14: 5.4.0, 6.4.0, 7.3.0, 8.0.1, 9.1.0, 11, 12
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++17: 7.3.0, 8.0.1, 9.1.0, 11, 12
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++20: 8.0.1, 9.1.0, 10, 11, 12
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          OS X:
+"          <ul>
+"            <li>
+"              <div>
+"                Apple Clang: 11.0.3
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Apple Clang, C++11: 11.0.3
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Apple Clang, C++14: 11.0.3
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Apple Clang, C++17: 11.0.3
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Apple Clang, C++20: 11.0.3
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          Windows:
+"          <ul>
+"            <li>
+"              <div>
+"                Visual C++: 10.0, 11.0, 12.0, 14.0, 14.1, 14.2, 14.3
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
+"  <div id="version_1_81_0.acknowledgements">
+"    <h3><span class="link">Acknowledgements</span></h3>
+"    <p>
+"      Marshall Clow and Glen Fernandes managed this release.
+"    </p>
+"  </div>
+"
+-hash
+"7387826640241bd7e3f39cf9114efa7ee6b7c38c1ab69173057cf69a354650ed
+-id
+"version_1_81_0
+-notice_url
+-notice_xml
+-pub_date
+-purpose_xml
+"
+"      New Libraries: Updated Libraries:
+"
+-title_xml
+"Version 1.81.0
+)
