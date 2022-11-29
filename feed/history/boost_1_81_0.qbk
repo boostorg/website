@@ -75,6 +75,12 @@ Please keep the list of libraries sorted in lexicographical order.
   * The documentation has been substantially revised to reflect
     the changes.
 
+* [phrase library..[@/libs/core/ Core]:]
+  * `empty_value` members are now marked as `constexpr`.
+  * Added `fclose_deleter`, a deleter that calls `std::fclose` on a pointer to `std::FILE`.
+  * Bit manipulation utilities in `boost/core/bit.hpp` now explicitly require unsigned integers on input. ([github core 129])
+  * `bit_width` now returns `int` instead of a value of the input argument type. This follows resolution of [@https://cplusplus.github.io/LWG/issue3656 LWG3656].
+
 * [phrase library..[@/libs/describe/ Describe]:]
   * To allow the inclusion of `enumerators.hpp`, `bases.hpp`, and `members.hpp`
     when the option `-pedantic` is used, the invocation of `BOOST_DESCRIBE_ENUM`
@@ -82,6 +88,16 @@ Please keep the list of libraries sorted in lexicographical order.
     `modifier_description.hpp`. As a consequence, `modifiers.hpp` no longer
     includes `enum.hpp`. Code that has been relying on this implicit inclusion
     may fail, and will need to be fixed to include `enum.hpp`.
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * [*Deprecated:] `path` construction, assignment and appending from containers of characters, such as `std::vector<char>` or `std::list<wchar_t>`, is deprecated in [*v3] and removed in [*v4]. Please use string types or iterators instead.
+  * [*Deprecated:] `boost/filesystem/path_traits.hpp` header is deprecated and will be removed in a future release. The header contained implementation details of `path` and should not be used in user's code.
+  * Previously deprecated APIs will now generate compilation warnings on use. To suppress these warnings, `BOOST_FILESYSTEM_ALLOW_DEPRECATED` macro can be defined when compiling user's code.
+  * Fixed compilation due to a missing include on POSIX systems that do not support `*at` APIs. ([github filesystem 250])
+  * On Windows prior to 10, added a workaround for network share filesystem that produces `ERROR_INVALID_PARAMETER` when constructing directory iterators. ([github_pr filesystem 246], [github filesystem 245])
+  * On Windows, fixed `weakly_canonical` failing with an `ERROR_INVALID_FUNCTION` error code if the path started with the "\\\\?\\" prefix. ([github filesystem 247])
+  * Added support for `std::string_view`, `boost::string_view` and `boost::container::string` (as well as respective `wchar_t` counterparts) in `path` constructors, assignment and appending operations. ([github filesystem 208])
+  * `path` constructors, assignment and appending operations taking a pair of iterators will no longer accept iterators with value types that are not one of the supported path character types.
 
 * [phrase library..[@/libs/flyweight/index.html Flyweight]:]
   * Maintenance work.
@@ -94,6 +110,11 @@ Please keep the list of libraries sorted in lexicographical order.
   * A small dependency reorganization. Now `boost::ref` and `boost::noncopyable` are used from Boost.Core ([github_pr fusion 249])
   * Added CI testing on Linux and MacOS for clang and gcc, fixed CI testing on Windows ([github_pr fusion 245], [github_pr fusion 236])
   * Improved docs and fixed typos ([github fusion 234], [github_pr fusion 235], [github_pr fusion 238])
+
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * `function_output_iterator` now supports perfect forwarding of the assigned values to the wrapped function object. ([github_pr iterator 73])
+  * Fixed compilation of constructing a `function_input_iterator` from result of post-incrementing another `function_input_iterator`. ([github iterator 75])
+  * The result of post-incrementing an iterator based on `iterator_facade` now supports `operator->`. `(it++)->foo` is equivalent to `(*it++).foo`, which was supported before.
 
 * [phrase library..[@/libs/json/ JSON]:]
   * Added `object::stable_erase`.
