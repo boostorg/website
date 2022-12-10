@@ -89,6 +89,9 @@ Please keep the list of libraries sorted in lexicographical order.
     includes `enum.hpp`. Code that has been relying on this implicit inclusion
     may fail, and will need to be fixed to include `enum.hpp`.
 
+* [phrase library..[@/libs/dll/ DLL]:]
+  * Fixed `path_from_handle` implementation for Windows platforms, thanks to @SaltfishAmi for the bug report [@https://github.com/apolukhin/Boost.DLL/issues/57 57].
+
 * [phrase library..[@/libs/filesystem/ Filesystem]:]
   * [*Deprecated:] `path` construction, assignment and appending from containers of characters, such as `std::vector<char>` or `std::list<wchar_t>`, is deprecated in [*v3] and removed in [*v4]. Please use string types or iterators instead.
   * [*Deprecated:] `boost/filesystem/path_traits.hpp` header is deprecated and will be removed in a future release. The header contained implementation details of `path` and should not be used in user's code.
@@ -146,6 +149,10 @@ Please keep the list of libraries sorted in lexicographical order.
     `std::nullopt_t`, and `std::monotype`).
   * Added non-throwing conversion from `value` to user types.
 
+* [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
+  * Fixed compilation while casting volatile arithmetic types. Thanks to Giovanni Cerretani for the bug report [github lexical_cast 50].
+  * Removed usage of deprecated headers. Thanks to Michael Ford for the PR [github_pr lexical_cast 53].
+
 * [phrase library..[@/libs/locale/ Locale]:]
   * [*Major update with some breaking changes.]
   * C++11 support is now required, support for C++03 and earlier is dropped
@@ -172,7 +179,17 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/nowide/ Nowide]:]
   * Fix build failure of tests on MSVC
 
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * The library [*does not use COM initialization any more]. Thanks to Alex Guteniev for the bug report, clarifications and PR [github_pr stacktrace 123]!
+  * The library now may use `BOOST_STACKTRACE_BACKTRACE_INCLUDE_FILE` macro value while detecting the libbacktrace availability in b2, thanks to Ben Gemmill for the bug report [github stacktrace 115].
+  * Added `BOOST_STACKTRACE_BACKTRACE_FORCE_STATIC` macro to force a single backtrace_state static instance while using the libbacktrace. Thanks to the Rasmus Thomsen for the bug report [github stacktrace 118]!
+  * Avoid unresolved references when including only the `boost/stacktrace/stacktrace.hpp` header. Thanks to the Long Deng for the bug report [github stacktrace 116].
+  * Optimized stacktrace printing by not calling `strlen` on Windows platforms. Thanks to Alex Guteniev for the bug report [github stacktrace 122]
+
 * [phrase library..[@/libs/pfr/ PFR]:]
+  * Improved detection of aggregate initializables in C++14 mode, thanks to Denis Mikhailov for the PR [github_pr pfr 97].
+  * Suppress clang-tidy warnings, thanks to Alexander Malkov for the PRs [github_pr pfr 109], [github_pr pfr 104].
+  * Use fold expressions if they are supported by the compiler. Thanks to Jean-Michaël Celerier for the PR [github_pr pfr 96].
   * Maintenance work.
 
 * [phrase library..[@/libs/stl_interfaces/ STLInterfaces]:]
@@ -193,6 +210,11 @@ Please keep the list of libraries sorted in lexicographical order.
   * Added CTAD deduction guides for all containers.
   * Added missing constructors as specified in
     [@https://cplusplus.github.io/LWG/issue2713 LWG issue 2713].
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Avoid recursive inclusion of headers, thanks to Nathan Sidwell for the bug report [github variant 101].
+  * Removed usage of deprecated headers, thanks to Michael Ford for the PR [github_pr variant 96].
+  * Fixed compilation on clang in C++23 mode, thanks to Ed Catmur for the PR [github_pr variant 98].
 
 * [phrase library..[@/libs/variant2/ Variant2]:]
   * Added support for `boost::json::value_from` and `boost::json::value_to`.
