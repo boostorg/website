@@ -34589,6 +34589,235 @@
 "    <ul>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added the <code><span class="identifier">consign</span></code>
+"                completion token adapter, which can be used to attach additional
+"                values to a completion handler.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">any_completion_handler</span><span class="special">&lt;&gt;</span></code>, which can be used to type-erase
+"                completion handlers.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">co_composed</span></code>
+"                to enable lightweight implementations of user-defined asynchronous
+"                operations using C++20 coroutines.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Add range-based <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">make_parallel_group</span><span class="special">()</span></code> overloads.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">any_completion_executor</span></code>,
+"                a type-erased wrapper for executors that are associated with completion
+"                handlers.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added missing <code><span class="identifier">context</span></code>
+"                query to use_future's executor.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added nothrow constructor overloads to <code><span class="identifier">execution</span><span class="special">::</span><span class="identifier">any_executor</span><span class="special">&lt;&gt;</span></code> and <code><span class="identifier">any_io_executor</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Optimised representation of empty <code><span class="identifier">execution</span><span class="special">::</span><span class="identifier">any_executor</span></code>
+"                objects to improve the performance of copy and move operations.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added an <code><span class="identifier">associated_cancellation_slot</span></code>
+"                specialisation for <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">reference_wrapper</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed I/O objects to return their executors by const reference.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed associated to use deduced return types for all two-argument
+"                <code><span class="identifier">get</span></code> functions.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">spawn</span></code> implementation
+"                to catch unhandled exceptions and rethrow them outside of the spawned
+"                "thread".
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">spawn</span></code> to ensure
+"                the completion handler is dispatched through the correct executor.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed cleanup of of terminal-state <code><span class="identifier">spawn</span></code>
+"                "thread" objects.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">spawn</span></code> and
+"                <code><span class="identifier">co_spawn</span></code> implementations
+"                to dispatch cancellation handlers on the correct executor.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed semantics of 'dispatch' to mean the executor is used as-is.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Deprecated the <code><span class="identifier">execution</span><span class="special">::</span><span class="identifier">execute</span></code>
+"                customisation point and sender/receiver facilities.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a C++11 <code><span class="identifier">parallel_group</span></code>
+"                example.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed example code to not use the deprecated <code><span class="identifier">resolve</span></code>
+"                conversions.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed an ambiguity in <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">channel_traits</span></code>
+"                specialisations.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a specialised channel implementation for the for <code><span class="identifier">R</span><span class="special">(</span><span class="identifier">error_code</span><span class="special">)</span></code>
+"                signature.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Made <code><span class="identifier">cancelled</span><span class="special">()</span></code>
+"                public on the <code><span class="identifier">async_compose</span></code>
+"                'self' object.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added io_executor_type and get_io_executor to the <code><span class="identifier">async_compose</span></code>
+"                'self' object.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed implementation of <code><span class="identifier">release</span><span class="special">()</span></code> for Windows overlapped handles.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Enabled deferred awaiting for <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">coro</span></code>,
+"                regularised <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">use_coro</span></code>,
+"                and fixed allocator handling.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Cleaned up <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">promise</span></code>
+"                and made it an asynchronous operation object.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Constrained <code><span class="identifier">post</span></code>/<code><span class="identifier">defer</span></code> overloads on ability to require
+"                <code><span class="identifier">blocking</span><span class="special">.</span><span class="identifier">never</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed descriptor implementation to fall back to <code><span class="identifier">fcntl</span></code>
+"                if <code><span class="identifier">ioctl</span></code> fails with
+"                <code><span class="identifier">ENOTTY</span></code> when setting
+"                non-blocking mode.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed Xcode deprecation warnings related to use of <code><span class="identifier">sprintf</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed the arguments passed to <code><span class="identifier">select_reactor</span><span class="special">::</span><span class="identifier">run</span></code>
+"                when it is run on an internal thread.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed compilation errors when <code><span class="identifier">BOOST_ASIO_DISABLE_SMALL_BLOCK_RECYCLING</span></code>
+"                is defined.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Updated detection of C++20 coroutine support on clang 14 and later.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed standard library feature detection to always enable <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">invoke_result</span></code> when targeting C++17
+"                or later.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed detection of return type deduction with MSVC.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Updated the asynchronous operation requirements to relax the requirements
+"                on the associated executor.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <tt>io_uring</tt> to the implementation notes.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Consult the <a href="/doc/libs/1_81_0/doc/html/boost_asio/history.html">Revision
+"                History</a> for further details.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/beast/">Beast</a>:</span>
 "          <ul>
 "            <li>
@@ -35493,7 +35722,7 @@
 "  </div>
 "
 -hash
-"3df8b5c48eb3add0e691ee6fbb63bccfa7a5b885e4530d0becf2ef75c7ef8427
+"9fbdc6c39fde1a121525c1851df11cfaa5d45351d3b3dea91c81e02e6f87bb65
 -id
 "version_1_81_0
 -notice_url
