@@ -46,6 +46,68 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed `named_condition_any` fails to notify ([github interprocess 62])
 ]
 
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added the `consign` completion token adapter, which can be used to attach
+    additional values to a completion handler.
+  * Added `any_completion_handler<>`, which can be used to type-erase completion
+    handlers.
+  * Added `experimental::co_composed` to enable lightweight
+    implementations of user-defined asynchronous operations using C++20
+    coroutines.
+  * Add range-based `experimental::make_parallel_group()` overloads.
+  * Added `any_completion_executor`, a type-erased wrapper for executors that
+    are associated with completion handlers.
+  * Added missing `context` query to use_future's executor.
+  * Added nothrow constructor overloads to `execution::any_executor<>` and
+    `any_io_executor`.
+  * Optimised representation of empty `execution::any_executor` objects to improve
+    the performance of copy and move operations.
+  * Added an `associated_cancellation_slot` specialisation for
+    `std::reference_wrapper`.
+  * Changed I/O objects to return their executors by const reference.
+  * Changed associated to use deduced return types for all two-argument `get`
+    functions.
+  * Fixed `spawn` implementation to catch unhandled exceptions and rethrow them
+    outside of the spawned "thread".
+  * Fixed `spawn` to ensure the completion handler is dispatched through the
+    correct executor.
+  * Fixed cleanup of of terminal-state `spawn` "thread" objects.
+  * Fixed `spawn` and `co_spawn` implementations to dispatch cancellation
+    handlers on the correct executor.
+  * Changed semantics of 'dispatch' to mean the executor is used as-is.
+  * Deprecated the `execution::execute` customisation point and sender/receiver
+    facilities.
+  * Added a C++11 `parallel_group` example.
+  * Fixed example code to not use the deprecated `resolve` conversions.
+  * Fixed an ambiguity in `experimental::channel_traits` specialisations.
+  * Added a specialised channel implementation for the  for `R(error_code)`
+    signature.
+  * Made `cancelled()` public on the `async_compose` 'self' object.
+  * Added io_executor_type and get_io_executor to the `async_compose` 'self'
+    object.
+  * Fixed implementation of `release()` for Windows overlapped handles.
+  * Enabled deferred awaiting for `experimental::coro`, regularised
+    `experimental::use_coro`, and fixed allocator handling.
+  * Cleaned up `experimental::promise` and made it an asynchronous operation
+    object.
+  * Constrained `post`/`defer` overloads on ability to require `blocking.never`.
+  * Changed descriptor implementation to fall back to `fcntl` if `ioctl` fails
+    with `ENOTTY` when setting non-blocking mode.
+  * Fixed Xcode deprecation warnings related to use of `sprintf`.
+  * Fixed the arguments passed to `select_reactor::run` when it is run on an
+    internal thread.
+  * Fixed compilation errors when `BOOST_ASIO_DISABLE_SMALL_BLOCK_RECYCLING` is
+    defined.
+  * Updated detection of C++20 coroutine support on clang 14 and later.
+  * Changed standard library feature detection to always enable
+    `std::invoke_result` when targeting C++17 or later.
+  * Fixed detection of return type deduction with MSVC.
+  * Updated the asynchronous operation requirements to relax the requirements on
+    the associated executor.
+  * Added [^io_uring] to the implementation notes.
+  * Consult the [@/doc/libs/1_81_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
+
 * [phrase library..[@/libs/beast/ Beast]:]
   * Add `buffers_generator`
   * Add `beast::http::message_generator`
