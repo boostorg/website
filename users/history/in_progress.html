@@ -39,6 +39,100 @@
                 <div class="description">
 
 
+  <div id="version_1_82_0.notice_of_dropping_c_03_support">
+    <h3><span class="link">Notice
+    of Dropping C++03 Support</span></h3>
+    <p>
+      The following libraries will be dropping C++03 support in release 1.84, two
+      releases from now:
+    </p>
+    <ul>
+      <li>
+        <div>
+          Bind
+        </div>
+      </li>
+      <li>
+        <div>
+          Chrono
+        </div>
+      </li>
+      <li>
+        <div>
+          ContainerHash
+        </div>
+      </li>
+      <li>
+        <div>
+          Endian
+        </div>
+      </li>
+      <li>
+        <div>
+          Function
+        </div>
+      </li>
+      <li>
+        <div>
+          Ratio
+        </div>
+      </li>
+      <li>
+        <div>
+          Rational
+        </div>
+      </li>
+      <li>
+        <div>
+          SmartPtr
+        </div>
+      </li>
+      <li>
+        <div>
+          System
+        </div>
+      </li>
+      <li>
+        <div>
+          Timer
+        </div>
+      </li>
+      <li>
+        <div>
+          Typeof
+        </div>
+      </li>
+      <li>
+        <div>
+          Unordered
+        </div>
+      </li>
+    </ul>
+    <p>
+      This release (1.82) and the next (1.83) will be the last releases offering
+      C++03 support for the above libraries and most of their dependencies.
+    </p>
+    <p>
+      The new baseline requirement for the above libraries, and for most of Boost,
+      will be C++11. Due to old compiler versions often implementing C++11 only partially,
+      due to missing support or bugs, what compilers are considered to meet the C++11
+      requirement may vary by library.
+    </p>
+    <p>
+      However, a general rule is that if a compiler does not recognize a C++11 keyword
+      or syntax at all (e.g. <code><span class="keyword">noexcept</span></code>,
+      <code><span class="keyword">constexpr</span></code>, or defining a <code><span class="special">=</span><span class="keyword">delete</span></code>d function
+      results in an immediate compile error), or if a compiler does not provide a
+      required C++11 header at all (e.g. trying to include <code><span class="special">&lt;</span><span class="identifier">atomic</span><span class="special">&gt;</span></code>
+      or <code><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">&gt;</span></code> fails), or the compiler provides a feature
+      or a header that is completely unusable, this compiler is not considered a
+      C++11 compiler.
+    </p>
+    <p>
+      This rules out, for instance, Microsoft Visual C++ before 14.0, or GCC before
+      4.8.
+    </p>
+  </div>
   <div id="version_1_82_0.new_libraries">
     <h3><span class="link">New Libraries</span></h3>
     <ul>
@@ -55,12 +149,254 @@
     <ul>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/math/">Math</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <strong>Deprecated C++11 support</strong>: We now
+                require C++14 as a minimum standard. Our minimum tested compiler
+                versions are now Clang-5, GCC-5 or MSVC-14.1.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added Estrin's method for polynomial evaluation.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix various issues in non-central distributions to allow for larger
+                non-centralities see <a href="https://github.com/boostorg/math/pull/939">939</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added CMake install target.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix special_functions.hpp to disable anything which can't be used
+                in an exception-free environment.
+              </div>
+            </li>
+            <li>
+              <div>
+                Get condition number calculation working in C++14.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix <code><span class="keyword">constexpr</span></code> table
+                driven functions to avoid massive slowdown when the code is not actually
+                <code><span class="keyword">constexpr</span></code>, see <a href="https://github.com/boostorg/math/issues/923">923</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improve tanh_sinh boundary handling, see <a href="https://github.com/boostorg/math/pull/894">894</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add Linux arm64, s390x and Apple M1 testing, fix up test cases to
+                handle 128-bit long doubles.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improve <code><span class="keyword">constexpr</span></code> math
+                functions to better handle infinities and NaN's.
+              </div>
+            </li>
+            <li>
+              <div>
+                Make the integrators const-correct.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix tanh_sinh integrator in case the function underflows, see <a href="https://github.com/boostorg/math/issues/898">898</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Don't use <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">cbrt</span></code> as some platforms still don't
+                support it.
+              </div>
+            </li>
+            <li>
+              <div>
+                Stop non-central T from raising spurious FE_INVALID exceptions, see
+                <a href="https://github.com/boostorg/math/pull/892">892</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix binomial distribution edge case.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improve ibeta handling of very small arguments, see <a href="https://github.com/boostorg/math/pull/884">884</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improve ibeta handling of infinities and NaN's, see <a href="https://github.com/boostorg/math/issues/878">874</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improve error handling in powm1, see <a href="https://github.com/boostorg/math/issues/781">781</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Improve root-finder bracketing to bracket faster when the exponent
+                is super-large or small.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix root finding edge cases, see <a href="https://github.com/boostorg/math/issues/873">873</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Lots of miscellaneous warning fixes.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add assertions when using features which require C++17 for better
+                error messages when invoking the compiler in a lower std version.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/multi_index/doc/index.html">Multi-index Containers</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Serialization now uses <code><span class="keyword">unsigned</span>
+                <span class="keyword">long</span></code> instead of <a href="/doc/libs/master/libs/serialization/doc/wrappers.html#collection_size_type"><code><span class="identifier">collection_size_type</span></code></a>, and
+                <code><span class="identifier">multi_index_container</span></code>
+                serialization <a href="/doc/libs/master/libs/serialization/doc/tutorial.html#versioning">class
+                version</a> has been bumped from 2 to 3 to reflect this change.
+                Reading old archives may fail for custom archive types giving special
+                treatment to <code><span class="identifier">collection_size_type</span></code>
+                values: if this is the case, globally define the macro <code><span class="identifier">BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2</span></code>
+                to ensure backwards compatibility in reading operations.
+              </div>
+            </li>
+            <li>
+              <div>
+                Maintenance work.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/multiprecision/">Multiprecision</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <strong>Deprecated C++11 support</strong>: We now
+                require C++14 as a minimum standard. Our minimum tested compiler
+                versions are now Clang-5, GCC-5 or MSVC-14.1.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a new forward declaration header.
+              </div>
+            </li>
+            <li>
+              <div>
+                Update Eigen interoperability so we no longer rely on Eigen's details,
+                see <a href="https://github.com/boostorg/multiprecision/issues/479">479</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add Cmake install target.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix cpp_dec_float construction from string in standalone case for
+                better error handling, see <a href="https://github.com/boostorg/multiprecision/issues/499">499</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Remove redundent definitions when in C++17 mode, see <a href="https://github.com/boostorg/multiprecision/pull/530">530</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix the error handling in standalone itrunc and ltrunc.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix potentially uninitialized storage when parsing octal strings.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add arm64 and s390x CI testing.
+              </div>
+            </li>
+            <li>
+              <div>
+                Add some missing expression template unpacking code for <code><span class="identifier">powm</span></code>, see <a href="https://github.com/boostorg/multiprecision/issues/506">506</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/static_string/">StaticString</a>:</span>
           <ul>
             <li>
               <div>
                 Boost.Core <code><span class="identifier">string_view</span></code>
                 and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">string_view</span></code> interoperability
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/test/">Test</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed several unused variable warnings
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed sprintf deprecation warnings
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed undefined behavior in <code><span class="identifier">basic_cstring</span><span class="special">::</span><span class="identifier">rfind</span></code>
+              </div>
+            </li>
+            <li>
+              <div>
+                Added CI through Github Actions
               </div>
             </li>
           </ul>
@@ -155,6 +491,24 @@
       </li>
     </ul>
   </div>
+  <div id="version_1_82_0.updated_tools">
+    <h3><span class="link">Updated Tools</span></h3>
+    <ul>
+      <li>
+        <div>
+          <span class="library"><a href="/tools/build/">Build</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Includes release of <a href="/tools/build/doc/html/#_version_4_9_4">B2
+                version 4.9.4</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
   <div id="version_1_82_0.compilers_tested">
     <h3><span class="link">Compilers Tested</span></h3>
     <p>
@@ -167,7 +521,8 @@
           <ul>
             <li>
               <div>
-                Clang: 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 12.0.0, 13.0.0, 14.0.0, 15.0.0
+                Clang, C++03: 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 12.0.0, 13.0.0, 14.0.0,
+                15.0.0
               </div>
             </li>
             <li>
@@ -194,7 +549,7 @@
             </li>
             <li>
               <div>
-                GCC: 4.6.3, 11, 12
+                GCC, C++03: 4.6.3, 11, 12
               </div>
             </li>
             <li>
@@ -226,7 +581,7 @@
           <ul>
             <li>
               <div>
-                Apple Clang: 11.0.3
+                Apple Clang, C++03: 11.0.3
               </div>
             </li>
             <li>
