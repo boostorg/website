@@ -50,37 +50,6 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed `named_condition_any` fails to notify ([github interprocess 62])
 ]
 
-* [phrase library..[@/libs/multi_index/doc/index.html Multi-index Containers]:]
-  * Serialization now uses `unsigned long` instead of
-    [@/libs/serialization/doc/wrappers.html#collection_size_type `collection_size_type`],
-    and `multi_index_container` serialization
-    [@/libs/serialization/doc/tutorial.html#versioning class version] has been bumped
-    from 2 to 3 to reflect this change. Reading old archives may fail for custom archive
-    types giving special treatment to `collection_size_type` values: if this is the case,
-    globally define the macro `BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2`
-    to ensure backwards compatibility in reading operations.
-  * Maintenance work.
-  
-* [phrase library..[@/libs/static_string/ StaticString]:]
-  * Boost.Core `string_view` and `std::string_view` interoperability
-
-* [phrase library..[@/libs/url/ URL]:]
-  * Add `url::format` with automatic percent-encoding
-  * URL router example
-  * `set_params` convenience function
-  * Support implicit conversions to `string_view`
-  * Parsing constructors are implicit
-  * `string_token::arg` has virtual destructor and slice protection
-  * Support `BOOST_URL_DISABLE_THREADS`
-  * Improvements and Bug fixes:
-    * WIN32_LEAN_AND_MEAN macro redefinition warning
-    * Comparison differentiates absent and empty components
-    * Detect `hier_part_rule` with empty-port-like segments
-    * Segments comparison as if normalized works above root
-    * hier-part path-rootless considers invalid segments
-    * port as number is set to 0 when it overflows
-    * ipv4 to string overflow detection algorithm
-
 * [phrase library..[@/libs/math/ Math]:]
   * [*Deprecated C++11 support]: We now require C++14 as a minimum standard.
     Our minimum tested compiler versions are now Clang-5, GCC-5 or MSVC-14.1.
@@ -106,6 +75,17 @@ Please keep the list of libraries sorted in lexicographical order.
   * Lots of miscellaneous warning fixes.
   * Add assertions when using features which require C++17 for better error messages when invoking the compiler in a lower std version.
 
+* [phrase library..[@/libs/multi_index/doc/index.html Multi-index Containers]:]
+  * Serialization now uses `unsigned long` instead of
+    [@/libs/serialization/doc/wrappers.html#collection_size_type `collection_size_type`],
+    and `multi_index_container` serialization
+    [@/libs/serialization/doc/tutorial.html#versioning class version] has been bumped
+    from 2 to 3 to reflect this change. Reading old archives may fail for custom archive
+    types giving special treatment to `collection_size_type` values: if this is the case,
+    globally define the macro `BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2`
+    to ensure backwards compatibility in reading operations.
+  * Maintenance work.
+  
 * [phrase library..[@/libs/multiprecision/ Multiprecision]:]
   * [*Deprecated C++11 support]: We now require C++14 as a minimum standard.
     Our minimum tested compiler versions are now Clang-5, GCC-5 or MSVC-14.1.
@@ -119,11 +99,31 @@ Please keep the list of libraries sorted in lexicographical order.
   * Add arm64 and s390x CI testing.
   * Add some missing expression template unpacking code for `powm`, see [@https://github.com/boostorg/multiprecision/issues/506 506].
 
+* [phrase library..[@/libs/static_string/ StaticString]:]
+  * Boost.Core `string_view` and `std::string_view` interoperability
+
 * [phrase library..[@/libs/test/ Test]:]
   * Fixed several unused variable warnings
   * Fixed sprintf deprecation warnings
   * Fixed undefined behavior in `basic_cstring::rfind`
   * Added CI through Github Actions
+
+* [phrase library..[@/libs/url/ URL]:]
+  * Add `url::format` with automatic percent-encoding
+  * URL router example
+  * `set_params` convenience function
+  * Support implicit conversions to `string_view`
+  * Parsing constructors are implicit
+  * `string_token::arg` has virtual destructor and slice protection
+  * Support `BOOST_URL_DISABLE_THREADS`
+  * Improvements and Bug fixes:
+    * WIN32_LEAN_AND_MEAN macro redefinition warning
+    * Comparison differentiates absent and empty components
+    * Detect `hier_part_rule` with empty-port-like segments
+    * Segments comparison as if normalized works above root
+    * hier-part path-rootless considers invalid segments
+    * port as number is set to 0 when it overflows
+    * ipv4 to string overflow detection algorithm
 
 [endsect]
 
