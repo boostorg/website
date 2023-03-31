@@ -208,8 +208,63 @@
           <ul>
             <li>
               <div>
-                Now uses core/enable_if instead of the deprecated utility/enable_if.
-                Thanks to Michael Ford for the PR <a href="https://github.com/boostorg/any/pull/25">PR#25</a>.
+                Now uses <code><span class="identifier">core</span><span class="special">/</span><span class="identifier">enable_if</span><span class="special">.</span><span class="identifier">hpp</span></code> header instead of the deprecated
+                <code><span class="identifier">utility</span><span class="special">/</span><span class="identifier">enable_if</span><span class="special">.</span><span class="identifier">hpp</span></code>. Thanks to Michael Ford for
+                the PR <a href="https://github.com/boostorg/any/pull/25">PR#25</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/beast">Beast</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Add <code><span class="identifier">error_code</span></code>s use
+                source_location
+              </div>
+            </li>
+            <li>
+              <div>
+                tcp_stream uses the correct executor of the timer.
+              </div>
+            </li>
+            <li>
+              <div>
+                error_categories use numeric ids
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">file_body</span></code> supports
+                seek
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/multi_index/doc/index.html">Multi-index Containers</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Serialization now uses <code><span class="keyword">unsigned</span>
+                <span class="keyword">long</span></code> instead of <a href="/doc/libs/master/libs/serialization/doc/wrappers.html#collection_size_type"><code><span class="identifier">collection_size_type</span></code></a>, and
+                <code><span class="identifier">multi_index_container</span></code>
+                serialization <a href="/doc/libs/master/libs/serialization/doc/tutorial.html#versioning">class
+                version</a> has been bumped from 2 to 3 to reflect this change.
+                Reading old archives may fail for custom archive types giving special
+                treatment to <code><span class="identifier">collection_size_type</span></code>
+                values: if this is the case, globally define the macro <code><span class="identifier">BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2</span></code>
+                to ensure backwards compatibility in reading operations.
+              </div>
+            </li>
+            <li>
+              <div>
+                Maintenance work.
               </div>
             </li>
           </ul>
@@ -249,6 +304,98 @@
               <div>
                 Avoid implicit cast from size_t to uint32_t, thanks to Travers Biddle
                 for the PR <a href="https://github.com/boostorg/dll/pull/57">PR#57</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/histogram/">Histogram</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Replace <code><span class="identifier">detail</span><span class="special">::</span><span class="identifier">span</span></code> and <code><span class="identifier">detail</span><span class="special">::</span><span class="identifier">make_span</span></code>
+                with implementations in <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span></code>
+              </div>
+            </li>
+            <li>
+              <div>
+                Documentation improvements
+              </div>
+            </li>
+            <li>
+              <div>
+                Protect usage of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">min</span></code>
+                and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">max</span></code> in some cases, contributed
+                by Han Jiang (min,max macros are illegially set by popular Windows
+                headers so we need to work around)
+              </div>
+            </li>
+            <li>
+              <div>
+                Added test to catch usage of unprotected min,max tokens in the library
+                in the future
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixes to support latest clang-14 and deduction guides in gcc-11+
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/locale/">Locale</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <code><span class="identifier">get_system_locale</span></code>
+                and dependents will now correctly favor <code><span class="error">$</span><span class="identifier">LC_ALL</span></code> over <code><span class="error">$</span><span class="identifier">LC_CTYPE</span></code> as defined by POSIX <a href="https://github.com/boostorg/locale/pull/144">PR#144</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">utf8_codecvt</span><span class="special">::</span><span class="identifier">out</span></code> returns <code><span class="identifier">partial</span></code>
+                for trailing (UTF) surrogates
+              </div>
+            </li>
+            <li>
+              <div>
+                Add <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">locale</span><span class="special">::</span><span class="identifier">util</span><span class="special">::</span><span class="identifier">locale_data</span></code> to parse a locale
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">locale</span><span class="special">::</span><span class="identifier">info</span><span class="special">::</span><span class="identifier">encoding</span><span class="special">()</span></code>
+                result is now in uppercase as documented, e.g. "UTF-8"
+                instead of "utf-8"
+              </div>
+            </li>
+            <li>
+              <div>
+                Support M49 country codes such as <code><span class="identifier">en_001</span></code>
+                or <code><span class="identifier">en_150</span></code> <a href="https://github.com/boostorg/locale/pull/148">PR#148</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                Treat <code><span class="identifier">en_US_POSIX</span></code>
+                as an alias for the <code><span class="identifier">C</span></code>
+                locale <a href="https://github.com/boostorg/locale/pull/148">PR#148</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                Improve error for missing segmentation support (i.e. without ICU)
+                <a href="https://github.com/boostorg/locale/pull/149">PR#149</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix compiler warnings
               </div>
             </li>
           </ul>
@@ -385,31 +532,6 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/master/libs/multi_index/doc/index.html">Multi-index Containers</a>:</span>
-          <ul>
-            <li>
-              <div>
-                Serialization now uses <code><span class="keyword">unsigned</span>
-                <span class="keyword">long</span></code> instead of <a href="/doc/libs/master/libs/serialization/doc/wrappers.html#collection_size_type"><code><span class="identifier">collection_size_type</span></code></a>, and
-                <code><span class="identifier">multi_index_container</span></code>
-                serialization <a href="/doc/libs/master/libs/serialization/doc/tutorial.html#versioning">class
-                version</a> has been bumped from 2 to 3 to reflect this change.
-                Reading old archives may fail for custom archive types giving special
-                treatment to <code><span class="identifier">collection_size_type</span></code>
-                values: if this is the case, globally define the macro <code><span class="identifier">BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2</span></code>
-                to ensure backwards compatibility in reading operations.
-              </div>
-            </li>
-            <li>
-              <div>
-                Maintenance work.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div>
           <span class="library"><a href="/doc/libs/master/libs/multiprecision/">Multiprecision</a>:</span>
           <ul>
             <li>
@@ -471,6 +593,26 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/nowide/">Nowide</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Add <code><span class="identifier">convert_string</span></code>
+                overload accepting a (<code><span class="identifier">std</span><span class="special">::</span></code>)string instance
+              </div>
+            </li>
+            <li>
+              <div>
+                Add <code><span class="identifier">quoted</span></code> to output
+                (quoted UTF-8) paths (<code><span class="identifier">std</span><span class="special">::</span><span class="identifier">filesystem</span></code>
+                or <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span></code>) to streams <a href="https://github.com/boostorg/nowide/pull/170">PR#170</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/pfr/">PFR</a>:</span>
           <ul>
             <li>
@@ -482,9 +624,15 @@
             </li>
             <li>
               <div>
+                Implemented <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">pfr</span><span class="special">::</span><span class="identifier">get</span></code>
+                by type of an element in the aggregate.
+              </div>
+            </li>
+            <li>
+              <div>
                 Implemented the <code><span class="identifier">BOOST_PFR_ENABLED</span></code>
-                to macro to detect library support, thanks to Denis Mikhailov for
-                the PR <a href="https://github.com/boostorg/pfr/pull/86">PR#86</a>.
+                macro to detect library support for reflection, thanks to Denis Mikhailov
+                for the PR <a href="https://github.com/boostorg/pfr/pull/86">PR#86</a>.
               </div>
             </li>
             <li>
@@ -495,8 +643,8 @@
             </li>
             <li>
               <div>
-                Fixed for the <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">pfr</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span></code>
-                on older compilers, thanks to Denis Mikhailov for the PR <a href="https://github.com/boostorg/pfr/pull/118">PR#118</a>.
+                Fixed the <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">pfr</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span></code> compilation on older compilers,
+                thanks to Denis Mikhailov for the PR <a href="https://github.com/boostorg/pfr/pull/118">PR#118</a>.
               </div>
             </li>
             <li>
@@ -525,13 +673,45 @@
             </li>
             <li>
               <div>
-                Implemented <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">pfr</span><span class="special">::</span><span class="identifier">get</span></code>
-                by type of an element in the aggregate.
+                Multiple fixes and improvements for the docs.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/process">Process</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added management for extern processes to V2 (still experimental)
               </div>
             </li>
             <li>
               <div>
-                Multiple fixes and improvements for the docs.
+                Deprecated <code><span class="identifier">wait_for</span></code>
+                &amp; <code><span class="identifier">wait_until</span></code>
+                in V1 - they will be removed in the future!
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/stacktrace/">Stacktrace</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed typos in docs and comments, thanks to Chocobo1 for the PR <a href="https://github.com/boostorg/stacktrace/pull/132">PR#132</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed multithreading flag detection for <code><span class="identifier">backtrace_create_state</span></code>
+                if <code><span class="identifier">BOOST_STACKTRACE_BACKTRACE_FORCE_STATIC</span></code>
+                is defined.
               </div>
             </li>
           </ul>
