@@ -108,6 +108,15 @@ or GCC before 4.8.
 * [phrase library..[@/libs/dll/ DLL]:]
   * Avoid implicit cast from size_t to uint32_t, thanks to Travers Biddle for the PR [github_pr dll 57].
 
+* [phrase library..[@/libs/locale/ Locale]:]
+  * `get_system_locale` and dependents will now correctly favor `$LC_ALL` over `$LC_CTYPE` as defined by POSIX [github_pr locale 144]
+  * `utf8_codecvt::out` returns `partial` for trailing (UTF) surrogates
+  * Add `boost::locale::util::locale_data` to parse a locale
+  * `boost::locale::info::encoding()` result is now in uppercase as documented, e.g. "UTF-8" instead of "utf-8"
+  * Support M49 country codes such as `en_001` or `en_150` [github_pr locale 148]
+  * Treat `en_US_POSIX` as an alias for the `C` locale [github_pr locale 148]
+  * Improve error for missing segmentation support (i.e. without ICU) [github_pr locale 149]
+  * Fix compiler warnings
 
 * [phrase library..[@/libs/math/ Math]:]
   * [*Deprecated C++11 support]: We now require C++14 as a minimum standard.
@@ -157,6 +166,10 @@ or GCC before 4.8.
   * Fix potentially uninitialized storage when parsing octal strings.
   * Add arm64 and s390x CI testing.
   * Add some missing expression template unpacking code for `powm`, see [@https://github.com/boostorg/multiprecision/issues/506 506].
+
+* [phrase library..[@/libs/nowide/ Nowide]:]
+  * Add `convert_string` overload accepting a (`std::`)string instance
+  * Add `quoted` to output (quoted UTF-8) paths (`std::filesystem` or `boost::filesystem`) to streams [github_pr nowide 170]
 
 * [phrase library..[@/libs/pfr/ PFR]:]
   * Implemented the `boost::pfr::is_implicitly_reflectable` and the machinery for specializing aggregates as reflectable or not, thanks to Denis Mikhailov for the PR [github_pr pfr 111].
