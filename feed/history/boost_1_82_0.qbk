@@ -95,7 +95,24 @@ or GCC before 4.8.
 ]
 
 * [phrase library..[@/libs/any/ Any]:]
-  * Now uses core/enable_if instead of the deprecated utility/enable_if. Thanks to Michael Ford for the PR [github_pr any 25].
+  * Now uses `core/enable_if.hpp` header instead of the deprecated `utility/enable_if.hpp`. Thanks to Michael Ford for the PR [github_pr any 25].
+
+* [phrase library..[@/libs/beast Beast]:]
+  * Add `error_code`s use source_location
+  * tcp_stream uses the correct executor of the timer.
+  * error_categories use numeric ids
+  * `file_body` supports seek
+
+* [phrase library..[@/libs/multi_index/doc/index.html Multi-index Containers]:]
+  * Serialization now uses `unsigned long` instead of
+    [@/libs/serialization/doc/wrappers.html#collection_size_type `collection_size_type`],
+    and `multi_index_container` serialization
+    [@/libs/serialization/doc/tutorial.html#versioning class version] has been bumped
+    from 2 to 3 to reflect this change. Reading old archives may fail for custom archive
+    types giving special treatment to `collection_size_type` values: if this is the case,
+    globally define the macro `BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2`
+    to ensure backwards compatibility in reading operations.
+  * Maintenance work.
 
 * [phrase library..[@/libs/container_hash/ ContainerHash]:]
   * Added an overload of `hash_value` for `std::nullptr_t`.
@@ -114,6 +131,16 @@ or GCC before 4.8.
   * Protect usage of `std::min` and `std::max` in some cases, contributed by Han Jiang (min,max macros are illegially set by popular Windows headers so we need to work around)
   * Added test to catch usage of unprotected min,max tokens in the library in the future 
   * Fixes to support latest clang-14 and deduction guides in gcc-11+
+
+* [phrase library..[@/libs/locale/ Locale]:]
+  * `get_system_locale` and dependents will now correctly favor `$LC_ALL` over `$LC_CTYPE` as defined by POSIX [github_pr locale 144]
+  * `utf8_codecvt::out` returns `partial` for trailing (UTF) surrogates
+  * Add `boost::locale::util::locale_data` to parse a locale
+  * `boost::locale::info::encoding()` result is now in uppercase as documented, e.g. "UTF-8" instead of "utf-8"
+  * Support M49 country codes such as `en_001` or `en_150` [github_pr locale 148]
+  * Treat `en_US_POSIX` as an alias for the `C` locale [github_pr locale 148]
+  * Improve error for missing segmentation support (i.e. without ICU) [github_pr locale 149]
+  * Fix compiler warnings
 
 * [phrase library..[@/libs/math/ Math]:]
   * [*Deprecated C++11 support]: We now require C++14 as a minimum standard.
@@ -139,17 +166,6 @@ or GCC before 4.8.
   * Fix root finding edge cases, see [@https://github.com/boostorg/math/issues/873 873].
   * Lots of miscellaneous warning fixes.
   * Add assertions when using features which require C++17 for better error messages when invoking the compiler in a lower std version.
-
-* [phrase library..[@/libs/multi_index/doc/index.html Multi-index Containers]:]
-  * Serialization now uses `unsigned long` instead of
-    [@/libs/serialization/doc/wrappers.html#collection_size_type `collection_size_type`],
-    and `multi_index_container` serialization
-    [@/libs/serialization/doc/tutorial.html#versioning class version] has been bumped
-    from 2 to 3 to reflect this change. Reading old archives may fail for custom archive
-    types giving special treatment to `collection_size_type` values: if this is the case,
-    globally define the macro `BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2`
-    to ensure backwards compatibility in reading operations.
-  * Maintenance work.
   
 * [phrase library..[@/libs/multiprecision/ Multiprecision]:]
   * [*Deprecated C++11 support]: We now require C++14 as a minimum standard.
@@ -164,17 +180,29 @@ or GCC before 4.8.
   * Add arm64 and s390x CI testing.
   * Add some missing expression template unpacking code for `powm`, see [@https://github.com/boostorg/multiprecision/issues/506 506].
 
+* [phrase library..[@/libs/nowide/ Nowide]:]
+  * Add `convert_string` overload accepting a (`std::`)string instance
+  * Add `quoted` to output (quoted UTF-8) paths (`std::filesystem` or `boost::filesystem`) to streams [github_pr nowide 170]
+
 * [phrase library..[@/libs/pfr/ PFR]:]
   * Implemented the `boost::pfr::is_implicitly_reflectable` and the machinery for specializing aggregates as reflectable or not, thanks to Denis Mikhailov for the PR [github_pr pfr 111].
-  * Implemented the `BOOST_PFR_ENABLED` to macro to detect library support, thanks to Denis Mikhailov for the PR [github_pr pfr 86].
+  * Implemented `boost::pfr::get` by type of an element in the aggregate.
+  * Implemented the `BOOST_PFR_ENABLED` macro to detect library support for reflection, thanks to Denis Mikhailov for the PR [github_pr pfr 86].
   * Fixed missing terminating character, thanks to Denis Mikhailov for the PR [github_pr pfr 114].
-  * Fixed for the `boost/pfr/config.hpp` on older compilers, thanks to Denis Mikhailov for the PR [github_pr pfr 118].
+  * Fixed the `boost/pfr/config.hpp` compilation on older compilers, thanks to Denis Mikhailov for the PR [github_pr pfr 118].
   * Workaround for broken C++17 stuctured binding in old compilers, thanks to Denis Mikhailov for the PR [github_pr pfr 119].
   * Avoid -Wzero-as-null-pointer-constant warnings, thanks to Markus F.X.J. Oberhumer for the PR [github_pr pfr 117].
   * Fixed multiple typos, thanks to Denis Mikhailov for the fixes.
   * Added missing `#pragma once`, thanks to [@https://github.com/caozhanhao caozhanhao] for the PR [github_pr pfr 121].
-  * Implemented `boost::pfr::get` by type of an element in the aggregate.
   * Multiple fixes and improvements for the docs.
+  
+* [phrase library..[@/libs/process Process]:]
+  * Added management for extern processes to V2 (still experimental)
+  * Deprecated `wait_for` & `wait_until` in V1 - they will be removed in the future!
+
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * Fixed typos in docs and comments, thanks to Chocobo1 for the PR [github_pr stacktrace 132].
+  * Fixed multithreading flag detection for `backtrace_create_state` if `BOOST_STACKTRACE_BACKTRACE_FORCE_STATIC` is defined.
 
 * [phrase library..[@/libs/static_string/ StaticString]:]
   * Boost.Core `string_view` and `std::string_view` interoperability
