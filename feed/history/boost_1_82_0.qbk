@@ -111,17 +111,6 @@ or GCC before 4.8.
   * error_categories use numeric ids
   * `file_body` supports seek
 
-* [phrase library..[@/libs/multi_index/doc/index.html Multi-index Containers]:]
-  * Serialization now uses `unsigned long` instead of
-    [@/libs/serialization/doc/wrappers.html#collection_size_type `collection_size_type`],
-    and `multi_index_container` serialization
-    [@/libs/serialization/doc/tutorial.html#versioning class version] has been bumped
-    from 2 to 3 to reflect this change. Reading old archives may fail for custom archive
-    types giving special treatment to `collection_size_type` values: if this is the case,
-    globally define the macro `BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2`
-    to ensure backwards compatibility in reading operations.
-  * Maintenance work.
-
 * [phrase library..[@/libs/container_hash/ ContainerHash]:]
   * Added an overload of `hash_value` for `std::nullptr_t`.
   * Added `is_tuple_like` and an overload of `hash_value` for
@@ -200,7 +189,18 @@ or GCC before 4.8.
   * Fix root finding edge cases, see [@https://github.com/boostorg/math/issues/873 873].
   * Lots of miscellaneous warning fixes.
   * Add assertions when using features which require C++17 for better error messages when invoking the compiler in a lower std version.
-  
+
+* [phrase library..[@/libs/multi_index/doc/index.html Multi-index Containers]:]
+  * Serialization now uses `unsigned long` instead of
+    [@/libs/serialization/doc/wrappers.html#collection_size_type `collection_size_type`],
+    and `multi_index_container` serialization
+    [@/libs/serialization/doc/tutorial.html#versioning class version] has been bumped
+    from 2 to 3 to reflect this change. Reading old archives may fail for custom archive
+    types giving special treatment to `collection_size_type` values: if this is the case,
+    globally define the macro `BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2`
+    to ensure backwards compatibility in reading operations.
+  * Maintenance work.
+
 * [phrase library..[@/libs/multiprecision/ Multiprecision]:]
   * [*Deprecated C++11 support]: We now require C++14 as a minimum standard.
     Our minimum tested compiler versions are now Clang-5, GCC-5 or MSVC-14.1.
@@ -229,7 +229,7 @@ or GCC before 4.8.
   * Fixed multiple typos, thanks to Denis Mikhailov for the fixes.
   * Added missing `#pragma once`, thanks to [@https://github.com/caozhanhao caozhanhao] for the PR [github_pr pfr 121].
   * Multiple fixes and improvements for the docs.
-  
+
 * [phrase library..[@/libs/process Process]:]
   * Added management for extern processes to V2 (still experimental)
   * Deprecated `wait_for` & `wait_until` in V1 - they will be removed in the future!
