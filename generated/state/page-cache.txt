@@ -35763,6 +35763,11 @@
 "      </li>
 "      <li>
 "        <div>
+"          Atomic
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          Bind
 "        </div>
 "      </li>
@@ -35793,6 +35798,11 @@
 "      </li>
 "      <li>
 "        <div>
+"          Filesystem
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          Function
 "        </div>
 "      </li>
@@ -35809,6 +35819,11 @@
 "      <li>
 "        <div>
 "          LexicalCast
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          Log
 "        </div>
 "      </li>
 "      <li>
@@ -35922,6 +35937,34 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                When compiled for x86 targets supporting AVX, vector instructions
+"                are now used for 128-bit atomic loads and stores.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                For 32-bit x86 targets, 64-bit atomic loads and stores with <code><span class="identifier">memory_order_seq_cst</span></code> semantics
+"                will now issue a memory ordering instruction.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">storage</span><span class="special">()</span></code>
+"                accessors and <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">storage_type</span></code>
+"                types that were deprecated in Boost.Atomic 1.73. Users are recommended
+"                to use <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">()</span></code>
+"                and <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value_type</span></code> instead.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/beast">Beast</a>:</span>
 "          <ul>
 "            <li>
@@ -35944,31 +35987,6 @@
 "              <div>
 "                <code><span class="identifier">file_body</span></code> supports
 "                seek
-"              </div>
-"            </li>
-"          </ul>
-"        </div>
-"      </li>
-"      <li>
-"        <div>
-"          <span class="library"><a href="/libs/multi_index/doc/index.html">Multi-index Containers</a>:</span>
-"          <ul>
-"            <li>
-"              <div>
-"                Serialization now uses <code><span class="keyword">unsigned</span>
-"                <span class="keyword">long</span></code> instead of <a href="/libs/serialization/doc/wrappers.html#collection_size_type"><code><span class="identifier">collection_size_type</span></code></a>, and
-"                <code><span class="identifier">multi_index_container</span></code>
-"                serialization <a href="/libs/serialization/doc/tutorial.html#versioning">class
-"                version</a> has been bumped from 2 to 3 to reflect this change.
-"                Reading old archives may fail for custom archive types giving special
-"                treatment to <code><span class="identifier">collection_size_type</span></code>
-"                values: if this is the case, globally define the macro <code><span class="identifier">BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2</span></code>
-"                to ensure backwards compatibility in reading operations.
-"              </div>
-"            </li>
-"            <li>
-"              <div>
-"                Maintenance work.
 "              </div>
 "            </li>
 "          </ul>
@@ -36002,12 +36020,221 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/core/">Core</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">snprintf</span><span class="special">.</span><span class="identifier">hpp</span></code> header with portable definitions
+"                of <code><span class="identifier">snprintf</span></code>, <code><span class="identifier">vsnprintf</span></code> and their <code><span class="keyword">wchar_t</span></code> counterparts.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Deprecated <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">is_same</span><span class="special">.</span><span class="identifier">hpp</span></code>
+"                and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">is_same</span></code>. The header will be removed
+"                in a future release. Users are advised to use Boost.TypeTraits or
+"                C++ standard library type traits instead.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Marked <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span></code> member functions and associated
+"                methods with <code><span class="keyword">noexcept</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Marked <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">swap</span></code> function with <code><span class="keyword">noexcept</span></code>, depending on whether the
+"                type supports a non-throwing swap operation.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">launder</span></code>, a portable implementation
+"                of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">launder</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">BOOST_CORE_ALIGNOF</span></code>,
+"                a portable implementation of <code><span class="keyword">alignof</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">max_align_t</span></code>, a portable equivalent
+"                of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">max_align_t</span></code>, and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">max_align</span></code>, the alignment of <code><span class="identifier">max_align_t</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">memory_resource</span></code>, a portable equivalent
+"                of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">pmr</span><span class="special">::</span><span class="identifier">memory_resource</span></code> from C++17.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">serialization</span><span class="special">.</span><span class="identifier">hpp</span></code>, a collection of primitives
+"                allowing libraries to implement Boost.Serialization support for their
+"                types without including a Serialization header and thereby making
+"                their libraries depend on Serialization.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">data</span></code>, an implementation of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">data</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">size</span></code>, an implementation of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">size</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Updated <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">span</span></code> to use <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">data</span></code>
+"                which adds support for range construction from an <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">initializer_list</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">identity</span></code>, an implementation of
+"                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">identity</span></code>. This facility has been
+"                moved from Boost.Functional.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/dll/">DLL</a>:</span>
 "          <ul>
 "            <li>
 "              <div>
 "                Avoid implicit cast from size_t to uint32_t, thanks to Travers Biddle
 "                for the PR <a href="https://github.com/boostorg/dll/pull/57">PR#57</a>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fixed compilation errors that could have been caused by <code><span class="identifier">path</span></code> conversion constructors being
+"                too permissive on the accepted arguments. (<a href="https://github.com/boostorg/filesystem/issues/273">#273</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>v4:</strong> <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">remove_filename</span></code>
+"                now presesrves the trailing directory separator. (<a href="https://github.com/boostorg/filesystem/issues/271">#271</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">remove_filename_and_trailing_separators</span></code>,
+"                which removes the filename and directory separators preceding it
+"                from the path. This behavior is similar to <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">remove_filename</span></code>
+"                in Filesystem <strong>v3</strong>, but is also usable
+"                in <strong>v4</strong>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">replace_filename</span></code>, which replaces
+"                filename in a path.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Updated implementation of the library version selection to avoid
+"                ODR violations. (<a href="https://github.com/boostorg/filesystem/issues/279">#279</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On Windows, added a workaround for querying file attributes for files
+"                in SMBv1 shares. Previously, directories in SMBv1 shares could have
+"                been reported as regular files. This does not affect SMBv2 or later.
+"                (<a href="https://github.com/boostorg/filesystem/issues/282">#282</a>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/geometry/">Geometry</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Major improvements
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/1045">PR#1045</a> Support geographic buffer for (multi)linestrings
+"                      and (multi)polygons
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Improvements
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/1114">PR#1114</a> Comparable distance: Add support for dynamic
+"                      geometries
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/1046">PR#1046</a> Support covered_by() for box, geometry combinations
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Solved issues
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/issues/705">#705</a> WKT: allow tabs and new lines
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/issues/1109">#1109</a>, <a href="https://github.com/boostorg/geometry/issues/1108">#1108</a> Fixes for union
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Various fixes in examples
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Breaking changes
+"                <ul>
+"                  <li>
+"                    <div>
+"                      The WKT output presentation of an empty polygon is now POLYGON()
+"                      to make it consistent with other geometries
+"                    </div>
+"                  </li>
+"                </ul>
 "              </div>
 "            </li>
 "          </ul>
@@ -36045,6 +36272,44 @@
 "            <li>
 "              <div>
 "                Fixes to support latest clang-14 and deduction guides in gcc-11+
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/json/">JSON</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <code><span class="identifier">set_at_pointer</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">hash</span></code> support.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Caller-provided serializer storage.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">value_to</span></code> supports
+"                missing elements for <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">optional</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix parser suspend inside an escape character.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Make sentinel() return a unique pointer.
 "              </div>
 "            </li>
 "          </ul>
@@ -36229,6 +36494,31 @@
 "              <div>
 "                Add assertions when using features which require C++17 for better
 "                error messages when invoking the compiler in a lower std version.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/multi_index/doc/index.html">Multi-index Containers</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Serialization now uses <code><span class="keyword">unsigned</span>
+"                <span class="keyword">long</span></code> instead of <a href="/libs/serialization/doc/wrappers.html#collection_size_type"><code><span class="identifier">collection_size_type</span></code></a>, and
+"                <code><span class="identifier">multi_index_container</span></code>
+"                serialization <a href="/libs/serialization/doc/tutorial.html#versioning">class
+"                version</a> has been bumped from 2 to 3 to reflect this change.
+"                Reading old archives may fail for custom archive types giving special
+"                treatment to <code><span class="identifier">collection_size_type</span></code>
+"                values: if this is the case, globally define the macro <code><span class="identifier">BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2</span></code>
+"                to ensure backwards compatibility in reading operations.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Maintenance work.
 "              </div>
 "            </li>
 "          </ul>
@@ -36738,7 +37028,7 @@
 "  </div>
 "
 -hash
-"92df6eee8b76ebf147d5d69ce38e0956383f8b6abeef24e51529f44b4b4fda4c
+"ee14d7fa6d7ae80049eb836c69a9274f5c94e9594ca89fe275668b381907514b
 -id
 "version_1_82_0
 -notice_url
