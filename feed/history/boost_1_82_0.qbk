@@ -26,16 +26,19 @@ The following libraries will be dropping C++03 support in release
 
 * Align
 * Any
+* Atomic
 * Bind
 * Chrono
 * ContainerHash
 * Conversion
 * DLL
 * Endian
+* Filesystem
 * Function
 * Functional
 * Io
 * LexicalCast
+* Log
 * Random
 * Ratio
 * SmartPtr
@@ -97,22 +100,16 @@ or GCC before 4.8.
 * [phrase library..[@/libs/any/ Any]:]
   * Now uses `core/enable_if.hpp` header instead of the deprecated `utility/enable_if.hpp`. Thanks to Michael Ford for the PR [github_pr any 25].
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * When compiled for x86 targets supporting AVX, vector instructions are now used for 128-bit atomic loads and stores.
+  * For 32-bit x86 targets, 64-bit atomic loads and stores with `memory_order_seq_cst` semantics will now issue a memory ordering instruction.
+  * Removed `atomic<T>::storage()` accessors and `atomic<T>::storage_type` types that were deprecated in Boost.Atomic 1.73. Users are recommended to use `atomic<T>::value()` and `atomic<T>::value_type` instead.
+
 * [phrase library..[@/libs/beast Beast]:]
   * Add `error_code`s use source_location
   * tcp_stream uses the correct executor of the timer.
   * error_categories use numeric ids
   * `file_body` supports seek
-
-* [phrase library..[@/libs/multi_index/doc/index.html Multi-index Containers]:]
-  * Serialization now uses `unsigned long` instead of
-    [@/libs/serialization/doc/wrappers.html#collection_size_type `collection_size_type`],
-    and `multi_index_container` serialization
-    [@/libs/serialization/doc/tutorial.html#versioning class version] has been bumped
-    from 2 to 3 to reflect this change. Reading old archives may fail for custom archive
-    types giving special treatment to `collection_size_type` values: if this is the case,
-    globally define the macro `BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2`
-    to ensure backwards compatibility in reading operations.
-  * Maintenance work.
 
 * [phrase library..[@/libs/container_hash/ ContainerHash]:]
   * Added an overload of `hash_value` for `std::nullptr_t`.
@@ -121,9 +118,35 @@ or GCC before 4.8.
   * Changed string hashing to use
     [@https://github.com/pdimov/mulxp_hash `mulxp1_hash`]. This
     improves both quality and speed.
-    
+
+* [phrase library..[@/libs/core/ Core]:]
+  * Added `boost/core/snprintf.hpp` header with portable definitions of `snprintf`, `vsnprintf` and their `wchar_t` counterparts.
+  * Deprecated `boost/core/is_same.hpp` and `boost::core::is_same`. The header will be removed in a future release.
+    Users are advised to use Boost.TypeTraits or C++ standard library type traits instead.
+  * Marked `boost::ref` member functions and associated methods with `noexcept`.
+  * Marked `boost::swap` function with `noexcept`, depending on whether the type supports a non-throwing swap operation.
+  * Added `boost::core::launder`, a portable implementation of `std::launder`.
+  * Added `BOOST_CORE_ALIGNOF`, a portable implementation of `alignof`.
+  * Added `boost::core::max_align_t`, a portable equivalent of `std::max_align_t`, and `boost::core::max_align`, the alignment of `max_align_t`.
+  * Added `boost::core::memory_resource`, a portable equivalent of `std::pmr::memory_resource` from C++17.
+  * Added `boost/core/serialization.hpp`, a collection of primitives allowing libraries to
+    implement Boost.Serialization support for their types without including a Serialization header and thereby making
+    their libraries depend on Serialization.
+  * Added `boost::data`, an implementation of `std::data`.
+  * Added `boost::size`, an implementation of `std::size`.
+  * Updated `boost::span` to use `boost::data` which adds support for range construction from an `std::initializer_list`.
+  * Added `boost::identity`, an implementation of `std::identity`. This facility has been moved from Boost.Functional.
+
 * [phrase library..[@/libs/dll/ DLL]:]
   * Avoid implicit cast from size_t to uint32_t, thanks to Travers Biddle for the PR [github_pr dll 57].
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Fixed compilation errors that could have been caused by `path` conversion constructors being too permissive on the accepted arguments. ([github filesystem 273])
+  * [*v4:] `path::remove_filename` now presesrves the trailing directory separator. ([github filesystem 271])
+  * Added `path::remove_filename_and_trailing_separators`, which removes the filename and directory separators preceding it from the path. This behavior is similar to `path::remove_filename` in Filesystem [*v3], but is also usable in [*v4].
+  * Added `path::replace_filename`, which replaces filename in a path.
+  * Updated implementation of the library version selection to avoid ODR violations. ([github filesystem 279])
+  * On Windows, added a workaround for querying file attributes for files in SMBv1 shares. Previously, directories in SMBv1 shares could have been reported as regular files. This does not affect SMBv2 or later. ([github filesystem 282])
 
 * [phrase library..[@/libs/geometry/ Geometry]:]
   * Major improvements
@@ -187,7 +210,18 @@ or GCC before 4.8.
   * Fix root finding edge cases, see [@https://github.com/boostorg/math/issues/873 873].
   * Lots of miscellaneous warning fixes.
   * Add assertions when using features which require C++17 for better error messages when invoking the compiler in a lower std version.
-  
+
+* [phrase library..[@/libs/multi_index/doc/index.html Multi-index Containers]:]
+  * Serialization now uses `unsigned long` instead of
+    [@/libs/serialization/doc/wrappers.html#collection_size_type `collection_size_type`],
+    and `multi_index_container` serialization
+    [@/libs/serialization/doc/tutorial.html#versioning class version] has been bumped
+    from 2 to 3 to reflect this change. Reading old archives may fail for custom archive
+    types giving special treatment to `collection_size_type` values: if this is the case,
+    globally define the macro `BOOST_MULTI_INDEX_ENABLE_SERIALIZATION_COMPATIBILITY_V2`
+    to ensure backwards compatibility in reading operations.
+  * Maintenance work.
+
 * [phrase library..[@/libs/multiprecision/ Multiprecision]:]
   * [*Deprecated C++11 support]: We now require C++14 as a minimum standard.
     Our minimum tested compiler versions are now Clang-5, GCC-5 or MSVC-14.1.
@@ -216,7 +250,7 @@ or GCC before 4.8.
   * Fixed multiple typos, thanks to Denis Mikhailov for the fixes.
   * Added missing `#pragma once`, thanks to [@https://github.com/caozhanhao caozhanhao] for the PR [github_pr pfr 121].
   * Multiple fixes and improvements for the docs.
-  
+
 * [phrase library..[@/libs/process Process]:]
   * Added management for extern processes to V2 (still experimental)
   * Deprecated `wait_for` & `wait_until` in V1 - they will be removed in the future!
