@@ -35763,6 +35763,11 @@
 "      </li>
 "      <li>
 "        <div>
+"          Asio
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          Atomic
 "        </div>
 "      </li>
@@ -35930,6 +35935,219 @@
 "                Now uses <code><span class="identifier">core</span><span class="special">/</span><span class="identifier">enable_if</span><span class="special">.</span><span class="identifier">hpp</span></code> header instead of the deprecated
 "                <code><span class="identifier">utility</span><span class="special">/</span><span class="identifier">enable_if</span><span class="special">.</span><span class="identifier">hpp</span></code>. Thanks to Michael Ford for
 "                the PR <a href="https://github.com/boostorg/any/pull/25">PR#25</a>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added the ability to customise the execution of a completion handler
+"                when an operation completes immediately.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added user-defined literals for buffer types.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a new protocol type <code><span class="identifier">local</span><span class="special">::</span><span class="identifier">seq_packet_protocol</span></code>
+"                to represent <code><span class="identifier">AF_UNIX</span></code>
+"                with <code><span class="identifier">SOCK_SEQPACKET</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Exposed <code><span class="identifier">sigaction</span><span class="special">()</span></code> flags via an optional argument
+"                to <code><span class="identifier">signal_set</span><span class="special">::</span><span class="identifier">add</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Change <code><span class="identifier">allocator_binder</span></code>,
+"                <code><span class="identifier">executor_binder</span></code>,
+"                and <code><span class="identifier">cancellation_slot_binder</span></code>
+"                to support detection of unspecialised associators.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed ambiguity in <code><span class="identifier">associated_cancellation_slot</span><span class="special">&lt;</span><span class="identifier">reference_wrapper</span><span class="special">&gt;::</span><span class="identifier">get</span><span class="special">()</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">awaitable</span><span class="special">&lt;&gt;</span></code>
+"                handling for completion signatures containing <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception_ptr</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">channel</span><span class="special">&lt;&gt;</span></code> <code><span class="identifier">try_send</span></code>
+"                failure after a <code><span class="identifier">cancel</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">thread_pool</span><span class="special">::</span><span class="identifier">join</span><span class="special">()</span></code> deadlock when the pool has no internal
+"                threads.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed pipe <code><span class="identifier">release</span><span class="special">()</span></code> when using <tt>io_uring</tt>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed data initialisation and cleanup issues in the <tt>io_uring</tt>
+"                backend.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a dangling reference issue in the execution context overload
+"                of <code><span class="identifier">get_associated_executor</span><span class="special">()</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Ensured buffered messages can still be received when an <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">channel</span><span class="special">&lt;&gt;</span></code>
+"                is closed.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed the <code><span class="identifier">any_completion_handler</span></code>
+"                assignment operator.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Constrained the constructor of <code><span class="identifier">any_completion_handler</span></code>
+"                to prevent accidental copying
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed to use <code><span class="identifier">uint64_t</span></code>
+"                for OpenSSL options, to match OpenSSL 3.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">deferred</span></code> interoperability
+"                with multiple completion signatures.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed channels to add partial support for C++11 and C++14.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added missing handler tracking source location support to <code><span class="identifier">co_composed</span></code> and 'awaitable&lt;&gt;'
+"                coroutines, when awaiting packaged asynchronous operations.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed some 'potential null dereference' and shadow variable warnings.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">buffer</span></code> overload selection when
+"                used with <code><span class="identifier">const_buffers_1</span></code>
+"                and <code><span class="identifier">mutable_buffers_1</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Disabled the runtime check for current Windows version unless targeting
+"                older Windows.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed compatibility between buffered stream wrappers and move-constructible
+"                streams, such as <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">stream</span><span class="special">&lt;&gt;</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">basic_socket_acceptor</span><span class="special">::</span><span class="identifier">async_accept</span></code>
+"                compatibility with lambdas that have a deduced return type.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">as_tuple</span></code> compatibility
+"                with legacy completion tokens.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">redirect_error</span></code>
+"                compatibility with new completion tokens.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a potential, Windows-specific program termination due to exceptions
+"                that should have been allowed to escape from a destructor.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Prevented inadvertent <code><span class="identifier">co_await</span></code>
+"                of boolean expressions.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed result handling and support for custom allocators in <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">use_coro</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed variadic template emulation for <code><span class="identifier">is_async_operation</span></code>
+"                and <code><span class="identifier">completion_signature_of</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed incorrect reuse of a moved-from result in <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">promise</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">coro</span></code>
+"                use with custom allocators.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">seek_cur</span></code> behaviour
+"                with stream-oriented files on Windows.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Various additions and modifications to the documentation.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Consult the <a href="/doc/libs/1_82_0/doc/html/boost_asio/history.html">Revision
+"                History</a> for further details.
 "              </div>
 "            </li>
 "          </ul>
@@ -37028,7 +37246,7 @@
 "  </div>
 "
 -hash
-"59f5f72764a8963fdd088a07bceb42ffb92bd359db3326e000ff8d4f2017facf
+"2895718f92e0f05f0693c4c3d9d80f9fd12eb1e650caf183c97132709da92406
 -id
 "version_1_82_0
 -notice_url
