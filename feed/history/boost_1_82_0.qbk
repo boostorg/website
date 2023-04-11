@@ -26,6 +26,7 @@ The following libraries will be dropping C++03 support in release
 
 * Align
 * Any
+* Asio
 * Atomic
 * Bind
 * Chrono
@@ -99,6 +100,59 @@ or GCC before 4.8.
 
 * [phrase library..[@/libs/any/ Any]:]
   * Now uses `core/enable_if.hpp` header instead of the deprecated `utility/enable_if.hpp`. Thanks to Michael Ford for the PR [github_pr any 25].
+  
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added the ability to customise the execution of a completion handler when an
+    operation completes immediately.
+  * Added user-defined literals for buffer types.
+  * Added a new protocol type `local::seq_packet_protocol` to represent `AF_UNIX`
+    with `SOCK_SEQPACKET`.
+  * Exposed `sigaction()` flags via an optional argument to `signal_set::add`.
+  * Change `allocator_binder`, `executor_binder`, and `cancellation_slot_binder`
+    to support detection of unspecialised associators.
+  * Fixed ambiguity in `associated_cancellation_slot<reference_wrapper>::get()`.
+  * Fixed `awaitable<>` handling for completion signatures containing
+    `std::exception_ptr`.
+  * Fixed `experimental::channel<>` `try_send` failure after a `cancel`.
+  * Fixed `thread_pool::join()` deadlock when the pool has no internal threads.
+  * Fixed pipe `release()` when using [^io_uring].
+  * Fixed data initialisation and cleanup issues in the [^io_uring] backend.
+  * Fixed a dangling reference issue in the execution context overload of
+    `get_associated_executor()`.
+  * Ensured buffered messages can still be received when an
+    `experimental::channel<>` is closed.
+  * Fixed the `any_completion_handler` assignment operator.
+  * Constrained the constructor of `any_completion_handler` to prevent
+    accidental copying
+  * Changed to use `uint64_t` for OpenSSL options, to match OpenSSL 3.
+  * Fixed `deferred` interoperability with multiple completion signatures.
+  * Fixed channels to add partial support for C++11 and C++14.
+  * Added missing handler tracking source location support to `co_composed` and
+    'awaitable<>' coroutines, when awaiting packaged asynchronous operations.
+  * Fixed some 'potential null dereference' and shadow variable warnings.
+  * Fixed a `asio::buffer` overload selection when used with `const_buffers_1`
+    and `mutable_buffers_1`.
+  * Disabled the runtime check for current Windows version unless targeting
+    older Windows.
+  * Fixed compatibility between buffered stream wrappers and move-constructible
+    streams, such as `ssl::stream<>`.
+  * Fixed `basic_socket_acceptor::async_accept` compatibility with
+    lambdas that have a deduced return type.
+  * Fixed `as_tuple` compatibility with legacy completion tokens.
+  * Fixed `redirect_error` compatibility with new completion tokens.
+  * Fixed a potential, Windows-specific program termination due to exceptions
+    that should have been allowed to escape from a destructor.
+  * Prevented inadvertent `co_await` of boolean expressions.
+  * Fixed result handling and support for custom allocators in
+    `experimental::use_coro`.
+  * Fixed variadic template emulation for `is_async_operation` and
+    `completion_signature_of`.
+  * Fixed incorrect reuse of a moved-from result in `experimental::promise`.
+  * Fixed `experimental::coro` use with custom allocators.
+  * Fixed `seek_cur` behaviour with stream-oriented files on Windows.
+  * Various additions and modifications to the documentation.
+  * Consult the [@/doc/libs/1_82_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
 
 * [phrase library..[@/libs/atomic/ Atomic]:]
   * When compiled for x86 targets supporting AVX, vector instructions are now used for 128-bit atomic loads and stores.
