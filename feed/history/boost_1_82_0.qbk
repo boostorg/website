@@ -19,6 +19,17 @@ Formatting reference: https://www.boost.org/doc/tools/quickbook/
 Please keep the list of libraries sorted in lexicographical order.
 ]
 
+[section Known Issues]
+
+These are patches from library authors which were found too late to be fixed
+in the release.
+
+* Filesystem
+  * Compilation on OpenBSD may fail because of broken support for `-Wl,--no-undefined` compiler flag for shared libraries on this platform, see [github filesystem 283].
+    [@/patches/1_82_0/0001-filesystem-fix-openbsd-build.patch Patch].
+
+[endsect]
+
 [section Notice of Dropping C++03 Support]
 
 The following libraries will be dropping C++03 support in release
@@ -100,7 +111,7 @@ or GCC before 4.8.
 
 * [phrase library..[@/libs/any/ Any]:]
   * Now uses `core/enable_if.hpp` header instead of the deprecated `utility/enable_if.hpp`. Thanks to Michael Ford for the PR [github_pr any 25].
-  
+
 * [phrase library..[@/libs/asio/ Asio]:]
   * Added the ability to customise the execution of a completion handler when an
     operation completes immediately.
