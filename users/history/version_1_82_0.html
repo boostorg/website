@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Version 1.82.0 beta 1</title>
+  <title>Version 1.82.0</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-boost.css" />
@@ -37,17 +37,47 @@
 
             <div class="section-body">
               <h2><span class=
-              "news-title">Version 1.82.0 beta 1</span></h2>
+              "news-title">Version 1.82.0</span></h2>
 
-              <p><span class=news-date">March 15th, 2023 15:05 GMT</span></p>
-              <p><a href="/doc/libs/1_82_0_beta1/">Documentation</a>
-              <table class="download-table"><caption>Beta Downloads</caption><tr><th scope="col">Platform</th><th scope="col">File</th><th scope="col">SHA256 Hash</th></tr>
-<tr><th scope="row" rowspan="2">unix</th><td><a href="https://boostorg.jfrog.io/artifactory/main/beta/1.82.0.beta1/source/boost_1_82_0_b1.tar.bz2">boost_1_82_0_b1.tar.bz2</a></td><td>edf4cb9e8e5a14412b91311438478ef6ce12afe2a54714eb2f0632a454c3d8d5</td></tr><tr><td><a href="https://boostorg.jfrog.io/artifactory/main/beta/1.82.0.beta1/source/boost_1_82_0_b1.tar.gz">boost_1_82_0_b1.tar.gz</a></td><td>0af2a60f76abb4f411b1bd9c1a553f64454d9414990e8cc12f02f3b431e2ac45</td></tr>
-<tr><th scope="row" rowspan="2">windows</th><td><a href="https://boostorg.jfrog.io/artifactory/main/beta/1.82.0.beta1/source/boost_1_82_0_b1.7z">boost_1_82_0_b1.7z</a></td><td>efe17bea3f0b2c11f34828f37d5777f30eb6fef57af355c6a6664b08a4339999</td></tr><tr><td><a href="https://boostorg.jfrog.io/artifactory/main/beta/1.82.0.beta1/source/boost_1_82_0_b1.zip">boost_1_82_0_b1.zip</a></td><td>495b2ae2f6970ea1e635f80222d9f6978148496cdd163e87c37cdd6de3b5ccfc</td></tr></table>
+              <p><span class=news-date">April 14th, 2023 03:08 GMT</span></p>
+              <p><a href="/doc/libs/1_82_0/">Documentation</a>
+              <table class="download-table"><caption>Downloads</caption><tr><th scope="col">Platform</th><th scope="col">File</th><th scope="col">SHA256 Hash</th></tr>
+<tr><th scope="row" rowspan="2">unix</th><td><a href="https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.tar.bz2">boost_1_82_0.tar.bz2</a></td><td>a6e1ab9b0860e6a2881dd7b21fe9f737a095e5f33a3a874afc6a345228597ee6</td></tr><tr><td><a href="https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.tar.gz">boost_1_82_0.tar.gz</a></td><td>66a469b6e608a51f8347236f4912e27dc5c60c60d7d53ae9bfe4683316c6f04c</td></tr>
+<tr><th scope="row" rowspan="2">windows</th><td><a href="https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.7z">boost_1_82_0.7z</a></td><td>e72ff100482d4b371327b6c550dbd244d49c0186860ccc3b8c093dd621537e39</td></tr><tr><td><a href="https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.zip">boost_1_82_0.zip</a></td><td>f7c9e28d242abcd7a2c1b962039fcdd463ca149d1883c3a950bbcc0ce6f7c6d9</td></tr></table>
               <div class="news-description">
                 <div class="description">
 
 
+  <div id="version_1_82_0.known_issues">
+    <h3><span class="link">Known Issues</span></h3>
+    <p>
+      These are patches from library authors which were found too late to be fixed
+      in the release.
+    </p>
+    <ul>
+      <li>
+        <div>
+          Filesystem
+          <ul>
+            <li>
+              <div>
+                Compilation on OpenBSD may fail because of broken support for <code><span class="special">-</span><span class="identifier">Wl</span><span class="special">,--</span><span class="identifier">no</span><span class="special">-</span><span class="identifier">undefined</span></code>
+                compiler flag for shared libraries on this platform, see <a href="https://github.com/boostorg/filesystem/issues/283">#283</a>.
+                <a href="/patches/1_82_0/0001-filesystem-fix-openbsd-build.patch">Patch</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                On Windows, creating directory iterators over directories in SMBv1
+                shares may fail with <code><span class="identifier">ERROR_INVALID_LEVEL</span></code>
+                error code, see <a href="https://github.com/boostorg/filesystem/issues/284">#284</a>. <a href="/patches/1_82_0/0002-filesystem-fix-win-smbv1-dir-iterator.patch">Patch</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
   <div id="version_1_82_0.notice_of_dropping_c_03_support">
     <h3><span class="link">Notice
     of Dropping C++03 Support</span></h3>
@@ -64,6 +94,16 @@
       <li>
         <div>
           Any
+        </div>
+      </li>
+      <li>
+        <div>
+          Asio
+        </div>
+      </li>
+      <li>
+        <div>
+          Atomic
         </div>
       </li>
       <li>
@@ -98,6 +138,11 @@
       </li>
       <li>
         <div>
+          Filesystem
+        </div>
+      </li>
+      <li>
+        <div>
           Function
         </div>
       </li>
@@ -114,6 +159,11 @@
       <li>
         <div>
           LexicalCast
+        </div>
+      </li>
+      <li>
+        <div>
+          Log
         </div>
       </li>
       <li>
@@ -202,7 +252,7 @@
     <ul>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/msyql/">Mysql</a>:</span> a C++11 client for the MySQL
+          <span class="library"><a href="/libs/msyql/">Mysql</a>:</span> a C++11 client for the MySQL
           database server, based on Boost.Asio, from Reuben Perez.
         </div>
       </li>
@@ -213,12 +263,13 @@
     <ul>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/any/">Any</a>:</span>
+          <span class="library"><a href="/libs/any/">Any</a>:</span>
           <ul>
             <li>
               <div>
-                Now uses core/enable_if instead of the deprecated utility/enable_if.
-                Thanks to Michael Ford for the PR <a href="https://github.com/boostorg/any/pull/25">PR#25</a>.
+                Now uses <code><span class="identifier">core</span><span class="special">/</span><span class="identifier">enable_if</span><span class="special">.</span><span class="identifier">hpp</span></code> header instead of the deprecated
+                <code><span class="identifier">utility</span><span class="special">/</span><span class="identifier">enable_if</span><span class="special">.</span><span class="identifier">hpp</span></code>. Thanks to Michael Ford for
+                the PR <a href="https://github.com/boostorg/any/pull/25">PR#25</a>.
               </div>
             </li>
           </ul>
@@ -226,7 +277,277 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/container_hash/">ContainerHash</a>:</span>
+          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added the ability to customise the execution of a completion handler
+                when an operation completes immediately.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added user-defined literals for buffer types.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a new protocol type <code><span class="identifier">local</span><span class="special">::</span><span class="identifier">seq_packet_protocol</span></code>
+                to represent <code><span class="identifier">AF_UNIX</span></code>
+                with <code><span class="identifier">SOCK_SEQPACKET</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Exposed <code><span class="identifier">sigaction</span><span class="special">()</span></code> flags via an optional argument
+                to <code><span class="identifier">signal_set</span><span class="special">::</span><span class="identifier">add</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Change <code><span class="identifier">allocator_binder</span></code>,
+                <code><span class="identifier">executor_binder</span></code>,
+                and <code><span class="identifier">cancellation_slot_binder</span></code>
+                to support detection of unspecialised associators.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed ambiguity in <code><span class="identifier">associated_cancellation_slot</span><span class="special">&lt;</span><span class="identifier">reference_wrapper</span><span class="special">&gt;::</span><span class="identifier">get</span><span class="special">()</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">awaitable</span><span class="special">&lt;&gt;</span></code>
+                handling for completion signatures containing <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception_ptr</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">channel</span><span class="special">&lt;&gt;</span></code> <code><span class="identifier">try_send</span></code>
+                failure after a <code><span class="identifier">cancel</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">thread_pool</span><span class="special">::</span><span class="identifier">join</span><span class="special">()</span></code> deadlock when the pool has no internal
+                threads.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed pipe <code><span class="identifier">release</span><span class="special">()</span></code> when using <tt>io_uring</tt>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed data initialisation and cleanup issues in the <tt>io_uring</tt>
+                backend.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a dangling reference issue in the execution context overload
+                of <code><span class="identifier">get_associated_executor</span><span class="special">()</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Ensured buffered messages can still be received when an <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">channel</span><span class="special">&lt;&gt;</span></code>
+                is closed.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed the <code><span class="identifier">any_completion_handler</span></code>
+                assignment operator.
+              </div>
+            </li>
+            <li>
+              <div>
+                Constrained the constructor of <code><span class="identifier">any_completion_handler</span></code>
+                to prevent accidental copying
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed to use <code><span class="identifier">uint64_t</span></code>
+                for OpenSSL options, to match OpenSSL 3.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">deferred</span></code> interoperability
+                with multiple completion signatures.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed channels to add partial support for C++11 and C++14.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added missing handler tracking source location support to <code><span class="identifier">co_composed</span></code> and 'awaitable&lt;&gt;'
+                coroutines, when awaiting packaged asynchronous operations.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed some 'potential null dereference' and shadow variable warnings.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">buffer</span></code> overload selection when
+                used with <code><span class="identifier">const_buffers_1</span></code>
+                and <code><span class="identifier">mutable_buffers_1</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Disabled the runtime check for current Windows version unless targeting
+                older Windows.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed compatibility between buffered stream wrappers and move-constructible
+                streams, such as <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">stream</span><span class="special">&lt;&gt;</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">basic_socket_acceptor</span><span class="special">::</span><span class="identifier">async_accept</span></code>
+                compatibility with lambdas that have a deduced return type.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">as_tuple</span></code> compatibility
+                with legacy completion tokens.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">redirect_error</span></code>
+                compatibility with new completion tokens.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a potential, Windows-specific program termination due to exceptions
+                that should have been allowed to escape from a destructor.
+              </div>
+            </li>
+            <li>
+              <div>
+                Prevented inadvertent <code><span class="identifier">co_await</span></code>
+                of boolean expressions.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed result handling and support for custom allocators in <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">use_coro</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed variadic template emulation for <code><span class="identifier">is_async_operation</span></code>
+                and <code><span class="identifier">completion_signature_of</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed incorrect reuse of a moved-from result in <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">promise</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">coro</span></code>
+                use with custom allocators.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">seek_cur</span></code> behaviour
+                with stream-oriented files on Windows.
+              </div>
+            </li>
+            <li>
+              <div>
+                Various additions and modifications to the documentation.
+              </div>
+            </li>
+            <li>
+              <div>
+                Consult the <a href="/doc/libs/1_82_0/doc/html/boost_asio/history.html">Revision
+                History</a> for further details.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
+          <ul>
+            <li>
+              <div>
+                When compiled for x86 targets supporting AVX, vector instructions
+                are now used for 128-bit atomic loads and stores.
+              </div>
+            </li>
+            <li>
+              <div>
+                For 32-bit x86 targets, 64-bit atomic loads and stores with <code><span class="identifier">memory_order_seq_cst</span></code> semantics
+                will now issue a memory ordering instruction.
+              </div>
+            </li>
+            <li>
+              <div>
+                Removed <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">storage</span><span class="special">()</span></code>
+                accessors and <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">storage_type</span></code>
+                types that were deprecated in Boost.Atomic 1.73. Users are recommended
+                to use <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">()</span></code>
+                and <code><span class="identifier">atomic</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value_type</span></code> instead.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/beast">Beast</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Add <code><span class="identifier">error_code</span></code>s use
+                source_location
+              </div>
+            </li>
+            <li>
+              <div>
+                tcp_stream uses the correct executor of the timer.
+              </div>
+            </li>
+            <li>
+              <div>
+                error_categories use numeric ids
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">file_body</span></code> supports
+                seek
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/container_hash/">ContainerHash</a>:</span>
           <ul>
             <li>
               <div>
@@ -252,7 +573,95 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/dll/">DLL</a>:</span>
+          <span class="library"><a href="/libs/core/">Core</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">snprintf</span><span class="special">.</span><span class="identifier">hpp</span></code> header with portable definitions
+                of <code><span class="identifier">snprintf</span></code>, <code><span class="identifier">vsnprintf</span></code> and their <code><span class="keyword">wchar_t</span></code> counterparts.
+              </div>
+            </li>
+            <li>
+              <div>
+                Deprecated <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">is_same</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">is_same</span></code>. The header will be removed
+                in a future release. Users are advised to use Boost.TypeTraits or
+                C++ standard library type traits instead.
+              </div>
+            </li>
+            <li>
+              <div>
+                Marked <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span></code> member functions and associated
+                methods with <code><span class="keyword">noexcept</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Marked <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">swap</span></code> function with <code><span class="keyword">noexcept</span></code>, depending on whether the
+                type supports a non-throwing swap operation.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">launder</span></code>, a portable implementation
+                of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">launder</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">BOOST_CORE_ALIGNOF</span></code>,
+                a portable implementation of <code><span class="keyword">alignof</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">max_align_t</span></code>, a portable equivalent
+                of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">max_align_t</span></code>, and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">max_align</span></code>, the alignment of <code><span class="identifier">max_align_t</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">memory_resource</span></code>, a portable equivalent
+                of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">pmr</span><span class="special">::</span><span class="identifier">memory_resource</span></code> from C++17.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">serialization</span><span class="special">.</span><span class="identifier">hpp</span></code>, a collection of primitives
+                allowing libraries to implement Boost.Serialization support for their
+                types without including a Serialization header and thereby making
+                their libraries depend on Serialization.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">data</span></code>, an implementation of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">data</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">size</span></code>, an implementation of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">size</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Updated <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">span</span></code> to use <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">data</span></code>
+                which adds support for range construction from an <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">initializer_list</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">identity</span></code>, an implementation of
+                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">identity</span></code>. This facility has been
+                moved from Boost.Functional.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/dll/">DLL</a>:</span>
           <ul>
             <li>
               <div>
@@ -265,7 +674,258 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/math/">Math</a>:</span>
+          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed compilation errors that could have been caused by <code><span class="identifier">path</span></code> conversion constructors being
+                too permissive on the accepted arguments. (<a href="https://github.com/boostorg/filesystem/issues/273">#273</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>v4:</strong> <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">remove_filename</span></code>
+                now presesrves the trailing directory separator. (<a href="https://github.com/boostorg/filesystem/issues/271">#271</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">remove_filename_and_trailing_separators</span></code>,
+                which removes the filename and directory separators preceding it
+                from the path. This behavior is similar to <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">remove_filename</span></code>
+                in Filesystem <strong>v3</strong>, but is also usable
+                in <strong>v4</strong>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">replace_filename</span></code>, which replaces
+                filename in a path.
+              </div>
+            </li>
+            <li>
+              <div>
+                Updated implementation of the library version selection to avoid
+                ODR violations. (<a href="https://github.com/boostorg/filesystem/issues/279">#279</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                On Windows, added a workaround for querying file attributes for files
+                in SMBv1 shares. Previously, directories in SMBv1 shares could have
+                been reported as regular files. This does not affect SMBv2 or later.
+                (<a href="https://github.com/boostorg/filesystem/issues/282">#282</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/geometry/">Geometry</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Major improvements
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/pull/1045">PR#1045</a> Support geographic buffer for (multi)linestrings
+                      and (multi)polygons
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Improvements
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/pull/1114">PR#1114</a> Comparable distance: Add support for dynamic
+                      geometries
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/pull/1046">PR#1046</a> Support covered_by() for box, geometry combinations
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Solved issues
+                <ul>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/issues/705">#705</a> WKT: allow tabs and new lines
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <a href="https://github.com/boostorg/geometry/issues/1109">#1109</a>, <a href="https://github.com/boostorg/geometry/issues/1108">#1108</a> Fixes for union
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Various fixes in examples
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Breaking changes
+                <ul>
+                  <li>
+                    <div>
+                      The WKT output presentation of an empty polygon is now POLYGON()
+                      to make it consistent with other geometries
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/histogram/">Histogram</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Replace <code><span class="identifier">detail</span><span class="special">::</span><span class="identifier">span</span></code> and <code><span class="identifier">detail</span><span class="special">::</span><span class="identifier">make_span</span></code>
+                with implementations in <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span></code>
+              </div>
+            </li>
+            <li>
+              <div>
+                Documentation improvements
+              </div>
+            </li>
+            <li>
+              <div>
+                Protect usage of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">min</span></code>
+                and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">max</span></code> in some cases, contributed
+                by Han Jiang (min,max macros are illegially set by popular Windows
+                headers so we need to work around)
+              </div>
+            </li>
+            <li>
+              <div>
+                Added test to catch usage of unprotected min,max tokens in the library
+                in the future
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixes to support latest clang-14 and deduction guides in gcc-11+
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/json/">JSON</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <code><span class="identifier">set_at_pointer</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">hash</span></code> support.
+              </div>
+            </li>
+            <li>
+              <div>
+                Caller-provided serializer storage.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">value_to</span></code> supports
+                missing elements for <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">optional</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix parser suspend inside an escape character.
+              </div>
+            </li>
+            <li>
+              <div>
+                Make sentinel() return a unique pointer.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/locale/">Locale</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <code><span class="identifier">get_system_locale</span></code>
+                and dependents will now correctly favor <code><span class="error">$</span><span class="identifier">LC_ALL</span></code> over <code><span class="error">$</span><span class="identifier">LC_CTYPE</span></code> as defined by POSIX <a href="https://github.com/boostorg/locale/pull/144">PR#144</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">utf8_codecvt</span><span class="special">::</span><span class="identifier">out</span></code> returns <code><span class="identifier">partial</span></code>
+                for trailing (UTF) surrogates
+              </div>
+            </li>
+            <li>
+              <div>
+                Add <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">locale</span><span class="special">::</span><span class="identifier">util</span><span class="special">::</span><span class="identifier">locale_data</span></code> to parse a locale
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">locale</span><span class="special">::</span><span class="identifier">info</span><span class="special">::</span><span class="identifier">encoding</span><span class="special">()</span></code>
+                result is now in uppercase as documented, e.g. "UTF-8"
+                instead of "utf-8"
+              </div>
+            </li>
+            <li>
+              <div>
+                Support M49 country codes such as <code><span class="identifier">en_001</span></code>
+                or <code><span class="identifier">en_150</span></code> <a href="https://github.com/boostorg/locale/pull/148">PR#148</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                Treat <code><span class="identifier">en_US_POSIX</span></code>
+                as an alias for the <code><span class="identifier">C</span></code>
+                locale <a href="https://github.com/boostorg/locale/pull/148">PR#148</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                Improve error for missing segmentation support (i.e. without ICU)
+                <a href="https://github.com/boostorg/locale/pull/149">PR#149</a>
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix compiler warnings
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/math/">Math</a>:</span>
           <ul>
             <li>
               <div>
@@ -394,14 +1054,14 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/multi_index/doc/index.html">Multi-index Containers</a>:</span>
+          <span class="library"><a href="/libs/multi_index/doc/index.html">Multi-index Containers</a>:</span>
           <ul>
             <li>
               <div>
                 Serialization now uses <code><span class="keyword">unsigned</span>
-                <span class="keyword">long</span></code> instead of <a href="/doc/libs/1_82_0_beta1/libs/serialization/doc/wrappers.html#collection_size_type"><code><span class="identifier">collection_size_type</span></code></a>, and
+                <span class="keyword">long</span></code> instead of <a href="/libs/serialization/doc/wrappers.html#collection_size_type"><code><span class="identifier">collection_size_type</span></code></a>, and
                 <code><span class="identifier">multi_index_container</span></code>
-                serialization <a href="/doc/libs/1_82_0_beta1/libs/serialization/doc/tutorial.html#versioning">class
+                serialization <a href="/libs/serialization/doc/tutorial.html#versioning">class
                 version</a> has been bumped from 2 to 3 to reflect this change.
                 Reading old archives may fail for custom archive types giving special
                 treatment to <code><span class="identifier">collection_size_type</span></code>
@@ -419,7 +1079,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/multiprecision/">Multiprecision</a>:</span>
+          <span class="library"><a href="/libs/multiprecision/">Multiprecision</a>:</span>
           <ul>
             <li>
               <div>
@@ -480,7 +1140,27 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/pfr/">PFR</a>:</span>
+          <span class="library"><a href="/libs/nowide/">Nowide</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Add <code><span class="identifier">convert_string</span></code>
+                overload accepting a (<code><span class="identifier">std</span><span class="special">::</span></code>)string instance
+              </div>
+            </li>
+            <li>
+              <div>
+                Add <code><span class="identifier">quoted</span></code> to output
+                (quoted UTF-8) paths (<code><span class="identifier">std</span><span class="special">::</span><span class="identifier">filesystem</span></code>
+                or <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span></code>) to streams <a href="https://github.com/boostorg/nowide/pull/170">PR#170</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/pfr/">PFR</a>:</span>
           <ul>
             <li>
               <div>
@@ -491,9 +1171,15 @@
             </li>
             <li>
               <div>
+                Implemented <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">pfr</span><span class="special">::</span><span class="identifier">get</span></code>
+                by type of an element in the aggregate.
+              </div>
+            </li>
+            <li>
+              <div>
                 Implemented the <code><span class="identifier">BOOST_PFR_ENABLED</span></code>
-                to macro to detect library support, thanks to Denis Mikhailov for
-                the PR <a href="https://github.com/boostorg/pfr/pull/86">PR#86</a>.
+                macro to detect library support for reflection, thanks to Denis Mikhailov
+                for the PR <a href="https://github.com/boostorg/pfr/pull/86">PR#86</a>.
               </div>
             </li>
             <li>
@@ -504,8 +1190,8 @@
             </li>
             <li>
               <div>
-                Fixed for the <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">pfr</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span></code>
-                on older compilers, thanks to Denis Mikhailov for the PR <a href="https://github.com/boostorg/pfr/pull/118">PR#118</a>.
+                Fixed the <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">pfr</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span></code> compilation on older compilers,
+                thanks to Denis Mikhailov for the PR <a href="https://github.com/boostorg/pfr/pull/118">PR#118</a>.
               </div>
             </li>
             <li>
@@ -534,12 +1220,6 @@
             </li>
             <li>
               <div>
-                Implemented <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">pfr</span><span class="special">::</span><span class="identifier">get</span></code>
-                by type of an element in the aggregate.
-              </div>
-            </li>
-            <li>
-              <div>
                 Multiple fixes and improvements for the docs.
               </div>
             </li>
@@ -548,7 +1228,45 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/static_string/">StaticString</a>:</span>
+          <span class="library"><a href="/libs/process">Process</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added management for extern processes to V2 (still experimental)
+              </div>
+            </li>
+            <li>
+              <div>
+                Deprecated <code><span class="identifier">wait_for</span></code>
+                &amp; <code><span class="identifier">wait_until</span></code>
+                in V1 - they will be removed in the future!
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/stacktrace/">Stacktrace</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed typos in docs and comments, thanks to Chocobo1 for the PR <a href="https://github.com/boostorg/stacktrace/pull/132">PR#132</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed multithreading flag detection for <code><span class="identifier">backtrace_create_state</span></code>
+                if <code><span class="identifier">BOOST_STACKTRACE_BACKTRACE_FORCE_STATIC</span></code>
+                is defined.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/libs/static_string/">StaticString</a>:</span>
           <ul>
             <li>
               <div>
@@ -561,7 +1279,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/test/">Test</a>:</span>
+          <span class="library"><a href="/libs/test/">Test</a>:</span>
           <ul>
             <li>
               <div>
@@ -588,7 +1306,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/unordered/">Unordered</a>:</span>
+          <span class="library"><a href="/libs/unordered/">Unordered</a>:</span>
           <ul>
             <li>
               <div>
@@ -625,7 +1343,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/url/">URL</a>:</span>
+          <span class="library"><a href="/libs/url/">URL</a>:</span>
           <ul>
             <li>
               <div>
@@ -712,11 +1430,11 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/doc/libs/1_82_0_beta1/libs/variant/">Variant</a>:</span>
+          <span class="library"><a href="/libs/variant/">Variant</a>:</span>
           <ul>
             <li>
               <div>
-                Now uses core/enable_if instead of the deprecated utility/enable_if.
+                Now uses core/addressof instead of the deprecated utility/addressof.
                 Thanks to Michael Ford for the PR <a href="https://github.com/boostorg/variant/pull/105">PR#105</a>.
               </div>
             </li>
