@@ -47,6 +47,15 @@ Please keep the list of libraries sorted in lexicographical order.
   * Added smart-pointer syntax to `boost::flyweight` (`operator*` and 
     `operator->` dereferencing to the underlying value).
 
+* [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
+  * Updated range `insert` in non-unique ordered indices to preserve insertion order
+    of equivalent elements (issue [github multi_index 68]). 
+  * Serialization now uses `std::size_t` instead of `unsigned long` to save and load
+    the size of a `multi_index_container` (`unsigned long` is smaller than
+    `std::size_t` in LLP64 data models). `multi_index_container` serialization
+    [@/libs/serialization/doc/tutorial.html#versioning class version] has been bumped
+    from 3 to 4 to reflect this change. 
+
 * [phrase library..[@/libs/ratio/ Ratio]:]
   * Change default `BOOST_RATIO_VERSION` to 2.
   * Support for `BOOST_RATIO_EXTENSIONS` is now deprecated and will eventually
