@@ -56,12 +56,17 @@ class BoostUtility
     static function cmp_pubdate($a,$b)
     { return cmp_less($b['pubdate'],$a['pubdate']); }
 
-    static function cmp_std_proposal($a,$b)
-    { return self::cmp(cmp_less($a['std-proposal'],$b['std-proposal']),$a,$b); }
-
-    static function cmp_std_tr1($a,$b)
-    { return self::cmp(cmp_less($a['std-tr1'],$b['std-tr1']),$a,$b); }
-
     static function cmp_title($a,$b)
     { return strcmp($a['title'],$b['title']); }
+
+    static function cmp_cxxstd($a,$b)
+    {
+        if (empty($a['cxxstd'])) {
+           return empty($b['cxxstd']) ? self::cmp_name($a, $b) : 1;
+        } else if (empty($b['cxxstd'])) {
+           return -1;
+        } else {
+           return self::cmp(strcmp($a['cxxstd'], $b['cxxstd']), $a, $b);
+        }
+    }
 }

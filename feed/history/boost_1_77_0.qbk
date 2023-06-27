@@ -1,0 +1,282 @@
+[article Version 1.77.0
+    [quickbook 1.6]
+    [source-mode c++]
+    [purpose
+        New Libraries: Describe, Lambda2.
+        Updated Libraries: Any, Asio, Atomic, Beast, Conversion, Core, DLL,
+        Filesystem, JSON, LexicalCast, Log, Mp11, MultiIndex, Nowide, PFR,
+        PropertyTree, System, UUID.
+        [/ Please don't add updated libraries yet, it
+           can create unnecessary merge conflicts.]
+    ]
+    [authors [Dawes, Beman]]
+    [/ last-revision is used for the final release date]
+    [last-revision ]
+]
+
+[import ext.qbk]
+
+[/
+Formatting reference: https://www.boost.org/doc/tools/quickbook/
+Please keep the list of libraries sorted in lexicographical order.
+]
+
+[section New Libraries]
+
+[/ Example:
+* [phrase library..[@/libs/accumulators/ Accumulators]:] Framework for
+  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
+]
+
+* [phrase library..[@/libs/describe/ Describe]:] A C++14 reflection library,
+  from Peter Dimov. Provides macros for describing enumerators and struct/class members,
+  and primitives for querying this information.
+
+* [phrase library..[@/libs/lambda2/ Lambda2]:] A C++14, dependency-free, single header
+  lambda library, from Peter Dimov. Allows simple function objects to be constructed via
+  expressions such as `_1 + 5`, `_1 % 2 == 0`, `_1 > _2`, or `_1 == ' ' || _1 == '\t'`.
+
+[endsect]
+
+[section Updated Libraries]
+
+[/ Example:
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  * Added anonymous shared memory for UNIX systems.
+  * Move semantics for shared objects ([ticket 1932]).
+  * Conform to `std::pointer_traits` requirements ([github_pr interprocess 32])
+  * Fixed `named_condition_any` fails to notify ([github interprocess 62])
+]
+
+* [phrase library..[@/libs/any/ Any]:]
+  * Added `boost::anys::basic_any` - a data type with customizable Small Object Optimization whose instances can hold instances of any type that satisfies ValueType requirements (many thanks to Ruslan Arutyunyan @rarutyun). If you are not sure that you really need it, then use `boost::any` instead.
+  * Started using GithubActions CI for additional testing
+  
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added support for cancellation of individual asynchronous operations.
+  * Added the `associator` trait, used to generically forward associators.
+  * Changed all asynchronous operations implemented in Asio to invoke their
+    completion handlers as rvalue references.
+  * Added support for asynchronous operations with multiple completion signatures.
+  * Added `operator&&` and `operator||` for `awaitable<>`, to allow coroutines to
+    be trivially awaited in parallel.
+  * Added the `experimental::as_tuple` completion token adapter.
+  * Added the `experimental::append` completion token adapter.
+  * Added the `experimental::prepend` completion token adapter.
+  * Added the `experimental::deferred` completion token, whicih allows deferred
+    execution of asynchronous operations.
+  * Added the `experimental::parallel_group` class and
+    `experimental::make_parallel_group` function.
+  * Added `experimental::promise`, which allows eager execution and
+    synchronisation of asynchronous operations.
+  * Added the `experimental::coro` class template, a C++20
+    coroutine primitive with the ability to combine both
+    asynchronous waiting (`co_await`) and yielding (`co_yield`).
+  * Added move assignment to `ssl::stream<>`.
+  * Changed `co_spawn` to `dispatch` the coroutine's initial step to the executor.
+  * Enabled additional optimisations for `any_executor` and `any_io_executor`
+    when used with asynchronous operations.
+  * Added the `nodiscard` attribute to `awaitable<>`.
+  * Increased the number of cached slots in the default recycling allocator.
+  * Changed the default allocator behaviour to respect alignment requirements,
+    to support over-aligned types.
+  * Ensured the result strings are always initialised in reverse name resolution.
+  * Fixed recursive template instantiation issues in
+    `use_awaitable_t::executor_with_default`.
+  * Fixed the `any_io_executor` equality operators to correctly return a result
+    based on the target executor.
+  * Fixed `strand<>` to avoid using a potentially moved-from executor.
+  * Ensured [^gcc] tests are not used for [^clang] when detecting compiler
+    features.
+  * Disabled coroutines support for the [^clang] shipped with MSVC.
+  * Fixed compatibility with recent LibreSSL when `OPENSSL_NO_SSL_INTERN` is
+    defined.
+  * Fixed `posix::basic_stream_descriptor` move operations to work with
+    non-defaulted executors.
+  * Consult the [@/doc/libs/1_77_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
+
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Added `make_atomic_ref` and `make_ipc_atomic_ref` factory functions for constructing atomic reference objects.
+  * Added C++17 template argument deduction guides for `atomic_ref` and `ipc_atomic_ref` to allow omitting template arguments when they can be deduced from constructor arguments.
+
+* [phrase library..[@/libs/beast/ Beast]:]
+  * This maintenance update brings minor bug fixes and updated CI reporting.
+  * We'd love to know how you or your company use Beast, consider adding an
+    entry to the
+    [@https://github.com/boostorg/beast/wiki/Companies-and-Individuals-Using-Beast Companies and Individuals Using Beast]
+    list.
+  * See the full
+    [@/libs/beast/doc/html/beast/release_notes.html Release Notes]
+    for a complete list of changes.
+
+* [phrase library..[@/libs/conversion/ Conversion]:]
+  * `boost::implicit_cast` is now `constexpr` ([github conversion 25]).
+  * Fixed broken links ([github_pr conversion 23]).
+  * Started using GithubActions CI for additional testing
+
+* [phrase library..[@/libs/core/ Core]:]
+  * `boost/core/uncaught_exceptions.hpp` has been modified for compatibility with Mac OS 10.4 and older. ([github_pr core 92])
+
+* [phrase library..[@/libs/dll/ DLL]:]
+  * More runtime checks for malformed ELFs in `boost::dll::library_info`
+  * In `boost::dll::library_info` use info from `.dynsym` ELF section if `.symtab` is empty or missing
+  * List protected ELF symbols in `boost::dll::library_info` as they are available for import ([github dll 50])
+  * Remove unneeded convert from `wchar_t` to char on POSIX environment, thanks to Vladislav Shchapov ([github_pr dll 49])
+  * Started using GithubAction CI for additional testing
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * [*Introducing Boost.Filesystem v4.] This new version of the library removes all deprecated features of v3 and also makes a number of breaking API changes intended to make Boost.Filesystem more compatible with std::filesystem introduced in C++17. The differences are described in the release notes and documentation using [*v3] and [*v4] tags and are also summarised in a separate section. Users can select Boost.Filesystem version by defining `BOOST_FILESYSTEM_VERSION` macro to either 3 or 4 when compiling their code. There is no need to separately compile Boost.Filesystem for each library version - a single binary supports both v3 and v4. Users should avoid using both v3 and v4 in the same application as this can lead to subtle bugs. Currently, v3 is the default. In a future release v4 will become the default, and eventually v3 will be removed. v4 is functional, but it is still a work in progress and there may be breaking API changes in the future.
+  * [*v4:] `path::filename`, `path::stem` and `path::extension` no longer consider root name or root directory of the path as a filename if the path only consists of those components. For example, on Windows `path("C:").filename()` used to return "C:" and `path("C:\\").filename()` used to return "\\" and both will return an empty path now. ([github filesystem 88], [github filesystem 194])
+  * [*v4:] `path::stem` and `path::extension` no longer treat a filename that starts with a dot and has no other dots as an extension. Filenames starting with a dot are commonly treated as filenames with an empty extension. The leading dot is used to indicate a hidden file on most UNIX-like systems. ([github filesystem 88])
+  * [*New:] Improved support for various path prefixes on Windows. Added support for local device prefix ("\\\\.\\") and experimental support for NT path prefix ("\\??\\"). The prefixes will be included in the root name of a path. Note that using the prefixes with Boost.Filesystem v3 can lead to surprising results (e.g. `path("\\\\.\\").stem() == "\\\\"`). It is recommended to use the prefixes only with Boost.Filesystem v4.
+  * Reworked `path::lexically_normal` implementation to eliminate some cases of duplicate dot (".") elements in the normalized paths.
+  * [*New:] Added runtime detection of the `statx` and `getrandom` system calls on Linux. This can be useful if the syscall is present at compile time but fails with `ENOSYS` at run time (for example, in Docker containers that restrict the syscall, even if available on the host). ([github filesystem 172])
+  * [*New:] Added support for disabling usage of various system APIs at library build time. This can be useful when a certain API is detected as present by the library configuration scripts but must not be used for some reason (for example, when runtime detection does not work on the target system). See the description of configuration macros in the library documentationfor for more details.
+  * [*New:] Added `copy_options::synchronize_data` and `copy_options::synchronize` options for the `copy_file` operation. These options allow to synchronize the written data and attributes with the permanent storage. These options are expensive in terms of performance, but allow to ensure reliability of the copied data. Note that `copy_file` performed implicit data synchronization on POSIX systems since Boost.Filesystem 1.74.0. This release adds support for more platforms and disables data synchronization by default while allowing the caller to explicitly request it. ([github filesystem 186])
+  * Added handling of `EINTR` error code on POSIX systems for some system calls issued internally. In particular, `EINTR` could have been ignored on `close`, which on HP-UX would result in a leaked file descriptor.
+  * In the `copy_file` implementations based on Linux `sendfile` and `copy_file_range` system calls, added handling of error codes indicating that a particular filesystem does not support the system call and fall back to the generic `read`/`write` loop. This should fix `copy_file` failing on [@https://www.ecryptfs.org/ eCryptFS] and possibly other filesystems. ([github filesystem 184])
+  * The `copy_file_range` system call is now used since Linux kernel 4.5, whereas previously it was only enabled since 5.3. The `copy_file` implementation will fall back to `sendfile` or `read`/`write` loop if `copy_file_range` fails to copy a given file across filesystems.
+  * The `copy_file` implementations based on Linux `sendfile` and `copy_file_range` system calls will not be used on filesystems that are known to contain files with generated content. These system calls are incompatible with such files, and copying them would result in zero-sized files. The generic `read`/`write` loop will be used instead. Currently, the blacklisted filesystems are: procfs, sysfs, tracefs and debugfs.
+  * In the `copy_file` implementation based on `read`/`write` loop, increased the maximum size of the buffer used for temporary storage and take into account the target filesystem block size for more optimal performance.
+  * On Windows CE, calling `current_path` to obtain the current path for a process will now fail with an error instead of returning successfully with a root path. This platform does not support current directory. Changing the current path was already failing similarly in previous releases of Boost.Filesystem.
+  * In `canonical`, fixed the check for a symlink referencing a directory above root, if an earlier symlink was resolved to an absolute path with a different root from the original path.
+  * In `canonical`, added a limit for the maximum number of symlinks that can be resolved during the call. The limit is currently at least 40 symlinks.
+  * On Windows, `canonical` and `weakly_canonical` will now use `path::preferred_separator` for the root directory separator in the resulting paths. This fixes "file not found" errors caused by Windows API not handling generic separators in UNC paths and paths that start with the Win32 filesystem prefix ("\\\\?\\"). ([github filesystem 87], [github filesystem 187])
+  * [*New:] Added `weakly_canonical` overloads taking `base` path as an argument.
+  * On Windows, `weakly_canonical` no longer fails with an error if the input path contains elements that do not exist in the filesystem but are cancelled by a subsequent dot-dot ("..") element. For example, `weakly_canonical("C:\\a\\..")` would previously fail if "C:\\a" directory did not exist. ([github filesystem 201])
+  * In `read_symlink` on Windows, corrected reparse point handling. The operation would return an empty path for some mount points (for example, created by [@https://www.box.com/ Box] cloud storage driver) and directory junction points that had empty print names. The new implementation now parses substitute name of the reparse point and attempts to reconstruct a Win32 path from it. ([github filesystem 187])
+  * On Windows, file streams provided in `boost/filesystem/fstream.hpp` will use wide character paths on libc++ versions 7.0 and higher, when the standard library supports opening files with wide character paths. ([github filesystem 181])
+  * On Windows, creating symlinks should no longer require elevated privileges, if Windows is configured in [@https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development Developer mode].
+  * With some compilers, global objects used internally in Boost.Filesystem are now destroyed after user's global destructors are called. This allows to call Boost.Filesystem methods during the program termination stage. In particular, this concerns the path locale that is used for character code conversion and can be installed by calling `path::imbue`. The supported compilers include MSVC, GCC and Clang, as well as other compilers that support customizing program initialization order through `#pragma section` (for MSVC-compatible compilers) or `__attribute__ ((init_priority))` (for GCC-compatible compilers).
+
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * Improvements
+    * [github_pr geometry 812] Umbrella strategies for distance and comparable_distance (undocumented for now).
+    * [github_pr geometry 840] Umbrella strategies for various algorithms (undocumented for now).
+    * [github_pr geometry 850] Introduced DynamicGeometry and GeometryCollection concepts and support in some algorithms (undocumented for now).
+    * [github_pr geometry 855] Various improvements related to strategies. Default strategies are now included with algorithms.
+  * Solved issues
+    * [github geometry 865] Exception thrown in rtree serialization.
+    * [github geometry 439] Invalid box spherical area computation.
+    * [github geometry 838] Invalid result of union_().
+    * [github geometry 851] Invalid geographic disjoint segment/box result.
+    * [github geometry 861] Invalid result of intersection().
+  * Bugfixes
+    * [github_pr geometry 832] Fixed box spherical and geographic area computation.
+    * [github_pr geometry 853] Fixed geographic disjoint segment/box.
+    * [github_pr geometry 866] Fixed serialization of rtree containing lesser number of elements in root node than minimum.
+    * [github_pr geometry 886] Fixed knn rtree query bug causing it to be slow for big k.
+    * Various fixes in set operations and buffer.
+
+* [phrase library..[@/libs/json/ JSON]:]
+  * `value_to` supports `TupleLike` types.
+  * `value_to` and `value_from` support `std::array` and similar types.
+  * Implicit conversion operator from `string` to `std::string_view`.
+  * `std::hash` specializations for json types.
+  * Fixed allocation errors in `object` and `key_value_pair`.
+  * Fixed crash when constructing `array` from a pair of iterators that form an
+    empty range.
+
+* [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
+  * Fixed assignment to an int of a floating point value that is out of representable range for int.
+  * Started using GithubActions CI for additional testing
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Fixed compilation for riscv32 target. ([github_pr log 150])
+
+* [phrase library..[@/libs/mp11/ Mp11]:]
+  * Added `mp_intersperse`, `mp_split`, `mp_join`
+
+* [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
+  * Maintenance work.
+
+* [phrase library..[@/libs/nowide/ Nowide]:]
+  * Allow for usage of `iostream` classes before `main` (best effort, works for most environments)
+  * Fix initialization of `rdbuf` in `cin/cout/cerr` for redirected input/output
+  * Fix corner case in `cin::unget()` after using `putback()`
+  * Fix possibly delayed `close` of `filebuf` after move assignment
+  * Improve performance of `utf8_codecvt`
+
+* [phrase library..[@/libs/pfr/ PFR]:]
+  * A MurMur Hash based implementation of hash_combine() is now used to reduce collisions count and improve quality of `boost::pfr::hash_value()`
+  * Visual Studio 2017 now supported in C++14 mode (thanks to Denis Mikhailov aka @denzor200)
+  * Issues found by inspect tool were fixed
+  * Fixed some warnings, including removal of extra semicolons in include/boost/pfr/detail/fields_count.hpp ([github pfr 72])
+  * Added a compile time assert for inherited types (thanks to Denis Mikhailov aka @denzor200)
+  * Reflection of aggregates with non movable fields is now possible if guaranteed copy elision is on
+  * Fixed spelling issues
+  * Started using GithubActions CI for additional testing
+
+* [phrase library..[@/libs/property_tree/ PropertyTree]:]
+ * This is a maintenance release.
+ * Extend compiler coverage in CI.
+ * Fix Boost compatibility for CMakeLists.txt.
+
+* [phrase library..[@/libs/system/ System]:]
+  * The conversion operator from `error_category` to `std::error_category`
+    has been improved and no longer requires `<map>` or `<mutex>`.
+  * The comparison operators of `error_category` are now inline friends
+    instead of member functions (a side effect of the previous change.)
+  * `error_condition` now defers calling `generic_category()` to avoid
+    instantiating the object until it's actually needed.
+  * `error_condition::failed` and `error_condition::message` have been
+    undeprecated, and `operator bool()` now once again returns `failed()`.
+  * The system category now doesn't call `generic_category()`, to avoid
+    instantiating the object.
+  * The return value of `default_error_condition` changes in some cases into
+    an `error_condition` from the generic category, instead of from the system
+    category. This happens on POSIX when the input `error_code` is from
+    the system category and does not correspond to any `errc_t` value.
+  * The interoperability of `error_code` and `std::error_code` has been
+    improved substantially. It is now possible to construct
+    `boost::system::error_code` from `std::error_code`, and it's possible
+    to pass `boost::system::error_code` to functions taking `std::error_code&`.
+  * A stream insertion operator for `error_condition` has been added.
+
+* [phrase library..[@/libs/uuid/ Uuid]:]
+  * Added `to_chars` for writing uuid strings without allocating ([github_pr uuid 116])
+
+[endsect]
+
+[section Updated Tools]
+
+* [phrase library..[@/tools/build/ Build]:]
+  * Includes release of [@/tools/build/doc/html/#_version_4_6_1 B2 version 4.6.1].
+
+[endsect]
+
+[section Compilers Tested]
+
+Boost's primary test compilers are:
+
+* Linux:
+  * Clang: 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 12.0.0
+  * Clang, C++11: 3.4, 11.0.0
+  * Clang, C++14: 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 5.0, 12.0.0
+  * Clang, C++17: 6.0.1, 7.0.0, 8.0.0, 9.0.0, 10.0.0, 11.0.0, 12.0.0
+  * Clang, C++20: 11.0.0, 12.0.0, 13.0.0
+
+  * GCC: 4.6.3, 11
+  * GCC, C++11: 4.7.3, 4.8.5, 11
+  * GCC, C++14: 5.4.0, 6.4.0, 7.3.0, 8.0.1, 9.1.0, 11
+  * GCC, C++17: 7.3.0, 8.0.1, 9.1.0, 11
+  * GCC, C++20: 8.0.1, 9.1.0, 10, 11
+
+* OS X:
+  * Apple Clang: 11.0.3
+  * Apple Clang, C++11: 11.0.3
+  * Apple Clang, C++14: 11.0.3
+  * Apple Clang, C++17: 11.0.3
+  * Apple Clang, C++20: 11.0.3
+
+* Windows:
+  * Visual C++: 10.0, 11.0, 12.0, 14.0, 14.1, 14.2
+
+[endsect]
+
+[section Acknowledgements]
+
+Marshall Clow, Michael Caisse and Glen Fernandes managed this release.
+
+[endsect]

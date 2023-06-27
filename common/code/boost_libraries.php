@@ -104,6 +104,7 @@ class BoostLibraries
                     case 'documentation':
                     case 'status':
                     case 'library_path':
+                    case 'cxxstd':
                     {
                         if (isset($val['value'])) { $lib[$val['tag']] = trim($val['value']); }
                         else { $lib[$val['tag']] = ''; }
@@ -116,22 +117,9 @@ class BoostLibraries
                         else { $lib[$val['tag']] = ''; }
                     }
                     break;
-                    case 'std-proposal':
-                    case 'std-tr1':
-                    {
-                        $value = isset($val['value']) ? trim($val['value']) : false;
-                        if($value && $value != 'true' && $value != 'false') {
-                            throw new BoostLibraries_DecodeException(
-                                "Invalid value for {$val['tag']}: {$value}",
-                                $xml);
-                        }
-                        $lib[$val['tag']] = ($value == 'true');
-                    }
-                    break;
                     case 'authors':
                     case 'maintainers':
                     case 'category':
-                    case 'std':
                     {
                         if(isset($val['value'])) {
                             $name = trim($val['value']);
@@ -315,10 +303,10 @@ class BoostLibraries
                 array_keys($this->categories));
             $valid_categories = array_intersect($category,
                     array_keys($this->categories));
-            if ($invalid_categories) {
-                echo $lib->details['key'], ": Invalid categories: ",
-                   implode(', ', $invalid_categories), "\n"; 
-            }
+//            if ($invalid_categories) {
+//                echo $lib->details['key'], ": Invalid categories: ",
+//                   implode(', ', $invalid_categories), "\n"; 
+//            }
 
             if (!$valid_categories) {
                 $valid_categories = array('miscellaneous');
@@ -458,7 +446,7 @@ class BoostLibraries
                 $this->write_many_elements($writer, $exclude, $details, 'maintainers');
                 $this->write_optional_element($writer, $exclude, $details, 'description');
                 $this->write_optional_element($writer, $exclude, $details, 'documentation');
-                $this->write_many_elements($writer, $exclude, $details, 'std');
+                $this->write_optional_element($writer, $exclude, $details, 'cxxstd');
                 $this->write_category_elements($writer, $exclude, $details, 'category');
                 $writer->endElement();
             }

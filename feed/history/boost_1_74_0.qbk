@@ -1,0 +1,419 @@
+[article Version 1.74.0
+    [quickbook 1.6]
+    [source-mode c++]
+    [purpose
+        New Libraries: STLInterfaces.
+        Updated Libraries: Asio, Atomic, Beast, Bimap, Config, Core, DLL,
+        Endian, Filesystem, Flyweight, Format, Geometry, GIL, Heap,
+        Integer, Iterator, LexicalCast, Log, Mp11, MultiIndex, Nowide,
+        Outcome, PolyCollection, Polygon, SmartPtr, Stacktrace, System,
+        TypeTraits, Variant, Variant2, Wave, YAP.
+    ]
+    [authors [Dawes, Beman]]
+    [/ last-revision is used for the final release date]
+    [last-revision ]
+]
+
+[import ext.qbk]
+
+[/
+Formatting reference: https://www.boost.org/doc/tools/quickbook/
+Please keep the list of libraries sorted in lexicographical order.
+]
+
+[section New Libraries]
+
+* [phrase library..[@/libs/stl_interfaces/ STLInterfaces]:] A library of CRTP
+  bases to ease the writing of STL views, iterators, and sequence containers,
+  from Zach Laine.
+
+[/ Example:
+* [phrase library..[@/libs/accumulators/ Accumulators]:] Framework for
+  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
+]
+
+[endsect]
+
+[section Updated Libraries]
+
+[/ Example:
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  * Added anonymous shared memory for UNIX systems.
+  * Move semantics for shared objects ([ticket 1932]).
+  * Conform to `std::pointer_traits` requirements ([github_pr interprocess 32])
+  * Fixed `named_condition_any` fails to notify ([github interprocess 62])
+]
+
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added an implementation of the proposed standard executors
+    ([@http://wg21.link/P0443r13 P0443r13], [@http://wg21.link/P1348r0 P1348r0],
+    and [@http://wg21.link/P1393r0 P1393r0]).
+  * Added support for the proposed standard executors to Asio's I/O facilities.
+    * The supplied executors now meet the requirements for the
+      proposed standard executors. These classes also continue to meet the
+      existing requirements for the Networking TS model of executors.
+    * All I/O objects, asynchronous operations, and utilities will
+      interoperate with both new proposed standard executors, and with
+      existing Networking TS executors.
+    * The `any_io_executor` type alias has been introduced as the default
+      runtime-polymorphic executor for all I/O objects. This defaults to
+      the `execution::any_executor<>` template. If required for backward
+      compatibility, `BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT` can be defined to
+      use the old `asio::executor` polymorphic wrapper instead.
+    * Support for the existing Networking TS model of executors can be disabled
+      by defining `BOOST_ASIO_NO_TS_EXECUTORS`.
+  * Added converting move construction and assignment to `basic_waitable_timer`.
+  * Enabled C++20 coroutine support when using [^gcc] 10.
+  * Added overloads of `co_spawn` that launch an awaitable.
+  * Added a new constructor overload to `use_awaitable_t`'s default executor
+    adapter, to enable conversion between executor types.
+  * Added support for using `detached_t` as a default completion token, by
+    adding members `as_default_on()` and `as_default_on_t<>`.
+  * Added a move constructor to `ssl::stream<>`.
+  * Changed `ssl::stream<>` write operations to linearise gather-write buffer
+    sequences.
+  * Added compile-time detection of the deprecated `asio_handler_invoke`,
+    `asio_handler_allocate`, and `asio_handler_deallocate` hooks, when
+    `BOOST_ASIO_NO_DEPRECATED` is defined.
+  * Implemented a number of performance optimisations.
+  * Added source location support to handler tracking.
+  * Implemented various improvements to the [^handlerviz.pl] tool.
+  * Added the [^handlerlive.pl] tool, which processes handler tracking output to
+    produce a list of "live" handlers.
+  * Added the [^handlertree.pl] tool, which filters handler tracking output to
+    include only those events in the tree that produced the nominated handlers.
+  * Added changes for clang-based Embarcadero C++ compilers.
+  * Fixed a deadlock that can occur when multiple threads concurrently initialise
+    the Windows I/O completion port backend.
+  * Fixed `async_compose` to work with copyable handlers when passed by lvalue.
+  * Fixed completion signature deduction in `co_spawn`.
+  * Removed a spurious `Executor` base class from the `executor_binder`
+    implementation.
+  * Various fixes and improvements in the documentation and examples.
+  * Consult the [@/doc/libs/1_74_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
+
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Added missing `const` qualifiers to some operations in `atomic_ref`.
+  * Added support for `yield` instruction on ARMv8-A. The instruction is used internally in spin loops to reduce CPU power consumption.
+  * Added support for C++20 [@/doc/html/atomic/interface.html#atomic.interface.interface_wait_notify_ops waiting and notifying operations]. The implementation includes generic backend that involves the internal lock pool, as well as specialized backends for Windows, Linux, FreeBSD, DragonFly BSD and NetBSD. Atomic types provide a new method `has_native_wait_notify`, a static boolean constant `always_has_native_wait_notify` and a set of capability macros that allow to detect if the implementation supports native waiting and notifying operations for a given type.
+  * Changed internal representation of `atomic_flag` to use 32-bit storage. This allows for more efficient waiting and notifying operations on `atomic_flag` on some platforms.
+  * Added support for build-time configuration of the internal lock pool size. The user can define the `BOOST_ATOMIC_LOCK_POOL_SIZE_LOG2` macro to specify binary logarithm of the size of the lock pool. The default value is 8, meaning that the size of the lock pool is 256, up from 64 used in the previous release.
+  * Added support for a new set of atomic types dedicated for [@/doc/html/atomic/interface.html#atomic.interface.interface_ipc inter-process communication]: `ipc_atomic_flag`, `ipc_atomic` and `ipc_atomic_ref`. Users are recommended to port their code using non-IPC types for inter-process communication to the new types. The new types provide the same set of operations as their non-IPC counterparts, with the following differences:
+    * Most operations have an added precondition that `is_lock_free` returns `true` for the given atomic object. The library will issue a compile time error if this precondition is known to be not satisfied at compile time.
+    * All provided operations are address-free, meaning that the atomic object (in case of `ipc_atomic_ref` - the referenced object) may be located in process-shared memory or mapped into the same process at multiple different addresses.
+    * The new `has_native_wait_notify` operation and `always_has_native_wait_notify` constant indicate support for native inter-process waiting and notifying operations. When that support is not present, the operations are implemented with a busy loop, which is less efficient, but still is address-free. A separate set of capability macros is also provided to indicate this support.
+  * Added new `atomic_unsigned_lock_free` and `atomic_signed_lock_free` types introduced in C++20. The types indicate the atomic object type for an unsigned or signed integer, respectively, that is lock-free and preferably has native support for waiting and notifying operations.
+  * Added new gcc assembler backends for ARMv8-A (for both AArch32 and AArch64). The new backends are used to implement operations not supported by compiler intrinsics (including 128-bit operations on AArch64) and can also be used when compiler intrinsics are not available. Both little and big endian targets are supported. AArch64 backend supports extensions defined in ARMv8.1 and ARMv8.3.
+  * Added support for big endian targets in the legacy ARM backend based on gcc assembler blocks (this backend is used on ARMv7 and older targets). Previously, the backend assumed little endian memory layout, which is significant for 64-bit operations.
+  * Improved performance of seq_cst stores and thread fences on x86 by using `lock`-prefixed instructions instead of `mfence`. This means that the operations no longer affect non-temporal stores, which was also not guaranteed before. Use specialized instructions and intrinsics to order non-temporal memory accesses.
+  * Fixed capability macros for 80-bit `long double` on x86 targets not indicating lock-free operations even if 128-bit atomic operations were available.
+  * Fixed compilation of gcc asm blocks on Alpha targets.
+  * In the gcc `__sync*` intrinsics backend, fixed that store and load operations of large objects (larger than a pointer size) could be non-atomic. The implementation currently assumes that small objects can be stored with a single instruction atomically on all modern architectures.
+
+* [phrase library..[@/libs/beast/ Beast]:]
+  * This update brings bug fixes and support for the following changes changes in Boost.Asio:
+  * Beast supports `BOOST_ASIO_NO_DEPRECATED`. Define this to help identify areas of your
+    Beast and Asio code which use deprecated Asio interfaces.
+  * Beast also supports `BOOST_ASIO_NO_TS_EXECUTORS`. Define this to identify uses of executors from
+    the now potentially outdated [@https://cplusplus.github.io/networking-ts/draft.pdf Networking TS]
+  * Asio will use the [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p0443r11.html Standard Executors]
+    model by default. You can prevent this behaviour by defining `BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT` in which
+    the Networking TS model will be used by default. Setting this flag does not prevent a program from using executors
+    from the Standard Executors model explicitly.
+  * We'd love to know how you or your company use Beast, consider adding an
+    entry  to the
+    [@https://github.com/boostorg/beast/wiki/Companies-and-Individuals-Using-Beast Companies and Individuals Using Beast]
+    list.
+  * See the full
+    [@/libs/beast/doc/html/beast/release_notes.html Release Notes]
+    for a complete list of changes.
+
+* [phrase library..[@/libs/bimap/ Bimap]:]
+  * Correct allocator usage (fixes C++20 compilation). (Glen Fernandes)
+
+* [phrase library..[@/libs/config/ Config]:]
+  * Implement `BOOST_NO_CXX11_OVERRIDE` and `BOOST_OVERRIDE`. (Glen Fernandes)
+
+* [phrase library..[@/libs/core/ Core]:]
+  * Implemented the allocator access utilities which provide a replacement for
+    `allocator_traits` with individual traits and functions for each facility.
+    They support the C++11 allocator model when possible and provide a fallback
+    for C++98 compatibility. These are now used in Circular_Buffer, Wave,
+    Lockfree, Heap, Smart_Ptr, Dynamic_Bitset, Format, Bimap and more.
+    (Glen Fernandes)
+
+* [phrase library..[@/libs/dll/ DLL]:]
+  * Multiple fixes for the `library_info` work on empty shared objects.
+  * Compilation fixes for C++98 and C++11 modes ([github dll 28]).
+  * Fixes for `smart_library` manglings (thanks to XiaLiChao82 [github dll 37]).
+
+* [phrase library..[@/libs/endian/ Endian]:]
+  * Enabled scoped enumeration types in `endian_reverse`.
+  * Enabled `bool`, `enum`, `float`, `double` in `endian_reverse_inplace`.
+  * Added an overload of `endian_reverse_inplace` for arrays.
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Removed compile-time checks for support for symlinks and hardlink on Windows. Instead, a runtime check is used. ([github_pr filesystem 142])
+  * Fixed handling of reparse points in `canonical` and `read_symlink` on Windows. This also affects other algorithms that involve `canonical` and `read_symlink` in their implementation. ([github_pr filesystem 100], [github filesystem 85], [github filesystem 99], [github filesystem 123], [github filesystem 125])
+  * Fixed that `read_symlink` on Windows could potentially fail or cause failures elsewhere with a sharing violation error, if the same symlink was opened concurrently. ([github filesystem 138])
+  * Fixed that `is_symlink(directory_entry)` would always return `false`, even if the directory entry actually referred to a symlink. ([github_pr filesystem 148])
+  * Added missing status inspection operation overloads for `directory_entry` and `error_code` (e.g. `is_directory(directory_entry, error_code&)`). Removed incorrect `noexcept` specifications for the overloads not taking the `error_code` arguments.
+  * `copy_file` implementation has been updated to perform checks on the source and target files, as required by C++20 ([fs.op.copy.file]/4.1). In particular, the operation will fail if the source or target file is not a regular file or the source and target paths identify the same file.
+  * `copy_file` on POSIX systems will now also copy the source file permissions to the target file, if the target file is overwritten.
+  * [*New:] Added `copy_file` implementations based on `sendfile` and `copy_file_range` system calls on Linux, which may improve file copying performance, especially on network filesystems.
+  * [*Deprecated:] The `copy_option` enumeration that is used with the `copy_file` operation is deprecated. As a replacement, the new enum `copy_options` (note the trailing 's') has been added. The new enum contains values similar to the `copy_options` enum from C++20. The old enum values are mapped onto the new enum. The old enum will be removed in a future release.
+  * [*New:] Added `copy_options::skip_existing` option, which allows `copy_file` operation to succeed without overwriting the target file, if it exists.
+  * [*New:] Added `copy_options::update_existing` option, which allows `copy_file` operation to conditionally overwrite the target file, if it exists, if its last write time is older than that of the replacement file.
+  * [*New:] `copy_file` now returns `bool`, which indicates whether the file was copied.
+  * [*New, breaking change:] `copy` operation has been extended and reworked to implement behavior specified in C++20 [fs.op.copy]. This includes support for `copy_options::recursive`, `copy_options::copy_symlinks`, `copy_options::skip_symlinks`, `copy_options::directories_only`, `copy_options::create_symlinks` and `copy_options::create_hard_links` options. The operation performs additional checks based on the specified options. Applying `copy` to a directory with default `copy_options` will now also copy files residing in that directory (but not nested directories or files in those directories).
+  * [*New:] Added `create_directory` overload taking two paths. The second path is a path to an existing directory, which is used as a source of permission attributes to use in the directory to create.
+  * [*Deprecated:] `copy_directory` operation has been deprecated in favor of the new `create_directory` overload. Note that the two operations have reversed order of the path arguments.
+  * `equivalent` on POSIX systems now returns the actual error code from the OS if one of the paths does not resolve to a file. Previously the function would return an error code of 1. ([github filesystem 141])
+  * `equivalent` no longer considers file size and last modification time in order to test whether the two paths refer to the same file. These checks could result in a false negative if the file was modified during the `equivalent` call.
+  * [*New:] Added `absolute` overloads taking `error_code` argument.
+  * Operations that have `current_path()` as the default value of their arguments and also have an `error_code` argument will use the `current_path(error_code& ec)` overload to obtain the current path, so that its failure is reported via the `error_code` argument instead of an exception.
+  * `space` now initializes the `space_info` structure members to -1 values on error, as required by C++20 ([fs.op.space]/1).
+  * `space` on Windows now accepts paths referring to arbitrary files, not only directories. This is similar to POSIX systems and corresponds to the operation description in C++20. ([github filesystem 73])
+  * [*New:] Added implementation of `temp_directory_path` for Windows CE. ([github_pr filesystem 25])
+  * [*New:] Improved compatibility with [@https://wasi.dev/ WASI] platform. ([github_pr filesystem 144])
+  * [*New:] Improved support for Embarcadero compilers. ([github_pr filesystem 130])
+  * [*New:] Added implementations of `unique_path` operation based on `getrandom` (Linux), `arc4random_buf` (OpenBSD/FreeBSD/CloudABI) and BCrypt (Windows) system APIs.
+  * [*Deprecated:] Auto-linking against system libraries on Windows with MSVC-compatible compilers is deprecated and will be removed in a future release. This affects users linking against static library of Boost.Filesystem. Users are advised to update their project build systems to either use a shared library of Boost.Filesystem, or explicitly specify the dependencies of Boost.Filesystem in the linker command line. Users of shared library of Boost.Filesystem are not affected.
+
+* [phrase library..[@/libs/flyweight/index.html Flyweight]:]
+  * Maintenance work.
+
+* [phrase library..[@/libs/format/ Format]:]
+  * Correct allocator usage (fixes C++20 compilation). (Glen Fernandes)
+
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * Improvements
+    * [github_pr geometry 720] Additional R-tree constructors (thanks to Caian Benedicto).
+    * Various improvements in buffer, set and relational operations.
+  * Solved issues
+    * [github geometry 709] memcpy called for object with no trivial copy-assignment.
+    * [github geometry 721] Compilation error in bgi::detail::rtree::visitors::insert.
+    * [github geometry 727] MSVC warning: conditional expression is constant.
+  * Bugfixes
+    * [github_pr geometry 700] Missing cases for default strategies in distance algorithm.
+    * [github_pr geometry 738] Longitudes out of range in direct geodesic formulas.
+
+* [phrase library..[@/libs/gil/ GIL]:]
+  * Added
+    * Added new constructor initializing `any_image` from r-value reference to any image ([github_pr gil 486]).
+    * Implemented mechanism to reverse `kernel_2d` ([github_pr gil 489]).
+  * Changed
+    * BREAKING: Replace Boost.Variant with Boost.Variant2 ([github_pr gil 474]) which completes removal on uses of Boost.MPL (missing from Boost 1.72.0 change added [github_pr gil 274]).
+    * Use perfect forwarding from apply_operation to visit ([github_pr gil 491]).
+  * Removed
+    * BREAKING: Removed dependency on Boost.Variant
+  * Fixed
+    * Fixed invalid conversion from RGB8 to CMYK32 due to overflow ([github_pr gil 470]).
+    * Fixed `image` constructor from other image ([github_pr gil 477]).
+    * Fixed error `plane_view_t` is not a class or namespace name ([github_pr gil 481]).
+    * Fixed `interleaved_view` factory using `point<std::ptrdiff_t>` for dimension ([github_pr gil 487]).
+    * Fixed documentation replacing uses MPL with MP11 in tutorial ([github_pr gil 494]).
+    * Fixed missing header in `numeric/kernel.hpp` to make it self-contained ([github_pr gil 502]).
+  * Acknowledgements
+    * Samuel Debionne, Pranam Lashkari, Mateusz Loskot, Debabrata Mandal
+
+* [phrase library..[@/libs/heap/ Heap]:]
+  * Correct destruction of top node in `skew_heap`. (Glen Fernandes)
+  * Correct and simplify allocator use. (Glen Fernandes)
+
+* [phrase library..[@/libs/integer/ Integer]:]
+  * Fixed compilation of `gcd` in C++20 mode with clang 10.
+  * Improved support for Embarcadero compilers. ([github_pr integer 21])
+
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * `boost/function_output_iterator.hpp` header is now deprecated. Users should replace its inclusion with `boost/iterator/function_output_iterator.hpp`. ([github_pr iterator 51])
+  * Improved support for Embarcadero compilers. ([github_pr iterator 55])
+
+* [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
+  * Fixed warnings on missing `override` (thanks to EugeneZelenko [github lexical_cast 35], [github lexical_cast 34]).
+  * Fixes for the the Embarcadero compilers (thanks to Edward Diener).
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Bug fixes:
+    * The syslog sink backend now verifies the IP version of the local and target addresses set by user. The addresses must have the same IP version as was specified in the `ip_version` named parameter on the sink backend construction (by default, IPv4 is assumed). When an address is obtained as a result of host name resolution, only addresses with matching IP version are considered. ([github log 119])
+  * New Features:
+    * Move constructors and assignment operators of various components were marked `noexcept`.
+    * Added a new `range_manip` stream manipulator that can be used for outputting elements of a range, optionally separated by a delimiter.
+    * Added a new `tuple_manip` stream manipulator that can be used for outputting elements of a tuple or any other heterogeneous sequence, optionally separated by a delimiter.
+    * Added a new `optional_manip` stream manipulator that can be used for outputting optionally present values.
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
+* [phrase library..[@/libs/mp11/ Mp11]:]
+  * Improved compilation performance of `mp_with_index<N>` for large `N`.
+  * Added `tuple_transform` (contributed by Hans Dembinski.)
+  
+* [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
+  * Added [@/libs/multi_index/doc/tutorial/basics.html#node_handling node extraction and insertion]
+    following the analogous interface of associative containers as introduced in C++17.
+    This feature has also been extended to non key-based indices, in contrast to C++
+    standard library sequence containers, which do not provide such functionality.
+  * Clarified documentation on read/write key extractors (issue [github multi_index 32]).
+  * Maintenance work.
+
+* [phrase library..[@/libs/nowide/ Nowide]:]
+  * The library now requires a C++11-compliant compiler and stdlib
+  * LFS: Add support for files > 2 GB where the underlying system supports it
+  * Generic UTF conversion functions are now available in the `boost::nowide::utf namespace`
+  * Add support for `stat` with UTF-8 paths
+
+* [phrase library..[@/libs/outcome/ Outcome]:]
+  * Announcements:
+    * The v2.1 branch is expected to be retired end of 2020, with the v2.2 branch becoming the default. You can use the future v2.2 branch now using [@https://github.com/ned14/outcome/tree/better_optimisation `better_optimisation`]. This branch has a number of major breaking changes to Outcome v2.1, see the front page for details.
+  * Enhancements:
+    * BREAKING CHANGE `void` results and outcomes no longer default construct types during explicit construction. Previously if you explicitly constructed a `result<T>` from a non-errored `result<void>`, it default constructed `T`. This was found to cause unhelpful surprise, so it has been disabled.
+    * New macro `OUTCOME_ENABLE_LEGACY_SUPPORT_FOR`. The macro `OUTCOME_ENABLE_LEGACY_SUPPORT_FOR` can be used to enable aliasing of older naming and features to newer naming and features when using a newer version of Outcome.
+    * Concepts now have snake case style naming instead of camel case style. When Outcome was first implemented, it was thought that C++ 20 concepts were going to have camel case style. This was changed before the C++ 20 release, and Outcome's concepts have been renamed similarly. This won't break any code in Outcome v2.1, as compatibility aliases are provided. However code compiled against Outcome v2.2 will need to be upgraded, unless `OUTCOME_ENABLE_LEGACY_SUPPORT_FOR` is set to `210` or lower.
+    * Concepts now live in `OUTCOME_V2_NAMESPACE::concepts` namespace. Previously concepts lived in the `convert` namespace, now they live in their own namespace.
+    * New concepts `basic_result<T>` and `basic_outcome<T>` added. End users were finding an unhelpful gap in between `is_basic_result<T>` and `value_or_error<T>` where they wanted a concept that matched types which were `basic_result`, but not exactly one of those. Concepts filling that gap were added.
+    * Operation `TRY` works differently from Outcome v2.2 onwards. This is a severely code breaking change which change the syntax of how one uses `OUTCOME_TRY()`. A regular expression suitable for upgrading code can be found in the list of changes between Outcome v2.1 and v2.2.
+  * Bug fixes:
+    * [@https://github.com/ned14/outcome/issues/224 #224] The clang Apple ships in Xcode 11.4 (currently the latest) has not been patched with the fixes to LLVM clang that fix `noexcept(std::is_constructible<T, void>)` failing to compile which I originally submitted years ago. So give up waiting on Apple to fix their clang, add a workaround to Outcome.
+    * Spare storage could not be used from within no-value policy classes. Due to an obvious brain fart when writing the code at the time, the spare storage APIs had the wrong prototype which prevented them working from within policy classes. Sorry.
+
+* [phrase library..[@/libs/poly_collection/ PolyCollection]:]
+  * Fixed internal ambiguity problem between `boost::type_erasure::any` and
+    `boost::any` (issue [github poly_collection 17]).
+  * Maintenance work.
+
+* [phrase library..[@/libs/smart_ptr/ SmartPtr]:]
+  * Added `owner_equals` to `shared_ptr`, `weak_ptr`, `local_shared_ptr`.
+  * Added `owner_hash_value` to `shared_ptr`, `weak_ptr`.
+  * Added `owner_equal_to`, `owner_hash`.
+  * Added `std::hash` specializations for `shared_ptr`, `local_shared_ptr`.
+  * Added `boost::hash` support to, and `std::hash`, `std::equal_to`
+    specializations for, `weak_ptr`.
+
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * Fixed a build error when compiled with `-fno-exceptions` (thanks to Jeremiah Rodriguez [github stacktrace 91]).
+
+* [phrase library..[@/libs/system/ System]:]
+  * `operator bool()` now returns `failed()` instead of `value() != 0`.
+
+* [phrase library..[@/libs/type_traits/ Type_Traits]:]
+  * Implemented `conjunction`, `disjunction`, `negation`,
+    `is_trivially_copyable`, `is_scoped_enum`, and `is_unscoped_enum`.
+    (Glen Fernandes)
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Fixed warnings on missing `override` (thanks to EugeneZelenko [github variant 78]).
+  * Fixes for the the Embarcadero compilers (thanks to Edward Diener [github variant 79]).
+  * Updated header locations to avoid warnings about using deprecated headers (thanks to Andrey Semashev [github variant 80])
+
+* [phrase library..[@/libs/variant2/ Variant2]:]
+  * Added support for derived types in `visit`.
+  * Improved compilation performance for many (hundreds of) alternatives.
+  * Added support for `visit<R>`.
+
+* [phrase library..[@/libs/wave/ Wave]:]
+  * Implement C++20 features for variadics, including `__VA_OPT__` ([github_pr wave 75])
+  * Implement `__has_include` ([github_pr wave 102])
+  * Introduce new sample: `check_macro_naming`, useful with Boost itself ([github_pr wave 97])
+  * Fix compilation issue caused by `std::allocator` member removal in C++20 ([github_pr wave 72])
+  * Repair Xpressive lexer and `token_statistics` sample ([github_pr wave 79])
+  * Repair lexertl lexer ([github_pr wave 78])
+  * Ensure hooks are run on predefined macros as well ([github_pr wave 87])
+  * Various minor bug fixes
+  * C++98/03 support is now deprecated and will be removed in 1.77
+
+* [phrase library..[@/libs/yap/ YAP]:]
+  * Fixed compilation errors for placeholders; they now work in the general case,
+    and in particular work with yap::print().
+  * constexpr all the YAP.
+  * Fix printing of correct value category in yap::print().
+  * Doc clarification.
+
+[endsect]
+
+[section Updated Tools]
+
+* [phrase library..[@/tools/boostbook/ Boostbook]:]
+  * Change encoding of generated documentation from US-ASCII to UTF-8.
+    (Glen Fernandes)
+
+[endsect]
+
+[section Compilers Tested]
+
+Boost's primary test compilers are:
+
+* Linux:
+  * Clang: 3.0, 4.0.1, 6.0.1
+  * Clang, C++0x: 3.0
+  * Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 6.0.1, 7.0.0, 8.0.0
+  * Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 4.0.1, 5.0.2,
+    6.0.1, 7.0.0, 8.0.0
+  * Clang, C++17: 5.0.2, 6.0.1, 7.0.0, 8.0.0
+  * GCC: 4.4.7, 4.5.3, 4.6.3, 5.4.0, 8.0.1
+  * GCC, C++0x: 4.4.7
+  * GCC, C++11: 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0, 8.0.1
+  * GCC, C++14: 5.4.0, 5.5.0, 6.4.0, 7.1.0, 7.3.0, 8.0.1
+  * GCC, C++17: 7.3.0, 8.0.1
+  * Intel, C++14: 18.0
+* OS X:
+  * Apple Clang: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++11: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++14: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++17: 9.1.0, 10.0.0
+  * Apple Clang, C++1z: 9.0.0
+  * Apple Clang, C++2a: 10.0.0
+* Windows:
+  * GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+  * GCC, C++0x: 4.6.4
+  * GCC, C++11: 4.7.3, 4.8.1, 4.9.3
+  * GCC, C++14: 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0
+  * GCC, C++17: 7.1.0, 7.2.0, 7.3.0
+  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+* FreeBSD:
+  * Clang: 4.0.0
+  * Clang, C++11: 4.0.0
+  * Clang, C++14: 4.0.0
+  * Clang, C++1z: 4.0.0
+
+Boost's additional test compilers include:
+
+* Linux:
+  * Clang: 3.0, 3.8.1, 3.9.1, 4.0.1, 5.0.2, 6.0.1
+  * Clang, C++0x: 3.0
+  * Clang, C++11: 3.0, 3.1, 3.2, 3.3, 3.4, 4.0.1, 6.0.1, 7.0.0, 8.0.0
+  * Clang, C++14: 3.5.0, 3.6.0, 3.7.1, 3.8.0, 3.9.1, 4.0.0, 4.0.1, 5.0.2,
+    6.0.1, 7.0.0, 8.0.0
+  * Clang, C++17: 5.0.2, 6.0.1, 7.0.0, 8.0.0
+  * GCC: 4.4.7, 4.5.3, 4.6.3, 4.9.4, 5.4.0, 5.5.0, 8.0.1
+  * GCC, C++0x: 4.4.7
+  * GCC, C++11: 4.7.3, 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.1.0, 8.0.1
+  * GCC, C++14: 5.4.0, 5.5.0, 6.3.0, 6.4.0, 7.1.0, 7.3.0, 8.0.1, 8.1.0
+  * GCC, C++17: 7.3.0, 8.0.1
+  * Intel, C++14: 18.0
+* OS X:
+  * Apple Clang: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++11: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++14: 9.0.0, 9.1.0, 10.0.0
+  * Apple Clang, C++17: 9.1.0, 10.0.0
+  * Apple Clang, C++1z: 9.0.0
+  * Apple Clang, C++2a: 10.0.0
+* Windows:
+  * GCC: 3.4.5, 4.1.2, 4.2.4, 4.3.3, 4.4.0, 4.5.4
+  * GCC, C++0x: 4.6.4
+  * GCC, C++11: 4.7.3, 4.8.1, 4.9.3
+  * GCC, C++14: 5.1.0, 5.2.0, 5.3.0, 6.1.0, 6.2.0, 6.3.0, 6.4.0
+  * GCC, C++17: 7.1.0, 7.2.0, 7.3.0
+  * Visual C++: 7.1, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 14.1
+* FreeBSD:
+  * Clang: 4.0.0
+  * Clang, C++11: 4.0.0
+  * Clang, C++14: 4.0.0
+  * Clang, C++1z: 4.0.0
+
+[endsect]
+
+[section Acknowledgements]
+
+Marshall Clow, Michael Caisse and Glen Fernandes managed this release.
+
+[endsect]

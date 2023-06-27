@@ -54,9 +54,9 @@ https://www.boost.org/development/website_updating.html
 
               <p>An oft-cited guideline is to ask yourself the question ``is
               this an exceptional (or unexpected) situation?'' This guideline
-              has an attractive ring to it, but is usually a mistake. The
+              has an attractive ring to it but is usually a mistake. The
               problem is that one person's ``exceptional'' is another's
-              ``expected'': when you really look at the terms carefully, the
+              ``expected'': when you look at the terms carefully, the
               distinction evaporates and you're left with no guideline. After
               all, if you check for an error condition, then in some sense
               you expect it to happen, or the check is wasted code.</p>
@@ -68,11 +68,11 @@ https://www.boost.org/development/website_updating.html
               example, a desktop application performing a long computation
               might periodically check to see whether the user had pressed a
               cancel button. Throwing an exception could allow the operation
-              to be cancelled gracefully. On the other hand, it would
+              to be canceled gracefully. On the other hand, it would
               probably be inappropriate to throw and <i>handle</i> exceptions
               in the inner loop of this computation because that could have a
               significant performance impact. The guideline mentioned above
-              has a grain of truth in it: in time critical code, throwing an
+              has a grain of truth in it: in time-critical code, throwing an
               exception should <em>be</em> the exception, not the rule.</p>
 
               <h3>How should I design my exception classes?</h3>
@@ -160,8 +160,8 @@ throw some_exception();
                 <li><strong>Expose relevant information about the cause of
                 the error</strong> in your exception class' public interface.
                 A fixation on the <code>what()</code> message is likely to
-                mean that you neglect to expose information someone might
-                need in order to make a coherent message for users. For
+                mean that you have neglected to expose information someone might
+                need, in order to make it a coherent message for users. For
                 example, if your exception reports a numeric range error,
                 it's important to have the actual numbers involved available
                 <i>as numbers</i> in the exception class' public interface
@@ -194,7 +194,7 @@ throw some_exception();
               usually requires that each object used by a client be tracked
               so that it can be checked for validity. If you need that sort
               of protection, it can usually be provided as a layer on top of
-              a simpler API. Beware half-measures, though. An API which
+              a simpler API. Beware half-measures, though. An API that
               promises resilience against some, but not all abuse is an
               invitation to disaster. Clients will begin to rely on the
               protection and their expectations will grow to cover
@@ -240,7 +240,7 @@ extern "C" void (*old_translator)(unsigned, EXCEPTION_POINTERS*)
               <code>_set_se_translator</code> hack described above. The
               result is that <code>catch(...)</code> can have the effect of
               making some unexpected system notification at a point where
-              recovery is impossible look just like a C++ exception thrown
+              recovery is impossible to look just like a C++ exception thrown
               from a reasonable place, invalidating the usual safe
               assumptions that destructors and catch blocks have taken valid
               steps to ensure program invariants during unwinding.

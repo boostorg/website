@@ -1,0 +1,375 @@
+[article Version 1.80.0
+    [quickbook 1.6]
+    [source-mode c++]
+    [purpose
+        Updated Libraries: Asio, Atomic, Filesystem, GIL, Histogram, Iterator,
+        JSON, LEAF, Locale, Log, Math, Multiprecision, Multi-index Containers,
+        Nowide, Optional, STLInterfaces, System, Unordered, Utility, Wave.
+        [/ Please don't add updated libraries yet, it
+           can create unnecessary merge conflicts.]
+    ]
+    [authors [Dawes, Beman]]
+    [/ last-revision is used for the final release date]
+    [last-revision ]
+]
+
+[import ext.qbk]
+
+[/
+Formatting reference: https://www.boost.org/doc/tools/quickbook/
+Please keep the list of libraries sorted in lexicographical order.
+]
+
+[section Known Issues]
+
+These are patches from library authors which were found too late to be fixed
+in the release.
+
+* Config
+  * Support for libcpp15 which removes `std::unary_function` and
+    `std::binary_function`. [@/patches/1_80_0/0005-config-libcpp15.patch Patch].
+* Filesystem
+  * Directory iterators may fail to construct for a network share on Windows prior to 10, see [github_pr filesystem 246] and [github filesystem 245].
+    [@/patches/1_80_0/0001-filesystem-win-fix-dir-it-net-share.patch Patch].
+  * On Windows, `weakly_canonical` fails to process paths that start with the "\\\\?\\" prefix, see [github filesystem 247].
+    [@/patches/1_80_0/0002-filesystem-fix-weakly-canonical-long-paths.patch Patch].
+  * On POSIX systems that don't support `*at` APIs, compilation fails due to a missing include, see [github filesystem 250].
+    [@/patches/1_80_0/0004-filesystem-posix-fix-no-at-apis-missing-include.patch Patch].
+* Unordered
+  * Containers are not in a valid state after moving, see [github unordered 139].
+    [@/patches/1_80_0/0003-unordered-valid-after-move.patch Patch].
+  * Fix MSVC /RTCc build runtime failures.
+    [@/patches/1_80_0/0006-unordered-msvc-rtcc.patch Patch].
+
+[endsect]
+
+[section New Libraries]
+
+[/ Example:
+* [phrase library..[@/libs/accumulators/ Accumulators]:] Framework for
+  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
+]
+
+* No new libraries.
+
+[endsect]
+
+[section Updated Libraries]
+
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added a deduced trailing return type to all asynchronous operations, to enable
+    the new form of `async_result` for C++11.
+  * Moved `append`, `prepend`, `as_tuple`, and `deferred` to the `boost::asio`
+    namespace, and made them compatible with C++11.
+  * Made `experimental::parallel_group` compatible with C++11.
+  * Added `buffer()` overloads for contiguous containers, such as `std::span`.
+  * Added the ability for `awaitable<>`-based coroutines to directly `co_await`
+    operations that are packaged as function objects.
+  * Changed `spawn()` to be a completion token-based asynchronous operation,
+    and added support for cancellation. The `basic_yield_context` token now
+    supports move-only and variadic result types. When targeting C++11 and later,
+    `spawn()` and `basic_yield_context` are implemented in terms of Boost.Context
+    directly.
+  * Added the `is_async_operation` trait and `async_operation` concept.
+  * Added the `completion_signature_of` trait.
+  * Added converting move construction/assignment to posix descriptors, serial
+    ports, pipes, Windows `object_handle`, Windows stream handles, and Windows
+    random-access handles.
+  * Added `release()` member functions to pipes, Windows stream handles, and
+    Windows random-access handles.
+  * Enabled support for `Endpoint` implementations that return `void` pointers
+    from their `data()` member functions, as per the documented `Endpoint` type
+    requirements.
+  * Removed `all()` and `race()` from `experimental::promise`, as
+    `experimental::parallel_group` covers this functionality.
+  * Added source locations to exceptions and error codes produced by the
+    synchronous and asynchronous operations.
+  * Fixed compatibility with OpenSSL 3.0.4 and later.
+  * Fixed compatibility with with [^-masm=intel].
+  * Explicitly stated that socket `shutdown()` calls are thread-safe with respect
+    to certain other synchronous operations on the same socket.
+  * Optimised the move construction of I/O objects where only the executor type
+    differs.
+  * Fixed the detection of `std::invoke_result` for clang/libc++.
+  * Fixed an issue where `experimental::parallel_group` initiation incorrectly
+    moved arguments instead of forwarding them.
+  * Fixed a sequencing issue in the implementation of `post()`, `dispatch()`,
+    and `defer()`.
+  * Fixed the `awaitable<>` implementation to propagate exceptions from awaited
+    initiation functions through the current completion handler.
+  * Fixed detection of `std::aligned_alloc` with [^gcc] 7.
+  * Changed to avoid using the soon-to-be-deprecated `std::aligned_storage` on
+    newer compilers.
+  * Fixed detection of `std::aligned_alloc` for older Apple platforms.
+  * Removed faulty assertions from `experimental::coro` implementation.
+  * Added defence against Qt-defined macros when building with Intel C++.
+  * Changed the implementation of the `select_reactor`, on Windows, to ensure that
+    any exception resulting from failure to recreate its interrupter's sockets
+    will be allowed to propagate out through `io_context::run()`.
+  * Fixed various compiler warnings.
+  * Updated all composed operations examples, and the C++11 timeouts example, to
+    use the new `async_result` form.
+  * Added composed operation and coroutine examples for C++20.
+  * Consult the [@/doc/libs/1_80_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
+
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Improved portability of endianness checks on ARM, AArch32 and AArch64 targets. ([github atomic 59])
+  * Fixed compilation with MSVC 14.0 (Visual Studio 2015) in C++17 mode. ([github atomic 61])
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * On Windows, added a fallback implementation for querying file attributes in case if the file cannot be opened with `ERROR_ACCESS_DENIED` error. This may allow `status` and `symlink_status` to succeed for system files and directories that are not reparse points or symlinks. ([github filesystem 234])
+  * On Windows, added a workaround for FAT/exFAT filesystems that produce `ERROR_INVALID_PARAMETER` when querying file attributes. This affected `status` and `symlink_status`, which reported that files do not exist, and directory iterators, which failed to construct, as well as other dependent operations. ([github filesystem 236], [github filesystem 237])
+  * Worked around a compilation problem on [@https://www.rtems.org/ RTEMS]. ([github_pr filesystem 240])
+  * On Linux, corrected switching to `sendfile` `copy_file` implementation if `copy_file_range` failed with `ENOSYS` in runtime. The `sendfile` fallback implementation used to skip the filesystem type check and could fail for some filesystems.
+  * On POSIX systems supporting `openat` and related APIs defined in POSIX.1-2008 and on Windows Vista and later, improved protection of `remove_all` against [@https://www.cve.org/CVERecord?id=CVE-2022-21658 CVE-2022-21658] that was implemented in the previous release. The previous fix could still result in removing unintended files in [@https://github.com/boostorg/filesystem/issues/224#issuecomment-1183738097 certain conditions]. Other systems remain vulnerable.
+
+* [phrase library..[@/libs/gil/ GIL]:]
+  [*NOTICE:] We are planning BREAKING switch to C++17 as minimum required C++ language version in one or two releases after Boost 1.80 ([github gil 676])
+  * Added
+    * GSoC 2020: Added Perona-Malik anisotropic diffusion algorithm ([github_pr gil 500])
+    * GSoC 2020: Added histogram class and related functionality ([github_pr gil 499])
+    * GSoC 2020: Added histogram equalization feature ([github_pr gil 514])
+    * GSoC 2020: Added histogram matching algorithm ([github_pr gil 515])
+    * GSoC 2020: Added ability to stack images either horizontally (`hstack`) or vertically (`vstack`) ([github_pr gil 506])
+    * GSoC 2020: Added adaptive histogram equalization algorithm ([github_pr gil 516])
+    * GSoC 2020: Added Standard Hough Transform and circle rasterization ([github_pr gil 512])
+    * GSoC 2020: Added Bresenham's algorithm for line rasterization ([github_pr gil 512])
+    * GSoC 2021: Added rotation of image by arbitrary angle around its center ([github_pr gil 565])
+    * GSoC 2021: Added rasterization support for ellipse based on "An Efficient Ellipse-Drawing Algorithm" by Jerry Van Aken ([github_pr gil 585])
+    * Added `image` constructor from compatible view ([github_pr gil 520])
+    * Added inverse function for affine `matrix3x2` ([github_pr gil 527])
+    * Added standard morphological transformations ([github_pr gil 541])
+    * Added `for_each_pixel` overload for `any_image` ([github_pr gil 648])
+    * Added C++17 polymorphic memory resource typedefs for `image` class ([github_pr gil 529])
+  * Changed
+    * [*BREAKING:] The required minimum C++ version is changed from from C++11 to C++14.
+      Currently, large parts of GIL still compile with a C++11 compiler. However,
+      there is no guarantee that it stays that way, and any compilers that do not
+      support at least C++14 are considered unsupported as of now.
+    * [*BREAKING:] `any_color_converted_view()` is deprecated and will be removed in the next release.
+      Use `color_converted_view()` instead, which provides the same feature.
+    * [*BREAKING:] `apply_operation` for `any_image` is deprecated and will be removed in the next release.
+      Use `variant2::visit` instead, which provides the same feature. ([github_pr gil 656])
+    * Moved numeric extension to core ([github_pr gil 573])
+    * Added support for C++17's `<filesystem>` ([github_pr gil 636])
+      The availability of the `std::filesystem` is detected automatically,
+      unless the `BOOST_GIL_IO_USE_BOOST_FILESYSTEM` macro is defined that forces
+      the preference of the Boost.Filesystem.
+    * Renamed `pixel_multiply_t` to `pixel_multiplies_t` and `pixel_divide_t` to `pixel_divides_t` ([github_pr gil 655])
+    * Renamed `io/dynamic_io_new.hpp` to `io/detail/dynamic.hpp` ([github_pr gil 653])
+    * Moved function `construct_matched` into `boost::gil::detail` namespace as it was only used by other implementation details ([github_pr gil 653])
+    * Made `packed_pixel` trivially copyable and assignable ([github_pr gil 679])
+    * Replace deprecated libtiff v4.3 typedefs with C99 fixed-size integers ([github_pr gil 685])
+  * Removed
+    * [*BREAKING:] Removed support for GCC 5 ([github_pr gil 572])
+    * Removed deprecated.hpp ([github_pr gil 627])
+  * Fixed
+    * Fixed conversion from RGB to HSL ([github_pr gil 505])
+    * Fixed conversion from RGB to signed CMYK ([github_pr gil 522])
+    * Removed unnecessary numeric cast in hsv.hpp ([github_pr gil 530])
+    * Fixed default constructor for `homogeneous_color_base` for reference pixel elements ([github_pr gil 542])
+    * Fixed returning reference to local temporary object in `subchroma_image_view` ([github_pr gil 556])
+    * Added missing header guards in diffusion.hpp ([github_pr gil 568])
+    * Fixed `any_image_view<>::const_t` ([github_pr gil 526])
+    * Fixed C++20 incompatibilities in I/O extensions ([github_pr gil 617])
+    * Ensured all examples build without errors ([github_pr gil 628])
+    * Fixed `convolve_2d` for images with `float32_t` channel model ([github_pr gil 577])
+    * Fixed `for_each_pixel` for non-1d iterable views ([github_pr gil 621])
+    * Fixed: `is_equal_to_sixteen` in PNG I/O was less-than test ([github_pr gil 650])
+    * Re-allow `devicen_t` with two components ([github_pr gil 654])
+      It was unintentionally removed in Boost 1.72
+    * Fixed memory leak in `image` class for empty dimensions ([github_pr gil 649])
+  * Acknowledgements
+    * Cypre55, Samuel Debionne, Mike-Devel, Edward Diener, Peter Dimov, Omar Emara, Dhruva Gole, Nicolas Herry, Eugene K, Avinal Kumar, Gaurav Kumar, Marco Langer, Pranam Lashkari, Mateusz Łoskot, Giovanni Mascellani, Debabrata Mandal, Gopi Krishna Menon, René Ferdinand Rivera Morell, Felix Morgner, Harshit Pant, Paul92, André Schröder, Scramjet911, Siddharth, Dirk Stolle, Prathamesh Tagore, theroyn, Olzhas Zhumabek
+
+* [phrase library..[@/libs/atomic/ Graph]:]
+  * Bug fixes:
+    * Fix bug in `stoer_wagner_min_cut` where vertices are not merged at the end of each mincut phase ([github graph 286])
+    * Fix conversion warning for return type of `strong_components` ([github graph 293])
+    * Fix compilation failure of `boykov_kolmogorov_max_flow` named parameter overload ([github graph 232])
+  * General code improvements:
+    * Remove redundant call to `combine` in `astar_search_no_init_tree` ([github graph 260])
+    * Remove redundant `child_idx` argument of `d_ary_heap_indirect<>::child` ([github graph 261])
+    * Improve documentation for traversal categories ([github graph 303])
+  * Acknowledgements
+    * Viktor Pti, Sebastian Brockmeyer, Etienne dg
+
+* [phrase library..[@/libs/histogram/ Histogram]:]
+  * Fixed segfault in `indexed` when trying to iterate over histogram with axes of zero size (physical or logical) under certain conditions
+  * Removed previously deprecated API
+    * class `accumulators::thread_safe`: use `accumulators::count<T, true>`
+    * Methods `accumulators::sum::large` and `accumulators::sum::small`: use `accumulators::sum::large_part` and `accumulators::sum::small_part`
+    * Type alias `algorithm::reduce_option`: use `algorithm::reduce_command`
+    * Template function `axis::traits::static_options`: use `axis::traits::get_options`
+    * Template function `axis::traits::static_is_inclusive`: use `axis::traits::is_inclusive`
+    * Type alias `indexed::range_iterator`: use `indexed::iterator`
+    * Type alias `indexed::accessor::reference`: use `indexed::accessor::const_reference`
+
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * For C++11 and later, added support for perfect forwarding of values written to `function_output_iterator`. ([github_pr iterator 73])
+  * Added protection against writing to `function_output_iterator` a result of dereferencing another `function_output_iterator`.
+
+* [phrase library..[@/libs/json/ JSON]:]
+  * Added non-const `value::at` overloads.
+  * Added the ability to manually choose endianness of the platform.
+  * Added `string::subview()` overload.
+  * Fixed segfault in `array::erase(it)`.
+  * Fixed low performance of `serialize` on libc++.
+  * Fixed ambigious conversion to `std::string_view` on GCC 8.
+  * Fixed parsing on big-endian platforms.
+  * Fixed handling of comment after trailing comma.
+
+* [phrase library..[@/libs/leaf/ LEAF]:]
+  * API breaking change: throw leaf::exception(....) now becomes leaf::throw_exception(....)
+  * Fixed a bug in support for a rare build configuration (exception handling enabled, diagnostics disabled)
+  * Using nullptr instead of 0 throughout
+  * Fixed pedantic warnings
+
+* [phrase library..[@/libs/locale/ Locale]:]
+  * Deprecated support for C++03 and earlier, C++11 will be required in the next release
+  * Provide `-sICU_LINK_LOCALE` as a temporary replacement for `-sICU_LINK` which is incompatible with Boost.Regex. `-sICU_LINK_LOCALE` and `-sICU_LINK` are deprecated and will be replaced by `ICU_*_NAME` options to be compatible with Boost.Regex
+  * Fix UB/assertion failure in the ICU `collator` implementation when transforming empty strings
+  * Fix some issues related to visibility of classes in shared libraries (Unix only)
+  * Fix compatibility with C++20 mode
+  * Fix compatibility with `BOOST_USE_WINDOWS_H`
+  * Fix build failures due to missing includes
+  * Handle or suppress many warnings which makes the build log cleaner
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Bug fixes:
+    * Fixed binding incorrect local address in UDP socket-based `syslog_backend` when IPv6 address is used for the syslog server. ([github log 181])
+    * Added a workaround for a [@https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105857 bug] in libstdc++ from gcc 11.2. When `max_size_decor` was used on a formatting stream, `std::codecvt::do_length` incorrectly accessed the input buffer and caused a buffer overflow.
+  * See [@/libs/log/doc/html/log/changelog.html changelog] for more details.
+
+* [phrase library..[@/libs/math/ Math]:]
+  * [*Deprecated C++11 support]: from 2023 we will require C++14 as a minimum standard.
+    This will mean GCC-5 or MSVC-14.1 as a minimal requirement.
+  * Add `constexpr` fma support, see [@https://github.com/boostorg/math/pull/734 734].
+  * Add support for the Chatterjee Correlation Coefficient, see [@https://github.com/boostorg/math/pull/770 770].
+  * Added support for the logarithm of the PDF for all the distributions.
+  * Improve support for building with no exception or RTTI support.
+  * Some minor bug fixes for [sub 1]F[sub 1] corner cases, see [@https://github.com/boostorg/math/pull/778 778].
+
+* [phrase library..[@/libs/multiprecision/ Multiprecision]:]
+  * [*Mark C++11 support as deprecated]: from 2023 we will move to requiring C++14 as a minimum standard level.  That will drop support for
+    GCC versions prior to 5 and MSVC prior to 14.1.
+  * Fix conflict between `boost/cstdfloat.hpp` and this library.
+  * Clean up lots of gcc and clang warnings.
+  * Fix input streaming of composite types (complex, interval rational) where there is a trailing delimeter in the stream and no whitespace.
+  * Fix `constexpr` integer square root where the input is 1, 2 or 3.
+  * Add missing `#include` of `<memory>` to float128.hpp.
+  * Correct 2-arg constructor for class `number` to prevent ambiguity in some cases.
+  * Correct and make more consistent behaviour of divide-by-zero in gmp.hpp.
+
+* [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
+  * Maintenance work.
+
+* [phrase library..[@/libs/nowide/ Nowide]:]
+  * Major performance improvement for Bulk I/O with files
+  * `basic_filebuf`: Fix wrong return value of `sync` when `fflush` failed
+  * `basic_filebuf`: Fix possible undefined behavior in a corner case when nothing was actually written but buffer is in "write" mode
+  * `basic_filebuf`: Limit putback of characters (i.e. `pbackfail`) only allowing putback of buffered characters (may be only 1 character)
+  
+* [phrase library..[@/libs/optional/ Optional]:]
+  * Added specializations for `std::hash<boost::optional<T>>`. 
+    This is a breaking change for programs that define such specializations themselves. 
+    For more details see [@/libs/optional/doc/html/boost_optional/reference/header__boost_optional_optional_hpp_/detailed_semantics___std__hash_specializations.html#reference_std_hash_spec specs].
+
+* [phrase library..[@/libs/stl_interfaces/ STLInterfaces]:]
+  * Fix [github stl_interfaces 53]: "missing 'typename' prior to dependent type
+    name 'C::const_iterator'"
+  * Fix [github stl_interfaces 54]: "Concept check fails on .data() of a view
+    on contiguous iterator_interface instantiations"
+  * New additions to make it easy to write views and view adaptors that
+    work like, and interoperate with, the ones in the standard library:
+    * Add workalikes for C++23's `std::bind_back()` and
+      `std::range_adaptor_closure` for pre-C++23 code.
+    * Add templates `closure` and `adaptor` to make writing view adaptors
+      easier, following the examples in
+      [@https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p2387r3.html
+      P2387].
+
+* [phrase library..[@/libs/system/ System]:]
+  * When an `error_code` is converted to `std::error_code` and then back
+    to `error_code`, the original is now restored, if possible.
+  * Reworked the conversion from `error_category` to `std::error_category`
+    to avoid the one-time allocation that shows up on leak checkers.
+  * Added a constructor that allows replacing the source location of an
+    `error_code`, and a corresponding `assign`.
+  * Added a converting constructor to `result`.
+
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  Major update:
+  * [@/libs/unordered/doc/html/unordered.html#buckets_fast_closed_addressing_implementation Refactor]
+    internal implementation to be dramatically faster
+  * Allow `final` `Hasher` and `KeyEqual` objects
+  * Update documentation, adding benchmark graphs and notes on the new internal data structures
+
+* [phrase library..[@/libs/utility/ Utility]:]
+  * In `string_view`/`string_ref`, fixed `max_size` returning incorrect value. ([github utility 91])
+  * Removed `noexcept` specifier from `string_view::compare` as it may throw on some input arguments. ([github utility 94])
+  * In `string_view`/`string_ref`, added support for calling `substr` with no arguments. ([github utility 96])
+  * Added `string_view::contains` methods that were introduced in C++23. ([github utility 93])
+  * In `string_view`, added asserts in `remove_prefix`/`remove_suffix` methods to enforce the precondition that the prefix/suffix length does not exceed the string view size. The previous (undocumented) behavior of silently clamping the prefix/suffix length is deprecated and will be removed in a future release. ([github utility 92])
+
+* [phrase library..[@/libs/wave/ Wave]:]
+  Fixed bugs:
+  * [github wave 24]: Line numbers wrong after conditional section
+  * [github wave 160]: one test fails with error C2660 and error C2440 under msvc /permissive- mode
+  * [github wave 161]: BOOST_WAVE_THROW_NAME_CTX does not result in a context callback and always throws
+  * [github wave 162]: When Boost headers are included in the preprocessed translation unit, Wave fails in boost/integer.hpp(99)
+
+[/ Example:
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  * Added anonymous shared memory for UNIX systems.
+  * Move semantics for shared objects ([ticket 1932]).
+  * Conform to `std::pointer_traits` requirements ([github_pr interprocess 32])
+  * Fixed `named_condition_any` fails to notify ([github interprocess 62])
+]
+
+[endsect]
+
+[section Updated Tools]
+
+* [phrase library..[@/tools/build/ Build]:]
+  * Includes release of [@/tools/build/doc/html/#_version_4_9_2 B2 version 4.9.2].
+
+[endsect]
+
+[section Compilers Tested]
+
+Boost's primary test compilers are:
+
+Boost's primary test compilers are:
+
+* Linux:
+  * Clang: 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 12.0.0, 13.0.0, 14.0.0
+  * Clang, C++11: 3.4, 11.0.0, 13.0.0, 14.0.0
+  * Clang, C++14: 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 5.0, 12.0.0, 13.0.0, 14.0.0
+  * Clang, C++17: 6.0.1, 7.0.0, 8.0.0, 9.0.0, 10.0.0, 11.0.0, 12.0.0, 13.0.0, 14.0.0
+  * Clang, C++20: 11.0.0, 12.0.0, 13.0.0, 14.0.0
+
+  * GCC: 4.6.3, 11, 12
+  * GCC, C++11: 4.7.3, 4.8.5, 11, 12
+  * GCC, C++14: 5.4.0, 6.4.0, 7.3.0, 8.0.1, 9.1.0, 11, 12
+  * GCC, C++17: 7.3.0, 8.0.1, 9.1.0, 11, 12
+  * GCC, C++20: 8.0.1, 9.1.0, 10, 11, 12
+
+* OS X:
+  * Apple Clang: 11.0.3
+  * Apple Clang, C++11: 11.0.3
+  * Apple Clang, C++14: 11.0.3
+  * Apple Clang, C++17: 11.0.3
+  * Apple Clang, C++20: 11.0.3
+
+* Windows:
+  * Visual C++: 10.0, 11.0, 12.0, 14.0, 14.1, 14.2, 14.3
+
+[endsect]
+
+[section Acknowledgements]
+
+Marshall Clow, Michael Caisse and Glen Fernandes managed this release.
+
+[endsect]

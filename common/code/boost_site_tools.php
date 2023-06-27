@@ -248,7 +248,7 @@ EOL;
       <a href="/doc/tools.html">Tools <span class="link">&gt;</span></a>
 
       <ul>
-        <li><a href="/build/">Boost Build <span class=
+        <li><a href="/tools/build/">Boost Build <span class=
         "link">&gt;</span></a></li>
 
         <li><a href="/tools/regression/">Regression <span class=
