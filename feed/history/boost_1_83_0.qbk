@@ -57,6 +57,16 @@ Please keep the list of libraries sorted in lexicographical order.
   * Remove dependency on Boost.Chrono, Boost.System, and others.
   * Disable deprecated headers unless `BOOST_TIMER_ENABLE_DEPRECATED` is defined.
 
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * [*Major update.]
+  * Added `boost::concurrent_flat_map`, a fast, thread-safe hashmap based on
+    open addressing.
+  * Sped up iteration of open-addressing containers.
+  * In open-addressing containers, `erase(iterator)`, which previously returned
+    nothing, now returns a proxy object convertible to an iterator to the next
+    element. This enables the typical `it = c.erase(it)` idiom without incurring
+    any performance penalty when the returned proxy is not used.
+
 [endsect]
 
 [section Compilers Tested]
