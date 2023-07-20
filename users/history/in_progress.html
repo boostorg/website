@@ -56,6 +56,21 @@
     <ul>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/atomic/">Atomic</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed compilation of <code><span class="identifier">atomic_ref</span></code>
+                for <code><span class="keyword">const</span></code>-qualified
+                types. Note that even <code><span class="keyword">const</span></code>-qualified
+                atomic objects must still reside in read-write memory. (<a href="https://github.com/boostorg/atomic/issues/62">#62</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/chrono/">Chrono</a>:</span>
           <ul>
             <li>
@@ -121,6 +136,106 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/filesystem/">Filesystem</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added <code><span class="identifier">directory_entry</span><span class="special">::</span><span class="identifier">refresh</span></code>
+                method that updates internal cached file statuses for the directory
+                entry identified by path.
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>v4:</strong> <code><span class="identifier">directory_entry</span></code>
+                constructors and modifiers that initialize or modify the path now
+                automatically call <code><span class="identifier">refresh</span></code>.
+                This may result in errors that were not indicated before and in
+                <strong>v3</strong>, if querying the filesystem for
+                file statuses fails (e.g. if the file does not exist). This new behavior
+                is similar to std::filesystem.
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>v4:</strong> <code><span class="identifier">directory_entry</span></code>
+                constructors and methods taking <code><span class="identifier">file_status</span></code>
+                parameters are removed. Users are recommended to remove these arguments
+                and rely on <code><span class="identifier">directory_entry</span></code>
+                calling <code><span class="identifier">refresh</span></code> internally.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">directory_entry</span></code>
+                member methods for checking the file type of the file, similar to
+                std::filesystem.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added more methods for testing file status: <code><span class="identifier">is_block_file</span></code>,
+                <code><span class="identifier">is_character_file</span></code>,
+                <code><span class="identifier">is_fifo</span></code>, <code><span class="identifier">is_socket</span></code> and <code><span class="identifier">is_reparse_file</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">recursive_directory_iterator</span></code>
+                is now more likely to reuse information about the file type that
+                is obtained during filesystem iteration. This may improve performance.
+                (<a href="https://github.com/boostorg/filesystem/issues/288">#288</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                File streams defined in <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">filesystem</span><span class="special">/</span><span class="identifier">fstream</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                are now movable, if the standard library file streams are. (<a href="https://github.com/boostorg/filesystem/issues/280">#280</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a new header <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">filesystem</span><span class="special">/</span><span class="identifier">cstdio</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                with a portable <code><span class="identifier">fopen</span></code>
+                overload that takes <code><span class="identifier">path</span></code>
+                as the first argument. This function is equivalent to <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">fopen</span></code>, except that on Windows it
+                uses the native wide character encoding for paths.
+              </div>
+            </li>
+            <li>
+              <div>
+                Generic <code><span class="identifier">path</span></code> comparison
+                operators are now more restricted to avoid potential ambiguities
+                when user's code contains a <code><span class="keyword">using</span>
+                <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">;</span></code> directive. (<a href="https://github.com/boostorg/filesystem/issues/285">#285</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed potential overload resolution ambiguity in users' code, where
+                <code><span class="identifier">path</span></code> constructors
+                from iterators could interfere with function overloads taking a
+                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">initializer_list</span></code> argument. (<a href="https://github.com/boostorg/filesystem/issues/287">#287</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                On Windows, added more workarounds for errors returned by various
+                filesystems when creating a directory iterator. (<a href="https://github.com/boostorg/filesystem/issues/284">#284</a>,
+                <a href="https://github.com/boostorg/filesystem/issues/286">#286</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                On Windows, relaxed access rights needed for querying file times.
+                (<a href="https://github.com/boostorg/filesystem/issues/290">#290</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/flyweight/index.html">Flyweight</a>:</span>
           <ul>
             <li>
@@ -135,6 +250,40 @@
               <div>
                 Fixed a situation where the mutex used by <a href="/doc/libs/master/libs/flyweight/doc/reference/locking.html#simple_locking_synopsis"><code><span class="identifier">simple_locking</span></code></a> was not
                 recursive (issue <a href="https://github.com/boostorg/flyweight/issues/12">#12</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/iterator/">Iterator</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added <code><span class="identifier">is_iterator</span></code>
+                type trait that allows to test whether the type qualifies as an iterator
+                type.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">filter_iterator</span></code> now
+                supports move-construction of the adopted iterator and the function
+                object. (<a href="https://github.com/boostorg/iterator/pull/79">PR#79</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/log/">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Fixed a possible infinite loop in <code><span class="identifier">text_file_backend</span></code>,
+                when the size of a formatted log record exceeds the <code><span class="identifier">rotation_size</span></code> limit. (<a href="https://github.com/boostorg/log/issues/209">#209</a>)
               </div>
             </li>
           </ul>
@@ -282,6 +431,95 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/mysql/">MySQL</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <strong>Major update.</strong>
+              </div>
+            </li>
+            <li>
+              <div>
+                Stored procedures are now fully supported, including <code><span class="identifier">SELECT</span></code> statements producing data
+                and procedures with <code><span class="identifier">OUT</span></code>
+                parameters.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added support for multi-queries, which allows running multiple semicolon-separated
+                statements with a single call.
+              </div>
+            </li>
+            <li>
+              <div>
+                A statically-typed interface has been added, which allows parsing
+                query results into user-provided types, using <a href="/doc/libs/master/libs/describe/">Boost.Describe</a>
+                structs and tuples.
+              </div>
+            </li>
+            <li>
+              <div>
+                Text queries and prepared statements can now be executed using the
+                new <code><span class="identifier">connection</span><span class="special">::</span><span class="identifier">execute</span></code> and <code><span class="identifier">connection</span><span class="special">::</span><span class="identifier">start_execution</span></code>
+                functions (and their async counterparts). These superseed <code><span class="identifier">connection</span><span class="special">::</span><span class="identifier">query</span></code>, <code><span class="identifier">connection</span><span class="special">::</span><span class="identifier">execute_statement</span></code>,
+                <code><span class="identifier">connection</span><span class="special">::</span><span class="identifier">start_query</span></code> and <code><span class="identifier">connection</span><span class="special">::</span><span class="identifier">start_statement_execution</span></code>.
+                The new functions allow access to new features, like the static interface.
+              </div>
+            </li>
+            <li>
+              <div>
+                A separate compilation mode has been added to help reduce build times.
+                Sources are included in <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">mysql</span><span class="special">/</span><span class="identifier">src</span><span class="special">.</span><span class="identifier">hpp</span></code>,
+                which must be included in exactly one translation unit.
+              </div>
+            </li>
+            <li>
+              <div>
+                Prepared statements can now be executed using an iterator pair to
+                specify parameters, using <code><span class="identifier">statement</span><span class="special">::</span><span class="identifier">bind</span></code>
+                and <code><span class="identifier">connection</span><span class="special">::</span><span class="identifier">execute</span></code>. This enables use cases
+                where the number and type of parameters is not known at compile-time.
+              </div>
+            </li>
+            <li>
+              <div>
+                Prepared statement execution now accepts parameters of type <code><span class="keyword">bool</span></code>, <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">optional</span></code>
+                and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added error codes and verified compatibility with MySQL v8.0.33 and
+                MariaDB v11.0.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed potential problems with Windows' <code><span class="identifier">min</span><span class="special">()</span></code> and <code><span class="identifier">max</span><span class="special">()</span></code> macros.
+              </div>
+            </li>
+            <li>
+              <div>
+                All assertions now use <a href="/doc/libs/master/libs/assert/">Boost.Assert</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                All exceptions are now thrown via <a href="/doc/libs/master/libs/throw_exception/">Boost.ThrowException</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Immediate completions are now correctly dispatched through the I/O
+                object executor.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/ratio/">Ratio</a>:</span>
           <ul>
             <li>
@@ -375,6 +613,21 @@
                 element. This enables the typical <code><span class="identifier">it</span>
                 <span class="special">=</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">erase</span><span class="special">(</span><span class="identifier">it</span><span class="special">)</span></code> idiom without incurring any performance
                 penalty when the returned proxy is not used.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/uuid/">UUID</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Improved generated x86 code for AVX targets. Removed the use of
+                <code><span class="identifier">lddqu</span></code> instruction
+                on SSE3 targets, which penalize performance on Intel NetBurst CPUs
+                but is more optimal on Skylake and later CPUs. (<a href="https://github.com/boostorg/uuid/pull/138">PR#138</a>)
               </div>
             </li>
           </ul>
