@@ -47,6 +47,9 @@ Please keep the list of libraries sorted in lexicographical order.
     or move construction from the held type.
   * Ported documentation to Quickbook, Doxygen comments now used in code.
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Fixed compilation of `atomic_ref` for `const`-qualified types. Note that even `const`-qualified atomic objects must still reside in read-write memory. ([github atomic 62])
+
 * [phrase library..[@/libs/chrono/ Chrono]:]
   * Remove use of deprecated Boost.Ratio features.
 
@@ -67,12 +70,33 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed tests failures on glibc 2.36+, thanks to [Đoàn Trần Công Danh](https://github.com/sgn)
     for the bugreport [@https://github.com/boostorg/dll/issues/58 #58].
 
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * Added `directory_entry::refresh` method that updates internal cached file statuses for the directory entry identified by path.
+  * [*v4:] `directory_entry` constructors and modifiers that initialize or modify the path now automatically call `refresh`. This may result in errors that were not indicated before and in [*v3], if querying the filesystem for file statuses fails (e.g. if the file does not exist). This new behavior is similar to std::filesystem.
+  * [*v4:] `directory_entry` constructors and methods taking `file_status` parameters are removed. Users are recommended to remove these arguments and rely on `directory_entry` calling `refresh` internally.
+  * Added `directory_entry` member methods for checking the file type of the file, similar to std::filesystem.
+  * Added more methods for testing file status: `is_block_file`, `is_character_file`, `is_fifo`, `is_socket` and `is_reparse_file`.
+  * `recursive_directory_iterator` is now more likely to reuse information about the file type that is obtained during filesystem iteration. This may improve performance. ([github filesystem 288])
+  * File streams defined in `boost/filesystem/fstream.hpp` are now movable, if the standard library file streams are. ([github filesystem 280])
+  * Added a new header `boost/filesystem/cstdio.hpp` with a portable `fopen` overload that takes `path` as the first argument. This function is equivalent to `std::fopen`, except that on Windows it uses the native wide character encoding for paths.
+  * Generic `path` comparison operators are now more restricted to avoid potential ambiguities when user's code contains a `using namespace boost::filesystem;` directive. ([github filesystem 285])
+  * Fixed potential overload resolution ambiguity in users' code, where `path` constructors from iterators could interfere with function overloads taking a `std::initializer_list` argument. ([github filesystem 287])
+  * On Windows, added more workarounds for errors returned by various filesystems when creating a directory iterator. ([github filesystem 284], [github filesystem 286])
+  * On Windows, relaxed access rights needed for querying file times. ([github filesystem 290])
+
 * [phrase library..[@/libs/flyweight/index.html Flyweight]:]
   * Added smart-pointer syntax to `boost::flyweight` (`operator*` and 
     `operator->` dereferencing to the underlying value).
   * Fixed a situation where the mutex used by
     [@/libs/flyweight/doc/reference/locking.html#simple_locking_synopsis `simple_locking`]
     was not recursive (issue [github flyweight 12]).
+
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * Added `is_iterator` type trait that allows to test whether the type qualifies as an iterator type.
+  * `filter_iterator` now supports move-construction of the adopted iterator and the function object. ([github_pr iterator 79])
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Fixed a possible infinite loop in `text_file_backend`, when the size of a formatted log record exceeds the `rotation_size` limit. ([github log 209])
 
 * [phrase library..[@/libs/math/ Math]:]
   * Added Numerical evaluation of Fourier transform of Daubechies scaling functions [@https://github.com/boostorg/math/pull/921 921].
@@ -105,6 +129,33 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed handling of global precsion changes in multi-threaded environments [@https://github.com/boostorg/multiprecision/pull/552 552].
   * Fixed `cpp_int::eval_convert_to` noexcept specification [@https://github.com/boostorg/multiprecision/pull/555 555].
 
+* [phrase library..[@/libs/mysql/ MySQL]:]
+  * [*Major update.]
+  * Stored procedures are now fully supported, including `SELECT` statements producing
+    data and procedures with `OUT` parameters.
+  * Added support for multi-queries, which allows running multiple semicolon-separated
+    statements with a single call.
+  * A statically-typed interface has been added, which allows parsing query results into
+    user-provided types, using [@/libs/describe/ Boost.Describe] structs and tuples.
+  * Text queries and prepared statements can now be executed using the new
+    `connection::execute` and `connection::start_execution` functions (and their async
+    counterparts). These superseed `connection::query`, `connection::execute_statement`,
+    `connection::start_query` and `connection::start_statement_execution`. The new
+    functions allow access to new features, like the static interface.
+  * A separate compilation mode has been added to help reduce build times. Sources
+    are included in `boost/mysql/src.hpp`, which must be included in exactly one
+    translation unit.
+  * Prepared statements can now be executed using an iterator pair to specify parameters,
+    using `statement::bind` and `connection::execute`. This enables use cases where the
+    number and type of parameters is not known at compile-time.
+  * Prepared statement execution now accepts parameters of type `bool`, `std::optional`
+    and `boost::optional`.
+  * Added error codes and verified compatibility with MySQL v8.0.33 and MariaDB v11.0.
+  * Fixed potential problems with Windows' `min()` and `max()` macros.
+  * All assertions now use [@/libs/assert/ Boost.Assert].
+  * All exceptions are now thrown via [@/libs/throw_exception/ Boost.ThrowException].
+  * Immediate completions are now correctly dispatched through the I/O object executor.
+
 * [phrase library..[@/libs/ratio/ Ratio]:]
   * Change default `BOOST_RATIO_VERSION` to 2.
   * Support for `BOOST_RATIO_EXTENSIONS` is now deprecated and will eventually
@@ -130,6 +181,9 @@ Please keep the list of libraries sorted in lexicographical order.
     nothing, now returns a proxy object convertible to an iterator to the next
     element. This enables the typical `it = c.erase(it)` idiom without incurring
     any performance penalty when the returned proxy is not used.
+
+* [phrase library..[@/libs/uuid/ UUID]:]
+  * Improved generated x86 code for AVX targets. Removed the use of `lddqu` instruction on SSE3 targets, which penalize performance on Intel NetBurst CPUs but is more optimal on Skylake and later CPUs. ([github_pr uuid 138])
 
 * [phrase library..[@/libs/variant2/ Variant2]:]
   * Added `uses_double_storage()`.
