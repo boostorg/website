@@ -85,6 +85,24 @@ Please keep the list of libraries sorted in lexicographical order.
   * Added `is_iterator` type trait that allows to test whether the type qualifies as an iterator type.
   * `filter_iterator` now supports move-construction of the adopted iterator and the function object. ([github_pr iterator 79])
 
+* [phrase library..[@/libs/json/ JSON]:]
+  * The library now only throws `system_error`, except for when allocation
+    failed, in which case `std::bad_alloc` is thrown.
+  * Serialization behavior can now be changed by `serialize_options`.
+  * Contextual conversions.
+  * Parser option for more precise number parsing.
+  * Support `parse_options` in stream `operator<<`.
+  * Parser option to allow `Infinity` and `NaN` JSON literals.
+  * Parser mode that only validates numbers rather than parsing them.
+  * Numbers with exponent larger than `INT_MAX` are accepted by the parser and
+    treated as infinity.
+  * Fix `object` member functions that should provide strong
+    guarantee.
+  * Fix ambiguity of `end` call when `boost/range.hpp` is included.
+  * Fix ASan failures.
+  * Fix error message for `error::size_mismatch`.
+  * Fix conversion into tuple with const elements.
+
 * [phrase library..[@/libs/log/ Log]:]
   * Fixed a possible infinite loop in `text_file_backend`, when the size of a formatted log record exceeds the `rotation_size` limit. ([github log 209])
 
