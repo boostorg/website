@@ -93,6 +93,14 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed a serialization-related compile-time bug in old compilers
     without ADL support (issue [github multi_index 70]).
 
+* [phrase library..[@/libs/mysql/ MySQL]:]
+  * Added `connection::reset_connection` and `connection::async_reset_connection`.
+    These functions clean session state (including prepared statements, variables, locks and more)
+    without closing and re-opening the connection.
+  * Added error codes introduced in MySQL server v8.1.0.
+  * Added fuzz testing for the deserialization functions.
+  
+
 * [phrase library..[@/libs/pfr/ PFR]:]
   * [*Big new feature: field names reflection]. Added new `constexpr` `boost::pfr::get_name<N, T>()`
     function that returns a `std::string_view` with a name of field at index `N`
