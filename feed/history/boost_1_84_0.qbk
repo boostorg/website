@@ -19,6 +19,51 @@ Formatting reference: https://www.boost.org/doc/tools/quickbook/
 Please keep the list of libraries sorted in lexicographical order.
 ]
 
+[section Updated default target Windows version]
+
+Boost.WinAPI, a library that is used internally by other Boost libraries for defining Windows SDK components,
+has been updated to target Windows 10 API by default, where possible. This means that Boost libraries will
+target Windows 10 by default and may not run on older Windows versions. This includes the pre-built binaries
+that are distributed by Boost.
+
+The affected libraries include:
+
+* Boost.Atomic
+* Boost.Beast
+* Boost.Chrono
+* Boost.DateTime
+* Boost.DLL
+* Boost.Filesystem
+* Boost.Interprocess
+* Boost.Log
+* Boost.Pool
+* Boost.Process
+* Boost.System
+* Boost.Stacktrace
+* Boost.Thread
+* Boost.UUID
+
+as well as libraries that depend on the above.
+
+Users are able to change the default by defining `BOOST_USE_WINAPI_VERSION` or `_WIN32_WINNT` when building
+and using Boost to the required version number. For example, to build Boost targeting Windows 7 one could use
+a command line like this:
+
+[pre
+    b2 variant=release define=BOOST_USE_WINAPI_VERSION=0x0601 stage
+]
+
+Note, however, that individual libraries may have their own requirements on the minimum supported Windows version.
+
+The list of Windows API version numbers can be seen on
+[@https://msdn.microsoft.com/en-us/library/6sehtctf.aspx this] page.
+
+[tip Do not use macro names like `_WIN32_WINNT_WIN7` for version numbers in the command line as this will likely
+not work. The version number macros are not pre-defined by the compiler, and therefore may not be defined at
+the point where the code checks the version.]
+
+[endsect]
+
 [section New Libraries]
 
 [/ Example:
@@ -49,6 +94,11 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed reference documentation generation. Now it is not overwritten by
     Boost.PFR reference. Thanks to Peter Dimov for the debugging.
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * C++03 is no longer supported, the minimum required language version is C++11.
+  * Added support for x87 extended double with reduced precision, which is used on FreeBSD and OpenBSD. ([github atomic 14])
+  * Support for Windows versions older than Windows 10 is deprecated and will be removed in Boost 1.87.
+
 * [phrase library..[@/libs/beast/ Beast]:]
   * Support for `immediate_executor`.
   * Remove deprecated allocation and invocation hooks.
@@ -67,6 +117,20 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/conversion/ Conversion]:]
   * C++03 is no longer supported [github_pr conversion 27].
 
+* [phrase library..[@/libs/core/ Core]:]
+  * `boost::swap` utility function has been renamed to `boost::core::invoke_swap` to
+    avoid forming a potential infinite recursion when the arguments are not swappable.
+    The new function is defined in `boost/core/invoke_swap.hpp` and is functionally equivalent
+    to `boost::swap`. The old `boost::swap` name is preserved for backward compatibility
+    but deprecated and will be removed in a future release. Its `noexcept` specification
+    has been removed to avoid compile errors caused by compile-time recursion.
+    `BOOST_ALLOW_DEPRECATED_SYMBOLS` or `BOOST_ALLOW_DEPRECATED` can be defined to suppress
+    deprecation warnings for the transition period. ([github core 148])
+  * Headers `boost/swap.hpp`, `boost/utility/swap.hpp` and `boost/core/swap.hpp` are
+    deprecated and will be removed. Please, switch to `boost/core/invoke_swap.hpp`.
+    `BOOST_ALLOW_DEPRECATED_HEADERS` or `BOOST_ALLOW_DEPRECATED` can be defined to suppress
+    deprecation warnings.
+
 * [phrase library..[@/libs/crc/ CRC]:]
   * C++03 support is deprecated and will be removed in release 1.86.
 
@@ -75,6 +139,14 @@ Please keep the list of libraries sorted in lexicographical order.
 
 * [phrase library..[@/libs/endian/ Endian]:]
   * C++03 is no longer supported.
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * As was announced in Boost 1.82.0, C++03 is no longer supported. A C++11 or later compiler is required.
+  * Fixed that some `directory_entry` observers taking `error_code& ec` argument did not clear the error code on successful return. ([github filesystem 291])
+  * On Windows, improved robustness of date and time conversion and added support for dates before January 1, 1970. ([github filesystem 293])
+  * Removed support for Windows CE that was deprecated since Boost.Filesystem 1.79.0.
+  * Removed `boost/filesystem/string_file.hpp` header. The header was deprecated since Boost.Filesystem 1.79.0.
+  * *Deprecated:* Support for Windows versions older than Windows 10 is deprecated and will be removed in Boost 1.87.
 
 * [phrase library..[@/libs/heap/ Heap]:]
   * C++03 support is deprecated and will be removed in release 1.86. New requirement will be C++14.
@@ -104,6 +176,11 @@ Please keep the list of libraries sorted in lexicographical order.
 
 * [phrase library..[@/libs/lockfree/ Lockfree]:]
   * C++03 support is deprecated and will be removed in release 1.86. New requirement will be C++14.
+
+* [phrase library..[@/libs/log/ Log]:]
+  * C++03 is no longer supported. A C++11 or later compiler is required.
+  * When built with C++11 compilers that are conforming enough for Boost.Regex v5 to be used, Boost.Log no longer links with Boost.Regex prebuilt library, since Boost.Regex v5 is header-only.
+  * Support for Windows versions older than Windows 10 is deprecated and will be removed in Boost 1.87.
 
 * [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
   * Fixed a serialization-related compile-time bug in old compilers
