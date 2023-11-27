@@ -182,9 +182,29 @@ the point where the code checks the version.]
   * When built with C++11 compilers that are conforming enough for Boost.Regex v5 to be used, Boost.Log no longer links with Boost.Regex prebuilt library, since Boost.Regex v5 is header-only.
   * Support for Windows versions older than Windows 10 is deprecated and will be removed in Boost 1.87.
 
+* [phrase library..[@/libs/math/ Math]:]
+  * Improve ccmath error detection.
+  * Remove use of deprecated std::numeric_limits<>::has_denorm, see [@https://github.com/boostorg/math/issues/1028 1028].
+  * Correct non-convergence bug in non-central-t distribution, see [@https://github.com/boostorg/math/issues/1035 1035].
+  * Adjust Bessel function approximation to [sub 1]F[sub 1] to avoid taking tgamma at a negative integer, see [@https://github.com/boostorg/math/issues/1034 1034].
+  * Avoid spurious overflow and divide by zero in ibeta, see [@https://github.com/boostorg/math/issues/1006 1006].
+  * Improve accuracy when using Sterling's approximation to tgamma, completes work started in [@https://github.com/boostorg/math/pull/1007 1007].
+  * Fix inverse_discrete_quantile for large initial guesses, see [@https://github.com/boostorg/math/pull/1007 1007].
+  * Improve Newton root finding, see [@https://github.com/boostorg/math/pull/1000 1000].
+  * Fix median_absolute_deviation for non-zero centre, see [@https://github.com/boostorg/math/pull/997 997].
+  * Fix up cstdfloat.hpp for gcc-14.
+  * Update to work for the new types declared in <stdfloat>.
+  * Change hypergeometric_distribution to use 64 rather than 32 bit integers to avoid unnecessary overflow and restrictions on use.
+
 * [phrase library..[@/libs/multi_index/ Multi-index Containers]:]
   * Fixed a serialization-related compile-time bug in old compilers
     without ADL support (issue [github multi_index 70]).
+
+* [phrase library..[@/libs/multiprecision/ Multiprecision]:]
+  * Change `boost::array` to `std::array` in the tests, fixes [@https://github.com/boostorg/multiprecision/issues/567 567].
+  * Correct cpp_int::eval_convert_to to be noexcept, fixes [@https://github.com/boostorg/multiprecision/issues/553 553].
+  * Make sure that changing the global precision, also changes the current thread precision.
+  * Fix rational_adaptor construction bug, fixes [@https://github.com/boostorg/multiprecision/issues/540 540].
 
 * [phrase library..[@/libs/mysql/ MySQL]:]
   * Added `connection::reset_connection` and `connection::async_reset_connection`.
@@ -215,6 +235,10 @@ the point where the code checks the version.]
   * Support for `BOOST_RATIO_EXTENSIONS` has been removed. Ratio is now
     implemented in terms of the standard `<ratio>` header.
 
+* [phrase library..[@/libs/random/ Random]:]
+  * C++03 is no longer supported.
+  * Fixed overflows in tests using Boost.Multiprecision
+
 * [phrase library..[@/libs/stacktrace/ Stacktrace]:]
   * C++03 is no longer supported. Thanks to
     [@https://github.com/leha-bot Alex] for the PR [github_pr stacktrace 139]
@@ -231,6 +255,11 @@ the point where the code checks the version.]
   * Added `operator|` for `result`.
   * Added `operator&` for `result`.
   * Added `operator&=` for `result`.
+
+* [phrase library..[@/libs/test/ Test]:]
+  * C++03 is no longer supported.
+  * Fixed useage of PRIxPTR for glibc 2.2 - 2.17 [github_pr test 392]
+  * Fixed MSVC warning C5263: calling 'std::move' on a temporary object prevents copy elision [github_pr test 390]
 
 * [phrase library..[@/libs/thread/ Thread]:]
   * C++03 is no longer supported.
