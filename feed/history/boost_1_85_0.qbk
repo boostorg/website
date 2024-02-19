@@ -64,6 +64,14 @@ Please keep the list of libraries sorted in lexicographical order.
   * `operator&` now works for `result<void>` (by way of taking a nullary function.)
   * Added `operator|=` for `result`.
 
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * Optimized `emplace()` for a `value_type` or `init_type` (if applicable) argument to bypass
+    creating an intermediate object. The argument is already the same type as the would-be intermediate object.
+  * Optimized `emplace()` for `k,v` arguments on map containers to delay constructing the object
+    until it is certain that an element should be inserted. This optimization happens when the
+    map’s `key_type` is move constructible or when the `k` argument is a  `key_type`.
+  * Fixed support for allocators with explicit copy constructors ([github_pr unordered 234]).
+
 [endsect]
 
 [section Compilers Tested]
