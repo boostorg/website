@@ -45,6 +45,12 @@ Please keep the list of libraries sorted in lexicographical order.
   * C++03 is no longer supported; a C++11 compiler is required.
     (This includes GCC 4.7 or later, and MSVC 12.0 (VS 2013) or later.)
 
+* [phrase library..[@/libs/conversion/ Conversion]:]
+  * Removed outdated mentions of `boost::lexical_cast` that is not part of the
+    library any more. Thanks to
+    [@https://github.com/eoan-ermine Danil Sidoruk] for the PR
+    [github_pr conversion 28]!
+
 * [phrase library..[@/libs/function/ Function]:]
   * C++03 is no longer supported; a C++11 compiler is required.
     (This includes GCC 4.7 or later, and MSVC 12.0 (VS 2013) or later.)
@@ -56,10 +62,32 @@ Please keep the list of libraries sorted in lexicographical order.
   * Old `make_shared_context`/`capture` APIs are deprecated, will be removed in the next release.
   * Removed support for transporting of dynamicaly captured error objects in exceptions.
 
+* [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
+  * Significant rewrite of the internal logic to separate optimized and C++ Standard Library IO-based streams:
+    * C++ Standard Library based streams now constructed in less cases leading to [*better performance];
+    * less template instantiations and simpler code;
+    * always use `std::char_traits` (do not use custom traits from input/output types as it leads to linktime or runtime errors);
+    * fixed missuse of forward declared boost::array (thanks to [@https://github.com/13steinj 13steinj] for the report [github lexical_cast 64]!);
+    * support for `volatile` input types was dropped, following the C++ Standard Library trend.
+  * Optimized conversions from std::basic_string_view and boost::basic_string_view  [github lexical_cast 30].
+  * Dropped dependency on Boost.NumericConversion and Boost.MPL. Fixed some cases
+    of converting floting point types to arithmetics.
+  * The library now compiles and works fine with `-fno-sanitize-recover=integer` [github lexical_cast 45].
+
 * [phrase library..[@/libs/msm/ MSM]:]
   * [* Major Update]. Backend update (back11). Requires C++ 11. The documentation now uses it as default.
   * [* Big new feature]. New front-end (PlantUML). Requires C++ 20 
   * Various Bugfixes (compiler errors and warnings, priority of deferred events)
+
+* [phrase library..[@/libs/pfr/ PFR]:]
+  * `boost::pfr::get_name` now can work with local types on some compilers.
+    Thanks to [@https://github.com/schaumb Bela Schaum] for the PR [github_pr pfr 152]!
+  * Removed unused implementation details. Thanks to
+    [@https://github.com/denzor200 Denis Mikhailov] for the PR [github_pr pfr 154].
+  * Allow throwing exceptions from `boost::pfr::structure_to_tuple`. Thanks to
+    [@https://github.com/denzor200 Denis Mikhailov] for the bug report [github pfr 155].
+  * Field reflection trick is now described in the docs. Thanks to all the
+    discussion participans in [github pfr 150]!
 
 * [phrase library..[@/libs/system/ System]:]
   * C++03 is no longer supported; a C++11 compiler is required.
@@ -68,6 +96,25 @@ Please keep the list of libraries sorted in lexicographical order.
   * The original and obsolete (32 bit) MinGW is no longer supported. MinGW-w64 (both 64 and 32 bit) is still supported.
   * `operator&` now works for `result<void>` (by way of taking a nullary function.)
   * Added `operator|=` for `result`.
+
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * [*Big new feature: stacktrace from arbitrary exception].
+    On some POSIX platforms `std::stacktrace::from_current_exception()` now
+    returns the stacktrace of the current exception object as if the stacktrace
+    was captures at the point of throwing the exception. Many thanks to
+    Andrei Nekrashevich for prototyping the idea in `libsfe`.
+  * Fixed memory consumption on Windows with `boost_stacktrace_windbg`. Thanks
+    to [@https://github.com/ycyclop ycyclop] for reporting the issue
+    [github stacktrace 111], to [@https://github.com/correa Thiago A. Correa]
+    for providing more information, to
+    [@https://github.com/akarpovskii Andrei Karpovskii] for providing a
+    possible fix.
+  * Fixed lbrary build with non hidden visibility. Thanks to
+    [@https://github.com/JBouwer Jan Bouwer] for the report and information on
+    how to fix it.
+
+* [phrase library..[@/libs/variant/ Variant]:]
+  * Removed more of the pre-C++11 macro and workarounds.
 
 [endsect]
 
