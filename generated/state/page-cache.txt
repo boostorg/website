@@ -39651,6 +39651,20 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/conversion/">Conversion</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Removed outdated mentions of <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">lexical_cast</span></code>
+"                that is not part of the library any more. Thanks to <a href="https://github.com/eoan-ermine">Danil
+"                Sidoruk</a> for the PR <a href="https://github.com/boostorg/conversion/pull/28">PR#28</a>!
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/function/">Function</a>:</span>
 "          <ul>
 "            <li>
@@ -39701,6 +39715,70 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/lexical_cast/">LexicalCast</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Significant rewrite of the internal logic to separate optimized and
+"                C++ Standard Library IO-based streams:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      C++ Standard Library based streams now constructed in less
+"                      cases leading to <strong>better performance</strong>;
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      less template instantiations and simpler code;
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      always use <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">char_traits</span></code>
+"                      (do not use custom traits from input/output types as it leads
+"                      to linktime or runtime errors);
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      fixed missuse of forward declared boost::array (thanks to
+"                      <a href="https://github.com/13steinj">13steinj</a> for
+"                      the report <a href="https://github.com/boostorg/lexical_cast/issues/64">#64</a>!);
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      support for <code><span class="keyword">volatile</span></code>
+"                      input types was dropped, following the C++ Standard Library
+"                      trend.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Optimized conversions from std::basic_string_view and boost::basic_string_view
+"                <a href="https://github.com/boostorg/lexical_cast/issues/30">#30</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Dropped dependency on Boost.NumericConversion and Boost.MPL. Fixed
+"                some cases of converting floting point types to arithmetics.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The library now compiles and works fine with <code><span class="special">-</span><span class="identifier">fno</span><span class="special">-</span><span class="identifier">sanitize</span><span class="special">-</span><span class="identifier">recover</span><span class="special">=</span><span class="identifier">integer</span></code> <a href="https://github.com/boostorg/lexical_cast/issues/45">#45</a>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/msm/">MSM</a>:</span>
 "          <ul>
 "            <li>
@@ -39719,6 +39797,39 @@
 "              <div>
 "                Various Bugfixes (compiler errors and warnings, priority of deferred
 "                events)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/pfr/">PFR</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">pfr</span><span class="special">::</span><span class="identifier">get_name</span></code> now can work with local
+"                types on some compilers. Thanks to <a href="https://github.com/schaumb">Bela
+"                Schaum</a> for the PR <a href="https://github.com/boostorg/pfr/pull/152">PR#152</a>!
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed unused implementation details. Thanks to <a href="https://github.com/denzor200">Denis
+"                Mikhailov</a> for the PR <a href="https://github.com/boostorg/pfr/pull/154">PR#154</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Allow throwing exceptions from <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">pfr</span><span class="special">::</span><span class="identifier">structure_to_tuple</span></code>.
+"                Thanks to <a href="https://github.com/denzor200">Denis Mikhailov</a>
+"                for the bug report <a href="https://github.com/boostorg/pfr/issues/155">#155</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Field reflection trick is now described in the docs. Thanks to all
+"                the discussion participans in <a href="https://github.com/boostorg/pfr/issues/150">#150</a>!
 "              </div>
 "            </li>
 "          </ul>
@@ -39761,6 +39872,49 @@
 "          </ul>
 "        </div>
 "      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/stacktrace/">Stacktrace</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <strong>Big new feature: stacktrace from arbitrary
+"                exception</strong>. On some POSIX platforms <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">stacktrace</span><span class="special">::</span><span class="identifier">from_current_exception</span><span class="special">()</span></code> now returns the stacktrace of the
+"                current exception object as if the stacktrace was captures at the
+"                point of throwing the exception. Many thanks to Andrei Nekrashevich
+"                for prototyping the idea in <code><span class="identifier">libsfe</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed memory consumption on Windows with <code><span class="identifier">boost_stacktrace_windbg</span></code>.
+"                Thanks to <a href="https://github.com/ycyclop">ycyclop</a>
+"                for reporting the issue <a href="https://github.com/boostorg/stacktrace/issues/111">#111</a>, to <a href="https://github.com/correa">Thiago
+"                A. Correa</a> for providing more information, to <a href="https://github.com/akarpovskii">Andrei
+"                Karpovskii</a> for providing a possible fix.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed lbrary build with non hidden visibility. Thanks to <a href="https://github.com/JBouwer">Jan
+"                Bouwer</a> for the report and information on how to fix it.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/variant/">Variant</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Removed more of the pre-C++11 macro and workarounds.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
 "    </ul>
 "  </div>
 "  <div id="version_1_85_0.compilers_tested">
@@ -39794,7 +39948,7 @@
 "  </div>
 "
 -hash
-"e7799c823d51b3bff5ba3bc7fbfa157d866f7b7c2bfc1ebf7b14e3481d4a579b
+"2f19765f07b8d1d5dc2a4a4b1734ad11e72b4d2694fb91b39584b877d1ec09dd
 -id
 "version_1_85_0
 -notice_url
