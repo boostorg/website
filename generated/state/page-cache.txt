@@ -39779,6 +39779,51 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/locale/">Locale</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fix linker issues due to missing typeinfo for <code><span class="identifier">char8_t</span></code>
+"                in C++20 mode
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix IConv compile flags when using ICU that has a bundled IConv
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">collator</span></code> now throws
+"                on construction, if at all, as documented
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">collator</span></code> no longer
+"                derives from <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">collator</span></code>
+"                to avoid possible type confusing when it isn't available for the
+"                current backend <a href="https://github.com/boostorg/locale/pull/216">PR#216</a>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Throw an exception when a faulty IConv library is detected (e.g.
+"                on some MacOS versions) instead of looping indefinitely <a href="https://github.com/boostorg/locale/pull/218">PR#218</a>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Reduce resolution of <code><span class="identifier">date_time</span></code>
+"                to seconds as milliseconds where not easily available causing confusion
+"                <a href="https://github.com/boostorg/locale/issues/221">#221</a>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/msm/">MSM</a>:</span>
 "          <ul>
 "            <li>
@@ -39937,6 +39982,36 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/unordered/">Unordered</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Optimized <code><span class="identifier">emplace</span><span class="special">()</span></code> for a <code><span class="identifier">value_type</span></code>
+"                or <code><span class="identifier">init_type</span></code> (if
+"                applicable) argument to bypass creating an intermediate object. The
+"                argument is already the same type as the would-be intermediate object.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Optimized <code><span class="identifier">emplace</span><span class="special">()</span></code> for <code><span class="identifier">k</span><span class="special">,</span><span class="identifier">v</span></code>
+"                arguments on map containers to delay constructing the object until
+"                it is certain that an element should be inserted. This optimization
+"                happens when the map’s <code><span class="identifier">key_type</span></code>
+"                is move constructible or when the <code><span class="identifier">k</span></code>
+"                argument is a <code><span class="identifier">key_type</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed support for allocators with explicit copy constructors (<a href="https://github.com/boostorg/unordered/pull/234">PR#234</a>).
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/variant/">Variant</a>:</span>
 "          <ul>
 "            <li>
@@ -39980,7 +40055,7 @@
 "  </div>
 "
 -hash
-"d19d241961eec55b84ddb4a149344d167158499fd5563180c315d3f19fce0fe3
+"204112a3dc4fa278aa5b084c31e9a32268a4779268ebdc2007ca8cbf733d7914
 -id
 "version_1_85_0
 -notice_url
