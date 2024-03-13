@@ -17356,3 +17356,635 @@
 -title_xml
 "Version 1.84.0
 )
+(feed/history/boost_1_85_0.qbk:1.85.0 beta1
+-description_xhtml
+"
+"
+"
+"  <div id="version_1_85_0.new_libraries">
+"    <h3><span class="link">New Libraries</span></h3>
+"    <ul>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/charconv/">Charconv</a>:</span> A high quality implementation
+"          of <code><span class="special">&lt;</span><span class="identifier">charconv</span><span class="special">&gt;</span></code> in C++11, from Matt Borland.
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/scope/">Scope</a>:</span> A collection of scope guard
+"          utilities and a <code><span class="identifier">unique_resource</span></code>
+"          wrapper, from Andrey Semashev.
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
+"  <div id="version_1_85_0.updated_libraries">
+"    <h3><span class="link">Updated Libraries</span></h3>
+"    <ul>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/bind/">Bind</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                C++03 is no longer supported; a C++11 compiler is required. (This
+"                includes GCC 4.7 or later, and MSVC 12.0 (VS 2013) or later.)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/conversion/">Conversion</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Removed outdated mentions of <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">lexical_cast</span></code>
+"                that is not part of the library any more. Thanks to <a href="https://github.com/eoan-ermine">Danil
+"                Sidoruk</a> for the PR <a href="https://github.com/boostorg/conversion/pull/28">PR#28</a>!
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/function/">Function</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                C++03 is no longer supported; a C++11 compiler is required. (This
+"                includes GCC 4.7 or later, and MSVC 12.0 (VS 2013) or later.)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/leaf/">LEAF</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                New API for transporting of error objects and exceptions between
+"                threads: <code><span class="identifier">try_capture_all</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">result</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+"                able to transport exceptions captured via <code><span class="identifier">try_capture_all</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">result</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+"                transporting dynamically captured error objects with improved efficiency.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Old <code><span class="identifier">make_shared_context</span></code>/<code><span class="identifier">capture</span></code> APIs are deprecated, will
+"                be removed in the next release.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed support for transporting of dynamicaly captured error objects
+"                in exceptions.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/lexical_cast/">LexicalCast</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Significant rewrite of the internal logic to separate optimized and
+"                C++ Standard Library IO-based streams:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      C++ Standard Library based streams now constructed in less
+"                      cases leading to <strong>better performance</strong>;
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      less template instantiations and simpler code;
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      always use <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">char_traits</span></code>
+"                      (do not use custom traits from input/output types as it leads
+"                      to linktime or runtime errors);
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      fixed missuse of forward declared boost::array (thanks to
+"                      <a href="https://github.com/13steinj">13steinj</a> for
+"                      the report <a href="https://github.com/boostorg/lexical_cast/issues/64">#64</a>!);
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      support for <code><span class="keyword">volatile</span></code>
+"                      input types was dropped, following the C++ Standard Library
+"                      trend.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Optimized conversions from std::basic_string_view and boost::basic_string_view
+"                <a href="https://github.com/boostorg/lexical_cast/issues/30">#30</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Dropped dependency on Boost.NumericConversion and Boost.MPL. Fixed
+"                some cases of converting floting point types to arithmetics.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The library now compiles and works fine with <code><span class="special">-</span><span class="identifier">fno</span><span class="special">-</span><span class="identifier">sanitize</span><span class="special">-</span><span class="identifier">recover</span><span class="special">=</span><span class="identifier">integer</span></code> <a href="https://github.com/boostorg/lexical_cast/issues/45">#45</a>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/locale/">Locale</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fix linker issues due to missing typeinfo for <code><span class="identifier">char8_t</span></code>
+"                in C++20 mode
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix IConv compile flags when using ICU that has a bundled IConv
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">collator</span></code> now throws
+"                on construction, if at all, as documented
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">collator</span></code> no longer
+"                derives from <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">collator</span></code>
+"                to avoid possible type confusing when it isn't available for the
+"                current backend <a href="https://github.com/boostorg/locale/pull/216">PR#216</a>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Throw an exception when a faulty IConv library is detected (e.g.
+"                on some MacOS versions) instead of looping indefinitely <a href="https://github.com/boostorg/locale/pull/218">PR#218</a>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Reduce resolution of <code><span class="identifier">date_time</span></code>
+"                to seconds as milliseconds where not easily available causing confusion
+"                <a href="https://github.com/boostorg/locale/issues/221">#221</a>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/msm/">MSM</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <strong>Major Update</strong>. Backend update (back11).
+"                Requires C++ 11. The documentation now uses it as default.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>Big new feature</strong>. New front-end (PlantUML).
+"                Requires C++ 20
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Various Bugfixes (compiler errors and warnings, priority of deferred
+"                events)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/mysql/">MySQL</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <strong>Breaking change</strong>: Boost.MySQL now
+"                requires linking to the new <strong>Boost.Charconv</strong>
+"                compiled library. This addresses a locale-dependency problem, increases
+"                efficiency, and powers the new client-side SQL formatting feature.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added experimental support for <strong>connection pools</strong>,
+"                which allows re-using sessions and provides built-in reconnection
+"                and error handling.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added experimental support for <strong>type-erased
+"                connections</strong> (<code><span class="identifier">any_connection</span></code>
+"                class). <code><span class="identifier">any_connection</span></code>
+"                is not a template and features simpler connection establishment and
+"                reconnection semantics.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added experimental support for <strong>client-side
+"                SQL formatting functions</strong> (<code><span class="identifier">format_sql</span></code>
+"                and <code><span class="identifier">format_sql_to</span></code>).
+"                These allow securely composing queries client-side, which enables
+"                patterns like batch inserts, dynamic filters or PATCH-like updates.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a performance issue affecting <code><span class="identifier">close_statement</span></code>
+"                and <code><span class="identifier">async_close_statement</span></code>
+"                that could cause significant delays in application code.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added support for building with <code><span class="identifier">BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The deprecated execution interface (<code><span class="identifier">connection</span><span class="special">::</span><span class="identifier">query</span></code>,
+"                <code><span class="identifier">connection</span><span class="special">::</span><span class="identifier">start_query</span></code>, <code><span class="identifier">connection</span><span class="special">::</span><span class="identifier">execute_statement</span></code>,
+"                <code><span class="identifier">connection</span><span class="special">::</span><span class="identifier">start_statement_execution</span></code> and their
+"                async counterparts) now triggers warnings, as it's scheduled for
+"                removal in Boost 1.86.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a bug that caused some error messages to be truncated.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Warning cleanup. Builds are now clean from warnings when building
+"                with <code><span class="special">-</span><span class="identifier">Wall</span></code>
+"                and <code><span class="special">-</span><span class="identifier">Wextra</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                All <code><span class="identifier">field_view</span></code> constructors
+"                are now stable.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The library internals have been rewritten using a sans-io approach
+"                to reduce complexity.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/pfr/">PFR</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">pfr</span><span class="special">::</span><span class="identifier">get_name</span></code> now can work with local
+"                types on some compilers. Thanks to <a href="https://github.com/schaumb">Bela
+"                Schaum</a> for the PR <a href="https://github.com/boostorg/pfr/pull/152">PR#152</a>!
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed unused implementation details. Thanks to <a href="https://github.com/denzor200">Denis
+"                Mikhailov</a> for the PR <a href="https://github.com/boostorg/pfr/pull/154">PR#154</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Allow throwing exceptions from <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">pfr</span><span class="special">::</span><span class="identifier">structure_to_tuple</span></code>.
+"                Thanks to <a href="https://github.com/denzor200">Denis Mikhailov</a>
+"                for the bug report <a href="https://github.com/boostorg/pfr/issues/155">#155</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Field reflection trick is now described in the docs. Thanks to all
+"                the discussion participans in <a href="https://github.com/boostorg/pfr/issues/150">#150</a>!
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/system/">System</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                C++03 is no longer supported; a C++11 compiler is required. (This
+"                includes GCC 4.8 or later, and MSVC 14.0 (VS 2015) or later.)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The deprecated header <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">system</span><span class="special">/</span><span class="identifier">cygwin_error</span><span class="special">.</span><span class="identifier">hpp</span></code>
+"                has been removed.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The original and obsolete (32 bit) MinGW is no longer supported.
+"                MinGW-w64 (both 64 and 32 bit) is still supported.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="keyword">operator</span><span class="special">&amp;</span></code>
+"                now works for <code><span class="identifier">result</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span></code> (by way of taking a nullary function.)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="keyword">operator</span><span class="special">|=</span></code>
+"                for <code><span class="identifier">result</span></code>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/stacktrace/">Stacktrace</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <strong>Big new feature: stacktrace from arbitrary
+"                exception</strong>. On some POSIX platforms <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">stacktrace</span><span class="special">::</span><span class="identifier">from_current_exception</span><span class="special">()</span></code> now returns the stacktrace of the
+"                current exception object as if the stacktrace was captures at the
+"                point of throwing the exception. Many thanks to Andrei Nekrashevich
+"                for prototyping the idea in <code><span class="identifier">libsfe</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed memory consumption on Windows with <code><span class="identifier">boost_stacktrace_windbg</span></code>.
+"                Thanks to <a href="https://github.com/ycyclop">ycyclop</a>
+"                for reporting the issue <a href="https://github.com/boostorg/stacktrace/issues/111">#111</a>, to <a href="https://github.com/correa">Thiago
+"                A. Correa</a> for providing more information, to <a href="https://github.com/akarpovskii">Andrei
+"                Karpovskii</a> for providing a possible fix.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed lbrary build with non hidden visibility. Thanks to <a href="https://github.com/JBouwer">Jan
+"                Bouwer</a> for the report and information on how to fix it.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/stl_interfaces/">STLInterfaces</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Change the behavior of <code><span class="identifier">iterator_interface</span></code>
+"                for input iterators in C++20 and later, to more closely follow the
+"                C++20 concepts.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Remove hidden friends from <code><span class="identifier">iterator_interface</span></code>
+"                to fix errors about concepts being redefined with different constraints.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Add a new <code><span class="identifier">v3</span></code> inline
+"                namespace, containing a new iterator_interface based on deducing
+"                this instead of CRTP (C++23 and later).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Add an rvalue-qualified overload of <code><span class="identifier">closure</span><span class="special">::</span><span class="keyword">operator</span><span class="special">()</span></code>, to prevent dangling temporaries.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/unordered/">Unordered</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Optimized <code><span class="identifier">emplace</span><span class="special">()</span></code> for a <code><span class="identifier">value_type</span></code>
+"                or <code><span class="identifier">init_type</span></code> (if
+"                applicable) argument to bypass creating an intermediate object. The
+"                argument is already the same type as the would-be intermediate object.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Optimized <code><span class="identifier">emplace</span><span class="special">()</span></code> for <code><span class="identifier">k</span><span class="special">,</span><span class="identifier">v</span></code>
+"                arguments on map containers to delay constructing the object until
+"                it is certain that an element should be inserted. This optimization
+"                happens when the map’s <code><span class="identifier">key_type</span></code>
+"                is move constructible or when the <code><span class="identifier">k</span></code>
+"                argument is a <code><span class="identifier">key_type</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed support for allocators with explicit copy constructors (<a href="https://github.com/boostorg/unordered/pull/234">PR#234</a>).
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/variant/">Variant</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Removed more of the pre-C++11 macro and workarounds.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
+"  <div id="version_1_85_0.compilers_tested">
+"    <h3><span class="link">Compilers Tested</span></h3>
+"    <p>
+"      Boost's primary test compilers are:
+"    </p>
+"    <ul>
+"      <li>
+"        <div>
+"          Linux:
+"          <ul>
+"            <li>
+"              <div>
+"                Clang, C++03: 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 12.0.0, 13.0.0, 14.0.0,
+"                15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++11: 3.4, 11.0.0, 13.0.0, 14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++14: 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 5.0, 12.0.0, 13.0.0,
+"                14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++17: 6.0.1, 7.0.0, 8.0.0, 9.0.0, 10.0.0, 11.0.0, 12.0.0,
+"                13.0.0, 14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++20: 11.0.0, 12.0.0, 13.0.0, 14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++03: 4.6.3, 11, 12
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++11: 4.7.3, 4.8.5, 11, 12
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++14: 5.4.0, 6.4.0, 7.3.0, 8.0.1, 9.1.0, 11, 12
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++17: 7.3.0, 8.0.1, 9.1.0, 11, 12
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++20: 8.0.1, 9.1.0, 10, 11, 12
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          OS X:
+"          <ul>
+"            <li>
+"              <div>
+"                Apple Clang, C++03: 11.0.3
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Apple Clang, C++11: 11.0.3
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Apple Clang, C++14: 11.0.3
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Apple Clang, C++17: 11.0.3
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Apple Clang, C++20: 11.0.3
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          Windows:
+"          <ul>
+"            <li>
+"              <div>
+"                Visual C++: 10.0, 11.0, 12.0, 14.0, 14.1, 14.2, 14.3
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"    </ul>
+"  </div>
+"  <div id="version_1_85_0.acknowledgements">
+"    <h3><span class="link">Acknowledgements</span></h3>
+"    <p>
+"      Marshall Clow and Glen Fernandes managed this release.
+"    </p>
+"  </div>
+"
+-hash
+"da6dee6df140dc97e66e950488be699d278524526b0b7047f6ea38a98a6df8a0
+-id
+"version_1_85_0
+-notice_url
+-notice_xml
+-pub_date
+-purpose_xml
+"
+"      New Libraries: Updated Libraries:
+"
+-title_xml
+"Version 1.85.0
+)
