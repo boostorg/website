@@ -74,6 +74,14 @@ Please keep the list of libraries sorted in lexicographical order.
     of converting floting point types to arithmetics.
   * The library now compiles and works fine with `-fno-sanitize-recover=integer` [github lexical_cast 45].
 
+* [phrase library..[@/libs/locale/ Locale]:]
+  * Fix linker issues due to missing typeinfo for `char8_t` in C++20 mode
+  * Fix IConv compile flags when using ICU that has a bundled IConv
+  * `collator` now throws on construction, if at all, as documented
+  * `collator` no longer derives from `std::collator` to avoid possible type confusing when it isn't available for the current backend [github_pr locale 216]
+  * Throw an exception when a faulty IConv library is detected (e.g. on some MacOS versions) instead of looping indefinitely [github_pr locale 218]
+  * Reduce resolution of `date_time` to seconds as milliseconds where not easily available causing confusion [github locale 221]
+
 * [phrase library..[@/libs/msm/ MSM]:]
   * [* Major Update]. Backend update (back11). Requires C++ 11. The documentation now uses it as default.
   * [* Big new feature]. New front-end (PlantUML). Requires C++ 20 
