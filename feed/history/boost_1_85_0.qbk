@@ -41,6 +41,9 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed `named_condition_any` fails to notify ([github interprocess 62])
 ]
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Added support for `pause` instruction on RISC-V. ([github_pr atomic 65])
+
 * [phrase library..[@/libs/beast/ Beast]:]
   * API Changes
     * The status code list has been updated to conform with the IANA registry.
@@ -76,6 +79,27 @@ Please keep the list of libraries sorted in lexicographical order.
     [@https://github.com/eoan-ermine Danil Sidoruk] for the PR
     [github_pr conversion 28]!
 
+* [phrase library..[@/libs/core/ Core]:]
+  * Added a new `boost/core/functor.hpp` header with a `functor` class template
+    for wrapping a raw function into a function object class.
+  * Changed `null_deleter`, `fclose_deleter` and checked deleter definitions so
+    that they don't bring namespace `boost` into argument-dependent lookup. Users
+    may need to either explicitly qualify the namespace of the called function or add
+    a `using`-declaration.
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * `path::generic_path` and `path::generic_string` methods now remove duplicate directory separators in the returned paths.
+  * [*v4:] `path::generic_path`, `path::generic_string`, `path::make_preferred` and `path::lexically_normal` avoid converting between backslashes and forward slashes in path root names. For example, on Windows, `path("\\\\\\\\?\\\\c:\\\\foo").generic_string()` now returns "\\\\?\\c:/foo" instead of "//?/c:/foo". Similarly, `path("\\\\\\\\host/share/foo/..").lexically_normal()` now returns "\\\\host\\share".
+  * [*v4:] `equivalent` now indicates error if either one of the paths doesn't exist.
+  * [*v4:] `absolute` now returns a path with a trailing directory separator when the input path has an empty `relative_path()`. ([github filesystem 301])
+  * Added a `unique_path` overload taking a single `error_code& ec` argument. The overload generates a unique path using the default path model.
+  * `weakly_canonical` now produces an absolute path if the input path is relative and contains no elements that exist in the filesystem. ([github filesystem 300])
+  * Added a new `copy_options::ignore_attribute_errors` option for `copy_file` and `copy` operations. The new option allows to ignore possible errors while copying file attributes. ([github filesystem 179])
+  * On Linux, `copy_file` backends based on `sendfile` and `copy_file_range` system calls will attempt to preallocate storage for the target file. This may reduce filesystem fragmentation and provide early error indication if there is not enough free space. Not all filesystems support this feature; file copying proceeds if storage preallocation is not supported.
+  * On POSIX systems that support [@https://pubs.opengroup.org/onlinepubs/9699919799/functions/fdopendir.html `fdopendir`], `openat` and related APIs defined in POSIX.1-2008, as well as on Windows, `recursive_directory_iterator` now uses file descriptors/handles instead of paths to query the file statuses and open nested directories during iteration. This makes directory iteration more resilient to concurrent modifications of the filesystem.
+  * Removed APIs that were previously declared deprecated. In particular, `path` and `recursive_directory_iterator` member functions, `is_regular`, `copy_directory`, `symbolic_link_exists`, `complete`, `copy_option`, `symlink_option`, as well as `boost/filesystem/convenience.hpp` and `boost/filesystem/path_traits.hpp` headers were removed. Possible replacements for the removed components are mentioned in the documentation.
+  * Support for `path` construction, assignment and appending from container types (e.g. `std::vector<char>`) is now disabled by default. Users can still enable this functionality by defining `BOOST_FILESYSTEM_DEPRECATED`. This functionality remains deprecated and will be completely removed in a future release.
+
 * [phrase library..[@/libs/function/ Function]:]
   * C++03 is no longer supported; a C++11 compiler is required.
     (This includes GCC 4.7 or later, and MSVC 12.0 (VS 2013) or later.)
@@ -94,6 +118,9 @@ Please keep the list of libraries sorted in lexicographical order.
     * [github_pr geometry 1248] Fix buffer issue by setting turns in closed clusters as non traversable
     * [github_pr geometry 1246] Fix compilation of converter and is_base_of
     * Various fixes of errors and warnings
+
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * Support for C++03 is deprecated and will be removed in a future release.
 
 * [phrase library..[@/libs/json/ JSON]:]
   * Boost.Endian is now used to deal with endianness.
