@@ -39645,6 +39645,19 @@
 "    <ul>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added support for <code><span class="identifier">pause</span></code>
+"                instruction on RISC-V. (<a href="https://github.com/boostorg/atomic/pull/65">PR#65</a>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/beast/">Beast</a>:</span>
 "          <ul>
 "            <li>
@@ -39811,6 +39824,136 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/core/">Core</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added a new <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">functor</span><span class="special">.</span><span class="identifier">hpp</span></code>
+"                header with a <code><span class="identifier">functor</span></code>
+"                class template for wrapping a raw function into a function object
+"                class.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Changed <code><span class="identifier">null_deleter</span></code>,
+"                <code><span class="identifier">fclose_deleter</span></code> and
+"                checked deleter definitions so that they don't bring namespace <code><span class="identifier">boost</span></code> into argument-dependent lookup.
+"                Users may need to either explicitly qualify the namespace of the
+"                called function or add a <code><span class="keyword">using</span></code>-declaration.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">generic_path</span></code> and <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">generic_string</span></code> methods now remove
+"                duplicate directory separators in the returned paths.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>v4:</strong> <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">generic_path</span></code>,
+"                <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">generic_string</span></code>, <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">make_preferred</span></code>
+"                and <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">lexically_normal</span></code> avoid converting
+"                between backslashes and forward slashes in path root names. For example,
+"                on Windows, <code><span class="identifier">path</span><span class="special">(</span><span class="string">"\\\\\\\\?\\\\c:\\\\foo"</span><span class="special">).</span><span class="identifier">generic_string</span><span class="special">()</span></code> now returns "\\?\c:/foo"
+"                instead of "//?/c:/foo". Similarly, <code><span class="identifier">path</span><span class="special">(</span><span class="string">"\\\\\\\\host/share/foo/.."</span><span class="special">).</span><span class="identifier">lexically_normal</span><span class="special">()</span></code> now returns "\\host\share".
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>v4:</strong> <code><span class="identifier">equivalent</span></code>
+"                now indicates error if either one of the paths doesn't exist.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <strong>v4:</strong> <code><span class="identifier">absolute</span></code>
+"                now returns a path with a trailing directory separator when the input
+"                path has an empty <code><span class="identifier">relative_path</span><span class="special">()</span></code>. (<a href="https://github.com/boostorg/filesystem/issues/301">#301</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a <code><span class="identifier">unique_path</span></code>
+"                overload taking a single <code><span class="identifier">error_code</span><span class="special">&amp;</span> <span class="identifier">ec</span></code>
+"                argument. The overload generates a unique path using the default
+"                path model.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">weakly_canonical</span></code>
+"                now produces an absolute path if the input path is relative and contains
+"                no elements that exist in the filesystem. (<a href="https://github.com/boostorg/filesystem/issues/300">#300</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a new <code><span class="identifier">copy_options</span><span class="special">::</span><span class="identifier">ignore_attribute_errors</span></code>
+"                option for <code><span class="identifier">copy_file</span></code>
+"                and <code><span class="identifier">copy</span></code> operations.
+"                The new option allows to ignore possible errors while copying file
+"                attributes. (<a href="https://github.com/boostorg/filesystem/issues/179">#179</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On Linux, <code><span class="identifier">copy_file</span></code>
+"                backends based on <code><span class="identifier">sendfile</span></code>
+"                and <code><span class="identifier">copy_file_range</span></code>
+"                system calls will attempt to preallocate storage for the target file.
+"                This may reduce filesystem fragmentation and provide early error
+"                indication if there is not enough free space. Not all filesystems
+"                support this feature; file copying proceeds if storage preallocation
+"                is not supported.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                On POSIX systems that support <a href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/fdopendir.html"><code><span class="identifier">fdopendir</span></code></a>, <code><span class="identifier">openat</span></code> and related APIs defined
+"                in POSIX.1-2008, as well as on Windows, <code><span class="identifier">recursive_directory_iterator</span></code>
+"                now uses file descriptors/handles instead of paths to query the file
+"                statuses and open nested directories during iteration. This makes
+"                directory iteration more resilient to concurrent modifications of
+"                the filesystem.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed APIs that were previously declared deprecated. In particular,
+"                <code><span class="identifier">path</span></code> and <code><span class="identifier">recursive_directory_iterator</span></code> member
+"                functions, <code><span class="identifier">is_regular</span></code>,
+"                <code><span class="identifier">copy_directory</span></code>,
+"                <code><span class="identifier">symbolic_link_exists</span></code>,
+"                <code><span class="identifier">complete</span></code>, <code><span class="identifier">copy_option</span></code>, <code><span class="identifier">symlink_option</span></code>,
+"                as well as <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">filesystem</span><span class="special">/</span><span class="identifier">convenience</span><span class="special">.</span><span class="identifier">hpp</span></code>
+"                and <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">filesystem</span><span class="special">/</span><span class="identifier">path_traits</span><span class="special">.</span><span class="identifier">hpp</span></code> headers were removed. Possible
+"                replacements for the removed components are mentioned in the documentation.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Support for <code><span class="identifier">path</span></code>
+"                construction, assignment and appending from container types (e.g.
+"                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span></code>)
+"                is now disabled by default. Users can still enable this functionality
+"                by defining <code><span class="identifier">BOOST_FILESYSTEM_DEPRECATED</span></code>.
+"                This functionality remains deprecated and will be completely removed
+"                in a future release.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/function/">Function</a>:</span>
 "          <ul>
 "            <li>
@@ -39898,6 +40041,18 @@
 "                    </div>
 "                  </li>
 "                </ul>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/iterator/">Iterator</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Support for C++03 is deprecated and will be removed in a future release.
 "              </div>
 "            </li>
 "          </ul>
@@ -40772,7 +40927,7 @@
 "  </div>
 "
 -hash
-"548250fb542e81c848b644ab61ada4117e264f1135a98ff539802892b3f4f170
+"b580af9af0661f8c7c0aa2b994078c7064a86aebeb296371e36bcb7fe4cd441b
 -id
 "version_1_85_0
 -notice_url
