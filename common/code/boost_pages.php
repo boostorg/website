@@ -765,6 +765,7 @@ class BoostPages_Page {
             }
 
             $output .= '</table>';
+            $output .= '* The download links are supported by grants from <a href="https://cppalliance.org/" target="_blank">The C++ Alliance</a>.<br><br>';
 
             if (array_key_exists('signature', $downloads)) {
                 $output .= "<p><a href='/".html_encode($downloads['signature']['location']).
