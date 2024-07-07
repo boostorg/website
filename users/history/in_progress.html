@@ -124,6 +124,165 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/graph/">Graph</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <em>Major</em> update: C++14 is the
+                new minimum standard; this was partly dictated by dependencies (at
+                least to C++11) and partly by choice. If you require support for
+                an older standard, please contact the maintainer.
+              </div>
+            </li>
+            <li>
+              <div>
+                Remove direct dependency on Boost.Regex.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fix several compilation errors caused by not explicitly including
+                common headers.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">isomorphism</span></code>: Fix
+                docs, ignore <code><span class="identifier">vertex_max_invariant</span></code>
+                parameter in favour of cheaply calculating upper exclusive bound,
+                fix bug with Associative Property Map, improve space efficiency from
+                linear in the size of the maximum invariant to linear in the size
+                of g1.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">boykov_kolmogorov_max_flow</span></code>:
+                Fix named parameter overload.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">adj_list_edge_iterator</span></code>:
+                Fix maybe-uninitialized warnings.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">hawick_circuits</span></code>:
+                Add a parameter to optionally limit the depth of the search, causing
+                a potentially suboptimal answer to be returned early.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">disjoint_sets</span></code>: Improve
+                performance of <code><span class="identifier">link_sets</span></code>
+                by removing redundant lookup of set representatives.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">maximum_adjacency_search</span></code>:
+                Refactor and more tests.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">property</span></code>: Use <code><span class="identifier">BOOST_ATTRIBUTE_NO_UNIQUE_ADDRESS</span></code>
+                to remove wasted space.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">labeled_graph</span></code>: Fix
+                <code><span class="identifier">remove_labeled_vertex</span></code>
+                so that it actually removes the label too.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">r_c_shortest_paths</span></code>:
+                Fix bug that the single-solution variant did not always return the
+                shortest path.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">read_graphviz</span></code>: Fix
+                stack overflow (oss-fuzz issue 66719) and non-keyword subgraph parsing.
+              </div>
+            </li>
+            <li>
+              <div>
+                Many miscellaneous improvements: broken links, typos, etc.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/stacktrace/">Stacktrace</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <strong>Big new feature: stacktrace from arbitrary
+                exception for Windows</strong>. <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">stacktrace</span><span class="special">::</span><span class="identifier">from_current_exception</span><span class="special">()</span></code> now works on Windows platform.
+                Many thanks to <a href="https://github.com/huangqinjin">huangqinjin</a>
+                for the implementation <a href="https://github.com/boostorg/stacktrace/pull/159">PR#159</a>
+    Now on POSIX and Windows
+                the <code><span class="identifier">from_current_exception</span><span class="special">()</span> </code> function returns the stacktrace
+                of the current exception object as if the stacktrace was captured
+                at the point of throwing the exception.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed inclusion of rarely used Windows SDK headers which can cause
+                conflict with other code using Windows SDK. Thanks to <a href="https://github.com/mabrarov">Marat
+                Abrarov</a> for fixing the issue <a href="https://github.com/boostorg/stacktrace/pull/157">PR#157</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Build option <code><span class="identifier">boost</span><span class="special">.</span><span class="identifier">stacktrace</span><span class="special">.</span><span class="identifier">from_exception</span></code>
+                now properly works on MacOS. Thanks to <a href="https://github.com/pdimov">Peter
+                Dimov</a> for the fix <a href="https://github.com/boostorg/stacktrace/pull/166">PR#166</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a typo in assert expression. Thanks to <a href="https://github.com/Ukilele">Kilian
+                Henneberger</a> for the bug report <a href="https://github.com/boostorg/stacktrace/issues/164">#164</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed shadowing warnings. Thanks to <a href="https://github.com/nigels-com">Nigel
+                Stewart</a> for the bug report <a href="https://github.com/boostorg/stacktrace/issues/141">#141</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">dladdr</span></code> minimal
+                support for AIX. Many thanks to Clément Chigot for the implementation
+                <a href="https://github.com/boostorg/stacktrace/pull/114">PR#114</a>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">Boost</span><span class="special">::</span><span class="identifier">stacktrace</span></code> CMake alias that refers
+                to the best supported implementation of Boost.Stacktrace on the platform.
+                Thanks to <a href="https://github.com/leha-bot">Alex</a> for
+                the feature <a href="https://github.com/boostorg/stacktrace/pull/167">PR#167</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/uuid/">UUID</a>:</span>
           <ul>
             <li>
