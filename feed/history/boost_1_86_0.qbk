@@ -74,6 +74,31 @@ Please keep the list of libraries sorted in lexicographical order.
   * `read_graphviz`: Fix stack overflow (oss-fuzz issue 66719) and non-keyword subgraph parsing.
   * Many miscellaneous improvements: broken links, typos, etc.
 
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * [*Big new feature: stacktrace from arbitrary exception for Windows].
+    `std::stacktrace::from_current_exception()` now works on Windows platform.
+    Many thanks to [@https://github.com/huangqinjin huangqinjin] for the
+    implementation [github_pr stacktrace 159]
+    Now on POSIX and Windows the `from_current_exception() ` function
+    returns the stacktrace of the current exception object as if the stacktrace
+    was captured at the point of throwing the exception.
+  * Fixed inclusion of rarely used Windows SDK headers which can cause
+    conflict with other code using Windows SDK. Thanks to
+    [@https://github.com/mabrarov Marat Abrarov] for fixing the issue
+    [github_pr stacktrace 157].
+  * Build option `boost.stacktrace.from_exception` now properly works
+    on MacOS. Thanks to [@https://github.com/pdimov Peter Dimov] for the fix
+    [github_pr stacktrace 166].
+  * Fixed a typo in assert expression. Thanks to [@https://github.com/Ukilele Kilian Henneberger]
+    for the bug report [github stacktrace 164].
+  * Fixed shadowing warnings. Thanks to [@https://github.com/nigels-com Nigel Stewart]
+    for the bug report [github stacktrace 141].
+  * Added `dladdr` minimal support for AIX. Many thanks to Clément Chigot
+    for the implementation [github_pr stacktrace 114].
+  * Added `Boost::stacktrace` CMake alias that refers to the best supported
+    implementation of Boost.Stacktrace on the platform. Thanks to [@https://github.com/leha-bot Alex]
+    for the feature [github_pr stacktrace 167].
+
 * [phrase library..[@/libs/uuid/ UUID]:]
   * _Major_ update.
   * C++03 is no longer supported, a C++11 compiler is required.
