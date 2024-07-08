@@ -58,6 +58,23 @@ Please keep the list of libraries sorted in lexicographical order.
   * Removed dependency on Boost.TypeTraits.
   * Brought back the `argN_type` typedefs that were accidentally lost in 1.85.
 
+* [phrase library..[@/libs/gil/ GIL]:]
+  * Added
+    * Added `tell()` and `error()` functions to `istream_device` and `ostream_device` classes ([github_pr gil 747]).
+  * Changed
+    * Don't ignore custom color converter in `color_converted_view` function ([github_pr gil 726]).
+    * Added workaround for conflict with `min()` and `max()` macros on WinAPI ([github_pr gil 745]).
+    * The use of `boost::filesystem` in GIL is now configurable in CMake via
+      option `BOOST_GIL_USE_BOOST_FILESYSTEM` ([github_pr gil 743]).
+  * Fixed
+    * Fixed convolution in `convolve_2d` ([github_pr gil  723])
+    * Normalize Gaussian 2D kernel to avoid darkening ([github_pr gil 725])
+    * Wrong buffer size in path string conversion functions for `std::wstring`
+      is fixed, avoiding buffer overflows when using I/O-related functions with
+      `std::wstring` paths ([github_pr gil 746]).
+  * Acknowledgements
+    * Christoph Gringmuth, Christopher Kormanyos, nicolacandussi, Dirk Stolle, Olzhas Zhumabek
+
 * [phrase library..[@/libs/graph/ Graph]:]
   * _Major_ update: C++14 is the new minimum standard; this was partly dictated by dependencies (at least to C++11) and partly by choice. If you require support for an older standard, please contact the maintainer.
   * Remove direct dependency on Boost.Regex.
