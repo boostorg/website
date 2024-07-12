@@ -1,9 +1,6 @@
-# Use the same base image as nibrev/php-5.3-apache
 FROM nibrev/php-5.3-apache
 
 RUN docker-php-ext-install mysql
 RUN a2enmod headers rewrite expires deflate filter setenvif include
-# Add any additional configurations here
-# For example, copy source code, install dependencies, etc.
+
 COPY . /var/www/html
-# COPY apache2.conf /etc/apache2/apache2.conf
