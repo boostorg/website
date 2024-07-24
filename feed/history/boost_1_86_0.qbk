@@ -40,6 +40,9 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed `named_condition_any` fails to notify ([github interprocess 62])
 ]
 
+* [phrase library..[@/libs/atomic/ Atomic]:]
+  * Use [@https://man.openbsd.org/OpenBSD-6.2/futex.2 `futex(2)`] system call on OpenBSD since recent OpenBSD versions have removed support for `syscall(2)`.
+
 * [phrase library..[@/libs/beast/ Beast]:]
   * API Changes
     * Added HTTP status code 418 `I'm a teapot`.
@@ -72,11 +75,31 @@ Please keep the list of libraries sorted in lexicographical order.
   * Added `bind_front.hpp`, `bind_back.hpp`, `invoke.hpp`, `mem_fn.hpp`, `integer_sequence.hpp` and `type_traits.hpp`.
   * Added `function_ref.hpp`.
 
+* [phrase library..[@/libs/core/ Core]:]
+  * Added a `boost/core/pointer_in_range.hpp` header with a `pointer_in_range`
+    function template to check if a pointer is within a given range.
+  * Fixed `type_name` for abstract classes. ([github core 172])
+  * Fixed `boost/core/type_name.hpp` compilation error with MSVC with disabled native `wchar_t` type.
+    ([github core 173])
+
 * [phrase library..[@/libs/crc/ CRC]:]
   * C++03 is no longer supported; a C++11 compiler is required.
     (This includes GCC 4.6 or later, and MSVC 10.0 (VS 2010) or later.)
   * Removed dependencies on Array, Config, Integer, and TypeTraits. The
     library is now standalone.
+
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * `is_empty` operation is now better protected against concurrent filesystem modifications.
+  * On POSIX systems, `is_empty` now indicates error if invoked on a file other than a regular file or a directory.
+  * On Windows, fixed `file_size` and `is_empty` operating on symlinks rather than the files the symlinks refer to. ([github filesystem 313])
+  * `directory_entry::refresh` no longer throws an exception if the file referenced by the entry doesn't exist. This makes
+    `directory_entry::status` and `directory_entry::symlink_status`, as well as methods based on them, behave similarly
+    to the equivalent standalone operations. The fact that the file does not exist is still indicated via the `error_code` returned
+    by the corresponding `directory_entry::refresh` overload, or can be seen by testing if the file type returned by `directory_entry::status`
+    or `directory_entry::symlink_status` calls is `file_type::file_not_found`. ([github filesystem 314])
+  * Fixed `weakly_canonical` testing path elements for existence relative to the current path instead of the base path specified in the call,
+    if the input path was a relative path.
+  * On Windows, fixed `weakly_canonical` producing incorrect result path when the input path started with "..". ([github filesystem 311])
 
 * [phrase library..[@/libs/format/ Format]:]
   * C++03 is no longer supported; a C++11 compiler is required.
@@ -127,6 +150,10 @@ Please keep the list of libraries sorted in lexicographical order.
   * Add support for custom allocators in `conv::utf_to_utf`
   * Don't build examples by default
 
+* [phrase library..[@/libs/log/ Log]:]
+  * Added a workaround for `windres.exe` issue, when it is used in CMake to compile event log resource files on MinGW-w64.
+    ([github_pr log 231])
+
 * [phrase library..[@/libs/stacktrace/ Stacktrace]:]
   * [*Big new feature: stacktrace from arbitrary exception for Windows].
     `std::stacktrace::from_current_exception()` now works on Windows platform.
@@ -165,6 +192,9 @@ Please keep the list of libraries sorted in lexicographical order.
   * Updated to reflect the newer [@https://datatracker.ietf.org/doc/rfc9562/ RFC 9562].
   * Added generators for time-based UUIDs.
   * _Many_ other improvements, see the [@/libs/uuid/doc/html/uuid.html#changes revision history].
+
+* [phrase library..[@/libs/winapi/ WinAPI]:]
+  * Added `BOOST_USE_WINAPI_VERSION` CMake option, which allows users to specify the Windows version for Boost to target.
 
 [endsect]
 
