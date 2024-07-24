@@ -154,6 +154,45 @@ Please keep the list of libraries sorted in lexicographical order.
   * Added a workaround for `windres.exe` issue, when it is used in CMake to compile event log resource files on MinGW-w64.
     ([github_pr log 231])
 
+* [phrase library..[@/libs/mysql/ MySQL]:]
+  * The long-deprecated functions `query`, `start_query`, `execute_statement` and `start_statement_execution`
+    (and their async equivalents) have been removed.
+  * Breaking changes to experimental APIs:
+    * The `identifier` class (client-side SQL formatting) has been removed. Use the new
+      format specifiers feature, instead.
+    * The required interface for custom formatters has been changed to accomodate the new
+      format specifiers API.
+    * `any_connection::async_connect` now requires that its `connect_params` argument be kept
+      alive until the operation completes. The overload taking a `const connect_params*`
+      has been removed.
+    * `character_set::name` is now a `const char*` instead of a `string_view`,
+      as MySQL character set names can't contain NULL characters.
+    * `any_connection` internal buffer is now limited to 64MB. If you need to read
+      or write rows bigger than that, increase `any_connection_params::max_buffer_size`.
+      `connection` and their helper typedefs are not limited.
+    * Renamed `any_connection_params::initial_read_buffer_size` to `initial_buffer_size`.
+    * Renamed `pool_params::initial_read_buffer_size` to `initial_buffer_size`.
+  * New experimental API: [*pipelines]. Pipelines can increase efficiency by coalescing
+    several requests in a single network packet. Pipelines can be used to run text queries,
+    prepare, execute and close statements, reset session state and set the connection's character set.
+  * Client-side SQL formatting now supports ranges out of the box. Formatting can be further
+    customized using the new `sequence` function. Use cases like batch inserts and
+    batch lookups can be significantly simplified using this functionality.
+  * Client-side SQL formatting now supports format specifiers which modify how values are formatted.
+    `{:i}` formats a string as a dynamic SQL identifiers, and `{:r}` outputs a raw unescaped
+  * The static interface (`static_results` and `static_execution_state`) now supports Boost.Pfr types
+    using `pfr_by_name` and `pfr_by_position`. Added `underlying_row_t` to support such types.
+  * `date` and `datetime` can now be constructed from and converted to C++20 `std::chrono::local_time`.
+  * Added `any_connection_params::max_buffer_size`, which allows to set a limit to the connection's
+    internal buffer.
+  * Added `is_fatal_error`, which allows users can now distinguish between fatal
+    (which require closing and re-opening the connection) and non-fatal error codes.
+  * Added `formattable_ref`, a type-erased reference type that can refer to any
+    type satisfying the `Formattable` concept. 
+  * Fixed an ODR violation under MSVC which could
+    cause crashes in release builds when using Boost.MySQL with other code also
+    using `asio::coroutine` in different translation units.
+
 * [phrase library..[@/libs/stacktrace/ Stacktrace]:]
   * [*Big new feature: stacktrace from arbitrary exception for Windows].
     `std::stacktrace::from_current_exception()` now works on Windows platform.
