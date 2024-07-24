@@ -41611,6 +41611,145 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/mysql/">MySQL</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                The long-deprecated functions <code><span class="identifier">query</span></code>,
+"                <code><span class="identifier">start_query</span></code>, <code><span class="identifier">execute_statement</span></code> and <code><span class="identifier">start_statement_execution</span></code> (and
+"                their async equivalents) have been removed.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Breaking changes to experimental APIs:
+"                <ul>
+"                  <li>
+"                    <div>
+"                      The <code><span class="identifier">identifier</span></code>
+"                      class (client-side SQL formatting) has been removed. Use the
+"                      new format specifiers feature, instead.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      The required interface for custom formatters has been changed
+"                      to accomodate the new format specifiers API.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <code><span class="identifier">any_connection</span><span class="special">::</span><span class="identifier">async_connect</span></code>
+"                      now requires that its <code><span class="identifier">connect_params</span></code>
+"                      argument be kept alive until the operation completes. The overload
+"                      taking a <code><span class="keyword">const</span> <span class="identifier">connect_params</span><span class="special">*</span></code>
+"                      has been removed.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <code><span class="identifier">character_set</span><span class="special">::</span><span class="identifier">name</span></code>
+"                      is now a <code><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span></code>
+"                      instead of a <code><span class="identifier">string_view</span></code>,
+"                      as MySQL character set names can't contain NULL characters.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <code><span class="identifier">any_connection</span></code>
+"                      internal buffer is now limited to 64MB. If you need to read
+"                      or write rows bigger than that, increase <code><span class="identifier">any_connection_params</span><span class="special">::</span><span class="identifier">max_buffer_size</span></code>.
+"                      <code><span class="identifier">connection</span></code>
+"                      and their helper typedefs are not limited.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Renamed <code><span class="identifier">any_connection_params</span><span class="special">::</span><span class="identifier">initial_read_buffer_size</span></code>
+"                      to <code><span class="identifier">initial_buffer_size</span></code>.
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Renamed <code><span class="identifier">pool_params</span><span class="special">::</span><span class="identifier">initial_read_buffer_size</span></code>
+"                      to <code><span class="identifier">initial_buffer_size</span></code>.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                New experimental API: <strong>pipelines</strong>.
+"                Pipelines can increase efficiency by coalescing several requests
+"                in a single network packet. Pipelines can be used to run text queries,
+"                prepare, execute and close statements, reset session state and set
+"                the connection's character set.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Client-side SQL formatting now supports ranges out of the box. Formatting
+"                can be further customized using the new <code><span class="identifier">sequence</span></code>
+"                function. Use cases like batch inserts and batch lookups can be significantly
+"                simplified using this functionality.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Client-side SQL formatting now supports format specifiers which modify
+"                how values are formatted. <code><span class="special">{:</span><span class="identifier">i</span><span class="special">}</span></code>
+"                formats a string as a dynamic SQL identifiers, and <code><span class="special">{:</span><span class="identifier">r</span><span class="special">}</span></code> outputs a raw unescaped
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The static interface (<code><span class="identifier">static_results</span></code>
+"                and <code><span class="identifier">static_execution_state</span></code>)
+"                now supports Boost.Pfr types using <code><span class="identifier">pfr_by_name</span></code>
+"                and <code><span class="identifier">pfr_by_position</span></code>.
+"                Added <code><span class="identifier">underlying_row_t</span></code>
+"                to support such types.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">date</span></code> and <code><span class="identifier">datetime</span></code> can now be constructed
+"                from and converted to C++20 <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">local_time</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">any_connection_params</span><span class="special">::</span><span class="identifier">max_buffer_size</span></code>,
+"                which allows to set a limit to the connection's internal buffer.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">is_fatal_error</span></code>,
+"                which allows users can now distinguish between fatal (which require
+"                closing and re-opening the connection) and non-fatal error codes.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">formattable_ref</span></code>,
+"                a type-erased reference type that can refer to any type satisfying
+"                the <code><span class="identifier">Formattable</span></code> concept.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed an ODR violation under MSVC which could cause crashes in release
+"                builds when using Boost.MySQL with other code also using <code><span class="identifier">asio</span><span class="special">::</span><span class="identifier">coroutine</span></code> in different translation
+"                units.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/stacktrace/">Stacktrace</a>:</span>
 "          <ul>
 "            <li>
@@ -41843,6 +41982,19 @@
 "          </ul>
 "        </div>
 "      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/tools/build/">Build</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Includes release of <a href="/tools/build/doc/html/#_version_5_2_1">B2
+"                version 5.2.1</a>.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
 "    </ul>
 "  </div>
 "  <div id="version_1_86_0.compilers_tested">
@@ -41853,17 +42005,106 @@
 "    <ul>
 "      <li>
 "        <div>
-"          <em>TODO</em>
+"          Linux:
+"          <ul>
+"            <li>
+"              <div>
+"                Clang, C++03: 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 12.0.0, 13.0.0, 14.0.0,
+"                15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++11: 3.4, 11.0.0, 13.0.0, 14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++14: 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 5.0, 12.0.0, 13.0.0,
+"                14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++17: 6.0.1, 7.0.0, 8.0.0, 9.0.0, 10.0.0, 11.0.0, 12.0.0,
+"                13.0.0, 14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Clang, C++20: 11.0.0, 12.0.0, 13.0.0, 14.0.0, 15.0.0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++03: 4.6.3, 11, 12
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++11: 4.7.3, 4.8.5, 11, 12
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++14: 5.4.0, 6.4.0, 7.3.0, 8.0.1, 9.1.0, 11, 12
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++17: 7.3.0, 8.0.1, 9.1.0, 11, 12
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                GCC, C++20: 8.0.1, 9.1.0, 10, 11, 12
+"              </div>
+"            </li>
+"          </ul>
 "        </div>
 "      </li>
-"    </ul>
-"    <p>
-"      Boost's additional test compilers include:
-"    </p>
-"    <ul>
 "      <li>
 "        <div>
-"          <em>TODO</em>
+"          OS X:
+"          <ul>
+"            <li>
+"              <div>
+"                Apple Clang, C++03: 11.0.3
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Apple Clang, C++11: 11.0.3
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Apple Clang, C++14: 11.0.3
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Apple Clang, C++17: 11.0.3
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Apple Clang, C++20: 11.0.3
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          Windows:
+"          <ul>
+"            <li>
+"              <div>
+"                Visual C++: 10.0, 11.0, 12.0, 14.0, 14.1, 14.2, 14.3
+"              </div>
+"            </li>
+"          </ul>
 "        </div>
 "      </li>
 "    </ul>
@@ -41871,12 +42112,12 @@
 "  <div id="version_1_86_0.acknowledgements">
 "    <h3><span class="link">Acknowledgements</span></h3>
 "    <p>
-"      <em>TODO</em>
+"      Marshall Clow and Glen Fernandes managed this release.
 "    </p>
 "  </div>
 "
 -hash
-"2f93cddbea990f26e9b1251edb26593a9277a62e7a8146a930af69db96073f40
+"4e16576f776746d2d7338054d5b2933169721465b498715fe2c03d6839e655fb
 -id
 "version_1_86_0
 -notice_url
