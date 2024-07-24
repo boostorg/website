@@ -54,6 +54,20 @@
     <ul>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/atomic/">Atomic</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Use <a href="https://man.openbsd.org/OpenBSD-6.2/futex.2"><code><span class="identifier">futex</span><span class="special">(</span><span class="number">2</span><span class="special">)</span></code></a>
+                system call on OpenBSD since recent OpenBSD versions have removed
+                support for <code><span class="identifier">syscall</span><span class="special">(</span><span class="number">2</span><span class="special">)</span></code>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/beast/">Beast</a>:</span>
           <ul>
             <li>
@@ -234,6 +248,32 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/core/">Core</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added a <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">pointer_in_range</span><span class="special">.</span><span class="identifier">hpp</span></code> header with a <code><span class="identifier">pointer_in_range</span></code> function template
+                to check if a pointer is within a given range.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">type_name</span></code> for
+                abstract classes. (<a href="https://github.com/boostorg/core/issues/172">#172</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">type_name</span><span class="special">.</span><span class="identifier">hpp</span></code> compilation error with MSVC
+                with disabled native <code><span class="keyword">wchar_t</span></code>
+                type. (<a href="https://github.com/boostorg/core/issues/173">#173</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/crc/">CRC</a>:</span>
           <ul>
             <li>
@@ -246,6 +286,62 @@
               <div>
                 Removed dependencies on Array, Config, Integer, and TypeTraits. The
                 library is now standalone.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/filesystem/">Filesystem</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <code><span class="identifier">is_empty</span></code> operation
+                is now better protected against concurrent filesystem modifications.
+              </div>
+            </li>
+            <li>
+              <div>
+                On POSIX systems, <code><span class="identifier">is_empty</span></code>
+                now indicates error if invoked on a file other than a regular file
+                or a directory.
+              </div>
+            </li>
+            <li>
+              <div>
+                On Windows, fixed <code><span class="identifier">file_size</span></code>
+                and <code><span class="identifier">is_empty</span></code> operating
+                on symlinks rather than the files the symlinks refer to. (<a href="https://github.com/boostorg/filesystem/issues/313">#313</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">directory_entry</span><span class="special">::</span><span class="identifier">refresh</span></code> no longer throws an exception
+                if the file referenced by the entry doesn't exist. This makes <code><span class="identifier">directory_entry</span><span class="special">::</span><span class="identifier">status</span></code> and <code><span class="identifier">directory_entry</span><span class="special">::</span><span class="identifier">symlink_status</span></code>,
+                as well as methods based on them, behave similarly to the equivalent
+                standalone operations. The fact that the file does not exist is still
+                indicated via the <code><span class="identifier">error_code</span></code>
+                returned by the corresponding <code><span class="identifier">directory_entry</span><span class="special">::</span><span class="identifier">refresh</span></code>
+                overload, or can be seen by testing if the file type returned by
+                <code><span class="identifier">directory_entry</span><span class="special">::</span><span class="identifier">status</span></code> or <code><span class="identifier">directory_entry</span><span class="special">::</span><span class="identifier">symlink_status</span></code>
+                calls is <code><span class="identifier">file_type</span><span class="special">::</span><span class="identifier">file_not_found</span></code>.
+                (<a href="https://github.com/boostorg/filesystem/issues/314">#314</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">weakly_canonical</span></code>
+                testing path elements for existence relative to the current path
+                instead of the base path specified in the call, if the input path
+                was a relative path.
+              </div>
+            </li>
+            <li>
+              <div>
+                On Windows, fixed <code><span class="identifier">weakly_canonical</span></code>
+                producing incorrect result path when the input path started with
+                "..". (<a href="https://github.com/boostorg/filesystem/issues/311">#311</a>)
               </div>
             </li>
           </ul>
@@ -497,6 +593,20 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/log/">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added a workaround for <code><span class="identifier">windres</span><span class="special">.</span><span class="identifier">exe</span></code>
+                issue, when it is used in CMake to compile event log resource files
+                on MinGW-w64. (<a href="https://github.com/boostorg/log/pull/231">PR#231</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/stacktrace/">Stacktrace</a>:</span>
           <ul>
             <li>
@@ -605,6 +715,125 @@
               <div>
                 <em>Many</em> other improvements, see
                 the <a href="/doc/libs/master/libs/uuid/doc/html/uuid.html#changes">revision history</a>.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/winapi/">WinAPI</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added <code><span class="identifier">BOOST_USE_WINAPI_VERSION</span></code>
+                CMake option, which allows users to specify the Windows version for
+                Boost to target.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="version_1_86_0.updated_tools">
+    <h3><span class="link">Updated Tools</span></h3>
+    <ul>
+      <li>
+        <div>
+          <span class="library"><a href="/tools/boostbook/">BoostBook</a>:</span>
+          <ul>
+            <li>
+              <div>
+                DTD updated: <code><span class="identifier">constructor</span></code>,
+                <code><span class="identifier">copy</span><span class="special">-</span><span class="identifier">assignment</span></code> and <code><span class="identifier">destructor</span></code>
+                elements are now allowed inside <code><span class="identifier">method</span><span class="special">-</span><span class="identifier">group</span></code>
+                elements.
+              </div>
+            </li>
+            <li>
+              <div>
+                Many fixes and improvements in Doxygen-generated documentation:
+                <ul>
+                  <li>
+                    <div>
+                      Fixed duplicate equal signs in Doxygen-generated enum value
+                      initializers.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Disabled alphabetical sorting of function arguments. The sorting
+                      can be re-enabled by setting the new <code><span class="identifier">boost</span><span class="special">.</span><span class="identifier">sort</span><span class="special">.</span><span class="identifier">params</span></code>
+                      XSL parameter to 1.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added support for custom class member grouping. See Doxygen
+                      tags <code><span class="error">@</span><span class="identifier">name</span></code>
+                      and <code><span class="error">@</span><span class="special">{</span></code>/<code><span class="error">@</span><span class="special">}</span></code>.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added support for Doxygen references to classes, methods, enums,
+                      variables, etc. (see <code><span class="error">@</span><span class="identifier">ref</span></code> tag).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added support for <code><span class="error">@</span><span class="identifier">remark</span></code> and <code><span class="error">@</span><span class="identifier">important</span></code>
+                      tags.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added support for <code><span class="error">@</span><span class="identifier">parblock</span></code> tags, which can
+                      be used to place multiple paragraphs under a tag that expects
+                      a single paragraph as an argument (e.g. <code><span class="error">@</span><span class="identifier">returns</span></code>).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Template parameter defaults that refer to implementation details
+                      are now concealed, similar to function parameter defaults.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Improved presentation of unnamed enums. Instead of showing
+                      a synthesized name such as <code><span class="error">@</span><span class="number">0</span></code>, the name is either omitted
+                      or is <code><span class="special">[</span><span class="identifier">unnamed</span><span class="special">]</span></code>, if the name is necessary
+                      to introduce a link to the enum documentation.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Changed the "See Also" (<code><span class="error">@</span><span class="identifier">sa</span></code>) blocks to be displayed
+                      inline, similar to "Returns".
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Fixed presentation of multiple exception specifications (<code><span class="error">@</span><span class="identifier">throws</span></code>).
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Added support for free form description of throwing behavior.
+                      If the exception type after the <code><span class="error">@</span><span class="identifier">throws</span></code> tag is "~"
+                      then the exception type is omitted from the output, and the
+                      following description is displayed directly in the "Throws"
+                      section.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Removed redundant spaces in return types and template parameters.
+                    </div>
+                  </li>
+                </ul>
               </div>
             </li>
           </ul>
