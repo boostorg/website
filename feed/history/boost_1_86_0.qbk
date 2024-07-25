@@ -223,6 +223,21 @@ Please keep the list of libraries sorted in lexicographical order.
     [@https://github.com/Schreischildkroete Schreischildkroete] for the bug report and to
     [@https://github.com/j-jr-richter Jens Richter] for fix [github stacktrace 72].
 
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  * Added container `pmr` aliases when header `<memory_resource>` is available. The alias
+    `boost::unordered::pmr::[container]` refers to `boost::unordered::[container]` with a
+    `std::pmr::polymorphic_allocator` allocator type.
+  * Equipped open-addressing and concurrent containers to internally calculate and provide
+    statistical metrics affected by the quality of the hash function. This functionality is
+    enabled by the global macro `BOOST_UNORDERED_ENABLE_STATS`.
+  * Avalanching hash functions must now be marked via an `is_avalanching` typedef with an embedded
+    `value` constant set to `true` (typically, defining `is_avalanching` as `std::true_type`).
+    `using is_avalanching = void` is deprecated but allowed for backwards compatibility.
+  * Added Visual Studio Natvis framework custom visualizations for containers and iterators.
+    This works for all containers with an allocator using raw pointers. In this release,
+    containers and iterators are not supported if their allocator uses fancy pointers. This may
+    be addressed in later releases.
+
 * [phrase library..[@/libs/uuid/ UUID]:]
   * _Major_ update.
   * C++03 is no longer supported, a C++11 compiler is required.
