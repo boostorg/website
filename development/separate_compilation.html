@@ -9,6 +9,7 @@
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href=
   "/style-v2/section-development.css" />
+  <script defer data-domain="original.boost.org" src="https://plausible.io/js/script.js"></script>
   <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style/csshover3.htc); } </style> <![endif]-->
 </head><!--
 Note: Editing website content is documented at:
@@ -93,7 +94,7 @@ http://www.boost.org/development/website_updating.html
 -pX   (Calling convention - 4 options).
 -VmX  (member pointer size and layout - 5 options).
 -VC   (on or off, changes name mangling).
--Vl   (on or off, changes struct layout). 
+-Vl   (on or off, changes struct layout).
 </pre>
 
               <p>These options are provided in addition to those affecting
@@ -307,19 +308,19 @@ BOOST_WHATEVER_DECL whatever get_whatever();
 #endif
 </pre>And then in the source code for this library one would use:
               <pre>
- 
-// 
-// define BOOST_WHATEVER SOURCE so that our library's 
-// setup code knows that we are building the library (possibly exporting code), 
-// rather than using it (possibly importing code): 
-// 
-#define BOOST_WHATEVER_SOURCE 
-#include &lt;boost/whatever.hpp&gt; 
 
-// class members don't need any further annotation: 
-whatever::whatever() { } 
-// but functions do: 
-BOOST_WHATEVER_DECL whatever get_whatever() 
+//
+// define BOOST_WHATEVER SOURCE so that our library's
+// setup code knows that we are building the library (possibly exporting code),
+// rather than using it (possibly importing code):
+//
+#define BOOST_WHATEVER_SOURCE
+#include &lt;boost/whatever.hpp&gt;
+
+// class members don't need any further annotation:
+whatever::whatever() { }
+// but functions do:
+BOOST_WHATEVER_DECL whatever get_whatever()
 {
    return whatever();
 }
@@ -448,8 +449,8 @@ libboost_regex-vc71-sgd-1_31.lib
               BOOST_LIB_NAME and, if applicable, BOOST_DYN_LINK.</p>
               <pre>
 //
-// Automatically link to the correct build variant where possible. 
-// 
+// Automatically link to the correct build variant where possible.
+//
 #if !defined(BOOST_ALL_NO_LIB) &amp;&amp; !defined(BOOST_WHATEVER_NO_LIB) &amp;&amp; !defined(BOOST_WHATEVER_SOURCE)
 //
 // Set the name of our library, this will get undef'ed by auto_link.hpp
@@ -490,9 +491,9 @@ libboost_regex-vc71-sgd-1_31.lib
               that your code knows whether it's building a dll or static
               library, a typical Jamfile would like like this:</p>
               <pre>
-lib boost_regex : ../src/whatever.cpp : 
+lib boost_regex : ../src/whatever.cpp :
   &lt;link&gt;shared:&lt;define&gt;BOOST_WHATEVER_DYN_LINK=1 ;
- 
+
 </pre>
 
               <h3><a name="testing" id="testing"></a>Testing

@@ -9,7 +9,7 @@
   <link rel="stylesheet" type="text/css" href=
   "/style-v2/section-community.css" />
   <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
-
+  <script defer data-domain="original.boost.org" src="https://plausible.io/js/script.js"></script>
   <style type="text/css">
 /*<![CDATA[*/
   h3.c2 {text-align: center}
@@ -159,14 +159,14 @@ http://www.boost.org/development/website_updating.html
               nothing new to any C++ programmer who expects local variables
               to be destroyed upon returning from a function:</p>
               <pre>
-ErrorCode f( int&amp; result )         // 1 
-{                                  // 2 
-    X x;                           // 3 
-    ErrorCode err = x.g( result ); // 4 
-    if ( err != kNoError )         // 5 
-        return err;                // 6 
-    // ...More code here... 
-    return kNoError;               // 7 
+ErrorCode f( int&amp; result )         // 1
+{                                  // 2
+    X x;                           // 3
+    ErrorCode err = x.g( result ); // 4
+    if ( err != kNoError )         // 5
+        return err;                // 6
+    // ...More code here...
+    return kNoError;               // 7
 }
 </pre>
 
@@ -175,13 +175,13 @@ ErrorCode f( int&amp; result )         // 1
               exceptions, there is no code devoted to error handling
               visible:</p>
               <pre>
-int f()                 // 1 
-{                       // 2 
-    X x;                // 3 
-    int result = x.g(); // 4 
-    // ...More code here... 
-    return result;      // 5 
-} 
+int f()                 // 1
+{                       // 2
+    X x;                // 3
+    int result = x.g(); // 4
+    // ...More code here...
+    return result;      // 5
+}
 </pre>
 
               <p>For many programmers more familiar with exceptions, the
@@ -246,20 +246,20 @@ int f()                 // 1
               component to some known state before further use. Consider the
               following example:</p>
               <pre>
-template &lt;class X&gt; 
-void print_random_sequence() 
-{ 
-    std::vector&lt;X&gt; v(10); // A vector of 10 items 
-    try { 
-        // Provides only the <i>basic</i> guarantee 
-        v.insert( v.begin(), X() ); 
-    } 
-    catch(...) {} // ignore any exceptions above 
-    // print the vector's contents 
-    std::cout "(" &lt;&lt; v.size() &lt;&lt; ") "; 
-    std::copy( v.begin(), v.end(), 
-    std::ostream_iterator&lt;X&gt;( std::cout, " " ) ); 
-} 
+template &lt;class X&gt;
+void print_random_sequence()
+{
+    std::vector&lt;X&gt; v(10); // A vector of 10 items
+    try {
+        // Provides only the <i>basic</i> guarantee
+        v.insert( v.begin(), X() );
+    }
+    catch(...) {} // ignore any exceptions above
+    // print the vector's contents
+    std::cout "(" &lt;&lt; v.size() &lt;&lt; ") ";
+    std::copy( v.begin(), v.end(),
+    std::ostream_iterator&lt;X&gt;( std::cout, " " ) );
+}
 </pre>
 
               <p>Since all we know about v after an exception is that it is
@@ -348,11 +348,11 @@ void print_random_sequence()
               <i>strong</i> using the &ldquo;make a new copy&rdquo; strategy
               described above:</p>
               <pre>
-template &lt;class Container, class BasicOp&gt; 
-void MakeOperationStrong( Container&amp; c, const BasicOp&amp; op ) 
-{ 
-    Container tmp(c); // Copy c 
-    op(tmp); // Work on the copy 
+template &lt;class Container, class BasicOp&gt;
+void MakeOperationStrong( Container&amp; c, const BasicOp&amp; op )
+{
+    Container tmp(c); // Copy c
+    op(tmp); // Work on the copy
     c.swap(tmp); // Cannot fail<a title=
 "Associative containers whose Compare object might throw an exception when copied cannot use this technique, since the swap function might fail."
 href="#footnote7"><sup>7</sup></a>
@@ -390,20 +390,20 @@ href="#footnote7"><sup>7</sup></a>
               representative case for maintaining invariants in larger
               systems:</p>
               <pre>
-// SearchableStack - A stack which can be efficiently searched 
-// for any value. 
-template &lt;class T&gt; 
-class SearchableStack 
-{ 
- public: 
-    void push(const T&amp; t); // O(log n) 
-    void pop(); // O(log n) 
-    bool contains(const T&amp; t) const; // O(log n) 
-    const T&amp; top() const; // O(1) 
- private: 
-    std::set&lt;T&gt; set_impl; 
-    std::list&lt;std::set&lt;T&gt;::iterator&gt; list_impl; 
-}; 
+// SearchableStack - A stack which can be efficiently searched
+// for any value.
+template &lt;class T&gt;
+class SearchableStack
+{
+ public:
+    void push(const T&amp; t); // O(log n)
+    void pop(); // O(log n)
+    bool contains(const T&amp; t) const; // O(log n)
+    const T&amp; top() const; // O(1)
+ private:
+    std::set&lt;T&gt; set_impl;
+    std::list&lt;std::set&lt;T&gt;::iterator&gt; list_impl;
+};
 </pre>
 
               <p>The idea is that the list acts as a stack of set iterators:
@@ -416,20 +416,20 @@ class SearchableStack
               <i>strong</i> guarantee within the natural levels of safety
               provided by set and list:</p>
               <pre>
-template &lt;class T&gt;                                // 1 
-void SearchableStack&lt;T&gt;::push(const T&amp; t)         // 2 
-{                                                       // 3 
-    set&lt;T&gt;::iterator i = set_impl.insert(t);      // 4 
-    try                                                 // 5 
-    {                                                   // 6 
-        list_impl.push_back(i);                         // 7 
-    }                                                   // 8 
-    catch(...)                                          // 9 
-    {                                                   // 10 
-        set_impl.erase(i);                              // 11 
-        throw;                                          // 12 
-    }                                                   // 13 
-}                                                       // 14 
+template &lt;class T&gt;                                // 1
+void SearchableStack&lt;T&gt;::push(const T&amp; t)         // 2
+{                                                       // 3
+    set&lt;T&gt;::iterator i = set_impl.insert(t);      // 4
+    try                                                 // 5
+    {                                                   // 6
+        list_impl.push_back(i);                         // 7
+    }                                                   // 8
+    catch(...)                                          // 9
+    {                                                   // 10
+        set_impl.erase(i);                              // 11
+        throw;                                          // 12
+    }                                                   // 13
+}                                                       // 14
 </pre>
 
               <p>What does our code actually require of the library? We need
@@ -508,19 +508,19 @@ void SearchableStack&lt;T&gt;::push(const T&amp; t)         // 2
               <code>new</code>, for which an instrumented replacement was
               supplied.</p>
               <pre>
-// Use this as a type parameter, e.g. vector&lt;TestClass&gt; 
-struct TestClass 
-{ 
-    TestClass( int v = 0 ) 
-        : p( ThisCanThrow(), new int( v ) ) {} 
-    TestClass( const TestClass&amp; rhs ) 
-        : p( ThisCanThrow(), new int( *rhs.p ) ) {} 
-    const TestClass&amp; operator=( const TestClass&amp; rhs ) 
-        { ThisCanThrow(); *p = *rhs.p; } 
+// Use this as a type parameter, e.g. vector&lt;TestClass&gt;
+struct TestClass
+{
+    TestClass( int v = 0 )
+        : p( ThisCanThrow(), new int( v ) ) {}
+    TestClass( const TestClass&amp; rhs )
+        : p( ThisCanThrow(), new int( *rhs.p ) ) {}
+    const TestClass&amp; operator=( const TestClass&amp; rhs )
+        { ThisCanThrow(); *p = *rhs.p; }
     bool operator==( const TestClass&amp; rhs ) const
-        { ThisCanThrow(); return *p == *rhs.p; } 
-    ...etc... 
-    ~TestClass() { delete p; } 
+        { ThisCanThrow(); return *p == *rhs.p; }
+    ...etc...
+    ~TestClass() { delete p; }
 };
 </pre>
 
@@ -537,34 +537,34 @@ struct TestClass
               href="#footnote12"><sup>12</sup></a></p>
               <pre>
 extern int gThrowCounter; // The throw counter
-void ThisCanThrow() 
-{ 
-    if (gThrowCounter-- == 0) 
-        throw 0; 
-} 
- 
-template &lt;class Value, class Operation&gt; 
-void StrongCheck(const Value&amp; v, const Operation&amp; op) 
-{ 
-    bool succeeded = false; 
-    for (long nextThrowCount = 0; !succeeded; ++nextThrowCount) 
-    { 
-        Value duplicate = v; 
-        try 
-        { 
-            gThrowCounter = nextThrowCount; 
-            op( duplicate ); // Try the operation 
-            succeeded = true; 
-        } 
-        catch(...) // Catch all exceptions 
-        { 
-            bool unchanged = duplicate == v; // Test <i>strong</i> guarantee 
-            assert( unchanged ); 
-        } 
-        // Specialize as desired for each container type, to check 
-        // integrity. For example, size() == distance(begin(),end()) 
-        CheckInvariant(v); // Check any invariant 
-    } 
+void ThisCanThrow()
+{
+    if (gThrowCounter-- == 0)
+        throw 0;
+}
+
+template &lt;class Value, class Operation&gt;
+void StrongCheck(const Value&amp; v, const Operation&amp; op)
+{
+    bool succeeded = false;
+    for (long nextThrowCount = 0; !succeeded; ++nextThrowCount)
+    {
+        Value duplicate = v;
+        try
+        {
+            gThrowCounter = nextThrowCount;
+            op( duplicate ); // Try the operation
+            succeeded = true;
+        }
+        catch(...) // Catch all exceptions
+        {
+            bool unchanged = duplicate == v; // Test <i>strong</i> guarantee
+            assert( unchanged );
+        }
+        // Specialize as desired for each container type, to check
+        // integrity. For example, size() == distance(begin(),end())
+        CheckInvariant(v); // Check any invariant
+    }
 }
 </pre>
 

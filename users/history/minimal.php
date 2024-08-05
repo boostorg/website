@@ -18,6 +18,7 @@ if(!isset($_history->db[$_guid])) {
   <title><?php print $_history->db[$_guid]['title']; ?></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
+  <script defer data-domain="original.boost.org" src="https://plausible.io/js/script.js"></script>
 </head>
 
 <body>

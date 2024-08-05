@@ -10,7 +10,7 @@ require_once(dirname(__FILE__).'/boost_filters.php');
 function boost_book_basic_filter($params)
 {
     $text = $params['content'];
-    
+
     $match = null;
 
     $pos1 = strpos($text, '</head>');
@@ -20,9 +20,10 @@ function boost_book_basic_filter($params)
     echo substr($text, 0, $pos1);
     echo '<link rel="icon" href="/favicon.ico" type="image/ico"/>';
     echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"/>';
+    echo '<script defer data-domain="original.boost.org" src="https://plausible.io/js/script.js"></script>';
     echo substr($text, $pos1, $pos3 - $pos1);
     virtual("/common/heading-doc.html");
-    
+
     $text = preg_replace('@(<div[^>]* )title="[^"]*"([^>]*>)@', '$1$2', substr($text, $pos4));
     echo prepare_html($text);
 }

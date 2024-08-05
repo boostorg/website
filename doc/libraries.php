@@ -233,6 +233,7 @@ function category_link($name, $category) {
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-doc.css" />
+  <script defer data-domain="original.boost.org" src="https://plausible.io/js/script.js"></script>
   <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
 </head>
 

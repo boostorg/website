@@ -12,6 +12,7 @@ $_irc = new boost_irc_stats('http://www.acc.umu.se/~zao/stats/ibd.html');
   <?php $_irc->content_head(); ?>
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-community.css" />
+  <script defer data-domain="original.boost.org" src="https://plausible.io/js/script.js"></script>
   <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
 </head>
 
