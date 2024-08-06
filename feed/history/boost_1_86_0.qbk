@@ -71,6 +71,13 @@ Please keep the list of libraries sorted in lexicographical order.
   * Acknowledgements
     * tyler92, Ruslan Zakirov, Orgad Shaneh, Alexander Kernozhitsky
 
+* [phrase library..[@/libs/charconv Charconv]:]
+  * Fixed support for PPC64LE architecture.
+  * Fixed support for platforms like Alpine linux that provide the `<quadmath.h>` header but not the compiled library.
+  * Fixed first character pattern matching in `from_chars` for integer types.
+  * Fixed overflow detection for integers with base greater than 10.
+  * Added native support for `std::float16_t` and `std::bfloat16_t` instead of using interchange formats.
+
 * [phrase library..[@/libs/cobalt Cobalt]:]
   * Added support for asio::cancel_after
   * Made `asio::deferred` co_await-able, because it's asio's default token
@@ -202,6 +209,21 @@ Please keep the list of libraries sorted in lexicographical order.
   * Added a workaround for `windres.exe` issue, when it is used in CMake to compile event log resource files on MinGW-w64.
     ([github_pr log 231])
 
+* [phrase library..[@/libs/math/ Math]:]
+  * Correct Bessel function results at infinity, see [@https://github.com/boostorg/math/issues/1143 1143].
+  * Improve Non Central T numerical stability, see [@https://github.com/scipy/scipy/issues/20693 scipy20693].
+  * Correct `float_next`/`float_prior` behaviour at infinity.
+  * Prevent spurious underflow in non-central beta, see [@https://github.com/scipy/scipy/issues/20693 scipy20693].
+  * Add improvement to Heuman Lambda precision.
+  * Improve Skew Normal root finding, see [@https://github.com/boostorg/math/issues/1120 1120].
+  * Lots of minor fixes and improved code coverage.
+
+* [phrase library..[@/libs/multiprecision/ Multiprecision]:]
+  * Make sure `eval_convert_to()` does not terminate with super large numbers, see [@https://github.com/boostorg/multiprecision/pull/618 618].
+  * Fix `sinc` implementation to match behavior of Boost.Math.
+  * Fix divide-by-zero in cpp_int modulus operations.
+  * Fix underflow behavior consistency for integers greater than 128-bits, see [@https://github.com/boostorg/multiprecision/issues/626 626].
+
 * [phrase library..[@/libs/mysql/ MySQL]:]
   * The long-deprecated functions `query`, `start_query`, `execute_statement` and `start_statement_execution`
     (and their async equivalents) have been removed.
@@ -241,6 +263,10 @@ Please keep the list of libraries sorted in lexicographical order.
     cause crashes in release builds when using Boost.MySQL with other code also
     using `asio::coroutine` in different translation units.
 
+* [phrase library..[@/libs/odeint/ Odeint]:]
+ * Added CMake Option `BOOST_NUMERIC_ODEINT_NO_ADAPTORS` to reduce dependencies, see [@https://github.com/boostorg/odeint/issues/82 82]
+ * Fixed CMake detection of MPI.
+
 * [phrase library..[@/libs/process/ Process]:]
  * Moved the old boost.process to v1 subfolder and inline namespace. deprecated process/*.hpp v1 headers
  * Turned v2 into a compile library.
@@ -275,6 +301,10 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fix addr2line work when the process is looked up via `PATH`. Thanks to
     [@https://github.com/Schreischildkroete Schreischildkroete] for the bug report and to
     [@https://github.com/j-jr-richter Jens Richter] for fix [github stacktrace 72].
+
+* [phrase library..[@/libs/test/ Test]:]
+ * Fix `-Wundef` in configuration step.
+ * Fix unreachable return compilation error on MSVC.
 
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * Added container `pmr` aliases when header `<memory_resource>` is available. The alias
