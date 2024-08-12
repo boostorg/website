@@ -153,6 +153,7 @@ class BoostFilter
 
         $head = "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\" />\n";
         $head .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=${charset}\" />\n";
+        $head .= "<script defer data-domain=\"original.boost.org\" src=\"https://plausible.io/js/script.js\"></script>\n";
 
         if (!empty($this->noindex))
             $head .= "<meta name=\"robots\" content=\"noindex\">\n";

@@ -181,7 +181,7 @@ $page = new PullRequestPage($_GET);
   <link rel="stylesheet" type="text/css" href=
   "/style-v2/section-development.css" />
   <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
-</head><!--
+<script defer data-domain="original.boost.org" src="https://plausible.io/js/script.js"></script></head><!--
 Note: Editing website content is documented at:
 https://www.boost.org/development/website_updating.html
 -->
