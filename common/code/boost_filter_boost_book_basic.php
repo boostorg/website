@@ -21,6 +21,7 @@ class BoostFilterBoostBookBasic extends BoostFilter
         echo $head;
         echo '<link rel="icon" href="/favicon.ico" type="image/ico"/>';
         echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"/>';
+        echo '<script defer data-domain="original.boost.org" src="https://plausible.io/js/script.js"></script>';
         if (!preg_match('@<meta\b[^<>]*\bname\s*=\s*["\']?viewport\b@', $head)) {
             echo '<meta name="viewport" content="width=device-width,initial-scale=1.0"/>';
         }

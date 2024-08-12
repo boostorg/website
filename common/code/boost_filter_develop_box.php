@@ -18,6 +18,7 @@ class BoostFilterDevelopBox extends BoostFilter
             echo $this->alter_title($head);
             echo '<link rel="icon" href="/favicon.ico" type="image/ico"'.$tag_end;
             echo '<link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"'.$tag_end;
+            echo '<script defer data-domain="original.boost.org" src="https://plausible.io/js/script.js"></script>';
             echo $match[0][0];
             echo $box;
             echo $this->prepare_html(substr($text, $match[0][1] + strlen($match[0][0])));
