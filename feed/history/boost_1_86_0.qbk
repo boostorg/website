@@ -40,6 +40,43 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed `named_condition_any` fails to notify ([github interprocess 62])
 ]
 
+* [phrase library..[@/libs/asio/ Asio]:] 
+  * Changed the `default_completion_token` trait's primary template to select
+    `deferred` as the default completion token. As a result, most asynchronous
+    operations' initiating functions will return a deferred asynchronous operation
+    by default.
+  * Added the `is_completion_condition` trait and added missing default completion
+    tokens to overloads of `async_read`, `async_read_at`, `async_write`, and
+    `async_write_at`.
+  * Added the `is_connect_condition` trait and used it disambiguate overloads of
+    `async_connect` when the completion token is defaulted.
+  * Extended the completion token adapters `as_tuple`, `bind_allocator`,
+    `bind_cancellation_slot`, `bind_executor`, `bind_immediate_executor`, and
+    `redirect_error` to allow them to be used as partial completion token
+    adapters.
+  * Added the `cancel_after` and `cancel_at` completion token adapters.
+  * Changed all completion token adapters to ensure they correctly propagate the
+    asynchronous operation's I/O executor during adaptation.
+  * Moved `co_composed` out of the `experimental` namespace.
+  * Added `composed`, which creates an initiation function object from a stateful
+    implementation. It is similar to `co_composed`, but for regular function
+    objects rather than C++20 coroutines.
+  * Changed the `detached` completion token to work with asynchronous operations
+    that have multiple completion signatures.
+  * Changed `async_initiate` to allow an empty variadic list of completion
+    signatures, which would indicate that an asynchronous operation never
+    completes.
+  * Added overloads of `async_initiate` that automatically deduce the type of
+    the completion token.
+  * Added `async_immediate` which implements a trivial asynchronous operation that
+    completes immediately, using an associated immediate executor if available.
+  * Enabled SFINAE-based partial specialisation of the `associator` trait.
+  * A number of bug fixes, compiler/platform compatibility improvements,
+    and minor optimisations.
+  * Various updates to documentation and examples.
+  * Consult the [@/doc/libs/1_86_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
+
 * [phrase library..[@/libs/atomic/ Atomic]:]
   * Use [@https://man.openbsd.org/OpenBSD-6.2/futex.2 `futex(2)`] system call on OpenBSD since recent OpenBSD versions have removed support for `syscall(2)`.
 
