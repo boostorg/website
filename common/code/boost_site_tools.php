@@ -257,7 +257,7 @@ EOL;
         <li><a href="/tools/inspect/">Inspect <span class=
         "link">&gt;</span></a></li>
 
-        <li><a href="/doc/html/boostbook.html">BoostBook <span class=
+        <li><a href="/tools/boostbook/">BoostBook <span class=
         "link">&gt;</span></a></li>
 
         <li><a href="/tools/quickbook/">QuickBook <span class=
