@@ -54,7 +54,56 @@
     <ul>
       <li>
         <div>
-          <em>TODO</em>
+          <span class="library"><a href="/doc/libs/master/libs/unordered/">Unordered</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <strong>Major update.</strong>
+              </div>
+            </li>
+            <li>
+              <div>
+                Added concurrent, node-based containers <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">concurrent_node_map</span></code>
+                and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">concurrent_node_set</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">insert_and_visit</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">f1</span><span class="special">,</span> <span class="identifier">f2</span><span class="special">)</span></code> and similar operations to concurrent
+                containers, which allow for visitation of an element right after
+                insertion (by contrast, <code><span class="identifier">insert_or_visit</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">f</span><span class="special">)</span></code> only visits the element if insertion
+                did <em>not</em> take place).
+              </div>
+            </li>
+            <li>
+              <div>
+                Made visitation exclusive-locked within certain <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">concurrent_flat_set</span></code>
+                operations to allow for safe mutable modification of elements (<a href="https://github.com/boostorg/unordered/pull/265">PR#265</a>).
+              </div>
+            </li>
+            <li>
+              <div>
+                In Visual Studio Natvis, supported any container with an allocator
+                that uses fancy pointers. This applies to any fancy pointer type,
+                as long as the proper Natvis customization point "Intrinsic"
+                functions are written for the fancy pointer type.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added GDB pretty-printers for all containers and iterators. For a
+                container with an allocator that uses fancy pointers, these only
+                work if the proper pretty-printer is written for the fancy pointer
+                type itself.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">initializer_list</span></code> assignment issues
+                for open-addressing containers (<a href="https://github.com/boostorg/unordered/pull/277">PR#277</a>).
+              </div>
+            </li>
+          </ul>
         </div>
       </li>
     </ul>
