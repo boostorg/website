@@ -67777,6 +67777,123 @@
 "    &lt;ul&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/asio/"&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+"          &lt;ul&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Changed the &lt;code&gt;&lt;span class="identifier"&gt;default_completion_token&lt;/span&gt;&lt;/code&gt;
+"                trait's primary template to select &lt;code&gt;&lt;span class="identifier"&gt;deferred&lt;/span&gt;&lt;/code&gt;
+"                as the default completion token. As a result, most asynchronous operations'
+"                initiating functions will return a deferred asynchronous operation
+"                by default.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added the &lt;code&gt;&lt;span class="identifier"&gt;is_completion_condition&lt;/span&gt;&lt;/code&gt;
+"                trait and added missing default completion tokens to overloads of
+"                &lt;code&gt;&lt;span class="identifier"&gt;async_read&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;async_read_at&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;async_write&lt;/span&gt;&lt;/code&gt;,
+"                and &lt;code&gt;&lt;span class="identifier"&gt;async_write_at&lt;/span&gt;&lt;/code&gt;.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added the &lt;code&gt;&lt;span class="identifier"&gt;is_connect_condition&lt;/span&gt;&lt;/code&gt;
+"                trait and used it disambiguate overloads of &lt;code&gt;&lt;span class="identifier"&gt;async_connect&lt;/span&gt;&lt;/code&gt;
+"                when the completion token is defaulted.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Extended the completion token adapters &lt;code&gt;&lt;span class="identifier"&gt;as_tuple&lt;/span&gt;&lt;/code&gt;,
+"                &lt;code&gt;&lt;span class="identifier"&gt;bind_allocator&lt;/span&gt;&lt;/code&gt;,
+"                &lt;code&gt;&lt;span class="identifier"&gt;bind_cancellation_slot&lt;/span&gt;&lt;/code&gt;,
+"                &lt;code&gt;&lt;span class="identifier"&gt;bind_executor&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;bind_immediate_executor&lt;/span&gt;&lt;/code&gt;, and &lt;code&gt;&lt;span class="identifier"&gt;redirect_error&lt;/span&gt;&lt;/code&gt; to allow them to
+"                be used as partial completion token adapters.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added the &lt;code&gt;&lt;span class="identifier"&gt;cancel_after&lt;/span&gt;&lt;/code&gt;
+"                and &lt;code&gt;&lt;span class="identifier"&gt;cancel_at&lt;/span&gt;&lt;/code&gt; completion
+"                token adapters.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Changed all completion token adapters to ensure they correctly propagate
+"                the asynchronous operation's I/O executor during adaptation.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Moved &lt;code&gt;&lt;span class="identifier"&gt;co_composed&lt;/span&gt;&lt;/code&gt;
+"                out of the &lt;code&gt;&lt;span class="identifier"&gt;experimental&lt;/span&gt;&lt;/code&gt;
+"                namespace.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added &lt;code&gt;&lt;span class="identifier"&gt;composed&lt;/span&gt;&lt;/code&gt;, which
+"                creates an initiation function object from a stateful implementation.
+"                It is similar to &lt;code&gt;&lt;span class="identifier"&gt;co_composed&lt;/span&gt;&lt;/code&gt;,
+"                but for regular function objects rather than C++20 coroutines.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Changed the &lt;code&gt;&lt;span class="identifier"&gt;detached&lt;/span&gt;&lt;/code&gt;
+"                completion token to work with asynchronous operations that have multiple
+"                completion signatures.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Changed &lt;code&gt;&lt;span class="identifier"&gt;async_initiate&lt;/span&gt;&lt;/code&gt;
+"                to allow an empty variadic list of completion signatures, which would
+"                indicate that an asynchronous operation never completes.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added overloads of &lt;code&gt;&lt;span class="identifier"&gt;async_initiate&lt;/span&gt;&lt;/code&gt;
+"                that automatically deduce the type of the completion token.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Added &lt;code&gt;&lt;span class="identifier"&gt;async_immediate&lt;/span&gt;&lt;/code&gt;
+"                which implements a trivial asynchronous operation that completes
+"                immediately, using an associated immediate executor if available.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Enabled SFINAE-based partial specialisation of the &lt;code&gt;&lt;span class="identifier"&gt;associator&lt;/span&gt;&lt;/code&gt; trait.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                A number of bug fixes, compiler/platform compatibility improvements,
+"                and minor optimisations.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Various updates to documentation and examples.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"            &lt;li&gt;
+"              &lt;div&gt;
+"                Consult the &lt;a href="https://www.boost.org/doc/libs/1_86_0/doc/html/boost_asio/history.html"&gt;Revision
+"                History&lt;/a&gt; for further details.
+"              &lt;/div&gt;
+"            &lt;/li&gt;
+"          &lt;/ul&gt;
+"        &lt;/div&gt;
+"      &lt;/li&gt;
+"      &lt;li&gt;
+"        &lt;div&gt;
 "          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/atomic/"&gt;Atomic&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
@@ -68133,7 +68250,7 @@
 "            &lt;li&gt;
 "              &lt;div&gt;
 "                Added a &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;core&lt;/span&gt;&lt;span class="special"&gt;/&lt;/span&gt;&lt;span class="identifier"&gt;pointer_in_range&lt;/span&gt;&lt;span class="special"&gt;.&lt;/span&gt;&lt;span class="identifier"&gt;hpp&lt;/span&gt;&lt;/code&gt; header with a &lt;code&gt;&lt;span class="identifier"&gt;pointer_in_range&lt;/span&gt;&lt;/code&gt; function template
-"                to check if a pointer is within a given range.
+"                to check if a pointer is within a given range (Glen Fernandes).
 "              &lt;/div&gt;
 "            &lt;/li&gt;
 "            &lt;li&gt;
@@ -68821,7 +68938,7 @@
 "      &lt;/li&gt;
 "      &lt;li&gt;
 "        &lt;div&gt;
-"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/odeint/"&gt;Odeint&lt;/a&gt;:&lt;/span&gt;
+"          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/numeric/odeint/"&gt;Odeint&lt;/a&gt;:&lt;/span&gt;
 "          &lt;ul&gt;
 "            &lt;li&gt;
 "              &lt;div&gt;
@@ -69316,11 +69433,11 @@
 "  &lt;/div&gt;
 "</description></item>
 -last_modified
-@Wed, 14 Aug 2024 20:10:48 +0000
+@Mon, 14 Oct 2024 04:16:10 +0000
 -quickbook
 "feed/history/boost_1_86_0.qbk
 -update_count
-=3
+=4
 )
 (feed/history/unversioned.qbk
 -item

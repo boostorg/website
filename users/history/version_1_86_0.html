@@ -63,6 +63,123 @@
     <ul>
       <li>
         <div>
+          <span class="library"><a href="/libs/asio/">Asio</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Changed the <code><span class="identifier">default_completion_token</span></code>
+                trait's primary template to select <code><span class="identifier">deferred</span></code>
+                as the default completion token. As a result, most asynchronous operations'
+                initiating functions will return a deferred asynchronous operation
+                by default.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added the <code><span class="identifier">is_completion_condition</span></code>
+                trait and added missing default completion tokens to overloads of
+                <code><span class="identifier">async_read</span></code>, <code><span class="identifier">async_read_at</span></code>, <code><span class="identifier">async_write</span></code>,
+                and <code><span class="identifier">async_write_at</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added the <code><span class="identifier">is_connect_condition</span></code>
+                trait and used it disambiguate overloads of <code><span class="identifier">async_connect</span></code>
+                when the completion token is defaulted.
+              </div>
+            </li>
+            <li>
+              <div>
+                Extended the completion token adapters <code><span class="identifier">as_tuple</span></code>,
+                <code><span class="identifier">bind_allocator</span></code>,
+                <code><span class="identifier">bind_cancellation_slot</span></code>,
+                <code><span class="identifier">bind_executor</span></code>, <code><span class="identifier">bind_immediate_executor</span></code>, and <code><span class="identifier">redirect_error</span></code> to allow them to
+                be used as partial completion token adapters.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added the <code><span class="identifier">cancel_after</span></code>
+                and <code><span class="identifier">cancel_at</span></code> completion
+                token adapters.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed all completion token adapters to ensure they correctly propagate
+                the asynchronous operation's I/O executor during adaptation.
+              </div>
+            </li>
+            <li>
+              <div>
+                Moved <code><span class="identifier">co_composed</span></code>
+                out of the <code><span class="identifier">experimental</span></code>
+                namespace.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">composed</span></code>, which
+                creates an initiation function object from a stateful implementation.
+                It is similar to <code><span class="identifier">co_composed</span></code>,
+                but for regular function objects rather than C++20 coroutines.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed the <code><span class="identifier">detached</span></code>
+                completion token to work with asynchronous operations that have multiple
+                completion signatures.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed <code><span class="identifier">async_initiate</span></code>
+                to allow an empty variadic list of completion signatures, which would
+                indicate that an asynchronous operation never completes.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added overloads of <code><span class="identifier">async_initiate</span></code>
+                that automatically deduce the type of the completion token.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">async_immediate</span></code>
+                which implements a trivial asynchronous operation that completes
+                immediately, using an associated immediate executor if available.
+              </div>
+            </li>
+            <li>
+              <div>
+                Enabled SFINAE-based partial specialisation of the <code><span class="identifier">associator</span></code> trait.
+              </div>
+            </li>
+            <li>
+              <div>
+                A number of bug fixes, compiler/platform compatibility improvements,
+                and minor optimisations.
+              </div>
+            </li>
+            <li>
+              <div>
+                Various updates to documentation and examples.
+              </div>
+            </li>
+            <li>
+              <div>
+                Consult the <a href="/doc/libs/1_86_0/doc/html/boost_asio/history.html">Revision
+                History</a> for further details.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
           <ul>
             <li>
@@ -419,7 +536,7 @@
             <li>
               <div>
                 Added a <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">pointer_in_range</span><span class="special">.</span><span class="identifier">hpp</span></code> header with a <code><span class="identifier">pointer_in_range</span></code> function template
-                to check if a pointer is within a given range.
+                to check if a pointer is within a given range (Glen Fernandes).
               </div>
             </li>
             <li>
@@ -1107,7 +1224,7 @@
       </li>
       <li>
         <div>
-          <span class="library"><a href="/libs/odeint/">Odeint</a>:</span>
+          <span class="library"><a href="/libs/numeric/odeint/">Odeint</a>:</span>
           <ul>
             <li>
               <div>
