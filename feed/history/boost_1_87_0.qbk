@@ -49,12 +49,25 @@ Please keep the list of libraries sorted in lexicographical order.
     * [@https://github.com/boostorg/container/issues/261 GitHub #261: ['"End iterators are not dereferencable"]].
     * [@https://github.com/boostorg/container/issues/288 GitHub #288: ['"Compile error when using flat_map::extract_sequence with small_vector"]].
 
+* [phrase library..[@/libs/filesystem/ Filesystem]:]
+  * As was announced in 1.84.0, Windows versions prior to 10 are no longer supported.
+  * On Windows, `canonical` is now based on the `GetFinalPathNameByHandleW` WinAPI function. As a side effect, drive letters are converted to upper case,
+    which makes the resulting paths more interoperable. ([github filesystem 325])
+  * [*v4:] `canonical` no longer produces a trailing directory separator in the resulting path, if the input path has one.
+  * If a `path` constructor or member function is called with an argument of a user-defined type that is convertible to `path` and one or more `Source` types,
+    the conversion to `path` is now chosen by default. This may resolve argument conversion ambiguities in some cases, but may also result in a less optimal
+    conversion path. If a different conversion path is desired, users are recommended to use explicit type casts. ([github filesystem 326])
+  * Added a workaround for `dirfd` being a macro on FreeBSD 9 and older. ([github filesystem 328])
+
 * [phrase library..[@/libs/flyweight/index.html Flyweight]:]
   * Added [@/libs/flyweight/doc/tutorial/configuration.html#concurrent_factory `concurrent_factory`],
     a factory based on a concurrent container from [@/libs/unordered/ Boost.Unordered]
     that provides excellent performance in multithreaded scenarios.
   * Marked as `noexcept` those `boost::flyweight` operations previously documented
     as not throwing (issue [github flyweight 15]).
+
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * `function_output_iterator` is now compliant with `std::output_iterator` concept. ([github iterator 85])
 
 * [phrase library..[@/libs/interprocess/ Interprocess]:]
   * Decreased number of Boost dependencies from 11 (in total) to 7.
@@ -73,6 +86,18 @@ Please keep the list of libraries sorted in lexicographical order.
     * [@https://github.com/boostorg/interprocess/issues/217   GitHub #217 (['"managed_map_file find_or_construct does not return Cache aligned memory"])].
     * [@https://github.com/boostorg/interprocess/issues/230   GitHub #230 (['"`interprocess::ipcdetail::intermodule_singleton` not working on MinGW"])].
     * [@https://github.com/boostorg/interprocess/issues/236   GitHub #236 (['"` Floating point inaccuracies in `get_current_process_creation_time` lead to `intermodule_singleton` failures"])].
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Replaced Boost.Thread synchronization primitives with equivalents from the C++ standard library. This may improve multithreaded performance,
+    but also has user-facing consequences:
+    * Boost.Thread thread interruption is no longer supported. Boost.Log no longer has special treatment for the `thread_interrupted` exception
+      that is used by Boost.Thread to implement thread interruption. This exception will be handled like any other exception.
+      In particular, user-specified exception handlers may now be invoked with the `thread_interrupted` pending exception.
+    * For timed waiting operations, timeouts are now using std::chrono time units. This means that the `ordering_window` named parameter that is supported
+      by the `bounded_ordering_queue` and `unbounded_ordering_queue` classes now expects an `std::chrono::duration` value instead of
+      `boost::posix_time::time_duration` from Boost.DateTime.
+    * In case of errors indicated by thread synchronization primitives, `std::system_error` exception is thrown instead of Boost.Thread exception types.
+  * Added support for C++ standard library lock types to `strictest_lock`.
 
 * [phrase library..[@/libs/move/index.html Move]:]
   *  Fixed bugs:
