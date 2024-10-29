@@ -101,6 +101,53 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/filesystem/">Filesystem</a>:</span>
+          <ul>
+            <li>
+              <div>
+                As was announced in 1.84.0, Windows versions prior to 10 are no longer
+                supported.
+              </div>
+            </li>
+            <li>
+              <div>
+                On Windows, <code><span class="identifier">canonical</span></code>
+                is now based on the <code><span class="identifier">GetFinalPathNameByHandleW</span></code>
+                WinAPI function. As a side effect, drive letters are converted to
+                upper case, which makes the resulting paths more interoperable. (<a href="https://github.com/boostorg/filesystem/issues/325">#325</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>v4:</strong> <code><span class="identifier">canonical</span></code>
+                no longer produces a trailing directory separator in the resulting
+                path, if the input path has one.
+              </div>
+            </li>
+            <li>
+              <div>
+                If a <code><span class="identifier">path</span></code> constructor
+                or member function is called with an argument of a user-defined type
+                that is convertible to <code><span class="identifier">path</span></code>
+                and one or more <code><span class="identifier">Source</span></code>
+                types, the conversion to <code><span class="identifier">path</span></code>
+                is now chosen by default. This may resolve argument conversion ambiguities
+                in some cases, but may also result in a less optimal conversion path.
+                If a different conversion path is desired, users are recommended
+                to use explicit type casts. (<a href="https://github.com/boostorg/filesystem/issues/326">#326</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Added a workaround for <code><span class="identifier">dirfd</span></code>
+                being a macro on FreeBSD 9 and older. (<a href="https://github.com/boostorg/filesystem/issues/328">#328</a>)
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/flyweight/index.html">Flyweight</a>:</span>
           <ul>
             <li>
@@ -115,6 +162,20 @@
                 Marked as <code><span class="keyword">noexcept</span></code> those
                 <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">flyweight</span></code> operations previously
                 documented as not throwing (issue <a href="https://github.com/boostorg/flyweight/issues/15">#15</a>).
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/iterator/">Iterator</a>:</span>
+          <ul>
+            <li>
+              <div>
+                <code><span class="identifier">function_output_iterator</span></code>
+                is now compliant with <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">output_iterator</span></code>
+                concept. (<a href="https://github.com/boostorg/iterator/issues/85">#85</a>)
               </div>
             </li>
           </ul>
@@ -223,6 +284,56 @@
                     </div>
                   </li>
                 </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/log/">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Replaced Boost.Thread synchronization primitives with equivalents
+                from the C++ standard library. This may improve multithreaded performance,
+                but also has user-facing consequences:
+                <ul>
+                  <li>
+                    <div>
+                      Boost.Thread thread interruption is no longer supported. Boost.Log
+                      no longer has special treatment for the <code><span class="identifier">thread_interrupted</span></code>
+                      exception that is used by Boost.Thread to implement thread
+                      interruption. This exception will be handled like any other
+                      exception. In particular, user-specified exception handlers
+                      may now be invoked with the <code><span class="identifier">thread_interrupted</span></code>
+                      pending exception.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      For timed waiting operations, timeouts are now using std::chrono
+                      time units. This means that the <code><span class="identifier">ordering_window</span></code>
+                      named parameter that is supported by the <code><span class="identifier">bounded_ordering_queue</span></code>
+                      and <code><span class="identifier">unbounded_ordering_queue</span></code>
+                      classes now expects an <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span></code>
+                      value instead of <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span></code>
+                      from Boost.DateTime.
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      In case of errors indicated by thread synchronization primitives,
+                      <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">system_error</span></code> exception is
+                      thrown instead of Boost.Thread exception types.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div>
+                Added support for C++ standard library lock types to <code><span class="identifier">strictest_lock</span></code>.
               </div>
             </li>
           </ul>
