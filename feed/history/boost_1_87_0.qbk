@@ -56,6 +56,24 @@ Please keep the list of libraries sorted in lexicographical order.
   * Marked as `noexcept` those `boost::flyweight` operations previously documented
     as not throwing (issue [github flyweight 15]).
 
+* [phrase library..[@/libs/interprocess/ Interprocess]:]
+  * Decreased number of Boost dependencies from 11 (in total) to 7.
+  * Deprecated `<boost/interprocess/containers/*.hpp>` headers. They were the original source of [*Boost.Container] in 2011, but no longer maintained.
+    As a long transition, Boost.Interprocess has maintained those headers for compatibility. They will be removed in a future Boost release.
+  * Some workarounds for Cygwin were added. Regression tests now work on Cygwin64.
+  * [*ABI breaking]: `segment_manager` nows uses a new implementation that supports overaligned types and fixes some existing bugs.
+    You can obtain the pre-Boost 1.87 ABI #defining `BOOST_INTERPROCESS_SEGMENT_MANAGER_ABI` to `1` before including Boost.Interprocess headers.
+  *  Fixed bugs:
+    * [@https://github.com/boostorg/interprocess/issues/152   GitHub #152 (['"Handle EINTR in shared_memory_object"])].
+    * [@https://github.com/boostorg/interprocess/issues/173   GitHub #173 (['"Managed shared memory segment value not aligned"])].
+    * [@https://github.com/boostorg/interprocess/issues/192   GitHub #192 (['"managed_windows_shared_memory crash on destruction"])].
+    * [@https://github.com/boostorg/interprocess/issues/199   GitHub #199 (['"missing/misused m_is_wide in char_wchar_holder assignment operators"])].
+    * [@https://github.com/boostorg/interprocess/issues/210   GitHub #210 (['"Bug in boost::interprocess::ipcdetail::sync_handles::obtain_mutex"])].
+    * [@https://github.com/boostorg/interprocess/issues/215   GitHub #215 (['"Alignment problem with boost/interprocess/segment_manager on SPARC 32Bit"])].
+    * [@https://github.com/boostorg/interprocess/issues/217   GitHub #217 (['"managed_map_file find_or_construct does not return Cache aligned memory"])].
+    * [@https://github.com/boostorg/interprocess/issues/230   GitHub #230 (['"`interprocess::ipcdetail::intermodule_singleton` not working on MinGW"])].
+    * [@https://github.com/boostorg/interprocess/issues/236   GitHub #236 (['"` Floating point inaccuracies in `get_current_process_creation_time` lead to `intermodule_singleton` failures"])].
+
 * [phrase library..[@/libs/move/index.html Move]:]
   *  Fixed bugs:
     *  [@https://github.com/boostorg/move/issues/56 Git Issue #56: ['"Forward declarations of std types cause compilation errors on some platforms"]].
