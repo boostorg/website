@@ -87,6 +87,9 @@ Please keep the list of libraries sorted in lexicographical order.
     * [@https://github.com/boostorg/interprocess/issues/230   GitHub #230 (['"`interprocess::ipcdetail::intermodule_singleton` not working on MinGW"])].
     * [@https://github.com/boostorg/interprocess/issues/236   GitHub #236 (['"` Floating point inaccuracies in `get_current_process_creation_time` lead to `intermodule_singleton` failures"])].
 
+* [phrase library..[@/libs/lexical_cast/ LexicalCast]:]
+  * Dropped dependency on Boost.Integer, leading to better compile times.
+
 * [phrase library..[@/libs/log/ Log]:]
   * Replaced Boost.Thread synchronization primitives with equivalents from the C++ standard library. This may improve multithreaded performance,
     but also has user-facing consequences:
@@ -115,6 +118,19 @@ Please keep the list of libraries sorted in lexicographical order.
     and `BOOST_SP_USE_PTHREADS` has been deprecated and support for it
     will be removed in a future release.
 
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * `Boost::stacktrace_from_exception` CMake target was added. Many thanks
+     to [@https://github.com/void-mian int main] for the [github_pr stacktrace 189].
+  * Don't export `boost_stacktrace_impl_return_nullptr` for static build on MSVC. Many thanks
+    to [@https://github.com/huangqinjin huangqinjin] for the  [github_pr stacktrace 186].
+  * Fixed autolinking with `ole32.lib` and `Dbgeng.lib` while using clang under Windows OS.
+  * Fixed missing namespace in docs. Thanks
+    to [@https://github.com/meastp Mats Taraldsvik] for the [github_pr stacktrace 181].
+  * Fixed missing include for `std::exception`. Thanks
+    to [@https://github.com/jschueller Julien Schueller] for the [github_pr stacktrace 178].
+  * Fixed type conversions errors reported by GCC. Thanks
+    to [@https://github.com/jplcz agent_J] for the [github_pr stacktrace 175].
+
 * [phrase library..[@/libs/stl_interfaces/ STLInterfaces]:]
   * Correct misdocumented requirements for sequence container `swap`; the
     expected return type is `void`, not `bool`.
@@ -125,6 +141,19 @@ Please keep the list of libraries sorted in lexicographical order.
   * Enable deducing `this` for recent versions of Clang and MSVC that support
     it, but do not advertise that support via `__cpp_explicit_this_parameter`.
     ([@https://github.com/boostorg/stl_interfaces/pull/68 PR#68])
+
+* [phrase library..[@/libs/pfr/ PFR]:]
+  * `boost::pfr::for_each_field_with_name` function was added. Many thanks
+    to [@https://github.com/Baduit Lena] for the [github_pr pfr 171].
+  * [*Significant] compilation time improvement for structures with big size and small fields count. Many thanks
+    to [@https://github.com/runer112 Zachary Wassall] for the [github_pr pfr 120].
+  * Fixed `pragma` directives.
+  * [*Initial support for C++20 Modules]. See the docs for more info.
+  * Fix unused variable warnings in core_name14_disabled.hpp. Thanks
+    to [@https://github.com/anarthal Anarthal (Rubén Pérez)] for the [github_pr pfr 183] and [github_pr pfr 187].
+  * Default limit for fields count in aggregate in C++17 was raised from 100 to 200.
+  * Fixed warning about GCC not being aware of the -Wundefined-var-template.
+  * Multiple minor improvement for compilation time.
 
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * [*Major update.]
