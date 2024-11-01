@@ -109,6 +109,75 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/mp11/ Mp11]:]
   * Added `mp_lambda` (contributed by Joaquin M Lopez Munoz)
 
+* [phrase library..[@/libs/mysql/ MySQL]:]
+  * [*Breaking changes to experimental APIs]:
+    * The thread-safety feature in `connection_pool` has been redesigned
+      to overcome some design flaws found by user experience.
+      The boolean option `thread_safe` has been added to `pool_params`
+      (set to `false` by default). When set, some pool functions change behavior
+      so they can be safely used concurrently. This works by internally creating
+      a strand, dispatching to it when required, and re-wiring cancellation signals.
+      When `pool_params::thread_safe` is `false`, the usual Asio executor
+      semantics apply, with no overhead.
+    * `pool_executor_params` has been removed, replaced by
+      `pool_params::connection_executor` and `pool_params::thread_safe`.
+    * The built-in timeout functionality in `connection_pool::async_get_connection`
+      has been completely removed. This function now supports per-operation cancellation,
+      so the same functionality can be achieved by using `asio::cancel_after`.
+    * Destroying a `connection_pool` now cancels outstanding async operations,
+      as other Asio I/O objects do. This prevents resource leaks:
+      an outstanding `async_run` operation extends the pool's lifetime until the operation
+      completes, which could cause the pool object to never get destroyed.
+    * When an `async_get_connection` operation is cancelled before a connection is available,
+      the operation now consistently fails with `client_errc::pool_not_running`,
+      `client_errc::no_connection_available` or `client_errc::pool_cancelled`,
+      depending on the pool state (previously, it would fail with
+      either `client_errc::timeout` or the last error code encountered by
+      the internal `async_connect` operations performed by the pool).
+      This information is now included in the output diagnostics object.
+    * `client_errc::timeout` and `client_errc::cancelled` have been removed.
+    * Calling `async_get_connection` on a pool that is not running
+      no longer fails immediately, but waits for `async_run` to be called.
+    * `sequence` now returns an owning type. This makes it safe use with
+      `with_params` in deferred async operations.
+      `format_sequence_view` has been renamed to `format_sequence`.
+    * `sequence` has been moved to a separate header, `boost/mysql/sequence.hpp`.
+  * `any_connection`, client-side SQL formatting
+    (including `format_sql` and `with_params`) and `connection_pool`
+    have been promoted to stable APIs.
+  * `any_connection` is now recommended for new code, instead of
+    `connection` and its aliases `tcp_connection`, `tcp_ssl_connection`
+    and `unix_connection`.
+  * Added `with_params`, a new `ExecutionRequest` encapsulating a query
+    template string and parameters to expand the query.
+    When executed, it expands the query using client-side SQL formatting
+    and sends it to the server for execution.
+    This is the new recommended way to run simple queries with parameters.
+  * Added `with_diagnostics`, an adapter completion token
+    that transforms exceptions thrown by async functions to
+    include `diagnostics` objects,
+    matching how sync throwing functions work.
+  * `with_diagnostics(asio::deferred)` is now the default completion token
+    for all operations in `any_connection` and `connection_pool`.
+    This causes expressions like `co_await conn.async_connect(params)`
+    to behave identically to `conn.connect(params)`.
+    Note that `connection` and its type aliases haven't been updated
+    to match this behavior.
+  * Async functions in `connection_pool` now support per-operation cancellation.
+  * All async operations now support `asio::cancel_after`, `asio::cancel_at`
+    and similar completion tokens that require a bound executor
+    to initiations passed to `asio::async_initiate`.
+  * `connection` and `any_connection` now dispatch immediate
+    completions through the token's immediate executor.
+  * Fixed an issue that caused a crash when trying to use
+    an `any_connection` that hasn't been previously connected.
+  * Removed an incorrect `noexcept` specifier from a potentially
+    throwing constructor in `field`.
+  * Fixed an issue that could cause the write buffer size to exceed
+    the configured buffer size limit.
+  * Heavily updated the documentation and examples to be more relevant and
+    reflect the new recommended best practices.
+
 * [phrase library..[@/libs/smart_ptr/ SmartPtr]:]
   * C++03 is no longer supported, a C++11 compiler is required.
     This includes GCC 4.8 or later, and MSVC 14.0 or later.
