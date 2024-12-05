@@ -39,6 +39,52 @@ Please keep the list of libraries sorted in lexicographical order.
   * Fixed `named_condition_any` fails to notify ([github interprocess 62])
 ]
 
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added support for using byte spans and sequences of byte spans as buffer
+    sequences. This means that they can be passed directly to I/O operations such
+    as `async_read`.
+  * Added support for generic dispositions, which are types that can be used to
+    test whether an asynchronous operation completed without error. This includes
+    `error_code` and `exception_ptr`, but can be extended to user types via
+    specialisation of the `disposition_traits` class template. The standard types
+    `std::error_code` and `std::exception_ptr` are recognised as dispositions.
+  * Added disposition support to the `boost::asio::use_future` completion token,
+    `boost::asio::awaitable<>`-based coroutines, `boost::asio::spawn()`, and
+    `boost::asio::experimental::cancellation_condition`.
+  * Added the `execution_context::service_maker` abstract base class. A
+    `service_maker` is an object that is passed to an execution context's
+    constructor, and allows services to be added at context construction time.
+  * Added `boost::asio::config`, which provides access to
+    configuration parameters that are associated with an execution context. The
+    class is intended for use by asio internals, or by libraries or user-provided
+    abstractions that build on top of asio, and will
+    typically be used to fine tune behaviour, such as enabling or disabling
+    certain optimisations. A concrete configuration source, such as
+    `boost::asio::config_from_env`,
+    `boost::asio::config_from_concurrency_hint` and
+    `boost::asio::config_from_string`, may be passed to the `io_context` or
+    `thread_pool` constructor.
+  * Added an initial set of configuration parameters recognised by Asio's
+    `io_context` and `thread_pool` implementations.
+  * Removed some previously deprecated facilities.
+  * Deprecated `basic_io_object` and `deadline_timer`.
+  * Added rvalue-qualified `operator()` overloads to associating binders.
+  * Added support for modular build structure.
+  * Fixed `spawn()` of functions that return move-only types.
+  * Fixed `co_composed` to not require concepts support.
+  * Fixed the epoll reactor to not try to re-register regular file descriptors
+    after fork.
+  * Fixed a leak in `ssl::detail::engine` move assignment.
+  * Fixed compile error when `BOOST_ASIO_DISABLE_SMALL_BLOCK_RECYCLING` is
+    defined.
+  * Fixed compile error when using Clang 19.
+  * Changed `thread_pool::join()` to ensure that it stops threads that are
+    subsequently added to the pool using `thread_pool::attach()`.
+  * Fixed the offsets passed to `io_uring_prep_write_fixed` and
+    `io_uring_prep_read_fixed`, when they are used for stream-oriented operations.
+  * Consult the [@/doc/libs/1_87_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
+
 * [phrase library..[@/libs/atomic/ Atomic]:]
   * Fixed initialization of atomic wait state list on memory reallocation. ([github atomic 72])
 
