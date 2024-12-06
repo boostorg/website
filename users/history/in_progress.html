@@ -55,6 +55,142 @@
     <ul>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/asio/">Asio</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Added support for using byte spans and sequences of byte spans as
+                buffer sequences. This means that they can be passed directly to
+                I/O operations such as <code><span class="identifier">async_read</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added support for generic dispositions, which are types that can
+                be used to test whether an asynchronous operation completed without
+                error. This includes <code><span class="identifier">error_code</span></code>
+                and <code><span class="identifier">exception_ptr</span></code>,
+                but can be extended to user types via specialisation of the <code><span class="identifier">disposition_traits</span></code> class template.
+                The standard types <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">error_code</span></code>
+                and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception_ptr</span></code> are recognised as
+                dispositions.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added disposition support to the <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">use_future</span></code>
+                completion token, <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">awaitable</span><span class="special">&lt;&gt;</span></code>-based coroutines, <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">spawn</span><span class="special">()</span></code>,
+                and <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">cancellation_condition</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added the <code><span class="identifier">execution_context</span><span class="special">::</span><span class="identifier">service_maker</span></code>
+                abstract base class. A <code><span class="identifier">service_maker</span></code>
+                is an object that is passed to an execution context's constructor,
+                and allows services to be added at context construction time.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">config</span></code>, which provides access to
+                configuration parameters that are associated with an execution context.
+                The class is intended for use by asio internals, or by libraries
+                or user-provided abstractions that build on top of asio, and will
+                typically be used to fine tune behaviour, such as enabling or disabling
+                certain optimisations. A concrete configuration source, such as
+                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">config_from_env</span></code>, <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">config_from_concurrency_hint</span></code> and
+                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">config_from_string</span></code>, may be passed
+                to the <code><span class="identifier">io_context</span></code>
+                or <code><span class="identifier">thread_pool</span></code> constructor.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added an initial set of configuration parameters recognised by Asio's
+                <code><span class="identifier">io_context</span></code> and <code><span class="identifier">thread_pool</span></code> implementations.
+              </div>
+            </li>
+            <li>
+              <div>
+                Removed some previously deprecated facilities.
+              </div>
+            </li>
+            <li>
+              <div>
+                Deprecated <code><span class="identifier">basic_io_object</span></code>
+                and <code><span class="identifier">deadline_timer</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added rvalue-qualified <code><span class="keyword">operator</span><span class="special">()</span></code> overloads to associating binders.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added support for modular build structure.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">spawn</span><span class="special">()</span></code>
+                of functions that return move-only types.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed <code><span class="identifier">co_composed</span></code>
+                to not require concepts support.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed the epoll reactor to not try to re-register regular file descriptors
+                after fork.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed a leak in <code><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">engine</span></code>
+                move assignment.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed compile error when <code><span class="identifier">BOOST_ASIO_DISABLE_SMALL_BLOCK_RECYCLING</span></code>
+                is defined.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed compile error when using Clang 19.
+              </div>
+            </li>
+            <li>
+              <div>
+                Changed <code><span class="identifier">thread_pool</span><span class="special">::</span><span class="identifier">join</span><span class="special">()</span></code> to ensure that it stops threads
+                that are subsequently added to the pool using <code><span class="identifier">thread_pool</span><span class="special">::</span><span class="identifier">attach</span><span class="special">()</span></code>.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed the offsets passed to <code><span class="identifier">io_uring_prep_write_fixed</span></code>
+                and <code><span class="identifier">io_uring_prep_read_fixed</span></code>,
+                when they are used for stream-oriented operations.
+              </div>
+            </li>
+            <li>
+              <div>
+                Consult the <a href="/doc/libs/master/doc/html/boost_asio/history.html">Revision
+                History</a> for further details.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/atomic/">Atomic</a>:</span>
           <ul>
             <li>
@@ -1107,7 +1243,7 @@
               <div>
                 <code><span class="identifier">Boost</span><span class="special">::</span><span class="identifier">stacktrace_from_exception</span></code> CMake
                 target was added. Many thanks to <a href="https://github.com/void-mian">int
-                main</a> for the <a href="https://github.com/boostorg/stacktrace/pull/189">PR#189</a>.
+                mian</a> for the <a href="https://github.com/boostorg/stacktrace/pull/189">PR#189</a>.
               </div>
             </li>
             <li>
