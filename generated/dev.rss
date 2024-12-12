@@ -8,7 +8,7 @@
     <description></description>
     <language>en-us</language>
     <copyright>Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or https://www.boost.org/LICENSE_1_0.txt)</copyright>
-<item><title>Version 1.87.x</title><link>https://www.boost.org/users/history/version_1_87_x.html</link><guid>https://www.boost.org/users/history/version_1_87_x.html</guid><pubDate>Sat, 16 Nov 2024 02:07:21 +0000</pubDate><description>
+<item><title>Version 1.87.x</title><link>https://www.boost.org/users/history/version_1_87_x.html</link><guid>https://www.boost.org/users/history/version_1_87_x.html</guid><pubDate>Thu, 12 Dec 2024 00:52:33 +0000</pubDate><description>
 
 
   &lt;div id="version_1_87_x.new_libraries"&gt;
@@ -16,7 +16,7 @@
     &lt;ul&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/parser/"&gt;Parser&lt;/a&gt;:&lt;/span&gt; Framework for building
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/parser/"&gt;Parser&lt;/a&gt;:&lt;/span&gt; Framework for building
           parsers, from Zach Laine.
         &lt;/div&gt;
       &lt;/li&gt;
@@ -27,7 +27,156 @@
     &lt;ul&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/beast/"&gt;Beast&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/asio/"&gt;Asio&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for using byte spans and sequences of byte spans as
+                buffer sequences. This means that they can be passed directly to
+                I/O operations such as &lt;code&gt;&lt;span class="identifier"&gt;async_read&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for generic dispositions, which are types that can
+                be used to test whether an asynchronous operation completed without
+                error. This includes &lt;code&gt;&lt;span class="identifier"&gt;error_code&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class="identifier"&gt;exception_ptr&lt;/span&gt;&lt;/code&gt;,
+                but can be extended to user types via specialisation of the &lt;code&gt;&lt;span class="identifier"&gt;disposition_traits&lt;/span&gt;&lt;/code&gt; class template.
+                The standard types &lt;code&gt;&lt;span class="identifier"&gt;std&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;error_code&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class="identifier"&gt;std&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;exception_ptr&lt;/span&gt;&lt;/code&gt; are recognised as
+                dispositions.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added disposition support to the &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;asio&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;use_future&lt;/span&gt;&lt;/code&gt;
+                completion token, &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;asio&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;awaitable&lt;/span&gt;&lt;span class="special"&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;/code&gt;-based coroutines, &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;asio&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;spawn&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt;&lt;/code&gt;,
+                and &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;asio&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;experimental&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;cancellation_condition&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added the &lt;code&gt;&lt;span class="identifier"&gt;execution_context&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;service_maker&lt;/span&gt;&lt;/code&gt;
+                abstract base class. A &lt;code&gt;&lt;span class="identifier"&gt;service_maker&lt;/span&gt;&lt;/code&gt;
+                is an object that is passed to an execution context's constructor,
+                and allows services to be added at context construction time.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;asio&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;config&lt;/span&gt;&lt;/code&gt;, which provides access to
+                configuration parameters that are associated with an execution context.
+                The class is intended for use by asio internals, or by libraries
+                or user-provided abstractions that build on top of asio, and will
+                typically be used to fine tune behaviour, such as enabling or disabling
+                certain optimisations. A concrete configuration source, such as
+                &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;asio&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;config_from_env&lt;/span&gt;&lt;/code&gt;, &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;asio&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;config_from_concurrency_hint&lt;/span&gt;&lt;/code&gt; and
+                &lt;code&gt;&lt;span class="identifier"&gt;boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;asio&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;config_from_string&lt;/span&gt;&lt;/code&gt;, may be passed
+                to the &lt;code&gt;&lt;span class="identifier"&gt;io_context&lt;/span&gt;&lt;/code&gt;
+                or &lt;code&gt;&lt;span class="identifier"&gt;thread_pool&lt;/span&gt;&lt;/code&gt; constructor.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added an initial set of configuration parameters recognised by Asio's
+                &lt;code&gt;&lt;span class="identifier"&gt;io_context&lt;/span&gt;&lt;/code&gt; and &lt;code&gt;&lt;span class="identifier"&gt;thread_pool&lt;/span&gt;&lt;/code&gt; implementations.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Removed some previously deprecated facilities.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Deprecated &lt;code&gt;&lt;span class="identifier"&gt;basic_io_object&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class="identifier"&gt;deadline_timer&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added rvalue-qualified &lt;code&gt;&lt;span class="keyword"&gt;operator&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt;&lt;/code&gt; overloads to associating binders.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added support for modular build structure.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed &lt;code&gt;&lt;span class="identifier"&gt;spawn&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt;&lt;/code&gt;
+                of functions that return move-only types.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed &lt;code&gt;&lt;span class="identifier"&gt;co_composed&lt;/span&gt;&lt;/code&gt;
+                to not require concepts support.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed the epoll reactor to not try to re-register regular file descriptors
+                after fork.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed a leak in &lt;code&gt;&lt;span class="identifier"&gt;ssl&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;detail&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;engine&lt;/span&gt;&lt;/code&gt;
+                move assignment.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed compile error when &lt;code&gt;&lt;span class="identifier"&gt;BOOST_ASIO_DISABLE_SMALL_BLOCK_RECYCLING&lt;/span&gt;&lt;/code&gt;
+                is defined.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed compile error when using Clang 19.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Changed &lt;code&gt;&lt;span class="identifier"&gt;thread_pool&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;join&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt;&lt;/code&gt; to ensure that it stops threads
+                that are subsequently added to the pool using &lt;code&gt;&lt;span class="identifier"&gt;thread_pool&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;attach&lt;/span&gt;&lt;span class="special"&gt;()&lt;/span&gt;&lt;/code&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed the offsets passed to &lt;code&gt;&lt;span class="identifier"&gt;io_uring_prep_write_fixed&lt;/span&gt;&lt;/code&gt;
+                and &lt;code&gt;&lt;span class="identifier"&gt;io_uring_prep_read_fixed&lt;/span&gt;&lt;/code&gt;,
+                when they are used for stream-oriented operations.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Consult the &lt;a href="https://www.boost.org/doc/libs/1_87_0/doc/html/boost_asio/history.html"&gt;Revision
+                History&lt;/a&gt; for further details.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/atomic/"&gt;Atomic&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed initialization of atomic wait state list on memory reallocation.
+                (&lt;a href="https://github.com/boostorg/atomic/issues/72"&gt;#72&lt;/a&gt;)
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/beast/"&gt;Beast&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -151,7 +300,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/charconv"&gt;Charconv&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/charconv"&gt;Charconv&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -174,7 +323,24 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/compat/"&gt;Compat&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/cobalt"&gt;Cobalt&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Removed requirement for get_executor to return a const ref
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Added experimental/composition.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/compat/"&gt;Compat&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -187,7 +353,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/container/"&gt;Container&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/container/"&gt;Container&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -221,7 +387,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/filesystem/"&gt;Filesystem&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/filesystem/"&gt;Filesystem&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -268,12 +434,12 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/flyweight/index.html"&gt;Flyweight&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/flyweight/index.html"&gt;Flyweight&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
-                Added &lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/flyweight/doc/tutorial/configuration.html#concurrent_factory"&gt;&lt;code&gt;&lt;span class="identifier"&gt;concurrent_factory&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;, a factory
-                based on a concurrent container from &lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/unordered/"&gt;Boost.Unordered&lt;/a&gt;
+                Added &lt;a href="https://www.boost.org/libs/flyweight/doc/tutorial/configuration.html#concurrent_factory"&gt;&lt;code&gt;&lt;span class="identifier"&gt;concurrent_factory&lt;/span&gt;&lt;/code&gt;&lt;/a&gt;, a factory
+                based on a concurrent container from &lt;a href="https://www.boost.org/libs/unordered/"&gt;Boost.Unordered&lt;/a&gt;
                 that provides excellent performance in multithreaded scenarios.
               &lt;/div&gt;
             &lt;/li&gt;
@@ -289,7 +455,119 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/iterator/"&gt;Iterator&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/geometry/"&gt;Geometry&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Improvements
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Use using instead of typedef in part of the code
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Modernize meta function with alias in part of the code
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Add support for modular build structure
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Complete CMake coverage (added github actions cmake tests)
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Improve documentation workflow
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Update Qt end WxWidgets examples
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Add enumerate to prepare for 17 and 23
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Breaking changes
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Remove deprecated rescaling code
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Solved issues
+                &lt;ul&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/issues/1309"&gt;#1309&lt;/a&gt; Fix some missing qbk includes
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/issues/1226"&gt;#1226&lt;/a&gt; &lt;a href="https://github.com/boostorg/geometry/issues/1326"&gt;#1326&lt;/a&gt; Fix extra round on ring
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/issues/1293"&gt;#1293&lt;/a&gt; &lt;a href="https://github.com/boostorg/geometry/issues/1294"&gt;#1294&lt;/a&gt; &lt;a href="https://github.com/boostorg/geometry/issues/1295"&gt;#1295&lt;/a&gt; Fix traversal
+                      through non clustered rings
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/issues/893"&gt;#893&lt;/a&gt; &lt;a href="https://github.com/boostorg/geometry/issues/1299"&gt;#1299&lt;/a&gt; Fix blocking rings for non
+                      union conditions
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/issues/1342"&gt;#1342&lt;/a&gt; Fix discarding a start turn for combination
+                      with touch
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/issues/1288"&gt;#1288&lt;/a&gt; &lt;a href="https://github.com/boostorg/geometry/issues/1345"&gt;#1345&lt;/a&gt; Fixes in handling (imperfect)
+                      touch
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      &lt;a href="https://github.com/boostorg/geometry/issues/1279"&gt;#1279&lt;/a&gt; Fix covered_by incorrect results
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;div&gt;
+                      Various fixes of errors and warnings
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/iterator/"&gt;Iterator&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -303,7 +581,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/interprocess/"&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/interprocess/"&gt;Interprocess&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -411,7 +689,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/json/"&gt;JSON&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/json/"&gt;JSON&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -470,7 +748,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/lexical_cast/"&gt;LexicalCast&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/lexical_cast/"&gt;LexicalCast&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -482,7 +760,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/log/"&gt;Log&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/log/"&gt;Log&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -532,7 +810,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/math/"&gt;Math&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/math/"&gt;Math&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -565,7 +843,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/move/index.html"&gt;Move&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/move/index.html"&gt;Move&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -586,7 +864,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/mp11/"&gt;Mp11&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/mp11/"&gt;Mp11&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -599,7 +877,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/multiprecision/"&gt;Multiprecision&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/multiprecision/"&gt;Multiprecision&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -618,7 +896,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/mysql/"&gt;MySQL&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/mysql/"&gt;MySQL&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -804,7 +1082,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/pfr/"&gt;PFR&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/pfr/"&gt;PFR&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -860,7 +1138,52 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/smart_ptr/"&gt;SmartPtr&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/process"&gt;Process&lt;/a&gt;:&lt;/span&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                (v2) Implemented cancellation of async_wait on windows.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                (v2) Added FORCE_DISABLE_CLOSE_RANGE
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                (v2) ext: Multiple ext fixes for BSD &amp;amp; Solaris.
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                (v2) unavailable &lt;code&gt;&lt;span class="identifier"&gt;ext&lt;/span&gt;&lt;/code&gt;
+                functions now compile and give an &lt;code&gt;&lt;span class="identifier"&gt;operation_not_supported&lt;/span&gt;&lt;/code&gt;
+                error (includes IOS)
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                (v2) multiple link fixes
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                (v2) removed filesystem from the linked library - which filsystem
+                library is used only affects header files now
+              &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                (v1) Added deprecation notice for 1.88.
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;div&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/smart_ptr/"&gt;SmartPtr&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -886,13 +1209,13 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/stacktrace/"&gt;Stacktrace&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/stacktrace/"&gt;Stacktrace&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
                 &lt;code&gt;&lt;span class="identifier"&gt;Boost&lt;/span&gt;&lt;span class="special"&gt;::&lt;/span&gt;&lt;span class="identifier"&gt;stacktrace_from_exception&lt;/span&gt;&lt;/code&gt; CMake
                 target was added. Many thanks to &lt;a href="https://github.com/void-mian"&gt;int
-                main&lt;/a&gt; for the &lt;a href="https://github.com/boostorg/stacktrace/pull/189"&gt;PR#189&lt;/a&gt;.
+                mian&lt;/a&gt; for the &lt;a href="https://github.com/boostorg/stacktrace/pull/189"&gt;PR#189&lt;/a&gt;.
               &lt;/div&gt;
             &lt;/li&gt;
             &lt;li&gt;
@@ -928,12 +1251,19 @@
                 for the &lt;a href="https://github.com/boostorg/stacktrace/pull/175"&gt;PR#175&lt;/a&gt;.
               &lt;/div&gt;
             &lt;/li&gt;
+            &lt;li&gt;
+              &lt;div&gt;
+                Fixed setting B2 &lt;code&gt;&lt;span class="identifier"&gt;from_exception&lt;/span&gt;&lt;/code&gt;
+                feature from CLI. Thanks to &lt;a href="https://github.com/grisumbras"&gt;Dmitry
+                Arkhipov&lt;/a&gt; for the &lt;a href="https://github.com/boostorg/stacktrace/pull/194"&gt;PR#194&lt;/a&gt;.
+              &lt;/div&gt;
+            &lt;/li&gt;
           &lt;/ul&gt;
         &lt;/div&gt;
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/stl_interfaces/"&gt;STLInterfaces&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/stl_interfaces/"&gt;STLInterfaces&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -960,7 +1290,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/test/"&gt;Test&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/test/"&gt;Test&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -977,7 +1307,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/unordered/"&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/unordered/"&gt;Unordered&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -1039,7 +1369,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/url/"&gt;URL&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/url/"&gt;URL&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -1061,7 +1391,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/uuid/"&gt;UUID&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/uuid/"&gt;UUID&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -1075,7 +1405,7 @@
       &lt;/li&gt;
       &lt;li&gt;
         &lt;div&gt;
-          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/doc/libs/1_87_0_beta1/libs/wave/"&gt;Wave&lt;/a&gt;:&lt;/span&gt;
+          &lt;span class="library"&gt;&lt;a href="https://www.boost.org/libs/wave/"&gt;Wave&lt;/a&gt;:&lt;/span&gt;
           &lt;ul&gt;
             &lt;li&gt;
               &lt;div&gt;
@@ -1112,9 +1442,6 @@
   &lt;/div&gt;
   &lt;div id="version_1_87_x.compilers_tested"&gt;
     &lt;h3&gt;&lt;span class="link"&gt;Compilers Tested&lt;/span&gt;&lt;/h3&gt;
-    &lt;p&gt;
-      Boost's primary test compilers are:
-    &lt;/p&gt;
     &lt;p&gt;
       Boost's primary test compilers are:
     &lt;/p&gt;
