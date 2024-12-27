@@ -300,6 +300,20 @@ Please keep the list of libraries sorted in lexicographical order.
   * Heavily updated the documentation and examples to be more relevant and
     reflect the new recommended best practices.
 
+* [phrase library..[@/libs/optional/ Optional]:]
+  * *Breaking change.* Dropped support for C++03. C++11 is now the required minimum; at least some C++11 features.
+  * Dropped dependency on Boost.Utility.
+  * Dropped dependency on Boost.Predef.
+  * Dropped dependency on Boost.StaticAssert.
+  * Dropped dependency on Boost.Move.
+  * A bit faster implementation of some relational operations.
+  * *Warning.* In the future releases we intend to introduce the range interface
+    into `optional`, so that `std::ranges::range<optional<T>>` will be `true`.
+    This may affect the overload resolution in programs that make decisions based
+    on predicates such as `std::ranges::range`. 
+  * Tags `in_place_init` and `in_place_init_if` become `inline constexpr` and therewith leave smaller footprint in the executable. This addresses [@https://github.com/boostorg/optional/issues/103 issue #103].
+
+
 * [phrase library..[@/libs/pfr/ PFR]:]
   * `boost::pfr::for_each_field_with_name` function was added. Many thanks
     to [@https://github.com/Baduit Lena] for the [github_pr pfr 171].
