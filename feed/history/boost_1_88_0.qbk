@@ -59,12 +59,35 @@ Please keep the list of libraries sorted in lexicographical order.
   * When `BOOST_ASSERT_HANDLER_IS_NORETURN` is defined, `boost::assertion_failed`
     and `boost::assertion_failed_msg` are declared as `BOOST_NORETURN`.
 
+* [phrase library..[@/libs/iterator/ Iterator]:]
+  * Dropped support for C++03 and ancient compilers, updated code base to use C++11 and MP11, reduced usage of MPL. ([github_pr iterator 82])
+  * Added `min_category` trait, which is a variadic equivalent of `minimum_category` that doesn't depend on MPL. `minimum_category` is deprecated
+    and will be removed in a future release.
+  * Extracted `enable_if_convertible` trait to a separate header `enable_if_convertible.hpp`. The trait was previously defined in `iterator_adaptor.hpp`,
+    and the header still provides `enable_if_convertible` when included. This dependency is provided for backward compatibility and will be removed in
+    a future release. Users are advised to add includes of `enable_if_convertible.hpp`, as needed.
+  * Added `*_t` variants of various iterator traits that produce types.
+  * `filter_iterator` and `transform_iterator` now use empty base optimization (EBO) to reduce size of the iterator when the adopted function object is stateless.
+  * `zip_iterator` now natively supports `boost::tuple`, `std::tuple` and `std::pair` for iterator tuples and doesn't need including Fusion support headers.
+  * `function_output_iterator` no longer allows default construction when the wrapped function is a function pointer. Such construction would previously
+    create an iterator with an uninitialized function pointer value, and such an iterator would be unusable.
+  * `generator_iterator.hpp` and `shared_container_iterator.hpp` headers were moved under the `boost/iterator` directory. The previous headers in `boost`
+    are still retained for backward compatibility, but will be removed in a future release. Users are advised to update their includes.
+  * `shared_container_iterator` now uses `std::shared_ptr` to reference the container internally. The support for `boost::shared_ptr` is still retained,
+    but it will incur performance overhead on the iterator construction, as `boost::shared_ptr` is now wrapped in a `std::shared_ptr` internally. It is
+    recommended to use `std::shared_ptr` to reference the container.
+
 * [phrase library..[@/libs/locale/ Locale]:]
   * Raised required ICU version to at least 4.8.1
   * Dropped support for ICU 50.1
   * Fixed parsing of integers with input strings in floating point format ([github_pr locale 241])
   * Support parsing and formatting of `uint64_t` values with the ICU backend ([github_pr locale 246])
   * Support `char8_t` on more platforms
+
+* [phrase library..[@/libs/log/ Log]:]
+  * Disabled usage of `std::codecvt<char16_t>` and `std::codecvt<char32_t>` locale facets in C++20 and later modes as they were deprecated in C++20.
+    This means character code conversions to/from `char16_t` and `char32_t` is no longer available in C++20 and later.
+  * Fixed building issues when using CMake and MinGW-w64. ([github_pr log 241])
 
 * [phrase library..[@/libs/mp11/ Mp11]:]
   * Fixed `mp_from_sequence` for non-integral values (accidentally broken in 1.83.0 due to offset support)
