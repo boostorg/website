@@ -44424,6 +44424,98 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/conversion/">Conversion</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Use modern C++ in the samples and in the library code.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/dll/">DLL</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added constructor from <code><span class="identifier">native_handle_t</span></code>
+"                to the <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">shared_library</span></code>. Many thanks to
+"                <a href="https://github.com/tgmatos">Tiago Matos</a> for the
+"                <a href="https://github.com/boostorg/dll/pull/82">PR#82</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Dropped multiple dependencies on other Boost libraries including
+"                Spirit, SmartPtr, Move, TypeTraits, and Function. DLL became more
+"                lightweight for compilation.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">error_code</span><span class="special">&amp;</span></code>
+"                in API is used instead of the <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span><span class="special">&amp;</span></code>. This is not a breaking change
+"                as <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span></code> is convertible to <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">error_code</span><span class="special">&amp;</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">:</span><span class="identifier">import_</span><span class="special">*</span></code>
+"                functions now return <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span></code>
+"                rather than <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span></code>.
+"                Define <code><span class="identifier">BOOST_DLL_USE_BOOST_SHARED_PTR</span></code>
+"                to restore the old behavior, however note that the macro will be
+"                removed in one of the upcomming Boost releases.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Use modern C++ in the samples and in the library code.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">library_info</span></code> now always throws
+"                in case of a broken binary. Updated the docs and added some tests.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Documented in FAQ why <code><span class="identifier">RTLD_NODELETE</span></code>
+"                is missing and why there is no <code><span class="special">.</span><span class="identifier">release</span><span class="special">()</span></code>
+"                method. Provided suggestions on possible workarounds.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Updated the information on building and using the library. CMake
+"                targets now link with <code><span class="special">-</span><span class="identifier">ldl</span></code> if it is required by the platform.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">detail</span><span class="special">::</span><span class="identifier">path_from_handle</span></code> implementation
+"                for long paths on Windows OS.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Highlighted in the docs that <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">/</span><span class="identifier">smart_</span><span class="special">*</span></code> parts of the library are experimental
+"                and incomplete.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed multiple mangling issues in <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">/</span><span class="identifier">smart_</span><span class="special">*</span></code> parts of the library.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/iterator/">Iterator</a>:</span>
 "          <ul>
 "            <li>
@@ -44619,6 +44711,45 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/stacktrace/">Stacktrace</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Use <code><span class="identifier">GetModuleNames</span></code>
+"                to determine the full module path for MSVC implementation. Many thanks
+"                to <a href="https://github.com/Dani-Hub">Daniel Krügler</a>
+"                for the <a href="https://github.com/boostorg/stacktrace/pull/198">PR#198</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Print relative addresses to allow their decoding later without knowing
+"                the base address. The logic could be disabled by defining <code><span class="identifier">BOOST_STACKTRACE_DISABLE_OFFSET_ADDR_BASE</span></code>.
+"                Many thanks to <a href="https://github.com/McCzarny">Maciej Czarnecki</a>
+"                for the <a href="https://github.com/boostorg/stacktrace/pull/200">PR#200</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Expose all the stacktrace libraries as b2 features for better control
+"                over the build and explicit information on what libraries are built.
+"                See "Configuration and Build" section for more info. Many
+"                thanks to <a href="https://github.com/uilianries">Uilian Ries</a>
+"                for initial implementation of the feature in <a href="https://github.com/boostorg/stacktrace/pull/202">PR#202</a>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">stacktrace_from_exception</span></code>
+"                builds with MinGW. Thanks to <a href="https://github.com/crhilton">crhilton</a>
+"                for the fix.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/unordered/">Unordered</a>:</span>
 "          <ul>
 "            <li>
@@ -44674,7 +44805,7 @@
 "  </div>
 "
 -hash
-"0e938f99407036d70c2d37dbbda709b9557c9b9b615202db5a3ca4dc4995348a
+"80763fc11ba4a606e10c3d73a3d53990f3fefa537dea80f4b4515a4fff6aa1d5
 -id
 "version_1_88_0
 -notice_url
