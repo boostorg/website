@@ -59,6 +59,31 @@ Please keep the list of libraries sorted in lexicographical order.
   * When `BOOST_ASSERT_HANDLER_IS_NORETURN` is defined, `boost::assertion_failed`
     and `boost::assertion_failed_msg` are declared as `BOOST_NORETURN`.
 
+* [phrase library..[@/libs/conversion/ Conversion]:]
+  * Use modern C++ in the samples and in the library code.
+
+* [phrase library..[@/libs/dll/ DLL]:]
+  * Added constructor from `native_handle_t` to the `boost::dll::shared_library`. Many thanks to
+    [@https://github.com/tgmatos Tiago Matos] for the [github_pr dll 82].
+  * Dropped multiple dependencies on other Boost libraries including Spirit, SmartPtr, Move,
+    TypeTraits, and Function. DLL became more lightweight for compilation.
+  * `std::error_code&` in API is used instead of the `boost::system::error_code&`. This is not
+    a breaking change as `boost::system::error_code` is convertible to `std::error_code&`.   
+  * `boost::dll:import_*` functions now return `std::shared_ptr` rather than `boost::shared_ptr`.
+    Define `BOOST_DLL_USE_BOOST_SHARED_PTR` to restore the old behavior, however note that the
+    macro will be removed in one of the upcomming Boost releases.
+  * Use modern C++ in the samples and in the library code.
+  * `boost::dll::library_info` now always throws in case of a broken binary. Updated the docs
+    and added some tests.
+  * Documented in FAQ why `RTLD_NODELETE` is missing and why there is no `.release()` method.
+    Provided suggestions on possible workarounds.
+  * Updated the information on building and using the library. CMake targets now link with
+    `-ldl` if it is required by the platform.
+  * Fixed `detail::path_from_handle` implementation for long paths on Windows OS.
+  * Highlighted in the docs that `boost/dll/smart_*` parts of the library are experimental
+    and incomplete.
+  * Fixed multiple mangling issues in `boost/dll/smart_*` parts of the library.
+
 * [phrase library..[@/libs/iterator/ Iterator]:]
   * Dropped support for C++03 and ancient compilers, updated code base to use C++11 and MP11, reduced usage of MPL. ([github_pr iterator 82])
   * Added `min_category` trait, which is a variadic equivalent of `minimum_category` that doesn't depend on MPL. `minimum_category` is deprecated
@@ -101,6 +126,19 @@ Please keep the list of libraries sorted in lexicographical order.
 
 * [phrase library..[@/libs/smart_ptr/ SmartPtr]:]
   * Fix `operator<<` for wide streams (accidentally broken in 1.87.0)
+
+* [phrase library..[@/libs/stacktrace/ Stacktrace]:]
+  * Use `GetModuleNames` to determine the full module path for MSVC implementation. Many thanks to
+    [@https://github.com/Dani-Hub Daniel Krügler] for the [github_pr stacktrace 198].
+  * Print relative addresses to allow their decoding later without knowing the base address. The
+    logic could be disabled by defining `BOOST_STACKTRACE_DISABLE_OFFSET_ADDR_BASE`. Many thanks to
+    [@https://github.com/McCzarny Maciej Czarnecki] for the [github_pr stacktrace 200].
+  * Expose all the stacktrace libraries as b2 features for better control over the build and explicit
+    information on what libraries are built. See "Configuration and Build" section for more info. Many
+    thanks to [@https://github.com/uilianries Uilian Ries] for initial implementation of the feature
+    in [github_pr stacktrace 202].
+  * Fixed `stacktrace_from_exception` builds with MinGW. Thanks to [@https://github.com/crhilton crhilton]
+    for the fix.
 
 * [phrase library..[@/libs/unordered/ Unordered]:]
   * Migrated the documentation to a multipage format using Antora.
