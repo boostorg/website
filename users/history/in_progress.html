@@ -135,6 +135,92 @@
       </li>
       <li>
         <div>
+          <span class="library"><a href="/doc/libs/master/libs/iterator/">Iterator</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Dropped support for C++03 and ancient compilers, updated code base
+                to use C++11 and MP11, reduced usage of MPL. (<a href="https://github.com/boostorg/iterator/pull/82">PR#82</a>)
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="identifier">min_category</span></code>
+                trait, which is a variadic equivalent of <code><span class="identifier">minimum_category</span></code>
+                that doesn't depend on MPL. <code><span class="identifier">minimum_category</span></code>
+                is deprecated and will be removed in a future release.
+              </div>
+            </li>
+            <li>
+              <div>
+                Extracted <code><span class="identifier">enable_if_convertible</span></code>
+                trait to a separate header <code><span class="identifier">enable_if_convertible</span><span class="special">.</span><span class="identifier">hpp</span></code>.
+                The trait was previously defined in <code><span class="identifier">iterator_adaptor</span><span class="special">.</span><span class="identifier">hpp</span></code>,
+                and the header still provides <code><span class="identifier">enable_if_convertible</span></code>
+                when included. This dependency is provided for backward compatibility
+                and will be removed in a future release. Users are advised to add
+                includes of <code><span class="identifier">enable_if_convertible</span><span class="special">.</span><span class="identifier">hpp</span></code>,
+                as needed.
+              </div>
+            </li>
+            <li>
+              <div>
+                Added <code><span class="special">*</span><span class="identifier">_t</span></code>
+                variants of various iterator traits that produce types.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">filter_iterator</span></code> and
+                <code><span class="identifier">transform_iterator</span></code>
+                now use empty base optimization (EBO) to reduce size of the iterator
+                when the adopted function object is stateless.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">zip_iterator</span></code> now
+                natively supports <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tuple</span></code>,
+                <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">tuple</span></code> and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span></code>
+                for iterator tuples and doesn't need including Fusion support headers.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">function_output_iterator</span></code>
+                no longer allows default construction when the wrapped function is
+                a function pointer. Such construction would previously create an
+                iterator with an uninitialized function pointer value, and such an
+                iterator would be unusable.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">generator_iterator</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                and <code><span class="identifier">shared_container_iterator</span><span class="special">.</span><span class="identifier">hpp</span></code>
+                headers were moved under the <code><span class="identifier">boost</span><span class="special">/</span><span class="identifier">iterator</span></code>
+                directory. The previous headers in <code><span class="identifier">boost</span></code>
+                are still retained for backward compatibility, but will be removed
+                in a future release. Users are advised to update their includes.
+              </div>
+            </li>
+            <li>
+              <div>
+                <code><span class="identifier">shared_container_iterator</span></code>
+                now uses <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span></code> to reference the container
+                internally. The support for <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span></code>
+                is still retained, but it will incur performance overhead on the
+                iterator construction, as <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span></code>
+                is now wrapped in a <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span></code>
+                internally. It is recommended to use <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span></code>
+                to reference the container.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
           <span class="library"><a href="/doc/libs/master/libs/locale/">Locale</a>:</span>
           <ul>
             <li>
@@ -163,6 +249,27 @@
               <div>
                 Support <code><span class="identifier">char8_t</span></code> on
                 more platforms
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="library"><a href="/doc/libs/master/libs/log/">Log</a>:</span>
+          <ul>
+            <li>
+              <div>
+                Disabled usage of <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">codecvt</span><span class="special">&lt;</span><span class="keyword">char16_t</span><span class="special">&gt;</span></code> and <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">codecvt</span><span class="special">&lt;</span><span class="keyword">char32_t</span><span class="special">&gt;</span></code> locale facets in C++20 and later
+                modes as they were deprecated in C++20. This means character code
+                conversions to/from <code><span class="keyword">char16_t</span></code>
+                and <code><span class="keyword">char32_t</span></code> is no longer
+                available in C++20 and later.
+              </div>
+            </li>
+            <li>
+              <div>
+                Fixed building issues when using CMake and MinGW-w64. (<a href="https://github.com/boostorg/log/pull/241">PR#241</a>)
               </div>
             </li>
           </ul>
