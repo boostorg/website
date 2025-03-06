@@ -44677,6 +44677,89 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/mysql/">MySQL</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <code><span class="identifier">connection_pool</span></code> now
+"                resizes correctly even in the presence of many connections with session
+"                establishment in-progress. The old algorithm could lead to the pool
+"                not being resized as expected under certain conditions (<a href="https://github.com/boostorg/mysql/issues/395">#395</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">any_connection</span><span class="special">::</span><span class="identifier">connection_id</span></code>.
+"                This function retrieves the connection's ID, which can subsequently
+"                be used in <code><span class="identifier">KILL</span></code> SQL
+"                statements to cancel queries. This function is equivalent to <code><span class="identifier">mysql_thread_id</span></code> in the official
+"                C API (<a href="https://github.com/boostorg/mysql/issues/408">#408</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Attempting to start an async operation on a <code><span class="identifier">connection</span></code>
+"                or <code><span class="identifier">any_connection</span></code>
+"                while another operation is in-progress no longer triggers undefined
+"                behavior. It now fails with <code><span class="identifier">client_errc</span><span class="special">::</span><span class="identifier">operation_in_progress</span></code>
+"                (<a href="https://github.com/boostorg/mysql/issues/405">#405</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Attempting to start an operation while a <code><span class="identifier">connection</span></code>
+"                or <code><span class="identifier">any_connection</span></code>
+"                are engaged in a multi-function operation no longer yields potentially
+"                dangerous packet mismatches. It instead fails with <code><span class="identifier">client_errc</span><span class="special">::</span><span class="identifier">engaged_in_multi_function</span></code> (<a href="https://github.com/boostorg/mysql/issues/448">#448</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Improved diagnostics when attempting to use a connection without
+"                a established session. Operations now fail with <code><span class="identifier">client_errc</span><span class="special">::</span><span class="identifier">not_connected</span></code>
+"                (<a href="https://github.com/boostorg/mysql/issues/450">#450</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed a race condition in <code><span class="identifier">connection</span></code>
+"                and <code><span class="identifier">any_connection</span></code>
+"                regarding per-operation cancellation. In previous versions, if a
+"                cancellation signal was emitted after an intermediate async operation
+"                had completed, but before its handler had been called, the signal
+"                was ignored. This is no longer the case (<a href="https://github.com/boostorg/mysql/issues/199">#199</a>).
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">field</span></code>'s constructor
+"                and assignment from <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">string_view</span></code>
+"                are now available in C++17, rather than C++20. These functions were
+"                guarded by standard feature-test macros, only available in C++20.
+"                These have been replaced by their Boost.Config equivalents.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added an HTTP server example that uses C++20 coroutines.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a doc page on interfacing sync and async code. This replaces
+"                the synchronous connection pool snippet, which contained a race condition.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Improved some of the other examples and doc pages.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/nowide/">Nowide</a>:</span>
 "          <ul>
 "            <li>
@@ -44810,7 +44893,7 @@
 "  </div>
 "
 -hash
-"a09ad98de3bc28c00d2ae5dfbf811dde98716273699b23f8c57f35b05628a355
+"3386eb6bcaa7a8c7671a0077bb7b8de87a540b26af86ed23008a36b3c86d3e67
 -id
 "version_1_88_0
 -notice_url
