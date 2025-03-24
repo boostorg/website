@@ -113,6 +113,22 @@ Please keep the list of libraries sorted in lexicographical order.
     * [github geometry 629] Avoid warnings for coordinate conversions and unused parameters
     * Various fixes of errors and warnings
 
+* [phrase library..[@/libs/geometry/ Graph]:]
+  * Bug fixes
+    * Replace implementation of `maximum_weighted_matching`, resolves multiple issues.
+    * Ensure `named_graph` is initialized before use.
+    * Replace custom geometry code in `is_straight_line_drawing` with Boost.Geometry, fixes incorrect results for very small angles.
+    * Fix incorrect callbacks to `finish_edge` in `undirected_dfs`.
+  * Performance improvements
+    * `adjacency_list`: Remove unnecessary calls to `resize`/`reserve` from within `add_vertex` for `vector`-based storage! A quick benchmark indicates a 10% improvement to graph construction time.
+    * `lengauer_tarjan_dominator_tree`: Replace `std::deque` with `std::vector`, obtaining a ~40% improvement for large graphs.
+  * General Improvements
+    * Replace the use of several Boost utilities with C++14 language features.
+    * Modernize examples with C++14 language features.
+    * Various fixes to documentation and build system.
+    * `vertex_by_property` no longer requires a mutable graph.
+    * Fix compilation issue with `cycle_canceling` and Clang 19.
+
 * [phrase library..[@/libs/iterator/ Iterator]:]
   * Dropped support for C++03 and ancient compilers, updated code base to use C++11 and MP11, reduced usage of MPL. ([github_pr iterator 82])
   * Added `min_category` trait, which is a variadic equivalent of `minimum_category` that doesn't depend on MPL. `minimum_category` is deprecated
