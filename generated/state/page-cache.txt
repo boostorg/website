@@ -45440,10 +45440,83 @@
 "  </div>
 "  <div id="version_1_89_0.updated_libraries">
 "    <h3><span class="link">Updated Libraries</span></h3>
-"<pre><span class="special">*</span> <span class="special">[</span><span class="identifier">phrase</span> <span class="identifier">library</span><span class="special">..[</span><span class="error">@</span><span class="special">/</span><span class="identifier">libs</span><span class="special">/</span><span class="identifier">any</span><span class="special">/</span> <span class="identifier">Any</span><span class="special">]:]</span>
-"  <span class="special">*</span> <span class="special">[*</span><span class="identifier">Initial</span> <span class="identifier">support</span> <span class="keyword">for</span> <span class="identifier">C</span><span class="special">++</span><span class="number">20</span> <span class="identifier">Modules</span><span class="special">].</span> <span class="identifier">See</span> <span class="identifier">the</span> <span class="identifier">docs</span> <span class="keyword">for</span> <span class="identifier">more</span> <span class="identifier">info</span><span class="special">.</span>
-"</pre>
 "    <ul>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/any/">Any</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <strong>Initial support for C++20 Modules</strong>.
+"                See the docs for more info.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/atomic/">Atomic</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added TSAN instrumentation in asm-based x86, AArch32, AArch64 and
+"                PPC backends. This silences TSAN false errors for code using Boost.Atomic
+"                for thread synchronization.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Following the announcement in Boost 1.84, removed support for Windows
+"                versions older than Windows 10.
+"                <ul>
+"                  <li>
+"                    <div>
+"                      A note to MinGW-w64 users. Since Windows SDK headers on MinGW-w64
+"                      define <code><span class="identifier">_WIN32_WINNT</span></code>
+"                      to an older Windows version by default, you may need to define
+"                      <code><span class="identifier">_WIN32_WINNT</span><span class="special">=</span><span class="number">0x0A00</span></code>
+"                      or <code><span class="identifier">BOOST_USE_WINAPI_VERSION</span><span class="special">=</span><span class="number">0x0A00</span></code>
+"                      when compiling Boost.Atomic and the code that uses Boost.Atomic.
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Support for Windows CE is deprecated and will be removed in a future
+"                release.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added support for timed waiting operations.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Exposed <code><span class="identifier">thread_pause</span></code>
+"                operation, which can be used as a backoff measure in spin loops.
+"                Added support for PowerPC and improved support for AArch64 in <code><span class="identifier">thread_pause</span></code>.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed <code><span class="identifier">BOOST_ATOMIC_NO_ATOMIC_FLAG_INIT</span></code>
+"                macro definition. Since the library now requires C++11, <code><span class="identifier">BOOST_ATOMIC_FLAG_INIT</span></code> is always
+"                supported.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Enabled bitwise operations for atomic enumerations. This can be useful
+"                when enumerations are used to implement bit masks.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
 "      <li>
 "        <div>
 "          <span class="library"><a href="/libs/beast/">Beast</a>:</span>
@@ -45530,6 +45603,48 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/charconv">Charconv</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fixed a performance degradation with <code><span class="identifier">from_chars</span></code>
+"                for integer types
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed rounding and trailing decimal place bugs with <code><span class="identifier">to_chars</span></code> for specified precisions
+"                with floating point types
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/cobalt/">Cobalt</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Move assign fixed for generator &amp; promise.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed internal exceptions
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added IO library. Cobalt.io provides a large subset of asio as a
+"                compiled library.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/compat/">Compat</a>:</span>
 "          <ul>
 "            <li>
@@ -45569,6 +45684,52 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/core/">Core</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">bit_ceil</span></code> to
+"                return 1 for input 0 as per specification. (<a href="https://github.com/boostorg/core/pull/199">PR#199</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added support for <code><span class="identifier">std</span><span class="special">::</span><span class="identifier">format</span></code>
+"                to <code><span class="identifier">boost</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">string_view</span></code>. (<a href="https://github.com/boostorg/core/issues/190">#190</a>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/detail/">Detail</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Operators generated by <code><span class="identifier">BOOST_BITMASK</span></code>
+"                now use underlying type of the enum to implement bitwise operators.
+"                The operators are marked <code><span class="keyword">noexcept</span></code>
+"                and <code><span class="keyword">constexpr</span></code>, when
+"                possible.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The function <code><span class="identifier">bitmask_set</span></code>
+"                generated by <code><span class="identifier">BOOST_BITMASK</span></code>
+"                is marked deprecated. In a future release, <code><span class="identifier">BOOST_BITMASK</span></code>
+"                will stop producing this function. Users are recommended to use double
+"                negation (<code><span class="special">!!</span><span class="identifier">mask</span></code>)
+"                to test if the value is zero. This affects e.g. enums defined in
+"                Boost.Filesystem.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/dll/">DLL</a>:</span>
 "          <ul>
 "            <li>
@@ -45595,6 +45756,108 @@
 "      </li>
 "      <li>
 "        <div>
+"          <span class="library"><a href="/libs/filesystem/">Filesystem</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Corrected ASAN warnings about comparing pointers to potentially unrelated
+"                objects in <code><span class="identifier">path</span><span class="special">::</span><span class="identifier">append</span></code>. (<a href="https://github.com/boostorg/filesystem/issues/335">#335</a>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/geometry/">Geometry</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Major improvements
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/1369">PR#1369</a> Rewrite of traversal
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/1402">PR#1402</a> Add geometry polyhedral surface
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Improvements
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/1404">PR#1404</a> Performance improvements in buffer
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/1405">PR#1405</a> Avoid static variables and functions in
+"                      header files
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Breaking changes
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/pull/1401">PR#1401</a> Remove deprecated headers
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Solved issues
+"                <ul>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/issues/1221">#1221</a> Difference with rectilinear multipolygon with
+"                      integer coordinates produces invalid polygon with disconnected
+"                      interior
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/issues/1295">#1295</a> Wrong result in intersection (result polygon
+"                      is equal to the biggest of the input polygons)
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/issues/1349">#1349</a> Difference of polygons giving wrong result
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      <a href="https://github.com/boostorg/geometry/issues/1382">#1382</a> Buffer operation creates self-intersection
+"                    </div>
+"                  </li>
+"                  <li>
+"                    <div>
+"                      Various fixes of errors and warnings
+"                    </div>
+"                  </li>
+"                </ul>
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
 "          <span class="library"><a href="/libs/hash2/">Hash2</a>:</span>
 "          <ul>
 "            <li>
@@ -45606,6 +45869,166 @@
 "            <li>
 "              <div>
 "                Added XXH3 algorithm (<code><span class="identifier">xxh3_128</span></code>).
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/iterator/">Iterator</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fixed <code><span class="identifier">filter_iterator</span></code>
+"                copy/converting constructor, which could previously produce an invalid
+"                iterator. (<a href="https://github.com/boostorg/iterator/issues/92">#92</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Removed usage of <code><span class="identifier">is_trivial</span></code>
+"                in <code><span class="identifier">iterator_facade</span></code>
+"                as it is deprecated in C++26. (<a href="https://github.com/boostorg/iterator/issues/93">#93</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                <code><span class="identifier">iterator_facade</span><span class="special">::</span><span class="keyword">operator</span><span class="special">[]</span></code>
+"                now always returns a proxy rather than conditionally returning a
+"                value or a proxy. This allows users to bind a reference to the result
+"                of the operator, regardless of whether the value type is trivially-copyable.
+"                (<a href="https://github.com/boostorg/iterator/issues/61">#61</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The proxy returned by <code><span class="identifier">iterator_facade</span><span class="special">::</span><span class="keyword">operator</span><span class="special">[]</span></code> now supports forwarding dereferencing
+"                operators to the referenced value. This allows <code><span class="identifier">it</span><span class="special">[</span><span class="identifier">n</span><span class="special">]-&gt;</span><span class="identifier">foo</span><span class="special">()</span></code> and <code><span class="special">(*</span><span class="identifier">it</span><span class="special">[</span><span class="identifier">n</span><span class="special">]).</span><span class="identifier">foo</span><span class="special">()</span></code>
+"                expressions to compile.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                The proxy returned by <code><span class="identifier">iterator_facade</span><span class="special">::</span><span class="keyword">operator</span><span class="special">[]</span></code> now implementes perfect forwarding
+"                in its assignment operator.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/json/">JSON</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Revamped documentation.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Optionals that are ranges are categorised as optionals.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Described class support is enabled for types with bases.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/log/">Log</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added support for <code><span class="identifier">BOOST_LOG_WITHOUT_ASIO</span></code>
+"                configuration macro, which can be used to remove the dependency on
+"                Boost.Asio and disable the related functionality.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Use locale-independent formatting of the file counter in <code><span class="identifier">text_file_backend</span></code> when composing
+"                log file names. This fixes failures in the subsequent parsing of
+"                the file names in <code><span class="identifier">file_collector</span><span class="special">::</span><span class="identifier">scan_for_files</span></code>.
+"                (<a href="https://github.com/boostorg/log/pull/246">PR#246</a>)
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Added a new <code><span class="identifier">wrap_filter</span></code>
+"                utility that simplifies injecting user-defined function objects in
+"                filtering expressions. (<a href="https://github.com/boostorg/log/issues/195">#195</a>)
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/math/">Math</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Add explicit C++14 <code><span class="special">&lt;</span><span class="identifier">type_traits</span><span class="special">&gt;</span></code>
+"                and <code><span class="keyword">constexpr</span></code> requirement
+"                to builds
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Collected fixes for GPU support on a variety of platforms
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix lower incomplete gamma function with x = 0
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix the external archive error in the jSO algorithm
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix numeric underflow in ibeta
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix inverse ibeta for large values of a and b
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix variadic functions to make them safe with C++26
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/multiprecision/">Multiprecision</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                <strong>Major update.</strong>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Adds a new backend type: <code><span class="identifier">cpp_double_fp_backend</span></code>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixes a namespace collision with Boost.Serialization
 "              </div>
 "            </li>
 "          </ul>
@@ -45698,6 +46121,46 @@
 "                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">pfr</span><span class="special">::</span><span class="identifier">names_as_array</span><span class="special">(</span><span class="identifier">empty_struct</span><span class="special">{}))</span></code>.
 "                Many thanks to <a href="https://github.com/sabudilovskiy">sabudilovskiy</a>
 "                for the bug report!
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/process/">process</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Added <code><span class="identifier">v1</span><span class="special">.</span><span class="identifier">hpp</span></code> to emulate v1 <code><span class="identifier">process</span><span class="special">.</span><span class="identifier">hpp</span></code> include.
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fix to windows path escaping
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Fixed exit-code issue wehre terminate &amp; async_wait lead to a
+"                loss of the exit-code value.
+"              </div>
+"            </li>
+"          </ul>
+"        </div>
+"      </li>
+"      <li>
+"        <div>
+"          <span class="library"><a href="/libs/random/">Random</a>:</span>
+"          <ul>
+"            <li>
+"              <div>
+"                Fix NAN being generated by <code><span class="identifier">beta_distribution</span></code>
+"              </div>
+"            </li>
+"            <li>
+"              <div>
+"                Improve the performance of <code><span class="identifier">beta_distribution</span><span class="special">::</span><span class="keyword">operator</span><span class="special">()</span></code>
 "              </div>
 "            </li>
 "          </ul>
@@ -45935,7 +46398,7 @@
 "  </div>
 "
 -hash
-"6e18661d3fb2f240f7127937bc1e7a1e7edc774680cc969113d2f5ba15251dcc
+"6b551bc8751c037e344f2d5d9f30bfa949c0abe3c969da6b783feb1c99307458
 -id
 "version_1_89_0
 -notice_url
