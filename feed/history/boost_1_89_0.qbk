@@ -69,6 +69,11 @@ Please keep the list of libraries sorted in lexicographical order.
   * Acknowledgements
     * yliu1021
 
+* [phrase library..[@/libs/cobalt/ Cobalt]:]
+  * Move assign fixed for generator & promise.
+  * Fixed internal exceptions
+  * Added IO library. Cobalt.io provides a large subset of asio as a compiled library.
+
 * [phrase library..[@/libs/compat/ Compat]:]
   * Added `move_only_function.hpp`.
 
@@ -96,6 +101,22 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/filesystem/ Filesystem]:]
   * Corrected ASAN warnings about comparing pointers to potentially unrelated objects in `path::append`. ([github filesystem 335])
 
+* [phrase library..[@/libs/geometry/ Geometry]:]
+  * Major improvements
+    * [github_pr geometry 1369] Rewrite of traversal
+    * [github_pr geometry 1402] Add geometry polyhedral surface
+  * Improvements
+    * [github_pr geometry 1404] Performance improvements in buffer
+    * [github_pr geometry 1405] Avoid static variables and functions in header files
+  * Breaking changes
+    * [github_pr geometry 1401] Remove deprecated headers
+  * Solved issues
+    * [github geometry 1221] Difference with rectilinear multipolygon with integer coordinates produces invalid polygon with disconnected interior
+    * [github geometry 1295] Wrong result in intersection (result polygon is equal to the biggest of the input polygons)
+    * [github geometry 1349] Difference of polygons giving wrong result
+    * [github geometry 1382] Buffer operation creates self-intersection
+    * Various fixes of errors and warnings
+
 * [phrase library..[@/libs/hash2/ Hash2]:]
   * Added Blake2 algorithm (`blake2s_256`, `blake2b_512`).
   * Added XXH3 algorithm (`xxh3_128`).
@@ -106,6 +127,11 @@ Please keep the list of libraries sorted in lexicographical order.
   * `iterator_facade::operator[]` now always returns a proxy rather than conditionally returning a value or a proxy. This allows users to bind a reference to the result of the operator, regardless of whether the value type is trivially-copyable. ([github iterator 61])
   * The proxy returned by `iterator_facade::operator[]` now supports forwarding dereferencing operators to the referenced value. This allows `it[n]->foo()` and `(*it[n]).foo()` expressions to compile.
   * The proxy returned by `iterator_facade::operator[]` now implementes perfect forwarding in its assignment operator.
+
+* [phrase library..[@/libs/json/ JSON]:]
+  * Revamped documentation.
+  * Optionals that are ranges are categorised as optionals.
+  * Described class support is enabled for types with bases.
 
 * [phrase library..[@/libs/log/ Log]:]
   * Added support for `BOOST_LOG_WITHOUT_ASIO` configuration macro, which can be used to remove the dependency on Boost.Asio and disable the related functionality.
@@ -138,6 +164,11 @@ Please keep the list of libraries sorted in lexicographical order.
    * Return `std::array<std::string_view, 0>` type for `boost::pfr::names_as_array(empty_struct{})`
      to allow compilation of `for (std::string_view name : boost::pfr::names_as_array(empty_struct{}))`.
      Many thanks to [@https://github.com/sabudilovskiy sabudilovskiy] for the bug report!
+
+* [phrase library..[@/libs/process/ process]:]
+   * Added `v1.hpp` to emulate v1 `process.hpp` include.
+   * Fix to windows path escaping
+   * Fixed exit-code issue wehre terminate & async_wait lead to a loss of the exit-code value.
 
 * [phrase library..[@/libs/type_index/ TypeIndex]:]
    * [*Initial support for C++20 Modules]. See the docs for more info.
