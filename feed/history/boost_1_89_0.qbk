@@ -44,6 +44,33 @@ Please keep the list of libraries sorted in lexicographical order.
 * [phrase library..[@/libs/any/ Any]:]
   * [*Initial support for C++20 Modules]. See the docs for more info.
 
+* [phrase library..[@/libs/asio/ Asio]:]
+  * Added allocator constructors to `execution_context`, `io_context` and
+    `thread_pool`, with the supplied allocator being used for allocating objects
+    associated with the execution context.
+  * Added a new configuration parameter "timer" / "heap_reserve" that may be
+    used to reserve space in the vector used for a timer queue's heap.
+  * Added a new configuration parameter "resolver" / "threads" that specifies
+    the number of internal threads used by `async_resolve` to emulate
+    asynchronous address resolution.
+  * Removed `deadline_timer`, `basic_deadline_timer` and `time_traits` from the
+    convenience header [^boost/asio.hpp].
+  * Ensured that the Windows named pipes created by `connect_pipe` use unique
+    names that do not conflict if Asio is used in multiple, independent plug-in
+    DLLs.
+  * Changed `BOOST_ASIO_CONCURRENCY_HINT_SAFE` to be consistent with the
+    `io_context` default constructor.
+  * Fixed the documentation for `BOOST_ASIO_CONCURRENCY_HINT_UNSAFE_IO` to reflect
+    that registration locking is still enabled.
+  * Added separate [^b2] and [^cmake] build targets for optional dependencies.
+  * Added the `[[noreturn]]` attribute to `boost::asio::detail::throw_exception`.
+  * Fixed `co_spawn` to adhere to the asynchronous operation requirement for
+    non-reentrant invocation of the completion handler.
+  * Added a documentation note on `basic_signal_set` async signal safety.
+  * Fixed various minor compilation errors on different platforms.
+  * Consult the [@/doc/libs/1_89_0/doc/html/boost_asio/history.html Revision
+    History] for further details.
+
 * [phrase library..[@/libs/atomic/ Atomic]:]
   * Added TSAN instrumentation in asm-based x86, AArch32, AArch64 and PPC backends. This silences TSAN false errors for code using Boost.Atomic for thread synchronization.
   * Following the announcement in Boost 1.84, removed support for Windows versions older than Windows 10.
